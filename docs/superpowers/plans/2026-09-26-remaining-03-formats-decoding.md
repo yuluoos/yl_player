@@ -63,21 +63,21 @@
 示例不是已验证支持声明；真实条目必须补齐媒体哈希、平台和证据。
 
 - [ ] 在 `format_matrix_test.dart` 为每个实际夹具先固定首帧、音频时标、seek 恢复、结束与释放断言；错误扩展名但同字节应保持探测结果一致。损坏/无索引行有明确预期，而不是一律允许失败。
-- [ ] 运行现有路由获得通过/失败列表，记录缺解复用、缺decoder、缺输出三类原因；已有通过路径成为回归基线，提交夹具与差距报告。
+- [x] 运行现有路由获得通过/失败列表，记录缺解复用、缺decoder、缺输出三类原因；已有通过路径成为回归基线，提交夹具与差距报告。
 
 ### Task 2：按缺口扩展解复用与音频
 
 - [ ] 按 Task 1 结果依次处理 WebM/网络或本地 FLV、TS/PS、AVI 路由缺口；每个组合先加入实际播放失败测试，再扩展探测/解复用。缺索引 seek 是单独行为，不能为首帧成功忽略。
 - [ ] 对 AC-3/E-AC-3、DTS、FLAC、Opus、Vorbis 的解码/声道布局/音频输出逐项实测；系统支持与 fallback 支持分开。多声道输出或降混必须保留明确布局规则，不能将有音频轨当作有声音。
-- [ ] 修改裁剪构建时记录开源依赖版本、启用模块、license、二进制架构和大小；只增加有对应样本的模块，保留 product 禁用网络边界，不能引入商业 SDK。
+- [x] 修改裁剪构建时记录开源依赖版本、启用模块、license、二进制架构和大小；只增加有对应样本的模块，保留 product 禁用网络边界，不能引入商业 SDK。
 - [ ] 运行制品 contract/metadata checks 和格式公开套件，验证 macOS arm64/x86_64、iOS device/simulator 构建切片；实际 Intel/真机播放另记，不能由交叉编译代替。
 - [ ] 按容器/音频能力切片提交，支持文档只新增已实测组合。
 
 ### Task 3：视频解码与回退预算
 
-- [ ] 先测试各平台 H.264/H.265、VP9、AV1 的硬解可用/不可用和 Profile/位深差异；将 decoder 选择与实际 hardware 证据对齐，未知状态不得当硬解。
+- [x] 先测试各平台 H.264/H.265、VP9、AV1 的硬解可用/不可用和 Profile/位深差异；将 decoder 选择与实际 hardware 证据对齐，未知状态不得当硬解。
 - [ ] 消费 P08 的设备基线，为每 codec/设备档位/分辨率/fps 冻结软解支持及 CPU/RSS/热阈值。无数据的档位不自动开放，使用已有明确失败路径。
-- [ ] 构造硬解失败、切段重建、decoder lease 争用、软解超限测试，锁定错误码 `decoder.unavailable` / `resource.exhausted` 与 scope。公开断言示例：
+- [x] 构造硬解失败、切段重建、decoder lease 争用、软解超限测试，锁定错误码 `decoder.unavailable` / `resource.exhausted` 与 scope。公开断言示例：
 
 ```dart
 // hardwareRequired + 已证明只能软解的 owned 样本：
@@ -86,8 +86,8 @@ expect(failure.retryable, isFalse);
 // failure 由测试捕获实际 YlPlayerException.failure，不能自行构造通过断言。
 ```
 
-- [ ] 实现最小缺失解码路径；分配前校验尺寸/帧率/重排深度，运行中资源超限有界结束，不修改固定清晰度或动态范围。软件路径无权报告硬解。
-- [ ] 跑 `decoder_budget_test.dart` 和真实重建/多播放器用例；每个已开启的软件 codec 独立提交和报告。
+- [x] 实现最小缺失解码路径；分配前校验尺寸/帧率/重排深度，运行中资源超限有界结束，不修改固定清晰度或动态范围。软件路径无权报告硬解。
+- [x] 跑 `decoder_budget_test.dart` 和真实重建/多播放器用例；每个已开启的软件 codec 独立提交和报告。
 
 ### Task 4：组合封板与跨计划交接
 
@@ -133,3 +133,7 @@ expect(failure.retryable, isFalse);
 2026-09-30 P03 VP9切片：普通可seek Matroska/WebM Profile0、8-bit420 SDR固定尺寸/可见单帧包接入系统硬解，每次创建/seek重建均验证实际hardware；未引入VP9软件decoder或商业SDK。VP9/Opus file/http/改名三路径和3项异常策略已实测通过，原生67项与路由矩阵7项通过；Vorbis旧样本非零CodecDelay继续明确拒绝。完整Task1/Task2/Task3不勾选；AV1、广泛VP9 Profile、物理影音/最低系统/跨端验收仍开放，最终矩阵见P03报告。
 
 2026-09-30 P03 Task3推进AV1实际会话调查：M1/macOS27下AVC对照6次×96帧硬解通过，AV1 Main8/Main10三策略×两次创建共12次均-12906。新增可复用探测、完整性/对照门禁，未启用产品AV1。P08资源/热基线缺失，软件预算保持未测不准入；不得套Android限额。下一步补P08测量或在AV1硬解设备采证，Task1/2/3和CAP均仍开放，详见P03报告。
+
+## 2026-10-15 续做交付状态
+
+已执行获批的 [八阶段续做计划](2026-10-14-p03-completion.md)：PS/AVC、非零 Vorbis delay、受控 AV1/VP9 候选、共享预算、Apple/Android 解码身份和实际输出验证。三端失败/诊断/负例分开保留，生产软件准入为空。原计划复合验收条目中仍缺逐格式完整 PCM 首尾/切轨、匹配真机及最低系统/Intel、持续热和独立产品复验的项目继续不勾选；工程实现不等于 CAP-FORMAT/CAP-DECODE 全通过。详见 [报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。

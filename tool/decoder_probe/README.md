@@ -1,6 +1,7 @@
 # Apple AV1 decoder feasibility probe
 
-This test-only tool probes actual VideoToolbox sessions on the current Mac.
+`run_apple.py` probes actual VideoToolbox sessions on the current Mac.
+The separate controlled software measurement tool is documented below.
 It does not enable a production decoder, define a software budget, measure
 performance, or verify physical output quality. It supplements P03 Task 3;
 P08 A/B measurements are still prerequisites for software admission.
@@ -63,3 +64,34 @@ remain invalid. Debug/simulator measurements cannot qualify production.
 The short protocol always reports missing sustained thermal and independent
 verification evidence; a supplied boolean cannot open production admission.
 It writes no profiles. Synthetic validator tests are not device evidence.
+
+## Fixed software engineering measurement
+
+`run_software.py` measures the installed Apple AV1 bridge in five fresh,
+optimized processes. Each process has 2 s idle, 12 s paced decode (288 actual
+NV12 outputs) and 2 s after disposal. The 65 raw samples contain actual monotonic
+time, cumulative process CPU, resident bytes, physical footprint, thermal state
+and low-power state. Process CPU includes decoder workers and probe overhead.
+The fixed 50 ms sampling lateness bound is declared before collection; timestamps
+are never rounded to an ideal grid. A separate fresh AVC VideoToolbox positive
+control must output all frames before measurements begin.
+
+```sh
+python3 -B tool/decoder_probe/run_software.py \
+  tool/decoder_probe/software_protocol.json /tmp/yl-software-new-run
+python3 -B tool/decoder_probe/run_software.py --check-admission \
+  /tmp/yl-software-baseline /tmp/yl-software-independent-verification
+```
+
+The output directory must not exist. The runner freezes the exact protocol,
+fixture, executable and loaded bridge hashes before execution, preserves partial
+raw failures, and rejects reordered/missing/duplicated samples or changed source
+and binaries. Admission checking is read-only: copied processes, changed inputs
+and summary rows that differ from raw output cannot qualify a verification.
+
+These are short engineering measurements of actual pixel buffers, not physical
+display, speakers, sustained thermal qualification or the Flutter product binary.
+The 32 MiB/64-frame ownership limits are fixed test limits, not measured production
+profiles. The tool always leaves production admission disabled. Matching sustained
+qualification and actual product-build verification remain separate requirements;
+this tool does not start long-play or weak-network workloads.

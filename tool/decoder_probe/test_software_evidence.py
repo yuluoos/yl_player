@@ -37,6 +37,18 @@ class SoftwareEvidenceTests(unittest.TestCase):
         self.assertIn('independent_verification_missing',s['admissionBlockers'])
         self.assertEqual(s['peakFootprintBytes'],2048)
 
+    def test_real_apple_two_image_identity_and_actual_sampling_jitter(self):
+        p,r=fixture();p['key']['decoderBuild']='a'*64+':'+ 'b'*64
+        p['maxSampleLatenessNs']=50_000_000
+        for row in r:
+            row['key']=p['key'].copy()
+            row['protocolSha256']=hashlib.sha256(json.dumps(p,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+            for i,sample in enumerate(row['samples']):
+                sample['slot']=i;sample['monotonicNs']+=1_000_000
+        self.assertTrue(summarize(p,r)['measurementValid'])
+        r[0]['samples'][10]['monotonicNs']+=51_000_000
+        self.assertFalse(summarize(p,r)['measurementValid'])
+
     def test_missing_duplicate_and_failed_runs_are_invalid(self):
         p,r=fixture()
         for rows in (r[:-1],r+[r[0]],r[:1]*5):

@@ -1,0 +1,9 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/state_update_cadence_test.dart
+Running Gradle task 'assembleDebug'...                             24.5s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          774ms
+00:00 +0: 250 ms updates keep their measured cadence and replacement session fence
+CADENCE_PLATFORM=android ELAPSED_MS=5173 PERIODIC_UPDATES=20 UPDATES_PER_5S=19.33 OLD_SESSION=YlPlaybackSessionId(<redacted>) NEW_SESSION=YlPlaybackSessionId(<redacted>)
+00:08 +1: (tearDownAll)
+00:08 +1: All tests passed!
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.cOQHyq

@@ -1,0 +1,17 @@
+[mpeg @ 0x7c73008000] Could not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+PS seek target=0 first_keyframe=23022
+PS seek target=2000000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=1250000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=0 first_keyframe=23022
+[mpeg @ 0x7c73008000] Could not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+PS seek target=0 first_keyframe=23022
+PS seek target=2000000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=1250000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=0 first_keyframe=23022
+PS regression: 72 checks, 4 failures

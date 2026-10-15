@@ -1,0 +1,14 @@
+F..
+======================================================================
+FAIL: test_copied_or_unbound_process_rows_cannot_be_independent (test_software_collector.AdmissionEvidenceTests.test_copied_or_unbound_process_rows_cannot_be_independent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 41, in test_copied_or_unbound_process_rows_cannot_be_independent
+    with self.assertRaises(ValueError):check_admission(*roots)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.035s
+
+FAILED (failures=1)

@@ -1,0 +1,32 @@
+.F.......FF.
+======================================================================
+FAIL: test_complete_required_output_is_separate_from_diagnostics (test_observations.ObservationsTest.test_complete_required_output_is_separate_from_diagnostics)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_observations.py", line 24, in test_complete_required_output_is_separate_from_diagnostics
+    self.assertTrue(result['fullAcceptance'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_skipped_required_software_row_stays_in_denominator (test_observations.ObservationsTest.test_skipped_required_software_row_stays_in_denominator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_observations.py", line 41, in test_skipped_required_software_row_stays_in_denominator
+    result=self.result();self.assertEqual(1,result['requiredRows']);self.assertEqual(0,result['supportedRows'])
+                         ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+======================================================================
+FAIL: test_truncated_input_is_a_negative_control_not_support (test_observations.ObservationsTest.test_truncated_input_is_a_negative_control_not_support)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_observations.py", line 59, in test_truncated_input_is_a_negative_control_not_support
+    result=self.result();self.assertEqual(0,result['supportedRows']);self.assertEqual(1,result['negativeControls'])
+                                                                     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 1 != 0
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.007s
+
+FAILED (failures=3)

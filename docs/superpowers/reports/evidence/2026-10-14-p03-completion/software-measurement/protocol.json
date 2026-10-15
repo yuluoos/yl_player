@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "repetitions": 5,
+  "idleNs": 2000000000,
+  "decodeNs": 12000000000,
+  "disposeNs": 2000000000,
+  "sampleIntervalNs": 250000000,
+  "maxSampleLatenessNs": 50000000,
+  "buildMode": "release",
+  "simulator": false,
+  "sustainedThermalVerified": false,
+  "fixture": "av1-main8",
+  "threads": 2,
+  "ownershipLimits": {
+    "maxOwnedBytes": 33554432,
+    "maxFrames": 64,
+    "maxPacketBytes": 1048576
+  },
+  "measurementScope": "optimized installed bridge; actual retained pixel buffers; process CPU includes all decoder workers",
+  "positiveControl": "separate fresh AVC VideoToolbox process before the five AV1 processes; no excluded warmup inside measured processes",
+  "key": {
+    "model": "MacBookPro17,1",
+    "osBuild": "26A434",
+    "decoderBuild": "60c60ccb7a322171f110b989307089f5cb97b331cc4a624d1ef20b79b5026536:747c2c1af9cacf77ec655ce7d02980898fa26be75b86cf57413f050d099a7360",
+    "codec": 12,
+    "profile": 0,
+    "bitDepth": 8,
+    "chroma": 420,
+    "width": 320,
+    "height": 180,
+    "fpsNumerator": 24,
+    "fpsDenominator": 1,
+    "threads": 2,
+    "outputPixelFormat": 875704438
+  },
+  "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+  "ownedMediaSha256": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+  "positiveControlBuildSha256": "e1d081d593bfc6a70b200fc3a31cbb277b651e89386cf4b18ae74e1282eadb05"
+}

@@ -1,0 +1,116 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+P03 owned-app foreground: 1 _LSOpenURLsWithCompletionHandler() failed for the application /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/macos/Build/Products/Debug/yl_player_example.app with error -600.
+00:00 +0: mp4-avc-aac / file
+01:30 +0 -1: mp4-avc-aac / file [E]
+  TimeoutException after 0:01:30.000000: Test timed out after 1 minutes, 30 seconds.
+  dart:isolate  _RawReceivePort._handleMessage
+  
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3080 pos 12: '!_expectingFrame': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3080:12                                                                           LiveTestWidgetsFlutterBinding.postTest
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+01:30 +0 -1: mp4-avc-aac / http
+01:30 +0 -2: mp4-avc-aac / http [E]
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3056 pos 12: '!inTest': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3056:12                                                                           LiveTestWidgetsFlutterBinding.runTest
+  package:integration_test/integration_test.dart 237:17                                                                   IntegrationTestWidgetsFlutterBinding.runTest
+  package:flutter_test/src/widget_tester.dart 184:24                                                                      testWidgets.<fn>
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3080 pos 12: '!_expectingFrame': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3080:12                                                                           LiveTestWidgetsFlutterBinding.postTest
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+01:30 +0 -2: mp4-avc-aac / renamed-file
+01:30 +0 -3: mp4-avc-aac / renamed-file [E]
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3056 pos 12: '!inTest': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3056:12                                                                           LiveTestWidgetsFlutterBinding.runTest
+  package:integration_test/integration_test.dart 237:17                                                                   IntegrationTestWidgetsFlutterBinding.runTest
+  package:flutter_test/src/widget_tester.dart 184:24                                                                      testWidgets.<fn>
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3080 pos 12: '!_expectingFrame': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3080:12                                                                           LiveTestWidgetsFlutterBinding.postTest
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+01:30 +0 -3: mp4-avc-aac / wrong-known-file
+01:30 +0 -4: mp4-avc-aac / wrong-known-file [E]
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3056 pos 12: '!inTest': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3056:12                                                                           LiveTestWidgetsFlutterBinding.runTest
+  package:integration_test/integration_test.dart 237:17                                                                   IntegrationTestWidgetsFlutterBinding.runTest
+  package:flutter_test/src/widget_tester.dart 184:24                                                                      testWidgets.<fn>
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3080 pos 12: '!_expectingFrame': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3080:12                                                                           LiveTestWidgetsFlutterBinding.postTest
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+01:30 +0 -4: mp4-avc-aac / extensionless-file
+01:30 +0 -5: mp4-avc-aac / extensionless-file [E]
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3056 pos 12: '!inTest': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3056:12                                                                           LiveTestWidgetsFlutterBinding.runTest
+  package:integration_test/integration_test.dart 237:17                                                                   IntegrationTestWidgetsFlutterBinding.runTest
+  package:flutter_test/src/widget_tester.dart 184:24                                                                      testWidgets.<fn>
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3080 pos 12: '!_expectingFrame': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3080:12                                                                           LiveTestWidgetsFlutterBinding.postTest
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+01:30 +0 -5: mp4-avc-aac / renamed-http
+01:30 +0 -6: mp4-avc-aac / renamed-http [E]
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3056 pos 12: '!inTest': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3056:12                                                                           LiveTestWidgetsFlutterBinding.runTest
+  package:integration_test/integration_test.dart 237:17                                                                   IntegrationTestWidgetsFlutterBinding.runTest
+  package:flutter_test/src/widget_tester.dart 184:24                                                                      testWidgets.<fn>
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+  'package:flutter_test/src/binding.dart': Failed assertion: line 3080 pos 12: '!_expectingFrame': is not true.
+  dart:core                                                                                                               _AssertionError._throwNew
+  package:flutter_test/src/binding.dart 3080:12                                                                           LiveTestWidgetsFlutterBinding.postTest
+  ===== asynchronous gap ===========================
+  package:stream_channel                                                                                                  _GuaranteeSink.add
+  /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/flutter_tools.KKMESy/flutter_test_listener.cUdaNv/listener.dart 56:22  main.<fn>
+  
+01:30 +0 -6: (tearDownAll)
+01:30 +0 -6: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / extensionless-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / http
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / renamed-file
+  ... and 2 more

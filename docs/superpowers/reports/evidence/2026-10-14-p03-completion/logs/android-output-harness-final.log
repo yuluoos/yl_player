@@ -1,0 +1,54 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                          
+integration_test/format_matrix_test.dart:328:11: Error: Method not found: 'debugPrintSynchronously'.
+          debugPrintSynchronously(
+          ^^^^^^^^^^^^^^^^^^^^^^^
+integration_test/format_matrix_test.dart:346:15: Error: Method not found: 'debugPrintSynchronously'.
+              debugPrintSynchronously('YL_FORMAT_CAPTURE_DIRECTORY=${directory.path}');
+              ^^^^^^^^^^^^^^^^^^^^^^^
+integration_test/format_matrix_test.dart:349:19: Error: Method not found: 'debugPrintSynchronously'.
+                  debugPrintSynchronously(
+                  ^^^^^^^^^^^^^^^^^^^^^^^
+integration_test/format_matrix_test.dart:361:11: Error: Method not found: 'debugPrintSynchronously'.
+          debugPrintSynchronously(
+          ^^^^^^^^^^^^^^^^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildDebug'.
+> Process 'command '/Users/yy2021_8689/flutter/bin/flutter'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (Powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 7s
+Running Gradle task 'assembleDebug'...                              8.1s
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart": Gradle task assembleDebug failed with exit code 1
+  package:flutter_tools/src/base/common.dart 34:3                    throwToolExit
+  package:flutter_tools/src/android/gradle.dart 595:7                AndroidGradleBuilder.buildGradleApp
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/android/gradle.dart 236:5                AndroidGradleBuilder.buildApk
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/android/android_device.dart 570:7        AndroidDevice.startApp
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/test/integration_test_device.dart 57:39  IntegrationTestTestDevice.start
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/test/flutter_platform.dart 680:51        FlutterPlatform._startTest.<fn>
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/base/async_guard.dart 108:24             asyncGuard.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+adb uninstall failed: ProcessException: Process exited abnormally with exit code 1:
+Failure [DELETE_FAILED_INTERNAL_ERROR]
+  Command: /opt/homebrew/share/android-commandlinetools/platform-tools/adb -s emulator-5554 uninstall dev.ylplayer.yl_player_example
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.AOXwp1

@@ -1,0 +1,45 @@
+* daemon not running; starting now at tcp:5037
+ADB server didn't ACK
+Full server startup log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//adb.501.log
+Server had pid: 45652
+--- adb starting (pid 45652) ---
+10-15 01:34:29.374 45652 1491026 I adb     : main.cpp:65 Android Debug Bridge version 1.0.41
+10-15 01:34:29.374 45652 1491026 I adb     : main.cpp:65 Version 37.0.1-15733141
+10-15 01:34:29.374 45652 1491026 I adb     : main.cpp:65 Installed as /opt/homebrew/bin/adb
+10-15 01:34:29.374 45652 1491026 I adb     : main.cpp:65 Running on Darwin 27.0.0 (arm64)
+10-15 01:34:29.374 45652 1491026 I adb     : main.cpp:65 
+10-15 01:34:29.391 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.391 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.391 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.392 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.392 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.393 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.393 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.394 45652 1491028 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:29.998 45652 1491026 F adb     : main.cpp:168 could not install *smartsocket* listener: Operation not permitted
+
+* failed to start daemon
+adb: cannot connect to daemon
+* daemon not running; starting now at tcp:5037
+ADB server didn't ACK
+Full server startup log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//adb.501.log
+Server had pid: 45656
+--- adb starting (pid 45656) ---
+10-15 01:34:30.155 45656 1491050 I adb     : main.cpp:65 Android Debug Bridge version 1.0.41
+10-15 01:34:30.155 45656 1491050 I adb     : main.cpp:65 Version 37.0.1-15733141
+10-15 01:34:30.155 45656 1491050 I adb     : main.cpp:65 Installed as /opt/homebrew/bin/adb
+10-15 01:34:30.155 45656 1491050 I adb     : main.cpp:65 Running on Darwin 27.0.0 (arm64)
+10-15 01:34:30.155 45656 1491050 I adb     : main.cpp:65 
+10-15 01:34:30.159 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.159 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.159 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.159 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.160 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.160 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.160 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.160 45656 1491052 E adb     : usb_osx.cpp:168 Unable to create an interface plug-in (e00002be)
+10-15 01:34:30.769 45656 1491050 F adb     : main.cpp:168 could not install *smartsocket* listener: Operation not permitted
+
+* failed to start daemon
+- waiting for device -
+error: cannot connect to daemon

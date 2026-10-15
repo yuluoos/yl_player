@@ -1,0 +1,7054 @@
+{
+  "schemaVersion": 1,
+  "platform": "android",
+  "fullAcceptance": false,
+  "productionSoftwareAdmission": "empty",
+  "scope": "actual composition markers and lifecycle; PCM measured in separate native run",
+  "publicBuildIdentity": "unrecorded in raw rows; these runs cannot satisfy strict combined output envelope",
+  "rollupNote": "Latest path observations span distinct runs; historical failures/missing rows remain in raw runs, not a single passing full run",
+  "counts": {
+    "latestObservedPaths": 73,
+    "requiredPixelLifecyclePassed": 59,
+    "requiredUnavailable": 6,
+    "diagnosticRows": 3,
+    "truncatedControls": 5
+  },
+  "runs": [
+    {
+      "log": "android-output-matrix-final1.log",
+      "sha256": "97da50c079ec6b051808ce5fabe74fd791a9e1be9fb3ef580e73d12272c0c63b",
+      "rows": [
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 532000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1479000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2414000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3370000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2485000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1699000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 534000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 629000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1338000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2300000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3268000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2489000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1722000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 473000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 472000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1459000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2394000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3353000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2510000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1723000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 484000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "wrong-known-file",
+          "platform": "android",
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 472000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1460000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2439000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3399000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2489000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1729000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 472000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "extensionless-file",
+          "platform": "android",
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 462000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1433000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2468000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3493000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2508000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1695000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 465000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "renamed-http",
+          "platform": "android",
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 432000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1391000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2343000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3290000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2454000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1724000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 497000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mov-hevc-aac",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 438000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1397000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2348000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3315000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2509000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1741000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 496000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mov-hevc-aac",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 475000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1458000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2414000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3353000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2486000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1744000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 475000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mov-hevc-aac",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 475000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1463000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2423000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3382000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2492000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1749000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 479000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-aac",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 449000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1414000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2364000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3330000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2497000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1744000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 488000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-aac",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 424000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1384000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2343000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3300000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2515000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1699000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 486000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-aac",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 487000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1486000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2386000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3362000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2449000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1768000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 477000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1292000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ts-avc-ac3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1292000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2385000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ts-avc-ac3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ts-avc-ac3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2385000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1612000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-avc-mp3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2385000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-avc-mp3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-avc-mp3",
+          "transport": "wrong-known-file",
+          "platform": "android",
+          "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2385000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2362000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792056902055824",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "seek-pixels",
+          "code": "test.assertion",
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        }
+      ]
+    },
+    {
+      "log": "android-output-matrix-final2.log",
+      "sha256": "92eeaea4cf18dd7f44e6dbcbd964c0f28ac574ec62233c1e37a67c844ab8bb4b",
+      "rows": [
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-eac3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 453000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 367000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-eac3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1292000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 412000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-eac3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 367000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-dts",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2367000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-dts",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2367000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1635000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-dts",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2367000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1612000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 385000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-flac",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 416000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1371000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2327000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3288000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2528000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1812000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 517000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-flac",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 519000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1458000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2417000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3378000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2514000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1823000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 440000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-flac",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 522000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1486000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2441000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3380000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2497000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1834000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 485000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "seek-pixels",
+          "code": "test.assertion",
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 446000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1429000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2391000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3348000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 466000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1421000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2422000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3320000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2523000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1688000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 474000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 462000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1425000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2389000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3352000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2559000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1750000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 530000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus-silk",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 439000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1454000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2395000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3352000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2518000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1628000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 528000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus-silk",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 602000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1282000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2449000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3415000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2537000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1734000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 518000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus-silk",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 579000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1501000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2506000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3479000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2540000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1845000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 536000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus-hybrid",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 433000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1415000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2385000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3478000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2590000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1747000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 506000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus-hybrid",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 648000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1355000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2318000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3277000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2553000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1761000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 469000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus-hybrid",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 481000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1434000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2399000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3348000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2558000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1701000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 457000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-vorbis",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 481000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1425000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2382000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3341000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2419000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1709000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 513000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-vorbis",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 549000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1472000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2305000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3495000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1817000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 568000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-vorbis",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 457000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1324000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2286000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3451000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2376000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1675000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 352000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-ac3-51",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1292000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 412000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-ac3-51",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 408000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3264000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 412000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057159831465",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-ac3-51",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 430000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1269000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2289000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3286000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2396000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1658000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 367000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        }
+      ]
+    },
+    {
+      "log": "android-output-matrix-final3.log",
+      "sha256": "b8b15f1a31507e2218da0984c5de14a5dff3705156b5616069f407d574cf7cb8",
+      "rows": [
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-opus",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 407000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1412000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2421000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3423000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2449000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1679000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 574000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-opus",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 423000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1430000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2437000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3437000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2352000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1758000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 585000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-opus",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 513000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1264000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2266000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3267000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2361000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1772000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 373000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-mpeg2-mp3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+          "supportRequirement": "diagnostic",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unsupported",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-mpeg2-mp3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+          "supportRequirement": "diagnostic",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unsupported",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "ps-mpeg2-mp3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+          "supportRequirement": "diagnostic",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unsupported",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-av1-opus",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unavailable",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-av1-opus",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unavailable",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-av1-opus",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unavailable",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-vorbis",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 577000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1331000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2335000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3341000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2536000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1778000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 569000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-vorbis",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 537000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1294000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2294000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3302000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2541000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1760000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 546000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-vorbis",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 549000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1301000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2308000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3312000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2550000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1794000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 538000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "webm-vp9-vorbis",
+          "transport": "wrong-known-file",
+          "platform": "android",
+          "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 563000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1315000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2314000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3317000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2567000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1778000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 407000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-hevc-main10-aac",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unavailable",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-hevc-main10-aac",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unavailable",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-hevc-main10-aac",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "decoder.unavailable",
+          "category": "decoder",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-aac-no-cues",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 464000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1472000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2479000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3480000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2480000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1748000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 463000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-aac-no-cues",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 429000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1436000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2438000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3439000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2520000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1735000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 504000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-aac-no-cues",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 482000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1487000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2252000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3255000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2461000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1718000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 472000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-truncated",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "container.unsupported",
+          "category": "container",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-truncated",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "container.unsupported",
+          "category": "container",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-truncated",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "container.unsupported",
+          "category": "container",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-truncated",
+          "transport": "extensionless-file",
+          "platform": "android",
+          "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "container.unsupported",
+          "category": "container",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057430119657",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-truncated",
+          "transport": "renamed-http",
+          "platform": "android",
+          "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+          "supportRequirement": "required",
+          "outcome": "failed",
+          "stage": "load",
+          "code": "container.unsupported",
+          "category": "container",
+          "scope": "command",
+          "engine": "unknown",
+          "decoder": "unknown",
+          "firstFrame": false,
+          "audioTrackSelected": false,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": false,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [],
+          "audioClockUs": null,
+          "seekProgress": false,
+          "completed": false,
+          "disposed": true
+        }
+      ]
+    },
+    {
+      "log": "android-output-harness-final2.log",
+      "sha256": "dfb163178d4d5cc29abaa195436c39bc405acf3efdac7cf885b8996ce7c65dd7",
+      "rows": [
+        {
+          "runId": "format-android-1792057904241458",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 586000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1321000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2318000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3369000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2434000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1682000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 442000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057904241458",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "http",
+          "platform": "android",
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 527000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1324000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2320000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3343000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2458000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1671000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 456000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057904241458",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 503000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1335000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2377000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3374000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2496000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1708000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 466000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792057904241458",
+          "buildSha256": "unrecorded",
+          "caseId": "mkv-avc-opus",
+          "transport": "file",
+          "platform": "android",
+          "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 563000
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1322000
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2322000
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3333000
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2559000
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1744000
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 553000
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        }
+      ]
+    },
+    {
+      "log": "android-public-output-delivery.log",
+      "sha256": "b2999f21f95ec3cf3e46524ae425a43353ca3ce23df95b639eefc62e9b86e713",
+      "rows": [
+        {
+          "runId": "format-android-1792061416774142",
+          "buildSha256": "unrecorded",
+          "caseId": "mp4-avc-aac",
+          "transport": "file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "media3",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 26000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1056000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2059000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3067000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2005000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1258000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 0,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792061416774142",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 190000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1157000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2163000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3140000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2113000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1385000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 137000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792061416774142",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "http",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 166000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1078000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2093000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3161000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2160000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1397000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 151000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792061416774142",
+          "buildSha256": "unrecorded",
+          "caseId": "flv-avc-mp3",
+          "transport": "renamed-file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 192000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1097000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2160000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3090000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2135000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1371000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 160000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        },
+        {
+          "runId": "format-android-1792061416774142",
+          "buildSha256": "unrecorded",
+          "caseId": "avi-avc-mp3",
+          "transport": "file",
+          "platform": "android",
+          "playbackRate": 1.0,
+          "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+          "supportRequirement": "required",
+          "outcome": "passed",
+          "stage": "end",
+          "code": null,
+          "category": null,
+          "scope": null,
+          "engine": "managedFallback",
+          "decoder": "hardware",
+          "firstFrame": true,
+          "audioTrackSelected": true,
+          "audioOutputVerified": false,
+          "pixelMarkersVerified": true,
+          "pcmMarkersVerified": false,
+          "pixelVerificationMethod": "player-composition",
+          "pcmVerificationMethod": "not-run",
+          "pixelEvidence": [
+            {
+              "phase": "play",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 220000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1149000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2170000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "play",
+              "marker": 3,
+              "rgb": [
+                255,
+                254,
+                255
+              ],
+              "positionUs": 3192000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-2000",
+              "marker": 2,
+              "rgb": [
+                1,
+                0,
+                255
+              ],
+              "positionUs": 2049000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-1250",
+              "marker": 1,
+              "rgb": [
+                0,
+                254,
+                1
+              ],
+              "positionUs": 1372000,
+              "comparison": "decoded-rgb-tolerance-40"
+            },
+            {
+              "phase": "seek-0",
+              "marker": 0,
+              "rgb": [
+                255,
+                0,
+                0
+              ],
+              "positionUs": 151000,
+              "comparison": "decoded-rgb-tolerance-40"
+            }
+          ],
+          "audioClockUs": null,
+          "seekProgress": true,
+          "completed": true,
+          "disposed": true
+        }
+      ]
+    }
+  ],
+  "finalRouteRegression": "Final intent-gate build: automatic/live managed FLV 2/2; FLV VOD all3, AVI file and MP4 file actual7markers/seek/end/dispose 5/5 at1x. No broad rerun asserted."
+}

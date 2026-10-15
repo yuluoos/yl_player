@@ -1,0 +1,516 @@
+Audio codec regression: 31 checks, 0 failures
+[libopus @ 0x79ed45c700] Error parsing Opus packet header.
+[libopus @ 0x74d8c1c700] Error parsing Opus packet header.
+[libopus @ 0x7abac24700] Error parsing Opus packet header.
+[libopus @ 0x7596c1c700] Error parsing Opus packet header.
+[libopus @ 0x7cb1458700] Error parsing Opus packet header.
+[libopus @ 0x7a08818700] Error parsing Opus packet header.
+[libopus @ 0x7796810700] Error parsing Opus packet header.
+[libopus @ 0x7a46c1c700] Error parsing Opus packet header.
+[libopus @ 0x76f8c24700] Error parsing Opus packet header.
+[libopus @ 0x772f048700] Error parsing Opus packet header.
+[libopus @ 0x7cbcc1c700] Error parsing Opus packet header.
+[libopus @ 0x7989068700] Error parsing Opus packet header.
+[libopus @ 0x7b07068700] Error parsing Opus packet header.
+[libopus @ 0x7c29048700] Error parsing Opus packet header.
+[libopus @ 0x762ec1c700] Error parsing Opus packet header.
+[libopus @ 0x75e1068700] Error parsing Opus packet header.
+[libopus @ 0x76b0c1c700] Error parsing Opus packet header.
+[libopus @ 0x7aeac24700] Error parsing Opus packet header.
+[libopus @ 0x76aec24700] Error parsing Opus packet header.
+[libopus @ 0x7ab8c1c700] Error parsing Opus packet header.
+[libopus @ 0x7659068700] Error parsing Opus packet header.
+[libopus @ 0x7a8ac1c700] Error parsing Opus packet header.
+[libopus @ 0x7584c1c700] Error parsing Opus packet header.
+[libopus @ 0x7634c24700] Error parsing Opus packet header.
+[libopus @ 0x7659068700] Error parsing Opus packet header.
+[libopus @ 0x77aac24700] Error parsing Opus packet header.
+[libopus @ 0x7b39068700] Error parsing Opus packet header.
+[libopus @ 0x77e9068700] Error parsing Opus packet header.
+[libopus @ 0x799b068700] Error parsing Opus packet header.
+[libopus @ 0x7cc6c24700] Error parsing Opus packet header.
+[libopus @ 0x7c19068700] Error parsing Opus packet header.
+[libopus @ 0x77a0c24700] Error parsing Opus packet header.
+YL_OPUS_FIXTURES={"files": {"10-1.mkv": {"bytes": 57104, "sha256": "c928a7cf181325afae0ea9378a8cb3c2beec7621131cd77c49da1a1a8697c27d"}, "10-1.pcm": {"bytes": 768000, "sha256": "f9c7417dcc77bf97e32840dc023ddb092ab3ae1f722e1c488f22ad8082e801bd"}, "10-2.mkv": {"bytes": 70184, "sha256": "5e29b23d6ee71f80c5ffdc8eae952442e01d57c316bf1229fda07395070da2db"}, "10-2.pcm": {"bytes": 1536000, "sha256": "414abdf181915755482c475919acfa5a0fcb7712a4f34c41daf834c36377202e"}, "120-1.mkv": {"bytes": 33308, "sha256": "c1297c18dce4afc5319da0fae5107239ce67d9a5b184a0ebfb13d3e808cd9f3f"}, "120-1.pcm": {"bytes": 768000, "sha256": "dba4f08f99e5941f45ab2262dd1b35d00622f6ce34016401152fa278708be7e2"}, "120-2.mkv": {"bytes": 49601, "sha256": "ed2d05f4a3b55e3784f9625f573286cdbe62f8db8bb82a7f815815bc7ebed13f"}, "120-2.pcm": {"bytes": 1536000, "sha256": "70217b146f02b36f6efb828d9b074420bee5f575635941f464fe2be52c432d1c"}, "2.5-1.mkv": {"bytes": 52447, "sha256": "118e5365af6f7b75ff8ea4785e02a02325fd99af22769ad1278d322106fc03b6"}, "2.5-1.pcm": {"bytes": 768000, "sha256": "c042c0e5d14ff79c94b873728e33434e06f45d7f06ee4ab47b36fd5c8fa28c8f"}, "2.5-2.mkv": {"bytes": 92030, "sha256": "6004814829507778b5b4fcda344ede3e0188a08b32dc4287cee7c034c9f4cb23"}, "2.5-2.pcm": {"bytes": 1536000, "sha256": "41bc96f6182e4b4dd7e47d9059e4d0cee0e12de715aa21b9b477c0ebc3dedc07"}, "20-1.mkv": {"bytes": 58316, "sha256": "bf958d6ca22533b1f65de11d41f297fe1444e1128e4f21f8f88e1ec1249f35cd"}, "20-1.pcm": {"bytes": 768000, "sha256": "64f9480ff7e88aa61fadce06f838bc4f4f22a452867a88e009f037b14468edb7"}, "20-2.mkv": {"bytes": 62911, "sha256": "b74470a1d65c4371b725ab201e8bfc25f9de5090d77520351de10604d44b23dd"}, "20-2.pcm": {"bytes": 1536000, "sha256": "142cfb40a90fd18d571fbde4a785165d0d913d5a3c1186f5d347ae1a5bb7121f"}, "40-1.mkv": {"bytes": 33492, "sha256": "7bd1299dad99fa23d17ae09d7dcf5276c8f3ee14f10fee79a8c9c707b2507a57"}, "40-1.pcm": {"bytes": 768000, "sha256": "dba4f08f99e5941f45ab2262dd1b35d00622f6ce34016401152fa278708be7e2"}, "40-2.mkv": {"bytes": 49582, "sha256": "2bcee01bdf856716eeb33ce4559e1df71c5bd381a2260e621dbcf0c8131d4a48"}, "40-2.pcm": {"bytes": 1536000, "sha256": "4e8660c8ac8c18b111e76ad1b0eec29976bd554e560e42f17522ae2c52083fbd"}, "5-1.mkv": {"bytes": 58066, "sha256": "6cfa3b39ed845c9a5cd7febba3b306c0c99cc7c1984d1fe0b85aa05083b36477"}, "5-1.pcm": {"bytes": 768000, "sha256": "c19938e6a3a841eb3ea8e6e534ce23cb6d0586e3e4835de1aaec7e8e1f60b5de"}, "5-2.mkv": {"bytes": 78297, "sha256": "1622c18d63b7c7cc3f5f792ca4933af90662cf62cf183e6345b1b9d30557bd73"}, "5-2.pcm": {"bytes": 1536000, "sha256": "4ac35fafade07993c531894bba1f69e3fa8142fba1bebab7ec7cfdec242a5c56"}, "60-1.mkv": {"bytes": 33128, "sha256": "1ec48e1201cb8dfa32825f16fff45cbbf5959bad4bfbf2f35ea712e17b8af0d2"}, "60-1.pcm": {"bytes": 768000, "sha256": "dba4f08f99e5941f45ab2262dd1b35d00622f6ce34016401152fa278708be7e2"}, "60-2.mkv": {"bytes": 49138, "sha256": "3e591df71b95b406935c132d6ef1c8994abb637ac1d5d18808869b176335de33"}, "60-2.pcm": {"bytes": 1536000, "sha256": "ce584438b623d20220b37b244e4e372e579c27e1093638fae048d7730c38296a"}, "gain-1.mkv": {"bytes": 58316, "sha256": "8475b06f0c55d66efdf93c7608d094d4f1943edbf99fd6b17ec0c92ce0584ea2"}, "gain-1.pcm": {"bytes": 768000, "sha256": "1f1e228e1ec42e081fb0379cb3e386c0ec97eeeeda32ef69e85782f3c1c7a704"}, "gain-2.mkv": {"bytes": 62911, "sha256": "50cdd6007bcdb2f484a5d5a435dfc22b53d5c7e43b1ae9f180d92870521b7cd5"}, "gain-2.pcm": {"bytes": 1536000, "sha256": "3f7694f793ec2806569a72d11b124917c643e4445d3a2364be71c3c89b2d55cd"}, "hybrid-1.mkv": {"bytes": 15684, "sha256": "6ad6b72089f471947ec8959fdf9d6d3aa1d8a63747d80e33a4ff8666ce9b3b32"}, "hybrid-1.pcm": {"bytes": 768000, "sha256": "d2e5f8dc57e6fed418485cc942615a804b33d2b1d0c96bcb0ad6952bf71cbeb9"}, "hybrid-2.mkv": {"bytes": 15134, "sha256": "c33153868e234519ea6d5b5e73fed1a47a8c23e2707e4506d5249f6a604e4dda"}, "hybrid-2.pcm": {"bytes": 1536000, "sha256": "716c67ba835fb58f432bc33e4be5e325a4519e0f0333852af7b7f029aa5ddfd2"}, "hybrid10-1.mkv": {"bytes": 16609, "sha256": "d9bf7c5788c363f0893743b060ce048c79d3476c5cac7cd2ff7608d818ba9442"}, "hybrid10-1.pcm": {"bytes": 768000, "sha256": "8aa24f1239356c60487d29a71836d2144023759e36783e9c1093559d0b22bbfd"}, "hybrid10-2.mkv": {"bytes": 17518, "sha256": "6cdd9d2b37b8093b905eeef022c79527a1529cf3e3b0866063f7b414658783b0"}, "hybrid10-2.pcm": {"bytes": 1536000, "sha256": "0ab8ea3a8210237e790a3045b5a89af4a5105aefee62f07e5e3c7d3b13d621b9"}, "medium-1.mkv": {"bytes": 9215, "sha256": "dcfc592e3a509bd9e53419a4ad296b6476b82834defedb3622322677e4059ef1"}, "medium-1.pcm": {"bytes": 768000, "sha256": "aa57581ca898c97ada45c1012fdab37408052e15871b50d8daed547e3ca68488"}, "medium-2.mkv": {"bytes": 9179, "sha256": "a8e0103c11fac3031c9fa31c2ef71962ce804fde858d855326d9a4cbada9b502"}, "medium-2.pcm": {"bytes": 1536000, "sha256": "ff9b5d1abdd88cc1052e57e3b40e94897bf4f8b39d06e798c5f211e5d189eb6e"}, "narrow-1.mkv": {"bytes": 8248, "sha256": "fbbf2fbe202c3d075778be450196062b3c664ecb8b762c1b6a9615e54ebceaa9"}, "narrow-1.pcm": {"bytes": 768000, "sha256": "5f23dfc26004c4d2ae1de208115783774ea5cc5c17e50d7e04e231cb89cc367b"}, "narrow-2.mkv": {"bytes": 7838, "sha256": "aa03a66591d3c6dde8c398939240c61d54d9ba24bdf50e3d6d8127ac2bdd7b57"}, "narrow-2.pcm": {"bytes": 1536000, "sha256": "67578048505733282b28f3c44b6bcb144533db3e527ecc2daade2cddf70aeb12"}, "silk10-1.mkv": {"bytes": 11366, "sha256": "71abdb1b3ff5a39dc9271953005d7165bf03064dc99e5631d601e3c2105ba2f7"}, "silk10-1.pcm": {"bytes": 768000, "sha256": "094ed089e86e73cf1ca1462c528f7a403e820abdd40a883f8e00829bff712076"}, "silk10-2.mkv": {"bytes": 11355, "sha256": "8a360cb4e1a84894ba1bf77446ce99b84deec5961aaa160fd7af5c72f35c037f"}, "silk10-2.pcm": {"bytes": 1536000, "sha256": "70012fa721ad3abb9105880110eb5800831e37a75720327c23a000a3f0f59f1a"}, "silk20-1.mkv": {"bytes": 10249, "sha256": "4659ee6a18a5c9b84338c0022d094b826e874ddc39d7a7ad2246482633618484"}, "silk20-1.pcm": {"bytes": 768000, "sha256": "b18c87fdb3f5d8e1791601300bb4dcd075870554b4583f483480dcd7d7544606"}, "silk20-2.mkv": {"bytes": 10250, "sha256": "ae458fcba865760fb5816ad475243bb17783db88876e334b210a57f25d5b0529"}, "silk20-2.pcm": {"bytes": 1536000, "sha256": "2815315d23954b13dbdb8cd30c2ad3828220630ca43ce913e7c903b11e6c908c"}, "silk40-1.mkv": {"bytes": 9703, "sha256": "3d26e3664aab786a2b6e08abcc4c0bfdb0720a89bb65e936d3920b30dbb0e7df"}, "silk40-1.pcm": {"bytes": 768000, "sha256": "70a5648e29ea1d7298a13ae62f22470334db683155f0acbd9714420ddc3fd154"}, "silk40-2.mkv": {"bytes": 9664, "sha256": "4d222464930bf6bc70039be957dcb29aff75e768b8cebd23c51a367729820f9d"}, "silk40-2.pcm": {"bytes": 1536000, "sha256": "b21265d462e0e15596ed73980952aff5e05d4c8b02ba0cb6bc922939a02e55c5"}, "speech-1.mkv": {"bytes": 9505, "sha256": "d0f2b999d20b7829131b723f14f02f9321572f301c09c0e6a0eca22d2d5e71f5"}, "speech-1.pcm": {"bytes": 768000, "sha256": "88e3a506c359721689d307816534b0cc3a4a8e3b17a47241d7ae0969e49a7584"}, "speech-2.mkv": {"bytes": 9482, "sha256": "c6f6e5ff8ce6ce1731d94041141652f3a6213534793bf619b338f1cd6960ed7c"}, "speech-2.pcm": {"bytes": 1536000, "sha256": "540fe5a8793ea799ed195086493ff136ac184213d121a6bc852378102bd0bf5e"}}, "generator": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers"}
+Opus source mode=2.5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.10 dB
+Opus 2ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.13 dB
+Opus bridge: 15306 checks, 0 failures
+Opus source mode=5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus 2ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus bridge: 8906 checks, 0 failures
+Opus source mode=10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus bridge: 5706 checks, 0 failures
+Opus source mode=20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.17 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.15 dB
+Opus bridge: 3306 checks, 0 failures
+Opus source mode=60
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.17 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.16 dB
+Opus bridge: 3034 checks, 0 failures
+Opus source mode=120
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.17 dB
+Opus 2ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.15 dB
+Opus bridge: 2772 checks, 0 failures
+Opus source mode=speech
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 3036 checks, 0 failures
+Opus source mode=silk10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.79 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.81 dB
+Opus bridge: 5708 checks, 0 failures
+Opus source mode=silk20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.81 dB
+Opus bridge: 4110 checks, 0 failures
+Opus source mode=silk40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.83 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.82 dB
+Opus bridge: 3308 checks, 0 failures
+Opus source mode=narrow
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=322.16 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.90 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=medium
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.83 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=hybrid
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.19 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.50 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=hybrid10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=90.26 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=87.18 dB
+Opus bridge: 5708 checks, 0 failures
+Opus source mode=gain
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.12 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.13 dB
+Opus bridge: 4106 checks, 0 failures
+Opus artifact mode=2.5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.10 dB
+Opus 2ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.13 dB
+Opus bridge: 15306 checks, 0 failures
+Opus artifact mode=5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus 2ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus bridge: 8906 checks, 0 failures
+Opus artifact mode=10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus bridge: 5706 checks, 0 failures
+Opus artifact mode=20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.17 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.15 dB
+Opus bridge: 3306 checks, 0 failures
+Opus artifact mode=60
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.17 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.16 dB
+Opus bridge: 3034 checks, 0 failures
+Opus artifact mode=120
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.17 dB
+Opus 2ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.15 dB
+Opus bridge: 2772 checks, 0 failures
+Opus artifact mode=speech
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 3036 checks, 0 failures
+Opus artifact mode=silk10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.79 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.81 dB
+Opus bridge: 5708 checks, 0 failures
+Opus artifact mode=silk20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.81 dB
+Opus bridge: 4110 checks, 0 failures
+Opus artifact mode=silk40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.83 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.82 dB
+Opus bridge: 3308 checks, 0 failures
+Opus artifact mode=narrow
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=322.16 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.90 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=medium
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.83 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=hybrid
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.19 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.50 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=hybrid10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=90.26 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=87.18 dB
+Opus bridge: 5708 checks, 0 failures
+Opus artifact mode=gain
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.12 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.13 dB
+Opus bridge: 4106 checks, 0 failures
+pass0 startPTS=-7000 streamStart=0 skip=312
+pass1 startPTS=-7000 streamStart=0 skip=312
+Opus demux: 844 checks, 0 failures
+YL_VORBIS_FIXTURES={"44100-1-delay.mkv": {"bytes": 13434, "sha256": "dafae0d4a1b0b1331889ca75ac0dda4ea9232a37b39fbd4b6cf87f1bbc08f904"}, "44100-1.mkv": {"bytes": 13539, "sha256": "2344ee167e8a06a37143abc653a20a3631f89b44392e05dffbfbd0817b0892e9"}, "44100-1.ogg": {"bytes": 12255, "sha256": "912d7b4c547c6923d00d989fdb1d55360561338c169dc3059ef7c05939e57aba"}, "44100-2-delay.mkv": {"bytes": 20655, "sha256": "3c156934f0fd1619580ae2f5ca22d40558eb677bac4b647a884867744a766a0e"}, "44100-2.mkv": {"bytes": 20759, "sha256": "e9bf29b631a3ca2d643589561767270c906fa54e85b5b85dee810c9c67c3189b"}, "44100-2.ogg": {"bytes": 19533, "sha256": "c972cb28cc1e051a1d777c95e2b7504b02d12e2e9708e4cfbffc4214732b5530"}, "48000-1-delay.mkv": {"bytes": 14004, "sha256": "650a6d6d26a27383cc9eef262964dbe8acb1e3656389698068c0d1e148c63742"}, "48000-1.mkv": {"bytes": 14109, "sha256": "88673bc49750d0011315795486f8f68a7b041d3ba2b97c68ae395be9edb7f780"}, "48000-1.ogg": {"bytes": 12782, "sha256": "b1752111bd78a0c59b30917c715899a98ac71d4c83878b7d14180c839f58c343"}, "48000-2-delay.mkv": {"bytes": 22110, "sha256": "294ea5478fdafd95760739efefb51317ab436f2571853a8ea4a619b6df8a6aea"}, "48000-2.mkv": {"bytes": 22214, "sha256": "d5660e1a9096c14ae91f2df69a1c65ae588cb498bdc80afac341e164d76ac366"}, "48000-2.ogg": {"bytes": 20915, "sha256": "4611406b5b10f6f32e777221579ba36bfa834e6184d875057379e4649f55dbc9"}}
+Vorbis coupling: 144 vectors, 0 failures
+Vorbis source rate=44100 channels=1
+[vorbis @ 0x7988c5c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7988c5c700] Setup header corrupt.
+[vorbis @ 0x7988c5c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7988c5c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7988c5c700] Setup header corrupt.
+[vorbis @ 0x7988c5c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7988c5c000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 1ch pass0: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis 44100Hz 1ch pass1: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3121 checks, 0 failures
+[vorbis @ 0x761cc64700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x761cc64700] Setup header corrupt.
+[vorbis @ 0x761cc64380] Could not update timestamps for discarded samples.
+[vorbis @ 0x761cc64700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x761cc64700] Setup header corrupt.
+[vorbis @ 0x761cc64380] Could not update timestamps for discarded samples.
+[vorbis @ 0x761cc64000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 1ch pass0: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis 44100Hz 1ch pass1: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=-23000 matched=3
+Vorbis bridge: 3125 checks, 0 failures
+Vorbis source rate=44100 channels=2
+[vorbis @ 0x798f028700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x798f028700] Setup header corrupt.
+[vorbis @ 0x798f028380] Could not update timestamps for discarded samples.
+[vorbis @ 0x798f028700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x798f028700] Setup header corrupt.
+[vorbis @ 0x798f028380] Could not update timestamps for discarded samples.
+[vorbis @ 0x798f028000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 2ch pass0: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis 44100Hz 2ch pass1: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3121 checks, 0 failures
+[vorbis @ 0x792ac60700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x792ac60700] Setup header corrupt.
+[vorbis @ 0x792ac60380] Could not update timestamps for discarded samples.
+[vorbis @ 0x792ac60700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x792ac60700] Setup header corrupt.
+[vorbis @ 0x792ac60380] Could not update timestamps for discarded samples.
+[vorbis @ 0x792ac60000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 2ch pass0: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis 44100Hz 2ch pass1: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=-23000 matched=3
+Vorbis bridge: 3125 checks, 0 failures
+Vorbis source rate=48000 channels=1
+[vorbis @ 0x7c02c68700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7c02c68700] Setup header corrupt.
+[vorbis @ 0x7c02c68380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7c02c68700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7c02c68700] Setup header corrupt.
+[vorbis @ 0x7c02c68380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7c02c68000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 1ch pass0: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis 48000Hz 1ch pass1: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3378 checks, 0 failures
+[vorbis @ 0x75cf030700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x75cf030700] Setup header corrupt.
+[vorbis @ 0x75cf030380] Could not update timestamps for discarded samples.
+[vorbis @ 0x75cf030700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x75cf030700] Setup header corrupt.
+[vorbis @ 0x75cf030380] Could not update timestamps for discarded samples.
+[vorbis @ 0x75cf030000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 1ch pass0: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis 48000Hz 1ch pass1: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3382 checks, 0 failures
+Vorbis source rate=48000 channels=2
+[vorbis @ 0x75db024700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x75db024700] Setup header corrupt.
+[vorbis @ 0x75db024380] Could not update timestamps for discarded samples.
+[vorbis @ 0x75db024700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x75db024700] Setup header corrupt.
+[vorbis @ 0x75db024380] Could not update timestamps for discarded samples.
+[vorbis @ 0x75db024000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3378 checks, 0 failures
+[vorbis @ 0x74f0c5c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x74f0c5c700] Setup header corrupt.
+[vorbis @ 0x74f0c5c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x74f0c5c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x74f0c5c700] Setup header corrupt.
+[vorbis @ 0x74f0c5c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x74f0c5c000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3382 checks, 0 failures
+[vorbis @ 0x781b028a80] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x781b028a80]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x781b028a80] Setup header corrupt.
+[vorbis @ 0x781b028700] Could not update timestamps for discarded samples.
+[vorbis @ 0x781b028a80] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x781b028a80]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x781b028a80] Setup header corrupt.
+[vorbis @ 0x781b028700] Could not update timestamps for discarded samples.
+[vp9 @ 0x781b028000] Codec (vp9) not on whitelist 'dca,vorbis'
+[matroska,webm @ 0x781b00c000] Failed to open codec in avformat_find_stream_info
+[vp9 @ 0x781b028000] Codec (vp9) not on whitelist 'dca,vorbis'
+[vorbis @ 0x781b028380] Could not update timestamps for discarded samples.
+[vp9 @ 0x781b028000] Codec (vp9) not on whitelist 'dca,vorbis'
+[matroska,webm @ 0x781b00c000] Failed to open codec in avformat_find_stream_info
+[vp9 @ 0x781b028000] Codec (vp9) not on whitelist 'dca,vorbis'
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.38 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.38 dB
+Vorbis seek target=2000000 first=1003000 matched=3
+Vorbis seek target=1250000 first=1003000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3455 checks, 0 failures
+[vorbis @ 0x7964c64a80] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x7964c64a80]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x7964c64a80] Setup header corrupt.
+[vorbis @ 0x7964c64700] Could not update timestamps for discarded samples.
+[vorbis @ 0x7964c64a80] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x7964c64a80]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x7964c64a80] Setup header corrupt.
+[vorbis @ 0x7964c64700] Could not update timestamps for discarded samples.
+[vorbis @ 0x7964c64380] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.60 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.60 dB
+Vorbis seek target=2000000 first=1003000 matched=3
+Vorbis seek target=1250000 first=1003000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3455 checks, 0 failures
+Vorbis artifact rate=44100 channels=1
+[vorbis @ 0x7654c4c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7654c4c700] Setup header corrupt.
+[vorbis @ 0x7654c4c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7654c4c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7654c4c700] Setup header corrupt.
+[vorbis @ 0x7654c4c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7654c4c000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 1ch pass0: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis 44100Hz 1ch pass1: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3111 checks, 0 failures
+[vorbis @ 0x78a7040700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x78a7040700] Setup header corrupt.
+[vorbis @ 0x78a7040380] Could not update timestamps for discarded samples.
+[vorbis @ 0x78a7040700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x78a7040700] Setup header corrupt.
+[vorbis @ 0x78a7040380] Could not update timestamps for discarded samples.
+[vorbis @ 0x78a7040000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 1ch pass0: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis 44100Hz 1ch pass1: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=-23000 matched=3
+Vorbis bridge: 3115 checks, 0 failures
+Vorbis artifact rate=44100 channels=2
+[vorbis @ 0x7b3b048380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7b3b048380] Setup header corrupt.
+[vorbis @ 0x7b3b048000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7b3b048380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7b3b048380] Setup header corrupt.
+[vorbis @ 0x7b3b048000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7b3b048000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 2ch pass0: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis 44100Hz 2ch pass1: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3111 checks, 0 failures
+[vorbis @ 0x77e3064700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x77e3064700] Setup header corrupt.
+[vorbis @ 0x77e3064380] Could not update timestamps for discarded samples.
+[vorbis @ 0x77e3064700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x77e3064700] Setup header corrupt.
+[vorbis @ 0x77e3064380] Could not update timestamps for discarded samples.
+[vorbis @ 0x77e3064000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 2ch pass0: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis 44100Hz 2ch pass1: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=-23000 matched=3
+Vorbis bridge: 3115 checks, 0 failures
+Vorbis artifact rate=48000 channels=1
+[vorbis @ 0x7883068380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7883068380] Setup header corrupt.
+[vorbis @ 0x7883068000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7883068380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7883068380] Setup header corrupt.
+[vorbis @ 0x7883068000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7883068000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 1ch pass0: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis 48000Hz 1ch pass1: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3368 checks, 0 failures
+[vorbis @ 0x7cdcc48700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7cdcc48700] Setup header corrupt.
+[vorbis @ 0x7cdcc48380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7cdcc48700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7cdcc48700] Setup header corrupt.
+[vorbis @ 0x7cdcc48380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7cdcc48000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 1ch pass0: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis 48000Hz 1ch pass1: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3372 checks, 0 failures
+Vorbis artifact rate=48000 channels=2
+[vorbis @ 0x7c67048380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7c67048380] Setup header corrupt.
+[vorbis @ 0x7c67048000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7c67048380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7c67048380] Setup header corrupt.
+[vorbis @ 0x7c67048000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7c67048000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3368 checks, 0 failures
+[vorbis @ 0x7bc1040700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7bc1040700] Setup header corrupt.
+[vorbis @ 0x7bc1040380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7bc1040700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7bc1040700] Setup header corrupt.
+[vorbis @ 0x7bc1040380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7bc1040000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3372 checks, 0 failures
+[vorbis @ 0x7ba104c380] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x7ba104c380]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x7ba104c380] Setup header corrupt.
+[vorbis @ 0x7ba104c000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7ba104c380] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x7ba104c380]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x7ba104c380] Setup header corrupt.
+[vorbis @ 0x7ba104c000] Could not update timestamps for discarded samples.
+[vp9 @ 0x7ba104c000] Codec (vp9) not on whitelist 'dca,vorbis'
+[matroska,webm @ 0x7ba0c7c000] Failed to open codec in avformat_find_stream_info
+[vp9 @ 0x7ba104c000] Codec (vp9) not on whitelist 'dca,vorbis'
+[vorbis @ 0x7ba104c380] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.38 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.38 dB
+Vorbis seek target=2000000 first=1003000 matched=3
+Vorbis seek target=1250000 first=1003000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3445 checks, 0 failures
+[vorbis @ 0x77e9050380] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x77e9050380]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x77e9050380] Setup header corrupt.
+[vorbis @ 0x77e9050000] Could not update timestamps for discarded samples.
+[vorbis @ 0x77e9050380] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x77e9050380]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x77e9050380] Setup header corrupt.
+[vorbis @ 0x77e9050000] Could not update timestamps for discarded samples.
+[vorbis @ 0x77e9050380] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.60 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.60 dB
+Vorbis seek target=2000000 first=1003000 matched=3
+Vorbis seek target=1250000 first=1003000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 3445 checks, 0 failures

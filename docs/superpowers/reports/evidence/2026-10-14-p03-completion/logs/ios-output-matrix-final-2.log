@@ -1,0 +1,397 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Xcode build...                                          
+Xcode build done.                                           24.2s
+00:00 +0: ps-avc-mp3 / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"file","platform":"ios","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  ps-avc-mp3 / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: ps-avc-mp3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / file
+  
+00:01 +0 -1: ps-avc-mp3 / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"http","platform":"ios","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/http failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  ps-avc-mp3 / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -2: ps-avc-mp3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / http
+  
+00:01 +0 -2: ps-avc-mp3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"renamed-file","platform":"ios","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/renamed-file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  ps-avc-mp3 / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -3: ps-avc-mp3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / renamed-file
+  
+00:01 +0 -3: ps-avc-mp3 / wrong-known-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"wrong-known-file","platform":"ios","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/wrong-known-file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  ps-avc-mp3 / wrong-known-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -4: ps-avc-mp3 / wrong-known-file [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / wrong-known-file
+  
+00:01 +0 -4: avi-avc-mp3 / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"avi-avc-mp3","transport":"file","platform":"ios","mediaHash":"8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+avi-avc-mp3/file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  avi-avc-mp3 / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -5: avi-avc-mp3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: avi-avc-mp3 / file
+  
+00:01 +0 -5: avi-avc-mp3 / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"avi-avc-mp3","transport":"http","platform":"ios","mediaHash":"8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+avi-avc-mp3/http failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  avi-avc-mp3 / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -6: avi-avc-mp3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: avi-avc-mp3 / http
+  
+00:01 +0 -6: avi-avc-mp3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"avi-avc-mp3","transport":"renamed-file","platform":"ios","mediaHash":"8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+avi-avc-mp3/renamed-file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  avi-avc-mp3 / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -7: avi-avc-mp3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: avi-avc-mp3 / renamed-file
+  
+00:01 +0 -7: mkv-av1-opus / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-av1-opus","transport":"file","platform":"ios","mediaHash":"60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-av1-opus/file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  mkv-av1-opus / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -8: mkv-av1-opus / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-av1-opus / file
+  
+00:01 +0 -8: mkv-av1-opus / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-av1-opus","transport":"http","platform":"ios","mediaHash":"60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-av1-opus/http failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 433
+The test description was:
+  mkv-av1-opus / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -9: mkv-av1-opus / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-av1-opus / http
+  
+00:01 +0 -9: mkv-av1-opus / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-av1-opus","transport":"renamed-file","platform":"ios","mediaHash":"60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-av1-opus/renamed-file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:433:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+00:02 +0 -10: mkv-av1-opus / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-av1-opus / renamed-file
+  
+00:02 +0 -10: mkv-avc-eac3 / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-eac3","transport":"file","platform":"ios","mediaHash":"e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -11: mkv-avc-eac3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-eac3 / file
+  
+00:02 +0 -11: mkv-avc-eac3 / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-eac3","transport":"http","platform":"ios","mediaHash":"e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -12: mkv-avc-eac3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-eac3 / http
+  
+00:02 +0 -12: mkv-avc-eac3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-eac3","transport":"renamed-file","platform":"ios","mediaHash":"e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -13: mkv-avc-eac3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-eac3 / renamed-file
+  
+00:02 +0 -13: mkv-avc-dts / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-dts","transport":"file","platform":"ios","mediaHash":"8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -14: mkv-avc-dts / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-dts / file
+  
+00:02 +0 -14: mkv-avc-dts / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-dts","transport":"http","platform":"ios","mediaHash":"8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -15: mkv-avc-dts / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-dts / http
+  
+00:02 +0 -15: mkv-avc-dts / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-dts","transport":"renamed-file","platform":"ios","mediaHash":"8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -16: mkv-avc-dts / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-dts / renamed-file
+  
+00:02 +0 -16: mkv-avc-flac / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-flac","transport":"file","platform":"ios","mediaHash":"251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -17: mkv-avc-flac / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-flac / file
+  
+00:02 +0 -17: mkv-avc-flac / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-flac","transport":"http","platform":"ios","mediaHash":"251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -18: mkv-avc-flac / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-flac / http
+  
+00:02 +0 -18: mkv-avc-flac / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-flac","transport":"renamed-file","platform":"ios","mediaHash":"251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -19: mkv-avc-flac / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-flac / renamed-file
+  
+00:02 +0 -19: mkv-avc-opus / file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-opus","transport":"file","platform":"ios","mediaHash":"918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -20: mkv-avc-opus / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus / file
+  
+00:02 +0 -20: mkv-avc-opus / http
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-opus","transport":"http","platform":"ios","mediaHash":"918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -21: mkv-avc-opus / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus / http
+  
+00:02 +0 -21: mkv-avc-opus / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060634282437","buildSha256":"unrecorded","caseId":"mkv-avc-opus","transport":"renamed-file","platform":"ios","mediaHash":"918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:02 +0 -22: mkv-avc-opus / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus / renamed-file
+  
+00:02 +0 -22: (tearDownAll)
+00:03 +0 -22: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: avi-avc-mp3 / file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: avi-avc-mp3 / http
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: avi-avc-mp3 / renamed-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-av1-opus / file
+  ... and 18 more

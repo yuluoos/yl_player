@@ -1,0 +1,45 @@
+Temporary display assertion 17112 bound to owned command 17111
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+P03 owned-app foreground: 1 _LSOpenURLsWithCompletionHandler() failed for the application /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/macos/Build/Products/Debug/yl_player_example.app with error -600.
+P03 owned-app activate: 3 captureAllowed=true ownedApps=1
+ownedWindows=0 areas=[]
+00:00 +0: unavailable AV1 hardware produces the public nonretryable error
+P03 owned-app foreground: 0 
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'decoder.unavailable'
+  Actual: 'policy.opus_unsupported'
+   Which: is different.
+          Expected: decoder.un ...
+            Actual: policy.opu ...
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart:55:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart line 55
+The test description was:
+  unavailable AV1 hardware produces the public nonretryable error
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:00 +0 -1: unavailable AV1 hardware produces the public nonretryable error [E]
+  Test failed. See exception logs above.
+  The test description was: unavailable AV1 hardware produces the public nonretryable error
+  
+00:00 +0 -1: (tearDownAll)
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart: unavailable AV1 hardware produces the public nonretryable error
+Temporary display assertion released

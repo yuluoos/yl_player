@@ -1,0 +1,388 @@
+Writing result bundle at path:
+	/private/tmp/yl-p03-audit/software-lifecycle-red.xcresult
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008103-000571C03CD9001E, name:My Mac }
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'yl_player_apple' from project 'yl_player_apple')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:23:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 21 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 22 |   var copy: Copy = { session, key, value in
+ 23 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   }
+ 25 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift (in target 'yl_player_apple' from project 'yl_player_apple')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:22:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+20 |   init(map: [String: Any?]) {
+21 |     connectTimeoutMs = Self.clampedMilliseconds(
+22 |       int64(map["connectTimeoutMs"]) ?? 10_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+23 |     )
+24 |     readTimeoutMs = Self.clampedMilliseconds(
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:25:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+23 |     )
+24 |     readTimeoutMs = Self.clampedMilliseconds(
+25 |       int64(map["readTimeoutMs"]) ?? 15_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+26 |     )
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:27:42: warning: expression implicitly coerced from 'Any??' to 'Any?'
+25 |       int64(map["readTimeoutMs"]) ?? 15_000
+26 |     )
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+   |                                          |  |- note: provide a default value to avoid this warning
+   |                                          |  |- note: force-unwrap the value to avoid this warning
+   |                                          |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                          `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+28 |     baseRetryDelayMs = Self.clampedMilliseconds(
+29 |       int64(map["baseRetryDelayMs"]) ?? 500
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:29:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+28 |     baseRetryDelayMs = Self.clampedMilliseconds(
+29 |       int64(map["baseRetryDelayMs"]) ?? 500
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     )
+31 |     maxRetryDelayMs = Self.clampedMilliseconds(
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:32:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     )
+31 |     maxRetryDelayMs = Self.clampedMilliseconds(
+32 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+33 |     )
+34 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:34:44: warning: expression implicitly coerced from 'Any??' to 'Any?'
+32 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+33 |     )
+34 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+   |                                            |  |- note: provide a default value to avoid this warning
+   |                                            |  |- note: force-unwrap the value to avoid this warning
+   |                                            |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+35 |   }
+36 | 
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:23:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 21 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 22 |   var copy: Copy = { session, key, value in
+ 23 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   }
+ 25 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:32:28: warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     bufferMode = map["bufferMode"] as? String ?? "automatic"
+31 |     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
+32 |     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+   |                            |  |- note: provide a default value to avoid this warning
+   |                            |  |- note: force-unwrap the value to avoid this warning
+   |                            |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+33 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+34 |     positionEventIntervalMs = min(
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:33:53: warning: expression implicitly coerced from 'Any??' to 'Any?'
+31 |     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
+32 |     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+33 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+   |                                                     |  |- note: provide a default value to avoid this warning
+   |                                                     |  |- note: force-unwrap the value to avoid this warning
+   |                                                     |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                                     `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+34 |     positionEventIntervalMs = min(
+35 |       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:35:17: warning: expression implicitly coerced from 'Any??' to 'Any?'
+33 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+34 |     positionEventIntervalMs = min(
+35 |       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
+   |                 |  |- note: provide a default value to avoid this warning
+   |                 |  |- note: force-unwrap the value to avoid this warning
+   |                 |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                 `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+36 |       2_000
+37 |     )
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift (in target 'yl_player_apple' from project 'yl_player_apple')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift:235:34: warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+  4 | /// Only this boundary projects private Pigeon records to native compatibility
+  5 | /// commands and encodes native measurements back to generated callback records.
+  6 | final class YlApplePlayerHost: ApplePlayerHostApi {
+    |             `- note: class 'YlApplePlayerHost' does not conform to the 'Sendable' protocol
+  7 |   let playerId: Int64
+  8 |   let suffix: String
+    :
+233 |   func dispose() async throws {
+234 |     await withCheckedContinuation { continuation in
+235 |       DispatchQueue.main.async { self.close(); continuation.resume() }
+    |                                  `- warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+236 |     }
+237 |   }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift:637:34: warning: 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+ 634 |       }
+ 635 |       commandCoordinator.begin(
+ 636 |         operation: { token in
+     |                    |- note: 'fallback' implicitly strongly captured here
+     |                    `- note: add 'fallback' as a capture list item to silence
+ 637 |           token.onCancel { [weak fallback] in fallback?.interruptControlOperation() }
+     |                                  |- warning: 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+     |                                  `- note: explicitly assign the capture list item to silence
+ 638 |           defer { fallback.resumeControlOperation() }
+ 639 |           try token.throwIfCancelled()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:302:23: warning: capture 'self' was never used [#NoUsage]
+ 300 |     presentation.pause(atHostTimeUs: Self.hostTimeUs())
+ 301 |     YlFallbackTeardownTransaction(
+ 302 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 303 |         tokenToCancel?.cancel()
+ 304 |         mediaToClose?.cancelInput()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:619:23: warning: capture 'self' was never used [#NoUsage]
+ 617 |     presentation.retireDisplay()
+ 618 |     YlFallbackTeardownTransaction(
+ 619 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 620 |         tokenToCancel?.cancel()
+ 621 |         mediaToClose?.cancelInput()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+
+[#ImplicitStrongCapture]: <https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture>
+[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:639:12: warning: 'UTTypeCreatePreferredIdentifierForTag' was deprecated in macOS 12.0: Use the UTType class instead. [#DeprecatedDeclaration]
+ 637 |       return UTType(mimeType: mime)?.identifier ?? mime
+ 638 |     }
+ 639 |     return UTTypeCreatePreferredIdentifierForTag(
+     |            `- warning: 'UTTypeCreatePreferredIdentifierForTag' was deprecated in macOS 12.0: Use the UTType class instead. [#DeprecatedDeclaration]
+ 640 |       kUTTagClassMIMEType,
+ 641 |       mime as CFString,
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:640:7: warning: 'kUTTagClassMIMEType' was deprecated in macOS 12.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]
+ 638 |     }
+ 639 |     return UTTypeCreatePreferredIdentifierForTag(
+ 640 |       kUTTagClassMIMEType,
+     |       `- warning: 'kUTTagClassMIMEType' was deprecated in macOS 12.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]
+ 641 |       mime as CFString,
+ 642 |       nil
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlManagedHTTPTransport.swift:146:5: warning: switch must be exhaustive
+144 | 
+145 |   private static func transportError(_ error: NWError) -> Error {
+146 |     switch error {
+    |     |- warning: switch must be exhaustive
+    |     `- note: add missing case: '.wifiAware(_)'
+147 |     case .tls: return URLError(.serverCertificateUntrusted)
+148 |     case .dns: return URLError(.cannotFindHost)
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:7:48: error: cannot find type 'YlVideoDecoderResource' in scope
+ 5 | import YlFFmpegBridge
+ 6 | 
+ 7 | private final class SoftwareSelectionResource: YlVideoDecoderResource {
+   |                                                `- error: cannot find type 'YlVideoDecoderResource' in scope
+ 8 |   let hardwareEvidence: YlHardwareDecoderEvidence
+ 9 |   var usesHardwareDecoder: Bool { hardwareEvidence.mode == .hardware }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:24:32: error: cannot find 'YlVideoDecoderSelection' in scope
+22 |     for mode in [YlHardwareDecoderEvidence.Mode.unknown, .software] {
+23 |       let resource = SoftwareSelectionResource(mode); var calls = 0
+24 |       XCTAssertThrowsError(try YlVideoDecoderSelection.choose(policy: .hardwareRequired,
+   |                                `- error: cannot find 'YlVideoDecoderSelection' in scope
+25 |         hardware: { resource }, software: { calls += 1; return SoftwareSelectionResource(.software) })) {
+26 |         XCTAssertEqual(($0 as? NativePlayerError)?.code, "decoder.unavailable")
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:33:22: error: cannot find 'YlVideoDecoderSelection' in scope
+31 |   func testHardwareFirstAndOnlyUnavailableErrorsCanFallback() throws {
+32 |     let hardware = SoftwareSelectionResource(.hardware); var calls = 0
+33 |     let result = try YlVideoDecoderSelection.choose(policy: .hardwarePreferred,
+   |                      `- error: cannot find 'YlVideoDecoderSelection' in scope
+34 |       hardware: { hardware }, software: { calls += 1; return SoftwareSelectionResource(.software) })
+35 |     XCTAssertTrue(result === hardware); XCTAssertEqual(calls, 0)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:36:30: error: cannot find 'YlVideoDecoderSelection' in scope
+34 |       hardware: { hardware }, software: { calls += 1; return SoftwareSelectionResource(.software) })
+35 |     XCTAssertTrue(result === hardware); XCTAssertEqual(calls, 0)
+36 |     XCTAssertThrowsError(try YlVideoDecoderSelection.choose(policy: .systemDefault,
+   |                              `- error: cannot find 'YlVideoDecoderSelection' in scope
+37 |       hardware: { throw NativePlayerError(category: "decoder", code: "decoder.video_configuration_invalid", message: "test") },
+38 |       software: { calls += 1; return SoftwareSelectionResource(.software) }))
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:40:24: error: cannot find 'YlVideoDecoderSelection' in scope
+38 |       software: { calls += 1; return SoftwareSelectionResource(.software) }))
+39 |     XCTAssertEqual(calls, 0)
+40 |     let software = try YlVideoDecoderSelection.choose(policy: .systemDefault,
+   |                        `- error: cannot find 'YlVideoDecoderSelection' in scope
+41 |       hardware: { throw YlHardwareDecoderEvidence.unavailable() },
+42 |       software: { calls += 1; return SoftwareSelectionResource(.software) })
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:52:22: error: cannot find 'YlSoftwareVideoConfiguration' in scope
+50 |     defer { ylf_close(&context) }
+51 |     let media = try XCTUnwrap(context)
+52 |     let config = try YlSoftwareVideoConfiguration(context: media, streamIndex: 0)
+   |                      `- error: cannot find 'YlSoftwareVideoConfiguration' in scope
+53 |     let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: .matroska), requireHardwareProbe: false)
+54 |     defer { prepared.discard() }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift:61:23: error: cannot find 'YlSoftwareVideoDecoder' in scope
+59 |     let pool = YlSoftwareDecodePool(); var ticks: UInt64 = 0
+60 |     var retained: CVPixelBuffer?; var count = 0; var failures = [NativePlayerError]()
+61 |     let decoder = try YlSoftwareVideoDecoder(configuration: config, key: key,
+   |                       `- error: cannot find 'YlSoftwareVideoDecoder' in scope
+62 |       admission: .init(entries: [key: limits]), pool: pool, maxInFlightBytes: 1024 * 1024,
+63 |       observe: { _ in ticks += 1; return .init(monotonicNs: ticks, cumulativeCpuNs: ticks, decodeWallNs: 1, thermalNominal: true) },
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkByteSourceTests.swift:1284:14: warning: weak variable 'retiredProxy' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+1282 |     var proxy: YlHlsMediaProxy? = try YlHlsMediaProxy(originURL: URL(string: "https://media.test/master.m3u8")!,
+1283 |       headers: [:], configuration: .init(map: [:]), opaqueRetention: lease)
+1284 |     weak var retiredProxy = proxy
+     |              `- warning: weak variable 'retiredProxy' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+1285 |     // Uses the same wrapper passed to every actual NW contentProcessed send.
+1286 |     var heldCompletion: ((NWError?) -> Void)? = proxy?.retainingPayloadCompletion { _ in }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlOpenedMediaTests.swift:94:14: warning: weak variable 'weakSource' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+ 92 |       probe: probe
+ 93 |     )
+ 94 |     weak var weakSource = source
+    |              `- warning: weak variable 'weakSource' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+ 95 |     var media: YlOpenedMedia? = try YlOpenedMedia(byteSource: source!)
+ 96 |     source = nil
+
+[#VariableNeverMutated]: <https://docs.swift.org/compiler/documentation/diagnostics/variable-never-mutated>
+[#WeakMutability]: <https://docs.swift.org/compiler/documentation/diagnostics/weak-mutability>
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/AppleHostCharacterizations.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/NativeBackendFixtures.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/NativeCallbackCharacterization.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/RunnerTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleCompatibilityTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleDecoderRestorationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlApplePublicationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleReconciliationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlBoundedPacketQueueTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlByteRingBufferTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashHlsCompilerTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashSidxTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFairPlayKeySessionTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFairPlayOutputTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFELVideoPipelineTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackBufferBudgetTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackQualityPolicyTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackStateEncoderTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackTrackCatalogTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlHlsHeaderPolicyTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlHlsManifestRewriterTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosAudioTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosAvPlayerStateTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosFallbackTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosHlsTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosNetworkTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosOpenCoordinatorTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosPlatformAdapterTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosPresentationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosVideoTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlVorbisDelayTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareVideoLifecycleTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlSoftwareDecodeBudgetTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlProgramStreamTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkByteSourceTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlOpenedMediaTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlPlatformServicesTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpDemandTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpFixturePeer.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpLifecycleTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpManagedPauseTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpPeerTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpProtocolTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpRecoveryTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpRestorationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpRouteTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpTransportTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlV2ReactivationTests.swift -supplementary-output-file-map /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/supplementaryOutputs-14 -target arm64-apple-macos12.0 -disable-cross-import-overlay-search -swift-module-cross-import Darwin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Darwin.swiftcrossimport/xlocale.swiftoverlay -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/RunnerTests-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -I /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/PackageFrameworks -F /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -module-cache-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 5 -Onone -D DEBUG -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos -enable-anonymous-context-mangled-names -file-compilation-dir /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -iquote -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-generated-files.hmap -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-own-target-headers.hmap -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/Runner-18c1723432283e0cc55f10a6dcfd9e02-VFS/all-product-headers.yaml -Xcc -iquote -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-project-headers.hmap -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/include -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/DerivedSources-normal/arm64 -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/DerivedSources/arm64 -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/DerivedSources -Xcc -DDEBUG\=1 -Xcc -DCOCOAPODS\=1 -Xcc -DCOCOAPODS\=1 -no-auto-bridging-header-chaining -module-name RunnerTests -const-gather-protocols-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/RunnerTests_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.o -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlSoftwareVideoLifecycleTests.o -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlSoftwareDecodeBudgetTests.o -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlProgramStreamTests.o -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlNetworkByteSourceTests.o -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlNetworkRequestPolicyTests.o -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlOpenedMediaTests.o -debug-module-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/RunnerTests.swiftmodule -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.o -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlSoftwareVideoLifecycleTests.o -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlSoftwareDecodeBudgetTests.o -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlProgramStreamTests.o -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlNetworkByteSourceTests.o -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlNetworkRequestPolicyTests.o -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlOpenedMediaTests.o -index-store-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Index.noindex/DataStore -index-system-modules
+note: Run script build phase 'Run Script' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Runner' from project 'Runner')
+Testing failed:
+	Cannot find type 'YlVideoDecoderResource' in scope
+	Cannot find 'YlVideoDecoderSelection' in scope
+	Cannot find 'YlVideoDecoderSelection' in scope
+	Cannot find 'YlVideoDecoderSelection' in scope
+	Cannot find 'YlVideoDecoderSelection' in scope
+	Cannot find 'YlSoftwareVideoConfiguration' in scope
+	Cannot find 'YlSoftwareVideoDecoder' in scope
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+

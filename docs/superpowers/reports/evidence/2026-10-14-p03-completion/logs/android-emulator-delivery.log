@@ -1,0 +1,153 @@
+INFO         | Android emulator version 37.1.11.0 (build_id 15917651) (CL:N/A)
+INFO         | Graphics backend: gfxstream
+INFO         | Found systemPath /opt/homebrew/share/android-commandlinetools/system-images/android-36/android-tv/arm64-v8a/
+INFO         | Guest usage of host flag 'VulkanVirtualQueue' will be ignored.
+INFO         | Guest GLES Driver: Auto (ext controls)
+INFO         | emuglConfig_init: vulkan_mode_selected:host gles_mode_selected:host
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `TV_64bit_1_5G_32G` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `TV_64bit_1_5G_32G` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `TV_64bit_1_5G_32G` are met
+INFO         | Storing crashdata in: /tmp/android-yy2021_8689/emu-crash-37.1.11.db, detection is enabled for process: 30719
+INFO         | Initializing gfxstream backend
+INFO         | startOpenglesRendererImpl: gpu info
+INFO         | 
+INFO         | Setting ICD filenames for the loader = /opt/homebrew/share/android-commandlinetools/emulator/lib64/vulkan/MoltenVK_icd.json
+INFO         | SharedLibrary::open for [/opt/homebrew/share/android-commandlinetools/emulator/qemu/darwin-aarch64/lib64/vulkan/libvulkan.dylib]
+INFO         | Added library: /opt/homebrew/share/android-commandlinetools/emulator/qemu/darwin-aarch64/lib64/vulkan/libvulkan.dylib
+INFO         | Enabling Vulkan portability.
+INFO         | Selecting Vulkan device: Apple M1, Version: 1.1.323
+INFO         | Using Vulkan externalMemoryMode: Metal for VkEmulation
+INFO         | Initializing VkEmulation features:
+INFO         |     glInteropSupported: false
+INFO         |     useDeferredCommands: true
+INFO         |     createResourceWithRequirements: true
+INFO         |     useVulkanComposition: false
+INFO         |     useVulkanNativeSwapchain: false
+INFO         |     enable guestRenderDoc: false
+INFO         |     ASTC LDR emulation mode: Gpu
+INFO         |     enable ETC2 emulation: true
+INFO         |     enable Ycbcr emulation: false
+INFO         |     guestVulkanOnly: false
+INFO         |     useDedicatedAllocations: false
+INFO         |     guestVulkanMaxApiVersion: 1.3.0
+INFO         |     enableProtectedMemoryEmulation: false
+INFO         | Graphics Adapter Vendor Google (Apple)
+INFO         | Graphics Adapter Android Emulator OpenGL ES Translator (Apple M1)
+INFO         | Graphics API Version OpenGL ES 3.0 (4.1 Metal - 91.7)
+INFO         | Graphics API Extensions GL_OES_EGL_sync GL_OES_EGL_image GL_OES_EGL_image_external GL_OES_depth24 GL_OES_depth32 GL_OES_element_index_uint GL_OES_texture_float GL_OES_texture_float_linear GL_OES_compressed_paletted_texture GL_OES_compressed_ETC1_RGB8_texture GL_OES_depth_texture GL_OES_texture_npot GL_OES_rgb8_rgba8 GL_EXT_color_buffer_float GL_EXT_color_buffer_half_float GL_EXT_texture_format_BGRA8888 GL_APPLE_texture_format_BGRA8888 
+INFO         | Graphics Device Extensions N/A
+INFO         | Disabling sparse binding feature support
+INFO         | Sending adb public key [QAAAABHxrDcP4P+q0bMwELAeRcy5JUHm4MpBO2jr/RrchrQ7eZdkjQwkFh06cIV9g1A0VooTW35nYpVweJrFXcMT+B0V3wGbPlH62bx3/swCyADY0Ovka1Gx/mKRkEDMpldwVruSfC7jqdKp2W9P16m/KLZqa7Q9IX9qq5+G6s7lavF3Ex2hW+kU92OcUc+nwRhq/IopQea93fmwXH4opzS5bLOWALQ5z7L8fOISR5EfEtla3scIJUUi+MdJxa1yXbIaGf+2QeQ3mhuQcqCaVXsfmLnmBJeuuEV48pSDzvtR2e89+fS3hdnw3URACezIGaAOzJO6p6EvcVk39GSrgPnvWqb7twuSCUjkGBUpNEYD/Z9mkQZ/reo+keC6mpoWq9QLdK5+qNLeTbl/cSJvCts4U8Y4xTmAoleEzIPGm83DAVpm5LWHpMCXzbMrSbUYyNq20OC46QfmFGbU7oWk3m/UViwyJRjSCVUCO0+r25uMR2ylx3Fs+Achpll98cY+d0zyPyCNO8UaJYxjwqjJiwlo/XG8QkY4Td/TQzeN7XTi/Gx7VXFV15zXBXjqijmV6/QQCB63f6sd91O4sd42sBhSzZw2rAHJmzgZjoehPN6URAlSq7wQExdzMMapPZyWg81CT+uQ8bo9ug95eABJeJI4A+dYeCi29WDJU3Asc0kZ95CLF0BqHgEAAQA= yy2021_8689@unknown]
+INFO         | Userspace boot properties:
+INFO         |   androidboot.boot_devices=a003600.virtio_mmio
+INFO         |   androidboot.dalvik.vm.heapsize=384m
+INFO         |   androidboot.debug.hwui.renderer=skiagl
+INFO         |   androidboot.hardware=ranchu
+INFO         |   androidboot.hardware.gltransport=pipe
+INFO         |   androidboot.hardware.vulkan=ranchu
+INFO         |   androidboot.logcat=*:V
+INFO         |   androidboot.opengles.version=196608
+INFO         |   androidboot.qemu=1
+INFO         |   androidboot.qemu.adb.pubkey=QAAAABHxrDcP4P+q0bMwELAeRcy5JUHm4MpBO2jr/RrchrQ7eZdkjQwkFh06cIV9g1A0VooTW35nYpVweJrFXcMT+B0V3wGbPlH62bx3/swCyADY0Ovka1Gx/mKRkEDMpldwVruSfC7jqdKp2W9P16m/KLZqa7Q9IX9qq5+G6s7lavF3Ex2hW+kU92OcUc+nwRhq/IopQea93fmwXH4opzS5bLOWALQ5z7L8fOISR5EfEtla3scIJUUi+MdJxa1yXbIaGf+2QeQ3mhuQcqCaVXsfmLnmBJeuuEV48pSDzvtR2e89+fS3hdnw3URACezIGaAOzJO6p6EvcVk39GSrgPnvWqb7twuSCUjkGBUpNEYD/Z9mkQZ/reo+keC6mpoWq9QLdK5+qNLeTbl/cSJvCts4U8Y4xTmAoleEzIPGm83DAVpm5LWHpMCXzbMrSbUYyNq20OC46QfmFGbU7oWk3m/UViwyJRjSCVUCO0+r25uMR2ylx3Fs+Achpll98cY+d0zyPyCNO8UaJYxjwqjJiwlo/XG8QkY4Td/TQzeN7XTi/Gx7VXFV15zXBXjqijmV6/QQCB63f6sd91O4sd42sBhSzZw2rAHJmzgZjoehPN6URAlSq7wQExdzMMapPZyWg81CT+uQ8bo9ug95eABJeJI4A+dYeCi29WDJU3Asc0kZ95CLF0BqHgEAAQA= yy2021_8689@unknown
+INFO         |   androidboot.qemu.avd_name=TV_64bit_1_5G_32G
+INFO         |   androidboot.qemu.camera_hq_edge_processing=0
+INFO         |   androidboot.qemu.camera_protocol_ver=1
+INFO         |   androidboot.qemu.cpuvulkan.version=4206592
+INFO         |   androidboot.qemu.gltransport.drawFlushInterval=800
+INFO         |   androidboot.qemu.gltransport.name=pipe
+INFO         |   androidboot.qemu.hwcodec.avcdec=2
+INFO         |   androidboot.qemu.hwcodec.hevcdec=2
+INFO         |   androidboot.qemu.hwcodec.vpxdec=2
+INFO         |   androidboot.qemu.settings.system.screen_off_timeout=2147483647
+INFO         |   androidboot.qemu.skin=1280x720
+INFO         |   androidboot.qemu.virtiowifi=1
+INFO         |   androidboot.qemu.vsync=60
+INFO         |   androidboot.serialno=EMULATOR37X1X11X0
+INFO         |   androidboot.vbmeta.digest=37d4680ab27b074e1ae6afd59407744d0d44fdf90f10463deb71bf43dcb00e32
+INFO         |   androidboot.vbmeta.hash_alg=sha256
+INFO         |   androidboot.vbmeta.size=6720
+INFO         |   androidboot.veritymode=enforcing
+INFO         | Monitoring duration of emulator setup.
+WARNING      | The emulator now requires a signed jwt token for gRPC access! Use the -grpc flag if you really want an open unprotected grpc port
+INFO         | Using security allow list from: /opt/homebrew/share/android-commandlinetools/emulator/lib/emulator_access.json
+INFO         | The active JSON Web Key Sets can be found here: /Users/yy2021_8689/Library/Caches/TemporaryItems/avd/running/30719/jwks/579c62b1-17d8-4b1a-becd-7e2e4103b3a7/active.jwk
+INFO         | Scanning /Users/yy2021_8689/Library/Caches/TemporaryItems/avd/running/30719/jwks/579c62b1-17d8-4b1a-becd-7e2e4103b3a7 for jwk keys.
+INFO         | Started GRPC server at 127.0.0.1:8554, security: Local, auth: +token
+INFO         | Advertising in: /Users/yy2021_8689/Library/Caches/TemporaryItems/avd/running/pid_30719.ini
+INFO         | Successfully initialized netsim WiFi
+INFO         | Activated packet streamer for uwb emulation
+INFO         | Activated packet streamer for bluetooth emulation
+INFO         | Setting display: 0 configuration to: 1280x720, dpi: 213x213 
+INFO         | setDisplayActiveConfig: id:0, 1280x720
+INFO         | Checking system compatibility:
+INFO         |   Checking: hasSufficientDiskSpace
+INFO         |      Ok: Disk space requirements to run avd: `TV_64bit_1_5G_32G` are met
+INFO         |   Checking: hasSufficientHwGpu
+INFO         |      Ok: Hardware GPU requirements to run avd: `TV_64bit_1_5G_32G` are passed
+INFO         |   Checking: hasSufficientSystem
+INFO         |      Ok: System requirements to run avd: `TV_64bit_1_5G_32G` are met
+INFO         | emulatorSetupEnvironment: Environment scene is not required
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_rgbcSensorValueWidget_valueChanged() (:0, )
+INFO         | Warning: QMetaObject::connectSlotsByName: No matching signal for on_posture_valueChanged(int) (:0, )
+INFO         | TouchpadHolder: registering via hw_xr_led agent for instance=0x782e208a80
+INFO         | Warning: QObject::connect: Cannot queue arguments of type 'std::vector<android::emulation::control::SnapshotInfo>'
+(Make sure 'std::vector<android::emulation::control::SnapshotInfo>' is registered using qRegisterMetaType().) (:0, )
+INFO         | AVD supportsNativeGLES=1, supportsGuestAngle=1
+INFO         | Guest Angle is still unstable for API > 35.
+INFO         | Created extended window in 105.378ms
+USER_INFO    | Emulator is performing a full startup. This may take upto two minutes, or more.
+INFO         | GPU Vendor=[Google (Apple)]
+INFO         | GPU Renderer=[Android Emulator OpenGL ES Translator (Apple M1)]
+INFO         | GPU Version=[OpenGL ES 3.0 (4.1 Metal - 91.7)]
+INFO         | Boot completed in 16772 ms
+INFO         | Increasing screen off timeout, logcat buffer size to 2M.
+ERROR        | Failed to find ColorBuffer: 80
+[h264 @ 0x78357f3700] no frame!
+[h264 @ 0x78357f3700] no frame!
+[h264 @ 0x78357f3700] no frame!
+[h264 @ 0x78357f3700] no frame!
+[h264 @ 0x78357de800] no frame!
+[h264 @ 0x78357de800] no frame!
+[h264 @ 0x7835c59400] no frame!
+[h264 @ 0x7835c59400] no frame!
+[h264 @ 0x7835c59900] no frame!
+[h264 @ 0x7835c59900] no frame!
+[h264 @ 0x7835c58500] no frame!
+[h264 @ 0x7835c58500] no frame!
+[h264 @ 0x78357de800] no frame!
+[h264 @ 0x78357de800] no frame!
+[h264 @ 0x78357ded00] no frame!
+[h264 @ 0x78357ded00] no frame!
+[h264 @ 0x7835d18f00] no frame!
+[h264 @ 0x7835d18f00] no frame!
+[h264 @ 0x7835d18000] no frame!
+[h264 @ 0x7835d18000] no frame!
+[h264 @ 0x78357df700] no frame!
+[h264 @ 0x78357df700] no frame!
+[h264 @ 0x78357df200] no frame!
+[h264 @ 0x78357df200] no frame!
+[h264 @ 0x7835d18f00] no frame!
+[h264 @ 0x7835d18f00] no frame!
+[h264 @ 0x7835d19400] no frame!
+[h264 @ 0x7835d19400] no frame!
+[h264 @ 0x78357df700] no frame!
+[h264 @ 0x78357df700] no frame!
+[h264 @ 0x78357df200] no frame!
+[h264 @ 0x78357df200] no frame!
+[h264 @ 0x7835d18f00] no frame!
+[h264 @ 0x7835d18f00] no frame!
+[h264 @ 0x7835d19400] no frame!
+[h264 @ 0x7835d19400] no frame!
+INFO         | Wait for emulator (pid 30719) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+
+USER_INFO    | Snapshots have been disabled by the user, save request is ignored.
+INFO         | Saving snapshot 'default_boot' using 1 ms
+INFO         | Wait for emulator (pid 30719) 20 seconds to shutdown gracefully before kill;you can set environment variable ANDROID_EMULATOR_WAIT_TIME_BEFORE_KILL(in seconds) to change the default value (20 seconds)
+
+INFO         | removeAll
+ERROR        | Failed to restore previous context: 12297
+WARNING      | Netsim Wifi dns:///localhost:53635 is gone due to CANCELLED

@@ -511,3 +511,39 @@ JNI 元数据协议 2、软件配置版本化入口与三个 ABI 的 API24、精
 验证：JVM 525 项，522 通过、3 既有跳过、0 失败；定向原生 7 项全通过，包含 96 帧实际软件像素、原生帧预算耗尽及释放归零、PS 实际硬件输出/重建与身份。公开 progressive 2、HLS 3、session replacement 3、multi-player rollback 1、cadence 1 均通过。初次回归发现旧测试的 source.missing 与固定 schema3 已落后于现有 track.not_found/schema5 契约，保留失败日志后校正测试并仅重跑受影响用例。具体身份、日志哈希及原始失败见 `tool/decoder_probe/p03-android-integration-observations.json`。
 
 以上不代表三端完整格式/PCM/物理输出或持续热状态准入；Task7/8 继续验收，未测生产软件档位保持关闭。
+
+### 2026-10-15 Task7 实际输出补齐（继续验证）
+
+Android 严格矩阵暴露并修复了真实输出缺陷：FLV 点播/AVI 转入 managed owned 解复用；PS/TS/AVI seek 验证有界关键帧锚点并抑制视频/PCM preroll；暂停保留待呈现包，seek 后旧 generation 不再进入新解码器或结束新会话。混合 3/4 字节 Annex-B 起始码统一为 4 字节，完整保留 SPS/PPS/SEI 与其他 NAL；实际 E-AC-3 容器视频输出恢复。HEVC hvcC 传递 profile/位深，未知配置不再冒充 Main 硬解。Media3 READY 但视频未被选中时及时报告 `decoder.unavailable`，避免一直等待不会出现的解码身份。
+
+三个 ABI 的签名来源 FFmpeg 构建只增加 AVI demuxer；安装字节与源码/导出/API24 合同核对。最新 JVM 532 项（529 通过、3 既有跳过），原生 17 项全部通过，真实公开 AV1 不可用错误 1 项通过。原生测试验证实际硬件/受控软件像素、AC3 5.1 到 stereo 的中心/环绕权重与 LFE 排除、EAC3/DTS/FLAC 双声道标记和双向 seek；它们不证明物理扬声器或延迟。原 AVI 包时间戳假设被真实 packet identity 正控否定，未据此修改 Apple bridge。
+
+Android 三批矩阵及后续定向复验分别保留 run 身份。AV1 和 HEVC Main10 的六条 required 行因当前模拟器硬件不可用而失败；MPEG2 的三条诊断拒绝、损坏 MP4 的五条负控单独计数。旧截图测试在 position 更新后先暂停，可能冻结前一帧；改为播放中等待实际目标颜色后，AVI 三种传输与 Opus 本地复验 4/4 通过。历史失败以及一次日志限流遗漏的 JSON 行保留，不能把缺行补造成成功。
+
+macOS 原生六项实际像素/PCM/seek 全部通过，包含新增 AC3 六声道、EAC3、DTS、FLAC。最初 AC3 拒绝来自测试包装器遗漏 `pcmFormat` 透传；实际 `0x60f` 布局断言通过，修复包装器后通过，没有改生产声道规则。公开截图经过宿主 ICC，按红/绿/蓝的主通道身份与白色辨认片段；原生测试仍独立核对精确解码颜色。截图不构成屏幕色准验收。
+
+Dart 四包测试 135/1673/113/82 项全部通过，四包 analyze 无问题；格式证据 Python 23 项、测量 Python 21 项通过。Apple 制品五架构、53 个 Swift 消费符号、9 类预期原因篡改负例通过。三份既有 macOS 测试镜像差异保持不变。公开 macOS/iOS 矩阵与软件测量仍在继续，完整 CAP-FORMAT、物理/最低系统和持续热准入尚未完成。
+
+### 2026-10-15 受控软件测量
+
+固定协议在执行前写入 run 目录：5 个独立优化进程，每次 idle 2s、AV1 解码/像素输出 12s、dispose 2s，250ms 采样，预先限定采样迟到最多50ms；没有丢弃预热、失败或异常运行。先执行独立 AVC VideoToolbox 三策略×两次创建的六行正控，再测已安装桥接的 AV1 Main8、320×180、24fps、2 workers。每个进程真实检查288帧 NV12 图像和65个单调采样点，全部通过；热状态均 nominal，lowPower=false。
+
+设备 `MacBookPro17,1`、OS build `26A434`，测量 key 同时绑定优化探针与已加载 bridge 的 SHA-256，以及媒体/包配置身份。峰值 RSS 15,466,496 B，physical footprint 7,340,608 B，单次16秒累计进程 CPU 最大199,590,000 ns。CPU 包含解码器内部线程和本进程其他活动，不是外层调用线程计时，也不是单 decoder 的精确归因。输出是实际 retained CVPixelBuffer；不代表 Flutter 产品二进制、屏幕/扬声器、长播或物理设备同步验收。
+
+[固定协议、五份原始采样、正控及汇总](evidence/2026-10-14-p03-completion/software-measurement/result.json) 的 `measurementValid=true`，`productionEligible=false`。缺口仍是 `sustained_thermal_missing`、`independent_verification_missing`：已有 P08 记录没有同设备/OS/本次构建的合格持续热证据，因此不能据这份短测量冻结生产阈值或生成软件档位。32MiB/64帧/1MiB packet 是执行前固定的工程测试限制，不是测出来的生产容量；生产 Apple/Android 名单均保持空表。没有启动另一会话的长播或弱网 ABR。
+
+### 2026-10-15 三端输出收尾与保留项
+
+公开严格矩阵每端调查73条路径（含扩展名边界），目录定义仍为22份夹具/132个基础平台传输行。它们是分批/定向复验的观测汇总，不能称为单次完整绿色运行；原始失败日志全部保留。公开行未预先记录产品 build SHA，且 PCM 在另一次原生运行采集，因此 `fullAcceptance=false`，不会拼接成同次完整音画验收。
+
+| 环境 | 1倍速必需路径图像/seek/结束/释放通过 | 必需路径失败 | 诊断 / 损坏负例 |
+| --- | ---: | --- | --- |
+| Android API36 arm64 模拟器 | 59 | AV1/Main10缺硬解6条 | 3 / 5 |
+| macOS M1 / 26A434 | 62 | AV1缺硬解3条 | 3 / 5 |
+| iOS27 / 24A434 专用模拟器 | 3 | 缺硬解59条；截图未捕获目标帧3条 | 3 / 5 |
+
+iOS三条截图失败另外执行0.25倍速观测控制，7个播放/seek颜色标记、结束和释放全部通过；初次慢速控制沿用15秒结束时限导致3条超时，按播放速率修正时限后3/3通过。该控制不替换1倍速失败，不证明同条件复验成功。iOS原生新增/关联输出集合6项全部失败、无跳过；不得扩大历史硬解跳过名单使其变绿。macOS原生图像/真实PCM/消耗时钟/seek集合6/6通过，Android原生输出17/17通过。新视频独立AV1负例保持原素材96个压缩视频包逐包SHA相同，用于隔离Opus策略对错误阶段的影响；macOS/iOS实际不可重试解码错误已验证。
+
+仍待完成的验收：逐格式完整PCM首尾样本和实际切轨对齐、同次产品身份绑定的完整音画记录、真机/最低OS/Intel运行、AV1/Main10硬件设备、物理声道/音画同步、匹配持续热与独立产品复验。当前软件候选不对未知设备开放；不得将关闭的生产档位写为AV1软件播放已普遍支持。工程已补齐的接线及真实输出证据与上述条件分开交付。
+
+最终 Android 定向复验：managed HTTP FLV automatic/live 保持 Media3 2/2通过；FLV本地/HTTP/改名、AVI本地和MP4本地五条1倍速实际输出全部通过；视频独立AV1公开错误1/1通过。输出修复与测试已提交 `278f616`。完整三端观测和原始日志见 [证据目录](evidence/2026-10-14-p03-completion/README.md)。

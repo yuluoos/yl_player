@@ -1,0 +1,16 @@
+In file included from /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/tool/apple_ffmpeg/test_software_video.m:1:
+In file included from /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/tool/apple_ffmpeg/../../darwin/native/YlFFmpegBridge/YlFFmpegBridge.m:1867:
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/tool/apple_ffmpeg/../../darwin/native/YlFFmpegBridge/YlSoftwareVideoBridge.inc:97:89: warning: implicit conversion from enumeration type 'enum Dav1dColorPrimaries' to different enumeration type 'enum AVColorPrimaries' [-Wimplicit-enum-enum-cast]
+   97 |  ylf_set_color(ext,kCMFormatDescriptionExtension_ColorPrimaries,ylf_color_primaries(seq.pri));
+      |                                                                 ~~~~~~~~~~~~~~~~~~~ ~~~~^~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/tool/apple_ffmpeg/../../darwin/native/YlFFmpegBridge/YlSoftwareVideoBridge.inc:98:93: warning: implicit conversion from enumeration type 'enum Dav1dTransferCharacteristics' to different enumeration type 'enum AVColorTransferCharacteristic' [-Wimplicit-enum-enum-cast]
+   98 |  ylf_set_color(ext,kCMFormatDescriptionExtension_TransferFunction,ylf_transfer_function(seq.trc));
+      |                                                                   ~~~~~~~~~~~~~~~~~~~~~ ~~~~^~~
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/tool/apple_ffmpeg/../../darwin/native/YlFFmpegBridge/YlSoftwareVideoBridge.inc:99:83: warning: implicit conversion from enumeration type 'enum Dav1dMatrixCoefficients' to different enumeration type 'enum AVColorSpace' [-Wimplicit-enum-enum-cast]
+   99 |  ylf_set_color(ext,kCMFormatDescriptionExtension_YCbCrMatrix,ylf_color_matrix(seq.mtrx));
+      |                                                              ~~~~~~~~~~~~~~~~ ~~~~^~~~
+3 warnings generated.
+[{"caseId": "av1-main8", "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb", "referenceDecoder": "libaom", "referenceSha256": "310b57f950f6e37a177b7686f471638f7f9b7349369bdfcc73f61b61635a03f8"}, {"caseId": "av1-main10", "fixtureSha256": "bf899306e78b59d58d2059361b175a8ca4266040b3a1f2dcce88f58e1b684c19", "referenceDecoder": "libaom", "referenceSha256": "3bae5a51d4ae959efe4f86107d1b4564546b81bb2928ce0da748644bfaab65e2"}, {"caseId": "vp9-main8", "fixtureSha256": "59decebd69a207e73290a927cdf068bcaaee661326a7f33f6a98983e8d53fb21", "referenceDecoder": "libvpx-vp9", "referenceSha256": "3d2868afe60ec691c610cbd3a390f39e0647eab44e3e4841aeba0655517b15d3"}]
+sysctlbyname for kern.hv_vmm_present failed with status -1Software video: 1401 checks, 0 failures
+sysctlbyname for kern.hv_vmm_present failed with status -1Software video: 393 checks, 0 failures
+sysctlbyname for kern.hv_vmm_present failed with status -1Software video: 1390 checks, 0 failures

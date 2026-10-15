@@ -1,0 +1,608 @@
+--------- beginning of main
+10-15 02:04:48.315 14744 14816 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:04:48.328 14744 14816 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:04:48.344 14744 14816 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:04:48.362 14744 14816 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:04:48.363 14744 14816 D CCodec  : client requested max input size 46080, which is smaller than what component recommended (6291456); overriding with component recommendation.
+10-15 02:04:48.363 14744 14816 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:04:48.363 14744 14816 D CCodec  : encoding statistics level = 0
+10-15 02:04:48.363 14744 14816 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t height = 180
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t level = 65536
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:04:48.363 14744 14816 D CCodec  :   string mime = "video/avc"
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t profile = 65536
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t width = 320
+10-15 02:04:48.363 14744 14816 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:48.363 14744 14816 D CCodec  : }
+10-15 02:04:48.363 14744 14816 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t color-standard = 4
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t color-range = 2
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t color-transfer = 3
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t sar-height = 1
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t sar-width = 1
+10-15 02:04:48.363 14744 14816 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t width = 320
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t height = 180
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t max-height = 240
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t max-width = 320
+10-15 02:04:48.363 14744 14816 D CCodec  :   string mime = "video/raw"
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:04:48.363 14744 14816 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:04:48.363 14744 14816 D CCodec  : }
+10-15 02:04:48.382 14744 14824 D CCodec  : allocate(c2.android.mp3.decoder)
+10-15 02:04:48.387 14744 14824 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:04:48.407 14744 14824 I CCodec  : Created component [c2.android.mp3.decoder] for [c2.android.mp3.decoder]
+10-15 02:04:48.434 14744 14824 D CCodec  : [c2.android.mp3.decoder] buffers are bound to CCodec for this session
+10-15 02:04:48.435 14744 14824 D CCodec  : encoding statistics level = 0
+10-15 02:04:48.435 14744 14824 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t bitrate = 64000
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t channel-count = 1
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t max-input-size = 8192
+10-15 02:04:48.435 14744 14824 D CCodec  :   string mime = "audio/mpeg"
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t sample-rate = 44100
+10-15 02:04:48.435 14744 14824 D CCodec  : }
+10-15 02:04:48.435 14744 14824 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t buffer-batch-max-output-size = 0
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t buffer-batch-threshold-output-size = 0
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t channel-count = 1
+10-15 02:04:48.435 14744 14824 D CCodec  :   string mime = "audio/raw"
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t sample-rate = 44100
+10-15 02:04:48.435 14744 14824 D CCodec  :   int32_t android._config-pcm-encoding = 2
+10-15 02:04:48.435 14744 14824 D CCodec  : }
+10-15 02:04:49.648 14744 14843 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:04:49.649 14744 14843 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:04:49.651 14744 14843 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:04:49.687 14744 14843 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:04:49.692 14744 14843 D CCodec  : client requested max input size 46080, which is smaller than what component recommended (6291456); overriding with component recommendation.
+10-15 02:04:49.693 14744 14843 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:04:49.693 14744 14843 D CCodec  : encoding statistics level = 0
+10-15 02:04:49.693 14744 14843 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t height = 180
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t level = 65536
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:04:49.693 14744 14843 D CCodec  :   string mime = "video/avc"
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t profile = 65536
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t width = 320
+10-15 02:04:49.693 14744 14843 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:49.693 14744 14843 D CCodec  : }
+10-15 02:04:49.693 14744 14843 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t color-standard = 4
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t color-range = 2
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t color-transfer = 3
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t sar-height = 1
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t sar-width = 1
+10-15 02:04:49.693 14744 14843 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t width = 320
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t height = 180
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t max-height = 240
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t max-width = 320
+10-15 02:04:49.693 14744 14843 D CCodec  :   string mime = "video/raw"
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:04:49.693 14744 14843 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:04:49.693 14744 14843 D CCodec  : }
+10-15 02:04:50.326 14744 14850 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:04:50.329 14744 14850 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:04:50.331 14744 14850 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:04:50.338 14744 14850 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:04:50.339 14744 14850 D CCodec  : encoding statistics level = 0
+10-15 02:04:50.339 14744 14850 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t height = 180
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t level = 65536
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:04:50.339 14744 14850 D CCodec  :   string mime = "video/avc"
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t profile = 65536
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t width = 320
+10-15 02:04:50.339 14744 14850 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:50.339 14744 14850 D CCodec  : }
+10-15 02:04:50.339 14744 14850 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t color-standard = 4
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t color-range = 2
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t color-transfer = 3
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t sar-height = 1
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t sar-width = 1
+10-15 02:04:50.339 14744 14850 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t width = 320
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t height = 180
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t max-height = 240
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t max-width = 320
+10-15 02:04:50.339 14744 14850 D CCodec  :   string mime = "video/raw"
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:04:50.339 14744 14850 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:04:50.339 14744 14850 D CCodec  : }
+10-15 02:04:50.835 14744 14862 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:04:50.837 14744 14862 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:04:50.839 14744 14862 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:04:50.860 14744 14862 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:04:50.863 14744 14862 D CCodec  : encoding statistics level = 0
+10-15 02:04:50.863 14744 14862 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t height = 180
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t level = 65536
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:04:50.863 14744 14862 D CCodec  :   string mime = "video/avc"
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t profile = 65536
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t width = 320
+10-15 02:04:50.863 14744 14862 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:50.863 14744 14862 D CCodec  : }
+10-15 02:04:50.863 14744 14862 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t color-standard = 4
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t color-range = 2
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t color-transfer = 3
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t sar-height = 1
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t sar-width = 1
+10-15 02:04:50.863 14744 14862 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t width = 320
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t height = 180
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t max-height = 240
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t max-width = 320
+10-15 02:04:50.863 14744 14862 D CCodec  :   string mime = "video/raw"
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:04:50.863 14744 14862 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:04:50.863 14744 14862 D CCodec  : }
+10-15 02:05:00.504 14744 14884 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:05:00.507 14744 14884 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:05:00.509 14744 14884 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:05:00.522 14744 14884 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:05:00.524 14744 14884 D CCodec  : client requested max input size 1257, which is smaller than what component recommended (6291456); overriding with component recommendation.
+10-15 02:05:00.524 14744 14884 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:05:00.524 14744 14884 D CCodec  : encoding statistics level = 0
+10-15 02:05:00.524 14744 14884 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t height = 180
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t level = 65536
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:05:00.524 14744 14884 D CCodec  :   string mime = "video/avc"
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t profile = 65536
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t width = 320
+10-15 02:05:00.524 14744 14884 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:00.524 14744 14884 D CCodec  : }
+10-15 02:05:00.524 14744 14884 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t color-standard = 4
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t color-range = 2
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t color-transfer = 3
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t sar-height = 1
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t sar-width = 1
+10-15 02:05:00.524 14744 14884 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t width = 320
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t height = 180
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t max-height = 240
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t max-width = 320
+10-15 02:05:00.524 14744 14884 D CCodec  :   string mime = "video/raw"
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:05:00.524 14744 14884 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:05:00.524 14744 14884 D CCodec  : }
+10-15 02:05:00.574 14744 14887 D CCodec  : allocate(c2.android.mp3.decoder)
+10-15 02:05:00.597 14744 14887 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:05:00.602 14744 14887 I CCodec  : Created component [c2.android.mp3.decoder] for [c2.android.mp3.decoder]
+10-15 02:05:00.615 14744 14887 D CCodec  : [c2.android.mp3.decoder] buffers are bound to CCodec for this session
+10-15 02:05:00.616 14744 14887 D CCodec  : client requested max input size 384, which is smaller than what component recommended (8192); overriding with component recommendation.
+10-15 02:05:00.616 14744 14887 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:05:00.616 14744 14887 D CCodec  : encoding statistics level = 0
+10-15 02:05:00.616 14744 14887 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t bitrate = 64000
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t channel-count = 2
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t max-input-size = 8192
+10-15 02:05:00.616 14744 14887 D CCodec  :   string mime = "audio/mpeg"
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t sample-rate = 48000
+10-15 02:05:00.616 14744 14887 D CCodec  : }
+10-15 02:05:00.616 14744 14887 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t buffer-batch-max-output-size = 0
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t buffer-batch-threshold-output-size = 0
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t channel-count = 2
+10-15 02:05:00.616 14744 14887 D CCodec  :   string mime = "audio/raw"
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t sample-rate = 48000
+10-15 02:05:00.616 14744 14887 D CCodec  :   int32_t android._config-pcm-encoding = 2
+10-15 02:05:00.616 14744 14887 D CCodec  : }
+10-15 02:05:05.621 14744 14909 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:05:05.622 14744 14909 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:05:05.625 14744 14909 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:05:05.637 14744 14909 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:05:05.639 14744 14909 D CCodec  : client requested max input size 46080, which is smaller than what component recommended (6291456); overriding with component recommendation.
+10-15 02:05:05.639 14744 14909 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:05:05.639 14744 14909 D CCodec  : encoding statistics level = 0
+10-15 02:05:05.639 14744 14909 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t height = 180
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t level = 65536
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:05:05.639 14744 14909 D CCodec  :   string mime = "video/avc"
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t profile = 65536
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t width = 320
+10-15 02:05:05.639 14744 14909 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:05.639 14744 14909 D CCodec  : }
+10-15 02:05:05.639 14744 14909 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t color-standard = 4
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t color-range = 2
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t color-transfer = 3
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t sar-height = 1
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t sar-width = 1
+10-15 02:05:05.639 14744 14909 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t width = 320
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t height = 180
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t max-height = 240
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t max-width = 320
+10-15 02:05:05.639 14744 14909 D CCodec  :   string mime = "video/raw"
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:05:05.639 14744 14909 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:05:05.639 14744 14909 D CCodec  : }
+10-15 02:05:05.902 14744 14915 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:05:05.904 14744 14915 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:05:05.905 14744 14915 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:05:05.918 14744 14915 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:05:05.919 14744 14915 D CCodec  : encoding statistics level = 0
+10-15 02:05:05.919 14744 14915 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t height = 180
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t level = 65536
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:05:05.919 14744 14915 D CCodec  :   string mime = "video/avc"
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t profile = 65536
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t width = 320
+10-15 02:05:05.919 14744 14915 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:05.919 14744 14915 D CCodec  : }
+10-15 02:05:05.919 14744 14915 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t color-standard = 4
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t color-range = 2
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t color-transfer = 3
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t sar-height = 1
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t sar-width = 1
+10-15 02:05:05.919 14744 14915 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t width = 320
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t height = 180
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t max-height = 240
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t max-width = 320
+10-15 02:05:05.919 14744 14915 D CCodec  :   string mime = "video/raw"
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:05:05.919 14744 14915 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:05:05.919 14744 14915 D CCodec  : }
+10-15 02:05:11.789 14744 14935 D CCodec  : allocate(c2.android.aac.decoder)
+10-15 02:05:11.791 14744 14935 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:05:11.799 14744 14935 I CCodec  : Created component [c2.android.aac.decoder] for [c2.android.aac.decoder]
+10-15 02:05:11.812 14744 14935 D CCodec  : [c2.android.aac.decoder] buffers are bound to CCodec for this session
+10-15 02:05:11.813 14744 14935 D CCodec  : encoding statistics level = 0
+10-15 02:05:11.813 14744 14935 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-album-mode = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-boost-level = 127
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-cut-level = 127
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-effect-type = 3
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-encoded-target-level = -1
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-max-output-channel_count = 8
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-target-ref-level = 64
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t bitrate = 64000
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t channel-count = 2
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t channel-mask = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t level = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t max-input-size = 8192
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t max-output-channel-count = 8
+10-15 02:05:11.813 14744 14935 D CCodec  :   string mime = "audio/mp4a-latm"
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t profile = 2
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t sample-rate = 48000
+10-15 02:05:11.813 14744 14935 D CCodec  : }
+10-15 02:05:11.813 14744 14935 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-album-mode = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-boost-level = 127
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-cut-level = 127
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-effect-type = 3
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-drc-output-loudness = -1
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-encoded-target-level = -1
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-max-output-channel_count = 8
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t aac-target-ref-level = 64
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t buffer-batch-max-output-size = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t buffer-batch-threshold-output-size = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t channel-count = 2
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t channel-mask = 0
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t max-output-channel-count = 8
+10-15 02:05:11.813 14744 14935 D CCodec  :   string mime = "audio/raw"
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t sample-rate = 48000
+10-15 02:05:11.813 14744 14935 D CCodec  :   int32_t android._config-pcm-encoding = 2
+10-15 02:05:11.813 14744 14935 D CCodec  : }
+10-15 02:05:12.030 14744 14944 D CCodec  : allocate(c2.goldfish.hevc.decoder)
+10-15 02:05:12.032 14744 14944 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:05:12.035 14744 14944 I CCodec  : Created component [c2.goldfish.hevc.decoder] for [c2.goldfish.hevc.decoder]
+10-15 02:05:12.047 14744 14944 D CCodec  : [c2.goldfish.hevc.decoder] buffers are bound to CCodec for this session
+10-15 02:05:12.048 14744 14944 D CCodec  : encoding statistics level = 0
+10-15 02:05:12.048 14744 14944 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t height = 180
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t level = 65536
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:05:12.048 14744 14944 D CCodec  :   string mime = "video/hevc"
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t profile = 1
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t width = 320
+10-15 02:05:12.048 14744 14944 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:12.048 14744 14944 D CCodec  : }
+10-15 02:05:12.048 14744 14944 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t color-standard = 4
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t color-range = 2
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t color-transfer = 3
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t sar-height = 1
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t sar-width = 1
+10-15 02:05:12.048 14744 14944 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t width = 320
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t height = 180
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t max-height = 240
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t max-width = 320
+10-15 02:05:12.048 14744 14944 D CCodec  :   string mime = "video/raw"
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:05:12.048 14744 14944 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:05:12.048 14744 14944 D CCodec  : }
+10-15 02:07:53.505 15354 15372 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:07:53.519 15354 15372 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:07:53.533 15354 15372 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:07:53.550 15354 15372 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:07:53.551 15354 15372 D CCodec  : encoding statistics level = 0
+10-15 02:07:53.551 15354 15372 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t height = 180
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t level = 65536
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:07:53.551 15354 15372 D CCodec  :   string mime = "video/avc"
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t profile = 65536
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t width = 320
+10-15 02:07:53.551 15354 15372 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:07:53.551 15354 15372 D CCodec  : }
+10-15 02:07:53.551 15354 15372 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t color-standard = 4
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t color-range = 2
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t color-transfer = 3
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t sar-height = 1
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t sar-width = 1
+10-15 02:07:53.551 15354 15372 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t width = 320
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t height = 180
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t max-height = 240
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t max-width = 320
+10-15 02:07:53.551 15354 15372 D CCodec  :   string mime = "video/raw"
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:07:53.551 15354 15372 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:07:53.551 15354 15372 D CCodec  : }
+10-15 02:09:22.136 15569 15587 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:09:22.149 15569 15587 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:09:22.161 15569 15587 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:09:22.200 15569 15587 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:09:22.202 15569 15587 D CCodec  : encoding statistics level = 0
+10-15 02:09:22.202 15569 15587 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t height = 180
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t level = 65536
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:09:22.202 15569 15587 D CCodec  :   string mime = "video/avc"
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t profile = 65536
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t width = 320
+10-15 02:09:22.202 15569 15587 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:09:22.202 15569 15587 D CCodec  : }
+10-15 02:09:22.202 15569 15587 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t color-standard = 4
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t color-range = 2
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t color-transfer = 3
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t sar-height = 1
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t sar-width = 1
+10-15 02:09:22.202 15569 15587 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t width = 320
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t height = 180
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t max-height = 240
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t max-width = 320
+10-15 02:09:22.202 15569 15587 D CCodec  :   string mime = "video/raw"
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:09:22.202 15569 15587 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:09:22.202 15569 15587 D CCodec  : }
+10-15 02:11:21.378 15788 15806 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:11:21.400 15788 15806 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:11:21.431 15788 15806 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:11:21.587 15788 15806 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:11:21.594 15788 15806 D CCodec  : encoding statistics level = 0
+10-15 02:11:21.594 15788 15806 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t height = 180
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t level = 65536
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:11:21.594 15788 15806 D CCodec  :   string mime = "video/avc"
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t profile = 65536
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t width = 320
+10-15 02:11:21.594 15788 15806 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:11:21.594 15788 15806 D CCodec  : }
+10-15 02:11:21.594 15788 15806 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t color-standard = 4
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t color-range = 2
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t color-transfer = 3
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t sar-height = 1
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t sar-width = 1
+10-15 02:11:21.594 15788 15806 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t width = 320
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t height = 180
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t max-height = 240
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t max-width = 320
+10-15 02:11:21.594 15788 15806 D CCodec  :   string mime = "video/raw"
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:11:21.594 15788 15806 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:11:21.594 15788 15806 D CCodec  : }
+10-15 02:12:33.771 16008 16027 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:12:33.789 16008 16027 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:12:33.804 16008 16027 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:12:33.871 16008 16027 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:12:33.880 16008 16027 D CCodec  : encoding statistics level = 0
+10-15 02:12:33.881 16008 16027 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t height = 180
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t level = 65536
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:12:33.881 16008 16027 D CCodec  :   string mime = "video/avc"
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t profile = 65536
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t width = 320
+10-15 02:12:33.881 16008 16027 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:12:33.881 16008 16027 D CCodec  : }
+10-15 02:12:33.881 16008 16027 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t color-standard = 4
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t color-range = 2
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t color-transfer = 3
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t sar-height = 1
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t sar-width = 1
+10-15 02:12:33.881 16008 16027 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t width = 320
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t height = 180
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t max-height = 240
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t max-width = 320
+10-15 02:12:33.881 16008 16027 D CCodec  :   string mime = "video/raw"
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:12:33.881 16008 16027 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:12:33.881 16008 16027 D CCodec  : }
+10-15 02:14:30.564 16228 16249 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:14:30.571 16228 16249 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:14:30.584 16228 16249 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:14:30.608 16228 16249 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:14:30.612 16228 16249 D CCodec  : client requested max input size 46080, which is smaller than what component recommended (6291456); overriding with component recommendation.
+10-15 02:14:30.612 16228 16249 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:14:30.612 16228 16249 D CCodec  : encoding statistics level = 0
+10-15 02:14:30.612 16228 16249 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t height = 180
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t level = 65536
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:14:30.612 16228 16249 D CCodec  :   string mime = "video/avc"
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t profile = 65536
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t width = 320
+10-15 02:14:30.612 16228 16249 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:14:30.612 16228 16249 D CCodec  : }
+10-15 02:14:30.612 16228 16249 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t color-standard = 4
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t color-range = 2
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t color-transfer = 3
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t sar-height = 1
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t sar-width = 1
+10-15 02:14:30.612 16228 16249 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t width = 320
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t height = 180
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t max-height = 240
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t max-width = 320
+10-15 02:14:30.612 16228 16249 D CCodec  :   string mime = "video/raw"
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:14:30.612 16228 16249 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:14:30.612 16228 16249 D CCodec  : }
+10-15 02:17:04.653 16453 16471 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:17:04.655 16453 16471 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:17:04.658 16453 16471 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:17:04.688 16453 16471 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:17:04.695 16453 16471 D CCodec  : encoding statistics level = 0
+10-15 02:17:04.695 16453 16471 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t height = 180
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t level = 65536
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:17:04.695 16453 16471 D CCodec  :   string mime = "video/avc"
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t profile = 65536
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t width = 320
+10-15 02:17:04.695 16453 16471 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:17:04.695 16453 16471 D CCodec  : }
+10-15 02:17:04.695 16453 16471 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t color-standard = 4
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t color-range = 2
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t color-transfer = 3
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t sar-height = 1
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t sar-width = 1
+10-15 02:17:04.695 16453 16471 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t width = 320
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t height = 180
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t max-height = 240
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t max-width = 320
+10-15 02:17:04.695 16453 16471 D CCodec  :   string mime = "video/raw"
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:17:04.695 16453 16471 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:17:04.695 16453 16471 D CCodec  : }
+10-15 02:17:10.153 16453 16485 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:17:10.159 16453 16485 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:17:10.160 16453 16485 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:17:10.168 16453 16485 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:17:10.169 16453 16485 D CCodec  : client requested max input size 46080, which is smaller than what component recommended (6291456); overriding with component recommendation.
+10-15 02:17:10.169 16453 16485 W CCodec  : This behavior is subject to change. It is recommended that app developers double check whether the requested max input size is in reasonable range.
+10-15 02:17:10.169 16453 16485 D CCodec  : encoding statistics level = 0
+10-15 02:17:10.169 16453 16485 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t height = 180
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t level = 65536
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:17:10.169 16453 16485 D CCodec  :   string mime = "video/avc"
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t profile = 65536
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t width = 320
+10-15 02:17:10.169 16453 16485 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:17:10.169 16453 16485 D CCodec  : }
+10-15 02:17:10.169 16453 16485 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t color-standard = 4
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t color-range = 2
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t color-transfer = 3
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t sar-height = 1
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t sar-width = 1
+10-15 02:17:10.169 16453 16485 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t width = 320
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t height = 180
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t max-height = 240
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t max-width = 320
+10-15 02:17:10.169 16453 16485 D CCodec  :   string mime = "video/raw"
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:17:10.169 16453 16485 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:17:10.169 16453 16485 D CCodec  : }
+10-15 02:17:14.353 16453 16491 D CCodec  : allocate(c2.goldfish.h264.decoder)
+10-15 02:17:14.357 16453 16491 I CCodec  : setting up 'default' as default (vendor) store
+10-15 02:17:14.360 16453 16491 I CCodec  : Created component [c2.goldfish.h264.decoder] for [c2.goldfish.h264.decoder]
+10-15 02:17:14.368 16453 16491 D CCodec  : [c2.goldfish.h264.decoder] buffers are bound to CCodec for this session
+10-15 02:17:14.371 16453 16491 D CCodec  : encoding statistics level = 0
+10-15 02:17:14.371 16453 16491 D CCodec  : setup formats input: AMessage(what = 0x00000000) = {
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t height = 180
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t level = 65536
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t max-input-size = 6291456
+10-15 02:17:14.371 16453 16491 D CCodec  :   string mime = "video/avc"
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t profile = 65536
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t width = 320
+10-15 02:17:14.371 16453 16491 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:17:14.371 16453 16491 D CCodec  : }
+10-15 02:17:14.371 16453 16491 D CCodec  : setup formats output: AMessage(what = 0x00000000) = {
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t android._color-format = 2135033992
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t android._video-scaling = 1
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t rotation-degrees = 0
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t color-standard = 4
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t color-range = 2
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t color-transfer = 3
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t sar-height = 1
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t sar-width = 1
+10-15 02:17:14.371 16453 16491 D CCodec  :   Rect crop(0, 0, 319, 179)
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t width = 320
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t height = 180
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t max-height = 240
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t max-width = 320
+10-15 02:17:14.371 16453 16491 D CCodec  :   string mime = "video/raw"
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t android._dataspace = 259
+10-15 02:17:14.371 16453 16491 D CCodec  :   int32_t color-format = 2130708361
+10-15 02:17:14.371 16453 16491 D CCodec  : }

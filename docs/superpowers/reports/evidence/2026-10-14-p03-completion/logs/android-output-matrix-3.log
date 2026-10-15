@@ -1,0 +1,351 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                             13.0s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          850ms
+00:00 +0: mkv-avc-eac3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792053973154652","buildSha256":"unrecorded","caseId":"mkv-avc-eac3","transport":"file","platform":"android","mediaHash":"e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36","supportRequirement":"required","outcome":"cleanup-failed","stage":"first-frame","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":false}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'cleanup-failed'
+   Which: is different.
+          Expected: passed
+            Actual: cleanup-fa ...
+                    ^
+           Differ at offset 0
+mkv-avc-eac3/file failed at first-frame (null)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  mkv-avc-eac3 / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -1: mkv-avc-eac3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-eac3 / file
+  
+00:17 +0 -1: mkv-avc-eac3 / http
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-eac3 / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -2: mkv-avc-eac3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-eac3 / http
+  
+00:17 +0 -2: mkv-avc-eac3 / renamed-file
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-eac3 / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -3: mkv-avc-eac3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-eac3 / renamed-file
+  
+00:17 +0 -3: mkv-avc-dts / file
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-dts / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -4: mkv-avc-dts / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-dts / file
+  
+00:17 +0 -4: mkv-avc-dts / http
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-dts / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -5: mkv-avc-dts / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-dts / http
+  
+00:17 +0 -5: mkv-avc-dts / renamed-file
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-dts / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -6: mkv-avc-dts / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-dts / renamed-file
+  
+00:17 +0 -6: mkv-avc-flac / file
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-flac / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -7: mkv-avc-flac / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-flac / file
+  
+00:17 +0 -7: mkv-avc-flac / http
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-flac / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -8: mkv-avc-flac / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-flac / http
+  
+00:17 +0 -8: mkv-avc-flac / renamed-file
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-flac / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -9: mkv-avc-flac / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-flac / renamed-file
+  
+00:17 +0 -9: mkv-avc-opus / file
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 64
+The test description was:
+  mkv-avc-opus / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -10: mkv-avc-opus / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus / file
+  
+00:17 +0 -10: mkv-avc-opus / http
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: false
+  Actual: <true>
+Previous cleanup did not finish
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:64:9)
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:29)
+<asynchronous suspension>
+00:17 +0 -11: mkv-avc-opus / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus / http
+  
+00:17 +0 -11: mkv-avc-opus / renamed-file
+00:17 +0 -12: mkv-avc-opus / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus / renamed-file
+  
+00:17 +0 -12: mkv-avc-opus-silk / file
+00:17 +0 -13: mkv-avc-opus-silk / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus-silk / file
+  
+00:17 +0 -13: mkv-avc-opus-silk / http
+00:17 +0 -14: mkv-avc-opus-silk / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus-silk / http
+  
+00:17 +0 -14: mkv-avc-opus-silk / renamed-file
+00:17 +0 -15: mkv-avc-opus-silk / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus-silk / renamed-file
+  
+00:17 +0 -15: mkv-avc-opus-hybrid / file
+00:17 +0 -16: mkv-avc-opus-hybrid / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus-hybrid / file
+  
+00:17 +0 -16: mkv-avc-opus-hybrid / http
+00:17 +0 -17: mkv-avc-opus-hybrid / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus-hybrid / http
+  
+00:17 +0 -17: mkv-avc-opus-hybrid / renamed-file
+00:17 +0 -18: mkv-avc-opus-hybrid / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-opus-hybrid / renamed-file
+  
+00:17 +0 -18: mkv-avc-vorbis / file
+00:17 +0 -19: mkv-avc-vorbis / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-vorbis / file
+  
+00:17 +0 -19: mkv-avc-vorbis / http
+00:17 +0 -20: mkv-avc-vorbis / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-vorbis / http
+  
+00:17 +0 -20: mkv-avc-vorbis / renamed-file
+00:17 +0 -21: mkv-avc-vorbis / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-vorbis / renamed-file
+  
+00:17 +0 -21: mkv-avc-ac3-51 / file
+00:17 +0 -22: mkv-avc-ac3-51 / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-ac3-51 / file
+  
+00:17 +0 -22: mkv-avc-ac3-51 / http
+00:17 +0 -23: mkv-avc-ac3-51 / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-ac3-51 / http
+  
+00:17 +0 -23: mkv-avc-ac3-51 / renamed-file
+00:17 +0 -24: mkv-avc-ac3-51 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-avc-ac3-51 / renamed-file
+  
+00:17 +0 -24: (tearDownAll)
+00:17 +0 -24: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-avc-ac3-51 / file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-avc-ac3-51 / http
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-avc-ac3-51 / renamed-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-avc-dts / file
+  ... and 20 more
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.WgP7GG

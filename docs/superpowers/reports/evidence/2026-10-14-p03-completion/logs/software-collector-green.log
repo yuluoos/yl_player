@@ -1,0 +1,14 @@
+..........F........
+======================================================================
+FAIL: test_truncated_duplicate_reordered_and_forged_result_rejected (test_software_collector.CollectorTests.test_truncated_duplicate_reordered_and_forged_result_rejected) (rows=66)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 20, in test_truncated_duplicate_reordered_and_forged_result_rejected
+    with self.assertRaises(ValueError):decode_raw(self.text(rows))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.033s
+
+FAILED (failures=1)

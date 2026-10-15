@@ -1,0 +1,26 @@
+gpg: no gpg-agent running in this session
+gpg: Signature made Tue Aug 11 20:42:43 2026 PDT
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+Verified 18 canonical file/symlink entries, all recipe/configuration inputs, accepted builder provenance and signed source; lock unchanged.
+NEGATIVE source immutable-verify exit=1
+input mismatch: darwin/native/YlFFmpegBridge/YlFFmpegBridge.m
+
+NEGATIVE vorbis-patch immutable-verify exit=1
+input mismatch: tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch
+
+NEGATIVE opus-license immutable-verify exit=1
+input mismatch: LICENSES/Opus-BSD.txt
+
+NEGATIVE configuration immutable-verify exit=1
+input mismatch: tool/apple_ffmpeg/build_xcframework.sh
+
+NEGATIVE slice immutable-verify exit=1
+artifact mismatch
+
+NEGATIVE Opus archive immutable-verify: rejected intended hash mismatch
+Apple FFmpeg contract passed: 3 slices, 5 architectures, 44 Swift symbols, 5 intended-reason negative checks; lock unchanged.

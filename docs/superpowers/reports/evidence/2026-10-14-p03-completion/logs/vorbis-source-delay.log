@@ -1,0 +1,22 @@
+[vorbis @ 0x74a9065180] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x74a9065180]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x74a9065180] Setup header corrupt.
+FAIL line 71: count >= (int)(skip + discard)
+FAIL line 73: trimmedCount == frames
+FAIL line 85: total >= rate * 4 && total <= rate * 4 + 4096
+FAIL line 87: energy > 1 && error / energy < 0.00001
+[vorbis @ 0x74a9065180] Duplicate value found in floor 1 X coordinates
+[vorbis @ 0x74a9065180]  Vorbis setup header packet corrupt (floors). 
+[vorbis @ 0x74a9065180] Setup header corrupt.
+FAIL line 71: count >= (int)(skip + discard)
+FAIL line 73: trimmedCount == frames
+FAIL line 85: total >= rate * 4 && total <= rate * 4 + 4096
+FAIL line 87: energy > 1 && error / energy < 0.00001
+FAIL line 120: ylf_packet_audio_trim(packet, &skip, &discard) == 0
+[vorbis @ 0x74a9064a80] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=0 frames=0 priming=1 SNR=-inf dB
+Vorbis 48000Hz 2ch pass1: packets=0 frames=0 priming=1 SNR=-inf dB
+Vorbis seek target=2000000 first=1003000 matched=3
+Vorbis seek target=1250000 first=1003000 matched=3
+Vorbis seek target=0 first=-21000 matched=3
+Vorbis bridge: 809 checks, 9 failures

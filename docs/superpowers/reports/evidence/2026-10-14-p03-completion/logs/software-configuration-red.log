@@ -1,0 +1,13 @@
+[{"caseId": "av1-main8", "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb", "referenceDecoder": "libaom", "referenceSha256": "310b57f950f6e37a177b7686f471638f7f9b7349369bdfcc73f61b61635a03f8"}, {"caseId": "av1-main10", "fixtureSha256": "bf899306e78b59d58d2059361b175a8ca4266040b3a1f2dcce88f58e1b684c19", "referenceDecoder": "libaom", "referenceSha256": "3bae5a51d4ae959efe4f86107d1b4564546b81bb2928ce0da748644bfaab65e2"}, {"caseId": "vp9-main8", "fixtureSha256": "59decebd69a207e73290a927cdf068bcaaee661326a7f33f6a98983e8d53fb21", "referenceDecoder": "libvpx-vp9", "referenceSha256": "3d2868afe60ec691c610cbd3a390f39e0647eab44e3e4841aeba0655517b15d3"}]
+sysctlbyname for kern.hv_vmm_present failed with status -1Software video: 1414 checks, 0 failures
+sysctlbyname for kern.hv_vmm_present failed with status -1Software video: 406 checks, 0 failures
+[vp9 @ 0x7c83008380] get_buffer() failed
+[vp9 @ 0x7c83008380] thread_get_buffer() failed
+sysctlbyname for kern.hv_vmm_present failed with status -1Software video: 1403 checks, 0 failures
+[libdav1d @ 0x757cc6c000] Codec (libdav1d) not on whitelist 'dca,vorbis'
+[matroska,webm @ 0x757cc30000] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x757cc6c000] Codec (libdav1d) not on whitelist 'dca,vorbis'
+FAIL 21 ylf_software_video_copy_configuration(context,video,&configuration)==0
+FAIL 21 configuration!=NULL
+FAIL 23 ylf_software_video_create_from_configuration(configuration,limits,&decoder)==0
+FAIL 23 decoder!=NULL

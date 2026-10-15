@@ -1,0 +1,113 @@
+YL_VORBIS_FIXTURES={"44100-1.mkv": {"bytes": 13539, "sha256": "a04f516dadb4dda9d99370e64cf8be8ce162e0958f178981242b806f7c82e302"}, "44100-1.ogg": {"bytes": 12255, "sha256": "912d7b4c547c6923d00d989fdb1d55360561338c169dc3059ef7c05939e57aba"}, "44100-2.mkv": {"bytes": 20759, "sha256": "4ebe7f5ab990d50827756568f2353a2a850f0d9d6e0b35f87097dbd8ffb1b3e7"}, "44100-2.ogg": {"bytes": 19533, "sha256": "c972cb28cc1e051a1d777c95e2b7504b02d12e2e9708e4cfbffc4214732b5530"}, "48000-1.mkv": {"bytes": 14109, "sha256": "02a0d6f2f2c203155095a373b79731697f87be7debbc932fd5d11048daf1c5da"}, "48000-1.ogg": {"bytes": 12782, "sha256": "b1752111bd78a0c59b30917c715899a98ac71d4c83878b7d14180c839f58c343"}, "48000-2.mkv": {"bytes": 22214, "sha256": "7beb60867b0a174903d5a425b74268bd734f6e58eea8d91b05dc9a506b5ea321"}, "48000-2.ogg": {"bytes": 20915, "sha256": "4611406b5b10f6f32e777221579ba36bfa834e6184d875057379e4649f55dbc9"}}
+Vorbis source rate=44100 channels=1
+[vorbis @ 0x7978c48700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7978c48700] Setup header corrupt.
+[vorbis @ 0x7978c48380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7978c48700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7978c48700] Setup header corrupt.
+[vorbis @ 0x7978c48380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7978c48000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 1ch pass0: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis 44100Hz 1ch pass1: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3111 checks, 0 failures
+Vorbis source rate=44100 channels=2
+[vorbis @ 0x7486c40a80]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7486c40a80] Setup header corrupt.
+[vorbis @ 0x7486c40700] Could not update timestamps for discarded samples.
+[vorbis @ 0x7486c40a80]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7486c40a80] Setup header corrupt.
+[vorbis @ 0x7486c40700] Could not update timestamps for discarded samples.
+[vorbis @ 0x7486c40380] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 2ch pass0: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis 44100Hz 2ch pass1: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3111 checks, 0 failures
+Vorbis source rate=48000 channels=1
+[vorbis @ 0x75f6c18700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x75f6c18700] Setup header corrupt.
+[vorbis @ 0x75f6c18380] Could not update timestamps for discarded samples.
+[vorbis @ 0x75f6c18700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x75f6c18700] Setup header corrupt.
+[vorbis @ 0x75f6c18380] Could not update timestamps for discarded samples.
+[vorbis @ 0x75f6c18000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 1ch pass0: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis 48000Hz 1ch pass1: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3368 checks, 0 failures
+Vorbis source rate=48000 channels=2
+[vorbis @ 0x76b9020700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x76b9020700] Setup header corrupt.
+[vorbis @ 0x76b9020380] Could not update timestamps for discarded samples.
+[vorbis @ 0x76b9020700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x76b9020700] Setup header corrupt.
+[vorbis @ 0x76b9020380] Could not update timestamps for discarded samples.
+[vorbis @ 0x76b9020000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3368 checks, 0 failures
+Vorbis artifact rate=44100 channels=1
+[vorbis @ 0x7ccec2c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7ccec2c700] Setup header corrupt.
+[vorbis @ 0x7ccec2c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7ccec2c700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7ccec2c700] Setup header corrupt.
+[vorbis @ 0x7ccec2c380] Could not update timestamps for discarded samples.
+[vorbis @ 0x7ccec2c000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 1ch pass0: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis 44100Hz 1ch pass1: packets=174 frames=176400 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3111 checks, 0 failures
+Vorbis artifact rate=44100 channels=2
+[vorbis @ 0x777cc74380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x777cc74380] Setup header corrupt.
+[vorbis @ 0x777cc74000] Could not update timestamps for discarded samples.
+[vorbis @ 0x777cc74380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x777cc74380] Setup header corrupt.
+[vorbis @ 0x777cc74000] Could not update timestamps for discarded samples.
+[vorbis @ 0x777cc74000] Could not update timestamps for discarded samples.
+Vorbis 44100Hz 2ch pass0: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis 44100Hz 2ch pass1: packets=174 frames=176400 priming=1 SNR=136.42 dB
+Vorbis seek target=2000000 first=1781000 matched=3
+Vorbis seek target=1250000 first=1038000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3111 checks, 0 failures
+Vorbis artifact rate=48000 channels=1
+[vorbis @ 0x7ad2c54380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7ad2c54380] Setup header corrupt.
+[vorbis @ 0x7ad2c54000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7ad2c54380]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x7ad2c54380] Setup header corrupt.
+[vorbis @ 0x7ad2c54000] Could not update timestamps for discarded samples.
+[vorbis @ 0x7ad2c54000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 1ch pass0: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis 48000Hz 1ch pass1: packets=189 frames=192000 priming=1 SNR=136.53 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3368 checks, 0 failures
+Vorbis artifact rate=48000 channels=2
+[vorbis @ 0x76c3064700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x76c3064700] Setup header corrupt.
+[vorbis @ 0x76c3064380] Could not update timestamps for discarded samples.
+[vorbis @ 0x76c3064700]  Vorbis setup header packet corrupt (framing flag). 
+[vorbis @ 0x76c3064700] Setup header corrupt.
+[vorbis @ 0x76c3064380] Could not update timestamps for discarded samples.
+[vorbis @ 0x76c3064000] Could not update timestamps for discarded samples.
+Vorbis 48000Hz 2ch pass0: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis 48000Hz 2ch pass1: packets=189 frames=192000 priming=1 SNR=136.46 dB
+Vorbis seek target=2000000 first=1786000 matched=3
+Vorbis seek target=1250000 first=1039000 matched=3
+Vorbis seek target=0 first=0 matched=3
+Vorbis bridge: 3368 checks, 0 failures

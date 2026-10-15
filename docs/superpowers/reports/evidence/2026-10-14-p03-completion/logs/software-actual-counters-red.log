@@ -1,0 +1,14 @@
+......F.
+======================================================================
+FAIL: test_real_apple_two_image_identity_and_actual_sampling_jitter (test_software_evidence.SoftwareEvidenceTests.test_real_apple_two_image_identity_and_actual_sampling_jitter)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_evidence.py", line 48, in test_real_apple_two_image_identity_and_actual_sampling_jitter
+    self.assertTrue(summarize(p,r)['measurementValid'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.020s
+
+FAILED (failures=1)

@@ -10,6 +10,7 @@ import json
 
 _MAX = 2**63 - 1
 _HASH = re.compile(r'[0-9a-f]{64}\Z')
+_BUILD = re.compile(r'[0-9a-f]{64}(?::[0-9a-f]{64})?\Z')
 _FIXED = dict(schemaVersion=1, repetitions=5, idleNs=2_000_000_000,
               decodeNs=12_000_000_000, disposeNs=2_000_000_000,
               sampleIntervalNs=250_000_000)
@@ -25,7 +26,7 @@ def _key_valid(key):
     if any(not isinstance(key.get(k),str) or not key[k].strip()
            for k in ('model','osBuild','decoderBuild')):
         return False
-    if not _HASH.fullmatch(key['decoderBuild']):
+    if not _BUILD.fullmatch(key['decoderBuild']):
         return False
     fields = ('width','height','fpsNumerator','fpsDenominator','threads',
               'outputPixelFormat','codec')
@@ -63,6 +64,9 @@ def summarize(protocol: dict, rows: list[dict]) -> dict:
     if protocol.get('buildMode') not in ('release','debug') or type(protocol.get('simulator')) is not bool:
         errors.add('unknown_environment')
     if len(rows)!=5: errors.add('incomplete_runs')
+    lateness = protocol.get('maxSampleLatenessNs', 0)
+    if type(lateness) is not int or lateness not in (0, 50_000_000):
+        errors.add('protocol_mismatch'); lateness=0
     indices=set(); identities=set(); raw_hashes=set(); peak_rss=peak_footprint=peak_cpu=0
     for row in rows:
         if not isinstance(row,dict):
@@ -87,11 +91,15 @@ def summarize(protocol: dict, rows: list[dict]) -> dict:
         samples=row.get('samples')
         if not isinstance(samples,list) or len(samples)!=65:
             errors.add('incomplete_samples');continue
-        previous_cpu=None;first_cpu=None
+        previous_cpu=None;first_cpu=None;previous_clock=None
         for position,sample in enumerate(samples):
             if not isinstance(sample,dict):errors.add('invalid_sample');continue
             clock=sample.get('monotonicNs');cpu=sample.get('cpuNs')
-            if not _integer(clock) or clock!=position*250_000_000:errors.add('nonmonotonic_or_missing_sample')
+            if (not _integer(clock) or not position*250_000_000 <= clock <= position*250_000_000+lateness or
+                (previous_clock is not None and clock <= previous_clock) or
+                (lateness and sample.get('slot') != position)):
+                errors.add('nonmonotonic_or_missing_sample')
+            if _integer(clock): previous_clock=clock
             if not _integer(cpu) or (previous_cpu is not None and cpu<previous_cpu):
                 errors.add('invalid_cpu_counter')
             else:

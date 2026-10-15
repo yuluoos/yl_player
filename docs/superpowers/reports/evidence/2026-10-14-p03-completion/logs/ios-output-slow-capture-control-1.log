@@ -1,0 +1,106 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Xcode build...                                          
+Xcode build done.                                           15.4s
+00:00 +0: mp4-avc-aac / renamed-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060781619201","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"renamed-file","platform":"ios","playbackRate":0.25,"mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"timeout","stage":"end","code":null,"category":null,"scope":null,"engine":"avPlayer","decoder":"unknown","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":0,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1000000,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2000000,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3000000,"comparison":"display-primary-marker-identity"},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2000000,"comparison":"display-primary-marker-identity"},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1250000,"comparison":"display-primary-marker-identity"},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":0,"comparison":"display-primary-marker-identity"}],"audioClockUs":null,"seekProgress":true,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'timeout'
+   Which: is different.
+          Expected: passed
+            Actual: timeout
+                    ^
+           Differ at offset 0
+mp4-avc-aac/renamed-file failed at end (null)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:439:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 439
+The test description was:
+  mp4-avc-aac / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:31 +0 -1: mp4-avc-aac / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-avc-aac / renamed-file
+  
+00:31 +0 -1: mp4-avc-aac / wrong-known-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060781619201","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"wrong-known-file","platform":"ios","playbackRate":0.25,"mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"timeout","stage":"end","code":null,"category":null,"scope":null,"engine":"avPlayer","decoder":"unknown","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":0,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1000000,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2000000,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3000000,"comparison":"display-primary-marker-identity"},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2000000,"comparison":"display-primary-marker-identity"},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1250000,"comparison":"display-primary-marker-identity"},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":0,"comparison":"display-primary-marker-identity"}],"audioClockUs":null,"seekProgress":true,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'timeout'
+   Which: is different.
+          Expected: passed
+            Actual: timeout
+                    ^
+           Differ at offset 0
+mp4-avc-aac/wrong-known-file failed at end (null)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:439:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 439
+The test description was:
+  mp4-avc-aac / wrong-known-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:00 +0 -2: mp4-avc-aac / wrong-known-file [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-avc-aac / wrong-known-file
+  
+01:00 +0 -2: mp4-avc-aac / extensionless-file
+YL_FORMAT_ROW={"runId":"format-ios-1792060781619201","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"extensionless-file","platform":"ios","playbackRate":0.25,"mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"timeout","stage":"end","code":null,"category":null,"scope":null,"engine":"avPlayer","decoder":"unknown","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":0,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1000000,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2000000,"comparison":"display-primary-marker-identity"},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3000000,"comparison":"display-primary-marker-identity"},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2000000,"comparison":"display-primary-marker-identity"},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1250000,"comparison":"display-primary-marker-identity"},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":0,"comparison":"display-primary-marker-identity"}],"audioClockUs":null,"seekProgress":true,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'timeout'
+   Which: is different.
+          Expected: passed
+            Actual: timeout
+                    ^
+           Differ at offset 0
+mp4-avc-aac/extensionless-file failed at end (null)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:439:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 439
+The test description was:
+  mp4-avc-aac / extensionless-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:30 +0 -3: mp4-avc-aac / extensionless-file [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-avc-aac / extensionless-file
+  
+01:30 +0 -3: (tearDownAll)
+01:30 +0 -3: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / extensionless-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / renamed-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-avc-aac / wrong-known-file

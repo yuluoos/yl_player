@@ -1,0 +1,9 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                             17.2s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          993ms
+00:00 +0: avi-avc-mp3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792056786467951","buildSha256":"unrecorded","caseId":"avi-avc-mp3","transport":"file","platform":"android","mediaHash":"8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":430000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1269000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2266000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3264000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2362000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1658000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":385000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:10 +1: (tearDownAll)
+00:10 +1: All tests passed!
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.E2ZVJg

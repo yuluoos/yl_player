@@ -1,0 +1,9 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                             19.9s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          770ms
+00:00 +0: ps-avc-mp3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792052885537354","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":430000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1269000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2289000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3286000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2478000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:07 +1: (tearDownAll)
+00:07 +1: All tests passed!
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.XpjdaW

@@ -1,0 +1,3118 @@
+{
+  "runStatus": "collected",
+  "stage": "complete",
+  "productionEnabled": false,
+  "rows": [
+    {
+      "decodedFrames": 288,
+      "measurementOutput": "actual CVPixelBuffer NV12 planes; not physical display",
+      "outputMarkersVerified": true,
+      "pid": 18706,
+      "samples": [
+        {
+          "cpuNs": 7396000,
+          "footprintBytes": 2114040,
+          "lowPower": false,
+          "monotonicNs": 312250,
+          "rssBytes": 6455296,
+          "slot": 0,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 9638000,
+          "footprintBytes": 2753040,
+          "lowPower": false,
+          "monotonicNs": 250495250,
+          "rssBytes": 8716288,
+          "slot": 1,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 10193000,
+          "footprintBytes": 2785808,
+          "lowPower": false,
+          "monotonicNs": 501478625,
+          "rssBytes": 8749056,
+          "slot": 2,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 10671000,
+          "footprintBytes": 2785808,
+          "lowPower": false,
+          "monotonicNs": 750636417,
+          "rssBytes": 8749056,
+          "slot": 3,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 11013000,
+          "footprintBytes": 2802192,
+          "lowPower": false,
+          "monotonicNs": 1003232458,
+          "rssBytes": 8765440,
+          "slot": 4,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 11309000,
+          "footprintBytes": 2802192,
+          "lowPower": false,
+          "monotonicNs": 1251979083,
+          "rssBytes": 8765440,
+          "slot": 5,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 11696000,
+          "footprintBytes": 2818576,
+          "lowPower": false,
+          "monotonicNs": 1500498625,
+          "rssBytes": 8781824,
+          "slot": 6,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 12229000,
+          "footprintBytes": 2818576,
+          "lowPower": false,
+          "monotonicNs": 1753848583,
+          "rssBytes": 8781824,
+          "slot": 7,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 14503000,
+          "footprintBytes": 4588048,
+          "lowPower": false,
+          "monotonicNs": 2003378667,
+          "rssBytes": 11960320,
+          "slot": 8,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 16772000,
+          "footprintBytes": 6062632,
+          "lowPower": false,
+          "monotonicNs": 2251595458,
+          "rssBytes": 13713408,
+          "slot": 9,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 19348000,
+          "footprintBytes": 6111784,
+          "lowPower": false,
+          "monotonicNs": 2503836958,
+          "rssBytes": 13762560,
+          "slot": 10,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 21432000,
+          "footprintBytes": 6226472,
+          "lowPower": false,
+          "monotonicNs": 2753037375,
+          "rssBytes": 13877248,
+          "slot": 11,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 23880000,
+          "footprintBytes": 6685224,
+          "lowPower": false,
+          "monotonicNs": 3001466167,
+          "rssBytes": 14336000,
+          "slot": 12,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 26905000,
+          "footprintBytes": 6865448,
+          "lowPower": false,
+          "monotonicNs": 3252900208,
+          "rssBytes": 14303232,
+          "slot": 13,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 28689000,
+          "footprintBytes": 6881832,
+          "lowPower": false,
+          "monotonicNs": 3503563500,
+          "rssBytes": 14057472,
+          "slot": 14,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 30764000,
+          "footprintBytes": 7209512,
+          "lowPower": false,
+          "monotonicNs": 3750842917,
+          "rssBytes": 14008320,
+          "slot": 15,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 32505000,
+          "footprintBytes": 7209512,
+          "lowPower": false,
+          "monotonicNs": 4003828750,
+          "rssBytes": 13172736,
+          "slot": 16,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 35275000,
+          "footprintBytes": 7209512,
+          "lowPower": false,
+          "monotonicNs": 4252988667,
+          "rssBytes": 13172736,
+          "slot": 17,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 38042000,
+          "footprintBytes": 6652456,
+          "lowPower": false,
+          "monotonicNs": 4501681042,
+          "rssBytes": 13205504,
+          "slot": 18,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 40264000,
+          "footprintBytes": 6652456,
+          "lowPower": false,
+          "monotonicNs": 4751760542,
+          "rssBytes": 13205504,
+          "slot": 19,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 42361000,
+          "footprintBytes": 6816296,
+          "lowPower": false,
+          "monotonicNs": 5000176625,
+          "rssBytes": 13369344,
+          "slot": 20,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 45017000,
+          "footprintBytes": 6865448,
+          "lowPower": false,
+          "monotonicNs": 5252842250,
+          "rssBytes": 13418496,
+          "slot": 21,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 47449000,
+          "footprintBytes": 6881832,
+          "lowPower": false,
+          "monotonicNs": 5504764000,
+          "rssBytes": 13434880,
+          "slot": 22,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 49352000,
+          "footprintBytes": 6881832,
+          "lowPower": false,
+          "monotonicNs": 5751444333,
+          "rssBytes": 13434880,
+          "slot": 23,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 52006000,
+          "footprintBytes": 6996520,
+          "lowPower": false,
+          "monotonicNs": 6003905083,
+          "rssBytes": 13549568,
+          "slot": 24,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 53940000,
+          "footprintBytes": 6996520,
+          "lowPower": false,
+          "monotonicNs": 6251556500,
+          "rssBytes": 13271040,
+          "slot": 25,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 56880000,
+          "footprintBytes": 7111208,
+          "lowPower": false,
+          "monotonicNs": 6504817583,
+          "rssBytes": 13058048,
+          "slot": 26,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 58974000,
+          "footprintBytes": 7111208,
+          "lowPower": false,
+          "monotonicNs": 6750503458,
+          "rssBytes": 13058048,
+          "slot": 27,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 60655000,
+          "footprintBytes": 7127592,
+          "lowPower": false,
+          "monotonicNs": 7003428500,
+          "rssBytes": 13090816,
+          "slot": 28,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 62777000,
+          "footprintBytes": 7127592,
+          "lowPower": false,
+          "monotonicNs": 7250559042,
+          "rssBytes": 13090816,
+          "slot": 29,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 64593000,
+          "footprintBytes": 6390312,
+          "lowPower": false,
+          "monotonicNs": 7503316000,
+          "rssBytes": 12943360,
+          "slot": 30,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 66612000,
+          "footprintBytes": 6455848,
+          "lowPower": false,
+          "monotonicNs": 7754286083,
+          "rssBytes": 13008896,
+          "slot": 31,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 68309000,
+          "footprintBytes": 6455848,
+          "lowPower": false,
+          "monotonicNs": 8001395542,
+          "rssBytes": 13008896,
+          "slot": 32,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 71124000,
+          "footprintBytes": 6455848,
+          "lowPower": false,
+          "monotonicNs": 8251435458,
+          "rssBytes": 13008896,
+          "slot": 33,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 72796000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 8503137500,
+          "rssBytes": 12943360,
+          "slot": 34,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 74653000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 8751507333,
+          "rssBytes": 13025280,
+          "slot": 35,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 76825000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 9001478083,
+          "rssBytes": 13090816,
+          "slot": 36,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 78868000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 9250623083,
+          "rssBytes": 13090816,
+          "slot": 37,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 80974000,
+          "footprintBytes": 6423080,
+          "lowPower": false,
+          "monotonicNs": 9504594250,
+          "rssBytes": 13107200,
+          "slot": 38,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 82826000,
+          "footprintBytes": 6521384,
+          "lowPower": false,
+          "monotonicNs": 9750053167,
+          "rssBytes": 13205504,
+          "slot": 39,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 84941000,
+          "footprintBytes": 6586920,
+          "lowPower": false,
+          "monotonicNs": 10000472625,
+          "rssBytes": 13287424,
+          "slot": 40,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 87557000,
+          "footprintBytes": 6685224,
+          "lowPower": false,
+          "monotonicNs": 10252471750,
+          "rssBytes": 13385728,
+          "slot": 41,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 89543000,
+          "footprintBytes": 6717992,
+          "lowPower": false,
+          "monotonicNs": 10502855833,
+          "rssBytes": 13434880,
+          "slot": 42,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 91983000,
+          "footprintBytes": 6881832,
+          "lowPower": false,
+          "monotonicNs": 10751696333,
+          "rssBytes": 13598720,
+          "slot": 43,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 93523000,
+          "footprintBytes": 6881832,
+          "lowPower": false,
+          "monotonicNs": 11002363083,
+          "rssBytes": 13598720,
+          "slot": 44,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 96335000,
+          "footprintBytes": 6881832,
+          "lowPower": false,
+          "monotonicNs": 11253265667,
+          "rssBytes": 13598720,
+          "slot": 45,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 98089000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 11502882417,
+          "rssBytes": 13615104,
+          "slot": 46,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 100332000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 11752510750,
+          "rssBytes": 13615104,
+          "slot": 47,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 102511000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 12001551792,
+          "rssBytes": 13615104,
+          "slot": 48,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 105392000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 12253671500,
+          "rssBytes": 13615104,
+          "slot": 49,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 107264000,
+          "footprintBytes": 6062632,
+          "lowPower": false,
+          "monotonicNs": 12500528542,
+          "rssBytes": 13631488,
+          "slot": 50,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 109764000,
+          "footprintBytes": 6160936,
+          "lowPower": false,
+          "monotonicNs": 12751415708,
+          "rssBytes": 13729792,
+          "slot": 51,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 112067000,
+          "footprintBytes": 6226472,
+          "lowPower": false,
+          "monotonicNs": 13001858042,
+          "rssBytes": 13795328,
+          "slot": 52,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 114500000,
+          "footprintBytes": 6226472,
+          "lowPower": false,
+          "monotonicNs": 13251416250,
+          "rssBytes": 13795328,
+          "slot": 53,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 116596000,
+          "footprintBytes": 6079016,
+          "lowPower": false,
+          "monotonicNs": 13502201625,
+          "rssBytes": 13811712,
+          "slot": 54,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 118939000,
+          "footprintBytes": 6079016,
+          "lowPower": false,
+          "monotonicNs": 13751410417,
+          "rssBytes": 13811712,
+          "slot": 55,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 121016000,
+          "footprintBytes": 6079016,
+          "lowPower": false,
+          "monotonicNs": 14001578542,
+          "rssBytes": 13811712,
+          "slot": 56,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 121349000,
+          "footprintBytes": 6046248,
+          "lowPower": false,
+          "monotonicNs": 14251382167,
+          "rssBytes": 13893632,
+          "slot": 57,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 121718000,
+          "footprintBytes": 4457000,
+          "lowPower": false,
+          "monotonicNs": 14500035125,
+          "rssBytes": 13910016,
+          "slot": 58,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122035000,
+          "footprintBytes": 4457000,
+          "lowPower": false,
+          "monotonicNs": 14750902500,
+          "rssBytes": 13910016,
+          "slot": 59,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122328000,
+          "footprintBytes": 4457000,
+          "lowPower": false,
+          "monotonicNs": 15001649667,
+          "rssBytes": 13910016,
+          "slot": 60,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122648000,
+          "footprintBytes": 4457000,
+          "lowPower": false,
+          "monotonicNs": 15251422625,
+          "rssBytes": 13910016,
+          "slot": 61,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123053000,
+          "footprintBytes": 4473384,
+          "lowPower": false,
+          "monotonicNs": 15500507292,
+          "rssBytes": 13926400,
+          "slot": 62,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123388000,
+          "footprintBytes": 4489768,
+          "lowPower": false,
+          "monotonicNs": 15753467500,
+          "rssBytes": 13844480,
+          "slot": 63,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123704000,
+          "footprintBytes": 4489768,
+          "lowPower": false,
+          "monotonicNs": 16001800500,
+          "rssBytes": 13844480,
+          "slot": 64,
+          "thermal": "nominal"
+        }
+      ],
+      "status": "passed",
+      "run": 0,
+      "runId": "ddc06feac96c4fe5a41ed04d72b7a18f",
+      "rawSha256": "13afff6d3d2f6550acaacb97b73328aea99c28fd9c1ae633c345bb524ab8ed2e",
+      "protocolSha256": "fda02fb17eb60683febe4d6aa33ee156c94bfa362db5686179c2f9f2f42d4996",
+      "key": {
+        "model": "MacBookPro17,1",
+        "osBuild": "26A434",
+        "decoderBuild": "60c60ccb7a322171f110b989307089f5cb97b331cc4a624d1ef20b79b5026536:747c2c1af9cacf77ec655ce7d02980898fa26be75b86cf57413f050d099a7360",
+        "codec": 12,
+        "profile": 0,
+        "bitDepth": 8,
+        "chroma": 420,
+        "width": 320,
+        "height": 180,
+        "fpsNumerator": 24,
+        "fpsDenominator": 1,
+        "threads": 2,
+        "outputPixelFormat": 875704438
+      },
+      "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "buildMode": "release",
+      "simulator": false,
+      "positiveControlPassed": true,
+      "positiveControlSha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f"
+    },
+    {
+      "decodedFrames": 288,
+      "measurementOutput": "actual CVPixelBuffer NV12 planes; not physical display",
+      "outputMarkersVerified": true,
+      "pid": 18793,
+      "samples": [
+        {
+          "cpuNs": 11715000,
+          "footprintBytes": 2130448,
+          "lowPower": false,
+          "monotonicNs": 345792,
+          "rssBytes": 6455296,
+          "slot": 0,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 14427000,
+          "footprintBytes": 2753064,
+          "lowPower": false,
+          "monotonicNs": 251262042,
+          "rssBytes": 8699904,
+          "slot": 1,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 14956000,
+          "footprintBytes": 2785832,
+          "lowPower": false,
+          "monotonicNs": 500740000,
+          "rssBytes": 8732672,
+          "slot": 2,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 15447000,
+          "footprintBytes": 2785832,
+          "lowPower": false,
+          "monotonicNs": 751278042,
+          "rssBytes": 8732672,
+          "slot": 3,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 15979000,
+          "footprintBytes": 2802216,
+          "lowPower": false,
+          "monotonicNs": 1000200458,
+          "rssBytes": 8749056,
+          "slot": 4,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 16411000,
+          "footprintBytes": 2802216,
+          "lowPower": false,
+          "monotonicNs": 1253188125,
+          "rssBytes": 8749056,
+          "slot": 5,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 16774000,
+          "footprintBytes": 2818600,
+          "lowPower": false,
+          "monotonicNs": 1500352042,
+          "rssBytes": 8765440,
+          "slot": 6,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 17110000,
+          "footprintBytes": 2818600,
+          "lowPower": false,
+          "monotonicNs": 1751266667,
+          "rssBytes": 8765440,
+          "slot": 7,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 17521000,
+          "footprintBytes": 2818600,
+          "lowPower": false,
+          "monotonicNs": 2001259458,
+          "rssBytes": 8765440,
+          "slot": 8,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 21888000,
+          "footprintBytes": 5833280,
+          "lowPower": false,
+          "monotonicNs": 2250801833,
+          "rssBytes": 13467648,
+          "slot": 9,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 23433000,
+          "footprintBytes": 5882432,
+          "lowPower": false,
+          "monotonicNs": 2500530833,
+          "rssBytes": 13516800,
+          "slot": 10,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 25568000,
+          "footprintBytes": 6259264,
+          "lowPower": false,
+          "monotonicNs": 2751229292,
+          "rssBytes": 13893632,
+          "slot": 11,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 27487000,
+          "footprintBytes": 6341184,
+          "lowPower": false,
+          "monotonicNs": 3003261750,
+          "rssBytes": 13975552,
+          "slot": 12,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 30077000,
+          "footprintBytes": 6357568,
+          "lowPower": false,
+          "monotonicNs": 3251242833,
+          "rssBytes": 14041088,
+          "slot": 13,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 32093000,
+          "footprintBytes": 6373952,
+          "lowPower": false,
+          "monotonicNs": 3500082125,
+          "rssBytes": 13336576,
+          "slot": 14,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 33982000,
+          "footprintBytes": 6373952,
+          "lowPower": false,
+          "monotonicNs": 3752274250,
+          "rssBytes": 13336576,
+          "slot": 15,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 36499000,
+          "footprintBytes": 6373952,
+          "lowPower": false,
+          "monotonicNs": 4002928708,
+          "rssBytes": 13336576,
+          "slot": 16,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 38861000,
+          "footprintBytes": 6554176,
+          "lowPower": false,
+          "monotonicNs": 4251256958,
+          "rssBytes": 13516800,
+          "slot": 17,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 41273000,
+          "footprintBytes": 6668864,
+          "lowPower": false,
+          "monotonicNs": 4501220708,
+          "rssBytes": 13631488,
+          "slot": 18,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 42917000,
+          "footprintBytes": 6668864,
+          "lowPower": false,
+          "monotonicNs": 4751025958,
+          "rssBytes": 13631488,
+          "slot": 19,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 45085000,
+          "footprintBytes": 6734400,
+          "lowPower": false,
+          "monotonicNs": 5001249542,
+          "rssBytes": 13697024,
+          "slot": 20,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 47029000,
+          "footprintBytes": 6718016,
+          "lowPower": false,
+          "monotonicNs": 5250792292,
+          "rssBytes": 13680640,
+          "slot": 21,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 49104000,
+          "footprintBytes": 6996544,
+          "lowPower": false,
+          "monotonicNs": 5501245750,
+          "rssBytes": 13942784,
+          "slot": 22,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 51749000,
+          "footprintBytes": 7324224,
+          "lowPower": false,
+          "monotonicNs": 5754565750,
+          "rssBytes": 14172160,
+          "slot": 23,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 53376000,
+          "footprintBytes": 7324224,
+          "lowPower": false,
+          "monotonicNs": 6001024625,
+          "rssBytes": 13418496,
+          "slot": 24,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 56074000,
+          "footprintBytes": 7340608,
+          "lowPower": false,
+          "monotonicNs": 6254210667,
+          "rssBytes": 13434880,
+          "slot": 25,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 57724000,
+          "footprintBytes": 6226496,
+          "lowPower": false,
+          "monotonicNs": 6500172000,
+          "rssBytes": 13402112,
+          "slot": 26,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 59657000,
+          "footprintBytes": 6226496,
+          "lowPower": false,
+          "monotonicNs": 6751292375,
+          "rssBytes": 13402112,
+          "slot": 27,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 61447000,
+          "footprintBytes": 6226496,
+          "lowPower": false,
+          "monotonicNs": 7001636833,
+          "rssBytes": 13402112,
+          "slot": 28,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 64511000,
+          "footprintBytes": 6226496,
+          "lowPower": false,
+          "monotonicNs": 7251261625,
+          "rssBytes": 13402112,
+          "slot": 29,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 66322000,
+          "footprintBytes": 6242880,
+          "lowPower": false,
+          "monotonicNs": 7502156542,
+          "rssBytes": 13418496,
+          "slot": 30,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 68028000,
+          "footprintBytes": 6242880,
+          "lowPower": false,
+          "monotonicNs": 7750054250,
+          "rssBytes": 13418496,
+          "slot": 31,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 69918000,
+          "footprintBytes": 6242880,
+          "lowPower": false,
+          "monotonicNs": 8001249167,
+          "rssBytes": 13418496,
+          "slot": 32,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 71514000,
+          "footprintBytes": 6996544,
+          "lowPower": false,
+          "monotonicNs": 8251232958,
+          "rssBytes": 13402112,
+          "slot": 33,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 73402000,
+          "footprintBytes": 6324800,
+          "lowPower": false,
+          "monotonicNs": 8502415417,
+          "rssBytes": 13418496,
+          "slot": 34,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 75453000,
+          "footprintBytes": 6324800,
+          "lowPower": false,
+          "monotonicNs": 8750058333,
+          "rssBytes": 13418496,
+          "slot": 35,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 77375000,
+          "footprintBytes": 6324800,
+          "lowPower": false,
+          "monotonicNs": 9000201292,
+          "rssBytes": 13418496,
+          "slot": 36,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 79574000,
+          "footprintBytes": 6324800,
+          "lowPower": false,
+          "monotonicNs": 9251312667,
+          "rssBytes": 13418496,
+          "slot": 37,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 82105000,
+          "footprintBytes": 6341184,
+          "lowPower": false,
+          "monotonicNs": 9503904708,
+          "rssBytes": 13451264,
+          "slot": 38,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 84070000,
+          "footprintBytes": 6341184,
+          "lowPower": false,
+          "monotonicNs": 9753124000,
+          "rssBytes": 13451264,
+          "slot": 39,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 85844000,
+          "footprintBytes": 6341184,
+          "lowPower": false,
+          "monotonicNs": 10001298917,
+          "rssBytes": 13451264,
+          "slot": 40,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 88484000,
+          "footprintBytes": 6341184,
+          "lowPower": false,
+          "monotonicNs": 10251418875,
+          "rssBytes": 13451264,
+          "slot": 41,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 90426000,
+          "footprintBytes": 5866048,
+          "lowPower": false,
+          "monotonicNs": 10500947500,
+          "rssBytes": 13467648,
+          "slot": 42,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 92600000,
+          "footprintBytes": 5882432,
+          "lowPower": false,
+          "monotonicNs": 10751921292,
+          "rssBytes": 13484032,
+          "slot": 43,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 95220000,
+          "footprintBytes": 5898816,
+          "lowPower": false,
+          "monotonicNs": 11002164583,
+          "rssBytes": 13467648,
+          "slot": 44,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 96944000,
+          "footprintBytes": 5898816,
+          "lowPower": false,
+          "monotonicNs": 11250161792,
+          "rssBytes": 13467648,
+          "slot": 45,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 99666000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 11501796083,
+          "rssBytes": 13484032,
+          "slot": 46,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 101781000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 11751247125,
+          "rssBytes": 13484032,
+          "slot": 47,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 103801000,
+          "footprintBytes": 6013504,
+          "lowPower": false,
+          "monotonicNs": 12000488208,
+          "rssBytes": 13418496,
+          "slot": 48,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 106545000,
+          "footprintBytes": 6013504,
+          "lowPower": false,
+          "monotonicNs": 12251255667,
+          "rssBytes": 13418496,
+          "slot": 49,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 108693000,
+          "footprintBytes": 6029888,
+          "lowPower": false,
+          "monotonicNs": 12502422667,
+          "rssBytes": 13434880,
+          "slot": 50,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 110839000,
+          "footprintBytes": 6029888,
+          "lowPower": false,
+          "monotonicNs": 12751285625,
+          "rssBytes": 13434880,
+          "slot": 51,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 113016000,
+          "footprintBytes": 6029888,
+          "lowPower": false,
+          "monotonicNs": 13003343583,
+          "rssBytes": 13434880,
+          "slot": 52,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 115752000,
+          "footprintBytes": 6029888,
+          "lowPower": false,
+          "monotonicNs": 13253121667,
+          "rssBytes": 13434880,
+          "slot": 53,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 117962000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 13500473125,
+          "rssBytes": 13451264,
+          "slot": 54,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 120257000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 13750689167,
+          "rssBytes": 13451264,
+          "slot": 55,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122180000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 14001258500,
+          "rssBytes": 13451264,
+          "slot": 56,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122755000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 14251303625,
+          "rssBytes": 13565952,
+          "slot": 57,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123112000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 14501303458,
+          "rssBytes": 13582336,
+          "slot": 58,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123510000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 14751263125,
+          "rssBytes": 13582336,
+          "slot": 59,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123832000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 15000809000,
+          "rssBytes": 13582336,
+          "slot": 60,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124101000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 15251237458,
+          "rssBytes": 12861440,
+          "slot": 61,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124506000,
+          "footprintBytes": 4506176,
+          "lowPower": false,
+          "monotonicNs": 15500981333,
+          "rssBytes": 12845056,
+          "slot": 62,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124771000,
+          "footprintBytes": 4522560,
+          "lowPower": false,
+          "monotonicNs": 15751945917,
+          "rssBytes": 12861440,
+          "slot": 63,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 125141000,
+          "footprintBytes": 4522560,
+          "lowPower": false,
+          "monotonicNs": 16003907125,
+          "rssBytes": 12861440,
+          "slot": 64,
+          "thermal": "nominal"
+        }
+      ],
+      "status": "passed",
+      "run": 1,
+      "runId": "62e67f16509f419c9929ed2027e4e397",
+      "rawSha256": "4aeb87df63e1e10f081e4e1705a56da49d779611ab708d514f2ef20028f191eb",
+      "protocolSha256": "fda02fb17eb60683febe4d6aa33ee156c94bfa362db5686179c2f9f2f42d4996",
+      "key": {
+        "model": "MacBookPro17,1",
+        "osBuild": "26A434",
+        "decoderBuild": "60c60ccb7a322171f110b989307089f5cb97b331cc4a624d1ef20b79b5026536:747c2c1af9cacf77ec655ce7d02980898fa26be75b86cf57413f050d099a7360",
+        "codec": 12,
+        "profile": 0,
+        "bitDepth": 8,
+        "chroma": 420,
+        "width": 320,
+        "height": 180,
+        "fpsNumerator": 24,
+        "fpsDenominator": 1,
+        "threads": 2,
+        "outputPixelFormat": 875704438
+      },
+      "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "buildMode": "release",
+      "simulator": false,
+      "positiveControlPassed": true,
+      "positiveControlSha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f"
+    },
+    {
+      "decodedFrames": 288,
+      "measurementOutput": "actual CVPixelBuffer NV12 planes; not physical display",
+      "outputMarkersVerified": true,
+      "pid": 18850,
+      "samples": [
+        {
+          "cpuNs": 6336000,
+          "footprintBytes": 2114040,
+          "lowPower": false,
+          "monotonicNs": 172834,
+          "rssBytes": 6455296,
+          "slot": 0,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 8206000,
+          "footprintBytes": 2736680,
+          "lowPower": false,
+          "monotonicNs": 250349750,
+          "rssBytes": 8683520,
+          "slot": 1,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 8713000,
+          "footprintBytes": 2769448,
+          "lowPower": false,
+          "monotonicNs": 501124209,
+          "rssBytes": 8716288,
+          "slot": 2,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 9139000,
+          "footprintBytes": 2769448,
+          "lowPower": false,
+          "monotonicNs": 753568667,
+          "rssBytes": 8716288,
+          "slot": 3,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 9499000,
+          "footprintBytes": 2785832,
+          "lowPower": false,
+          "monotonicNs": 1001131209,
+          "rssBytes": 8732672,
+          "slot": 4,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 9891000,
+          "footprintBytes": 2785832,
+          "lowPower": false,
+          "monotonicNs": 1253323834,
+          "rssBytes": 8732672,
+          "slot": 5,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 10386000,
+          "footprintBytes": 2802216,
+          "lowPower": false,
+          "monotonicNs": 1500278834,
+          "rssBytes": 8749056,
+          "slot": 6,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 10883000,
+          "footprintBytes": 2802216,
+          "lowPower": false,
+          "monotonicNs": 1752688042,
+          "rssBytes": 8749056,
+          "slot": 7,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 11291000,
+          "footprintBytes": 2802216,
+          "lowPower": false,
+          "monotonicNs": 2000510000,
+          "rssBytes": 8749056,
+          "slot": 8,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 17536000,
+          "footprintBytes": 5849664,
+          "lowPower": false,
+          "monotonicNs": 2251385084,
+          "rssBytes": 13484032,
+          "slot": 9,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 19448000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 2501233375,
+          "rssBytes": 13582336,
+          "slot": 10,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 21778000,
+          "footprintBytes": 6423104,
+          "lowPower": false,
+          "monotonicNs": 2751239250,
+          "rssBytes": 14057472,
+          "slot": 11,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 24052000,
+          "footprintBytes": 6505024,
+          "lowPower": false,
+          "monotonicNs": 3001557125,
+          "rssBytes": 14139392,
+          "slot": 12,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 26595000,
+          "footprintBytes": 6521408,
+          "lowPower": false,
+          "monotonicNs": 3250791167,
+          "rssBytes": 14204928,
+          "slot": 13,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 28576000,
+          "footprintBytes": 6537792,
+          "lowPower": false,
+          "monotonicNs": 3501946375,
+          "rssBytes": 14221312,
+          "slot": 14,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 31001000,
+          "footprintBytes": 6537792,
+          "lowPower": false,
+          "monotonicNs": 3751573375,
+          "rssBytes": 14221312,
+          "slot": 15,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 33122000,
+          "footprintBytes": 6537792,
+          "lowPower": false,
+          "monotonicNs": 4002054167,
+          "rssBytes": 14221312,
+          "slot": 16,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 35672000,
+          "footprintBytes": 6537792,
+          "lowPower": false,
+          "monotonicNs": 4251613625,
+          "rssBytes": 14221312,
+          "slot": 17,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 37793000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 4503361125,
+          "rssBytes": 14237696,
+          "slot": 18,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 39900000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 4753224709,
+          "rssBytes": 14237696,
+          "slot": 19,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 41714000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 5001598417,
+          "rssBytes": 14237696,
+          "slot": 20,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 44010000,
+          "footprintBytes": 6439488,
+          "lowPower": false,
+          "monotonicNs": 5253244084,
+          "rssBytes": 14221312,
+          "slot": 21,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 46409000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 5501276750,
+          "rssBytes": 14237696,
+          "slot": 22,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 48577000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 5751621209,
+          "rssBytes": 14237696,
+          "slot": 23,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 50803000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 6002091750,
+          "rssBytes": 14237696,
+          "slot": 24,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 53047000,
+          "footprintBytes": 6455872,
+          "lowPower": false,
+          "monotonicNs": 6250830375,
+          "rssBytes": 14237696,
+          "slot": 25,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 55307000,
+          "footprintBytes": 6472256,
+          "lowPower": false,
+          "monotonicNs": 6501254709,
+          "rssBytes": 14254080,
+          "slot": 26,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 57602000,
+          "footprintBytes": 6488640,
+          "lowPower": false,
+          "monotonicNs": 6752474042,
+          "rssBytes": 14270464,
+          "slot": 27,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 60045000,
+          "footprintBytes": 6652480,
+          "lowPower": false,
+          "monotonicNs": 7002493417,
+          "rssBytes": 14434304,
+          "slot": 28,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 62537000,
+          "footprintBytes": 6652480,
+          "lowPower": false,
+          "monotonicNs": 7251244125,
+          "rssBytes": 14434304,
+          "slot": 29,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 64751000,
+          "footprintBytes": 6668864,
+          "lowPower": false,
+          "monotonicNs": 7500863375,
+          "rssBytes": 14450688,
+          "slot": 30,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 66862000,
+          "footprintBytes": 6636096,
+          "lowPower": false,
+          "monotonicNs": 7751559417,
+          "rssBytes": 14417920,
+          "slot": 31,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 69355000,
+          "footprintBytes": 6652480,
+          "lowPower": false,
+          "monotonicNs": 8003212625,
+          "rssBytes": 14434304,
+          "slot": 32,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 71689000,
+          "footprintBytes": 6652480,
+          "lowPower": false,
+          "monotonicNs": 8252072042,
+          "rssBytes": 14434304,
+          "slot": 33,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 74098000,
+          "footprintBytes": 6505024,
+          "lowPower": false,
+          "monotonicNs": 8501597042,
+          "rssBytes": 14450688,
+          "slot": 34,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 76443000,
+          "footprintBytes": 6505024,
+          "lowPower": false,
+          "monotonicNs": 8750824542,
+          "rssBytes": 14450688,
+          "slot": 35,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 78597000,
+          "footprintBytes": 6505024,
+          "lowPower": false,
+          "monotonicNs": 9003564417,
+          "rssBytes": 14450688,
+          "slot": 36,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 81073000,
+          "footprintBytes": 6505024,
+          "lowPower": false,
+          "monotonicNs": 9253409417,
+          "rssBytes": 14450688,
+          "slot": 37,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 83114000,
+          "footprintBytes": 6521408,
+          "lowPower": false,
+          "monotonicNs": 9503324209,
+          "rssBytes": 14467072,
+          "slot": 38,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 85279000,
+          "footprintBytes": 6521408,
+          "lowPower": false,
+          "monotonicNs": 9752806500,
+          "rssBytes": 14467072,
+          "slot": 39,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 86990000,
+          "footprintBytes": 6521408,
+          "lowPower": false,
+          "monotonicNs": 10001851875,
+          "rssBytes": 14467072,
+          "slot": 40,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 89292000,
+          "footprintBytes": 6521408,
+          "lowPower": false,
+          "monotonicNs": 10251228334,
+          "rssBytes": 14467072,
+          "slot": 41,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 91109000,
+          "footprintBytes": 6554176,
+          "lowPower": false,
+          "monotonicNs": 10502084042,
+          "rssBytes": 14499840,
+          "slot": 42,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 93697000,
+          "footprintBytes": 6554176,
+          "lowPower": false,
+          "monotonicNs": 10751606375,
+          "rssBytes": 14499840,
+          "slot": 43,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 95948000,
+          "footprintBytes": 6554176,
+          "lowPower": false,
+          "monotonicNs": 11001510709,
+          "rssBytes": 14499840,
+          "slot": 44,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 98887000,
+          "footprintBytes": 6570560,
+          "lowPower": false,
+          "monotonicNs": 11253460709,
+          "rssBytes": 14516224,
+          "slot": 45,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 101187000,
+          "footprintBytes": 6259264,
+          "lowPower": false,
+          "monotonicNs": 11504581084,
+          "rssBytes": 14860288,
+          "slot": 46,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 102411000,
+          "footprintBytes": 6259264,
+          "lowPower": false,
+          "monotonicNs": 11753357042,
+          "rssBytes": 14860288,
+          "slot": 47,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 104630000,
+          "footprintBytes": 6259264,
+          "lowPower": false,
+          "monotonicNs": 12001354750,
+          "rssBytes": 14860288,
+          "slot": 48,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 107165000,
+          "footprintBytes": 6259264,
+          "lowPower": false,
+          "monotonicNs": 12251575459,
+          "rssBytes": 14860288,
+          "slot": 49,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 109319000,
+          "footprintBytes": 6275648,
+          "lowPower": false,
+          "monotonicNs": 12501224667,
+          "rssBytes": 14876672,
+          "slot": 50,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 111555000,
+          "footprintBytes": 6275648,
+          "lowPower": false,
+          "monotonicNs": 12750182667,
+          "rssBytes": 14876672,
+          "slot": 51,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 113991000,
+          "footprintBytes": 6275648,
+          "lowPower": false,
+          "monotonicNs": 13003065000,
+          "rssBytes": 14876672,
+          "slot": 52,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 116564000,
+          "footprintBytes": 6275648,
+          "lowPower": false,
+          "monotonicNs": 13251154625,
+          "rssBytes": 14876672,
+          "slot": 53,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 118061000,
+          "footprintBytes": 5964352,
+          "lowPower": false,
+          "monotonicNs": 13503630500,
+          "rssBytes": 14893056,
+          "slot": 54,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 120264000,
+          "footprintBytes": 5964352,
+          "lowPower": false,
+          "monotonicNs": 13751250375,
+          "rssBytes": 14893056,
+          "slot": 55,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122619000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 14004128834,
+          "rssBytes": 14860288,
+          "slot": 56,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 122950000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 14251099667,
+          "rssBytes": 14860288,
+          "slot": 57,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123343000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 14501190542,
+          "rssBytes": 14876672,
+          "slot": 58,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123672000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 14751582834,
+          "rssBytes": 14876672,
+          "slot": 59,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124027000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 15000990500,
+          "rssBytes": 14876672,
+          "slot": 60,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124343000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 15253327584,
+          "rssBytes": 14876672,
+          "slot": 61,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124713000,
+          "footprintBytes": 5964352,
+          "lowPower": false,
+          "monotonicNs": 15502480042,
+          "rssBytes": 14893056,
+          "slot": 62,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 125044000,
+          "footprintBytes": 5980736,
+          "lowPower": false,
+          "monotonicNs": 15751173959,
+          "rssBytes": 14909440,
+          "slot": 63,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 125336000,
+          "footprintBytes": 5980736,
+          "lowPower": false,
+          "monotonicNs": 16001975042,
+          "rssBytes": 14909440,
+          "slot": 64,
+          "thermal": "nominal"
+        }
+      ],
+      "status": "passed",
+      "run": 2,
+      "runId": "85206429dc7841e3b434146a2bd65670",
+      "rawSha256": "370e608f04f841533fcaeb68027402c2fcb8c46fd2919051d72c710f318d72d6",
+      "protocolSha256": "fda02fb17eb60683febe4d6aa33ee156c94bfa362db5686179c2f9f2f42d4996",
+      "key": {
+        "model": "MacBookPro17,1",
+        "osBuild": "26A434",
+        "decoderBuild": "60c60ccb7a322171f110b989307089f5cb97b331cc4a624d1ef20b79b5026536:747c2c1af9cacf77ec655ce7d02980898fa26be75b86cf57413f050d099a7360",
+        "codec": 12,
+        "profile": 0,
+        "bitDepth": 8,
+        "chroma": 420,
+        "width": 320,
+        "height": 180,
+        "fpsNumerator": 24,
+        "fpsDenominator": 1,
+        "threads": 2,
+        "outputPixelFormat": 875704438
+      },
+      "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "buildMode": "release",
+      "simulator": false,
+      "positiveControlPassed": true,
+      "positiveControlSha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f"
+    },
+    {
+      "decodedFrames": 288,
+      "measurementOutput": "actual CVPixelBuffer NV12 planes; not physical display",
+      "outputMarkersVerified": true,
+      "pid": 18906,
+      "samples": [
+        {
+          "cpuNs": 11275000,
+          "footprintBytes": 2114040,
+          "lowPower": false,
+          "monotonicNs": 289792,
+          "rssBytes": 6455296,
+          "slot": 0,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 14137000,
+          "footprintBytes": 2736656,
+          "lowPower": false,
+          "monotonicNs": 251217750,
+          "rssBytes": 8699904,
+          "slot": 1,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 14609000,
+          "footprintBytes": 2769424,
+          "lowPower": false,
+          "monotonicNs": 503462417,
+          "rssBytes": 8732672,
+          "slot": 2,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 15153000,
+          "footprintBytes": 2769424,
+          "lowPower": false,
+          "monotonicNs": 752698417,
+          "rssBytes": 8732672,
+          "slot": 3,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 15590000,
+          "footprintBytes": 2785808,
+          "lowPower": false,
+          "monotonicNs": 1002776250,
+          "rssBytes": 8749056,
+          "slot": 4,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 16088000,
+          "footprintBytes": 2785808,
+          "lowPower": false,
+          "monotonicNs": 1251331292,
+          "rssBytes": 8749056,
+          "slot": 5,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 16545000,
+          "footprintBytes": 2802192,
+          "lowPower": false,
+          "monotonicNs": 1502916042,
+          "rssBytes": 8765440,
+          "slot": 6,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 16913000,
+          "footprintBytes": 2802192,
+          "lowPower": false,
+          "monotonicNs": 1752038292,
+          "rssBytes": 8765440,
+          "slot": 7,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 17330000,
+          "footprintBytes": 2802192,
+          "lowPower": false,
+          "monotonicNs": 2000261958,
+          "rssBytes": 8765440,
+          "slot": 8,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 23595000,
+          "footprintBytes": 5734952,
+          "lowPower": false,
+          "monotonicNs": 2252386750,
+          "rssBytes": 13385728,
+          "slot": 9,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 25945000,
+          "footprintBytes": 5784104,
+          "lowPower": false,
+          "monotonicNs": 2502709792,
+          "rssBytes": 13434880,
+          "slot": 10,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 28279000,
+          "footprintBytes": 6160936,
+          "lowPower": false,
+          "monotonicNs": 2752014250,
+          "rssBytes": 13811712,
+          "slot": 11,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 30442000,
+          "footprintBytes": 6242856,
+          "lowPower": false,
+          "monotonicNs": 3000845708,
+          "rssBytes": 13893632,
+          "slot": 12,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 32966000,
+          "footprintBytes": 6259240,
+          "lowPower": false,
+          "monotonicNs": 3252430667,
+          "rssBytes": 13959168,
+          "slot": 13,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 34804000,
+          "footprintBytes": 6275624,
+          "lowPower": false,
+          "monotonicNs": 3503298458,
+          "rssBytes": 13975552,
+          "slot": 14,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 36827000,
+          "footprintBytes": 6275624,
+          "lowPower": false,
+          "monotonicNs": 3753042542,
+          "rssBytes": 13975552,
+          "slot": 15,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 38773000,
+          "footprintBytes": 6275624,
+          "lowPower": false,
+          "monotonicNs": 4001015542,
+          "rssBytes": 13975552,
+          "slot": 16,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 41140000,
+          "footprintBytes": 6554152,
+          "lowPower": false,
+          "monotonicNs": 4252916333,
+          "rssBytes": 14254080,
+          "slot": 17,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 43279000,
+          "footprintBytes": 6570536,
+          "lowPower": false,
+          "monotonicNs": 4502611958,
+          "rssBytes": 14270464,
+          "slot": 18,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 44726000,
+          "footprintBytes": 6570536,
+          "lowPower": false,
+          "monotonicNs": 4753089167,
+          "rssBytes": 14270464,
+          "slot": 19,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 47097000,
+          "footprintBytes": 6636072,
+          "lowPower": false,
+          "monotonicNs": 5002070625,
+          "rssBytes": 14336000,
+          "slot": 20,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 49564000,
+          "footprintBytes": 6292008,
+          "lowPower": false,
+          "monotonicNs": 5251884625,
+          "rssBytes": 14319616,
+          "slot": 21,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 51686000,
+          "footprintBytes": 6308392,
+          "lowPower": false,
+          "monotonicNs": 5500042375,
+          "rssBytes": 14336000,
+          "slot": 22,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 53512000,
+          "footprintBytes": 6308392,
+          "lowPower": false,
+          "monotonicNs": 5751203125,
+          "rssBytes": 14336000,
+          "slot": 23,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 55077000,
+          "footprintBytes": 6324776,
+          "lowPower": false,
+          "monotonicNs": 6001079500,
+          "rssBytes": 14352384,
+          "slot": 24,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 57594000,
+          "footprintBytes": 6324776,
+          "lowPower": false,
+          "monotonicNs": 6250373583,
+          "rssBytes": 14352384,
+          "slot": 25,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 59716000,
+          "footprintBytes": 6341160,
+          "lowPower": false,
+          "monotonicNs": 6502932958,
+          "rssBytes": 14368768,
+          "slot": 26,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 62231000,
+          "footprintBytes": 6439464,
+          "lowPower": false,
+          "monotonicNs": 6750960417,
+          "rssBytes": 14467072,
+          "slot": 27,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 63572000,
+          "footprintBytes": 6455848,
+          "lowPower": false,
+          "monotonicNs": 7003804792,
+          "rssBytes": 14483456,
+          "slot": 28,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 65323000,
+          "footprintBytes": 6455848,
+          "lowPower": false,
+          "monotonicNs": 7252241417,
+          "rssBytes": 14483456,
+          "slot": 29,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 66738000,
+          "footprintBytes": 6472232,
+          "lowPower": false,
+          "monotonicNs": 7501402583,
+          "rssBytes": 12877824,
+          "slot": 30,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 68354000,
+          "footprintBytes": 6799912,
+          "lowPower": false,
+          "monotonicNs": 7751244917,
+          "rssBytes": 12877824,
+          "slot": 31,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 69687000,
+          "footprintBytes": 6799912,
+          "lowPower": false,
+          "monotonicNs": 8000850333,
+          "rssBytes": 12877824,
+          "slot": 32,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 71577000,
+          "footprintBytes": 6210088,
+          "lowPower": false,
+          "monotonicNs": 8253215792,
+          "rssBytes": 12861440,
+          "slot": 33,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 73378000,
+          "footprintBytes": 6242856,
+          "lowPower": false,
+          "monotonicNs": 8500827208,
+          "rssBytes": 12779520,
+          "slot": 34,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 76474000,
+          "footprintBytes": 6505000,
+          "lowPower": false,
+          "monotonicNs": 8751984458,
+          "rssBytes": 13041664,
+          "slot": 35,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 78452000,
+          "footprintBytes": 6505000,
+          "lowPower": false,
+          "monotonicNs": 9002909083,
+          "rssBytes": 13041664,
+          "slot": 36,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 79916000,
+          "footprintBytes": 6013480,
+          "lowPower": false,
+          "monotonicNs": 9251466458,
+          "rssBytes": 13041664,
+          "slot": 37,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 81497000,
+          "footprintBytes": 6029864,
+          "lowPower": false,
+          "monotonicNs": 9503702083,
+          "rssBytes": 13058048,
+          "slot": 38,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 84100000,
+          "footprintBytes": 6029864,
+          "lowPower": false,
+          "monotonicNs": 9753512833,
+          "rssBytes": 13058048,
+          "slot": 39,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 86244000,
+          "footprintBytes": 6029864,
+          "lowPower": false,
+          "monotonicNs": 10000829083,
+          "rssBytes": 13074432,
+          "slot": 40,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 88093000,
+          "footprintBytes": 5767720,
+          "lowPower": false,
+          "monotonicNs": 10253176333,
+          "rssBytes": 13074432,
+          "slot": 41,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 91153000,
+          "footprintBytes": 5800488,
+          "lowPower": false,
+          "monotonicNs": 10502931917,
+          "rssBytes": 13107200,
+          "slot": 42,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 94644000,
+          "footprintBytes": 5964328,
+          "lowPower": false,
+          "monotonicNs": 10753089250,
+          "rssBytes": 13271040,
+          "slot": 43,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 97583000,
+          "footprintBytes": 5964328,
+          "lowPower": false,
+          "monotonicNs": 11000829667,
+          "rssBytes": 13271040,
+          "slot": 44,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 99745000,
+          "footprintBytes": 5964328,
+          "lowPower": false,
+          "monotonicNs": 11252920208,
+          "rssBytes": 13271040,
+          "slot": 45,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 102241000,
+          "footprintBytes": 5980712,
+          "lowPower": false,
+          "monotonicNs": 11503872542,
+          "rssBytes": 13287424,
+          "slot": 46,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 104360000,
+          "footprintBytes": 5980712,
+          "lowPower": false,
+          "monotonicNs": 11753736458,
+          "rssBytes": 13287424,
+          "slot": 47,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 107782000,
+          "footprintBytes": 5980712,
+          "lowPower": false,
+          "monotonicNs": 12001336958,
+          "rssBytes": 13287424,
+          "slot": 48,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 110483000,
+          "footprintBytes": 5980712,
+          "lowPower": false,
+          "monotonicNs": 12252253500,
+          "rssBytes": 13287424,
+          "slot": 49,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 113164000,
+          "footprintBytes": 5997096,
+          "lowPower": false,
+          "monotonicNs": 12521852042,
+          "rssBytes": 13303808,
+          "slot": 50,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 115090000,
+          "footprintBytes": 5997096,
+          "lowPower": false,
+          "monotonicNs": 12750660458,
+          "rssBytes": 13303808,
+          "slot": 51,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 117424000,
+          "footprintBytes": 6259240,
+          "lowPower": false,
+          "monotonicNs": 13002878917,
+          "rssBytes": 13303808,
+          "slot": 52,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 120293000,
+          "footprintBytes": 6160936,
+          "lowPower": false,
+          "monotonicNs": 13253741458,
+          "rssBytes": 13631488,
+          "slot": 53,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 123173000,
+          "footprintBytes": 6177320,
+          "lowPower": false,
+          "monotonicNs": 13500995750,
+          "rssBytes": 13647872,
+          "slot": 54,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 126460000,
+          "footprintBytes": 6177320,
+          "lowPower": false,
+          "monotonicNs": 13754466125,
+          "rssBytes": 13647872,
+          "slot": 55,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 130531000,
+          "footprintBytes": 6406696,
+          "lowPower": false,
+          "monotonicNs": 14001284917,
+          "rssBytes": 13877248,
+          "slot": 56,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 131200000,
+          "footprintBytes": 6373928,
+          "lowPower": false,
+          "monotonicNs": 14251069125,
+          "rssBytes": 13959168,
+          "slot": 57,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 131590000,
+          "footprintBytes": 6390312,
+          "lowPower": false,
+          "monotonicNs": 14501555792,
+          "rssBytes": 13975552,
+          "slot": 58,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 132087000,
+          "footprintBytes": 6390312,
+          "lowPower": false,
+          "monotonicNs": 14753086583,
+          "rssBytes": 13975552,
+          "slot": 59,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 132437000,
+          "footprintBytes": 6390312,
+          "lowPower": false,
+          "monotonicNs": 15003254708,
+          "rssBytes": 13975552,
+          "slot": 60,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 132810000,
+          "footprintBytes": 6390312,
+          "lowPower": false,
+          "monotonicNs": 15252920917,
+          "rssBytes": 13975552,
+          "slot": 61,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 133338000,
+          "footprintBytes": 6406696,
+          "lowPower": false,
+          "monotonicNs": 15503716125,
+          "rssBytes": 13991936,
+          "slot": 62,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 133875000,
+          "footprintBytes": 6439464,
+          "lowPower": false,
+          "monotonicNs": 15752924500,
+          "rssBytes": 14024704,
+          "slot": 63,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 134230000,
+          "footprintBytes": 6439464,
+          "lowPower": false,
+          "monotonicNs": 16003154792,
+          "rssBytes": 14024704,
+          "slot": 64,
+          "thermal": "nominal"
+        }
+      ],
+      "status": "passed",
+      "run": 3,
+      "runId": "e09505f4e07e4b218fa782cc8e04ca08",
+      "rawSha256": "eed32c385937f8092e69bad8e19f142ebbe67fed1a2155e901c7a16d0028366d",
+      "protocolSha256": "fda02fb17eb60683febe4d6aa33ee156c94bfa362db5686179c2f9f2f42d4996",
+      "key": {
+        "model": "MacBookPro17,1",
+        "osBuild": "26A434",
+        "decoderBuild": "60c60ccb7a322171f110b989307089f5cb97b331cc4a624d1ef20b79b5026536:747c2c1af9cacf77ec655ce7d02980898fa26be75b86cf57413f050d099a7360",
+        "codec": 12,
+        "profile": 0,
+        "bitDepth": 8,
+        "chroma": 420,
+        "width": 320,
+        "height": 180,
+        "fpsNumerator": 24,
+        "fpsDenominator": 1,
+        "threads": 2,
+        "outputPixelFormat": 875704438
+      },
+      "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "buildMode": "release",
+      "simulator": false,
+      "positiveControlPassed": true,
+      "positiveControlSha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f"
+    },
+    {
+      "decodedFrames": 288,
+      "measurementOutput": "actual CVPixelBuffer NV12 planes; not physical display",
+      "outputMarkersVerified": true,
+      "pid": 18958,
+      "samples": [
+        {
+          "cpuNs": 5770000,
+          "footprintBytes": 2114040,
+          "lowPower": false,
+          "monotonicNs": 205292,
+          "rssBytes": 6455296,
+          "slot": 0,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 7704000,
+          "footprintBytes": 2769472,
+          "lowPower": false,
+          "monotonicNs": 251730542,
+          "rssBytes": 8699904,
+          "slot": 1,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 8234000,
+          "footprintBytes": 2802240,
+          "lowPower": false,
+          "monotonicNs": 502325959,
+          "rssBytes": 8732672,
+          "slot": 2,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 8824000,
+          "footprintBytes": 2802240,
+          "lowPower": false,
+          "monotonicNs": 752647875,
+          "rssBytes": 8732672,
+          "slot": 3,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 9736000,
+          "footprintBytes": 2835008,
+          "lowPower": false,
+          "monotonicNs": 1003705334,
+          "rssBytes": 8765440,
+          "slot": 4,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 10410000,
+          "footprintBytes": 2835008,
+          "lowPower": false,
+          "monotonicNs": 1250158209,
+          "rssBytes": 8765440,
+          "slot": 5,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 11007000,
+          "footprintBytes": 2867776,
+          "lowPower": false,
+          "monotonicNs": 1504429625,
+          "rssBytes": 8798208,
+          "slot": 6,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 11749000,
+          "footprintBytes": 2867776,
+          "lowPower": false,
+          "monotonicNs": 1750912959,
+          "rssBytes": 8798208,
+          "slot": 7,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 12962000,
+          "footprintBytes": 3162688,
+          "lowPower": false,
+          "monotonicNs": 2003920584,
+          "rssBytes": 9650176,
+          "slot": 8,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 19436000,
+          "footprintBytes": 6046296,
+          "lowPower": false,
+          "monotonicNs": 2252923959,
+          "rssBytes": 13664256,
+          "slot": 9,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 22880000,
+          "footprintBytes": 6144600,
+          "lowPower": false,
+          "monotonicNs": 2500696750,
+          "rssBytes": 13762560,
+          "slot": 10,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 26162000,
+          "footprintBytes": 6505048,
+          "lowPower": false,
+          "monotonicNs": 2756303542,
+          "rssBytes": 14123008,
+          "slot": 11,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 29715000,
+          "footprintBytes": 6586968,
+          "lowPower": false,
+          "monotonicNs": 3000345084,
+          "rssBytes": 14204928,
+          "slot": 12,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 33829000,
+          "footprintBytes": 6505048,
+          "lowPower": false,
+          "monotonicNs": 3251226042,
+          "rssBytes": 14434304,
+          "slot": 13,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 38481000,
+          "footprintBytes": 6521432,
+          "lowPower": false,
+          "monotonicNs": 3503794292,
+          "rssBytes": 14450688,
+          "slot": 14,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 41840000,
+          "footprintBytes": 6619736,
+          "lowPower": false,
+          "monotonicNs": 3750368834,
+          "rssBytes": 14548992,
+          "slot": 15,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 46607000,
+          "footprintBytes": 6685272,
+          "lowPower": false,
+          "monotonicNs": 4003182625,
+          "rssBytes": 14614528,
+          "slot": 16,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 50353000,
+          "footprintBytes": 6685272,
+          "lowPower": false,
+          "monotonicNs": 4250966334,
+          "rssBytes": 14614528,
+          "slot": 17,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 54596000,
+          "footprintBytes": 6701656,
+          "lowPower": false,
+          "monotonicNs": 4501287084,
+          "rssBytes": 14794752,
+          "slot": 18,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 57962000,
+          "footprintBytes": 6701656,
+          "lowPower": false,
+          "monotonicNs": 4754687667,
+          "rssBytes": 14794752,
+          "slot": 19,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 61820000,
+          "footprintBytes": 6701656,
+          "lowPower": false,
+          "monotonicNs": 5003097459,
+          "rssBytes": 14794752,
+          "slot": 20,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 66324000,
+          "footprintBytes": 6668888,
+          "lowPower": false,
+          "monotonicNs": 5255429375,
+          "rssBytes": 14761984,
+          "slot": 21,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 69704000,
+          "footprintBytes": 6685272,
+          "lowPower": false,
+          "monotonicNs": 5500244375,
+          "rssBytes": 14778368,
+          "slot": 22,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 73297000,
+          "footprintBytes": 6685272,
+          "lowPower": false,
+          "monotonicNs": 5751318500,
+          "rssBytes": 14778368,
+          "slot": 23,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 77859000,
+          "footprintBytes": 6685272,
+          "lowPower": false,
+          "monotonicNs": 6001070042,
+          "rssBytes": 14778368,
+          "slot": 24,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 81847000,
+          "footprintBytes": 6357592,
+          "lowPower": false,
+          "monotonicNs": 6253251209,
+          "rssBytes": 14778368,
+          "slot": 25,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 85522000,
+          "footprintBytes": 6373976,
+          "lowPower": false,
+          "monotonicNs": 6500726459,
+          "rssBytes": 14794752,
+          "slot": 26,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 89478000,
+          "footprintBytes": 6390360,
+          "lowPower": false,
+          "monotonicNs": 6750434625,
+          "rssBytes": 14811136,
+          "slot": 27,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 93310000,
+          "footprintBytes": 6390360,
+          "lowPower": false,
+          "monotonicNs": 7003351084,
+          "rssBytes": 14811136,
+          "slot": 28,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 98937000,
+          "footprintBytes": 6390360,
+          "lowPower": false,
+          "monotonicNs": 7253907959,
+          "rssBytes": 14811136,
+          "slot": 29,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 103231000,
+          "footprintBytes": 6406744,
+          "lowPower": false,
+          "monotonicNs": 7501694959,
+          "rssBytes": 14827520,
+          "slot": 30,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 107524000,
+          "footprintBytes": 6406744,
+          "lowPower": false,
+          "monotonicNs": 7752723625,
+          "rssBytes": 14827520,
+          "slot": 31,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 110856000,
+          "footprintBytes": 6406744,
+          "lowPower": false,
+          "monotonicNs": 8004429084,
+          "rssBytes": 14827520,
+          "slot": 32,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 114508000,
+          "footprintBytes": 6488664,
+          "lowPower": false,
+          "monotonicNs": 8251120459,
+          "rssBytes": 15335424,
+          "slot": 33,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 117701000,
+          "footprintBytes": 6505048,
+          "lowPower": false,
+          "monotonicNs": 8503404959,
+          "rssBytes": 15351808,
+          "slot": 34,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 120896000,
+          "footprintBytes": 6505048,
+          "lowPower": false,
+          "monotonicNs": 8753387084,
+          "rssBytes": 15351808,
+          "slot": 35,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 124480000,
+          "footprintBytes": 6505048,
+          "lowPower": false,
+          "monotonicNs": 9001453209,
+          "rssBytes": 15351808,
+          "slot": 36,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 127671000,
+          "footprintBytes": 6505048,
+          "lowPower": false,
+          "monotonicNs": 9250855875,
+          "rssBytes": 15351808,
+          "slot": 37,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 130530000,
+          "footprintBytes": 6521432,
+          "lowPower": false,
+          "monotonicNs": 9504068875,
+          "rssBytes": 15368192,
+          "slot": 38,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 134712000,
+          "footprintBytes": 6521432,
+          "lowPower": false,
+          "monotonicNs": 9752062584,
+          "rssBytes": 15368192,
+          "slot": 39,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 138485000,
+          "footprintBytes": 6521432,
+          "lowPower": false,
+          "monotonicNs": 10003278750,
+          "rssBytes": 15368192,
+          "slot": 40,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 142666000,
+          "footprintBytes": 6521432,
+          "lowPower": false,
+          "monotonicNs": 10250384125,
+          "rssBytes": 15368192,
+          "slot": 41,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 145336000,
+          "footprintBytes": 6046296,
+          "lowPower": false,
+          "monotonicNs": 10501257709,
+          "rssBytes": 15384576,
+          "slot": 42,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 148977000,
+          "footprintBytes": 6046296,
+          "lowPower": false,
+          "monotonicNs": 10750464542,
+          "rssBytes": 15384576,
+          "slot": 43,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 152775000,
+          "footprintBytes": 6046296,
+          "lowPower": false,
+          "monotonicNs": 11005962792,
+          "rssBytes": 15384576,
+          "slot": 44,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 156730000,
+          "footprintBytes": 6062680,
+          "lowPower": false,
+          "monotonicNs": 11251189042,
+          "rssBytes": 15400960,
+          "slot": 45,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 160855000,
+          "footprintBytes": 6079064,
+          "lowPower": false,
+          "monotonicNs": 11503271042,
+          "rssBytes": 15417344,
+          "slot": 46,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 164948000,
+          "footprintBytes": 6079064,
+          "lowPower": false,
+          "monotonicNs": 11751956375,
+          "rssBytes": 15417344,
+          "slot": 47,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 168961000,
+          "footprintBytes": 6079064,
+          "lowPower": false,
+          "monotonicNs": 12001256709,
+          "rssBytes": 15417344,
+          "slot": 48,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 175345000,
+          "footprintBytes": 6079064,
+          "lowPower": false,
+          "monotonicNs": 12253747917,
+          "rssBytes": 15417344,
+          "slot": 49,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 178876000,
+          "footprintBytes": 6095448,
+          "lowPower": false,
+          "monotonicNs": 12503415375,
+          "rssBytes": 15433728,
+          "slot": 50,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 182350000,
+          "footprintBytes": 6095448,
+          "lowPower": false,
+          "monotonicNs": 12752478375,
+          "rssBytes": 15433728,
+          "slot": 51,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 185133000,
+          "footprintBytes": 6095448,
+          "lowPower": false,
+          "monotonicNs": 13003446750,
+          "rssBytes": 15433728,
+          "slot": 52,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 189359000,
+          "footprintBytes": 6095448,
+          "lowPower": false,
+          "monotonicNs": 13251330542,
+          "rssBytes": 15433728,
+          "slot": 53,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 193658000,
+          "footprintBytes": 5947992,
+          "lowPower": false,
+          "monotonicNs": 13503774084,
+          "rssBytes": 15450112,
+          "slot": 54,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 197674000,
+          "footprintBytes": 5947992,
+          "lowPower": false,
+          "monotonicNs": 13754468209,
+          "rssBytes": 15450112,
+          "slot": 55,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 201420000,
+          "footprintBytes": 5931608,
+          "lowPower": false,
+          "monotonicNs": 14003392500,
+          "rssBytes": 15433728,
+          "slot": 56,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 201932000,
+          "footprintBytes": 5898816,
+          "lowPower": false,
+          "monotonicNs": 14251404375,
+          "rssBytes": 15417344,
+          "slot": 57,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 202405000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 14500442709,
+          "rssBytes": 15433728,
+          "slot": 58,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 202817000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 14751119417,
+          "rssBytes": 15433728,
+          "slot": 59,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 203261000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 15000725292,
+          "rssBytes": 15433728,
+          "slot": 60,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 203886000,
+          "footprintBytes": 5915200,
+          "lowPower": false,
+          "monotonicNs": 15253468959,
+          "rssBytes": 15433728,
+          "slot": 61,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 204435000,
+          "footprintBytes": 5931584,
+          "lowPower": false,
+          "monotonicNs": 15500218917,
+          "rssBytes": 15450112,
+          "slot": 62,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 204881000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 15753822084,
+          "rssBytes": 15466496,
+          "slot": 63,
+          "thermal": "nominal"
+        },
+        {
+          "cpuNs": 205360000,
+          "footprintBytes": 5947968,
+          "lowPower": false,
+          "monotonicNs": 16003270917,
+          "rssBytes": 15466496,
+          "slot": 64,
+          "thermal": "nominal"
+        }
+      ],
+      "status": "passed",
+      "run": 4,
+      "runId": "ee726648a7064e63bd86470728a5eff1",
+      "rawSha256": "c34d1c8e15f5bd2a2ca7114066fc9b7295ebcd9dcfb1c5349fd9884700f2ac56",
+      "protocolSha256": "fda02fb17eb60683febe4d6aa33ee156c94bfa362db5686179c2f9f2f42d4996",
+      "key": {
+        "model": "MacBookPro17,1",
+        "osBuild": "26A434",
+        "decoderBuild": "60c60ccb7a322171f110b989307089f5cb97b331cc4a624d1ef20b79b5026536:747c2c1af9cacf77ec655ce7d02980898fa26be75b86cf57413f050d099a7360",
+        "codec": 12,
+        "profile": 0,
+        "bitDepth": 8,
+        "chroma": 420,
+        "width": 320,
+        "height": 180,
+        "fpsNumerator": 24,
+        "fpsDenominator": 1,
+        "threads": 2,
+        "outputPixelFormat": 875704438
+      },
+      "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb",
+      "buildMode": "release",
+      "simulator": false,
+      "positiveControlPassed": true,
+      "positiveControlSha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f"
+    }
+  ],
+  "sourceSha256": {
+    "tool/decoder_probe/software_decode_probe.swift": "01e8d16ca6ff0c666707c3c0f9d1bf92d2dfcc2f446336f791287591c64de4a2",
+    "tool/decoder_probe/apple_decode_probe.swift": "17b7bc778520ce785d957839c3fcadfdc88dce2c406b236be81c0444b6bddba0",
+    "tool/decoder_probe/run_software.py": "b904f950cafcf95d57dbcd18307fba69b53ca43f8b4e7b92a0351821b5426545",
+    "tool/decoder_probe/software_evidence.py": "8eff3be458a34d90cccae36629610043fb3f59feb23dfa33cd8c4bdb44a306b5",
+    "tool/decoder_probe/software_protocol.json": "efd8181ec1783df7041b7a7c63341a40be314d213555e5569fc9c7236b9dfef3"
+  },
+  "protocolSha256": "fda02fb17eb60683febe4d6aa33ee156c94bfa362db5686179c2f9f2f42d4996",
+  "positiveControlSha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f",
+  "summary": {
+    "measurementValid": true,
+    "productionEligible": false,
+    "admissionBlockers": [
+      "sustained_thermal_missing",
+      "independent_verification_missing"
+    ],
+    "measurementErrors": [],
+    "peakRSSBytes": 15466496,
+    "peakFootprintBytes": 7340608,
+    "peakProcessCpuNs": 199590000
+  }
+}

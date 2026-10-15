@@ -1,0 +1,14 @@
+...F
+======================================================================
+FAIL: test_each_actual_policy_and_recreation_is_required (test_software_collector.PositiveControlTests.test_each_actual_policy_and_recreation_is_required)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 50, in test_each_actual_policy_and_recreation_is_required
+    self.assertFalse(valid_control([rows[0]]*6))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.006s
+
+FAILED (failures=1)

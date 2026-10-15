@@ -1,0 +1,243 @@
+Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+
+> Task :gradle:compileKotlin
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/Deeplink.kt:13:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to property.
+- To opt in to applying to both value parameter and property, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/Deeplink.kt:15:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to property.
+- To opt in to applying to both value parameter and property, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/Deeplink.kt:17:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to property.
+- To opt in to applying to both value parameter and property, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/Deeplink.kt:19:5 This annotation is currently applied to the value parameter only, but in the future it will also be applied to property.
+- To opt in to applying to both value parameter and property, add '-Xannotation-default-target=param-property' to your compiler arguments.
+- To keep applying to the value parameter only, use the '@param:' annotation target.
+
+See https://youtrack.jetbrains.com/issue/KT-73255 for more details.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/FlutterPlugin.kt:12:8 'interface ApkVariant : Any, BaseVariant, InstallableVariant, AndroidArtifactVariant, InternalBaseVariant' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/FlutterPlugin.kt:625:69 'interface ApkVariant : Any, BaseVariant, InstallableVariant, AndroidArtifactVariant, InternalBaseVariant' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/FlutterPluginUtils.kt:12:8 'interface BaseVariantOutput : Any, OutputFile' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/plugins/PluginHandler.kt:168:70 Unchecked cast of 'NamedDomainObjectContainer<out BuildType>' to 'NamedDomainObjectContainer<BuildType>'.
+w: file:///Users/yy2021_8689/flutter/packages/flutter_tools/gradle/src/main/kotlin/plugins/PluginHandler.kt:169:75 Unchecked cast of 'NamedDomainObjectContainer<out BuildType>' to 'NamedDomainObjectContainer<BuildType>'.
+
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :integration_test
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :yl_player_android
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:28:1: 'fun Project.android(configure: Action<LibraryExtension>): Unit' is deprecated. Replaced by com.android.build.api.dsl.LibraryExtension.
+This class is not used for the public extensions in AGP when android.newDsl=true, which is the default in AGP 9.0, and will be removed in AGP 10.0.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:40:18: 'fun srcDirs(vararg srcDirs: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:43:18: 'fun srcDirs(vararg srcDirs: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:44:20: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:45:20: 'fun srcDir(srcDir: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/build.gradle.kts:48:18: 'fun srcDirs(vararg srcDirs: Any): Any' is deprecated. Use `directories` mutable set instead.
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preDebugBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugResources UP-TO-DATE
+> Task :yl_player_android:packageDebugResources UP-TO-DATE
+> Task :yl_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugRFile UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :yl_player_android:preDebugUnitTestBuild UP-TO-DATE
+> Task :yl_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:checkDebugUnitTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :yl_player_android:mapDebugUnitTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :yl_player_android:processDebugManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:generateDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestConfig UP-TO-DATE
+
+> Task :yl_player_android:compileDebugKotlin
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt:102:14 'fun setPreferredBufferSizeOverride(p0: Int): AudioSink.AudioSinkConfig.Builder' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt:102:52 'field preferredBufferSizeOverride: Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:41:24 'constructor<T : Any!>(p0: DataSource, p1: Uri, p2: Int, p3: ParsingLoadable.Parser<out T & Any>): ParsingLoadable<T>' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:49:37 'fun loadStarted(p0: LoadEventInfo, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramTiming.kt:9:32 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionManager.kt:171:109 'field forceAllowInsecureDecoderComponents: Boolean' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt:243:107 The corresponding parameter in the supertype 'YlPlaybackEngineFactory' is named 'options'. This may cause problems when calling this function with named arguments.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt:246:98 The corresponding parameter in the supertype 'YlPlaybackEngineFactory' is named 'options'. This may cause problems when calling this function with named arguments.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:162:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:163:15 'fun renderOutputBuffer(p0: MediaCodecAdapter, p1: Int, p2: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSourceAssessment.kt:17:167 Unnecessary safe call on a non-null receiver of type 'URI'.
+
+> Task :yl_player_android:compileDebugJavaWithJavac
+> Task :yl_player_android:processDebugJavaRes UP-TO-DATE
+> Task :yl_player_android:bundleLibRuntimeToJarDebug
+> Task :yl_player_android:bundleLibCompileToJarDebug
+
+> Task :yl_player_android:compileDebugUnitTestKotlin
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlAdaptiveLoadControlTest.kt:28:51 'static field EMPTY_MEDIA_PERIOD_ID: MediaSource.MediaPeriodId' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt:133:33 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParserTest.kt:134:34 Unnecessary non-null assertion (!!) on a non-null receiver of type 'String'.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDrmBridgeTest.kt:113:51 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AndroidDrmLicenseRequest'.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlDrmKeySessionTest.kt:168:35 The corresponding parameter in the supertype 'YlDrmSystemDriver' is named 'callback'. This may cause problems when calling this function with named arguments.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionTest.kt:21:39 'constructor(p0: UUID, p1: ByteArray, p2: Boolean): FrameworkCryptoConfig' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionTest.kt:56:28 'field forceAllowInsecureDecoderComponents: Boolean' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3FixedVideoTest.kt:57:72 Unnecessary non-null assertion (!!) on a non-null receiver of type 'AndroidVideoGeometryMessage'.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMetricsCollectorTest.kt:22:50 'fun set(p0: Any?, p1: Any?, p2: Int, p3: Long, p4: Long): Timeline.Period' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt:44:24 'fun requestAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!, p1: Int, p2: Int): Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt:60:46 'fun requestAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!, p1: Int, p2: Int): Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt:67:37 'fun requestAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!, p1: Int, p2: Int): Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt:70:46 'fun abandonAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!): Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt:73:37 'fun abandonAudioFocus(p0: AudioManager.OnAudioFocusChangeListener!): Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt:20:79 'fun release(): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt:27:79 'fun release(): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt:39:23 'fun release(): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt:42:39 'fun release(): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriverTest.kt:81:27 'field forceAllowInsecureDecoderComponents: Boolean' is deprecated. Deprecated in Java.
+
+> Task :yl_player_android:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:processDebugUnitTestJavaRes UP-TO-DATE
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :yl_player_android:testDebugUnitTest
+
+YlHardwareCodecSelectorTest > legacy software codec names are rejected() PASSED
+
+YlHardwareCodecSelectorTest > strict gate waits for initialized evidence and admits audio without video callback() PASSED
+
+YlHardwareCodecSelectorTest > positive evidence belongs to initialized codec and unavailable on API28 names() PASSED
+
+YlHardwareCodecSelectorTest > audio codecs pass through normal Media3 selection() PASSED
+
+YlHardwareCodecSelectorTest > HEVC requires an explicit accepted hardware candidate() PASSED
+
+YlHardwareCodecSelectorTest > constrained envelope is capped at 1080p30() PASSED
+
+YlHardwareCodecSelectorTest > strict selector accepts only API29 records and refuses name-only API28 candidates() PASSED
+
+YlHardwareCodecSelectorTest > known vendor codec names are accepted() PASSED
+
+YlHardwareCodecSelectorTest > platform software flag wins over a vendor-looking name() PASSED
+
+YlHardwareCodecSelectorTest > host limits can only tighten an envelope() PASSED
+
+YlHardwareCodecSelectorTest > landscape display does not reject portrait video by encoded height() PASSED
+
+YlHardwareCodecSelectorTest > production inventory reports deduplicated video MIME families excluding software audio and encoders() PASSED
+
+YlHardwareCodecSelectorTest > canonical aliases prove only consistent exact initialized codec metadata() PASSED
+
+YlHardwareCodecSelectorTest > display resolution is a viewport preference and tier limits remain hard() PASSED
+
+YlHardwareCodecSelectorTest > portrait display does not reject landscape video by encoded width() PASSED
+
+YlHardwareCodecSelectorTest > unmeasured Media3 software is never offered for video under any policy() PASSED
+
+YlNativePlaybackPlannerTest > rejects software video above 1080p or 30fps() PASSED
+
+YlNativePlaybackPlannerTest > unmeasured software is not admitted by the historical resolution envelope() PASSED
+
+YlNativePlaybackPlannerTest > rejects software codecs outside approved h264 and hevc scope() PASSED
+
+YlNativePlaybackPlannerTest > uses software for 1080p HEVC when device decoders reject its profile level() PASSED
+
+YlNativePlaybackPlannerTest > uses software for unsupported h264 or hevc configuration within bounded envelope() PASSED
+
+YlNativePlaybackPlannerTest > audio clock interpolates between coarse hardware timestamps() PASSED
+
+YlNativePlaybackPlannerTest > non blocking pcm write retains partial data for a later scheduler turn() PASSED
+
+YlNativePlaybackPlannerTest > software video pacing uses decoded frame time instead of reordered packet time() PASSED
+
+YlNativePlaybackPlannerTest > normal speed does not install muting playback parameters() PASSED
+
+YlNativePlaybackPlannerTest > unknown fps never enters software decoding() PASSED
+
+YlNativePlaybackPlannerTest > uses hardware after FFmpeg demux when codec configuration is supported() PASSED
+
+YlNativePlaybackPlannerTest > audio clock interpolation never advances beyond written pcm() PASSED
+
+YlNativePlaybackPlannerTest > full video queue waits for presentation time instead of rendering a burst() PASSED
+
+YlNativePlaybackPlannerTest > pcm flush discards bytes that were not accepted by audio track() PASSED
+
+YlNativePlaybackPlannerTest > main10 level 62 remains software when hardware configuration probe rejects its level() PASSED
+
+YlSoftwareDecodeBudgetTest > invalidObservationAndOversizePacketPermanentlyCloseLease() PASSED
+
+YlSoftwareDecodeBudgetTest > candidateAndRetainedOldFramesShareTheStrictestCap() PASSED
+
+YlSoftwareDecodeBudgetTest > replacementCannotEraseRecentCpuConsumption() PASSED
+
+YlSoftwareDecodeBudgetTest > exactIdentityAndPositiveRationalAreRequired() PASSED
+
+YlSoftwareDecodeBudgetTest > nativeReceiptsAreIdempotentAndSurviveRetirement() PASSED
+
+YlSoftwareDecodeBudgetTest > unversionedMetadataNeverReachesAdmission() PASSED
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/example/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 33s
+33 actionable tasks: 7 executed, 26 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.1.0/userguide/configuration_cache_enabling.html

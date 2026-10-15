@@ -1,0 +1,11 @@
+Temporary display assertion 32110 bound to owned command 32109
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart
+Running Gradle task 'assembleDebug'...                             11.3s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          687ms
+00:00 +0: unavailable AV1 hardware produces the public nonretryable error
+YL_DECODER_ERROR_ROW=actual-unavailable-nonretryable
+00:01 +1: (tearDownAll)
+00:01 +1: All tests passed!
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.drRCUX
+Temporary display assertion released

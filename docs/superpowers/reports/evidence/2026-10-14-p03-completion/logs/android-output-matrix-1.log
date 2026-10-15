@@ -1,0 +1,529 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                             12.9s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          968ms
+00:00 +0: mp4-avc-aac / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"file","platform":"android","mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":453000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1392000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2326000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3287000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2515000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1696000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":473000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:12 +1: mp4-avc-aac / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"http","platform":"android","mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":446000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1395000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2348000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3302000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2438000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1733000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":410000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:21 +2: mp4-avc-aac / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"renamed-file","platform":"android","mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":492000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1480000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2433000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3400000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2490000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1702000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":470000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:31 +3: mp4-avc-aac / wrong-known-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"wrong-known-file","platform":"android","mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":492000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1456000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2417000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3378000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2527000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1730000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":492000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:41 +4: mp4-avc-aac / extensionless-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"extensionless-file","platform":"android","mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":490000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1421000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2380000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3303000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2499000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1738000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":460000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:51 +5: mp4-avc-aac / renamed-http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-avc-aac","transport":"renamed-http","platform":"android","mediaHash":"3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":511000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1468000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2431000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3391000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2448000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1706000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":458000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:01 +6: mov-hevc-aac / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mov-hevc-aac","transport":"file","platform":"android","mediaHash":"7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":422000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1388000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2368000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3337000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2539000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1749000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":474000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:11 +7: mov-hevc-aac / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mov-hevc-aac","transport":"http","platform":"android","mediaHash":"7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":470000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1421000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2399000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3352000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2511000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1721000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":450000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:21 +8: mov-hevc-aac / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mov-hevc-aac","transport":"renamed-file","platform":"android","mediaHash":"7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":469000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1404000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2368000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3299000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2521000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1734000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":522000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:31 +9: mkv-avc-aac / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mkv-avc-aac","transport":"file","platform":"android","mediaHash":"0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":490000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1442000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2384000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3358000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2498000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1724000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":519000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:41 +10: mkv-avc-aac / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mkv-avc-aac","transport":"http","platform":"android","mediaHash":"0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":432000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1383000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2347000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3306000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2425000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1711000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":479000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:51 +11: mkv-avc-aac / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mkv-avc-aac","transport":"renamed-file","platform":"android","mediaHash":"0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":575000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1284000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2493000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3455000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2490000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1836000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":442000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+02:01 +12: flv-avc-mp3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"flv-avc-mp3","transport":"file","platform":"android","mediaHash":"c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f","supportRequirement":"required","outcome":"failed","stage":"progress","code":"test.assertion","category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+flv-avc-mp3/file failed at progress (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  flv-avc-mp3 / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:02 +12 -1: flv-avc-mp3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: flv-avc-mp3 / file
+  
+02:02 +12 -1: flv-avc-mp3 / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"flv-avc-mp3","transport":"http","platform":"android","mediaHash":"c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f","supportRequirement":"required","outcome":"failed","stage":"progress","code":"test.assertion","category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+flv-avc-mp3/http failed at progress (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  flv-avc-mp3 / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:03 +12 -2: flv-avc-mp3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: flv-avc-mp3 / http
+  
+02:03 +12 -2: flv-avc-mp3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"flv-avc-mp3","transport":"renamed-file","platform":"android","mediaHash":"c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f","supportRequirement":"required","outcome":"failed","stage":"progress","code":"test.assertion","category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+flv-avc-mp3/renamed-file failed at progress (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  flv-avc-mp3 / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:04 +12 -3: flv-avc-mp3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: flv-avc-mp3 / renamed-file
+  
+02:04 +12 -3: ts-avc-ac3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ts-avc-ac3","transport":"file","platform":"android","mediaHash":"d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f","supportRequirement":"required","outcome":"failed","stage":"first-frame","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ts-avc-ac3/file failed at first-frame (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ts-avc-ac3 / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:05 +12 -4: ts-avc-ac3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: ts-avc-ac3 / file
+  
+02:05 +12 -4: ts-avc-ac3 / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ts-avc-ac3","transport":"http","platform":"android","mediaHash":"d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f","supportRequirement":"required","outcome":"failed","stage":"first-frame","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ts-avc-ac3/http failed at first-frame (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ts-avc-ac3 / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:05 +12 -5: ts-avc-ac3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: ts-avc-ac3 / http
+  
+02:05 +12 -5: ts-avc-ac3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ts-avc-ac3","transport":"renamed-file","platform":"android","mediaHash":"d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f","supportRequirement":"required","outcome":"failed","stage":"first-frame","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ts-avc-ac3/renamed-file failed at first-frame (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ts-avc-ac3 / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:06 +12 -6: ts-avc-ac3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: ts-avc-ac3 / renamed-file
+  
+02:06 +12 -6: ps-mpeg2-mp3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-mpeg2-mp3","transport":"file","platform":"android","mediaHash":"5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775","supportRequirement":"diagnostic","outcome":"failed","stage":"load","code":"decoder.unsupported","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+02:06 +13 -6: ps-mpeg2-mp3 / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-mpeg2-mp3","transport":"http","platform":"android","mediaHash":"5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775","supportRequirement":"diagnostic","outcome":"failed","stage":"load","code":"decoder.unsupported","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+02:06 +14 -6: ps-mpeg2-mp3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-mpeg2-mp3","transport":"renamed-file","platform":"android","mediaHash":"5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775","supportRequirement":"diagnostic","outcome":"failed","stage":"load","code":"decoder.unsupported","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+02:06 +15 -6: ps-avc-mp3 / file
+YL_FORMAT_CAPTURE_DIRECTORY=/data/user/0/dev.ylplayer.yl_player_example/code_cache/yl_format_IIDSHT
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"seek-pixels","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":430000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1292000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2266000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3264000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2388000}],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/file failed at seek-pixels (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ps-avc-mp3 / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:15 +15 -7: ps-avc-mp3 / file [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / file
+  
+02:15 +15 -7: ps-avc-mp3 / http
+YL_FORMAT_CAPTURE_DIRECTORY=/data/user/0/dev.ylplayer.yl_player_example/code_cache/yl_format_QMDAWT
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"http","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"seek-pixels","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":453000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1269000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2266000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3264000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2388000}],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/http failed at seek-pixels (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ps-avc-mp3 / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:23 +15 -8: ps-avc-mp3 / http [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / http
+  
+02:23 +15 -8: ps-avc-mp3 / renamed-file
+YL_FORMAT_CAPTURE_DIRECTORY=/data/user/0/dev.ylplayer.yl_player_example/code_cache/yl_format_TMIGLO
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"renamed-file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"seek-pixels","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":476000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1269000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2266000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3286000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2365000}],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/renamed-file failed at seek-pixels (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ps-avc-mp3 / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:31 +15 -9: ps-avc-mp3 / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / renamed-file
+  
+02:31 +15 -9: ps-avc-mp3 / wrong-known-file
+YL_FORMAT_CAPTURE_DIRECTORY=/data/user/0/dev.ylplayer.yl_player_example/code_cache/yl_format_EZNYDK
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"ps-avc-mp3","transport":"wrong-known-file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"failed","stage":"seek-pixels","code":"test.assertion","category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":476000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1269000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2289000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3264000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2388000}],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+ps-avc-mp3/wrong-known-file failed at seek-pixels (test.assertion)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:390:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 390
+The test description was:
+  ps-avc-mp3 / wrong-known-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:40 +15 -10: ps-avc-mp3 / wrong-known-file [E]
+  Test failed. See exception logs above.
+  The test description was: ps-avc-mp3 / wrong-known-file
+  
+02:40 +15 -10: mkv-avc-aac-no-cues / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mkv-avc-aac-no-cues","transport":"file","platform":"android","mediaHash":"3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":525000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1505000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2332000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3302000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2516000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1898000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":656000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+02:55 +16 -10: mkv-avc-aac-no-cues / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mkv-avc-aac-no-cues","transport":"http","platform":"android","mediaHash":"3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":447000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1385000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2343000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3296000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2569000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1738000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":470000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+03:08 +17 -10: mkv-avc-aac-no-cues / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mkv-avc-aac-no-cues","transport":"renamed-file","platform":"android","mediaHash":"3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":422000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1374000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2334000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3295000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2517000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1742000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":515000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+03:22 +18 -10: mp4-truncated / file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"file","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'session'
+  Actual: 'command'
+   Which: is different.
+          Expected: session
+            Actual: command
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:387:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 387
+The test description was:
+  mp4-truncated / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+03:22 +18 -11: mp4-truncated / file [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-truncated / file
+  
+03:22 +18 -11: mp4-truncated / http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"http","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'session'
+  Actual: 'command'
+   Which: is different.
+          Expected: session
+            Actual: command
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:387:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 387
+The test description was:
+  mp4-truncated / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+03:22 +18 -12: mp4-truncated / http [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-truncated / http
+  
+03:22 +18 -12: mp4-truncated / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"renamed-file","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'session'
+  Actual: 'command'
+   Which: is different.
+          Expected: session
+            Actual: command
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:387:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 387
+The test description was:
+  mp4-truncated / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+03:22 +18 -13: mp4-truncated / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-truncated / renamed-file
+  
+03:22 +18 -13: mp4-truncated / extensionless-file
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"extensionless-file","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'session'
+  Actual: 'command'
+   Which: is different.
+          Expected: session
+            Actual: command
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:387:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 387
+The test description was:
+  mp4-truncated / extensionless-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+03:22 +18 -14: mp4-truncated / extensionless-file [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-truncated / extensionless-file
+  
+03:22 +18 -14: mp4-truncated / renamed-http
+YL_FORMAT_ROW={"runId":"format-android-1792053419033252","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"renamed-http","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'session'
+  Actual: 'command'
+   Which: is different.
+          Expected: session
+            Actual: command
+                    ^
+           Differ at offset 0
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:387:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 387
+The test description was:
+  mp4-truncated / renamed-http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+03:23 +18 -15: mp4-truncated / renamed-http [E]
+  Test failed. See exception logs above.
+  The test description was: mp4-truncated / renamed-http
+  
+03:23 +18 -15: (tearDownAll)
+03:23 +18 -15: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: flv-avc-mp3 / file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: flv-avc-mp3 / http
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: flv-avc-mp3 / renamed-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mp4-truncated / extensionless-file
+  ... and 11 more
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.hwqroT

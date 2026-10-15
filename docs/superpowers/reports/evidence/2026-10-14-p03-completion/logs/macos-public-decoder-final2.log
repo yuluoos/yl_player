@@ -1,0 +1,14 @@
+Temporary display assertion 17974 bound to owned command 17973
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart
+Building macOS application...                                   
+✓ Built build/macos/Build/Products/Debug/yl_player_example.app
+Failed to foreground app; open returned 1
+P03 owned-app foreground: 1 _LSOpenURLsWithCompletionHandler() failed for the application /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/macos/Build/Products/Debug/yl_player_example.app with error -600.
+P03 owned-app activate: 3 captureAllowed=true ownedApps=1
+ownedWindows=0 areas=[]
+00:00 +0: unavailable AV1 hardware produces the public nonretryable error
+P03 owned-app foreground: 0 
+YL_DECODER_ERROR_ROW=actual-unavailable-nonretryable
+00:00 +1: (tearDownAll)
+00:00 +1: All tests passed!
+Temporary display assertion released

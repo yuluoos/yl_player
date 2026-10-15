@@ -1,0 +1,517 @@
+Writing result bundle at path:
+	/private/tmp/yl-p03-audit/native-red.xcresult
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008103-000571C03CD9001E, name:My Mac }
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'yl_player_apple' from project 'yl_player_apple')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:23:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 21 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 22 |   var copy: Copy = { session, key, value in
+ 23 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   }
+ 25 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlVorbisDelayTests.swift:12:20: error: cannot find 'ylf_open_file' in scope
+10 |     let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "vorbis_switch", withExtension: "mkv"))
+11 |     var context: YLFMediaContextRef?; var info = YLFMediaInfo()
+12 |     XCTAssertEqual(ylf_open_file(url.path, &context, &info), 0)
+   |                    `- error: cannot find 'ylf_open_file' in scope
+13 |     defer { ylf_close(&context) }
+14 |     let opened = try XCTUnwrap(context)
+Failed frontend command:
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swift-frontend -frontend -c /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/AppleHostCharacterizations.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/NativeBackendFixtures.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/NativeCallbackCharacterization.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/RunnerTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleCompatibilityTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleDecoderRestorationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlApplePublicationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleReconciliationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlBoundedPacketQueueTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlByteRingBufferTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashHlsCompilerTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashSidxTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFairPlayKeySessionTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFairPlayOutputTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFELVideoPipelineTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackBufferBudgetTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackQualityPolicyTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackStateEncoderTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlFallbackTrackCatalogTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlHlsHeaderPolicyTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlHlsManifestRewriterTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosAudioTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosAvPlayerStateTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosFallbackTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosHlsTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosNetworkTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosOpenCoordinatorTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosPlatformAdapterTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosPresentationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlMacosVideoTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift -primary-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlVorbisDelayTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlProgramStreamTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkByteSourceTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlOpenedMediaTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlPlatformServicesTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpDemandTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpFixturePeer.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpLifecycleTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpManagedPauseTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpPeerTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpProtocolTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpRecoveryTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpRestorationTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpRouteTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlRtmpTransportTests.swift /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlV2ReactivationTests.swift -emit-dependencies-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.d -emit-const-values-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.swiftconstvalues -emit-reference-dependencies-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.swiftdeps -serialize-diagnostics-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.dia -target arm64-apple-macos12.0 -disable-cross-import-overlay-search -swift-module-cross-import Darwin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/Darwin.swiftcrossimport/xlocale.swiftoverlay -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libFoundationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#FoundationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libObservationMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#ObservationMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libPreviewsMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#PreviewsMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftMacros -load-resolved-plugin /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib/swift/host/plugins/libSwiftUIMacros.dylib\#/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/bin/swift-plugin-server\#SwiftUIMacros -disable-implicit-swift-modules -Xcc -fno-implicit-modules -Xcc -fno-implicit-module-maps -explicit-swift-module-map-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/RunnerTests-dependencies-1.json -Xllvm -aarch64-use-tbi -enable-objc-interop -stack-check -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk -I /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug -Isystem /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib -F /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/PackageFrameworks -F /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug -F /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks -module-cache-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules -no-color-diagnostics -Xcc -fno-color-diagnostics -enable-testing -g -debug-info-format\=dwarf -dwarf-version\=4 -swift-version 5 -Onone -D DEBUG -serialize-debugging-options -enable-experimental-feature DebugDescriptionMacro -enable-bare-slash-regex -empty-abi-descriptor -validate-clang-modules-once -clang-build-session-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/ModuleCache.noindex/Session.modulevalidation -Xcc -working-directory -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos -enable-anonymous-context-mangled-names -file-compilation-dir /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos -Xcc -D_LIBCPP_HARDENING_MODE\=_LIBCPP_HARDENING_MODE_DEBUG -Xcc -ivfsstatcache -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/SDKStatCaches.noindex/macosx27.0-26A425-7231f6df4def33e022ae2eb8f782df1a.sdkstatcache -Xcc -fmodules-prune-interval\=86400 -Xcc -fmodules-prune-after\=345600 -Xcc -iquote -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-generated-files.hmap -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-own-target-headers.hmap -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-all-non-framework-target-headers.hmap -Xcc -ivfsoverlay -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/Runner-18c1723432283e0cc55f10a6dcfd9e02-VFS/all-product-headers.yaml -Xcc -iquote -Xcc /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/RunnerTests-project-headers.hmap -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/include -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/DerivedSources-normal/arm64 -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/DerivedSources/arm64 -Xcc -I/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/DerivedSources -Xcc -DDEBUG\=1 -Xcc -DCOCOAPODS\=1 -Xcc -DCOCOAPODS\=1 -no-auto-bridging-header-chaining -module-name RunnerTests -const-gather-protocols-file /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/RunnerTests_const_extract_protocols.json -disable-clang-spi -clang-target arm64-apple-macos27.0 -target-sdk-version 27.0 -target-sdk-name macosx27.0 -in-process-plugin-server-path /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/libSwiftInProcPluginServer.dylib -o /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.o -debug-module-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Intermediates.noindex/Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/RunnerTests.swiftmodule -index-unit-output-path /Runner.build/Debug/RunnerTests.build/Objects-normal/arm64/YlVorbisDelayTests.o -index-store-path /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Index.noindex/DataStore -index-system-modules
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/App'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/Info.plist'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/AssetManifest.bin'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/FontManifest.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/NOTICES.Z'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/NativeAssetsManifest.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/android_audio_only.m4a'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/benchmark_601.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/benchmark_sdr.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/README.md'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/SHA256SUMS'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/manifest.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/chunk-1-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period0/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/chunk-1-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash/period1/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/SHA256SUMS'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/absolute-base.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/absolute-list.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/absolute-range.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/audio-added.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/audio-removed.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/avc/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/avc/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/avc/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/avc/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/avc/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/baseline-0.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/baseline-1.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/baseline.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/clip-0.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/clip-1.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/clip-end.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/clip.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/cross-codec.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/fractional-microsecond.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/fractional/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/fractional/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/gap.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/hevc/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/hevc/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/hevc/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/hevc/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/hevc/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent-0.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent-1.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent-pto.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent.m3u8'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/chunk-1-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/independent/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/large-exact.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/manifest.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/matrix.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/multiple-base.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/overlap.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period-fixture-provenance.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/chunk-1-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period0/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/chunk-1-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/period1/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/range-fixture-provenance.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/reference.vtt'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/resolution.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_timeline/unknown-middle.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/README.md'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/SHA256SUMS'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/manifest.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/manifest_high_to_low.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/manifest_low_to_high.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/manifest_missing_high.mpd'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-2-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-2-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-2-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-2-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/chunk-2-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period0/init-2.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-0-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-0-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-0-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-0-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-1-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-1-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-1-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-1-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-2-00001.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-2-00002.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-2-00003.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-2-00004.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/chunk-2-00005.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/init-0.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/init-1.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/dash_variants/period1/init-2.m4s'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/SHA256SUMS'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/avi-avc-mp3.avi'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/avi-avc-mp3.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/baseline-macos.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/cases.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/continuous-avc-aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/flv-avc-mp3.flv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/flv-avc-mp3.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/generation.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-av1-opus.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-av1-opus.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-aac-no-cues.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-aac-no-cues.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-aac-opus.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-aac-vorbis.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-aac.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-ac3-51.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-ac3-51.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-dts.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-dts.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-eac3.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-eac3.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-flac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-flac.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-opus-hybrid.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-opus-hybrid.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-opus-silk.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-opus-silk.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-opus.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-opus.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-vorbis-codec-delay.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-vorbis.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-avc-vorbis.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-hevc-main10-aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mkv-hevc-main10-aac.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mov-hevc-aac.mov'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mov-hevc-aac.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/opus-policy-fixture.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/ps-mpeg2-mp3.mpg'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/ps-mpeg2-mp3.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/timed-audio-short.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/timed-video-short.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/truncated.mp4'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/ts-avc-ac3.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/ts-avc-ac3.ts'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/vorbis-policy-fixture.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/webm-vp9-opus.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/webm-vp9-opus.webm'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/webm-vp9-vorbis.probe.json'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/webm-vp9-vorbis.webm'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/h264_aac.flv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/h264_aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/h264_mp3.flv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/hevc_aac.flv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/hevc_main10_level62_aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/hevc_main10_level62_aac.mp4'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/hls_encrypted_segment0.ts'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/hls_key.bin'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/hls_main10_encrypted_segment0.ts'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/long_60fps_h264_aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/network_seek_h264_aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/two_audio_tracks.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/video_tail_60fps_h264_aac.mkv'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/fonts/MaterialIcons-Regular.otf'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/isolate_snapshot_data'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/kernel_blob.bin'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/shaders/ink_sparkle.frag'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/shaders/stretch_effect.frag'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/App.framework/Versions/A/Resources/flutter_assets/vm_snapshot_data'
+
+note: Removed stale file '/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Versions/A/FlutterMacOS'
+
+note: Run script build phase 'Run Script' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Runner' from project 'Runner')
+Testing failed:
+	Cannot find 'ylf_open_file' in scope
+	Testing cancelled because the build failed.
+
+** TEST FAILED **
+

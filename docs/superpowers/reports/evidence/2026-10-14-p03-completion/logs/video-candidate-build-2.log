@@ -1,0 +1,184 @@
+gpg: no gpg-agent running in this session
+gpg: Signature made Tue Aug 11 20:42:43 2026 PDT
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+[GNUPG:] NEWSIG ffmpeg-devel@ffmpeg.org
+[GNUPG:] KEY_CONSIDERED FCF986EA15E6E293A5644F10B4322F04D67658D8 0
+[GNUPG:] SIG_ID /cMaRf1z+P1mlrauTJGdDOFEINk 2026-08-12 1786506163
+[GNUPG:] GOODSIG B4322F04D67658D8 FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>
+[GNUPG:] VALIDSIG FCF986EA15E6E293A5644F10B4322F04D67658D8 2026-08-12 1786506163 0 4 0 1 10 00 FCF986EA15E6E293A5644F10B4322F04D67658D8
+[GNUPG:] TRUST_UNDEFINED 0 pgp ffmpeg-devel@ffmpeg.org
+patching file 'libavcodec/aarch64/vorbisdsp_neon.S'
+patching file 'libavcodec/libdav1d.c'
+The Meson build system
+Version: 1.9.2
+Source dir: /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3
+Build dir: /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-build
+Build type: cross build
+Project name: dav1d
+Project version: 1.5.3
+C compiler for the host machine: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang (clang 21.0.0 "Apple clang version 21.0.0 (clang-2100.3.34.2)")
+C linker for the host machine: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang ld64 27037.1
+C compiler for the build machine: cc (clang 21.0.0 "Apple clang version 21.0.0 (clang-2100.3.34.2)")
+C linker for the build machine: cc ld64 27037.1
+Build machine cpu family: aarch64
+Build machine cpu: aarch64
+Host machine cpu family: aarch64
+Host machine cpu: arm64
+Target machine cpu family: aarch64
+Target machine cpu: arm64
+Fetching value of define "DAV1D_API_VERSION_MAJOR" : 7 
+Fetching value of define "DAV1D_API_VERSION_MINOR" : 0 
+Fetching value of define "DAV1D_API_VERSION_PATCH" : 0 
+Run-time dependency threads found: YES
+Checking for function "clock_gettime" : YES 
+Checking for function "posix_memalign" : YES 
+Checking for function "memalign" : NO 
+Checking for function "aligned_alloc" : YES 
+Library m found: YES
+Check usable header "stdatomic.h" : YES 
+Check usable header "sys/types.h" : YES 
+Check usable header "unistd.h" : YES 
+Check usable header "io.h" : NO 
+Check usable header "pthread_np.h" : NO 
+Checking for function "getopt_long" : YES 
+Checking for function "getauxval" : NO 
+Checking for function "elf_aux_info" : NO 
+Checking for function "pthread_getaffinity_np" with dependency threads: NO 
+Checking for function "pthread_setaffinity_np" with dependency threads: NO 
+Checking for function "pthread_setname_np" with dependency threads: YES 
+Checking for function "pthread_set_name_np" with dependency threads: NO 
+Checking if "_Generic" compiles: YES 
+Compiler for C supports arguments -fvisibility=hidden: YES 
+Compiler for C supports arguments -Wundef: YES 
+Compiler for C supports arguments -Werror=vla: YES 
+Compiler for C supports arguments -Wno-maybe-uninitialized: NO 
+Compiler for C supports arguments -Wno-missing-field-initializers: YES 
+Compiler for C supports arguments -Wno-unused-parameter: YES 
+Compiler for C supports arguments -Wstrict-prototypes: YES 
+Compiler for C supports arguments -Werror=missing-prototypes: YES 
+Compiler for C supports arguments -Wshorten-64-to-32: YES 
+Compiler for C supports arguments -fomit-frame-pointer: YES 
+Compiler for C supports arguments -ffast-math: YES 
+Compiler for C supports arguments -fno-align-functions: YES 
+Checking if "DOTPROD" compiles: YES 
+Checking if "I8MM" compiles: YES 
+Checking if "SVE" compiles: YES 
+Checking if "SVE2" compiles: YES 
+Configuring config.h using configuration
+Found pkg-config: NO
+Build targets in project: 5
+
+dav1d 1.5.3
+
+  User defined options
+    Cross files    : /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-cross.ini
+    b_staticpic    : true
+    buildtype      : release
+    default_library: static
+    enable_asm     : true
+    enable_docs    : false
+    enable_examples: false
+    enable_tests   : false
+    enable_tools   : false
+    libdir         : lib
+    prefix         : /yl_dav1d/install
+
+Found ninja-1.13.0.git.kitware.jobserver-pipe-1 at /private/tmp/yl-p03-build-tools/bin/ninja
+ninja: Entering directory `/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-build'
+[1/73] Generating include/vcs_version.h with a custom command
+[2/73] Compiling C object src/libdav1d_bitdepth_8.a.p/fg_apply_tmpl.c.o
+[3/73] Compiling C object src/libdav1d_bitdepth_8.a.p/cdef_tmpl.c.o
+[4/73] Compiling C object src/libdav1d_bitdepth_8.a.p/cdef_apply_tmpl.c.o
+[5/73] Compiling C object src/libdav1d_bitdepth_8.a.p/ipred_prepare_tmpl.c.o
+[6/73] Compiling C object src/libdav1d_bitdepth_8.a.p/ipred_tmpl.c.o
+[7/73] Compiling C object src/libdav1d_bitdepth_8.a.p/filmgrain_tmpl.c.o
+[8/73] Compiling C object src/libdav1d_bitdepth_8.a.p/loopfilter_tmpl.c.o
+[9/73] Compiling C object src/libdav1d_bitdepth_8.a.p/lf_apply_tmpl.c.o
+[10/73] Compiling C object src/libdav1d_bitdepth_8.a.p/itx_tmpl.c.o
+[11/73] Compiling C object src/libdav1d_bitdepth_8.a.p/lr_apply_tmpl.c.o
+[12/73] Compiling C object src/libdav1d_bitdepth_8.a.p/looprestoration_tmpl.c.o
+[13/73] Compiling C object src/libdav1d_bitdepth_16.a.p/cdef_apply_tmpl.c.o
+[14/73] Compiling C object src/libdav1d_bitdepth_16.a.p/cdef_tmpl.c.o
+[15/73] Compiling C object src/libdav1d_bitdepth_8.a.p/mc_tmpl.c.o
+[16/73] Compiling C object src/libdav1d_bitdepth_16.a.p/fg_apply_tmpl.c.o
+[17/73] Compiling C object src/libdav1d_bitdepth_16.a.p/ipred_prepare_tmpl.c.o
+[18/73] Compiling C object src/libdav1d_bitdepth_16.a.p/filmgrain_tmpl.c.o
+[19/73] Compiling C object src/libdav1d_bitdepth_16.a.p/ipred_tmpl.c.o
+[20/73] Compiling C object src/libdav1d_bitdepth_16.a.p/loopfilter_tmpl.c.o
+[21/73] Compiling C object src/libdav1d_bitdepth_8.a.p/recon_tmpl.c.o
+[22/73] Compiling C object src/libdav1d_bitdepth_16.a.p/lf_apply_tmpl.c.o
+[23/73] Compiling C object src/libdav1d_bitdepth_16.a.p/itx_tmpl.c.o
+[24/73] Compiling C object src/libdav1d_bitdepth_16.a.p/lr_apply_tmpl.c.o
+[25/73] Compiling C object src/libdav1d_bitdepth_16.a.p/mc_tmpl.c.o
+[26/73] Compiling C object src/libdav1d_bitdepth_16.a.p/looprestoration_tmpl.c.o
+[27/73] Compiling C object src/libdav1d.a.p/ctx.c.o
+[28/73] Compiling C object src/libdav1d.a.p/cpu.c.o
+[29/73] Compiling C object src/libdav1d.a.p/data.c.o
+[30/73] Compiling C object src/libdav1d.a.p/dequant_tables.c.o
+[31/73] Compiling C object src/libdav1d.a.p/getbits.c.o
+[32/73] Compiling C object src/libdav1d_bitdepth_16.a.p/recon_tmpl.c.o
+[33/73] Compiling C object src/libdav1d.a.p/intra_edge.c.o
+[34/73] Compiling C object src/libdav1d.a.p/lf_mask.c.o
+[35/73] Compiling C object src/libdav1d.a.p/cdf.c.o
+[36/73] Compiling C object src/libdav1d.a.p/log.c.o
+[37/73] Compiling C object src/libdav1d.a.p/mem.c.o
+[38/73] Compiling C object src/libdav1d.a.p/lib.c.o
+[39/73] Compiling C object src/libdav1d.a.p/msac.c.o
+[40/73] Compiling C object src/libdav1d.a.p/itx_1d.c.o
+[41/73] Compiling C object src/libdav1d.a.p/pal.c.o
+[42/73] Compiling C object src/libdav1d.a.p/picture.c.o
+[43/73] Compiling C object src/libdav1d.a.p/qm.c.o
+[44/73] Compiling C object src/libdav1d.a.p/ref.c.o
+[45/73] Compiling C object src/libdav1d.a.p/obu.c.o
+[46/73] Compiling C object src/libdav1d.a.p/scan.c.o
+[47/73] Compiling C object src/libdav1d.a.p/tables.c.o
+[48/73] Compiling C object src/libdav1d.a.p/decode.c.o
+[49/73] Compiling C object src/libdav1d.a.p/warpmv.c.o
+[50/73] Compiling C object src/libdav1d.a.p/wedge.c.o
+[51/73] Compiling C object src/libdav1d.a.p/arm_cpu.c.o
+[52/73] Compiling C object src/libdav1d.a.p/refmvs.c.o
+[53/73] Compiling C object src/libdav1d.a.p/arm_64_looprestoration_common.S.o
+[54/73] Compiling C object src/libdav1d.a.p/arm_64_msac.S.o
+[55/73] Compiling C object src/libdav1d.a.p/arm_64_refmvs.S.o
+[56/73] Compiling C object src/libdav1d.a.p/arm_64_cdef.S.o
+[57/73] Compiling C object src/libdav1d.a.p/thread_task.c.o
+[58/73] Compiling C object src/libdav1d.a.p/arm_64_itx.S.o
+[59/73] Compiling C object src/libdav1d.a.p/arm_64_loopfilter.S.o
+[60/73] Compiling C object src/libdav1d.a.p/arm_64_filmgrain.S.o
+[61/73] Compiling C object src/libdav1d.a.p/arm_64_looprestoration.S.o
+[62/73] Compiling C object src/libdav1d.a.p/arm_64_ipred.S.o
+[63/73] Compiling C object src/libdav1d.a.p/arm_64_cdef16.S.o
+[64/73] Compiling C object src/libdav1d.a.p/arm_64_mc_dotprod.S.o
+[65/73] Compiling C object src/libdav1d.a.p/arm_64_filmgrain16.S.o
+[66/73] Compiling C object src/libdav1d.a.p/arm_64_mc.S.o
+[67/73] Compiling C object src/libdav1d.a.p/arm_64_ipred16.S.o
+[68/73] Compiling C object src/libdav1d.a.p/arm_64_loopfilter16.S.o
+[69/73] Compiling C object src/libdav1d.a.p/arm_64_looprestoration16.S.o
+[70/73] Compiling C object src/libdav1d.a.p/arm_64_mc16_sve.S.o
+[71/73] Compiling C object src/libdav1d.a.p/arm_64_itx16.S.o
+[72/73] Compiling C object src/libdav1d.a.p/arm_64_mc16.S.o
+[73/73] Linking static target src/libdav1d.a
+ninja: Entering directory `/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-build'
+[1/4] Generating include/vcs_version.h with a custom command
+[1/2] Installing files
+Installing src/libdav1d.a to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/lib
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3/include/dav1d/common.h to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/include/dav1d
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3/include/dav1d/data.h to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/include/dav1d
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3/include/dav1d/dav1d.h to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/include/dav1d
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3/include/dav1d/headers.h to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/include/dav1d
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3/include/dav1d/picture.h to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/include/dav1d
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/dav1d-1.5.3/include/dav1d/version.h to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/include/dav1d
+Installing /private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-build/meson-private/dav1d.pc to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-apple-ffmpeg.dlHBEg/build/iphoneos-arm64/dav1d-stage/yl_dav1d/install/lib/pkgconfig
+ERROR: dav1d >= 1.0.0 not found using pkg-config
+
+If you think configure made a mistake, make sure you are using the latest
+version from Git.  If the latest version fails, report the problem to the
+ffmpeg-user@ffmpeg.org mailing list or IRC #ffmpeg on irc.libera.chat.
+Include the log file "ffbuild/config.log" produced by configure as this will help
+solve the problem.
+kept FFmpeg build directory: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.dlHBEg

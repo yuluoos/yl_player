@@ -1,0 +1,15 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                             21.7s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           5.4s
+00:00 +0: ps-avc-mp3 / file
+YL_FORMAT_ROW={"caseId":"ps-avc-mp3","transport":"file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:06 +1: ps-avc-mp3 / http
+YL_FORMAT_ROW={"caseId":"ps-avc-mp3","transport":"http","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:10 +2: ps-avc-mp3 / renamed-file
+YL_FORMAT_ROW={"caseId":"ps-avc-mp3","transport":"renamed-file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:13 +3: ps-avc-mp3 / wrong-known-file
+YL_FORMAT_ROW={"caseId":"ps-avc-mp3","transport":"wrong-known-file","platform":"android","mediaHash":"5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"managedFallback","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":false,"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:16 +4: (tearDownAll)
+00:17 +4: All tests passed!
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.5MB1Pk

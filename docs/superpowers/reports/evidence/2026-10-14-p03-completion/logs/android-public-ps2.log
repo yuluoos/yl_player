@@ -1,0 +1,48 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                          
+e: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProgressiveExtractors.kt:12:33 None of the following candidates is applicable:
+
+fun <T> Array<T>.plus(element: T): Array<T>:
+  Argument type mismatch: actual type is 'Array<(out) Extractor>', but 'YlProgressiveExtractors.PsOwnedRoute' was expected.
+
+fun <T> Array<T>.plus(elements: Collection<T>): Array<T>:
+  Argument type mismatch: actual type is 'Array<(out) Extractor>', but 'Collection<uninferred T (of fun <T> Array<T>.plus)>' was expected.
+
+fun <T> Array<T>.plus(elements: Array<out T>): Array<T>:
+  Argument type mismatch: actual type is 'Array<(out) Extractor>', but 'Array<out uninferred T (of fun <T> Array<T>.plus)>' was expected.
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':yl_player_android:compileDebugKotlin'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.btapi.BuildToolsApiCompilationWork
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to generate a Build Scan (Powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 28s
+Running Gradle task 'assembleDebug'...                             29.5s
+00:00 +0 -1: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart [E]
+  Failed to load "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart": Gradle task assembleDebug failed with exit code 1
+  package:flutter_tools/src/base/common.dart 34:3                    throwToolExit
+  package:flutter_tools/src/android/gradle.dart 595:7                AndroidGradleBuilder.buildGradleApp
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/android/gradle.dart 236:5                AndroidGradleBuilder.buildApk
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/android/android_device.dart 570:7        AndroidDevice.startApp
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/test/integration_test_device.dart 57:39  IntegrationTestTestDevice.start
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/test/flutter_platform.dart 680:51        FlutterPlatform._startTest.<fn>
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/base/async_guard.dart 108:24             asyncGuard.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.GbPZ8K

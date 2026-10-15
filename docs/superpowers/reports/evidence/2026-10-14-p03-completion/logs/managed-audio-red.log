@@ -1,0 +1,84 @@
+Writing result bundle at path:
+	/private/tmp/yl-p03-audit/managed-audio-red.xcresult
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008103-000571C03CD9001E, name:My Mac }
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'RunnerTests' from project 'Runner')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1226:17: warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1224 |     DispatchQueue.global().async {
+1225 |       do {
+1226 |         _ = try stage.run(token: token, work: {
+     |                 `- warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1227 |           let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+1228 |           entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+
+yl_player_apple.YlHardwareEvidencePreparation:1:22: note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+1 | final internal class YlHardwareEvidencePreparation {
+  |                      `- note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+2 |     internal typealias Schedule = (TimeInterval, @escaping () -> Void) -> () -> Void
+3 |     internal init(timeout: TimeInterval = 5, now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }, schedule: yl_player_apple.YlHardwareEvidencePreparation.Schedule? = nil)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1:11: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]
+   1 | @testable import yl_player_apple
+     |           `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]
+   2 | import AVFoundation
+   3 | import CoreVideo
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1226:34: warning: capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]
+1224 |     DispatchQueue.global().async {
+1225 |       do {
+1226 |         _ = try stage.run(token: token, work: {
+     |                                  `- warning: capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]
+1227 |           let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+1228 |           entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+
+yl_player_apple.YlOpenCancellationToken:1:22: note: class 'YlOpenCancellationToken' does not conform to the 'Sendable' protocol
+1 | final internal class YlOpenCancellationToken {
+  |                      `- note: class 'YlOpenCancellationToken' does not conform to the 'Sendable' protocol
+2 |     internal var isCancelled: Bool { get }
+3 |     internal func onCancel(_ handler: @escaping () -> Void)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1227:47: warning: capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]
+1225 |       do {
+1226 |         _ = try stage.run(token: token, work: {
+1227 |           let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+     |                                               `- warning: capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]
+1228 |           entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+1229 |         }, discard: { _ in discarded.fulfill() })
+
+yl_player_apple.YlManagedBufferScope:1:22: note: class 'YlManagedBufferScope' does not conform to the 'Sendable' protocol
+ 1 | final internal class YlManagedBufferScope {
+   |                      `- note: class 'YlManagedBufferScope' does not conform to the 'Sendable' protocol
+ 2 |     internal let ledger: yl_player_apple.YlManagedBufferLedger
+ 3 |     internal var hasBoundedTimeline: Bool { get }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1243:26: warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1241 |     DispatchQueue.global().async {
+1242 |       do {
+1243 |         let _: Int = try stage.run(token: .init(), work: { XCTFail("Overlapping work started"); return 1 }, discard: { (_: Int) in })
+     |                          `- warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1244 |         XCTFail("Overlapping probe admitted")
+1245 |       } catch { XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.unavailable") }
+
+yl_player_apple.YlHardwareEvidencePreparation:1:22: note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+1 | final internal class YlHardwareEvidencePreparation {
+  |                      `- note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+2 |     internal typealias Schedule = (TimeInterval, @escaping () -> Void) -> () -> Void
+3 |     internal init(timeout: TimeInterval = 5, now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }, schedule: yl_player_apple.YlHardwareEvidencePreparation.Schedule? = nil)
+
+[#AddPreconcurrencyImport]: <https://docs.swift.org/compiler/documentation/diagnostics/add-preconcurrency-import>
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/Runner.xcodeproj: RunnerTests: ld: warning: building for macOS-12.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/Runner.xcodeproj: RunnerTests: ld: warning: building for macOS-12.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+note: Run script build phase 'Run Script' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Runner' from project 'Runner')
+2026-10-14 23:30:13.093 xcodebuild[75417:1129411] [MT] IDETestOperationsObserverDebug: 7.494 elapsed -- Testing started completed.
+2026-10-14 23:30:13.093 xcodebuild[75417:1129411] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-14 23:30:13.093 xcodebuild[75417:1129411] [MT] IDETestOperationsObserverDebug: 7.494 sec, +7.494 sec -- end
+Failing tests:
+	YlManagedSoftwareAudioTests.testManagedRangeRetryAndActualOpusVorbisPCMOwnership()
+
+** TEST FAILED **
+
+Testing started

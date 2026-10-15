@@ -1,0 +1,14 @@
+{
+  "platform": "ios",
+  "device": "A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6",
+  "groups": [
+    [
+      "regex:^mp4-avc-aac / (renamed-file|wrong-known-file|extensionless-file)$"
+    ]
+  ],
+  "strict": true,
+  "sourceSha256": "3b3ee7bb8eca54df423134a1a671ba3bd56ef4962ce663267f59e2ca7682599f",
+  "extraArguments": [
+    "--dart-define=YL_FORMAT_SLOW_CAPTURE=true"
+  ]
+}

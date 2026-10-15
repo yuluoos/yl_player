@@ -1,0 +1,65 @@
+CMake Deprecation Warning at CMakeLists.txt:1 (cmake_minimum_required):
+  Compatibility with CMake < 3.10 will be removed from a future version of
+  CMake.
+
+  Update the VERSION argument <min> value.  Or, use the <min>...<max> syntax
+  to tell CMake that the project requires at least <min> but has been updated
+  to work with policies introduced by <max> or earlier.
+
+
+-- The C compiler identification is AppleClang 21.0.0.21000334
+-- The CXX compiler identification is AppleClang 21.0.0.21000334
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring vorbis 1.3.7
+-- Looking for floor in m
+-- Looking for floor in m - found
+-- Found Ogg: /private/tmp/yl-p03-vorbis-reference/install/lib/libogg.a (found version "1.3.6")
+-- Configuring done (1.9s)
+-- Generating done (0.0s)
+-- Build files have been written to: /private/tmp/yl-p03-vorbis-current
+[ 12%] Building C object lib/CMakeFiles/vorbis.dir/mdct.c.o
+[ 12%] Building C object lib/CMakeFiles/vorbis.dir/block.c.o
+[ 12%] Building C object lib/CMakeFiles/vorbis.dir/envelope.c.o
+[ 12%] Building C object lib/CMakeFiles/vorbis.dir/smallft.c.o
+[ 16%] Building C object lib/CMakeFiles/vorbis.dir/window.c.o
+[ 19%] Building C object lib/CMakeFiles/vorbis.dir/lsp.c.o
+[ 22%] Building C object lib/CMakeFiles/vorbis.dir/lpc.c.o
+[ 25%] Building C object lib/CMakeFiles/vorbis.dir/analysis.c.o
+[ 29%] Building C object lib/CMakeFiles/vorbis.dir/synthesis.c.o
+[ 32%] Building C object lib/CMakeFiles/vorbis.dir/psy.c.o
+[ 35%] Building C object lib/CMakeFiles/vorbis.dir/info.c.o
+[ 38%] Building C object lib/CMakeFiles/vorbis.dir/floor1.c.o
+[ 41%] Building C object lib/CMakeFiles/vorbis.dir/floor0.c.o
+[ 45%] Building C object lib/CMakeFiles/vorbis.dir/res0.c.o
+[ 48%] Building C object lib/CMakeFiles/vorbis.dir/mapping0.c.o
+[ 51%] Building C object lib/CMakeFiles/vorbis.dir/registry.c.o
+[ 54%] Building C object lib/CMakeFiles/vorbis.dir/codebook.c.o
+[ 58%] Building C object lib/CMakeFiles/vorbis.dir/sharedbook.c.o
+[ 61%] Building C object lib/CMakeFiles/vorbis.dir/lookup.c.o
+[ 64%] Building C object lib/CMakeFiles/vorbis.dir/bitrate.c.o
+[ 67%] Linking C static library libvorbis.a
+[ 67%] Built target vorbis
+[ 77%] Building C object lib/CMakeFiles/vorbisfile.dir/vorbisfile.c.o
+[ 77%] Building C object test/CMakeFiles/test_codebook.dir/test_codebook.c.o
+[ 77%] Building C object lib/CMakeFiles/vorbisenc.dir/vorbisenc.c.o
+[ 80%] Linking C executable test_codebook
+[ 80%] Built target test_codebook
+[ 83%] Linking C static library libvorbisfile.a
+[ 83%] Built target vorbisfile
+[ 87%] Linking C static library libvorbisenc.a
+[ 87%] Built target vorbisenc
+[ 96%] Building C object test/CMakeFiles/vorbis_test.dir/util.c.o
+[ 96%] Building C object test/CMakeFiles/vorbis_test.dir/test.c.o
+[ 96%] Building C object test/CMakeFiles/vorbis_test.dir/write_read.c.o
+[100%] Linking C executable vorbis_test
+ld: warning: ignoring duplicate libraries: '-lm'
+[100%] Built target vorbis_test

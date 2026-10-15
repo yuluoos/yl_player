@@ -1,0 +1,469 @@
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   138  100   138    0     0    114      0  0:00:01  0:00:01 --:--:--   114100   138  100   138    0     0    114      0  0:00:01  0:00:01 --:--:--   114
+  0     0    0     0    0     0      0      0 --:--:--  0:00:02 --:--:--     0 83  429k   83  359k    0     0   120k      0  0:00:03  0:00:02  0:00:01  383k100  429k  100  429k    0     0   141k      0  0:00:03  0:00:03 --:--:--  431k
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   138  100   138    0     0    177      0 --:--:-- --:--:-- --:--:--   177
+  0     0    0     0    0     0      0      0 --:--:--  0:00:01 --:--:--     0  0 1175k    0  7965    0     0   3864      0  0:05:11  0:00:02  0:05:09 11888 55 1175k   55  656k    0     0   224k      0  0:00:05  0:00:02  0:00:03  430k100 1175k  100 1175k    0     0   378k      0  0:00:03  0:00:03 --:--:--  686k
+configure: WARNING: unrecognized options: --disable-docs
+checking build system type... aarch64-apple-darwin27.0.0
+checking host system type... aarch64-apple-darwin27.0.0
+checking how to print strings... printf
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
+checking if the linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) is GNU ld... no
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 786432
+checking how to convert aarch64-apple-darwin27.0.0 file names to aarch64-apple-darwin27.0.0 format... func_convert_file_noop
+checking how to convert aarch64-apple-darwin27.0.0 file names to toolchain format... func_convert_file_noop
+checking for /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld option to reload object files... -r
+checking for file... file
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... no
+checking for strip... strip
+checking for ranlib... ranlib
+checking for gawk... no
+checking for mawk... no
+checking for nawk... no
+checking for awk... awk
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /bin/dd
+checking how to truncate binary pipes... /bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dsymutil... dsymutil
+checking for nmedit... nmedit
+checking for lipo... lipo
+checking for otool... otool
+checking for otool64... no
+checking for -single_module linker flag... ld: warning: -single_module is obsolete
+no
+checking for -exported_symbols_list linker flag... yes
+checking for -force_load linker flag... yes
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... yes
+checking for gcc option to produce PIC... -fno-common -DPIC
+checking if gcc PIC flag -fno-common -DPIC works... yes
+checking if gcc static flag -static works... no
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries... yes
+checking dynamic linker characteristics... darwin27.0.0 dyld
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking for a BSD-compatible install... /opt/homebrew/bin/ginstall -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /opt/homebrew/bin/gmkdir -p
+checking whether make sets $(MAKE)... yes
+checking whether make supports the include directive... yes (GNU style)
+checking whether make supports nested variables... yes
+checking dependency style of gcc... gcc3
+checking whether to enable maintainer-specific portions of Makefiles... yes
+checking for gcc... (cached) gcc
+checking whether the compiler supports GNU C... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking for gcc option to enable C11 features... (cached) none needed
+checking whether gcc understands -c and -o together... (cached) yes
+checking for inttypes.h... (cached) yes
+checking for stdint.h... (cached) yes
+checking for sys/types.h... (cached) yes
+checking for an ANSI C-conforming const... yes
+checking size of int16_t... 2
+checking size of uint16_t... 2
+checking size of u_int16_t... 2
+checking size of int32_t... 4
+checking size of uint32_t... 4
+checking size of u_int32_t... 4
+checking size of int64_t... 8
+checking size of uint64_t... 8
+checking size of short... 2
+checking size of int... 4
+checking size of long... 8
+checking size of long long... 8
+checking for working memcmp... yes
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating src/Makefile
+config.status: creating doc/Makefile
+config.status: creating doc/libogg/Makefile
+config.status: creating include/Makefile
+config.status: creating include/ogg/Makefile
+config.status: creating include/ogg/config_types.h
+config.status: creating libogg.spec
+config.status: creating ogg.pc
+config.status: creating ogg-uninstalled.pc
+config.status: creating config.h
+config.status: executing libtool commands
+config.status: executing depfiles commands
+configure: WARNING: unrecognized options: --disable-docs
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
+Making all in src
+gcc -DHAVE_CONFIG_H -I. -I..  -I../include -I../include  -D_V_SELFTEST -O2 -MT test_bitwise-bitwise.o -MD -MP -MF .deps/test_bitwise-bitwise.Tpo -c -o test_bitwise-bitwise.o `test -f 'bitwise.c' || echo './'`bitwise.c
+gcc -DHAVE_CONFIG_H -I. -I..  -I../include -I../include  -D_V_SELFTEST -O2 -MT test_framing-framing.o -MD -MP -MF .deps/test_framing-framing.Tpo -c -o test_framing-framing.o `test -f 'framing.c' || echo './'`framing.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../include -I../include   -O2 -MT framing.lo -MD -MP -MF .deps/framing.Tpo -c -o framing.lo framing.c
+/bin/sh ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../include -I../include   -O2 -MT bitwise.lo -MD -MP -MF .deps/bitwise.Tpo -c -o bitwise.lo bitwise.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../include -I../include -O2 -MT framing.lo -MD -MP -MF .deps/framing.Tpo -c framing.c -o framing.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../include -I../include -O2 -MT bitwise.lo -MD -MP -MF .deps/bitwise.Tpo -c bitwise.c -o bitwise.o
+mv -f .deps/bitwise.Tpo .deps/bitwise.Plo
+mv -f .deps/test_bitwise-bitwise.Tpo .deps/test_bitwise-bitwise.Po
+/bin/sh ../libtool  --tag=CC   --mode=link gcc -D_V_SELFTEST -O2   -o test_bitwise test_bitwise-bitwise.o  
+mv -f .deps/framing.Tpo .deps/framing.Plo
+/bin/sh ../libtool  --tag=CC   --mode=link gcc  -O2 -no-undefined -version-info 8:6:8  -o libogg.la -rpath /private/tmp/yl-p03-vorbis-reference/install/lib framing.lo bitwise.lo  
+mv -f .deps/test_framing-framing.Tpo .deps/test_framing-framing.Po
+/bin/sh ../libtool  --tag=CC   --mode=link gcc -D_V_SELFTEST -O2   -o test_framing test_framing-framing.o  
+libtool: link: gcc -D_V_SELFTEST -O2 -o test_bitwise test_bitwise-bitwise.o 
+libtool: link: ar cr .libs/libogg.a  framing.o bitwise.o
+libtool: link: ranlib .libs/libogg.a
+libtool: link: gcc -D_V_SELFTEST -O2 -o test_framing test_framing-framing.o 
+libtool: link: ( cd ".libs" && rm -f "libogg.la" && ln -s "../libogg.la" "libogg.la" )
+Making all in include
+Making all in ogg
+make[3]: Nothing to be done for `all'.
+make[3]: Nothing to be done for `all-am'.
+Making all in doc
+Making all in libogg
+make[3]: Nothing to be done for `all'.
+make[3]: Nothing to be done for `all-am'.
+make[2]: Nothing to be done for `all-am'.
+Making install in src
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/lib'
+ /bin/sh ../libtool   --mode=install /opt/homebrew/bin/ginstall -c   libogg.la '/private/tmp/yl-p03-vorbis-reference/install/lib'
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libogg.lai /private/tmp/yl-p03-vorbis-reference/install/lib/libogg.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libogg.a /private/tmp/yl-p03-vorbis-reference/install/lib/libogg.a
+libtool: install: chmod 644 /private/tmp/yl-p03-vorbis-reference/install/lib/libogg.a
+libtool: install: ranlib /private/tmp/yl-p03-vorbis-reference/install/lib/libogg.a
+make[2]: Nothing to be done for `install-data-am'.
+Making install in include
+Making install in ogg
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/include/ogg'
+ /opt/homebrew/bin/ginstall -c -m 644 config_types.h '/private/tmp/yl-p03-vorbis-reference/install/include/ogg'
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/include/ogg'
+ /opt/homebrew/bin/ginstall -c -m 644 ogg.h os_types.h '/private/tmp/yl-p03-vorbis-reference/install/include/ogg'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+Making install in doc
+Making install in libogg
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libogg/libogg'
+ /opt/homebrew/bin/ginstall -c -m 644 bitpacking.html datastructures.html decoding.html encoding.html general.html index.html ogg_iovec_t.html ogg_packet.html ogg_packet_clear.html ogg_page.html ogg_page_bos.html ogg_page_checksum_set.html ogg_page_continued.html ogg_page_eos.html ogg_page_granulepos.html ogg_page_packets.html ogg_page_pageno.html ogg_page_serialno.html ogg_page_version.html ogg_stream_check.html ogg_stream_clear.html ogg_stream_destroy.html ogg_stream_eos.html ogg_stream_flush.html ogg_stream_flush_fill.html ogg_stream_init.html ogg_stream_iovecin.html ogg_stream_packetin.html ogg_stream_packetout.html ogg_stream_packetpeek.html ogg_stream_pagein.html ogg_stream_pageout.html ogg_stream_pageout_fill.html ogg_stream_reset.html ogg_stream_reset_serialno.html ogg_stream_state.html ogg_sync_buffer.html ogg_sync_check.html ogg_sync_clear.html ogg_sync_destroy.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libogg/libogg'
+ /opt/homebrew/bin/ginstall -c -m 644 ogg_sync_init.html ogg_sync_pageout.html ogg_sync_pageseek.html ogg_sync_reset.html ogg_sync_state.html ogg_sync_wrote.html oggpack_adv.html oggpack_adv1.html oggpack_bits.html oggpack_buffer.html oggpack_bytes.html oggpack_get_buffer.html oggpack_look.html oggpack_look1.html oggpack_read.html oggpack_read1.html oggpack_readinit.html oggpack_reset.html oggpack_write.html oggpack_writealign.html oggpack_writecheck.html oggpack_writeclear.html oggpack_writecopy.html oggpack_writeinit.html oggpack_writetrunc.html overview.html reference.html style.css '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libogg/libogg'
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libogg'
+ /opt/homebrew/bin/ginstall -c -m 644 framing.html index.html oggstream.html ogg-multiplex.html fish_xiph_org.png multiplex1.png packets.png pages.png stream.png vorbisword2.png white-ogg.png white-xifish.png rfc3533.txt rfc5334.txt skeleton.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libogg'
+make[2]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/aclocal'
+ /opt/homebrew/bin/ginstall -c -m 644 ogg.m4 '/private/tmp/yl-p03-vorbis-reference/install/share/aclocal'
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/lib/pkgconfig'
+ /opt/homebrew/bin/ginstall -c -m 644 ogg.pc '/private/tmp/yl-p03-vorbis-reference/install/lib/pkgconfig'
+checking build system type... arm-apple-darwin27.0.0
+checking host system type... arm-apple-darwin27.0.0
+checking for a BSD-compatible install... /opt/homebrew/bin/ginstall -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /opt/homebrew/bin/gmkdir -p
+checking for gawk... no
+checking for mawk... no
+checking for nawk... no
+checking for awk... awk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking whether to enable maintainer-specific portions of Makefiles... no
+checking whether make supports nested variables... (cached) yes
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking whether make supports the include directive... yes (GNU style)
+checking dependency style of gcc... gcc3
+checking how to run the C preprocessor... gcc -E
+checking for inline... inline
+checking how to print strings... printf
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
+checking if the linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) is GNU ld... no
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 786432
+checking how to convert arm-apple-darwin27.0.0 file names to arm-apple-darwin27.0.0 format... func_convert_file_noop
+checking how to convert arm-apple-darwin27.0.0 file names to toolchain format... func_convert_file_noop
+checking for /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... dlltool
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... no
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /bin/dd
+checking how to truncate binary pipes... /bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dsymutil... dsymutil
+checking for nmedit... nmedit
+checking for lipo... lipo
+checking for otool... otool
+checking for otool64... no
+checking for -single_module linker flag... ld: warning: -single_module is obsolete
+no
+checking for -exported_symbols_list linker flag... yes
+checking for -force_load linker flag... yes
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... yes
+checking for gcc option to produce PIC... -fno-common -DPIC
+checking if gcc PIC flag -fno-common -DPIC works... yes
+checking if gcc static flag -static works... no
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries... yes
+checking dynamic linker characteristics... darwin27.0.0 dyld
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking GCC version... 21.0.0
+checking if gcc accepts -Wdeclaration-after-statement... no
+checking for memory.h... (cached) yes
+checking for cos in -lm... no
+checking for pthread_create in -lpthread... no
+checking for pkg-config... /opt/homebrew/bin/pkg-config
+checking pkg-config is at least version 0.9.0... yes
+checking for OGG... yes
+checking for size_t... yes
+checking for working alloca.h... no
+checking for alloca... no
+checking whether `alloca.c' needs Cray hooks... no
+checking stack direction for C alloca... -1
+checking for working memcmp... no
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating m4/Makefile
+config.status: creating lib/Makefile
+config.status: creating lib/modes/Makefile
+config.status: creating lib/books/Makefile
+config.status: creating lib/books/coupled/Makefile
+config.status: creating lib/books/uncoupled/Makefile
+config.status: creating lib/books/floor/Makefile
+config.status: creating doc/Makefile
+config.status: creating doc/vorbisfile/Makefile
+config.status: creating doc/vorbisenc/Makefile
+config.status: creating doc/libvorbis/Makefile
+config.status: creating doc/Doxyfile
+config.status: creating include/Makefile
+config.status: creating include/vorbis/Makefile
+config.status: creating examples/Makefile
+config.status: creating test/Makefile
+config.status: creating vq/Makefile
+config.status: creating libvorbis.spec
+config.status: creating vorbis.pc
+config.status: creating vorbisenc.pc
+config.status: creating vorbisfile.pc
+config.status: creating vorbis-uninstalled.pc
+config.status: creating vorbisenc-uninstalled.pc
+config.status: creating vorbisfile-uninstalled.pc
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
+Making all in m4
+make[2]: Nothing to be done for `all'.
+Making all in include
+Making all in vorbis
+make[3]: Nothing to be done for `all'.
+make[3]: Nothing to be done for `all-am'.
+Making all in vq
+make[2]: Nothing to be done for `all'.
+Making all in lib
+Making all in modes
+make[3]: Nothing to be done for `all'.
+Making all in books
+Making all in coupled
+make[4]: Nothing to be done for `all'.
+Making all in uncoupled
+make[4]: Nothing to be done for `all'.
+Making all in floor
+make[4]: Nothing to be done for `all'.
+make[4]: Nothing to be done for `all-am'.
+  CC       test_sharedbook-sharedbook.o
+  CC       mdct.lo
+  CC       smallft.lo
+  CC       block.lo
+  CC       envelope.lo
+  CC       window.lo
+  CC       lsp.lo
+  CC       lpc.lo
+  CC       analysis.lo
+  CC       synthesis.lo
+  CC       psy.lo
+  CC       info.lo
+  CC       floor1.lo
+  CC       floor0.lo
+  CC       res0.lo
+  CC       mapping0.lo
+  CC       registry.lo
+  CC       codebook.lo
+  CC       sharedbook.lo
+  CC       lookup.lo
+  CC       bitrate.lo
+  CC       vorbisfile.lo
+  CC       vorbisenc.lo
+  CCLD     test_sharedbook
+  CCLD     libvorbis.la
+  CCLD     libvorbisfile.la
+  CCLD     libvorbisenc.la
+Making all in test
+make[2]: Nothing to be done for `all'.
+Making all in doc
+Making all in libvorbis
+make[3]: Nothing to be done for `all'.
+Making all in vorbisfile
+make[3]: Nothing to be done for `all'.
+Making all in vorbisenc
+make[3]: Nothing to be done for `all'.
+echo "*** Warning: Documentation build is disabled."
+*** Warning: Documentation build is disabled.
+touch doxygen-build.stamp
+make[2]: Nothing to be done for `all-am'.
+Making install in m4
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+Making install in include
+Making install in vorbis
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/include/vorbis'
+ /opt/homebrew/bin/ginstall -c -m 644 codec.h vorbisfile.h vorbisenc.h '/private/tmp/yl-p03-vorbis-reference/install/include/vorbis'
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+Making install in vq
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+Making install in lib
+Making install in modes
+make[3]: Nothing to be done for `install-exec-am'.
+make[3]: Nothing to be done for `install-data-am'.
+Making install in books
+Making install in coupled
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+Making install in uncoupled
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+Making install in floor
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+make[4]: Nothing to be done for `install-exec-am'.
+make[4]: Nothing to be done for `install-data-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/lib'
+ /bin/sh ../libtool   --mode=install /opt/homebrew/bin/ginstall -c   libvorbis.la libvorbisfile.la libvorbisenc.la '/private/tmp/yl-p03-vorbis-reference/install/lib'
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libvorbis.lai /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbis.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libvorbisfile.lai /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisfile.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libvorbisenc.lai /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisenc.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libvorbis.a /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbis.a
+libtool: install: chmod 644 /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbis.a
+libtool: install: ranlib /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbis.a
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libvorbisfile.a /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisfile.a
+libtool: install: chmod 644 /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisfile.a
+libtool: install: ranlib /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisfile.a
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libvorbisenc.a /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisenc.a
+libtool: install: chmod 644 /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisenc.a
+libtool: install: ranlib /private/tmp/yl-p03-vorbis-reference/install/lib/libvorbisenc.a
+make[3]: Nothing to be done for `install-data-am'.
+Making install in test
+make[2]: Nothing to be done for `install-exec-am'.
+make[2]: Nothing to be done for `install-data-am'.
+Making install in doc
+Making install in libvorbis
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/libvorbis'
+ /opt/homebrew/bin/ginstall -c -m 644 index.html reference.html style.css vorbis_comment.html vorbis_info.html vorbis_analysis_blockout.html vorbis_analysis_buffer.html vorbis_analysis_headerout.html vorbis_analysis_init.html vorbis_analysis_wrote.html vorbis_analysis.html vorbis_bitrate_addblock.html vorbis_bitrate_flushpacket.html vorbis_block_init.html vorbis_block_clear.html vorbis_dsp_clear.html vorbis_granule_time.html vorbis_version_string.html vorbis_info_blocksize.html vorbis_info_clear.html vorbis_info_init.html vorbis_comment_add.html vorbis_comment_add_tag.html vorbis_comment_clear.html vorbis_comment_init.html vorbis_comment_query.html vorbis_comment_query_count.html vorbis_commentheader_out.html vorbis_packet_blocksize.html vorbis_synthesis.html vorbis_synthesis_blockin.html vorbis_synthesis_halfrate.html vorbis_synthesis_halfrate_p.html vorbis_synthesis_headerin.html vorbis_synthesis_idheader.html vorbis_synthesis_init.html vorbis_synthesis_lapout.html vorbis_synthesis_pcmout.html vorbis_synthesis_read.html vorbis_synthesis_restart.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/libvorbis'
+ /opt/homebrew/bin/ginstall -c -m 644 vorbis_synthesis_trackonly.html vorbis_block.html vorbis_dsp_state.html return.html overview.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/libvorbis'
+Making install in vorbisfile
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/vorbisfile'
+ /opt/homebrew/bin/ginstall -c -m 644 OggVorbis_File.html callbacks.html chaining_example_c.html chainingexample.html crosslap.html datastructures.html decoding.html example.html exampleindex.html fileinfo.html index.html initialization.html ov_bitrate.html ov_bitrate_instant.html ov_callbacks.html ov_clear.html ov_comment.html ov_crosslap.html ov_fopen.html ov_info.html ov_open.html ov_open_callbacks.html ov_pcm_seek.html ov_pcm_seek_lap.html ov_pcm_seek_page.html ov_pcm_seek_page_lap.html ov_pcm_tell.html ov_pcm_total.html ov_raw_seek.html ov_raw_seek_lap.html ov_raw_tell.html ov_raw_total.html ov_read.html ov_read_float.html ov_read_filter.html ov_seekable.html ov_serialnumber.html ov_streams.html ov_test.html ov_test_callbacks.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/vorbisfile'
+ /opt/homebrew/bin/ginstall -c -m 644 ov_test_open.html ov_time_seek.html ov_time_seek_lap.html ov_time_seek_page.html ov_time_seek_page_lap.html ov_time_tell.html ov_time_total.html overview.html reference.html seekexample.html seeking.html seeking_example_c.html seeking_test_c.html seekingexample.html style.css threads.html vorbisfile_example_c.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/vorbisfile'
+Making install in vorbisenc
+make[3]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/vorbisenc'
+ /opt/homebrew/bin/ginstall -c -m 644 changes.html examples.html index.html ovectl_ratemanage2_arg.html ovectl_ratemanage_arg.html overview.html reference.html style.css vorbis_encode_ctl.html vorbis_encode_init.html vorbis_encode_setup_init.html vorbis_encode_setup_managed.html vorbis_encode_setup_vbr.html vorbis_encode_init_vbr.html '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/vorbisenc'
+make[3]: Nothing to be done for `install-exec-am'.
+/bin/sh /private/tmp/yl-p03-vorbis-reference/src/libvorbis-1.3.7/install-sh -d /private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7
+if test -d vorbis; then \
+	  for dir in vorbis/*; do \
+	    if test -d $dir; then \
+	      b=`basename $dir`; \
+	      /bin/sh /private/tmp/yl-p03-vorbis-reference/src/libvorbis-1.3.7/install-sh -d /private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/$b; \
+	      for f in $dir/*; do \
+		/opt/homebrew/bin/ginstall -c -m 644 $f /private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7/$b; \
+	      done \
+	    fi \
+	  done \
+	fi
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7'
+ /opt/homebrew/bin/ginstall -c -m 644 rfc5215.xml rfc5215.txt eightphase.png fish_xiph_org.png floor1_inverse_dB_table.html floorval.png fourphase.png framing.html helper.html index.html oggstream.html programming.html squarepolar.png stereo.html stream.png v-comment.html vorbis-clip.txt vorbis-errors.txt vorbis-fidelity.html doxygen-build.stamp '/private/tmp/yl-p03-vorbis-reference/install/share/doc/libvorbis-1.3.7'
+make[2]: Nothing to be done for `install-exec-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/share/aclocal'
+ /opt/homebrew/bin/ginstall -c -m 644 vorbis.m4 '/private/tmp/yl-p03-vorbis-reference/install/share/aclocal'
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-vorbis-reference/install/lib/pkgconfig'
+ /opt/homebrew/bin/ginstall -c -m 644 vorbis.pc vorbisenc.pc vorbisfile.pc '/private/tmp/yl-p03-vorbis-reference/install/lib/pkgconfig'
+Test-only reference prefix: /private/tmp/yl-p03-vorbis-reference/install

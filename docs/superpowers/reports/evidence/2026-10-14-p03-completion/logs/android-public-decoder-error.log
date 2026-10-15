@@ -1,0 +1,33 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart
+Running Gradle task 'assembleDebug'...                             12.7s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...          831ms
+00:00 +0: unavailable AV1 hardware produces the public nonretryable error
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TimeoutException was thrown running a test:
+TimeoutException after 0:00:15.000000: Future not completed
+
+When the exception was thrown, this was the stack:
+<asynchronous suspension>
+#1      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart:32:25)
+<asynchronous suspension>
+#2      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#3      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 2 frames from dart:async and package:stack_trace)
+
+The test description was:
+  unavailable AV1 hardware produces the public nonretryable error
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +0 -1: unavailable AV1 hardware produces the public nonretryable error [E]
+  Test failed. See exception logs above.
+  The test description was: unavailable AV1 hardware produces the public nonretryable error
+  
+00:16 +0 -1: (tearDownAll)
+00:17 +0 -1: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/decoder_budget_test.dart: unavailable AV1 hardware produces the public nonretryable error
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.eEI90x

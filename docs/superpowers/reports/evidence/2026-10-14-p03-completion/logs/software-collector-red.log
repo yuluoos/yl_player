@@ -1,0 +1,59 @@
+EFFFFF
+======================================================================
+ERROR: test_complete_raw_samples_bound_to_result (test_software_collector.CollectorTests.test_complete_raw_samples_bound_to_result)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 12, in test_complete_raw_samples_bound_to_result
+    self.assertEqual(288,decode_raw(self.text(self.raw()))['decodedFrames'])
+                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+KeyError: 'decodedFrames'
+
+======================================================================
+FAIL: test_truncated_duplicate_reordered_and_forged_result_rejected (test_software_collector.CollectorTests.test_truncated_duplicate_reordered_and_forged_result_rejected) (rows=65)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 20, in test_truncated_duplicate_reordered_and_forged_result_rejected
+    with self.assertRaises(ValueError):decode_raw(self.text(rows))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_truncated_duplicate_reordered_and_forged_result_rejected (test_software_collector.CollectorTests.test_truncated_duplicate_reordered_and_forged_result_rejected) (rows=65)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 20, in test_truncated_duplicate_reordered_and_forged_result_rejected
+    with self.assertRaises(ValueError):decode_raw(self.text(rows))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_truncated_duplicate_reordered_and_forged_result_rejected (test_software_collector.CollectorTests.test_truncated_duplicate_reordered_and_forged_result_rejected) (rows=67)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 20, in test_truncated_duplicate_reordered_and_forged_result_rejected
+    with self.assertRaises(ValueError):decode_raw(self.text(rows))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_truncated_duplicate_reordered_and_forged_result_rejected (test_software_collector.CollectorTests.test_truncated_duplicate_reordered_and_forged_result_rejected) (rows=66)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 20, in test_truncated_duplicate_reordered_and_forged_result_rejected
+    with self.assertRaises(ValueError):decode_raw(self.text(rows))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_truncated_duplicate_reordered_and_forged_result_rejected (test_software_collector.CollectorTests.test_truncated_duplicate_reordered_and_forged_result_rejected) (rows=66)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_software_collector.py", line 20, in test_truncated_duplicate_reordered_and_forged_result_rejected
+    with self.assertRaises(ValueError):decode_raw(self.text(rows))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+FAILED (failures=5, errors=1)

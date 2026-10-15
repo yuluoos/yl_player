@@ -8,7 +8,7 @@ actual source and requirements before Load.
 
 ## Route matrix
 
-| Source or route | Android Media3 | Apple AVPlayer | Apple managed fallback |
+| Source or route | Android route | Apple AVPlayer | Apple managed fallback |
 |---|---|---|---|
 | Android `content:` URI | Supported; Android only | Rejected as invalid | Rejected as invalid |
 | Local MP4/MOV and platform-native progressive media | Supported subject to Media3 extractor/codec | Supported subject to AVFoundation/codec | Not selected |
@@ -19,18 +19,21 @@ actual source and requirements before Load.
 | Local Matroska | Supported subject to Media3 | Not selected | Inspection-dependent; supported H.264/H.265 video with supported compressed audio; FLAC scope below |
 | Network Matroska VOD | Supported subject to Media3 | Not selected | Inspection-dependent owned byte route |
 | Network Matroska marked live | Media3 route; runtime-dependent | Not selected | Rejected |
-| Network HTTP-FLV | Supported subject to Media3 | Not selected | Inspection-dependent; automatic/live use sequential input, explicit onDemand supports VOD with seekability determined by HTTP Range |
+| Network HTTP-FLV | Owned demux for explicit onDemand; automatic/live retain Media3 | Not selected | Inspection-dependent; automatic/live use sequential input, explicit onDemand supports VOD with seekability determined by HTTP Range |
 | Plain TCP RTMP, classic AVC with optional AAC | Owned bounded transport into Media3 FLV extractor; no fallback/retry nesting | Not selected | Owned bounded transport into custom AVIO/FLV and VideoToolbox |
 | RTMPS, enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
-| Local FLV | Media3 route; runtime-dependent | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
-| Local WebM | Media3 route; runtime-dependent | Not selected | Rejected until supported video/audio paths are available |
+| Local FLV | Owned demux for VOD seek | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
+| Local WebM | Media3 with observed decoder admission | Not selected | Inspected VP9 with Opus/Vorbis; native hardware first, exact software admission when qualified |
 | Standalone MPEG-TS VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; 188-byte AVC/AC-3 file/HTTP/renamed-file scope measured on macOS; strict policies and live intent rejected |
-| AVI VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; Baseline AVC/MP3 scope below; strict policies and live intent rejected |
-| MPEG-PS request | Media3 route; runtime-dependent | Rejected before engine selection (`container.unsupported`, or `policy.unsupported` for a strict request) | Rejected before engine selection |
+| AVI VOD | Owned demux with verified Baseline AVC timing | Not selected | Inspection-dependent defaults; Baseline AVC/MP3 scope below; strict policies and live intent rejected |
+| MPEG-PS VOD | Owned demux for AVC/MP3; MPEG-2 video diagnostic remains unsupported | Not selected | Owned AVC/MP3; incompatible strict/live policies rejected explicitly |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
 
-The Apple FFmpeg artifact enables Matroska, FLV, MP4, MPEG-TS, and AVI demuxing plus the
-documented parsers. It does not provide networking or software video decoding.
+The Apple FFmpeg artifact enables Matroska, FLV, MP4, MPEG-TS, MPEG-PS and AVI
+demuxing plus the documented parsers. It has no networking. Its controlled AV1
+(dav1d) and VP9 software candidates require an exact qualified device/build
+profile and a shared resource lease. Production software profiles remain empty;
+linking the decoders does not enable an unmeasured software fallback.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
 
@@ -63,11 +66,12 @@ separate acceptance. Explicit live and strict policies remain rejected.
 For non-RTMP sources with formats other than DASH, Android first tries Media3, then makes at most one managed fallback attempt for
 container/extractor and decoder failures. The fallback uses package-owned local,
 content, progressive HTTP, or HLS VOD/live input; FFmpeg demuxes MP4/MOV,
-Matroska/WebM, FLV, and MPEG-TS. H.264/H.265 packets stay compressed for
-MediaCodec when the stream's codec/profile/level has a hardware decoder. If no
-compatible decoder exists, H.264/H.265 video at no more than 720p30 is software
-decoded to the Flutter texture. Higher adaptive variants are downgraded when a
-qualifying variant exists; otherwise Load fails. Supported fallback audio is
+Matroska/WebM, FLV, MPEG-TS, MPEG-PS and AVI. H.264/H.265 packets stay compressed
+for MediaCodec when the codec/profile/level has a proven hardware decoder. An
+owned software candidate requires an exact qualified profile and shared memory,
+frame, packet and process-CPU accounting. Production profiles remain empty, so
+missing hardware produces an explicit decoder failure without silently changing
+quality. Opaque system software codecs cannot bypass the owned budget. Supported fallback audio is
 AAC, MP3, AC-3, E-AC-3, DTS, FLAC, Opus, and Vorbis. Standard HLS AES-128 is
 supported; Widevine, SAMPLE-AES, and DRM bypass are not.
 
@@ -764,3 +768,24 @@ Manual selection picks one supported rendition inside the chosen group; automati
 Media3 adaptation and managed networking retain their existing policies. See the
 [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md) for
 exact tests and separate device/physical-audio limitations.
+
+## P03 controlled output evidence (2026-10-15)
+
+Production software admission remains empty on both adapters. The Apple AV1/VP9
+and Android AVC/HEVC software implementations have controlled ownership/lifecycle
+checks; their synthetic test limits are not production device profiles.
+
+The Android matrix currently records 59 required paths with displayed markers,
+seek, completion and disposal, plus six required AV1/Main10 paths unavailable on
+the selected emulator. macOS records 62 such required paths and three unavailable
+AV1 paths on the selected M1. These rollups span explicitly separate runs, retain
+original failures, and exclude diagnostic/negative-control cases from support.
+Native PCM is measured separately; the public rows do not prove combined A/V
+output or physical synchronisation. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md)
+for iOS hardware gaps, exact identities and remaining acceptance conditions.
+
+Five optimized Mac process measurements of the installed AV1 bridge passed their
+fixed short protocol and actual pixel controls. Sustained thermal qualification,
+independent verification and the matching product/device build are still needed
+before production admission. This work does not change long-play or weak-network
+ABR tooling.

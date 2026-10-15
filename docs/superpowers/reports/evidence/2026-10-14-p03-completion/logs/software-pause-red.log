@@ -1,0 +1,187 @@
+Writing result bundle at path:
+	/private/tmp/yl-p03-audit/software-pause-red.xcresult
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:x86_64, id:00008103-000571C03CD9001E, name:My Mac }
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'yl_player_apple' from project 'yl_player_apple')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:26:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 25 |   var copy: Copy = { session, key, value in
+ 26 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 27 |   }
+ 28 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift (in target 'yl_player_apple' from project 'yl_player_apple')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:303:23: warning: capture 'self' was never used [#NoUsage]
+ 301 |     presentation.pause(atHostTimeUs: Self.hostTimeUs())
+ 302 |     YlFallbackTeardownTransaction(
+ 303 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 304 |         tokenToCancel?.cancel()
+ 305 |         mediaToClose?.cancelInput()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:620:23: warning: capture 'self' was never used [#NoUsage]
+ 618 |     presentation.retireDisplay()
+ 619 |     YlFallbackTeardownTransaction(
+ 620 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 621 |         tokenToCancel?.cancel()
+ 622 |         mediaToClose?.cancelInput()
+
+[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift:637:34: warning: 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+ 634 |       }
+ 635 |       commandCoordinator.begin(
+ 636 |         operation: { token in
+     |                    |- note: 'fallback' implicitly strongly captured here
+     |                    `- note: add 'fallback' as a capture list item to silence
+ 637 |           token.onCancel { [weak fallback] in fallback?.interruptControlOperation() }
+     |                                  |- warning: 'weak' ownership of capture 'fallback' differs from implicitly-captured strong reference in outer scope [#ImplicitStrongCapture]
+     |                                  `- note: explicitly assign the capture list item to silence
+ 638 |           defer { fallback.resumeControlOperation() }
+ 639 |           try token.throwIfCancelled()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+
+[#ImplicitStrongCapture]: <https://docs.swift.org/compiler/documentation/diagnostics/implicit-strong-capture>
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'RunnerTests' from project 'Runner')
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1231:17: warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1229 |     DispatchQueue.global().async {
+1230 |       do {
+1231 |         _ = try stage.run(token: token, work: {
+     |                 `- warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1232 |           let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+1233 |           entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+
+yl_player_apple.YlHardwareEvidencePreparation:1:22: note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+1 | final internal class YlHardwareEvidencePreparation {
+  |                      `- note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+2 |     internal typealias Schedule = (TimeInterval, @escaping () -> Void) -> () -> Void
+3 |     internal init(timeout: TimeInterval = 5, now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }, schedule: yl_player_apple.YlHardwareEvidencePreparation.Schedule? = nil)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1:11: warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]
+   1 | @testable import yl_player_apple
+     |           `- warning: add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]
+   2 | import AVFoundation
+   3 | import CoreVideo
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1231:34: warning: capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]
+1229 |     DispatchQueue.global().async {
+1230 |       do {
+1231 |         _ = try stage.run(token: token, work: {
+     |                                  `- warning: capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]
+1232 |           let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+1233 |           entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+
+yl_player_apple.YlOpenCancellationToken:1:22: note: class 'YlOpenCancellationToken' does not conform to the 'Sendable' protocol
+1 | final internal class YlOpenCancellationToken {
+  |                      `- note: class 'YlOpenCancellationToken' does not conform to the 'Sendable' protocol
+2 |     internal var isCancelled: Bool { get }
+3 |     internal func onCancel(_ handler: @escaping () -> Void)
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1232:47: warning: capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]
+1230 |       do {
+1231 |         _ = try stage.run(token: token, work: {
+1232 |           let payload = Payload(try XCTUnwrap(scope.reserve(category: .compressedPackets, bytes: 128)))
+     |                                               `- warning: capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]
+1233 |           entered.fulfill(); _ = release.wait(timeout: .now() + 10); return payload
+1234 |         }, discard: { _ in discarded.fulfill() })
+
+yl_player_apple.YlManagedBufferScope:1:22: note: class 'YlManagedBufferScope' does not conform to the 'Sendable' protocol
+ 1 | final internal class YlManagedBufferScope {
+   |                      `- note: class 'YlManagedBufferScope' does not conform to the 'Sendable' protocol
+ 2 |     internal let ledger: yl_player_apple.YlManagedBufferLedger
+ 3 |     internal var hasBoundedTimeline: Bool { get }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1248:26: warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1246 |     DispatchQueue.global().async {
+1247 |       do {
+1248 |         let _: Int = try stage.run(token: .init(), work: { XCTFail("Overlapping work started"); return 1 }, discard: { (_: Int) in })
+     |                          `- warning: capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]
+1249 |         XCTFail("Overlapping probe admitted")
+1250 |       } catch { XCTAssertEqual((error as? NativePlayerError)?.code, "decoder.unavailable") }
+
+yl_player_apple.YlHardwareEvidencePreparation:1:22: note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+1 | final internal class YlHardwareEvidencePreparation {
+  |                      `- note: class 'YlHardwareEvidencePreparation' does not conform to the 'Sendable' protocol
+2 |     internal typealias Schedule = (TimeInterval, @escaping () -> Void) -> () -> Void
+3 |     internal init(timeout: TimeInterval = 5, now: @escaping () -> TimeInterval = { ProcessInfo.processInfo.systemUptime }, schedule: yl_player_apple.YlHardwareEvidencePreparation.Schedule? = nil)
+
+[#AddPreconcurrencyImport]: <https://docs.swift.org/compiler/documentation/diagnostics/add-preconcurrency-import>
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/Runner.xcodeproj: RunnerTests: ld: warning: building for macOS-12.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/Runner.xcodeproj: RunnerTests: ld: warning: building for macOS-12.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+note: Run script build phase 'Run Script' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Runner' from project 'Runner')
+2026-10-14 23:51:28.437 xcodebuild[82982:1168307] [MT] IDETestOperationsObserverDebug: 7.499 elapsed -- Testing started completed.
+2026-10-14 23:51:28.437 xcodebuild[82982:1168307] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-14 23:51:28.437 xcodebuild[82982:1168307] [MT] IDETestOperationsObserverDebug: 7.499 sec, +7.499 sec -- end
+Failing tests:
+	YlSoftwareVideoLifecycleTests.testPausedDecoderKeepsBudgetObservationsUntilResume()
+	YlSoftwareVideoLifecycleTests.testPausedDecoderKeepsBudgetObservationsUntilResume()
+	YlSoftwareVideoLifecycleTests.testPausedDecoderKeepsBudgetObservationsUntilResume()
+
+** TEST FAILED **
+
+Testing started

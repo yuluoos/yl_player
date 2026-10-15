@@ -1,0 +1,36 @@
+{
+  "platform": "macos",
+  "device": "macos",
+  "groups": [
+    [
+      "mp4-avc-aac",
+      "mov-hevc-aac",
+      "mkv-avc-aac",
+      "webm-vp9-opus",
+      "flv-avc-mp3",
+      "ts-avc-ac3",
+      "ps-mpeg2-mp3"
+    ],
+    [
+      "ps-avc-mp3",
+      "avi-avc-mp3",
+      "mkv-av1-opus",
+      "mkv-avc-eac3",
+      "mkv-avc-dts",
+      "mkv-avc-flac",
+      "mkv-avc-opus"
+    ],
+    [
+      "mkv-avc-opus-silk",
+      "mkv-avc-opus-hybrid",
+      "mkv-avc-vorbis",
+      "webm-vp9-vorbis",
+      "mkv-hevc-main10-aac",
+      "mkv-avc-ac3-51",
+      "mkv-avc-aac-no-cues",
+      "mp4-truncated"
+    ]
+  ],
+  "strict": true,
+  "sourceSha256": "61d05d419a005e332955ad67de8f1a08b6b67581de0292535b1032de8643f76f"
+}

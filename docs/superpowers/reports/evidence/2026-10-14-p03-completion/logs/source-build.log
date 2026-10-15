@@ -1,0 +1,23 @@
+gpg: keybox '/private/tmp/yl-p03-source/gnupg/pubring.kbx' created
+gpg: /private/tmp/yl-p03-source/gnupg/trustdb.gpg: trustdb created
+gpg: key B4322F04D67658D8: public key "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" imported
+gpg: no gpg-agent running in this session
+gpg: Total number processed: 1
+gpg:               imported: 1
+gpg: Signature made Tue Aug 11 20:42:43 2026 PDT
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang is unable to create an executable file.
+If /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang is a cross-compiler, use the --enable-cross-compile option.
+Only do this if you know what cross compiling means.
+C compiler test failed.
+
+If you think configure made a mistake, make sure you are using the latest
+version from Git.  If the latest version fails, report the problem to the
+ffmpeg-user@ffmpeg.org mailing list or IRC #ffmpeg on irc.libera.chat.
+Include the log file "ffbuild/config.log" produced by configure as this will help
+solve the problem.

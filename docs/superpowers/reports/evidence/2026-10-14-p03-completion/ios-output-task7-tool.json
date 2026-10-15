@@ -1,0 +1,190 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "\n🧪 Test\n\nDiscovered 6 test(s):\n   RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek\n   RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek\n   RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek\n   RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek\n   RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek\n   RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek\n\nWarnings (7):\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION\n\n  ⚠ capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1231\n\n  ⚠ add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1\n\n  ⚠ capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1231\n\n  ⚠ capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1232\n\n  ⚠ capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1248\n\nTest Failures (12):\n\n  ✗ YlContainerOutputTests / testAC3SurroundActualPixelsSixChannelPCMAndSeek: AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:158\n\n  ✗ YlContainerOutputTests / testAC3SurroundActualPixelsSixChannelPCMAndSeek(): failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.\n\n  ✗ YlContainerOutputTests / testDTSActualPixelsPCMAndSeek: failed: caught error: \"Playback operation failed.\"\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:117\n\n  ✗ YlContainerOutputTests / testDTSActualPixelsPCMAndSeek(): failed: caught error: \"Playback operation failed.\"\n\n  ✗ YlContainerOutputTests / testEAC3ActualPixelsPCMAndSeek: failed: caught error: \"Playback operation failed.\"\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:117\n\n  ✗ YlContainerOutputTests / testEAC3ActualPixelsPCMAndSeek(): failed: caught error: \"Playback operation failed.\"\n\n  ✗ YlContainerOutputTests / testFLACActualPixelsPCMAndSeek: failed: caught error: \"Playback operation failed.\"\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:117\n\n  ✗ YlContainerOutputTests / testFLACActualPixelsPCMAndSeek(): failed: caught error: \"Playback operation failed.\"\n\n  ✗ YlContainerOutputTests / testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek: Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.\n    \u001b[0m/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:154\n\n  ✗ YlContainerOutputTests / testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek(): failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.\n\n  ✗ YlContainerOutputTests / testProgramStreamActualPixelsPCMAndBidirectionalSeek: PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.\n    \u001b[0m/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:150\n\n  ✗ YlContainerOutputTests / testProgramStreamActualPixelsPCMAndBidirectionalSeek(): failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.\n\n❌ 6 tests failed, 0 passed, 0 skipped (⏱️ 113.7s)\n  └ Files:\n     ├── /private/tmp/yl-p03-audit/ios-output-task7.xcresult — Result Bundle\n     └── ~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/\n         ├── logs/test_sim_2026-10-15T10-28-25-702Z_pid2826_e7fdcb24.log — Build Logs\n         └── test-products/test_sim_2026-10-15T10-28-25-703Z_pid2826_157b7d84.xctestproducts — Test Products\n"
+    }
+  ],
+  "structuredContent": {
+    "schema": "xcodebuildmcp.output.test-result",
+    "schemaVersion": "3",
+    "didError": true,
+    "error": "Tests failed",
+    "data": {
+      "summary": {
+        "status": "FAILED",
+        "durationMs": 113672,
+        "counts": {
+          "passed": 0,
+          "failed": 6,
+          "skipped": 0
+        },
+        "target": "simulator"
+      },
+      "artifacts": {
+        "buildLogPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/test_sim_2026-10-15T10-28-25-702Z_pid2826_e7fdcb24.log",
+        "xcresultPath": "/private/tmp/yl-p03-audit/ios-output-task7.xcresult",
+        "testProductsPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/test-products/test_sim_2026-10-15T10-28-25-703Z_pid2826_157b7d84.xctestproducts"
+      },
+      "tests": {
+        "selected": [
+          "RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+          "RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+          "RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+          "RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+          "RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+          "RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek"
+        ],
+        "discovered": {
+          "total": 6,
+          "items": [
+            "RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+            "RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+            "RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+            "RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+            "RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+            "RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek"
+          ]
+        }
+      },
+      "diagnostics": {
+        "warnings": [
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT"
+          },
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION"
+          },
+          {
+            "message": "capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1231"
+          },
+          {
+            "message": "add '@preconcurrency' to suppress 'Sendable'-related warnings from module 'yl_player_apple' [#AddPreconcurrencyImport]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1"
+          },
+          {
+            "message": "capture of 'token' with non-Sendable type 'YlOpenCancellationToken' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1231"
+          },
+          {
+            "message": "capture of 'scope' with non-Sendable type 'YlManagedBufferScope' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1232"
+          },
+          {
+            "message": "capture of 'stage' with non-Sendable type 'YlHardwareEvidencePreparation' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift:1248"
+          }
+        ],
+        "errors": [],
+        "testFailures": [
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+            "message": "AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:158"
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+            "message": "failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable."
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testDTSActualPixelsPCMAndSeek",
+            "message": "failed: caught error: \"Playback operation failed.\"",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:117"
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testDTSActualPixelsPCMAndSeek()",
+            "message": "failed: caught error: \"Playback operation failed.\""
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testEAC3ActualPixelsPCMAndSeek",
+            "message": "failed: caught error: \"Playback operation failed.\"",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:117"
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testEAC3ActualPixelsPCMAndSeek()",
+            "message": "failed: caught error: \"Playback operation failed.\""
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testFLACActualPixelsPCMAndSeek",
+            "message": "failed: caught error: \"Playback operation failed.\"",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:117"
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testFLACActualPixelsPCMAndSeek()",
+            "message": "failed: caught error: \"Playback operation failed.\""
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+            "message": "Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+            "location": "\u001b[0m/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:154"
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+            "message": "failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable."
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+            "message": "PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+            "location": "\u001b[0m/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:150"
+          },
+          {
+            "suite": "YlContainerOutputTests",
+            "test": "testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+            "message": "failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable."
+          }
+        ]
+      },
+      "testCases": [
+        {
+          "suite": "YlContainerOutputTests",
+          "test": "testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+          "status": "failed",
+          "durationMs": 1135
+        },
+        {
+          "suite": "YlContainerOutputTests",
+          "test": "testDTSActualPixelsPCMAndSeek",
+          "status": "failed",
+          "durationMs": 24
+        },
+        {
+          "suite": "YlContainerOutputTests",
+          "test": "testEAC3ActualPixelsPCMAndSeek",
+          "status": "failed",
+          "durationMs": 11
+        },
+        {
+          "suite": "YlContainerOutputTests",
+          "test": "testFLACActualPixelsPCMAndSeek",
+          "status": "failed",
+          "durationMs": 9
+        },
+        {
+          "suite": "YlContainerOutputTests",
+          "test": "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+          "status": "failed",
+          "durationMs": 14
+        },
+        {
+          "suite": "YlContainerOutputTests",
+          "test": "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+          "status": "failed",
+          "durationMs": 78
+        }
+      ]
+    }
+  },
+  "isError": true
+}

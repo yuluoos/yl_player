@@ -1,0 +1,27 @@
+[mpeg @ 0x74b6c14000] Could not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+PS video index=0 pts=23022 duration=41667 profile=578 delay=0 fps=24/1
+PS video index=1 pts=64689 duration=41667 profile=578 delay=0 fps=24/1
+PS video index=2 pts=106356 duration=41667 profile=578 delay=0 fps=24/1
+PS video index=66 pts=2773022 duration=41667 profile=578 delay=0 fps=24/1
+FAIL: every PS AVC frame has ordered presentation time
+PS seek target=0 first_keyframe=23022
+PS seek target=2000000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=1250000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=0 first_keyframe=23022
+[mpeg @ 0x74b6c14000] Could not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+PS video index=0 pts=23022 duration=41667 profile=578 delay=0 fps=24/1
+PS video index=1 pts=64689 duration=41667 profile=578 delay=0 fps=24/1
+PS video index=2 pts=106356 duration=41667 profile=578 delay=0 fps=24/1
+PS video index=66 pts=2773022 duration=41667 profile=578 delay=0 fps=24/1
+FAIL: every PS AVC frame has ordered presentation time
+PS seek target=0 first_keyframe=23022
+PS seek target=2000000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=1250000 first_keyframe=23022
+FAIL: PS bounded preceding keyframe with preserved AV skew
+PS seek target=0 first_keyframe=23022
+PS regression: 268 checks, 6 failures

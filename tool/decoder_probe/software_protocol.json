@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "repetitions": 5,
+  "idleNs": 2000000000,
+  "decodeNs": 12000000000,
+  "disposeNs": 2000000000,
+  "sampleIntervalNs": 250000000,
+  "maxSampleLatenessNs": 50000000,
+  "buildMode": "release",
+  "simulator": false,
+  "sustainedThermalVerified": false,
+  "fixture": "av1-main8",
+  "threads": 2,
+  "ownershipLimits": {"maxOwnedBytes": 33554432, "maxFrames": 64, "maxPacketBytes": 1048576},
+  "measurementScope": "optimized installed bridge; actual retained pixel buffers; process CPU includes all decoder workers",
+  "positiveControl": "separate fresh AVC VideoToolbox process before the five AV1 processes; no excluded warmup inside measured processes"
+}

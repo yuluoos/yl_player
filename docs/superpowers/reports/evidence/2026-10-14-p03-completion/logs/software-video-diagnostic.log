@@ -1,0 +1,92 @@
+[{"caseId": "av1-main8", "fixtureSha256": "368c0d598cf95971d07af5722fc567ba3dd29ad5c3f08c1ccd0d4be8f940bbfb", "referenceDecoder": "libaom", "referenceSha256": "310b57f950f6e37a177b7686f471638f7f9b7349369bdfcc73f61b61635a03f8"}, {"caseId": "av1-main10", "fixtureSha256": "bf899306e78b59d58d2059361b175a8ca4266040b3a1f2dcce88f58e1b684c19", "referenceDecoder": "libaom", "referenceSha256": "3bae5a51d4ae959efe4f86107d1b4564546b81bb2928ce0da748644bfaab65e2"}, {"caseId": "vp9-main8", "fixtureSha256": "59decebd69a207e73290a927cdf068bcaaee661326a7f33f6a98983e8d53fb21", "referenceDecoder": "libvpx-vp9", "referenceSha256": "3d2868afe60ec691c610cbd3a390f39e0647eab44e3e4841aeba0655517b15d3"}]
+sysctlbyname for kern.hv_vmm_present failed with status -1FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=1 pts=42000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=3 pts=125000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=5 pts=208000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=7 pts=292000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=9 pts=375000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=11 pts=458000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=13 pts=542000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=15 pts=625000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=17 pts=708000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+FAIL 29 abs(y-(depth==10?324:81))<=4
+frame=19 pts=792000 depth=8 Y=0 refY=81 maxDiff=174
+FAIL 44 maximumDifference<=1
+frame=25 pts=1042000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=27 pts=1125000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=29 pts=1208000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=31 pts=1292000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=33 pts=1375000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=35 pts=1458000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=37 pts=1542000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=39 pts=1625000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=41 pts=1708000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=43 pts=1792000 depth=8 Y=0 refY=144 maxDiff=144
+FAIL 44 maximumDifference<=1
+frame=49 pts=2042000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=51 pts=2125000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=53 pts=2208000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=55 pts=2292000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=57 pts=2375000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=59 pts=2458000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=61 pts=2542000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=63 pts=2625000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=65 pts=2708000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=67 pts=2792000 depth=8 Y=0 refY=41 maxDiff=214
+FAIL 44 maximumDifference<=1
+frame=73 pts=3042000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=75 pts=3125000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=77 pts=3208000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=79 pts=3292000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=81 pts=3375000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=83 pts=3458000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=85 pts=3542000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=87 pts=3625000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=89 pts=3708000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+frame=91 pts=3792000 depth=8 Y=0 refY=235 maxDiff=235
+FAIL 44 maximumDifference<=1
+Software video: 1384 checks, 50 failures

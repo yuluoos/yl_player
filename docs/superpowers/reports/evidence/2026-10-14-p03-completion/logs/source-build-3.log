@@ -1,0 +1,864 @@
+gpg: key B4322F04D67658D8: "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" not changed
+gpg: Total number processed: 1
+gpg:              unchanged: 1
+gpg: Signature made Tue Aug 11 20:42:43 2026 PDT
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+install prefix            /yl_ffmpeg/install
+source path               /private/tmp/yl-p03-source/ffmpeg-9.0.1
+C compiler                /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang
+C library                 
+ARCH                      aarch64 (generic)
+big-endian                no
+runtime cpu detection     yes
+NEON enabled              yes
+DOTPROD enabled           yes
+I8MM enabled              yes
+PMULL enabled             yes
+EOR3 enabled              yes
+SVE enabled               yes
+SVE2 enabled              yes
+SME enabled               yes
+SME-I16I64 enabled        yes
+SME2 enabled              yes
+debug symbols             yes
+strip symbols             yes
+optimize for size         no
+optimizations             yes
+static                    yes
+shared                    no
+network support           no
+threading support         pthreads
+safe bitstream reader     yes
+texi2html enabled         no
+perl enabled              yes
+pod2man enabled           yes
+makeinfo enabled          no
+makeinfo supports HTML    no
+experimental features     yes
+xmllint enabled           yes
+
+External libraries:
+
+External libraries providing hardware acceleration:
+
+Libraries:
+avcodec                 avformat                avutil
+
+Programs:
+
+Enabled decoders:
+dca                     vorbis
+
+Enabled encoders:
+
+Enabled hwaccels:
+
+Enabled parsers:
+aac                     dca                     hevc
+ac3                     h264                    mpegaudio
+
+Enabled demuxers:
+avi                     matroska                mpegts
+flv                     mov
+
+Enabled muxers:
+
+Enabled protocols:
+file
+
+Enabled filters:
+
+Enabled bsfs:
+dovi_rpu
+
+Enabled indevs:
+
+Enabled outdevs:
+
+License: LGPL version 2.1 or later
+GEN	libavutil/libavutil.version
+GEN	libavcodec/libavcodec.version
+GEN	libavformat/libavformat.version
+CC	libavformat/allformats.o
+CC	libavformat/av1.o
+CC	libavformat/avformat.o
+CC	libavformat/avidec.o
+CC	libavformat/avio.o
+CC	libavformat/aviobuf.o
+CC	libavformat/codecstring.o
+CC	libavformat/demux.o
+CC	libavformat/demux_utils.o
+CC	libavformat/dovi_isom.o
+CC	libavformat/dump.o
+CC	libavformat/dv.o
+CC	libavformat/dvdclut.o
+CC	libavformat/file.o
+CC	libavformat/flac_picture.o
+CC	libavformat/flvdec.o
+CC	libavformat/format.o
+CC	libavformat/iamf.o
+CC	libavformat/iamf_parse.o
+CC	libavformat/iamf_reader.o
+CC	libavformat/id3v1.o
+CC	libavformat/id3v2.o
+CC	libavformat/isom.o
+CC	libavformat/isom_tags.o
+CC	libavformat/lcevc.o
+CC	libavformat/matroska.o
+CC	libavformat/matroskadec.o
+CC	libavformat/metadata.o
+CC	libavformat/mov.o
+CC	libavformat/mov_chan.o
+CC	libavformat/mov_esds.o
+CC	libavformat/mpegts.o
+CC	libavformat/mux.o
+CC	libavformat/mux_utils.o
+CC	libavformat/nal.o
+CC	libavformat/oggparsevorbis.o
+CC	libavformat/options.o
+CC	libavformat/os_support.o
+CC	libavformat/packet_list.o
+CC	libavformat/protocols.o
+CC	libavformat/qtpalette.o
+CC	libavformat/replaygain.o
+CC	libavformat/riff.o
+CC	libavformat/riffdec.o
+CC	libavformat/rmsipr.o
+CC	libavformat/sdp.o
+CC	libavformat/seek.o
+CC	libavformat/url.o
+CC	libavformat/urldecode.o
+CC	libavformat/utils.o
+CC	libavformat/version.o
+CC	libavformat/vorbiscomment.o
+CC	libavformat/vpcc.o
+GEN	libavformat/libavformat.pc
+CC	libavcodec/lcevctab.o
+CC	libavcodec/to_upper4.o
+GEN	libavcodec/libavcodec.pc
+GEN	libavutil/libavutil.pc
+CC	libavcodec/aac_ac3_parser.o
+CC	libavcodec/aac_parser.o
+CC	libavcodec/aarch64/dcadsp_init_aarch64.o
+AS	libavcodec/aarch64/dcadsp_neon.o
+CC	libavcodec/aarch64/fdctdsp_init_aarch64.o
+AS	libavcodec/aarch64/fdctdsp_neon.o
+CC	libavcodec/aarch64/h264dsp_init_aarch64.o
+AS	libavcodec/aarch64/h264dsp_neon.o
+AS	libavcodec/aarch64/h264idct_neon.o
+CC	libavcodec/aarch64/idctdsp_init_aarch64.o
+AS	libavcodec/aarch64/idctdsp_neon.o
+AS	libavcodec/aarch64/simple_idct_neon.o
+CC	libavcodec/aarch64/synth_filter_init.o
+AS	libavcodec/aarch64/synth_filter_neon.o
+CC	libavcodec/aarch64/vorbisdsp_init.o
+AS	libavcodec/aarch64/vorbisdsp_neon.o
+CC	libavcodec/ac3_channel_layout_tab.o
+CC	libavcodec/ac3_parser.o
+CC	libavcodec/ac3tab.o
+CC	libavcodec/adts_header.o
+CC	libavcodec/adts_parser.o
+CC	libavcodec/allcodecs.o
+CC	libavcodec/aom_film_grain.o
+CC	libavcodec/atsc_a53.o
+CC	libavcodec/avcodec.o
+CC	libavcodec/avdct.o
+CC	libavcodec/bitstream.o
+CC	libavcodec/bitstream_filters.o
+CC	libavcodec/bsf.o
+CC	libavcodec/bsf/dovi_rpu.o
+CC	libavcodec/cbs.o
+CC	libavcodec/cbs_av1.o
+CC	libavcodec/cbs_bsf.o
+CC	libavcodec/cbs_h2645.o
+CC	libavcodec/cbs_h265.o
+CC	libavcodec/cbs_sei.o
+CC	libavcodec/codec_desc.o
+CC	libavcodec/codec_par.o
+CC	libavcodec/d3d11va.o
+CC	libavcodec/dca.o
+CC	libavcodec/dca_core.o
+CC	libavcodec/dca_exss.o
+CC	libavcodec/dca_lbr.o
+CC	libavcodec/dca_parser.o
+CC	libavcodec/dca_sample_rate_tab.o
+CC	libavcodec/dca_xll.o
+CC	libavcodec/dcadata.o
+CC	libavcodec/dcadct.o
+CC	libavcodec/dcadec.o
+CC	libavcodec/dcadsp.o
+CC	libavcodec/dcahuff.o
+CC	libavcodec/decode.o
+CC	libavcodec/dirac.o
+CC	libavcodec/dovi_rpu.o
+CC	libavcodec/dovi_rpudec.o
+CC	libavcodec/dovi_rpuenc.o
+CC	libavcodec/dv_profile.o
+CC	libavcodec/dynamic_hdr_vivid.o
+CC	libavcodec/encode.o
+CC	libavcodec/exif.o
+CC	libavcodec/faandct.o
+CC	libavcodec/faanidct.o
+CC	libavcodec/fdctdsp.o
+CC	libavcodec/get_buffer.o
+CC	libavcodec/golomb.o
+CC	libavcodec/h2645_parse.o
+CC	libavcodec/h2645_sei.o
+CC	libavcodec/h2645_vui.o
+CC	libavcodec/h2645data.o
+CC	libavcodec/h264_parse.o
+CC	libavcodec/h264_parser.o
+CC	libavcodec/h264_ps.o
+CC	libavcodec/h264_sei.o
+CC	libavcodec/h264data.o
+CC	libavcodec/h264dsp.o
+CC	libavcodec/h264idct.o
+CC	libavcodec/hevc/data.o
+CC	libavcodec/hevc/parse.o
+CC	libavcodec/hevc/parser.o
+CC	libavcodec/hevc/ps.o
+CC	libavcodec/hevc/sei.o
+CC	libavcodec/idctdsp.o
+CC	libavcodec/imgconvert.o
+CC	libavcodec/itut35.o
+CC	libavcodec/jfdctfst.o
+CC	libavcodec/jfdctint.o
+CC	libavcodec/jni.o
+CC	libavcodec/jrevdct.o
+CC	libavcodec/mathtables.o
+CC	libavcodec/mediacodec.o
+CC	libavcodec/mpeg12framerate.o
+CC	libavcodec/mpeg4audio.o
+CC	libavcodec/mpeg4audio_sample_rates.o
+CC	libavcodec/mpegaudio_parser.o
+CC	libavcodec/mpegaudiodecheader.o
+CC	libavcodec/mpegaudiotabs.o
+CC	libavcodec/options.o
+CC	libavcodec/packet.o
+CC	libavcodec/parser.o
+CC	libavcodec/parsers.o
+CC	libavcodec/profiles.o
+CC	libavcodec/pthread.o
+CC	libavcodec/pthread_frame.o
+CC	libavcodec/pthread_slice.o
+CC	libavcodec/qsv_api.o
+CC	libavcodec/raw.o
+CC	libavcodec/simple_idct.o
+CC	libavcodec/startcode.o
+CC	libavcodec/synth_filter.o
+CC	libavcodec/threadprogress.o
+CC	libavcodec/tiff_common.o
+CC	libavcodec/utils.o
+CC	libavcodec/version.o
+CC	libavcodec/vlc.o
+CC	libavcodec/vorbis.o
+CC	libavcodec/vorbis_data.o
+CC	libavcodec/vorbis_parser.o
+CC	libavcodec/vorbisdec.o
+CC	libavcodec/vorbisdsp.o
+CC	libavcodec/xiph.o
+AS	libavutil/aarch64/cpu_sme.o
+CC	libavutil/aarch64/cpu.o
+AS	libavutil/aarch64/cpu_sve.o
+AS	libavutil/aarch64/crc.o
+CC	libavutil/aarch64/float_dsp_init.o
+AS	libavutil/aarch64/float_dsp_neon.o
+CC	libavutil/aarch64/tx_float_init.o
+AS	libavutil/aarch64/tx_float_neon.o
+CC	libavutil/adler32.o
+CC	libavutil/aes.o
+CC	libavutil/aes_ctr.o
+CC	libavutil/ambient_viewing_environment.o
+CC	libavutil/audio_fifo.o
+CC	libavutil/avsscanf.o
+CC	libavutil/avstring.o
+CC	libavutil/base64.o
+CC	libavutil/blowfish.o
+CC	libavutil/bprint.o
+CC	libavutil/buffer.o
+CC	libavutil/camellia.o
+CC	libavutil/cast5.o
+CC	libavutil/channel_layout.o
+CC	libavutil/container_fifo.o
+CC	libavutil/cpu.o
+CC	libavutil/crc.o
+CC	libavutil/csp.o
+CC	libavutil/des.o
+CC	libavutil/detection_bbox.o
+CC	libavutil/dict.o
+CC	libavutil/display.o
+CC	libavutil/dovi_meta.o
+CC	libavutil/downmix_info.o
+CC	libavutil/encryption_info.o
+CC	libavutil/error.o
+CC	libavutil/eval.o
+CC	libavutil/executor.o
+CC	libavutil/fifo.o
+CC	libavutil/file.o
+CC	libavutil/file_open.o
+CC	libavutil/film_grain_params.o
+CC	libavutil/fixed_dsp.o
+CC	libavutil/float_dsp.o
+CC	libavutil/float_scalarproduct.o
+CC	libavutil/frame.o
+CC	libavutil/hash.o
+CC	libavutil/hdr_dynamic_metadata.o
+CC	libavutil/hdr_dynamic_vivid_metadata.o
+CC	libavutil/hmac.o
+CC	libavutil/hwcontext.o
+CC	libavutil/hwcontext_stub.o
+CC	libavutil/iamf.o
+CC	libavutil/imgutils.o
+CC	libavutil/integer.o
+CC	libavutil/intmath.o
+CC	libavutil/lfg.o
+CC	libavutil/lls.o
+CC	libavutil/log.o
+CC	libavutil/log2_tab.o
+CC	libavutil/lzo.o
+CC	libavutil/mastering_display_metadata.o
+CC	libavutil/mathematics.o
+CC	libavutil/md5.o
+CC	libavutil/mem.o
+CC	libavutil/murmur3.o
+CC	libavutil/opt.o
+CC	libavutil/parseutils.o
+CC	libavutil/pixdesc.o
+CC	libavutil/pixelutils.o
+CC	libavutil/random_seed.o
+CC	libavutil/rational.o
+CC	libavutil/raw_color_params.o
+CC	libavutil/rc4.o
+CC	libavutil/refstruct.o
+CC	libavutil/reverse.o
+CC	libavutil/ripemd.o
+CC	libavutil/samplefmt.o
+CC	libavutil/sha.o
+CC	libavutil/sha512.o
+CC	libavutil/side_data.o
+CC	libavutil/slicethread.o
+CC	libavutil/spherical.o
+CC	libavutil/stereo3d.o
+CC	libavutil/tdrdi.o
+CC	libavutil/tea.o
+CC	libavutil/threadmessage.o
+CC	libavutil/time.o
+CC	libavutil/timecode.o
+CC	libavutil/timecode_internal.o
+CC	libavutil/timestamp.o
+CC	libavutil/tree.o
+CC	libavutil/twofish.o
+CC	libavutil/tx.o
+CC	libavutil/tx_double.o
+CC	libavutil/tx_float.o
+CC	libavutil/tx_int32.o
+CC	libavutil/utils.o
+CC	libavutil/uuid.o
+CC	libavutil/version.o
+CC	libavutil/video_enc_params.o
+CC	libavutil/video_hint.o
+CC	libavutil/xga_font_data.o
+CC	libavutil/xtea.o
+AR	libavformat/libavformat.a
+AR	libavcodec/libavcodec.a
+AR	libavutil/libavutil.a
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/avio_http_serve_files.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/avio_list_dir.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/avio_read_callback.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_filter_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_filter_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/demux_decode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/encode_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/encode_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/extract_mvs.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/filter_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/hw_decode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/mux.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/qsv_decode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/qsv_transcode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/remux.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/resample_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/scale_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/show_metadata.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/transcode_aac.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/transcode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/vaapi_encode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/vaapi_transcode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/README
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/Makefile
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/avio_http_serve_files.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/avio_list_dir.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/avio_read_callback.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_filter_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_filter_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/decode_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/demux_decode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/encode_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/encode_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/extract_mvs.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/filter_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/hw_decode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/mux.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/qsv_decode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/qsv_transcode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/remux.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/resample_audio.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/scale_video.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/show_metadata.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/transcode_aac.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/transcode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/vaapi_encode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/vaapi_transcode.c
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/README
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/doc/examples/Makefile
+INSTALL	libavformat/libavformat.a
+INSTALL	libavcodec/libavcodec.a
+INSTALL	libavutil/libavutil.a
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavformat/avformat.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavformat/avio.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavformat/version.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavformat/version_major.h
+INSTALL	libavformat/libavformat.pc
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/ac3_parser.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/adts_parser.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/avcodec.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/avdct.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/bsf.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/codec.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/codec_desc.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/codec_id.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/codec_par.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/d3d11va.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/defs.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/dirac.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/dv_profile.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/dxva2.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/exif.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/jni.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/mediacodec.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/packet.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/qsv.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/smpte_436m.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/vdpau.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/version.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/version_major.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/videotoolbox.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavcodec/vorbis_parser.h
+INSTALL	libavcodec/libavcodec.pc
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/adler32.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/aes.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/aes_ctr.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/ambient_viewing_environment.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/attributes.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/audio_fifo.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/avassert.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/avstring.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/avutil.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/base64.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/blowfish.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/bprint.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/bswap.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/buffer.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/cast5.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/camellia.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/channel_layout.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/common.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/container_fifo.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/cpu.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/crc.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/csp.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/des.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/detection_bbox.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/dict.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/display.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/dovi_meta.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/downmix_info.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/encryption_info.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/error.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/eval.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/executor.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/fifo.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/file.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/film_grain_params.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/frame.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hash.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hdr_dynamic_metadata.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hdr_dynamic_vivid_metadata.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hmac.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_cuda.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_d3d11va.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_d3d12va.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_drm.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_dxva2.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_amf.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_qsv.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_mediacodec.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_opencl.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_oh.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_vaapi.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_videotoolbox.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_vdpau.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/hwcontext_vulkan.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/iamf.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/imgutils.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/intfloat.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/intreadwrite.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/lfg.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/log.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/lzo.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/macros.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/mathematics.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/mastering_display_metadata.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/md5.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/mem.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/motion_vector.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/murmur3.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/opt.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/parseutils.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/pixdesc.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/pixelutils.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/pixfmt.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/random_seed.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/raw_color_params.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/rc4.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/rational.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/refstruct.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/replaygain.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/ripemd.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/samplefmt.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/sha.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/sha512.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/spherical.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/stereo3d.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/tdrdi.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/threadmessage.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/time.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/timecode.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/timestamp.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/tree.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/twofish.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/uuid.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/version.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/video_enc_params.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/xtea.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/tea.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/tx.h
+INSTALL	private/tmp/yl-p03-source/ffmpeg-9.0.1/libavutil/video_hint.h
+INSTALL	libavutil/avconfig.h
+INSTALL	libavutil/ffversion.h
+INSTALL	libavutil/libavutil.pc
+checking whether make supports nested variables... yes
+checking for a BSD-compatible install... /opt/homebrew/bin/ginstall -c
+checking whether build environment is sane... yes
+checking for a race-free mkdir -p... /opt/homebrew/bin/gmkdir -p
+checking for gawk... no
+checking for mawk... no
+checking for nawk... no
+checking for awk... awk
+checking whether make sets $(MAKE)... yes
+checking whether to enable maintainer-specific portions of Makefiles... yes
+checking build system type... aarch64-apple-darwin27.0.0
+checking host system type... aarch64-apple-darwin27.0.0
+checking how to print strings... printf
+checking whether make supports the include directive... yes (GNU style)
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether the compiler supports GNU C... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to enable C11 features... none needed
+checking whether gcc understands -c and -o together... yes
+checking dependency style of gcc... gcc3
+checking for a sed that does not truncate output... /usr/bin/sed
+checking for grep that handles long lines and -e... /usr/bin/grep
+checking for egrep... /usr/bin/grep -E
+checking for fgrep... /usr/bin/grep -F
+checking for ld used by gcc... /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld
+checking if the linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) is GNU ld... no
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 786432
+checking how to convert aarch64-apple-darwin27.0.0 file names to aarch64-apple-darwin27.0.0 format... func_convert_file_noop
+checking how to convert aarch64-apple-darwin27.0.0 file names to toolchain format... func_convert_file_noop
+checking for /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld option to reload object files... -r
+checking for file... file
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... no
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /bin/dd
+checking how to truncate binary pipes... /bin/dd bs=4096 count=1
+checking for mt... no
+checking if : is a manifest tool... no
+checking for dsymutil... dsymutil
+checking for nmedit... nmedit
+checking for lipo... lipo
+checking for otool... otool
+checking for otool64... no
+checking for -single_module linker flag... ld: warning: -single_module is obsolete
+no
+checking for -exported_symbols_list linker flag... yes
+checking for -force_load linker flag... yes
+checking for stdio.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for strings.h... yes
+checking for sys/stat.h... yes
+checking for sys/types.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... yes
+checking for gcc option to produce PIC... -fno-common -DPIC
+checking if gcc PIC flag -fno-common -DPIC works... yes
+checking if gcc static flag -static works... no
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld) supports shared libraries... yes
+checking dynamic linker characteristics... darwin27.0.0 dyld
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking for gcc... (cached) gcc
+checking whether the compiler supports GNU C... (cached) yes
+checking whether gcc accepts -g... (cached) yes
+checking for gcc option to enable C11 features... (cached) none needed
+checking whether gcc understands -c and -o together... (cached) yes
+checking dependency style of gcc... (cached) gcc3
+checking for an ANSI C-conforming const... yes
+checking for inline... inline
+checking dependency style of gcc... gcc3
+checking for C/C++ restrict keyword... __restrict
+checking for C99 variable-size arrays... yes
+checking how to run the C preprocessor... gcc -E
+checking argument osce training data... no
+checking if gcc supports -fvisibility=hidden... yes
+checking whether to add -D_FORTIFY_SOURCE=2 to CFLAGS... yes
+checking if gcc supports -Wall -Wextra -Wcast-align -Wnested-externs -Wshadow -Wstrict-prototypes... yes
+checking for lrintf... yes
+checking for lrint... yes
+checking for __malloc_hook... no
+checking for elf_aux_info... no
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating opus.pc
+config.status: creating opus-uninstalled.pc
+config.status: creating celt/arm/armopts.s
+config.status: creating doc/Makefile
+config.status: creating doc/Doxyfile
+config.status: creating config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+configure:
+------------------------------------------------------------------------
+  opus 1.6.1:  Automatic configuration OK.
+
+    Compiler support:
+
+      C99 var arrays: ................ yes
+      C99 lrintf: .................... yes
+      Use alloca: .................... no (using var arrays)
+
+    General configuration:
+
+      Floating point support: ........ yes
+      Fast float approximations: ..... yes
+      Fixed point debugging: ......... no
+      Inline Assembly Optimizations: . disabled
+      External Assembly Optimizations: disabled
+      Intrinsics Optimizations: ...... no
+      Run-time CPU detection: ........ disabled
+      Custom modes: .................. no
+      Assertion checking: ............ no
+      Hardening: ..................... yes
+      Fuzzing: ....................... no
+      Check ASM: ..................... no
+
+      API documentation: ............. no
+      Extra programs: ................ no
+------------------------------------------------------------------------
+
+ Type "make; make install" to compile and install
+ Type "make check" to run the test suite
+
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  all-recursive
+  CC       celt/bands.lo
+  CC       celt/celt.lo
+  CC       celt/celt_encoder.lo
+make[3]: Nothing to be done for `all'.
+  CC       celt/celt_decoder.lo
+  CC       celt/cwrs.lo
+  CC       celt/entcode.lo
+  CC       celt/entdec.lo
+  CC       celt/entenc.lo
+  CC       celt/kiss_fft.lo
+  CC       celt/laplace.lo
+  CC       celt/mathops.lo
+  CC       celt/mdct.lo
+  CC       celt/modes.lo
+  CC       celt/pitch.lo
+  CC       celt/celt_lpc.lo
+  CC       celt/quant_bands.lo
+  CC       celt/rate.lo
+  CC       celt/vq.lo
+  CC       silk/CNG.lo
+  CC       silk/code_signs.lo
+  CC       silk/init_decoder.lo
+  CC       silk/decode_core.lo
+  CC       silk/decode_frame.lo
+  CC       silk/decode_parameters.lo
+  CC       silk/decode_indices.lo
+  CC       silk/decode_pulses.lo
+  CC       silk/decoder_set_fs.lo
+  CC       silk/dec_API.lo
+  CC       silk/enc_API.lo
+  CC       silk/encode_indices.lo
+  CC       silk/encode_pulses.lo
+  CC       silk/gain_quant.lo
+  CC       silk/interpolate.lo
+  CC       silk/LP_variable_cutoff.lo
+  CC       silk/NLSF_decode.lo
+  CC       silk/NSQ.lo
+  CC       silk/NSQ_del_dec.lo
+  CC       silk/PLC.lo
+  CC       silk/shell_coder.lo
+  CC       silk/tables_gain.lo
+  CC       silk/tables_LTP.lo
+  CC       silk/tables_NLSF_CB_NB_MB.lo
+  CC       silk/tables_NLSF_CB_WB.lo
+  CC       silk/tables_other.lo
+  CC       silk/tables_pitch_lag.lo
+  CC       silk/tables_pulses_per_block.lo
+  CC       silk/VAD.lo
+  CC       silk/control_audio_bandwidth.lo
+  CC       silk/quant_LTP_gains.lo
+  CC       silk/VQ_WMat_EC.lo
+  CC       silk/HP_variable_cutoff.lo
+  CC       silk/NLSF_encode.lo
+  CC       silk/NLSF_VQ.lo
+  CC       silk/NLSF_unpack.lo
+  CC       silk/NLSF_del_dec_quant.lo
+  CC       silk/process_NLSFs.lo
+  CC       silk/stereo_LR_to_MS.lo
+  CC       silk/stereo_MS_to_LR.lo
+  CC       silk/check_control_input.lo
+  CC       silk/control_SNR.lo
+  CC       silk/init_encoder.lo
+  CC       silk/control_codec.lo
+  CC       silk/A2NLSF.lo
+  CC       silk/ana_filt_bank_1.lo
+  CC       silk/biquad_alt.lo
+  CC       silk/bwexpander_32.lo
+  CC       silk/bwexpander.lo
+  CC       silk/debug.lo
+  CC       silk/decode_pitch.lo
+  CC       silk/inner_prod_aligned.lo
+  CC       silk/lin2log.lo
+  CC       silk/log2lin.lo
+  CC       silk/LPC_analysis_filter.lo
+  CC       silk/LPC_inv_pred_gain.lo
+  CC       silk/table_LSF_cos.lo
+  CC       silk/NLSF2A.lo
+  CC       silk/NLSF_stabilize.lo
+  CC       silk/NLSF_VQ_weights_laroia.lo
+  CC       silk/pitch_est_tables.lo
+  CC       silk/resampler.lo
+  CC       silk/resampler_down2.lo
+  CC       silk/resampler_down2_3.lo
+  CC       silk/resampler_private_AR2.lo
+  CC       silk/resampler_private_down_FIR.lo
+  CC       silk/resampler_private_IIR_FIR.lo
+  CC       silk/resampler_private_up2_HQ.lo
+  CC       silk/resampler_rom.lo
+  CC       silk/sigm_Q15.lo
+  CC       silk/sort.lo
+  CC       silk/sum_sqr_shift.lo
+  CC       silk/stereo_decode_pred.lo
+  CC       silk/stereo_encode_pred.lo
+  CC       silk/stereo_find_predictor.lo
+  CC       silk/stereo_quant_pred.lo
+  CC       silk/LPC_fit.lo
+  CC       silk/float/apply_sine_window_FLP.lo
+  CC       silk/float/corrMatrix_FLP.lo
+  CC       silk/float/encode_frame_FLP.lo
+  CC       silk/float/find_LPC_FLP.lo
+  CC       silk/float/find_LTP_FLP.lo
+  CC       silk/float/find_pitch_lags_FLP.lo
+  CC       silk/float/find_pred_coefs_FLP.lo
+  CC       silk/float/LPC_analysis_filter_FLP.lo
+  CC       silk/float/LTP_analysis_filter_FLP.lo
+  CC       silk/float/LTP_scale_ctrl_FLP.lo
+  CC       silk/float/noise_shape_analysis_FLP.lo
+  CC       silk/float/process_gains_FLP.lo
+  CC       silk/float/regularize_correlations_FLP.lo
+  CC       silk/float/residual_energy_FLP.lo
+  CC       silk/float/warped_autocorrelation_FLP.lo
+  CC       silk/float/wrappers_FLP.lo
+  CC       silk/float/autocorrelation_FLP.lo
+  CC       silk/float/burg_modified_FLP.lo
+  CC       silk/float/bwexpander_FLP.lo
+  CC       silk/float/energy_FLP.lo
+  CC       silk/float/inner_product_FLP.lo
+  CC       silk/float/k2a_FLP.lo
+  CC       silk/float/LPC_inv_pred_gain_FLP.lo
+  CC       silk/float/pitch_analysis_core_FLP.lo
+  CC       silk/float/scale_copy_vector_FLP.lo
+  CC       silk/float/scale_vector_FLP.lo
+  CC       silk/float/schur_FLP.lo
+  CC       silk/float/sort_FLP.lo
+  CC       src/opus.lo
+  CC       src/opus_decoder.lo
+  CC       src/opus_encoder.lo
+  CC       src/extensions.lo
+  CC       src/opus_multistream.lo
+  CC       src/opus_multistream_encoder.lo
+  CC       src/opus_multistream_decoder.lo
+  CC       src/repacketizer.lo
+  CC       src/opus_projection_encoder.lo
+  CC       src/opus_projection_decoder.lo
+  CC       src/mapping_matrix.lo
+  CC       src/analysis.lo
+  CC       src/mlp.lo
+  CC       src/mlp_data.lo
+  CCLD     libopus.la
+/Applications/Xcode.app/Contents/Developer/usr/bin/make  install-recursive
+make[3]: Nothing to be done for `all'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib'
+ /bin/sh ./libtool   --mode=install /opt/homebrew/bin/ginstall -c   libopus.la '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib'
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libopus.lai /private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib/libopus.la
+libtool: install: /opt/homebrew/bin/ginstall -c .libs/libopus.a /private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib/libopus.a
+libtool: install: chmod 644 /private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib/libopus.a
+libtool: install: ranlib /private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib/libopus.a
+libtool: warning: remember to run 'libtool --finish /yl_opus/install/lib'
+make[5]: Nothing to be done for `install-exec-am'.
+make[5]: Nothing to be done for `install-data-am'.
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/share/aclocal'
+ /opt/homebrew/bin/ginstall -c -m 644 ../../../opus-1.6.1/opus.m4 '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/share/aclocal'
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib/pkgconfig'
+ /opt/homebrew/bin/ginstall -c -m 644 opus.pc '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/lib/pkgconfig'
+ /opt/homebrew/bin/gmkdir -p '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/include/opus'
+ /opt/homebrew/bin/ginstall -c -m 644 ../../../opus-1.6.1/include/opus.h ../../../opus-1.6.1/include/opus_multistream.h ../../../opus-1.6.1/include/opus_types.h ../../../opus-1.6.1/include/opus_defines.h ../../../opus-1.6.1/include/opus_projection.h '/private/tmp/yl-p03-source/build/macosx-arm64/opus-stage/yl_opus/install/include/opus'

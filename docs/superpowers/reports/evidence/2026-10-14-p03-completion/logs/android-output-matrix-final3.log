@@ -1,0 +1,242 @@
+00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart
+Running Gradle task 'assembleDebug'...                             11.1s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk
+Installing build/app/outputs/flutter-apk/app-debug.apk...           4.0s
+00:00 +0: webm-vp9-opus / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-opus","transport":"file","platform":"android","mediaHash":"e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":407000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1412000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2421000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3423000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2449000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1679000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":574000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:16 +1: webm-vp9-opus / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-opus","transport":"http","platform":"android","mediaHash":"e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":423000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1430000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2437000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3437000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2352000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1758000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":585000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:25 +2: webm-vp9-opus / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-opus","transport":"renamed-file","platform":"android","mediaHash":"e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":513000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1264000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2266000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3267000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2361000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1772000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":373000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:35 +3: ps-mpeg2-mp3 / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"ps-mpeg2-mp3","transport":"file","platform":"android","mediaHash":"5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775","supportRequirement":"diagnostic","outcome":"failed","stage":"load","code":"decoder.unsupported","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:35 +4: ps-mpeg2-mp3 / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"ps-mpeg2-mp3","transport":"http","platform":"android","mediaHash":"5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775","supportRequirement":"diagnostic","outcome":"failed","stage":"load","code":"decoder.unsupported","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:35 +5: ps-mpeg2-mp3 / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"ps-mpeg2-mp3","transport":"renamed-file","platform":"android","mediaHash":"5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775","supportRequirement":"diagnostic","outcome":"failed","stage":"load","code":"decoder.unsupported","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+00:35 +6: mkv-av1-opus / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-av1-opus","transport":"file","platform":"android","mediaHash":"60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-av1-opus/file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:404:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 404
+The test description was:
+  mkv-av1-opus / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:35 +6 -1: mkv-av1-opus / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-av1-opus / file
+  
+00:35 +6 -1: mkv-av1-opus / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-av1-opus","transport":"http","platform":"android","mediaHash":"60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-av1-opus/http failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:404:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 404
+The test description was:
+  mkv-av1-opus / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:36 +6 -2: mkv-av1-opus / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-av1-opus / http
+  
+00:36 +6 -2: mkv-av1-opus / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-av1-opus","transport":"renamed-file","platform":"android","mediaHash":"60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-av1-opus/renamed-file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:404:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 404
+The test description was:
+  mkv-av1-opus / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:36 +6 -3: mkv-av1-opus / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-av1-opus / renamed-file
+  
+00:36 +6 -3: webm-vp9-vorbis / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-vorbis","transport":"file","platform":"android","mediaHash":"aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":577000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1331000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2335000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3341000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2536000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1778000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":569000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:45 +7 -3: webm-vp9-vorbis / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-vorbis","transport":"http","platform":"android","mediaHash":"aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":537000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1294000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2294000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3302000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2541000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1760000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":546000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+00:55 +8 -3: webm-vp9-vorbis / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-vorbis","transport":"renamed-file","platform":"android","mediaHash":"aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":549000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1301000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2308000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3312000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2550000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1794000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":538000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:04 +9 -3: webm-vp9-vorbis / wrong-known-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"webm-vp9-vorbis","transport":"wrong-known-file","platform":"android","mediaHash":"aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":563000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1315000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2314000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3317000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2567000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1778000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":407000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:14 +10 -3: mkv-hevc-main10-aac / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-hevc-main10-aac","transport":"file","platform":"android","mediaHash":"8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-hevc-main10-aac/file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:404:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 404
+The test description was:
+  mkv-hevc-main10-aac / file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:14 +10 -4: mkv-hevc-main10-aac / file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-hevc-main10-aac / file
+  
+01:14 +10 -4: mkv-hevc-main10-aac / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-hevc-main10-aac","transport":"http","platform":"android","mediaHash":"8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-hevc-main10-aac/http failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:404:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 404
+The test description was:
+  mkv-hevc-main10-aac / http
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:15 +10 -5: mkv-hevc-main10-aac / http [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-hevc-main10-aac / http
+  
+01:15 +10 -5: mkv-hevc-main10-aac / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-hevc-main10-aac","transport":"renamed-file","platform":"android","mediaHash":"8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245","supportRequirement":"required","outcome":"failed","stage":"load","code":"decoder.unavailable","category":"decoder","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'passed'
+  Actual: 'failed'
+   Which: is different.
+          Expected: passed
+            Actual: failed
+                    ^
+           Differ at offset 0
+mkv-hevc-main10-aac/renamed-file failed at load (decoder.unavailable)
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart:404:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart line 404
+The test description was:
+  mkv-hevc-main10-aac / renamed-file
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:15 +10 -6: mkv-hevc-main10-aac / renamed-file [E]
+  Test failed. See exception logs above.
+  The test description was: mkv-hevc-main10-aac / renamed-file
+  
+01:15 +10 -6: mkv-avc-aac-no-cues / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-avc-aac-no-cues","transport":"file","platform":"android","mediaHash":"3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":464000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1472000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2479000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3480000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2480000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1748000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":463000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:28 +11 -6: mkv-avc-aac-no-cues / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-avc-aac-no-cues","transport":"http","platform":"android","mediaHash":"3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":429000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1436000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2438000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3439000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2520000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1735000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":504000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:41 +12 -6: mkv-avc-aac-no-cues / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mkv-avc-aac-no-cues","transport":"renamed-file","platform":"android","mediaHash":"3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987","supportRequirement":"required","outcome":"passed","stage":"end","code":null,"category":null,"scope":null,"engine":"media3","decoder":"hardware","firstFrame":true,"audioTrackSelected":true,"audioOutputVerified":false,"pixelMarkersVerified":true,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[{"phase":"play","marker":0,"rgb":[255,0,0],"positionUs":482000},{"phase":"play","marker":1,"rgb":[0,254,1],"positionUs":1487000},{"phase":"play","marker":2,"rgb":[1,0,255],"positionUs":2252000},{"phase":"play","marker":3,"rgb":[255,254,255],"positionUs":3255000},{"phase":"seek-2000","marker":2,"rgb":[1,0,255],"positionUs":2461000},{"phase":"seek-1250","marker":1,"rgb":[0,254,1],"positionUs":1718000},{"phase":"seek-0","marker":0,"rgb":[255,0,0],"positionUs":472000}],"audioClockUs":null,"seekProgress":true,"completed":true,"disposed":true}
+01:54 +13 -6: mp4-truncated / file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"file","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+01:54 +14 -6: mp4-truncated / http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"http","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+01:54 +15 -6: mp4-truncated / renamed-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"renamed-file","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+01:54 +16 -6: mp4-truncated / extensionless-file
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"extensionless-file","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+01:54 +17 -6: mp4-truncated / renamed-http
+YL_FORMAT_ROW={"runId":"format-android-1792057430119657","buildSha256":"unrecorded","caseId":"mp4-truncated","transport":"renamed-http","platform":"android","mediaHash":"b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c","supportRequirement":"required","outcome":"failed","stage":"load","code":"container.unsupported","category":"container","scope":"command","engine":"unknown","decoder":"unknown","firstFrame":false,"audioTrackSelected":false,"audioOutputVerified":false,"pixelMarkersVerified":false,"pcmMarkersVerified":false,"pixelVerificationMethod":"player-composition","pcmVerificationMethod":"not-run","pixelEvidence":[],"audioClockUs":null,"seekProgress":false,"completed":false,"disposed":true}
+01:54 +18 -6: (tearDownAll)
+01:55 +18 -6: Some tests failed.
+
+Failing tests:
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-av1-opus / file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-av1-opus / http
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-av1-opus / renamed-file
+  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/format_matrix_test.dart: mkv-hevc-main10-aac / file
+  ... and 2 more
+Android test log: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-android-test.B3Qbeg
