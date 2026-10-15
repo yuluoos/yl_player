@@ -1,0 +1,329 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "43819cc0104e9caeea76ed85ffe233801d4d0116",
+  "productionSoftwareAdmission": "empty_unmeasured",
+  "media3Baselines": [
+    {
+      "run": "android-media3-logcat.txt",
+      "observation": {
+        "fixture": "avi-avc-mp3.avi",
+        "decoder": "c2.goldfish.h264.decoder",
+        "images": 2,
+        "ended": false,
+        "cause": "null"
+      }
+    },
+    {
+      "run": "android-media3-logcat.txt",
+      "observation": {
+        "fixture": "ps-avc-mp3.mpg",
+        "images": 0,
+        "ended": false,
+        "cause": "null"
+      }
+    },
+    {
+      "run": "android-media3-cold-logcat.txt",
+      "observation": {
+        "fixture": "avi-avc-mp3.avi",
+        "decoder": "c2.goldfish.h264.decoder",
+        "images": 93,
+        "ended": true,
+        "state": 4,
+        "positionMs": 4050,
+        "playWhenReady": true,
+        "suppression": 0,
+        "tracks": "2:true, 1:true",
+        "cause": "null"
+      }
+    },
+    {
+      "run": "android-media3-cold-logcat.txt",
+      "observation": {
+        "fixture": "ps-avc-mp3.mpg",
+        "images": 0,
+        "ended": true,
+        "state": 4,
+        "positionMs": 19314,
+        "playWhenReady": true,
+        "suppression": 0,
+        "tracks": "1:true",
+        "cause": "null"
+      }
+    },
+    {
+      "run": "android-media3-cold-logcat.txt",
+      "observation": {
+        "fixture": "mkv-av1-opus.mkv",
+        "decoder": "c2.android.av1-dav1d.decoder",
+        "images": 95,
+        "ended": true,
+        "state": 4,
+        "positionMs": 4026,
+        "playWhenReady": true,
+        "suppression": 0,
+        "tracks": "2:true, 1:true",
+        "cause": "null"
+      }
+    }
+  ],
+  "publicPsRuns": [
+    {
+      "run": "android-public-ps1.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "file",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "timeout",
+        "stage": "first-frame",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "media3",
+        "decoder": "unknown",
+        "firstFrame": false,
+        "audioTrackSelected": false,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": false,
+        "completed": false,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps1.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "http",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "timeout",
+        "stage": "first-frame",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "media3",
+        "decoder": "unknown",
+        "firstFrame": false,
+        "audioTrackSelected": false,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": false,
+        "completed": false,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps1.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "renamed-file",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "timeout",
+        "stage": "first-frame",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "media3",
+        "decoder": "unknown",
+        "firstFrame": false,
+        "audioTrackSelected": false,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": false,
+        "completed": false,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps1.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "wrong-known-file",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "timeout",
+        "stage": "first-frame",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "media3",
+        "decoder": "unknown",
+        "firstFrame": false,
+        "audioTrackSelected": false,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": false,
+        "completed": false,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps3.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "file",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "passed",
+        "stage": "end",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "managedFallback",
+        "decoder": "hardware",
+        "firstFrame": true,
+        "audioTrackSelected": true,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": true,
+        "completed": true,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps3.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "http",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "passed",
+        "stage": "end",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "managedFallback",
+        "decoder": "hardware",
+        "firstFrame": true,
+        "audioTrackSelected": true,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": true,
+        "completed": true,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps3.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "renamed-file",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "passed",
+        "stage": "end",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "managedFallback",
+        "decoder": "hardware",
+        "firstFrame": true,
+        "audioTrackSelected": true,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": true,
+        "completed": true,
+        "disposed": true
+      }
+    },
+    {
+      "run": "android-public-ps3.log",
+      "observation": {
+        "caseId": "ps-avc-mp3",
+        "transport": "wrong-known-file",
+        "platform": "android",
+        "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+        "supportRequirement": "required",
+        "outcome": "passed",
+        "stage": "end",
+        "code": null,
+        "category": null,
+        "scope": null,
+        "engine": "managedFallback",
+        "decoder": "hardware",
+        "firstFrame": true,
+        "audioTrackSelected": true,
+        "audioOutputVerified": false,
+        "pixelMarkersVerified": false,
+        "audioClockUs": null,
+        "seekProgress": true,
+        "completed": true,
+        "disposed": true
+      }
+    }
+  ],
+  "nativePixelRun": {
+    "run": "android-native-pixels3",
+    "tests": 3,
+    "failures": 0,
+    "framesDecoded": 96,
+    "remainingOwnedBytes": 0,
+    "physicalOutputVerified": false,
+    "syntheticAdmission": true
+  },
+  "jni": {
+    "architectures": 3,
+    "minimumApi": 24,
+    "metadataVersion": 2,
+    "softwareConfigurationVersion": 2
+  },
+  "notes": [
+    "First emulator snapshot/no-audio run stalled AVI/AV1. Cold normal-audio run output93/95frames and EOS; initial failures retained.",
+    "Raw Media3 PS only exposes audio. Required PS output is verified through owned demux; raw baseline cannot count as supported.",
+    "Artifact and native worker measurements do not qualify physical-device sustained software admission."
+  ],
+  "finalNativeTests": {
+    "tests": 7,
+    "failures": 0,
+    "skipped": 0,
+    "log": "android-task6-final.log"
+  },
+  "finalJvmTests": {
+    "tests": 525,
+    "failures": 0,
+    "skipped": 3,
+    "log": "android-task6-final.log"
+  },
+  "preparationIdentity": {
+    "red": "expected UNKNOWN but was HARDWARE",
+    "green": "unknown until initialized; actual MediaCodec name after initialization",
+    "log": "android-native-identity-green.log"
+  },
+  "installedArtifactSha256": "af05427011aabbb5de96b02c0054e4eae4c2ad553469f5d90ab900fbee88c367",
+  "logSha256": {
+    "android-native-identity-red2.log": "00e2b33f14cac4b590389ab89eab78024965bf59cf8ffc4f98c891d7f84cbc03",
+    "android-task6-public-regressions.log": "ae1a966efe06791950119f874a29b4085d69327f8f17b64fd0ca1bf035dd5332",
+    "android-task6-android_multi_player_rollback.log": "d97f7def73915a272753dc9c69ca7d33c9e5f495a3653b0b220f8bb27bee64cb",
+    "android-native-identity-green.log": "b64971a350e77e812600d7d56e8519a17ec66c21d19f5db06d0d42ce85563010",
+    "android-task6-public-regressions2.log": "e1c4568ce1507b2f10ed09323986d5e5eafd03c5325a80bce32a9973c1e7ddc0",
+    "android-public-ps3.log": "ef9c168ef7e5c87b8df1aae83abf732b8c7e3b9b64252ee719c184c2e57e70dd",
+    "android-task6-final.log": "fa991776e6a3c3701e701077990e1ae5edd9000ae05bb959d8fd9ffe31a71b11",
+    "android-task6-callback-final.log": "68721adad34cfcf4a53b09bba6aa50dd7449dee7c6964a7b46ca721c3a2910ea",
+    "android-task6-state_update_cadence.log": "5c62594c0a877c5c09979b70e11102156ba4d24b7e521c572c5587b9c05b0263"
+  },
+  "publicRegressions": {
+    "progressive": 2,
+    "hls": 3,
+    "sessionReplacement": 3,
+    "multiPlayerRollback": 1,
+    "cadence": 1,
+    "failedAttemptsRetained": true
+  }
+}

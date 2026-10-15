@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:yl_player_android/src/android_codec.dart';
 import 'package:yl_player_android/src/pigeon/yl_player_android.g.dart';
 import 'support/android_callback_probe.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +190,7 @@ void main() {
       addTearDown(media.close);
       final created = await AndroidPlayerFactoryHostApi().create(
         AndroidCreateRequest(
-          schemaMajor: 3,
+          schemaMajor: AndroidCodec.schemaMajor,
           options: AndroidPlayerOptionsMessage(
             decoderPolicy: AndroidDecoderPolicy.hardwarePreferred,
             audioPolicy: AndroidAudioPolicy.appManaged,

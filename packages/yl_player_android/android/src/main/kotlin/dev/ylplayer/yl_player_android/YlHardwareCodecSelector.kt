@@ -108,20 +108,10 @@ internal class YlPolicyCodecSelector(
     override fun getDecoderInfos(mimeType: String, requiresSecureDecoder: Boolean, requiresTunnelingDecoder: Boolean): List<MediaCodecInfo> {
         val codecs = delegate.getDecoderInfos(mimeType, requiresSecureDecoder, requiresTunnelingDecoder)
         if (!MimeTypes.isVideo(mimeType)) return codecs
-        return when (policy) {
-            dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.SYSTEM_DEFAULT -> codecs
-            dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_REQUIRED -> codecs.filter {
-                evidence.mode(it.name) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE
-            }
-            // Stable sorting preserves all software/system fallback candidates. Names rank only.
-            dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED -> codecs.sortedBy {
-                when {
-                    evidence.mode(it.name) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE -> 0
-                    !it.softwareOnly && (it.hardwareAccelerated || isHardwareCodecName(it.name)) -> 1
-                    else -> 2
-                }
-            }
-        }
+        // MediaCodec does not expose an owned reference-surface allocator. Until
+        // that backend has an enforceable measured budget, only proven hardware
+        // may be offered. Owned FFmpeg software is admitted separately.
+        return codecs.filter { evidence.mode(it.name) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE }
     }
 }
 

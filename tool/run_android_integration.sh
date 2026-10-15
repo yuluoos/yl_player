@@ -2,6 +2,7 @@
 # Internal runner: bounded host-side real Activity lifecycle orchestration.
 set -eu
 YL_SUITE=$1
+shift
 : "${YL_ANDROID_DEVICE_ID:?}"
 YL_ADB=${YL_ADB:-adb}
 YL_ANDROID_API=$("$YL_ADB" -s "$YL_ANDROID_DEVICE_ID" shell getprop ro.build.version.sdk | tr -d '\r')
@@ -21,7 +22,7 @@ trap cleanup EXIT HUP INT TERM
 # prior buffer, then clear this explicitly selected test device before launch.
 "$YL_ADB" -s "$YL_ANDROID_DEVICE_ID" logcat -d > "$YL_RUN_LOG.previous-logcat"
 "$YL_ADB" -s "$YL_ANDROID_DEVICE_ID" logcat -c
-flutter test "$YL_SUITE" -d "$YL_ANDROID_DEVICE_ID" --timeout 5m \
+flutter test "$YL_SUITE" "$@" -d "$YL_ANDROID_DEVICE_ID" --timeout 5m \
   --dart-define="YL_ANDROID_API=$YL_ANDROID_API" > "$YL_RUN_LOG" 2>&1 &
 YL_TEST_PID=$!
 YL_SECONDS=0

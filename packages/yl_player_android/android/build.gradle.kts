@@ -42,6 +42,7 @@ android {
         getByName("androidTest") {
             java.srcDirs("src/androidTest/kotlin")
             assets.srcDir("../../yl_player/example/assets/test_media/dash_timeline")
+            assets.srcDir("../../yl_player/example/assets/test_media")
         }
         getByName("test") {
             java.srcDirs("src/test/kotlin")

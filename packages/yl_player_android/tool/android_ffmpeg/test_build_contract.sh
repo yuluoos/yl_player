@@ -19,7 +19,7 @@ require_line '--disable-gpl'
 require_line '--disable-nonfree'
 require_line '--disable-encoders'
 require_line '--disable-avfilter'
-require_line '--enable-demuxer=matroska,flv,mov,mpegts,aac,mp3,ogg'
+require_line '--enable-demuxer=matroska,flv,mov,mpegts,mpegps,h264,aac,mp3,ogg'
 require_line '--enable-decoder=h264,hevc,aac,mp3,ac3,eac3,dca,flac,opus,vorbis'
 require_line '--enable-bsf=h264_mp4toannexb,hevc_mp4toannexb,aac_adtstoasc'
 require_line '--enable-swresample'
@@ -50,3 +50,5 @@ if ! grep -F -- 'glTexSubImage2D' "$bridge" >/dev/null; then
   echo 'software renderer must reuse allocated YUV textures between frames' >&2
   exit 1
 fi
+
+python3 -B "$script_dir/verify_artifact.py"

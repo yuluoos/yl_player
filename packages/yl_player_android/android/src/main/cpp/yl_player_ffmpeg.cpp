@@ -9,6 +9,9 @@
 #include <cstring>
 #include <deque>
 #include <mutex>
+#include <memory>
+#include <new>
+#include <climits>
 #include <string>
 #include <vector>
 
@@ -19,6 +22,7 @@ extern "C" {
 #include <libavutil/channel_layout.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/opt.h>
+#include <libavutil/pixdesc.h>
 #include <libswresample/swresample.h>
 }
 
@@ -28,8 +32,10 @@ enum NativeKind { kUnknownKind = 0, kVideo = 1, kAudio = 2 };
 enum NativeCodec {
   kUnknownCodec = 0, kH264 = 1, kHevc = 2, kAac = 3, kMp3 = 4,
   kAc3 = 5, kEac3 = 6, kDts = 7, kFlac = 8, kOpus = 9,
-  kVorbis = 10, kVp9 = 11,
+  kVorbis = 10, kVp9 = 11, kAv1 = 12,
 };
+
+#include "YlSoftwareVideoBudget.inc"
 
 struct Renderer {
   ANativeWindow* window = nullptr;
@@ -69,6 +75,10 @@ struct Session {
   int software_video_stream = -1;
   std::deque<DecodedVideoFrame> decoded_video_frames;
   Renderer renderer;
+  SoftwareAllocator software_allocator;
+  std::unique_ptr<SoftwareReceipt> renderer_receipt;
+  std::unique_ptr<SoftwareReceipt> packet_receipt;
+  int64_t origin_us = 0;
   AVCodecContext* audio_decoder = nullptr;
   SwrContext* resampler = nullptr;
   int software_audio_stream = -1;
@@ -122,7 +132,7 @@ bool supported_input(const AVInputFormat* input) {
   const std::string name(input->name);
   return name.find("mov") != std::string::npos || name.find("matroska") != std::string::npos ||
          name.find("flv") != std::string::npos || name.find("mpegts") != std::string::npos ||
-         name == "aac" || name == "mp3" || name.find("ogg") != std::string::npos;
+         name == "mpeg" || name == "aac" || name == "mp3" || name.find("ogg") != std::string::npos;
 }
 
 int codec_value(AVCodecID codec) {
@@ -138,8 +148,22 @@ int codec_value(AVCodecID codec) {
     case AV_CODEC_ID_OPUS: return kOpus;
     case AV_CODEC_ID_VORBIS: return kVorbis;
     case AV_CODEC_ID_VP9: return kVp9;
+    case AV_CODEC_ID_AV1: return kAv1;
     default: return kUnknownCodec;
   }
+}
+
+// Normative 8-bit 4:2:0 profiles can be described without opening a decoder.
+// Unknown/high-bit-depth variants remain unknown until metadata proves them;
+// get_buffer2 still rejects any contradictory decoded format before allocation.
+AVPixelFormat software_pixel_format(const AVCodecParameters* p) {
+  if (p->format >= 0) return static_cast<AVPixelFormat>(p->format);
+  const int profile = p->profile & ~AV_PROFILE_H264_CONSTRAINED;
+  if (p->codec_id == AV_CODEC_ID_H264 && (profile == AV_PROFILE_H264_BASELINE ||
+      profile == AV_PROFILE_H264_MAIN || profile == AV_PROFILE_H264_EXTENDED || profile == AV_PROFILE_H264_HIGH))
+    return AV_PIX_FMT_YUV420P;
+  if (p->codec_id == AV_CODEC_ID_HEVC && p->profile == AV_PROFILE_HEVC_MAIN) return AV_PIX_FMT_YUV420P;
+  return AV_PIX_FMT_NONE;
 }
 
 int kind_value(AVMediaType type) {
@@ -245,15 +269,6 @@ void copy_plane_8(const uint8_t* source, int stride, int width, int height,
   }
 }
 
-void copy_plane_10(const uint8_t* source, int stride, int width, int height,
-                   std::vector<uint8_t>* destination) {
-  destination->resize(static_cast<size_t>(width) * height);
-  for (int y = 0; y < height; ++y) {
-    const auto* row = reinterpret_cast<const uint16_t*>(source + static_cast<ptrdiff_t>(y) * stride);
-    for (int x = 0; x < width; ++x) (*destination)[static_cast<size_t>(y) * width + x] = row[x] >> 2;
-  }
-}
-
 bool render_frame(Renderer* renderer, const AVFrame* frame) {
   if (renderer->display == EGL_NO_DISPLAY || !eglMakeCurrent(renderer->display, renderer->surface,
                                                                renderer->surface, renderer->context)) return false;
@@ -263,10 +278,6 @@ bool render_frame(Renderer* renderer, const AVFrame* frame) {
     copy_plane_8(frame->data[0], frame->linesize[0], frame->width, frame->height, &renderer->planes[0]);
     copy_plane_8(frame->data[1], frame->linesize[1], chroma_width, chroma_height, &renderer->planes[1]);
     copy_plane_8(frame->data[2], frame->linesize[2], chroma_width, chroma_height, &renderer->planes[2]);
-  } else if (frame->format == AV_PIX_FMT_YUV420P10LE) {
-    copy_plane_10(frame->data[0], frame->linesize[0], frame->width, frame->height, &renderer->planes[0]);
-    copy_plane_10(frame->data[1], frame->linesize[1], chroma_width, chroma_height, &renderer->planes[1]);
-    copy_plane_10(frame->data[2], frame->linesize[2], chroma_width, chroma_height, &renderer->planes[2]);
   } else if (frame->format == AV_PIX_FMT_NV12 || frame->format == AV_PIX_FMT_NV21) {
     copy_plane_8(frame->data[0], frame->linesize[0], frame->width, frame->height, &renderer->planes[0]);
     renderer->planes[1].resize(static_cast<size_t>(chroma_width) * chroma_height);
@@ -356,8 +367,17 @@ jlongArray receive_video_frames(JNIEnv* env, Session* session) {
       if (result != AVERROR(EAGAIN) && result != AVERROR_EOF) return nullptr;
       break;
     }
+    auto account = session->software_allocator.account;
+    if (!account || session->decoded_video_frames.size() >= static_cast<size_t>(account->max_frames) ||
+        frame->width != account->width || frame->height != account->height || frame->format != AV_PIX_FMT_YUV420P ||
+        frame->color_range == AVCOL_RANGE_JPEG ||
+        (frame->color_trc != AVCOL_TRC_UNSPECIFIED && frame->color_trc != AVCOL_TRC_BT709 && frame->color_trc != AVCOL_TRC_SMPTE170M) ||
+        (frame->colorspace != AVCOL_SPC_UNSPECIFIED && frame->colorspace != AVCOL_SPC_BT470BG && frame->colorspace != AVCOL_SPC_SMPTE170M)) {
+      av_frame_free(&frame); return nullptr;
+    }
     AVStream* stream = session->format->streams[session->software_video_stream];
     int64_t presentation_time_us = timestamp_us(frame->best_effort_timestamp, stream->time_base);
+    if (presentation_time_us != INT64_MIN) presentation_time_us -= session->origin_us;
     session->decoded_video_frames.push_back({frame, presentation_time_us});
     presentation_times.push_back(presentation_time_us);
   }
@@ -402,10 +422,14 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeOpen(JNIEnv* env, job
   session->format->pb = session->io;
   session->format->flags |= AVFMT_FLAG_CUSTOM_IO;
   session->format->interrupt_callback = {interrupt, session};
+  // Metadata probing must never create unadmitted software video decoders.
+  av_opt_set(session->format, "codec_whitelist", "aac,mp3,ac3,eac3,dca,flac,opus,vorbis", 0);
   if (avformat_open_input(&session->format, nullptr, input, nullptr) < 0 ||
       avformat_find_stream_info(session->format, nullptr) < 0) {
     free_session(env, session); return 0;
   }
+  if (std::string(input->name) == "mpeg" && session->format->start_time != AV_NOPTS_VALUE)
+    session->origin_us = session->format->start_time;
   return reinterpret_cast<jlong>(session);
 }
 
@@ -433,14 +457,23 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeStreamInfo(JNIEnv* en
   if (!session || index < 0 || static_cast<unsigned>(index) >= session->format->nb_streams) return nullptr;
   AVStream* stream = session->format->streams[index];
   AVCodecParameters* parameters = stream->codecpar;
-  AVRational frame_rate = av_guess_frame_rate(session->format, stream, nullptr);
+  AVRational frame_rate = stream->avg_frame_rate.num > 0 && stream->avg_frame_rate.den > 0
+      ? stream->avg_frame_rate : stream->r_frame_rate;
+  const AVPixFmtDescriptor* pixel = av_pix_fmt_desc_get(software_pixel_format(parameters));
+  int depth = pixel ? pixel->comp[0].depth : 0;
+  int chroma = !pixel ? 0 : pixel->nb_components == 1 ? 400 :
+      pixel->log2_chroma_w == 1 && pixel->log2_chroma_h == 1 ? 420 :
+      pixel->log2_chroma_w == 1 && pixel->log2_chroma_h == 0 ? 422 :
+      pixel->log2_chroma_w == 0 && pixel->log2_chroma_h == 0 ? 444 : 0;
   jlong values[] = {
       kind_value(parameters->codec_type), codec_value(parameters->codec_id), parameters->width, parameters->height,
       frame_rate.den ? static_cast<jlong>(av_q2d(frame_rate) * 1000.0) : 0,
       parameters->profile, parameters->level, parameters->sample_rate, parameters->ch_layout.nb_channels,
-      parameters->bit_rate, timestamp_us(stream->duration, stream->time_base)};
-  jlongArray result = env->NewLongArray(11);
-  env->SetLongArrayRegion(result, 0, 11, values);
+      parameters->bit_rate, timestamp_us(stream->duration, stream->time_base),
+      2, 20, frame_rate.num, frame_rate.den, depth, chroma,
+      parameters->color_range, parameters->color_space, parameters->color_trc};
+  jlongArray result = env->NewLongArray(20);
+  env->SetLongArrayRegion(result, 0, 20, values);
   return result;
 }
 
@@ -491,18 +524,46 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeHardwareCodecConfig(
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareVideo(
-    JNIEnv* env, jobject, jlong handle, jint index, jobject surface) {
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareVideoV2(
+    JNIEnv* env, jobject, jlong handle, jint index, jobject surface, jlongArray wire, jobject budget) {
   auto* session = from(handle);
-  if (!session) return JNI_FALSE;
-  AVCodecContext* decoder = create_decoder(session, index);
-  if (!decoder || !create_renderer(env, surface, &session->renderer)) {
-    avcodec_free_context(&decoder); destroy_renderer(&session->renderer); return JNI_FALSE;
+  if (!session || !wire || !budget || env->GetArrayLength(wire) != 6 || index < 0 ||
+      static_cast<unsigned>(index) >= session->format->nb_streams) return JNI_FALSE;
+  jlong limits[6]; env->GetLongArrayRegion(wire, 0, 6, limits);
+  if (limits[0] != 1 || limits[1] <= 0 || limits[2] <= 0 || limits[2] > INT_MAX ||
+      limits[3] <= 0 || limits[3] > INT_MAX || limits[3] > limits[1] || limits[4] < 1 || limits[4] > 16 || limits[5] != 6)
+    return JNI_FALSE;
+  AVStream* stream = session->format->streams[index];
+  AVCodecParameters* p = stream->codecpar;
+  if ((p->codec_id != AV_CODEC_ID_H264 && p->codec_id != AV_CODEC_ID_HEVC) || software_pixel_format(p) != AV_PIX_FMT_YUV420P ||
+      p->width <= 0 || p->height <= 0 || p->width > 32768 || p->height > 32768 ||
+      p->color_range == AVCOL_RANGE_JPEG ||
+      (p->color_space == AVCOL_SPC_UNSPECIFIED && p->height > 576) ||
+      (p->color_space != AVCOL_SPC_UNSPECIFIED && p->color_space != AVCOL_SPC_BT470BG && p->color_space != AVCOL_SPC_SMPTE170M) ||
+      (p->color_trc != AVCOL_TRC_UNSPECIFIED && p->color_trc != AVCOL_TRC_BT709 && p->color_trc != AVCOL_TRC_SMPTE170M))
+    return JNI_FALSE;
+  const AVCodec* codec = avcodec_find_decoder(p->codec_id);
+  if (!codec) return JNI_FALSE;
+  // Stop old native owners before replacing the allocator; their AVBuffer
+  // receipts retain their original shared account independently.
+  avcodec_free_context(&session->video_decoder); clear_decoded_video_frames(session);
+  destroy_renderer(&session->renderer); session->renderer_receipt.reset(); session->packet_receipt.reset();
+  auto account = std::make_shared<SoftwareAccounting>(env, session->vm, budget, p->width, p->height, limits[3], limits[2]);
+  if (env->ExceptionCheck() || !account->reserve_method || !account->release_method) return JNI_FALSE;
+  session->software_allocator.account = account;
+  AVCodecContext* decoder = avcodec_alloc_context3(codec);
+  if (!decoder || avcodec_parameters_to_context(decoder, p) < 0) { avcodec_free_context(&decoder); return JNI_FALSE; }
+  decoder->opaque = &session->software_allocator; decoder->get_buffer2 = software_get_buffer;
+  decoder->thread_count = static_cast<int>(limits[4]); decoder->pkt_timebase = stream->time_base;
+  const int64_t image_bytes = static_cast<int64_t>(p->width) * p->height +
+      2LL * ((p->width + 1) / 2) * ((p->height + 1) / 2);
+  jlong rendering = account->reserve(image_bytes * 2, 1); // CPU staging plus owned GL textures.
+  if (!rendering) { avcodec_free_context(&decoder); return JNI_FALSE; }
+  session->renderer_receipt.reset(new SoftwareReceipt(account, rendering));
+  if (avcodec_open2(decoder, codec, nullptr) < 0 || !create_renderer(env, surface, &session->renderer)) {
+    avcodec_free_context(&decoder); destroy_renderer(&session->renderer); session->renderer_receipt.reset(); return JNI_FALSE;
   }
-  avcodec_free_context(&session->video_decoder);
-  clear_decoded_video_frames(session);
-  session->video_decoder = decoder;
-  session->software_video_stream = index;
+  session->video_decoder = decoder; session->software_video_stream = index;
   return JNI_TRUE;
 }
 
@@ -553,13 +614,23 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeReadPacket(JNIEnv* en
       if (result < 0) { av_packet_free(&packet); return nullptr; }
     }
     AVStream* stream = session->format->streams[packet->stream_index];
+    session->packet_receipt.reset();
+    if (auto account = session->software_allocator.account) {
+      jlong receipt = packet->size > 0 && packet->size <= account->max_packet ? account->reserve(packet->size, 0) : 0;
+      if (!receipt) {
+        account->exhausted.store(true); av_packet_free(&packet);
+        jlong status[] = {-2, 0, 0, 0, 0, 0}; jlongArray out = env->NewLongArray(6);
+        env->SetLongArrayRegion(out, 0, 6, status); return out;
+      }
+      session->packet_receipt.reset(new SoftwareReceipt(account, receipt));
+    }
     session->packet_data.assign(packet->data, packet->data + packet->size);
-    jlong values[] = {packet->stream_index, timestamp_us(packet->pts, stream->time_base),
-                      timestamp_us(packet->dts, stream->time_base), timestamp_us(packet->duration, stream->time_base),
-                      (packet->flags & AV_PKT_FLAG_KEY) ? 1 : 0};
+    jlong values[] = {packet->stream_index, (packet->pts == AV_NOPTS_VALUE ? INT64_MIN : timestamp_us(packet->pts, stream->time_base) - session->origin_us),
+                      (packet->dts == AV_NOPTS_VALUE ? INT64_MIN : timestamp_us(packet->dts, stream->time_base) - session->origin_us), timestamp_us(packet->duration, stream->time_base),
+                      (packet->flags & AV_PKT_FLAG_KEY) ? 1 : 0, packet->size};
     av_packet_free(&packet);
-    jlongArray metadata = env->NewLongArray(5);
-    env->SetLongArrayRegion(metadata, 0, 5, values);
+    jlongArray metadata = env->NewLongArray(6);
+    env->SetLongArrayRegion(metadata, 0, 6, values);
     return metadata;
   }
   av_packet_free(&packet);
@@ -571,7 +642,8 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeTakePacketData(JNIEnv
   auto* session = from(handle);
   if (!session) return env->NewByteArray(0);
   jbyteArray result = bytes(env, session->packet_data.data(), session->packet_data.size());
-  session->packet_data.clear();
+  std::vector<uint8_t>().swap(session->packet_data);
+  session->packet_receipt.reset();
   return result;
 }
 
@@ -581,12 +653,16 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareVideo(
   auto* session = from(handle);
   if (!session || !session->video_decoder || session->software_video_stream < 0) return nullptr;
   const jsize size = env->GetArrayLength(data);
+  auto account = session->software_allocator.account;
+  jlong receipt = account && size > 0 && size <= account->max_packet ? account->reserve(static_cast<int64_t>(size) + AV_INPUT_BUFFER_PADDING_SIZE, 0) : 0;
+  if (!receipt) { if (account) account->exhausted.store(true); return nullptr; }
+  SoftwareReceipt packet_receipt(account, receipt);
   AVPacket* packet = av_packet_alloc();
   if (!packet || av_new_packet(packet, size) < 0) { av_packet_free(&packet); return nullptr; }
   env->GetByteArrayRegion(data, 0, size, reinterpret_cast<jbyte*>(packet->data));
   AVStream* stream = session->format->streams[session->software_video_stream];
-  packet->pts = timestamp_from_us(pts_us, stream->time_base);
-  packet->dts = timestamp_from_us(dts_us, stream->time_base);
+  packet->pts = timestamp_from_us(pts_us == INT64_MIN ? pts_us : pts_us + session->origin_us, stream->time_base);
+  packet->dts = timestamp_from_us(dts_us == INT64_MIN ? dts_us : dts_us + session->origin_us, stream->time_base);
   int result = avcodec_send_packet(session->video_decoder, packet);
   av_packet_free(&packet);
   if (result < 0) return nullptr;
@@ -682,7 +758,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSeek(JNIEnv*, jobject
     if (session->audio_decoder) avcodec_flush_buffers(session->audio_decoder);
     return JNI_TRUE;
   }
-  int result = avformat_seek_file(session->format, -1, INT64_MIN, position_us, INT64_MAX, AVSEEK_FLAG_BACKWARD);
+  int result = avformat_seek_file(session->format, -1, INT64_MIN, position_us + session->origin_us, INT64_MAX, AVSEEK_FLAG_BACKWARD);
   if (result >= 0) {
     avformat_flush(session->format);
     if (session->video_bsf) av_bsf_flush(session->video_bsf);
@@ -706,4 +782,10 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeFlush(JNIEnv*, jobjec
 extern "C" JNIEXPORT void JNICALL
 Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose(JNIEnv* env, jobject, jlong handle) {
   free_session(env, from(handle));
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSoftwareBudgetExhausted(JNIEnv*, jobject, jlong handle) {
+  auto* session = from(handle);
+  return session && session->software_allocator.account && session->software_allocator.account->exhausted.load();
 }

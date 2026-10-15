@@ -6,6 +6,7 @@ internal class YlFfmpegSession private constructor(
     private var handle: Long,
     private val source: YlNativeByteSource,
 ) : AutoCloseable {
+    private var software: YlSoftwareDecodeLease? = null
     val mediaInfo: YlNativeMediaInfo
 
     init {
@@ -20,23 +21,9 @@ internal class YlFfmpegSession private constructor(
 
     private fun streamInfo(index: Int): YlNativeStreamInfo {
         val values = YlFfmpegBridge.nativeStreamInfo(handle, index)
-        check(values.size >= 11)
-        return YlNativeStreamInfo(
-            index,
-            YlNativeStreamKind.entries.getOrElse(values[0].toInt()) { YlNativeStreamKind.UNKNOWN },
-            YlNativeCodec.entries.getOrElse(values[1].toInt()) { YlNativeCodec.UNKNOWN },
-            width = values[2].toInt(),
-            height = values[3].toInt(),
-            frameRate = values[4] / 1000.0,
-            profile = values[5].toInt(),
-            level = values[6].toInt(),
-            sampleRate = values[7].toInt(),
-            channelCount = values[8].toInt(),
-            bitrate = values[9],
-            durationUs = values[10],
-            language = YlFfmpegBridge.nativeStreamLanguage(handle, index),
-            codecConfig = YlFfmpegBridge.nativeStreamCodecConfig(handle, index),
-        )
+        return decodeStreamMetadata(index, values,
+            YlFfmpegBridge.nativeStreamLanguage(handle, index),
+            YlFfmpegBridge.nativeStreamCodecConfig(handle, index))
     }
 
     fun configureHardwareVideo(streamIndex: Int): Boolean =
@@ -44,30 +31,45 @@ internal class YlFfmpegSession private constructor(
 
     fun hardwareCodecConfig(): ByteArray = YlFfmpegBridge.nativeHardwareCodecConfig(handle)
 
-    fun configureSoftwareVideo(streamIndex: Int, surface: Surface): Boolean =
-        YlFfmpegBridge.nativeConfigureSoftwareVideo(handle, streamIndex, surface)
+    fun configureSoftwareVideo(streamIndex: Int, surface: Surface, lease: YlSoftwareDecodeLease): Boolean {
+        software = lease
+        val result = lease.measured { YlFfmpegBridge.nativeConfigureSoftwareVideoV2(handle, streamIndex, surface,
+            longArrayOf(1, lease.limits.maxOwnedBytes, lease.limits.maxFrames.toLong(),
+                lease.limits.maxPacketBytes.toLong(), lease.key.threads.toLong(), 6), lease.budget) }
+        if (!result) checkSoftwareFailure()
+        return result
+    }
+
+    private fun checkSoftwareFailure() {
+        if (YlFfmpegBridge.nativeSoftwareBudgetExhausted(handle)) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+    }
 
     fun configureSoftwareAudio(streamIndex: Int): Boolean =
         YlFfmpegBridge.nativeConfigureSoftwareAudio(handle, streamIndex)
 
     fun readPacket(): YlNativePacket? {
         val metadata = YlFfmpegBridge.nativeReadPacket(handle) ?: return null
+        if (metadata[0] == -2L) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
         if (metadata[0] < 0) throw YlBoundaryException(YlFailureKind.NETWORK_FAILED)
-        val bytes = YlFfmpegBridge.nativeTakePacketData(handle)
-        return YlNativePacket(metadata[0].toInt(), bytes, metadata[1], metadata[2], metadata[3], metadata[4] != 0L)
+        if (metadata.size != 6 || metadata[5] !in 1..Int.MAX_VALUE.toLong()) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
+        val ownership = software?.budget?.reservePacket(metadata[5].toInt())
+        try {
+            val bytes = YlFfmpegBridge.nativeTakePacketData(handle)
+            return YlNativePacket(metadata[0].toInt(), bytes, metadata[1], metadata[2], metadata[3], metadata[4] != 0L, ownership)
+        } catch (failure: Throwable) { ownership?.close(); throw failure }
     }
 
-    fun decodeSoftwareVideo(packet: YlNativePacket): LongArray =
-        YlFfmpegBridge.nativeDecodeSoftwareVideo(
-            handle,
-            packet.data,
-            packet.presentationTimeUs,
-            packet.decodeTimeUs,
-        ) ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+    fun decodeSoftwareVideo(packet: YlNativePacket): LongArray {
+        val lease = checkNotNull(software)
+        return lease.measured { YlFfmpegBridge.nativeDecodeSoftwareVideo(handle, packet.data,
+            packet.presentationTimeUs, packet.decodeTimeUs) } ?: run {
+            checkSoftwareFailure(); throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+        }
+    }
 
     fun finishSoftwareVideo(): LongArray =
-        YlFfmpegBridge.nativeFinishSoftwareVideo(handle)
-            ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+        checkNotNull(software).measured { YlFfmpegBridge.nativeFinishSoftwareVideo(handle) }
+            ?: run { checkSoftwareFailure(); throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED) }
 
     fun renderSoftwareVideoFrame(): Boolean =
         YlFfmpegBridge.nativeRenderSoftwareVideoFrame(handle)
@@ -88,6 +90,7 @@ internal class YlFfmpegSession private constructor(
         source.cancel()
         YlFfmpegBridge.nativeClose(value)
         source.close()
+        software?.close(); software = null
     }
 
     companion object {
@@ -98,7 +101,8 @@ internal class YlFfmpegSession private constructor(
                 source.close()
                 throw YlBoundaryException(YlFailureKind.CONTAINER_UNSUPPORTED)
             }
-            return YlFfmpegSession(handle, source)
+            return try { YlFfmpegSession(handle, source) }
+            catch (failure: Throwable) { YlFfmpegBridge.nativeClose(handle); source.close(); throw failure }
         }
     }
 }
@@ -115,7 +119,8 @@ internal object YlFfmpegBridge {
     external fun nativeStreamCodecConfig(handle: Long, index: Int): ByteArray
     external fun nativeConfigureHardwareVideo(handle: Long, streamIndex: Int): Boolean
     external fun nativeHardwareCodecConfig(handle: Long): ByteArray
-    external fun nativeConfigureSoftwareVideo(handle: Long, streamIndex: Int, surface: Surface): Boolean
+    external fun nativeConfigureSoftwareVideoV2(handle: Long, streamIndex: Int, surface: Surface, limits: LongArray, budget: YlSoftwareDecodeBudget): Boolean
+    external fun nativeSoftwareBudgetExhausted(handle: Long): Boolean
     external fun nativeConfigureSoftwareAudio(handle: Long, streamIndex: Int): Boolean
     external fun nativeReadPacket(handle: Long): LongArray?
     external fun nativeTakePacketData(handle: Long): ByteArray
@@ -132,4 +137,27 @@ internal object YlFfmpegBridge {
     external fun nativeSeek(handle: Long, positionUs: Long): Boolean
     external fun nativeFlush(handle: Long)
     external fun nativeClose(handle: Long)
+}
+
+/** Copies JNI stream metadata; protocol validation is kept at the boundary. */
+internal fun decodeStreamMetadata(index: Int, values: LongArray, language: String? = null,
+    codecConfig: ByteArray = byteArrayOf()): YlNativeStreamInfo {
+    // Exact length and version prevent an older/replaced JNI library from
+    // treating arbitrary appended fields as an admission descriptor.
+    if (values.size != 20 || values[11] != 2L || values[12] != 20L || index < 0 ||
+        values[0] !in 0L until YlNativeStreamKind.entries.size.toLong() ||
+        values[1] !in 0L until YlNativeCodec.entries.size.toLong() ||
+        listOf(2, 3, 5, 6, 7, 8, 13, 14, 15, 16, 17, 18, 19).any { values[it] !in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong() }) {
+        throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
+    }
+    return YlNativeStreamInfo(index,
+        YlNativeStreamKind.entries.getOrElse(values[0].toInt()) { YlNativeStreamKind.UNKNOWN },
+        YlNativeCodec.entries.getOrElse(values[1].toInt()) { YlNativeCodec.UNKNOWN },
+        width = values[2].toInt(), height = values[3].toInt(), frameRate = if (values[13] > 0 && values[14] > 0) values[13].toDouble() / values[14] else 0.0,
+        profile = values[5].toInt(), level = values[6].toInt(), sampleRate = values[7].toInt(),
+        channelCount = values[8].toInt(), bitrate = values[9], durationUs = values[10],
+        language = language, codecConfig = codecConfig,
+        fpsNumerator = values[13].toInt(), fpsDenominator = values[14].toInt(),
+        bitDepth = values[15].toInt(), chroma = values[16].toInt(), colorRange = values[17].toInt(),
+        colorSpace = values[18].toInt(), colorTransfer = values[19].toInt())
 }

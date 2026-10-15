@@ -501,3 +501,13 @@ FFmpeg libdav1d 的独立图片池改为受控 `get_buffer2` 分配，补丁和 
 描述符 API 更新随五架构制品再次独立干净复建，18项规范文件/链接完全一致；九类篡改负例、16项 probe Python 和11项 media matrix Python 通过。macOS DASH/跨Period 40项通过，预算/音频/FEL/生命周期回归及新增关键帧回归通过。iOS 首轮85通过、1失败、1跳过；失败为旧 bounded FLV 在当前模拟器无法取得实际硬解，保留失败，不转换成预期拒绝。首轮只发现两项新生命周期测试，显式类重跑后全部13项通过，记录各次独立 run。详见 `tool/decoder_probe/p03-apple-integration-observations.json`。
 
 生产软件表仍为空；受控准入只验证工程行为，未提供持续热、真机或最低系统资格。Android、三端公开完整输出与独立测量仍是下一阶段，P03整体未完成。
+
+### 2026-10-15 Android P03 工程接入
+
+完整 MPEG-1/2 pack 探测将 PS 的 Media3 音频误识别转入 owned demux；PS/AVC/MP3 的本地、HTTP、改名及错误已知扩展名四条公开路径通过。AVI 保留 Media3，AV1 的原始 Media3 软件输出基线单独保留，不能生成产品软件准入。生产软件表仍为空；JNI H.264/HEVC 候选必须按设备、OS、安装代码、profile、位深、尺寸、分数帧率、线程和输出格式精确准入，资源池包含原生参考帧、待输出帧与压缩包，旧帧存续不能清零预算。
+
+JNI 元数据协议 2、软件配置版本化入口与三个 ABI 的 API24、精确导出和源码哈希验证通过；artifact verifier 只读，三个破坏性负例均拒绝。准备阶段不再把计划硬解当实际身份，创建成功后报告实际 MediaCodec 名称。未知及不受控 MediaCodec 软件候选不冒充硬件，也不能绕过 owned 软件预算。
+
+验证：JVM 525 项，522 通过、3 既有跳过、0 失败；定向原生 7 项全通过，包含 96 帧实际软件像素、原生帧预算耗尽及释放归零、PS 实际硬件输出/重建与身份。公开 progressive 2、HLS 3、session replacement 3、multi-player rollback 1、cadence 1 均通过。初次回归发现旧测试的 source.missing 与固定 schema3 已落后于现有 track.not_found/schema5 契约，保留失败日志后校正测试并仅重跑受影响用例。具体身份、日志哈希及原始失败见 `tool/decoder_probe/p03-android-integration-observations.json`。
+
+以上不代表三端完整格式/PCM/物理输出或持续热状态准入；Task7/8 继续验收，未测生产软件档位保持关闭。

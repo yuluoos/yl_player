@@ -53,7 +53,8 @@ void main() {
       );
       await expectLater(
         session.selectAudioTrack('missing-but-nonempty'),
-        throwsA(failureCode(YlFailureCodes.sourceMissing)),
+        // Audio identity lookup uses the dedicated P01 missing-track contract.
+        throwsA(failureCode('track.not_found')),
       );
       expect(player.state.failure, isNull);
       expect(player.state.sessionId, session.id);

@@ -28,12 +28,9 @@ internal object YlHardwareCodecProbe {
         }?.name
     }
 
-    private fun isHardware(info: MediaCodecInfo): Boolean = if (Build.VERSION.SDK_INT >= 29) {
-        info.isHardwareAccelerated
-    } else {
-        val name = info.name.lowercase()
-        !name.startsWith("omx.google.") && !name.startsWith("c2.android.") && !name.contains("sw")
-    }
+    // A vendor-looking name is not proof on older Android releases.
+    private fun isHardware(info: MediaCodecInfo): Boolean = Build.VERSION.SDK_INT >= 29 &&
+        info.isHardwareAccelerated && !info.isSoftwareOnly
 
     private fun supportsProfile(capabilities: MediaCodecInfo.CodecCapabilities, stream: YlNativeStreamInfo): Boolean {
         val profile = when (stream.codec) {
@@ -104,12 +101,23 @@ internal class YlHardwareVideoDecoder(
 ) : AutoCloseable {
     private val codec = MediaCodec.createByCodecName(codecName)
     private val info = MediaCodec.BufferInfo()
+    /** Identity of the initialized codec, rather than its discovery candidate. */
+    val decoderIdentity: String get() = codec.name
     init {
+      try {
+        val actual = codec.codecInfo
+        if (Build.VERSION.SDK_INT < 29 || !actual.isHardwareAccelerated || actual.isSoftwareOnly) {
+            throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
+        }
         val format = MediaFormat.createVideoFormat(checkNotNull(stream.codec.mimeType), stream.width, stream.height)
         if (stream.frameRate > 0) format.setFloat(MediaFormat.KEY_FRAME_RATE, stream.frameRate.toFloat())
         if (codecConfig.isNotEmpty()) format.setByteBuffer("csd-0", ByteBuffer.wrap(codecConfig))
         codec.configure(format, surface, null, 0)
         codec.start()
+      } catch (error: Throwable) {
+        codec.release()
+        throw error
+      }
     }
 
     fun consume(packet: YlNativePacket): Boolean {

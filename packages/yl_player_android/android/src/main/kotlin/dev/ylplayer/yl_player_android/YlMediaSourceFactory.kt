@@ -76,7 +76,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
                 }
             }
             .createMediaSource(item)
-        else DefaultMediaSourceFactory(dataSources).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
+        else DefaultMediaSourceFactory(dataSources, YlProgressiveExtractors()).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
     }
     fun setPlaybackPaused(paused: Boolean) { rtmp?.setPlaybackPaused(paused) }
     fun cancelAll() { rtmp?.cancelAll(); http?.cancelAll() }

@@ -9,6 +9,17 @@ class YlNativePlaybackPlannerTest {
     private val hevcMain10 = YlNativeStreamInfo(0, YlNativeStreamKind.VIDEO, YlNativeCodec.HEVC, 1280, 720, 30.0, profile = 2)
 
     @Test
+    fun `unmeasured software is not admitted by the historical resolution envelope`() {
+        assertEquals(YlNativeVideoPath.UNSUPPORTED, YlNativePlaybackPlanner { false }.chooseVideoPath(h264))
+    }
+
+    @Test
+    fun `unknown fps never enters software decoding`() {
+        assertEquals(YlNativeVideoPath.UNSUPPORTED,
+            YlNativePlaybackPlanner { false }.chooseVideoPath(h264.copy(frameRate = 0.0)))
+    }
+
+    @Test
     fun `uses hardware after FFmpeg demux when codec configuration is supported`() {
         val planner = YlNativePlaybackPlanner { true }
 
@@ -17,14 +28,14 @@ class YlNativePlaybackPlannerTest {
 
     @Test
     fun `uses software for unsupported h264 or hevc configuration within bounded envelope`() {
-        val planner = YlNativePlaybackPlanner { false }
+        val planner = YlNativePlaybackPlanner(admittedSoftware = { true }) { false }
 
         assertEquals(YlNativeVideoPath.SOFTWARE, planner.chooseVideoPath(hevcMain10))
     }
 
     @Test
     fun `uses software for 1080p HEVC when device decoders reject its profile level`() {
-        val planner = YlNativePlaybackPlanner { false }
+        val planner = YlNativePlaybackPlanner(admittedSoftware = { true }) { false }
 
         assertEquals(
             YlNativeVideoPath.SOFTWARE,
@@ -36,7 +47,7 @@ class YlNativePlaybackPlannerTest {
 
     @Test
     fun `rejects software video above 1080p or 30fps`() {
-        val planner = YlNativePlaybackPlanner { false }
+        val planner = YlNativePlaybackPlanner(admittedSoftware = { true }) { false }
 
         assertEquals(
             YlNativeVideoPath.UNSUPPORTED,
@@ -50,7 +61,7 @@ class YlNativePlaybackPlannerTest {
 
     @Test
     fun `rejects software codecs outside approved h264 and hevc scope`() {
-        val planner = YlNativePlaybackPlanner { false }
+        val planner = YlNativePlaybackPlanner(admittedSoftware = { true }) { false }
 
         assertEquals(
             YlNativeVideoPath.UNSUPPORTED,
@@ -60,7 +71,7 @@ class YlNativePlaybackPlannerTest {
 
     @Test
     fun `main10 level 62 remains software when hardware configuration probe rejects its level`() {
-        val planner = YlNativePlaybackPlanner { stream -> stream.level < 186 }
+        val planner = YlNativePlaybackPlanner(admittedSoftware = { true }) { stream -> stream.level < 186 }
 
         assertEquals(
             YlNativeVideoPath.SOFTWARE,

@@ -16,7 +16,9 @@ internal class YlNativeFallbackEngine(
     private val options: AndroidLoadOptionsMessage,
     private val playerOptions: AndroidPlayerOptionsMessage,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
+    softwareServicesOverride: YlSoftwareDecodeServices? = null,
 ) : YlPlaybackEngineAdapter {
+    private val softwareServices by lazy { softwareServicesOverride ?: YlSoftwareDecodeServices.production(context) }
     private val events = CoroutineScope(SupervisorJob() + dispatcher)
     private val worker = Executors.newSingleThreadExecutor { task ->
         Thread(task, "yl-ffmpeg-${identity.sessionId}").apply { isDaemon = true }
@@ -28,11 +30,18 @@ internal class YlNativeFallbackEngine(
     private var audio: YlNativeStreamInfo? = null
     private var videoPath = YlNativeVideoPath.UNSUPPORTED
     private var hardwareName: String? = null
+    // Planned candidates are not evidence: publish only after successful initialization.
+    private var observedDecoderMode = AndroidDecoderMode.UNKNOWN
+    private var observedDecoderIdentity: String? = null
     private var hardwareVideo: YlHardwareVideoDecoder? = null
     private var audioOutput: YlPcmAudioOutput? = null
     private var output: YlVideoOutput? = null
     private var outputIdentity: YlOutputIdentity? = null
     private var playbackJob: Job? = null
+    private var budgetJob: Job? = null
+    private var softwareLease: YlSoftwareDecodeLease? = null
+    private var terminalFailure = false
+    private val decoderPolicy = options.decoderPolicyOverride ?: playerOptions.decoderPolicy
     @Volatile private var playing = false
     @Volatile private var closed = false
     private var positionUs = options.startPositionMs?.times(1000) ?: 0
@@ -63,12 +72,11 @@ internal class YlNativeFallbackEngine(
         selectedAudioIndex = audio?.index ?: -1
         video?.let { stream ->
             hardwareName = YlHardwareCodecProbe.findVideoDecoder(stream)
-            videoPath = YlNativePlaybackPlanner { hardwareName != null }.chooseVideoPath(stream)
-            if (options.decoderPolicyOverride == AndroidDecoderPolicy.HARDWARE_REQUIRED ||
-                playerOptions.decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) {
+            videoPath = YlNativePlaybackPlanner(admittedSoftware = softwareServices::isAdmitted) { hardwareName != null }.chooseVideoPath(stream)
+            if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) {
                 if (videoPath != YlNativeVideoPath.HARDWARE) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
             }
-            if (videoPath == YlNativeVideoPath.UNSUPPORTED) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+            if (videoPath == YlNativeVideoPath.UNSUPPORTED) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         }
         if (video == null && audio == null) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
         audio?.let { audioOutput = YlPcmAudioOutput(opened, it) }
@@ -98,6 +106,8 @@ internal class YlNativeFallbackEngine(
     }
 
     private fun configureVideo(surface: Surface) {
+        observedDecoderMode = AndroidDecoderMode.UNKNOWN
+        observedDecoderIdentity = null
         val stream = video ?: return
         val native = requireSession()
         if (videoPath == YlNativeVideoPath.HARDWARE) {
@@ -108,15 +118,26 @@ internal class YlNativeFallbackEngine(
                 }.getOrNull()
             }
             if (hardwareVideo == null) {
-                val allowSoftware = options.decoderPolicyOverride != AndroidDecoderPolicy.HARDWARE_REQUIRED &&
-                    playerOptions.decoderPolicy != AndroidDecoderPolicy.HARDWARE_REQUIRED &&
-                    YlNativePlaybackPlanner { false }.chooseVideoPath(stream) == YlNativeVideoPath.SOFTWARE
+                val allowSoftware = decoderPolicy != AndroidDecoderPolicy.HARDWARE_REQUIRED &&
+                    YlNativePlaybackPlanner(admittedSoftware = softwareServices::isAdmitted) { false }.chooseVideoPath(stream) == YlNativeVideoPath.SOFTWARE
                 if (!allowSoftware) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
                 videoPath = YlNativeVideoPath.SOFTWARE
+                hardwareName = null
+            } else {
+                observedDecoderMode = AndroidDecoderMode.HARDWARE
+                observedDecoderIdentity = hardwareVideo?.decoderIdentity
             }
         }
-        if (videoPath == YlNativeVideoPath.SOFTWARE && !native.configureSoftwareVideo(stream.index, surface)) {
-            throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+        if (videoPath == YlNativeVideoPath.SOFTWARE) {
+            val lease = softwareLease ?: softwareServices.acquire(stream).also { softwareLease = it }
+            if (!native.configureSoftwareVideo(stream.index, surface, lease)) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
+            observedDecoderMode = AndroidDecoderMode.SOFTWARE
+            observedDecoderIdentity = "ffmpeg-${stream.codec.name.lowercase()}"
+            if (budgetJob == null) budgetJob = scope.launch {
+                try { while (isActive && !closed) { delay(lease.observationIntervalMs); lease.observe() } }
+                catch (_: CancellationException) { }
+                catch (error: Throwable) { failOnce(error) }
+            }
         }
     }
 
@@ -161,7 +182,7 @@ internal class YlNativeFallbackEngine(
                         }
                         playing = false; audioOutput?.pause(); emitSnapshot(AndroidPlaybackStatus.COMPLETED, true); break
                     }
-                    when (packet.streamIndex) {
+                    try { when (packet.streamIndex) {
                         selectedAudioIndex -> {
                             audioOutput?.consume(packet)
                             drainDueVideo(pendingHardwareVideo)
@@ -183,6 +204,7 @@ internal class YlNativeFallbackEngine(
                             }
                         }
                     }
+                    } finally { packet.close() }
                     positionUs = currentPositionUs()
                     emit(YlEngineEvent.Tick(timeline(), metrics()))
                     yield()
@@ -190,7 +212,7 @@ internal class YlNativeFallbackEngine(
             } catch (_: CancellationException) {
                 Unit
             } catch (error: Throwable) {
-                if (!closed) emit(YlEngineEvent.Failed((error as? YlBoundaryException)?.kind ?: YlFailureKind.PLATFORM_FAILURE))
+                failOnce(error)
             }
         }
     }
@@ -321,7 +343,7 @@ internal class YlNativeFallbackEngine(
         val public = output ?: return@withContext
         val surface = public.recreateBorrowedSurface()
         hardwareVideo?.replaceSurface(surface) ?: video?.let { stream ->
-            if (!requireSession().configureSoftwareVideo(stream.index, surface)) {
+            if (!requireSession().configureSoftwareVideo(stream.index, surface, checkNotNull(softwareLease))) {
                 throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
             }
             playbackGeneration++
@@ -331,10 +353,12 @@ internal class YlNativeFallbackEngine(
     }
 
     private suspend fun closePlayback() = withContext(worker) {
-        playing = false; playbackJob?.cancel(); playbackJob = null
+        playing = false; budgetJob?.cancel(); budgetJob = null
+        playbackJob?.cancel(); playbackJob = null
         hardwareVideo?.close(); hardwareVideo = null
         audioOutput?.close(); audioOutput = null
         session?.close(); session = null
+        softwareLease?.close(); softwareLease = null
     }
     override fun dispose(): Deferred<Unit> {
         closed = true
@@ -363,8 +387,7 @@ internal class YlNativeFallbackEngine(
         AndroidSizeMessage(stream.width.toDouble(), stream.height.toDouble()), 1.0, 0)
     private fun emitSnapshot(status: AndroidPlaybackStatus, reachedReady: Boolean) = emit(YlEngineEvent.Snapshot(YlEngineSnapshot(
         status, timeline(), video?.let(::geometry), audioTracks(), videoTracks(),
-        if (videoPath == YlNativeVideoPath.HARDWARE) AndroidDecoderMode.HARDWARE else AndroidDecoderMode.SOFTWARE,
-        hardwareName ?: video?.let { "ffmpeg-${it.codec.name.lowercase()}" }, metrics(), reachedReady)))
+        observedDecoderMode, observedDecoderIdentity, metrics(), reachedReady)))
     private fun audioTracks() = requireSession().mediaInfo.streams.filter { it.kind == YlNativeStreamKind.AUDIO }.map {
         AndroidTrackMessage("ffmpeg-audio-${it.index}", AndroidTrackKind.AUDIO, language = it.language,
             codec = it.codec.name.lowercase(), bitrate = it.bitrate.takeIf { value -> value > 0 }, isSelected = it.index == selectedAudioIndex)
@@ -373,6 +396,12 @@ internal class YlNativeFallbackEngine(
         listOf(AndroidTrackMessage("ffmpeg-video-${it.index}", AndroidTrackKind.VIDEO, codec = it.codec.name.lowercase(),
             bitrate = it.bitrate.takeIf { value -> value > 0 }, width = it.width.toLong(), height = it.height.toLong(), isSelected = true))
     }.orEmpty()
+    private fun failOnce(error: Throwable) {
+        if (closed || terminalFailure) return
+        terminalFailure = true; playing = false; budgetJob?.cancel(); playbackJob?.cancel()
+        session?.cancel(); softwareLease?.close()
+        emit(YlEngineEvent.Failed((error as? YlBoundaryException)?.kind ?: YlFailureKind.PLATFORM_FAILURE))
+    }
     private fun emit(event: YlEngineEvent) { events.launch { if (!closed) callback?.invoke(identity, event) } }
     private fun requireSession() = checkNotNull(session)
 

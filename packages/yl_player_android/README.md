@@ -6,9 +6,18 @@ on `yl_player`; Flutter registers this package automatically. It targets Android
 
 Media3 remains the primary route. When its extractor cannot expose video or its
 decoder cannot initialize, the package makes one managed fallback attempt:
-FFmpeg demuxes MP4/MOV, Matroska/WebM, FLV, and MPEG-TS into H.264/H.265 packets
-for MediaCodec when hardware supports the stream; otherwise FFmpeg software
-decodes H.264 or H.265 video up to 720p30 into the existing Flutter texture.
+FFmpeg demuxes MP4/MOV, Matroska/WebM, FLV, MPEG-TS and MPEG-PS into
+H.264/H.265 packets for proven hardware MediaCodec. PS uses owned demux because
+Media3's PS extractor can silently expose only its audio. AVI and AV1 remain on
+Media3. Decoder metadata uses a versioned JNI contract; mismatched libraries
+fail explicitly.
+
+Owned H.264/H.265 software decoding requires an exact measured device, OS,
+APK/native-build and stream admission record. The production table is empty.
+Controlled tests exercise 8-bit 4:2:0 limited-range BT.601 output, actual frames,
+shared reference/packet/renderer accounting and resource exhaustion. Other
+bit depths/color paths are rejected instead of silently converted. Geometry
+limits alone never authorize software decoding.
 AAC, MP3, AC-3, E-AC-3, DTS, FLAC, Opus, and Vorbis audio can be decoded to PCM.
 
 The fallback accepts local files, Android content URIs, progressive HTTP, and
@@ -27,9 +36,11 @@ bounded-buffer requests are rejected; built-in buffer strategies remain tuning
 goals.
 
 Decoder policies are honored per Player with an optional per-Load override.
-System-default retains the Media3 order, hardware-preferred ranks hardware but
-retains fallbacks, and hardware-required filters candidates and verifies the
-initialized MediaCodec for video. A capability snapshot is conservative and
+All policies try positively identified hardware first. Hardware-required never
+uses software. Default/preferred can use the separately admitted owned fallback;
+opaque MediaCodec software and unknown hardware evidence are not admitted.
+Positive platform hardware metadata requires API29+; API24 remains the binary
+minimum, not a promise of verified video decoding on every older device. A capability snapshot is conservative and
 does not prove that a codec will initialize for arbitrary media.
 
 Plugin-managed audio uses one focus owner and preserves current playback intent
@@ -40,9 +51,9 @@ events can quiesce and reconstruct the active session.
 
 The implementation exposes Media3 state, tracks, geometry, decoder mode,
 metrics, correlated events, and safe `YlFailure` values through the v0.2 SPI.
-VP9/AV1 software decoding, subtitles, downloads, persistent media cache, and
-background audio are outside
-the package. See the [support matrix](../../docs/platform-support.md) for route
+Production VP9/AV1 software admission, downloads, persistent media cache and
+background audio remain unavailable. Subtitle routes have their own documented
+format and protection constraints. See the [support matrix](../../docs/platform-support.md) for route
 limits and the outstanding physical Android endurance evidence.
 
 The schema5 Widevine DASH route consumes `YlWidevineDrm` explicitly. Protected

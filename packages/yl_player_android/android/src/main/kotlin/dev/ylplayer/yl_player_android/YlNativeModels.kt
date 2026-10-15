@@ -15,6 +15,7 @@ internal enum class YlNativeCodec(val mimeType: String?) {
     OPUS("audio/opus"),
     VORBIS("audio/vorbis"),
     VP9("video/x-vnd.on2.vp9"),
+    AV1("video/av01"), // Append only: native codec ordinals are an ABI.
 }
 
 internal data class YlNativeStreamInfo(
@@ -32,6 +33,13 @@ internal data class YlNativeStreamInfo(
     val language: String? = null,
     val durationUs: Long = -1,
     val codecConfig: ByteArray = byteArrayOf(),
+    val fpsNumerator: Int = 0,
+    val fpsDenominator: Int = 0,
+    val bitDepth: Int = 0,
+    val chroma: Int = 0,
+    val colorRange: Int = 0,
+    val colorSpace: Int = 2,
+    val colorTransfer: Int = 2,
 )
 
 internal data class YlNativeMediaInfo(
@@ -47,7 +55,8 @@ internal data class YlNativePacket(
     val decodeTimeUs: Long,
     val durationUs: Long,
     val keyFrame: Boolean,
-)
+    val ownership: AutoCloseable? = null,
+) : AutoCloseable { override fun close() { ownership?.close() } }
 
 internal data class YlNativePcmChunk(
     val data: ByteArray,
@@ -162,8 +171,9 @@ internal object YlAudioPlaybackRatePolicy {
         parametersWereApplied || speed != 1f
 }
 
-/** Keeps software decoding deliberately bounded; higher HLS variants are selected down first. */
+/** Hardware first; the historical geometry envelope is only an extra bound, never admission. */
 internal class YlNativePlaybackPlanner(
+    private val admittedSoftware: (YlNativeStreamInfo) -> Boolean = { false },
     private val supportsHardwareConfiguration: (YlNativeStreamInfo) -> Boolean,
 ) {
     fun chooseVideoPath(stream: YlNativeStreamInfo): YlNativeVideoPath {
@@ -172,7 +182,7 @@ internal class YlNativePlaybackPlanner(
         }
         if (supportsHardwareConfiguration(stream)) return YlNativeVideoPath.HARDWARE
         val inEnvelope = stream.width in 1..1920 && stream.height in 1..1080 &&
-            (stream.frameRate <= 0.0 || stream.frameRate <= 30.0)
-        return if (inEnvelope) YlNativeVideoPath.SOFTWARE else YlNativeVideoPath.UNSUPPORTED
+            (stream.frameRate.isFinite() && stream.frameRate > 0.0 && stream.frameRate <= 30.0)
+        return if (inEnvelope && admittedSoftware(stream)) YlNativeVideoPath.SOFTWARE else YlNativeVideoPath.UNSUPPORTED
     }
 }
