@@ -34,6 +34,9 @@ private final class ContainerDisplay: YlDisplayDriving {
 private final class ContainerPCM: YlAudioPacketConverting {
   struct Block { let pts: Int64; let rate: Double; let samples: [[Float]] }
   let converter = YlAppleCompressedAudioConverter()
+  // Preserve the real converter format, including explicit surround labels.
+  var pcmFormat: AVAudioFormat? { converter.pcmFormat }
+  var reservesOutputBuffers: Bool { converter.reservesOutputBuffers }
   private let lock = NSLock()
   private var blocks = [Block]()
   func configure(stream: YlAudioStreamConfiguration) throws { try converter.configure(stream: stream) }
@@ -51,10 +54,11 @@ private final class ContainerPCM: YlAudioPacketConverting {
   }
   func reset() { converter.reset() }
   func clearEvidence() { lock.withLock { blocks.removeAll() } }
-  func verifyTone(start: Int64, end: Int64, expected: Double, file: StaticString = #filePath, line: UInt = #line) {
+  func verifyTone(start: Int64, end: Int64, expected: Double, channels: Int = 2, file: StaticString = #filePath, line: UInt = #line) {
     let rows = lock.withLock { blocks }
     XCTAssertFalse(rows.isEmpty, file: file, line: line)
-    for channel in 0..<2 {
+    XCTAssertTrue(rows.allSatisfy { $0.samples.count == channels }, "Decoded channel count changed", file: file, line: line)
+    for channel in 0..<channels {
       var samples = [Float](); var rate = 0.0
       for row in rows where row.samples.count > channel {
         rate = row.rate
@@ -67,7 +71,8 @@ private final class ContainerPCM: YlAudioPacketConverting {
       guard samples.count > 4000 else { continue }
       let crossings = zip(samples, samples.dropFirst()).filter { $0 <= 0 && $1 > 0 }.count
       let frequency = Double(crossings) * rate / Double(samples.count)
-      XCTAssertEqual(frequency, expected + Double(channel * 55), accuracy: 9, file: file, line: line)
+      let target = channels == 6 && channel == 3 ? 60 + (expected - 440) / 22 : expected + Double(channel * 55)
+      XCTAssertEqual(frequency, target, accuracy: 9, file: file, line: line)
       XCTAssertGreaterThan(samples.map { abs($0) }.max() ?? 0, 0.01, file: file, line: line)
     }
   }
@@ -82,9 +87,14 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
 }
 
 @MainActor final class YlContainerOutputTests: XCTestCase {
-  private func checkOutput(name: String, ext: String, format: YlSourceFormat) async throws {
+  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false) async throws {
     let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
     let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: format), requireHardwareProbe: false)
+    if channels == 6 {
+      let stream = try XCTUnwrap(prepared.audioStreams.first)
+      XCTAssertEqual(stream.channel_count, 6)
+      XCTAssertEqual(stream.channel_layout_mask, 0x60f, "AC3 encoded speaker layout must survive discovery")
+    }
     let texture = ContainerTexture(), audio = ContainerAudioFactory()
     var display: ContainerDisplay?, state: YlNativeState?, errors = [NativePlayerError]()
     var initial: YlFallbackBackend?
@@ -100,7 +110,7 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
     } catch {
       initial?.dispose()
       #if targetEnvironment(simulator)
-      if (error as? NativePlayerError)?.code == "decoder.video_hardware_unavailable" {
+      if allowSimulatorHardwareSkip && (error as? NativePlayerError)?.code == "decoder.video_hardware_unavailable" {
         throw XCTSkip("iOS Simulator has no hardware decoder for this fixture; no output acceptance.")
       }
       #endif
@@ -123,7 +133,7 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
     }
     for second in 0..<4 {
       audio.pcm.verifyTone(start: Int64(second) * 1_000_000 + 250_000,
-        end: Int64(second) * 1_000_000 + 750_000, expected: Double(440 + second * 220))
+        end: Int64(second) * 1_000_000 + 750_000, expected: Double(440 + second * 220), channels: channels)
     }
     for (target, rgb, tone): (Int64, [Int], Double) in [(1250,[0,255,0],660), (2250,[0,0,255],880), (0,[255,0,0],440)] {
       try backend.pause(); audio.pcm.clearEvidence(); texture.history.removeAll()
@@ -131,16 +141,30 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
       try backend.play()
       try await advance(until: { (state?.positionMs ?? 0) >= target + 450 && !texture.history.isEmpty })
       XCTAssertTrue(texture.history.contains { value in zip(value,rgb).allSatisfy { abs($0 - $1) < 24 } }, "seek=\(target), observed=\(Set(texture.history))")
-      audio.pcm.verifyTone(start: target * 1000 + 100_000, end: target * 1000 + 400_000, expected: tone)
+      audio.pcm.verifyTone(start: target * 1000 + 100_000, end: target * 1000 + 400_000, expected: tone, channels: channels)
     }
     backend.stop(); backend.dispose(); backend.dispose()
   }
   func testProgramStreamActualPixelsPCMAndBidirectionalSeek() async throws {
-    do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs) }
+    do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs, allowSimulatorHardwareSkip: true) }
     catch let error as NativePlayerError { XCTFail("PS: \(error.code): \(error.message)") }
   }
   func testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek() async throws {
-    do { try await checkOutput(name: "p03-webm-vp9-vorbis", ext: "webm", format: .webm) }
+    do { try await checkOutput(name: "p03-webm-vp9-vorbis", ext: "webm", format: .webm, allowSimulatorHardwareSkip: true) }
     catch let error as NativePlayerError { XCTFail("Vorbis: \(error.code): \(error.message)") }
   }
+  func testAC3SurroundActualPixelsSixChannelPCMAndSeek() async throws {
+    do { try await checkOutput(name: "p03-mkv-avc-ac3-51", ext: "mkv", format: .matroska, channels: 6) }
+    catch let error as NativePlayerError { XCTFail("AC3: \(error.code): \(error.message)") }
+  }
+  func testEAC3ActualPixelsPCMAndSeek() async throws {
+    try await checkOutput(name: "p03-mkv-avc-eac3", ext: "mkv", format: .matroska)
+  }
+  func testDTSActualPixelsPCMAndSeek() async throws {
+    try await checkOutput(name: "p03-mkv-avc-dts", ext: "mkv", format: .matroska)
+  }
+  func testFLACActualPixelsPCMAndSeek() async throws {
+    try await checkOutput(name: "p03-mkv-avc-flac", ext: "mkv", format: .matroska)
+  }
+
 }

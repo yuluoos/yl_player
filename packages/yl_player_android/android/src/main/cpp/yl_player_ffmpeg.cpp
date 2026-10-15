@@ -79,6 +79,9 @@ struct Session {
   std::unique_ptr<SoftwareReceipt> renderer_receipt;
   std::unique_ptr<SoftwareReceipt> packet_receipt;
   int64_t origin_us = 0;
+  int64_t video_present_from_us = 0;
+  int seek_video_stream = -1;
+  bool waiting_seek_keyframe = false;
   AVCodecContext* audio_decoder = nullptr;
   SwrContext* resampler = nullptr;
   int software_audio_stream = -1;
@@ -132,7 +135,7 @@ bool supported_input(const AVInputFormat* input) {
   const std::string name(input->name);
   return name.find("mov") != std::string::npos || name.find("matroska") != std::string::npos ||
          name.find("flv") != std::string::npos || name.find("mpegts") != std::string::npos ||
-         name == "mpeg" || name == "aac" || name == "mp3" || name.find("ogg") != std::string::npos;
+         name == "mpeg" || name == "avi" || name == "aac" || name == "mp3" || name.find("ogg") != std::string::npos;
 }
 
 int codec_value(AVCodecID codec) {
@@ -378,6 +381,9 @@ jlongArray receive_video_frames(JNIEnv* env, Session* session) {
     AVStream* stream = session->format->streams[session->software_video_stream];
     int64_t presentation_time_us = timestamp_us(frame->best_effort_timestamp, stream->time_base);
     if (presentation_time_us != INT64_MIN) presentation_time_us -= session->origin_us;
+    if (presentation_time_us != INT64_MIN && presentation_time_us < session->video_present_from_us) {
+      av_frame_free(&frame); continue;
+    }
     session->decoded_video_frames.push_back({frame, presentation_time_us});
     presentation_times.push_back(presentation_time_us);
   }
@@ -428,7 +434,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeOpen(JNIEnv* env, job
       avformat_find_stream_info(session->format, nullptr) < 0) {
     free_session(env, session); return 0;
   }
-  if (std::string(input->name) == "mpeg" && session->format->start_time != AV_NOPTS_VALUE)
+  if ((std::string(input->name) == "mpeg" || std::string(input->name).find("mpegts") != std::string::npos) && session->format->start_time != AV_NOPTS_VALUE)
     session->origin_us = session->format->start_time;
   return reinterpret_cast<jlong>(session);
 }
@@ -465,10 +471,34 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeStreamInfo(JNIEnv* en
       pixel->log2_chroma_w == 1 && pixel->log2_chroma_h == 1 ? 420 :
       pixel->log2_chroma_w == 1 && pixel->log2_chroma_h == 0 ? 422 :
       pixel->log2_chroma_w == 0 && pixel->log2_chroma_h == 0 ? 444 : 0;
+  int profile = parameters->profile, level = parameters->level;
+  const uint8_t* config = parameters->extradata;
+  const int config_size = parameters->extradata_size;
+  if (parameters->codec_id == AV_CODEC_ID_HEVC && config && config_size >= 23 && config[0] == 1) {
+    size_t offset = 23;
+    bool valid = (config[13] & 0xf0) == 0xf0 && (config[15] & 0xfc) == 0xfc &&
+        (config[16] & 0xfc) == 0xfc && (config[17] & 0xf8) == 0xf8 && (config[18] & 0xf8) == 0xf8;
+    for (int array = 0; valid && array < config[22]; array++) {
+      if (offset + 3 > static_cast<size_t>(config_size)) { valid = false; break; }
+      const int count = (config[offset+1] << 8) | config[offset+2]; offset += 3;
+      for (int n = 0; n < count; n++) {
+        if (offset + 2 > static_cast<size_t>(config_size)) { valid = false; break; }
+        const int size = (config[offset] << 8) | config[offset+1]; offset += 2;
+        if (size < 2 || offset + size > static_cast<size_t>(config_size)) { valid = false; break; }
+        offset += size;
+      }
+    }
+    if (valid && offset == static_cast<size_t>(config_size)) {
+      profile = config[1] & 31; level = config[12];
+      depth = (config[17] & 7) == (config[18] & 7) ? 8 + (config[17] & 7) : 0;
+      const int chroma_id = config[16] & 3;
+      chroma = chroma_id == 0 ? 400 : chroma_id == 1 ? 420 : chroma_id == 2 ? 422 : 444;
+    }
+  }
   jlong values[] = {
       kind_value(parameters->codec_type), codec_value(parameters->codec_id), parameters->width, parameters->height,
       frame_rate.den ? static_cast<jlong>(av_q2d(frame_rate) * 1000.0) : 0,
-      parameters->profile, parameters->level, parameters->sample_rate, parameters->ch_layout.nb_channels,
+      profile, level, parameters->sample_rate, parameters->ch_layout.nb_channels,
       parameters->bit_rate, timestamp_us(stream->duration, stream->time_base),
       2, 20, frame_rate.num, frame_rate.den, depth, chroma,
       parameters->color_range, parameters->color_space, parameters->color_trc};
@@ -591,6 +621,18 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareAudi
   return JNI_TRUE;
 }
 
+// AVI may omit PTS only when its AVC profile proves no frame reordering.
+static bool normalize_avi_timing(AVFormatContext* format, AVPacket* packet) {
+  if (!format->iformat || std::string(format->iformat->name) != "avi") return true;
+  AVCodecParameters* p = format->streams[packet->stream_index]->codecpar;
+  if (p->codec_type != AVMEDIA_TYPE_VIDEO || packet->pts != AV_NOPTS_VALUE) return true;
+  if (p->codec_id != AV_CODEC_ID_H264 || p->video_delay != 0 ||
+      (p->profile != AV_PROFILE_H264_BASELINE && p->profile != AV_PROFILE_H264_CONSTRAINED_BASELINE) ||
+      packet->dts == AV_NOPTS_VALUE) return false;
+  packet->pts = packet->dts;
+  return true;
+}
+
 extern "C" JNIEXPORT jlongArray JNICALL
 Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeReadPacket(JNIEnv* env, jobject, jlong handle) {
   auto* session = from(handle);
@@ -606,6 +648,17 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeReadPacket(JNIEnv* en
       jlongArray metadata = env->NewLongArray(5);
       env->SetLongArrayRegion(metadata, 0, 5, values);
       return metadata;
+    }
+    if (!normalize_avi_timing(session->format, packet)) {
+      av_packet_free(&packet);
+      jlong values[] = {-1, AVERROR_INVALIDDATA, 0, 0, 0};
+      jlongArray metadata = env->NewLongArray(5);
+      env->SetLongArrayRegion(metadata, 0, 5, values);
+      return metadata;
+    }
+    if (session->waiting_seek_keyframe && packet->stream_index == session->seek_video_stream) {
+      if (!(packet->flags & AV_PKT_FLAG_KEY)) { av_packet_unref(packet); continue; }
+      session->waiting_seek_keyframe = false;
     }
     if (packet->stream_index == session->hardware_video_stream && session->video_bsf) {
       if (av_bsf_send_packet(session->video_bsf, packet) < 0) { av_packet_unref(packet); continue; }
@@ -739,15 +792,66 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeTakePcmData(JNIEnv* e
   return result;
 }
 
+// PS timestamp search can land inside a GOP. Bound the scan, verify a keyframe
+// at/before the requested time, then replay through the preroll suppression.
+// This limits seek work, independently of software decode admission.
+static int seek_program_anchor(Session* session, int64_t position_us, int64_t absolute_us, int video) {
+  AVPacket* packet = av_packet_alloc();
+  if (!packet) return AVERROR(ENOMEM);
+  int result = AVERROR_INVALIDDATA;
+  AVStream* stream = session->format->streams[video];
+  for (int64_t window = 1000000; window <= 8000000; window *= 2) {
+    const int64_t relative_probe = std::max<int64_t>(0, position_us - window);
+    int64_t probe;
+    if (__builtin_add_overflow(relative_probe, session->origin_us, &probe)) break;
+    result = avformat_seek_file(session->format, -1, INT64_MIN, probe, probe, 0);
+    if (result < 0) break;
+    avformat_flush(session->format);
+    int64_t bytes = 0;
+    bool found = false;
+    for (int count = 0; count < 512 && bytes < 8*1024*1024 && !session->cancelled.load(); count++) {
+      av_packet_unref(packet);
+      result = av_read_frame(session->format, packet);
+      if (result < 0) break;
+      bytes += std::max(packet->size, 0);
+      if (bytes > 8*1024*1024) break;
+      if (packet->stream_index != video || !(packet->flags & AV_PKT_FLAG_KEY)) continue;
+      if (!normalize_avi_timing(session->format, packet)) break;
+      const int64_t pts = timestamp_us(packet->pts, stream->time_base);
+      if (pts == INT64_MIN) continue;
+      // Audio can start before the first video sample. Seeking presentation
+      // zero must still admit that initial keyframe, without admitting a later
+      // GOP beyond the target after an imprecise demux seek.
+      const int64_t first_video_us = timestamp_us(stream->start_time, stream->time_base);
+      found = pts <= absolute_us || (relative_probe == 0 && first_video_us != INT64_MIN && pts <= first_video_us);
+      break;
+    }
+    av_packet_unref(packet);
+    if (found) { result = avformat_seek_file(session->format, -1, INT64_MIN, probe, probe, 0); break; }
+    result = AVERROR_INVALIDDATA;
+    if (relative_probe == 0 || session->cancelled.load()) break;
+  }
+  av_packet_free(&packet);
+  return result;
+}
+
 extern "C" JNIEXPORT jboolean JNICALL
 Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSeek(JNIEnv*, jobject, jlong handle, jlong position_us) {
   auto* session = from(handle);
   if (!session || position_us < 0) return JNI_FALSE;
   std::lock_guard<std::mutex> guard(session->mutex);
+  int video = -1;
+  for (unsigned i = 0; i < session->format->nb_streams; i++) {
+    if (session->format->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) { video = static_cast<int>(i); break; }
+  }
   JNIEnv* env = env_for(session);
   jlong callback_position = env->CallLongMethod(session->source, session->time_seek_method, position_us);
   if (env->ExceptionCheck()) { env->ExceptionClear(); callback_position = -3; }
   if (callback_position >= 0) {
+    // Long.MAX_VALUE asks the managed live source for its current edge.
+    session->video_present_from_us = position_us == INT64_MAX ? callback_position : position_us;
+    session->seek_video_stream = video;
+    session->waiting_seek_keyframe = video >= 0;
     session->io->buf_ptr = session->io->buf_end;
     session->io->eof_reached = 0;
     session->io->error = 0;
@@ -758,8 +862,16 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSeek(JNIEnv*, jobject
     if (session->audio_decoder) avcodec_flush_buffers(session->audio_decoder);
     return JNI_TRUE;
   }
-  int result = avformat_seek_file(session->format, -1, INT64_MIN, position_us + session->origin_us, INT64_MAX, AVSEEK_FLAG_BACKWARD);
+  int64_t absolute_us;
+  if (__builtin_add_overflow(position_us, session->origin_us, &absolute_us)) return JNI_FALSE;
+  const std::string container = session->format->iformat ? session->format->iformat->name : "";
+  const bool program = container == "mpeg" || container == "avi" || container.find("mpegts") != std::string::npos;
+  int result = program && video >= 0 ? seek_program_anchor(session, position_us, absolute_us, video)
+      : avformat_seek_file(session->format, -1, INT64_MIN, absolute_us, INT64_MAX, AVSEEK_FLAG_BACKWARD);
   if (result >= 0) {
+    session->video_present_from_us = position_us;
+    session->seek_video_stream = video;
+    session->waiting_seek_keyframe = video >= 0;
     avformat_flush(session->format);
     if (session->video_bsf) av_bsf_flush(session->video_bsf);
     clear_decoded_video_frames(session);

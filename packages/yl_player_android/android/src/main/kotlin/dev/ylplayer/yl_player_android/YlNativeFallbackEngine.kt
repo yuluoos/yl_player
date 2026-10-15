@@ -17,6 +17,7 @@ internal class YlNativeFallbackEngine(
     private val playerOptions: AndroidPlayerOptionsMessage,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     softwareServicesOverride: YlSoftwareDecodeServices? = null,
+    private val findHardwareDecoder: (YlNativeStreamInfo) -> String? = YlHardwareCodecProbe::findVideoDecoder,
 ) : YlPlaybackEngineAdapter {
     private val softwareServices by lazy { softwareServicesOverride ?: YlSoftwareDecodeServices.production(context) }
     private val events = CoroutineScope(SupervisorJob() + dispatcher)
@@ -71,7 +72,7 @@ internal class YlNativeFallbackEngine(
         audio = media.streams.firstOrNull { it.kind == YlNativeStreamKind.AUDIO && it.codec in supportedAudio }
         selectedAudioIndex = audio?.index ?: -1
         video?.let { stream ->
-            hardwareName = YlHardwareCodecProbe.findVideoDecoder(stream)
+            hardwareName = findHardwareDecoder(stream)
             videoPath = YlNativePlaybackPlanner(admittedSoftware = softwareServices::isAdmitted) { hardwareName != null }.chooseVideoPath(stream)
             if (decoderPolicy == AndroidDecoderPolicy.HARDWARE_REQUIRED) {
                 if (videoPath != YlNativeVideoPath.HARDWARE) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
@@ -114,7 +115,7 @@ internal class YlNativeFallbackEngine(
             val configured = native.configureHardwareVideo(stream.index)
             if (configured) {
                 hardwareVideo = runCatching {
-                    YlHardwareVideoDecoder(stream, surface, checkNotNull(hardwareName), native.hardwareCodecConfig())
+                    YlHardwareVideoDecoder(stream, surface, checkNotNull(hardwareName), native.hardwareCodecConfig(), cancelled = { closed })
                 }.getOrNull()
             }
             if (hardwareVideo == null) {
@@ -174,12 +175,17 @@ internal class YlNativeFallbackEngine(
                     val packet = requireSession().readPacket()
                     if (packet == null) {
                         while (pendingHardwareVideo.isNotEmpty() && playing) {
-                            renderWhenDue(pendingHardwareVideo.removeFirst())
+                            if (!renderWhenDue(pendingHardwareVideo.first(), generation)) break
+                            pendingHardwareVideo.removeFirst()
                         }
+                        if (generation != playbackGeneration || closed) continue
+                        hardwareVideo?.let { markFirstFrame(if (it.finish()) 1 else 0) }
                         softwareVideoFrames?.let { frames ->
                             frames.finish()
-                            while (frames.bufferedCount > 0 && playing) renderSoftwareWhenDue(frames)
+                            while (frames.bufferedCount > 0 && playing && generation == playbackGeneration) renderSoftwareWhenDue(frames, generation)
                         }
+                        while (playing && !closed && generation == playbackGeneration && audioOutput?.hasQueuedPlayback == true) delay(AUDIO_DRAIN_RETRY_MS)
+                        if (!playing || closed || generation != playbackGeneration) continue
                         playing = false; audioOutput?.pause(); emitSnapshot(AndroidPlaybackStatus.COMPLETED, true); break
                     }
                     try { when (packet.streamIndex) {
@@ -190,16 +196,17 @@ internal class YlNativeFallbackEngine(
                         }
                         video?.index -> {
                             if (softwareVideoFrames != null) {
-                                while (softwareVideoFrames.bufferedCount >= MAX_SOFTWARE_VIDEO_FRAMES && playing) {
-                                    renderSoftwareWhenDue(softwareVideoFrames)
+                                while (softwareVideoFrames.bufferedCount >= MAX_SOFTWARE_VIDEO_FRAMES && generation == playbackGeneration) {
+                                    renderSoftwareWhenDue(softwareVideoFrames, generation)
                                 }
+                                if (generation != playbackGeneration || closed) continue
                                 softwareVideoFrames.decode(packet)
                                 markFirstFrame(softwareVideoFrames.renderDue(currentPositionUs()))
                             } else {
                                 pendingHardwareVideo.addLast(packet)
                                 drainDueVideo(pendingHardwareVideo)
                                 if (pendingHardwareVideo.size > 30) {
-                                    renderWhenDue(pendingHardwareVideo.removeFirst())
+                                    if (renderWhenDue(pendingHardwareVideo.first(), generation)) pendingHardwareVideo.removeFirst()
                                 }
                             }
                         }
@@ -225,29 +232,26 @@ internal class YlNativeFallbackEngine(
         }
     }
 
-    private suspend fun renderWhenDue(packet: YlNativePacket) {
-        val pts = packet.presentationTimeUs
-        if (pts != Long.MIN_VALUE) {
-            while (playing) {
-                val aheadUs = pts - currentPositionUs()
-                if (YlVideoPacingPolicy.action(pts, currentPositionUs()) == YlVideoPacingAction.PRESENT) break
-                delay((aheadUs / 1000).coerceIn(1, 20))
-            }
+    /** A suspended render belongs to the generation that removed/read its packet.
+     * Pause retains it; seek invalidates it before it can reach the new decoder. */
+    private suspend fun awaitPresentation(pts: Long, generation: Long): Boolean {
+        while (!closed && generation == playbackGeneration) {
+            if (!playing) { delay(10); continue }
+            if (pts == Long.MIN_VALUE || YlVideoPacingPolicy.action(pts, currentPositionUs()) == YlVideoPacingAction.PRESENT) return true
+            delay(((pts-currentPositionUs())/1000).coerceIn(1,20))
         }
-        renderVideo(packet)
+        return false
     }
 
-    private suspend fun renderSoftwareWhenDue(frames: YlSoftwareVideoFrames) {
+    private suspend fun renderWhenDue(packet: YlNativePacket, generation: Long): Boolean {
+        if (!awaitPresentation(packet.presentationTimeUs, generation)) return false
+        renderVideo(packet)
+        return true
+    }
+
+    private suspend fun renderSoftwareWhenDue(frames: YlSoftwareVideoFrames, generation: Long) {
         val pts = frames.nextPresentationTimeUs ?: return
-        if (pts != Long.MIN_VALUE) {
-            while (playing) {
-                val clockUs = currentPositionUs()
-                val aheadUs = pts - clockUs
-                if (YlVideoPacingPolicy.action(pts, clockUs) == YlVideoPacingAction.PRESENT) break
-                delay((aheadUs / 1000).coerceIn(1, 20))
-            }
-        }
-        if (playing) {
+        if (awaitPresentation(pts, generation)) {
             frames.renderNext()
             markFirstFrame(1)
         }
@@ -282,7 +286,7 @@ internal class YlNativeFallbackEngine(
     override suspend fun seekTo(positionMs: Long) = withContext(worker) {
         val targetUs = positionMs.coerceAtLeast(0) * 1000
         if (!requireSession().seekTo(targetUs)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
-        hardwareVideo?.flush(); audioOutput?.flush(); requireSession().flush()
+        hardwareVideo?.flush(targetUs); audioOutput?.flush(targetUs); requireSession().flush()
         playbackGeneration++
         positionUs = targetUs; positionAnchorUs = targetUs; monotonicAnchorNs = System.nanoTime(); firstFrame = false
         firstFrameAtMs = 0L

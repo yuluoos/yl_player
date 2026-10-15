@@ -2,25 +2,41 @@ package dev.ylplayer.yl_player_android
 
 import androidx.media3.common.ParserException
 import androidx.media3.extractor.*
+import dev.ylplayer.yl_player_android.pigeon.AndroidSourceKind
+import dev.ylplayer.yl_player_android.pigeon.AndroidStreamIntent
 
-/** Detect PS before a raw-audio extractor can mistake its embedded MP3 for the
- * entire programme. The ordinary container failure activates the owned demux;
- * all probing uses the existing managed DataSource and credentials. */
-internal class YlProgressiveExtractors : ExtractorsFactory {
+/** Only finite, explicitly requested FLV needs the new seek route. Automatic
+ * network sources retain the established streaming extractor. */
+internal fun requiresOwnedFlvSeek(kind: AndroidSourceKind, intent: AndroidStreamIntent): Boolean =
+    kind != AndroidSourceKind.NETWORK || intent == AndroidStreamIntent.ON_DEMAND
+
+/** Route formats whose default extractor cannot preserve seek or video timing.
+ * PS must not be mistaken for raw MP3; AVI needs verified presentation timing
+ * and FLV needs indexed seeking. The owned demux uses the same managed source. */
+internal class YlProgressiveExtractors(private val routeFlvForSeek: Boolean = true) : ExtractorsFactory {
     override fun createExtractors(): Array<Extractor> =
-        arrayOf<Extractor>(PsOwnedRoute()) + DefaultExtractorsFactory().createExtractors()
+        arrayOf<Extractor>(OwnedRoute(routeFlvForSeek)) + DefaultExtractorsFactory().createExtractors()
 
-    internal class PsOwnedRoute : Extractor {
+    internal class OwnedRoute(private val routeFlvForSeek: Boolean = true) : Extractor {
         override fun sniff(input: ExtractorInput): Boolean {
-            if (isProgramStreamPack(input)) throw ParserException.createForUnsupportedContainerFeature("MPEG-PS requires the owned video demux route.")
+            val header = ByteArray(12)
+            val owned = try {
+                input.peekFully(header, 0, header.size, true) && (
+                    (header.copyOfRange(0,4).contentEquals("RIFF".toByteArray()) &&
+                        header.copyOfRange(8,12).contentEquals("AVI ".toByteArray())) ||
+                    (routeFlvForSeek && header[0] == 70.toByte() && header[1] == 76.toByte() && header[2] == 86.toByte() &&
+                        header[3] == 1.toByte() && (header[4].toInt() and 0xfa) == 0))
+            } catch (_: java.io.EOFException) { false }
+            input.resetPeekPosition()
+            if (owned || isProgramStreamPack(input)) throw ParserException.createForUnsupportedContainerFeature("Container requires the owned seek and video demux route.")
             return false
         }
-        override fun init(output: ExtractorOutput) = error("PS routing probe cannot be selected")
-        override fun read(input: ExtractorInput, seekPosition: PositionHolder): Int = error("PS routing probe cannot read samples")
+        override fun init(output: ExtractorOutput) = error("Owned routing probe cannot be selected")
+        override fun read(input: ExtractorInput, seekPosition: PositionHolder): Int = error("Owned routing probe cannot read samples")
         override fun seek(position: Long, timeUs: Long) = Unit
         override fun release() = Unit
 
-        /** Complete MPEG-1/2 pack markers and MPEG-2 stuffing, using at most21 bytes. */
+        /** Complete MPEG-1/2 pack markers and MPEG-2 stuffing, using at most 21 bytes. */
         private fun isProgramStreamPack(input: ExtractorInput): Boolean {
             val bytes = ByteArray(21)
             fun at(index: Int) = bytes[index].toInt() and 255

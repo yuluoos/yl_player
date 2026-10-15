@@ -164,6 +164,11 @@ internal class YlInitializedDecoderGate(private val policy: dev.ylplayer.yl_play
         if (snapshot.status !in listOf(dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.READY, dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.PLAYING)) return
         if (policy == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_REQUIRED) {
             if (snapshot.videoTracks.isEmpty() && snapshot.audioTracks.isNotEmpty()) { ready.complete(snapshot); return }
+            // READY with declared but unselected video cannot initialize a
+            // decoder. Resolve the failure instead of waiting for its identity.
+            if (snapshot.videoTracks.isNotEmpty() && snapshot.videoTracks.none { it.isSelected }) {
+                fail(YlFailureKind.DECODER_UNAVAILABLE); return
+            }
             if (snapshot.decoderIdentity == null) return
             if (snapshot.decoderMode != dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE) { fail(YlFailureKind.DECODER_UNAVAILABLE); return }
         }

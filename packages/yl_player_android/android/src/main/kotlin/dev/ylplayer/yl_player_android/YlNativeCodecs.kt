@@ -35,7 +35,7 @@ internal object YlHardwareCodecProbe {
     private fun supportsProfile(capabilities: MediaCodecInfo.CodecCapabilities, stream: YlNativeStreamInfo): Boolean {
         val profile = when (stream.codec) {
             YlNativeCodec.H264 -> when (stream.profile) {
-                66 -> MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
+                66, 578 -> MediaCodecInfo.CodecProfileLevel.AVCProfileBaseline
                 77 -> MediaCodecInfo.CodecProfileLevel.AVCProfileMain
                 88 -> MediaCodecInfo.CodecProfileLevel.AVCProfileExtended
                 100 -> MediaCodecInfo.CodecProfileLevel.AVCProfileHigh
@@ -48,7 +48,7 @@ internal object YlHardwareCodecProbe {
                 else -> null
             }
             else -> null
-        } ?: return true
+        } ?: return false
         val level = androidLevel(stream)
         return capabilities.profileLevels.any { it.profile == profile && (level == null || it.level >= level) }
     }
@@ -98,9 +98,15 @@ internal class YlHardwareVideoDecoder(
     surface: Surface,
     codecName: String,
     codecConfig: ByteArray,
+    private val cancelled: () -> Boolean = { false },
 ) : AutoCloseable {
     private val codec = MediaCodec.createByCodecName(codecName)
     private val info = MediaCodec.BufferInfo()
+    private val configuration = codecConfig.copyOf()
+    private var resendConfiguration = false
+    private var observedOutput = false
+    private var presentationFloorUs = 0L
+    private var reachedEos = false
     /** Identity of the initialized codec, rather than its discovery candidate. */
     val decoderIdentity: String get() = codec.name
     init {
@@ -111,7 +117,17 @@ internal class YlHardwareVideoDecoder(
         }
         val format = MediaFormat.createVideoFormat(checkNotNull(stream.codec.mimeType), stream.width, stream.height)
         if (stream.frameRate > 0) format.setFloat(MediaFormat.KEY_FRAME_RATE, stream.frameRate.toFloat())
-        if (codecConfig.isNotEmpty()) format.setByteBuffer("csd-0", ByteBuffer.wrap(codecConfig))
+        if (codecConfig.isNotEmpty()) {
+            if (stream.codec == YlNativeCodec.H264) {
+                val units = androidx.media3.common.util.CodecSpecificDataUtil.splitNalUnits(codecConfig)
+                    ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+                val sps = units.filter { (if (it.size > 4) it[4].toInt() and 31 else -1) == 7 }.fold(byteArrayOf()) { a,b -> a+b }
+                val pps = units.filter { (if (it.size > 4) it[4].toInt() and 31 else -1) == 8 }.fold(byteArrayOf()) { a,b -> a+b }
+                if (sps.isEmpty() || pps.isEmpty()) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+                format.setByteBuffer("csd-0", ByteBuffer.wrap(sps))
+                format.setByteBuffer("csd-1", ByteBuffer.wrap(pps))
+            } else format.setByteBuffer("csd-0", ByteBuffer.wrap(codecConfig))
+        }
         codec.configure(format, surface, null, 0)
         codec.start()
       } catch (error: Throwable) {
@@ -120,22 +136,41 @@ internal class YlHardwareVideoDecoder(
       }
     }
 
-    fun consume(packet: YlNativePacket): Boolean {
-        var rendered = drainOutput()
-        var inputIndex: Int
-        do {
-            inputIndex = codec.dequeueInputBuffer(5_000)
-            if (inputIndex < 0) rendered = drainOutput() || rendered
-        } while (inputIndex < 0)
-        if (inputIndex >= 0) {
-            val input = checkNotNull(codec.getInputBuffer(inputIndex))
-            input.clear()
-            if (packet.data.size > input.remaining()) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
-            input.put(packet.data)
-            codec.queueInputBuffer(inputIndex, 0, packet.data.size,
-                packet.presentationTimeUs.coerceAtLeast(0), if (packet.keyFrame) MediaCodec.BUFFER_FLAG_KEY_FRAME else 0)
+    private fun queue(bytes: ByteArray, pts: Long, flags: Int): Boolean {
+        val deadline = System.nanoTime()+5_000_000_000L
+        var rendered = false
+        while (true) {
+            if (cancelled() || Thread.currentThread().isInterrupted) throw kotlinx.coroutines.CancellationException()
+            if (System.nanoTime() >= deadline) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
+            val index=codec.dequeueInputBuffer(5_000)
+            if (index < 0) { rendered=drainOutput() || rendered; continue }
+            val input=checkNotNull(codec.getInputBuffer(index)); input.clear()
+            if (bytes.size>input.remaining()) throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
+            input.put(bytes);codec.queueInputBuffer(index,0,bytes.size,pts,flags)
+            return drainOutput() || rendered
         }
-        return drainOutput() || rendered
+    }
+    fun consume(packet: YlNativePacket): Boolean {
+        var rendered=drainOutput()
+        if (resendConfiguration) {
+            rendered=queue(configuration,0,MediaCodec.BUFFER_FLAG_CODEC_CONFIG) || rendered
+            resendConfiguration=false
+        }
+        return queue(canonicalAnnexB(packet.data),packet.presentationTimeUs.coerceAtLeast(0),
+            if(packet.keyFrame) MediaCodec.BUFFER_FLAG_KEY_FRAME else 0) || rendered
+    }
+    /** Drain reordered output before publishing completion; cancellation remains bounded. */
+    fun finish(): Boolean {
+        if (reachedEos) return false
+        var rendered=queue(byteArrayOf(),0,MediaCodec.BUFFER_FLAG_END_OF_STREAM)
+        val deadline=System.nanoTime()+5_000_000_000L
+        while (!reachedEos) {
+            if (cancelled()) throw kotlinx.coroutines.CancellationException()
+            if (System.nanoTime()>=deadline) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
+            rendered=drainOutput() || rendered
+            if (!reachedEos) Thread.sleep(1)
+        }
+        return rendered
     }
 
     private fun drainOutput(): Boolean {
@@ -143,9 +178,13 @@ internal class YlHardwareVideoDecoder(
         while (true) {
             when (val outputIndex = codec.dequeueOutputBuffer(info, 0)) {
                 MediaCodec.INFO_TRY_AGAIN_LATER -> return rendered
-                MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> Unit
+                MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> { observedOutput=true }
                 else -> if (outputIndex >= 0) {
-                    val render = info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0
+                    observedOutput=true
+                    reachedEos = reachedEos || info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0
+                    val render = info.flags and MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0 &&
+                        !(info.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0 && info.size == 0) &&
+                        info.presentationTimeUs >= presentationFloorUs
                     codec.releaseOutputBuffer(outputIndex, render)
                     rendered = rendered || render
                 }
@@ -153,7 +192,11 @@ internal class YlHardwareVideoDecoder(
         }
     }
 
-    fun flush() = codec.flush()
+    fun flush(targetUs: Long = 0) {
+        // Android MediaCodec documents CSD loss on flush before first output.
+        resendConfiguration = !observedOutput && configuration.isNotEmpty()
+        codec.flush(); reachedEos=false; presentationFloorUs=targetUs
+    }
     fun replaceSurface(surface: Surface) = codec.setOutputSurface(surface)
     override fun close() { runCatching { codec.stop() }; codec.release() }
 }
@@ -165,6 +208,7 @@ internal class YlPcmAudioOutput(
     private var output: AudioTrack? = null
     private val pendingWrite = YlPendingPcmWrite()
     private var firstPresentationUs = Long.MIN_VALUE
+    private var presentationFloorUs = 0L
     private var writtenFrames = 0L
     private var outputChannelCount = 0
     private var clockFramePosition = 0L
@@ -179,10 +223,13 @@ internal class YlPcmAudioOutput(
     }
 
     val hasPendingData: Boolean get() = pendingWrite.hasData
+    val hasQueuedPlayback: Boolean get() = output?.let {
+        (it.playbackHeadPosition.toLong() and 0xffffffffL) < writtenFrames
+    } ?: false
 
     fun consume(packet: YlNativePacket) {
         check(!pendingWrite.hasData)
-        val pcm = session.decodeSoftwareAudio(packet) ?: return
+        val pcm = session.decodeSoftwareAudio(packet)?.let { trimNativePcm(it,presentationFloorUs) } ?: return
         if (firstPresentationUs == Long.MIN_VALUE) firstPresentationUs = pcm.presentationTimeUs.coerceAtLeast(0)
         outputChannelCount = pcm.channelCount.coerceAtLeast(1)
         output ?: create(pcm).also { output = it }
@@ -227,7 +274,8 @@ internal class YlPcmAudioOutput(
         }
     }
     fun pause() { playing = false; output?.pause() }
-    fun flush() {
+    fun flush(targetUs: Long = 0) {
+        presentationFloorUs=targetUs
         output?.let { audio ->
             audio.pause()
             audio.flush()

@@ -837,10 +837,14 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift",
-    "sha256": "fa09402f05511a75e9114e6305248226a8bfb8a4d6bfa065186269639c9e6881",
+    "sha256": "f0d795e3650937397f729068bf69b4268e07d2a84e343b01424fc675d8908a99",
     "methods": [
       "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
-      "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek"
+      "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+      "testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+      "testEAC3ActualPixelsPCMAndSeek",
+      "testDTSActualPixelsPCMAndSeek",
+      "testFLACActualPixelsPCMAndSeek"
     ]
   },
   {
@@ -917,5 +921,25 @@
       "testPausedDecoderKeepsBudgetObservationsUntilResume",
       "testCancellationAfterSoftwareCandidateCreationKeepsCurrentDecoder"
     ]
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-mkv-avc-ac3-51.mkv",
+    "sha256": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-mkv-avc-eac3.mkv",
+    "sha256": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-mkv-avc-dts.mkv",
+    "sha256": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+    "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-mkv-avc-flac.mkv",
+    "sha256": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+    "methods": []
   }
 ]

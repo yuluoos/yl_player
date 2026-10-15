@@ -88,6 +88,10 @@
 		ACE2BD982F4DA89D82D4E434 /* YlRtmpRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50A940DD8D6F94037E79F8AD /* YlRtmpRecoveryTests.swift */; };
 		B0748004F715FE005444B080 /* hevc_aac.ts in Resources */ = {isa = PBXBuildFile; fileRef = D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */; };
 		52EF0FF3DE9736231C652645 /* p03-webm-vp9-vorbis.webm in Resources */ = {isa = PBXBuildFile; fileRef = F6A3CCD1476E2F80C30C74B8 /* p03-webm-vp9-vorbis.webm */; };
+		4E74B3068D027894CBF1DA2F /* p03-mkv-avc-flac.mkv in Resources */ = {isa = PBXBuildFile; fileRef = B8E5A82E2970C9064CF6EFDE /* p03-mkv-avc-flac.mkv */; };
+		338EB82A111F23ECD1F7193B /* p03-mkv-avc-dts.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 0982A7AF0F764E4DB9EAA11E /* p03-mkv-avc-dts.mkv */; };
+		2731DBD64CA5527DC2BDCEE2 /* p03-mkv-avc-eac3.mkv in Resources */ = {isa = PBXBuildFile; fileRef = B926F84700D1C3D6BEB37846 /* p03-mkv-avc-eac3.mkv */; };
+		0849E06CEBB0488FE6BE85B6 /* p03-mkv-avc-ac3-51.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 3CC6917818EA286FDC7BC1E6 /* p03-mkv-avc-ac3-51.mkv */; };
 		E4F2A820BFFA1C5BFE382952 /* p03-av1-fragment.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 5BE2B8918406CF92A57637DD /* p03-av1-fragment.mp4 */; };
 		35346C19B30D124CD566DD50 /* p03-vp9-hidden.webm in Resources */ = {isa = PBXBuildFile; fileRef = 6261956E4FF91A829EC83112 /* p03-vp9-hidden.webm */; };
 		274CA7C39C96B10C6D163373 /* p03-av1-main10.mkv in Resources */ = {isa = PBXBuildFile; fileRef = DC19ABA39ABE4456EA703EFD /* p03-av1-main10.mkv */; };
@@ -223,6 +227,10 @@
 		D0B87C8143455324448E46AD /* YlFallbackStateEncoderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFallbackStateEncoderTests.swift; sourceTree = "<group>"; };
 		D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */ = {isa = PBXFileReference; includeInIndex = 1; path = hevc_aac.ts; sourceTree = "<group>"; };
 		F6A3CCD1476E2F80C30C74B8 /* p03-webm-vp9-vorbis.webm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-webm-vp9-vorbis.webm"; sourceTree = "<group>"; };
+		B8E5A82E2970C9064CF6EFDE /* p03-mkv-avc-flac.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-mkv-avc-flac.mkv"; sourceTree = "<group>"; };
+		0982A7AF0F764E4DB9EAA11E /* p03-mkv-avc-dts.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-mkv-avc-dts.mkv"; sourceTree = "<group>"; };
+		B926F84700D1C3D6BEB37846 /* p03-mkv-avc-eac3.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-mkv-avc-eac3.mkv"; sourceTree = "<group>"; };
+		3CC6917818EA286FDC7BC1E6 /* p03-mkv-avc-ac3-51.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-mkv-avc-ac3-51.mkv"; sourceTree = "<group>"; };
 		5BE2B8918406CF92A57637DD /* p03-av1-fragment.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-fragment.mp4"; sourceTree = "<group>"; };
 		6261956E4FF91A829EC83112 /* p03-vp9-hidden.webm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-vp9-hidden.webm"; sourceTree = "<group>"; };
 		DC19ABA39ABE4456EA703EFD /* p03-av1-main10.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-main10.mkv"; sourceTree = "<group>"; };
@@ -339,6 +347,10 @@
 				57D5CB3220138BCD13684C98 /* hevc_aac.mkv */,
 				D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */,
 				F6A3CCD1476E2F80C30C74B8 /* p03-webm-vp9-vorbis.webm */,
+				B8E5A82E2970C9064CF6EFDE /* p03-mkv-avc-flac.mkv */,
+				0982A7AF0F764E4DB9EAA11E /* p03-mkv-avc-dts.mkv */,
+				B926F84700D1C3D6BEB37846 /* p03-mkv-avc-eac3.mkv */,
+				3CC6917818EA286FDC7BC1E6 /* p03-mkv-avc-ac3-51.mkv */,
 				5BE2B8918406CF92A57637DD /* p03-av1-fragment.mp4 */,
 				6261956E4FF91A829EC83112 /* p03-vp9-hidden.webm */,
 				DC19ABA39ABE4456EA703EFD /* p03-av1-main10.mkv */,
@@ -564,6 +576,10 @@
 				54C92931EF395AD5E8078BF1 /* hevc_aac.mkv in Resources */,
 				B0748004F715FE005444B080 /* hevc_aac.ts in Resources */,
 				52EF0FF3DE9736231C652645 /* p03-webm-vp9-vorbis.webm in Resources */,
+				4E74B3068D027894CBF1DA2F /* p03-mkv-avc-flac.mkv in Resources */,
+				338EB82A111F23ECD1F7193B /* p03-mkv-avc-dts.mkv in Resources */,
+				2731DBD64CA5527DC2BDCEE2 /* p03-mkv-avc-eac3.mkv in Resources */,
+				0849E06CEBB0488FE6BE85B6 /* p03-mkv-avc-ac3-51.mkv in Resources */,
 				E4F2A820BFFA1C5BFE382952 /* p03-av1-fragment.mp4 in Resources */,
 				35346C19B30D124CD566DD50 /* p03-vp9-hidden.webm in Resources */,
 				274CA7C39C96B10C6D163373 /* p03-av1-main10.mkv in Resources */,

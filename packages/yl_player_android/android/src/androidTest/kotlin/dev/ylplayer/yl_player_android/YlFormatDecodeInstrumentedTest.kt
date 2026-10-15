@@ -21,9 +21,9 @@ import java.util.concurrent.TimeUnit
  * production software or physical-output qualification. Raw Media3's failed
  * audio-only PS baseline is retained in the P03 observations. */
 class YlFormatDecodeInstrumentedTest {
-    private fun openNativePs(): YlFfmpegSession {
+    private fun openNativePs(name: String = "ps-avc-mp3.mpg"): YlFfmpegSession {
         val assets = InstrumentationRegistry.getInstrumentation().context.assets
-        val bytes = assets.open("format_matrix/ps-avc-mp3.mpg").use { it.readBytes() }
+        val bytes = assets.open("format_matrix/$name").use { it.readBytes() }
         val source = object : YlNativeByteSource {
             var position = 0; var cancelled = false
             override fun read(target: java.nio.ByteBuffer): Int {
@@ -51,11 +51,54 @@ class YlFormatDecodeInstrumentedTest {
             assertEquals(320, video.width); assertEquals(180, video.height)
             assertTrue(video.fpsNumerator > 0 && video.fpsDenominator > 0)
             assertEquals(8, video.bitDepth); assertEquals(420, video.chroma)
-            for (target in listOf(0L, 2_000_000L, 500_000L)) {
+            for (target in listOf(0L, 2_000_000L, 1_250_000L, 500_000L)) {
                 assertTrue("PS seek failed", session.seekTo(target))
                 val packet = generateSequence { session.readPacket() }.first { it.streamIndex == video.index }
-                assertTrue("PS timestamp was not normalized: ${packet.presentationTimeUs}", packet.presentationTimeUs <= target + 100_000)
+                android.util.Log.i("P03_SEEK", "target=$target pts=${packet.presentationTimeUs} key=${packet.keyFrame}")
+                packet.use {
+                    assertTrue("PS timestamp was not normalized: ${it.presentationTimeUs}", it.presentationTimeUs <= target + 100_000)
+                    assertTrue("PS seek must restore a decodable keyframe at or before target", it.keyFrame)
+                }
             }
+        }
+    }
+
+    @Test fun nativeTransportAndAviTimestampsAreUsable() {
+        for(name in listOf("ts-avc-ac3.ts","avi-avc-mp3.avi")) openNativePs(name).use { session ->
+            val video=session.mediaInfo.streams.single {it.kind==YlNativeStreamKind.VIDEO}
+            assertTrue(session.seekTo(0))
+            val packet=generateSequence {session.readPacket()}.first {it.streamIndex==video.index}
+            packet.use {assertTrue("$name pts=${it.presentationTimeUs}",it.presentationTimeUs in 0..100_000)}
+        }
+    }
+    @Test fun nativeAviSeekKeepsPacketClockIdentity() {
+        openNativePs("avi-avc-mp3.avi").use { session ->
+            val video=session.mediaInfo.streams.single {it.kind==YlNativeStreamKind.VIDEO}
+            val linear=mutableMapOf<Long,ByteArray>()
+            while(true) {
+                val packet=session.readPacket() ?: break
+                packet.use { if(it.streamIndex==video.index) linear[it.presentationTimeUs]=it.data }
+            }
+            for(target in listOf(2_000_000L,1_250_000L,500_000L)) {
+                assertTrue(session.seekTo(target))
+                var videoPackets=0
+                while(true) {
+                    val packet=session.readPacket() ?: break
+                    packet.use { if(it.streamIndex==video.index) {
+                        if(videoPackets++==0) assertTrue(it.presentationTimeUs<=target)
+                        assertArrayEquals("AVI seek relabeled a different frame at ${it.presentationTimeUs}",linear[it.presentationTimeUs],it.data)
+                    } }
+                }
+                assertTrue(videoPackets>0)
+            }
+        }
+    }
+
+    @Test fun nativeMain10MetadataPreservesProfile() {
+        openNativePs("mkv-hevc-main10-aac.mkv").use { session ->
+            val video=session.mediaInfo.streams.single {it.kind==YlNativeStreamKind.VIDEO}
+            assertEquals(2,video.profile)
+            assertEquals(10,video.bitDepth)
         }
     }
 
@@ -159,7 +202,54 @@ class YlFormatDecodeInstrumentedTest {
         } finally { engine.dispose().await(); file.delete() }
     }
 
-    @Test fun ownedPsHardwareOutputsPixels() {
+    @Test fun actualEngineBudgetFailureIsOneTerminalEventAndCleanup() = kotlinx.coroutines.runBlocking {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val file = File(context.cacheDir, "p03-engine-budget.mpg")
+        InstrumentationRegistry.getInstrumentation().context.assets.open("format_matrix/ps-avc-mp3.mpg").use { input -> file.outputStream().use(input::copyTo) }
+        val pool = YlSoftwareDecodePool()
+        val stream = openNativePs().use { it.mediaInfo.streams.single { s -> s.kind == YlNativeStreamKind.VIDEO } }
+        val key = YlSoftwareDecodeKey("controlled", "test", "test", stream.codec.ordinal, stream.profile,
+            stream.bitDepth, stream.chroma, stream.width, stream.height, stream.fpsNumerator, stream.fpsDenominator, 2, 1)
+        val limits = YlSoftwareDecodeLimits(32L*1024*1024,1,1024*1024,1_000_000_000,1_000_000_000,1_000_000_000)
+        var tick=0L
+        val services = YlSoftwareDecodeServices(YlSoftwareDecodeIdentity("controlled","test","test"),
+            YlSoftwareDecodeAdmission(mapOf(key to limits)),pool,2) { tick++;YlSoftwareDecodeObservation(tick,tick,1,true) }
+        val texture = android.graphics.SurfaceTexture(false)
+        val entry = object : io.flutter.view.TextureRegistry.SurfaceTextureEntry {
+            override fun id() = 903L
+            override fun surfaceTexture() = texture
+            override fun release() = texture.release()
+        }
+        val output = YlVideoOutput(entry)
+        val engine = YlNativeFallbackEngine(context,YlSessionIdentity("p03","budget"),
+            AndroidSourceMessage(AndroidSourceKind.FILE,file.absolutePath,AndroidStreamIntent.ON_DEMAND,AndroidMediaFormat.MPEG_PS),
+            AndroidLoadOptionsMessage(false,bufferStrategy=AndroidBufferStrategyMessage(AndroidBufferKind.AUTOMATIC),videoConstraints=AndroidVideoConstraintsMessage()),
+            AndroidPlayerOptionsMessage(AndroidDecoderPolicy.HARDWARE_PREFERRED,AndroidAudioPolicy.APP_MANAGED,250),
+            kotlinx.coroutines.Dispatchers.Unconfined,services,findHardwareDecoder={null})
+        val failure = kotlinx.coroutines.CompletableDeferred<YlFailureKind>()
+        val count = java.util.concurrent.atomic.AtomicInteger()
+        val snapshots = java.util.Collections.synchronizedList(mutableListOf<YlEngineSnapshot>())
+        engine.registerCallback { _,event -> when(event) {
+            is YlEngineEvent.Failed -> {count.incrementAndGet();failure.complete(event.kind)}
+            is YlEngineEvent.Snapshot -> snapshots.add(event.value)
+            else -> Unit
+        } }
+        try {
+            engine.prepare();engine.activate(output)
+            assertEquals(AndroidDecoderMode.SOFTWARE,snapshots.last().decoderMode)
+            assertEquals("ffmpeg-h264",snapshots.last().decoderIdentity)
+            engine.onConfigurationChanged()
+            engine.play()
+            assertEquals(YlFailureKind.RESOURCE_EXHAUSTED,kotlinx.coroutines.withTimeout(5000) { failure.await() })
+            kotlinx.coroutines.delay(100)
+            assertEquals(1,count.get())
+        } finally {engine.dispose().await();output.release();file.delete()}
+        assertEquals(0L,pool.ownedBytes)
+    }
+
+    @Test fun ownedPsHardwareOutputsPixels() = hardwarePixels("ps-avc-mp3.mpg")
+    @Test fun ownedEac3ContainerHardwareOutputsPixels() = hardwarePixels("mkv-avc-eac3.mkv")
+    private fun hardwarePixels(fixture: String) {
         val thread = android.os.HandlerThread("p03-hardware-pixels").apply { start() }
         val reader = ImageReader.newInstance(320, 180, ImageFormat.YUV_420_888, 4)
         val images = java.util.concurrent.atomic.AtomicInteger()
@@ -167,7 +257,7 @@ class YlFormatDecodeInstrumentedTest {
             assertTrue(it.planes[0].buffer.remaining() > 0); images.incrementAndGet()
         } }, Handler(thread.looper))
         try {
-            openNativePs().use { session ->
+            openNativePs(fixture).use { session ->
                 val stream = session.mediaInfo.streams.single { it.kind == YlNativeStreamKind.VIDEO }
                 val name = checkNotNull(YlHardwareCodecProbe.findVideoDecoder(stream))
                 assertTrue(session.configureHardwareVideo(stream.index))
@@ -177,6 +267,7 @@ class YlFormatDecodeInstrumentedTest {
                         val packet = session.readPacket() ?: break
                         packet.use { if (it.streamIndex == stream.index) decoder.consume(it) }
                     }
+                    decoder.finish()
                     decoder.flush()
                     decoder.replaceSurface(reader.surface)
                     assertEquals(name, decoder.decoderIdentity)
@@ -188,9 +279,10 @@ class YlFormatDecodeInstrumentedTest {
         } finally { reader.close(); thread.quitSafely(); thread.join(2000) }
     }
     @Test fun media3AviAvc() = media3("avi-avc-mp3.avi")
+    @Test fun media3Eac3VideoOnly() = media3("mkv-avc-eac3.mkv", videoOnly=true)
     @Test fun media3Av1() = media3("mkv-av1-opus.mkv")
 
-    private fun media3(name: String) {
+    private fun media3(name: String, videoOnly: Boolean = false) {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val input = File(context.cacheDir, "p03-$name")
@@ -209,6 +301,8 @@ class YlFormatDecodeInstrumentedTest {
                     images++
                 } }, Handler(context.mainLooper))
                 player = ExoPlayer.Builder(context).build().also { exo ->
+                    if(videoOnly) exo.trackSelectionParameters=exo.trackSelectionParameters.buildUpon()
+                        .setTrackTypeDisabled(androidx.media3.common.C.TRACK_TYPE_AUDIO,true).build()
                     exo.addAnalyticsListener(object : AnalyticsListener {
                         override fun onVideoDecoderInitialized(eventTime: AnalyticsListener.EventTime,
                             decoderName: String, initializedTimestampMs: Long, initializationDurationMs: Long) {

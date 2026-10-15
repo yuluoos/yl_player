@@ -34,6 +34,7 @@ internal fun requiresHlsCredentialAncestry(
 /** One factory and provenance graph per source, retained through stop/restore/recovery. */
 @OptIn(UnstableApi::class)
 internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, private val drmManager: androidx.media3.exoplayer.drm.DrmSessionManager? = null, onRetry: (Int, Long) -> Unit) {
+    private val routeFlvForSeek = requiresOwnedFlvSeek(source.kind, source.intent)
     private val rtmp = if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpDataSources(source.locator) else null
     private val managed = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private val requestHeaders = source.request?.headers.orEmpty()
@@ -76,7 +77,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
                 }
             }
             .createMediaSource(item)
-        else DefaultMediaSourceFactory(dataSources, YlProgressiveExtractors()).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
+        else DefaultMediaSourceFactory(dataSources, YlProgressiveExtractors(routeFlvForSeek)).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
     }
     fun setPlaybackPaused(paused: Boolean) { rtmp?.setPlaybackPaused(paused) }
     fun cancelAll() { rtmp?.cancelAll(); http?.cancelAll() }

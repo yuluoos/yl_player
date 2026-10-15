@@ -44,15 +44,17 @@
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins; every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "fa09402f05511a75e9114e6305248226a8bfb8a4d6bfa065186269639c9e6881",
-      "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim."
+      "source_sha256": "f0d795e3650937397f729068bf69b4268e07d2a84e343b01424fc675d8908a99",
+      "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
+      "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition."
     },
     "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": {
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins; every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "fa09402f05511a75e9114e6305248226a8bfb8a4d6bfa065186269639c9e6881",
-      "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim."
+      "source_sha256": "f0d795e3650937397f729068bf69b4268e07d2a84e343b01424fc675d8908a99",
+      "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
+      "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition."
     }
   },
   "hardening_r19": {

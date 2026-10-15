@@ -23,7 +23,7 @@ common_flags=(
   --enable-avcodec
   --enable-avformat
   --enable-swresample
-  --enable-demuxer=matroska,flv,mov,mpegts,mpegps,h264,aac,mp3,ogg
+  --enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264,aac,mp3,ogg
   --enable-decoder=h264,hevc,aac,mp3,ac3,eac3,dca,flac,opus,vorbis
   --enable-parser=aac,ac3,dca,flac,h264,hevc,mpegaudio,opus,vorbis
   --enable-bsf=h264_mp4toannexb,hevc_mp4toannexb,aac_adtstoasc

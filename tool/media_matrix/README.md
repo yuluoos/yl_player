@@ -1,6 +1,6 @@
 # P03 格式基线
 
-17份原创短片/损坏夹具，共覆盖8类容器、4类目标视频和8类音频；目录在 `packages/yl_player/example/assets/test_media/format_matrix/`。每个样本列出Android/iOS/macOS及file/http调查行，尚未做完整输出验收。MPEG-2/MP3仅用于合理的MPEG-PS容器探测，不新增视频编码支持承诺。Profile/位深、声道、seek期望独立记录；`expected_seekable`表示测试目标，不宣称媒体自带索引。
+当前目录有22份原创短片/损坏夹具，共覆盖8类容器、4类目标视频和8类音频；目录在 `packages/yl_player/example/assets/test_media/format_matrix/`。每个样本列出Android/iOS/macOS及file/http调查行，三端调查行与公开路径证据分开记录；完整输出验收仍开放。MPEG-2/MP3仅用于合理的MPEG-PS容器探测，不新增视频编码支持承诺。Profile/位深、声道、seek期望独立记录；`expected_seekable`表示测试目标，不宣称媒体自带索引。
 
 生成：`python3 -B tool/media_matrix/generate.py`。需要FFmpeg8.0.1及记录的编码器，生成命令/版本、独立ffprobe结果与SHA256SUMS随样本提交。颜色标记每秒red/lime/blue/white；音频每秒440/660/880/1100Hz，每声道加55Hz，5.1的LFE改用60/70/80/90Hz。图形与声音均为本项目原创生成，不含外来影视材料。编码器/封装器的随机标识可能导致重新生成的字节哈希不同，必须重新probe、验证并记录实际哈希，不以命令相同推断字节一致。
 
@@ -50,3 +50,25 @@ VP9切片保留全部21份媒体，仍为67条公开路径。`webm-vp9-opus`增�
 从原WebM直接复制的96帧IVF，不依赖宿主FFmpeg；来源、命令及哈希见
 `fixtures/vp9-profile0.json`。硬件提示探测与真实session硬件证据分别记录；
 最终观测见`macos-vp9-observations.json`，物理像素/声音/同步仍未验收。
+
+
+P03 完成工程切片增加 `observations.py`：固定 run/build/media 身份和计划行数，
+分开统计 required、diagnostic 与截断负控；像素、原生 PCM 和音频时钟必须
+属于同一运行才能形成完整输出验收。公开 `YL_FORMAT_ROW` 当前不包含同次
+原生 PCM，且构建身份未嵌入时明确为 `unrecorded`，不得通过跨 run 拼接
+把它升级为完整验收。实际 Android/macOS/iOS 观测与历史失败见 P03 执行报告。
+
+公开矩阵默认观察真实像素：Android texture 采用 RGB 容差40；Apple 屏幕
+截图受宿主 ICC 影响，只辨认四段红/绿/蓝/白身份（主通道至少180、领先其他
+通道至少100；白色各通道至少220且差值至多35），原生测试独立核对精确解码
+像素。每段及2s/1.25s/0 seek 后都等待实际目标图像，失败保存截图，
+宿主缩放变化使该 run 失败。此观察不证明物理屏幕色准或音画同步。
+
+`av1-hardware-control.mkv` 是硬解错误测试专用的视频独立控制片，不加入
+格式支持分母。从现有原创 AV1/Opus 片无损复制视频，96个压缩包 SHA 均相同；
+来源、工具版本、逐包哈希在 `tool/decoder_probe/fixtures/av1-hardware-control.json`。
+它避免既有 Opus 硬解策略先行拒绝，单独观察真实视频 `decoder.unavailable`。
+
+若宿主截图慢于一秒标记窗口，可另起 run 加
+`--dart-define=YL_FORMAT_SLOW_CAPTURE=true`，以0.25×运行并在每行记录
+`playbackRate`。它是独立的观测控制，不替换、抹去或计作1×失败行的同条件通过。

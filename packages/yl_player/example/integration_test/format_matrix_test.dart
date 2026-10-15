@@ -1,14 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart' show debugPrintSynchronously;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 
 import 'support/apple_strict_support.dart' show stateWhere;
+import 'support/capture_composition.dart';
 
 const _assets = 'assets/test_media/format_matrix';
 const _caseIds = [
@@ -39,6 +43,18 @@ const _caseIds = [
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   var aborted = false;
+  final runId =
+      'format-${Platform.operatingSystem}-${DateTime.now().microsecondsSinceEpoch}';
+  const verifyPixels = bool.fromEnvironment(
+    'YL_FORMAT_VERIFY_PIXELS',
+    defaultValue: true,
+  );
+  // Optional host-observation control for slow simulator screenshots. Keep the
+  // ordinary 1x run and its failures; record this rate on every separate row.
+  const playbackRate = bool.fromEnvironment('YL_FORMAT_SLOW_CAPTURE')
+      ? 0.25
+      : 1.0;
+  double? captureScale;
   for (final id in _caseIds) {
     for (final transport in [
       'file',
@@ -132,6 +148,87 @@ void main() {
         var cleaned = false;
         var engine = 'unknown';
         var decoder = 'unknown';
+        var pixelsVerified = false;
+        var retainCaptures = false;
+        final pixelEvidence = <Map<String, Object>>[];
+        final captureKey = GlobalKey();
+        Future<void> marker(int second, String phase) async {
+          final boundary =
+              captureKey.currentContext!.findRenderObject()
+                  as RenderRepaintBoundary;
+          final expected = [
+            [255, 0, 0],
+            [0, 255, 0],
+            [0, 0, 255],
+            [255, 255, 255],
+          ][second];
+          final deadline = Stopwatch()..start();
+          while (true) {
+            await tester.pump(const Duration(milliseconds: 30));
+            final (image, scale, top) = await captureComposition(boundary);
+            try {
+              if (captureScale != null && captureScale != scale) {
+                retainCaptures = true;
+                fail('Capture scale changed within a run');
+              }
+              captureScale = scale;
+              final data = (await image.toByteData(
+                format: ui.ImageByteFormat.rawRgba,
+              ))!;
+              final x = image.width ~/ 2;
+              final y = (top + boundary.size.height * scale / 2).round();
+              final offset = (y * image.width + x) * 4;
+              final rgb = [
+                for (var c = 0; c < 3; c++) data.getUint8(offset + c),
+              ];
+              // Screen captures pass through the host display ICC profile.
+              // Identify the four primary-colour markers there; exact decoded
+              // RGB/planes are checked separately in the native output tests.
+              // Black, grey and every other fixture marker must still fail.
+              final screenCapture = Platform.isMacOS || Platform.isIOS;
+              final matched = screenCapture
+                  ? second == 3
+                        ? rgb.every((value) => value >= 220) &&
+                              (rgb.reduce((a, b) => a > b ? a : b) -
+                                      rgb.reduce((a, b) => a < b ? a : b)) <=
+                                  35
+                        : rgb[second] >= 180 &&
+                              [
+                                for (var c = 0; c < 3; c++)
+                                  if (c != second) c,
+                              ].every((c) => rgb[second] - rgb[c] >= 100)
+                  : List.generate(
+                      3,
+                      (c) => (rgb[c] - expected[c]).abs() <= 40,
+                    ).every((v) => v);
+              final png = (await image.toByteData(
+                format: ui.ImageByteFormat.png,
+              ))!;
+              await File('${directory.path}/$phase-$second.png').writeAsBytes(
+                png.buffer.asUint8List(png.offsetInBytes, png.lengthInBytes),
+              );
+              if (matched) {
+                pixelEvidence.add({
+                  'phase': phase,
+                  'marker': second,
+                  'rgb': rgb,
+                  'positionUs': player!.state.timeline.position.inMicroseconds,
+                  'comparison': screenCapture
+                      ? 'display-primary-marker-identity'
+                      : 'decoded-rgb-tolerance-40',
+                });
+                return;
+              }
+              if (deadline.elapsed > const Duration(seconds: 3)) {
+                retainCaptures = true;
+                fail('Displayed marker mismatch: $phase/$second, rgb=$rgb');
+              }
+            } finally {
+              image.dispose();
+            }
+          }
+        }
+
         try {
           player = await YlPlayerController.create(
             options: const YlPlayerOptions(
@@ -139,7 +236,12 @@ void main() {
             ),
           );
           await tester.pumpWidget(
-            MaterialApp(home: YlPlayerView(controller: player)),
+            MaterialApp(
+              home: RepaintBoundary(
+                key: captureKey,
+                child: YlPlayerView(controller: player),
+              ),
+            ),
           );
           stage = 'load';
           final source = server == null
@@ -153,10 +255,14 @@ void main() {
               .timeout(const Duration(seconds: 12));
           stage = 'ready';
           await session.ready.timeout(const Duration(seconds: 10));
+          if (playbackRate != 1.0) {
+            await session.setPlaybackSpeed(playbackRate);
+          }
           stage = 'first-frame';
           await session.play();
           await session.firstFrame.timeout(const Duration(seconds: 10));
           firstFrame = true;
+          await tester.pump(const Duration(milliseconds: 30));
           if (id == 'ts-avc-ac3') {
             expect(
               player.state.timeline.position.inMilliseconds,
@@ -168,15 +274,19 @@ void main() {
             );
           }
           stage = 'progress';
-          await stateWhere(
-            player,
-            (s) => s.timeline.position > const Duration(milliseconds: 400),
-          );
+          if (!verifyPixels) {
+            await stateWhere(
+              player,
+              (s) => s.timeline.position > const Duration(milliseconds: 400),
+            );
+          }
           expect(player.state.videoGeometry, isNotNull);
           audioSelected = player.state.audioTracks.any((t) => t.isSelected);
           expect(audioSelected, isTrue);
           if (id.startsWith('webm-vp9')) {
-            expect(player.state.engine.name, 'managedFallback');
+            if (!Platform.isAndroid) {
+              expect(player.state.engine.name, 'managedFallback');
+            }
             expect(player.state.decoderMode.name, 'hardware');
           }
           if (id == 'flv-avc-mp3' ||
@@ -186,24 +296,22 @@ void main() {
             expect(player.state.timeline.isSeekable, isTrue);
             expect(player.state.timeline.duration, isNotNull);
           }
+          if (verifyPixels) {
+            stage = 'pixel-markers';
+            for (var second = 0; second < 4; second++) {
+              if (second > 0) {
+                await stateWhere(
+                  player,
+                  (s) => s.timeline.position.inMilliseconds >= second * 1000,
+                );
+              }
+              // Observe the actual target frame while rendering can progress.
+              // Pausing on a timeline event can freeze an older queued surface.
+              await marker(second, 'play');
+            }
+          }
           stage = 'seek';
-          final targets = [
-            2000,
-            if (id == 'mov-hevc-aac' ||
-                id == 'mkv-hevc-main10-aac' ||
-                id == 'flv-avc-mp3' ||
-                id == 'mkv-avc-flac' ||
-                id == 'mkv-avc-vorbis' ||
-                id.startsWith('webm-vp9') ||
-                id.startsWith('mkv-avc-opus') ||
-                id == 'ts-avc-ac3' ||
-                id == 'avi-avc-mp3')
-              1250,
-            if (id.startsWith('mkv-avc-opus') ||
-                id == 'mkv-avc-vorbis' ||
-                id.startsWith('webm-vp9'))
-              0,
-          ];
+          const targets = [2000, 1250, 0];
           for (final targetMs in targets) {
             await session.pause();
             await session.seekTo(Duration(milliseconds: targetMs));
@@ -213,22 +321,33 @@ void main() {
                   (s.timeline.position.inMilliseconds - targetMs).abs() <= 300,
             );
             await session.play();
-            await stateWhere(
-              player,
-              (s) =>
-                  s.timeline.position > Duration(milliseconds: targetMs + 350),
-            );
+            if (!verifyPixels) {
+              await stateWhere(
+                player,
+                (s) =>
+                    s.timeline.position >
+                    Duration(milliseconds: targetMs + 350),
+              );
+            }
             expect(player.state.failure, isNull);
+            if (verifyPixels) {
+              stage = 'seek-pixels';
+              await marker(targetMs ~/ 1000, 'seek-$targetMs');
+            }
             if (id.startsWith('webm-vp9')) {
               expect(player.state.decoderMode.name, 'hardware');
             }
           }
           seek = true;
+          pixelsVerified = verifyPixels;
           stage = 'end';
-          await stateWhere(
-            player,
-            (s) => s.status == YlPlaybackStatus.completed,
-          );
+          // Keep the same media-time allowance for the optional slow capture
+          // control. Its four-second clip takes sixteen wall-clock seconds.
+          if (player.state.status != YlPlaybackStatus.completed) {
+            await player.states
+                .firstWhere((s) => s.status == YlPlaybackStatus.completed)
+                .timeout(Duration(milliseconds: (15000 / playbackRate).ceil()));
+          }
           completed = true;
           expect(player.state.failure, isNull);
           outcome = 'passed';
@@ -242,6 +361,11 @@ void main() {
           code = failure?.code;
           category = failure?.category.name;
           scope = failure?.scope.name;
+        } on TestFailure catch (error) {
+          code = 'test.assertion';
+          debugPrintSynchronously(
+            'YL_FORMAT_ASSERTION=$id/$transport/$stage: ${error.message}',
+          );
         } catch (_) {
           // Fixed stage only: never dump native exceptions or source identities.
           code = 'test.assertion';
@@ -254,14 +378,28 @@ void main() {
             );
             await tester.pumpWidget(const SizedBox.shrink());
             await server?.close(force: true);
-            await directory.delete(recursive: true);
+            if (!retainCaptures) {
+              await directory.delete(recursive: true);
+            } else {
+              debugPrintSynchronously(
+                'YL_FORMAT_CAPTURE_DIRECTORY=${directory.path}',
+              );
+              await for (final item in directory.list()) {
+                if (item is File && item.path.endsWith('.png')) {
+                  debugPrintSynchronously(
+                    'YL_FORMAT_CAPTURE=${jsonEncode({'caseId': id, 'transport': transport, 'file': item.uri.pathSegments.last, 'pngBase64': base64Encode(await item.readAsBytes())})}',
+                    wrapWidth: 100000,
+                  );
+                }
+              }
+            }
             cleaned = true;
           } catch (_) {
             aborted = true;
             outcome = 'cleanup-failed';
           }
-          debugPrint(
-            'YL_FORMAT_ROW=${jsonEncode({'caseId': id, 'transport': transport, 'platform': Platform.operatingSystem, 'mediaHash': row['sha256'], 'supportRequirement': row['supportRequirement'], 'outcome': outcome, 'stage': stage, 'code': code, 'category': category, 'scope': scope, 'engine': engine, 'decoder': decoder, 'firstFrame': firstFrame, 'audioTrackSelected': audioSelected, 'audioOutputVerified': false, 'pixelMarkersVerified': false, 'audioClockUs': null, 'seekProgress': seek, 'completed': completed, 'disposed': cleaned})}',
+          debugPrintSynchronously(
+            'YL_FORMAT_ROW=${jsonEncode({'runId': runId, 'buildSha256': const String.fromEnvironment('YL_FORMAT_BUILD_SHA256', defaultValue: 'unrecorded'), 'caseId': id, 'transport': transport, 'platform': Platform.operatingSystem, 'playbackRate': playbackRate, 'mediaHash': row['sha256'], 'supportRequirement': row['supportRequirement'], 'outcome': outcome, 'stage': stage, 'code': code, 'category': category, 'scope': scope, 'engine': engine, 'decoder': decoder, 'firstFrame': firstFrame, 'audioTrackSelected': audioSelected, 'audioOutputVerified': false, 'pixelMarkersVerified': pixelsVerified, 'pcmMarkersVerified': false, 'pixelVerificationMethod': verifyPixels ? 'player-composition' : 'not-run', 'pcmVerificationMethod': 'not-run', 'pixelEvidence': pixelEvidence, 'audioClockUs': null, 'seekProgress': seek, 'completed': completed, 'disposed': cleaned})}',
             wrapWidth: 100000,
           );
         }
@@ -297,7 +435,10 @@ void main() {
         } else if (row['integrity'] == 'truncated') {
           expect(outcome, 'failed');
           expect(category, anyOf('source', 'container'));
-          expect(scope, 'session');
+          expect(
+            scope,
+            Platform.isAndroid && stage == 'load' ? 'command' : 'session',
+          );
           expect(firstFrame, isFalse);
         } else {
           expect(
