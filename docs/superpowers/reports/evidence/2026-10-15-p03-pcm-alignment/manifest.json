@@ -1,0 +1,318 @@
+{
+  "README.md": {
+    "bytes": 7106,
+    "sha256": "33eeb09ad91daf73ebfaeaf67aae8db4aa096bbef27e175facb329d5f542089c"
+  },
+  "android-native22.xml": {
+    "bytes": 3714,
+    "sha256": "4a72a26efcce643a931ea8eace784f4dc8f5890214e6cd476b26e14a3047d281"
+  },
+  "apple-final-provenance.json": {
+    "bytes": 9912,
+    "sha256": "87c426016bacbf4325678a8f22d9638127198ee78773e2f388345325427689e9"
+  },
+  "apple-interim-provenance.json": {
+    "bytes": 9912,
+    "sha256": "7639ec0789843ccc4d8e3f39dcfd57a251898f7a0ec2b99fbfce425cf6f90658"
+  },
+  "build-identities.json": {
+    "bytes": 14314,
+    "sha256": "94a2869aece73b4c5bd8608010a95485ddf5a827d952ffddab1b5aa8369fc643"
+  },
+  "codec.swift": {
+    "bytes": 3189,
+    "sha256": "5aa7adba34816fecc879d7b4017f3f2f0004eca381c0cfc721413f929137bc0b"
+  },
+  "dash-owner-red-summary.json": {
+    "bytes": 1422,
+    "sha256": "7e92850d5ba454e914803f07cf17c3e502e96a6f0cc36504d4d57d95166da627"
+  },
+  "diagnostic-raw-hashes.json": {
+    "bytes": 2247,
+    "sha256": "74b5bef2f8a39237dd50385438d201c316e80c5a7da02f6604ef67279695c359"
+  },
+  "final-review.md": {
+    "bytes": 1900,
+    "sha256": "79f22db7a4b9f8640ec407204bd20637ab0fbe3153a4348f9f22f0876af6ceea"
+  },
+  "final-verification.json": {
+    "bytes": 1586,
+    "sha256": "540487e87fd2c5fd0c029f8af9af03e7cc05a88414c379ee2359b07946d76e4a"
+  },
+  "ios-pcm-final-summary.json": {
+    "bytes": 1003,
+    "sha256": "7624fae221608b396e824dd4af3c149b28a4bdaa88e4675dc837467e39cd1537"
+  },
+  "ios-pcm-final-tests.json": {
+    "bytes": 5443,
+    "sha256": "50320e83480d819e61cb05de8f90bda05e0c79215b2468207f9a1683d3a6c3b7"
+  },
+  "logs/android-capture-install.log": {
+    "bytes": 36,
+    "sha256": "781a31c82430c97897af612ece5e0ca2205e301cb5ff121ce2660541ea5182c7"
+  },
+  "logs/android-capture-run.log": {
+    "bytes": 2322,
+    "sha256": "aaac277312cd355fdbc803eab59cd7ada782ec1cb0efd1f945c3940fcd8171aa"
+  },
+  "logs/android-contract.log": {
+    "bytes": 78,
+    "sha256": "f881e5f46b35aab9e627bc725efb80e8fce20f141c3afa56b8580807234a0dc8"
+  },
+  "logs/android-emulator.log": {
+    "bytes": 12636,
+    "sha256": "72171abd885855169a8bed80e55ee7a2e9ca050b2226839c6846ce3c57dc5718"
+  },
+  "logs/android-final.log": {
+    "bytes": 6935,
+    "sha256": "e2b829f7076c4b8cb58c0292fc83b15494900d20f138d4e531373b348d4d9c80"
+  },
+  "logs/android-native-green.log": {
+    "bytes": 8112,
+    "sha256": "a169c78feb0720e8c541cf4491a3958870ad59d886e108cf878fec9f0553f84f"
+  },
+  "logs/android-native.log": {
+    "bytes": 9191,
+    "sha256": "5a9d1977317c6fbed182a95b147642d8e00d8d245e890f5e21ffbd4f1ab7008d"
+  },
+  "logs/android-pcm-diagnostic.log": {
+    "bytes": 7522,
+    "sha256": "17278636674c3db06cea22773716597a73486d091be94be721ac97412cb56773"
+  },
+  "logs/android-pcm-observations.log": {
+    "bytes": 7468,
+    "sha256": "b0904b5c7d182b87d6d0750c7d9622cc55d425de73dcf0008911bd21ef8da618"
+  },
+  "logs/android-relink.log": {
+    "bytes": 150,
+    "sha256": "a18ad8613a12d115e499c502dbc3c3493ad21832a71667d5d061984e75f7428d"
+  },
+  "logs/apple-candidate.log": {
+    "bytes": 1290,
+    "sha256": "877019370d935831b586d7678957ec4d604905fca8bba78390073db36ce9041a"
+  },
+  "logs/apple-candidate2.log": {
+    "bytes": 298432,
+    "sha256": "9ddb15cd8ee209d1890f459dcdf288945b817bbdffc2d2b97d9c08d789709eab"
+  },
+  "logs/apple-contract-final.log": {
+    "bytes": 1595,
+    "sha256": "46c8283713f32252722497d9f32179a0cba4f146eba01a21923848607c2a1e1a"
+  },
+  "logs/apple-contract-green.log": {
+    "bytes": 1595,
+    "sha256": "46c8283713f32252722497d9f32179a0cba4f146eba01a21923848607c2a1e1a"
+  },
+  "logs/apple-contract.log": {
+    "bytes": 548,
+    "sha256": "55deb0b817c3403214cebdc7c493257b5c735b568b1faf477e1846dc900507ea"
+  },
+  "logs/apple-discovery.log": {
+    "bytes": 187,
+    "sha256": "9bd81eae473cb165f4ffd29ea370ee4a3523d269b1e25a5d4c6836ddc9a32a73"
+  },
+  "logs/apple-final-candidate.log": {
+    "bytes": 298444,
+    "sha256": "9c6c41cc81fb8e07f4d4e5a4a9bc8593ac80b081f144015ce19fed8c74ec2b99"
+  },
+  "logs/apple-final-rebuild.log": {
+    "bytes": 298475,
+    "sha256": "612ab1851d84e92ff4008134a062d15ec8843722e2e5e3a81a5e937185a3500a"
+  },
+  "logs/apple-independent-rebuild.log": {
+    "bytes": 298475,
+    "sha256": "4e3bcc5f2032474b0db5df835c233bc57a56ba12b785a89d4fc89519a965f719"
+  },
+  "logs/codec.log": {
+    "bytes": 10714,
+    "sha256": "be4ac2d7f986af7bb025eeb5c32bbb0b1c79e646b6cf551e38bb615162ca07e0"
+  },
+  "logs/config-ios.log": {
+    "bytes": 2122,
+    "sha256": "8facf0dd4c543a29930d5b09f562a12e9a4f4dd19caa0a908f8b8b97aa7fe38e"
+  },
+  "logs/config-macos.log": {
+    "bytes": 2134,
+    "sha256": "360f4b286996efed464679b5588f1ddc18f6843fe4f523c35d9be8aadb752aca"
+  },
+  "logs/dash-owner-red.log": {
+    "bytes": 7522,
+    "sha256": "86f8ccb9ae1b3ab5f60d3697b1bca8b4daf76157f8a62c76fa92961d938cb9d2"
+  },
+  "logs/dolby-abi.log": {
+    "bytes": 393,
+    "sha256": "3a374bb2f00eeda84db3e76e75ddf03fd675b15e7b272dd2817ae28f21723bec"
+  },
+  "logs/dolby-discovery-red.log": {
+    "bytes": 1279,
+    "sha256": "65ef7bdeb775b8f88d1821aedd66ab79a3889401b5b90d9b148ee74b6ffc8eb1"
+  },
+  "logs/dolby-final-candidate-abi.log": {
+    "bytes": 393,
+    "sha256": "c36ee0a04c7d4cd027f1bd808c40402d66b03579267d31c7a42f5ee7d4bd7006"
+  },
+  "logs/dolby-installed-final.log": {
+    "bytes": 393,
+    "sha256": "c36ee0a04c7d4cd027f1bd808c40402d66b03579267d31c7a42f5ee7d4bd7006"
+  },
+  "logs/fixture-discovery-final.log": {
+    "bytes": 187,
+    "sha256": "9bd81eae473cb165f4ffd29ea370ee4a3523d269b1e25a5d4c6836ddc9a32a73"
+  },
+  "logs/ios-final-run.log": {
+    "bytes": 41625,
+    "sha256": "50f0d5e991215cdac60916c7ecf923cbd0209f099d1c8b5debec3b1a96a2318e"
+  },
+  "logs/macos-diagnostic.log": {
+    "bytes": 12385,
+    "sha256": "5b30bc83cd07b2baa3362ea3f01edc6e6c62179908a52c182e6ff47e972d3694"
+  },
+  "logs/macos-final-run.log": {
+    "bytes": 30733,
+    "sha256": "e0c2677cc7fede271fe86204292a011016a125b2ea15670550628a8af8c17c74"
+  },
+  "logs/macos-final.log": {
+    "bytes": 29119,
+    "sha256": "230cb024d44af8f8bfa644aa5bf18c821c947914bc026abef533c30b4a233a46"
+  },
+  "logs/macos-final2.log": {
+    "bytes": 48780,
+    "sha256": "9770d1a4533102dc9659def2411902c9e4a75cd0fc0e8d096e71dc810104b84e"
+  },
+  "logs/macos-green1.log": {
+    "bytes": 45515,
+    "sha256": "9fe8b7e7f3650da52befa16ee04ff6688881cca92bb6a227227aeab095c2b5cc"
+  },
+  "logs/macos-red.log": {
+    "bytes": 69929,
+    "sha256": "5012310886e4fc4ecc521d0e702af6bd693126d249f63419ab3bbb3ea373261e"
+  },
+  "logs/prime-frames.log": {
+    "bytes": 1407,
+    "sha256": "ec4560028bbee524482ceaaac3040224fdbd4ae132a619a95f1b1e593daca2ce"
+  },
+  "logs/prime.log": {
+    "bytes": 1625,
+    "sha256": "fb749c65c69b70d992c62ac300b8646fa1ad281134cfc191455c82fbb88cd511"
+  },
+  "logs/python-media.log": {
+    "bytes": 122,
+    "sha256": "93ac8fc9821a401cb9f2b020d7075ad8227f3e662d499adb9f716d19e6afd2f8"
+  },
+  "logs/python-probe.log": {
+    "bytes": 120,
+    "sha256": "47f8951e0f0cee9ab7839c421ead696e08236052d4dfa6cbaa3ae28d9694767b"
+  },
+  "logs/software-measurement.log": {
+    "bytes": 76,
+    "sha256": "a58f3bd81ac7d68760b4f48d3b036915233811c345be595c2a95d29d71e7efa8"
+  },
+  "logs/unadmitted-video-final.log": {
+    "bytes": 700,
+    "sha256": "a472e0119ecac0a19535397390d29821e85864623fe688fbac295eb1ab608657"
+  },
+  "macos-final2-summary.json": {
+    "bytes": 6190,
+    "sha256": "79a9e86044a7270b1be5c2ac7779ed07f629c7ffc744857325493cf123de6461"
+  },
+  "macos-final3-summary.json": {
+    "bytes": 4218,
+    "sha256": "51862902df0f69d965f2c01e8318bc80f023ca1f0fa6b6d69000d89a7c203ca8"
+  },
+  "macos-final3-tests.json": {
+    "bytes": 52344,
+    "sha256": "9ce47c7c9268e995562eaf2e7ec02381bf5463862f6fc34b0daba1bee7f68bdb"
+  },
+  "macos-green1-summary.json": {
+    "bytes": 2844,
+    "sha256": "619bf037e135b1b5c5b6421ec14513443b30808ce5e8be05bf5428b29f32e953"
+  },
+  "macos-red-summary.json": {
+    "bytes": 3020,
+    "sha256": "12d9346317a42a36ebea5b85bdf0598d3efc34846bdae9cffeb3239a44c1f729"
+  },
+  "prime-frames.swift": {
+    "bytes": 2476,
+    "sha256": "021a15842f728ae73505fd3f1155c9227374bb41183fcea03f2aaa4640856462"
+  },
+  "prime.swift": {
+    "bytes": 2454,
+    "sha256": "54e1135e39861c1fdf78c781b3e744fb337e519467f92a45cb750b13c104b4be"
+  },
+  "progress.md": {
+    "bytes": 6290,
+    "sha256": "5c967c695906d05bccd58dbe88e5f361a8886bfc4dec5b4145566eb103c5cd41"
+  },
+  "run-ios.json": {
+    "bytes": 1439,
+    "sha256": "5eaf1dbc78ea04466d9cf9cac5f5f5c602a80403f29ba9adceb36abbb4005aca"
+  },
+  "run-macos.json": {
+    "bytes": 1287,
+    "sha256": "646072cdc4cb5a84c8f2fe2c5e58e9827dc68b261142aa85629a2b2cd5ba404a"
+  },
+  "run-native.py": {
+    "bytes": 354,
+    "sha256": "a7297dc47229f48cb5e6d2e52d9ec4e59c05bcf8c2407c5ffc51ab85bc496983"
+  },
+  "software-measurement/build.log": {
+    "bytes": 873,
+    "sha256": "d94505af5b28e5fed81ecd4577980f00fc6c4ec48b505dc07e73118c8cb1e46e"
+  },
+  "software-measurement/control.jsonl": {
+    "bytes": 1814,
+    "sha256": "40e218f1716df05044e358b608cc7e72c54c978602d0649a1a6d5f999f94eb1f"
+  },
+  "software-measurement/control.stderr": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "software-measurement/protocol.json": {
+    "bytes": 1407,
+    "sha256": "7b73313520fa999d7953b2d9a695e0e2663048a6536921d054a3f59d76d8fd89"
+  },
+  "software-measurement/result.json": {
+    "bytes": 85019,
+    "sha256": "261cb600cbda75d2d229a2d105369324d54b849afa647c85cdc14155f57f341d"
+  },
+  "software-measurement/run-0.jsonl": {
+    "bytes": 18613,
+    "sha256": "02c4026e6ca433f909222ed1a59f201bcff25c4a472766fcb85e2cdc6b86a2c5"
+  },
+  "software-measurement/run-0.stderr": {
+    "bytes": 245,
+    "sha256": "07980d72bc19c0fc15a64ef6507d0fb218cf516cda8adccdc71a2f166734b1d9"
+  },
+  "software-measurement/run-1.jsonl": {
+    "bytes": 18629,
+    "sha256": "da3bc50ede8dfe57c9dd152227b0ff75c69aba8cb5a37d5d4cab79e08c98afd0"
+  },
+  "software-measurement/run-1.stderr": {
+    "bytes": 245,
+    "sha256": "b555218a6935ad8c2f038243bccc8d5dfadc24828f65f75fedfe932c4a3a3dcc"
+  },
+  "software-measurement/run-2.jsonl": {
+    "bytes": 18625,
+    "sha256": "45a86e7f3f0ad2e7bbfca6fa9b2220444de269138362defd672272906d063f56"
+  },
+  "software-measurement/run-2.stderr": {
+    "bytes": 245,
+    "sha256": "56c30b0cd2171540788d4e4481a902e5569f6e8410554ab239b5c2bd9260ad81"
+  },
+  "software-measurement/run-3.jsonl": {
+    "bytes": 18633,
+    "sha256": "c00c9e74737ee8e7ef03dcc518720ef304f265e2ae1a9f02376bcb3a5b93935a"
+  },
+  "software-measurement/run-3.stderr": {
+    "bytes": 245,
+    "sha256": "bad02af932edc4e6898e27b03d01c96e3e2330905b658cff170e30057e0c77b1"
+  },
+  "software-measurement/run-4.jsonl": {
+    "bytes": 18631,
+    "sha256": "16939eb3548a5f427f7967a540d7b90398b50e0c2dbfb76a180c18cd4d99a71a"
+  },
+  "software-measurement/run-4.stderr": {
+    "bytes": 245,
+    "sha256": "601ee0623c6b5e5ec1413d3cefe863ade07e28468aed7618175184c047c06b63"
+  }
+}

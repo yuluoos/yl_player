@@ -72,3 +72,21 @@ P03 完成工程切片增加 `observations.py`：固定 run/build/media 身份�
 若宿主截图慢于一秒标记窗口，可另起 run 加
 `--dart-define=YL_FORMAT_SLOW_CAPTURE=true`，以0.25×运行并在每行记录
 `playbackRate`。它是独立的观测控制，不替换、抹去或计作1×失败行的同条件通过。
+
+
+P03 PCM boundary/switch control is generated explicitly with
+`python3 tool/media_matrix/prepare_pcm_alignment.py`. It packet-copies the four
+owned AC3 5.1/EAC3/DTS/FLAC tracks, preserving the catalog fixtures, and pins
+host FFmpeg frame timestamps and unshifted Float32 reference windows. Native
+tests compare first/last 4096 frames, every packet's PTS/frame count, and the
+2.5-second cold track-switch output. The Dolby files start at -5 ms and decode
+192000 raw frames; programme-zero clipping retains 191760 frames. DTS/FLAC
+retain 192000. These are the encoded files' boundaries, not a claim that their
+lossy encoder preserved every original source sample.
+
+`python3 tool/media_matrix/check_dolby_bridge.py PATH/TO/YlFFmpegBridge.framework/YlFFmpegBridge`
+checks actual Dolby ABI PCM, capacity rejection before consumption, reset and
+failure poisoning. Host references share FFmpeg decoder ancestry with Dolby,
+DTS and Android; CoreAudio FLAC remains an independent implementation. This
+separate-build regression proof does not replace independent decoder or physical
+speaker/A/V qualification. Neither script changes production admission profiles.

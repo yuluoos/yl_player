@@ -351,7 +351,17 @@ AVCodecContext* create_decoder(Session* session, int stream_index) {
   const AVCodec* codec = avcodec_find_decoder(parameters->codec_id);
   if (!codec) return nullptr;
   AVCodecContext* decoder = avcodec_alloc_context3(codec);
-  if (!decoder || avcodec_parameters_to_context(decoder, parameters) < 0 || avcodec_open2(decoder, codec, nullptr) < 0) {
+  if (!decoder || avcodec_parameters_to_context(decoder, parameters) < 0) {
+    avcodec_free_context(&decoder);
+    return nullptr;
+  }
+  // Dolby packet PTS already carries container delay. Preserve decoded priming
+  // so programme-zero/seek trimming happens exactly once in YlPcmAudioOutput.
+  // Otherwise codecpar.initial_padding silently shortens the first PCM block
+  // while the JNI packet timestamp still labels its pre-trim first sample.
+  if (parameters->codec_id == AV_CODEC_ID_AC3 || parameters->codec_id == AV_CODEC_ID_EAC3)
+    decoder->flags2 |= AV_CODEC_FLAG2_SKIP_MANUAL;
+  if (avcodec_open2(decoder, codec, nullptr) < 0) {
     avcodec_free_context(&decoder);
     return nullptr;
   }

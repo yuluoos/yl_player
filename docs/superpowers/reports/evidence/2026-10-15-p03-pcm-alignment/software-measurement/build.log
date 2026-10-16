@@ -1,0 +1,7 @@
+/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/apple_decode_probe.swift:74:49: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 72 |     var property: CFTypeRef?
+ 73 |     let propertyStatus = VTSessionCopyProperty(session, key: "UsingHardwareAcceleratedVideoDecoder" as CFString,
+ 74 |       allocator: kCFAllocatorDefault, valueOut: &property)
+    |                                                 `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 75 |     row["propertyStatus"] = propertyStatus
+ 76 |     if propertyStatus == noErr, let property, CFGetTypeID(property) == CFBooleanGetTypeID() {

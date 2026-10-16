@@ -1,0 +1,115 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6",
+      "deviceName" : "yl-p03-output-20261015",
+      "modelName" : "iPhone 18 Pro",
+      "osBuildNumber" : "24A434",
+      "osVersion" : "27.0",
+      "platform" : "iOS Simulator"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.031s",
+                  "durationInSeconds" : 0.030750036239624023,
+                  "name" : "testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts()",
+                  "nodeIdentifier" : "YlAudioRendererTests/testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAudioRendererTests/testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.078s",
+                  "durationInSeconds" : 0.07760405540466309,
+                  "name" : "testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets()",
+                  "nodeIdentifier" : "YlAudioRendererTests/testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAudioRendererTests/testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.42s",
+                  "durationInSeconds" : 0.41877496242523193,
+                  "name" : "testDolbySurroundSystemOutputCanSwitchToAAC()",
+                  "nodeIdentifier" : "YlAudioRendererTests/testDolbySurroundSystemOutputCanSwitchToAAC()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAudioRendererTests/testDolbySurroundSystemOutputCanSwitchToAAC",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlAudioRendererTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAudioRendererTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.72s",
+                  "durationInSeconds" : 0.7153419256210327,
+                  "name" : "testDASHWindowOwnsNegativePCMClipping()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testDASHWindowOwnsNegativePCMClipping()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDASHWindowOwnsNegativePCMClipping",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.015s",
+                  "durationInSeconds" : 0.01485598087310791,
+                  "name" : "testDolbyTrimRetainsAllocationAndResetsHistory()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testDolbyTrimRetainsAllocationAndResetsHistory()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDolbyTrimRetainsAllocationAndResetsHistory",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0066s",
+                  "durationInSeconds" : 0.0065500736236572266,
+                  "name" : "testPCMTrimRoundsForwardAndRejectsTimestampOverflow()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testPCMTrimRoundsForwardAndRejectsTimestampOverflow()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testPCMTrimRoundsForwardAndRejectsTimestampOverflow",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.1926660537719727,
+                  "name" : "testRealConvertersPreserveFirstAndLastSamples()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testRealConvertersPreserveFirstAndLastSamples()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testRealConvertersPreserveFirstAndLastSamples",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlContainerOutputTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

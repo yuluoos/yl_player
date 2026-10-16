@@ -1,0 +1,796 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift",
+                        "lineNumber" : 207
+                      }
+                    }
+                  ],
+                  "duration" : "7秒",
+                  "durationInSeconds" : 7.431455016136169,
+                  "name" : "testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "7秒",
+                  "durationInSeconds" : 7.463994026184082,
+                  "name" : "testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.67s",
+                  "durationInSeconds" : 0.6707780361175537,
+                  "name" : "testDASHWindowOwnsNegativePCMClipping()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testDASHWindowOwnsNegativePCMClipping()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDASHWindowOwnsNegativePCMClipping",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0048s",
+                  "durationInSeconds" : 0.004828929901123047,
+                  "name" : "testDolbyTrimRetainsAllocationAndResetsHistory()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testDolbyTrimRetainsAllocationAndResetsHistory()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDolbyTrimRetainsAllocationAndResetsHistory",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "6秒",
+                  "durationInSeconds" : 6.915158033370972,
+                  "name" : "testDTSActualPixelsPCMAndSeek()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "6秒",
+                  "durationInSeconds" : 6.718732953071594,
+                  "name" : "testEAC3ActualPixelsPCMAndSeek()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "6秒",
+                  "durationInSeconds" : 6.730423927307129,
+                  "name" : "testFLACActualPixelsPCMAndSeek()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "6秒",
+                  "durationInSeconds" : 6.803657054901123,
+                  "name" : "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0022s",
+                  "durationInSeconds" : 0.0021600723266601562,
+                  "name" : "testPCMTrimRoundsForwardAndRejectsTimestampOverflow()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testPCMTrimRoundsForwardAndRejectsTimestampOverflow()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testPCMTrimRoundsForwardAndRejectsTimestampOverflow",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift",
+                        "lineNumber" : 207
+                      }
+                    }
+                  ],
+                  "duration" : "6秒",
+                  "durationInSeconds" : 6.832731008529663,
+                  "name" : "testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.1953150033950806,
+                  "name" : "testRealConvertersPreserveFirstAndLastSamples()",
+                  "nodeIdentifier" : "YlContainerOutputTests/testRealConvertersPreserveFirstAndLastSamples()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testRealConvertersPreserveFirstAndLastSamples",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlContainerOutputTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.0009s",
+                  "durationInSeconds" : 0.0009000301361083984,
+                  "name" : "testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts()",
+                  "nodeIdentifier" : "YlMacosAudioTests/testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testDolbyAudioRejectsMissingOrMismatchedSpeakerLayouts",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.014s",
+                  "durationInSeconds" : 0.013524055480957031,
+                  "name" : "testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets()",
+                  "nodeIdentifier" : "YlMacosAudioTests/testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testDolbySurroundConvertsCenterWithoutChangingSpeakerOrderAndResets",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.022s",
+                  "durationInSeconds" : 0.021589994430541992,
+                  "name" : "testDolbySurroundSystemOutputCanSwitchToAAC()",
+                  "nodeIdentifier" : "YlMacosAudioTests/testDolbySurroundSystemOutputCanSwitchToAAC()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testDolbySurroundSystemOutputCanSwitchToAAC",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0073s",
+                  "durationInSeconds" : 0.0073490142822265625,
+                  "name" : "testFLACDecodesExactMono16AndStereo24SamplesIncludingShortFinalPacketAndReset()",
+                  "nodeIdentifier" : "YlMacosAudioTests/testFLACDecodesExactMono16AndStereo24SamplesIncludingShortFinalPacketAndReset()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testFLACDecodesExactMono16AndStereo24SamplesIncludingShortFinalPacketAndReset",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlMacosAudioTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.0016s",
+                  "durationInSeconds" : 0.0015599727630615234,
+                  "name" : "testAudioOnlyFallbackRejectsActualUnsupportedRouteBeforeHardwareProbe()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testAudioOnlyFallbackRejectsActualUnsupportedRouteBeforeHardwareProbe()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testAudioOnlyFallbackRejectsActualUnsupportedRouteBeforeHardwareProbe",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0037s",
+                  "durationInSeconds" : 0.0036950111389160156,
+                  "name" : "testAudioOutputStartFailurePublishesTerminalFailure()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testAudioOutputStartFailurePublishesTerminalFailure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testAudioOutputStartFailurePublishesTerminalFailure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.049s",
+                  "durationInSeconds" : 0.04857790470123291,
+                  "name" : "testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBackendSeekOrdersHeldStagesAndSuppressesOldAudioAndVideo",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0012s",
+                  "durationInSeconds" : 0.0012079477310180664,
+                  "name" : "testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+                        "lineNumber" : 1704
+                      }
+                    }
+                  ],
+                  "duration" : "2秒",
+                  "durationInSeconds" : 2.9191750288009644,
+                  "name" : "testBoundedEOFBelowMinimumStillProgressesWithRealManagedInput()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedEOFBelowMinimumStillProgressesWithRealManagedInput()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedEOFBelowMinimumStillProgressesWithRealManagedInput",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "3秒",
+                  "durationInSeconds" : 3.5378700494766235,
+                  "name" : "testBoundedFiveHundredMsControlledFixtureProgressesWithoutExceedingDuration()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedFiveHundredMsControlledFixtureProgressesWithoutExceedingDuration()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedFiveHundredMsControlledFixtureProgressesWithoutExceedingDuration",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.0827800035476685,
+                  "name" : "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0013s",
+                  "durationInSeconds" : 0.0013270378112792969,
+                  "name" : "testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+                        "lineNumber" : 1704
+                      }
+                    }
+                  ],
+                  "duration" : "2秒",
+                  "durationInSeconds" : 2.827157974243164,
+                  "name" : "testBoundedSixteenMiBManagedFixtureWithControlledVideoMustProgressAndReachEOF()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBManagedFixtureWithControlledVideoMustProgressAndReachEOF()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBManagedFixtureWithControlledVideoMustProgressAndReachEOF",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "2秒",
+                  "durationInSeconds" : 2.8016330003738403,
+                  "name" : "testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0042s",
+                  "durationInSeconds" : 0.004172921180725098,
+                  "name" : "testCancelledOpusSwitchAfterRewindCannotResumePartialPipeline()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testCancelledOpusSwitchAfterRewindCannotResumePartialPipeline()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testCancelledOpusSwitchAfterRewindCannotResumePartialPipeline",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0031s",
+                  "durationInSeconds" : 0.0031450986862182617,
+                  "name" : "testCancelledVorbisSwitchAfterRewindCannotResumePartialPipeline()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testCancelledVorbisSwitchAfterRewindCannotResumePartialPipeline()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testCancelledVorbisSwitchAfterRewindCannotResumePartialPipeline",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.12s",
+                  "durationInSeconds" : 0.12127804756164551,
+                  "name" : "testCurrentDecodeErrorFailsOnceAndSuppressesRetiredFailure()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testCurrentDecodeErrorFailsOnceAndSuppressesRetiredFailure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testCurrentDecodeErrorFailsOnceAndSuppressesRetiredFailure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0021s",
+                  "durationInSeconds" : 0.00214993953704834,
+                  "name" : "testDemuxEOFCancellationAndMalformedReadRemainDistinct()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testDemuxEOFCancellationAndMalformedReadRemainDistinct()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testDemuxEOFCancellationAndMalformedReadRemainDistinct",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0041s",
+                  "durationInSeconds" : 0.004088997840881348,
+                  "name" : "testEvidenceCancellationRetainsLatePayloadAndNeverAcceptsLateSuccess()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testEvidenceCancellationRetainsLatePayloadAndNeverAcceptsLateSuccess()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testEvidenceCancellationRetainsLatePayloadAndNeverAcceptsLateSuccess",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0027s",
+                  "durationInSeconds" : 0.0026929378509521484,
+                  "name" : "testEvidenceDeadlineRetainsLatePayloadAndRejectsSecondProbeUntilNativeReturn()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testEvidenceDeadlineRetainsLatePayloadAndRejectsSecondProbeUntilNativeReturn()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testEvidenceDeadlineRetainsLatePayloadAndRejectsSecondProbeUntilNativeReturn",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.002s",
+                  "durationInSeconds" : 0.001983046531677246,
+                  "name" : "testFLVInitialAndReopenedInspectionUseAACSequenceHeaderMetadata()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testFLVInitialAndReopenedInspectionUseAACSequenceHeaderMetadata()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testFLVInitialAndReopenedInspectionUseAACSequenceHeaderMetadata",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0011s",
+                  "durationInSeconds" : 0.0010600090026855469,
+                  "name" : "testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testHardwareEvidenceRequiresActualCFBooleanAndSafeIdentity",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0023s",
+                  "durationInSeconds" : 0.002309083938598633,
+                  "name" : "testInactiveOpusSwitchPreservesPreparedRendererUntilActivation()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testInactiveOpusSwitchPreservesPreparedRendererUntilActivation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testInactiveOpusSwitchPreservesPreparedRendererUntilActivation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0027s",
+                  "durationInSeconds" : 0.002727985382080078,
+                  "name" : "testInactiveVorbisSwitchPreservesPreparedRendererUntilActivation()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testInactiveVorbisSwitchPreservesPreparedRendererUntilActivation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testInactiveVorbisSwitchPreservesPreparedRendererUntilActivation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00096s",
+                  "durationInSeconds" : 0.0009579658508300781,
+                  "name" : "testInjectedPropertyReaderPreservesCompatibleKeyAndCFType()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testInjectedPropertyReaderPreservesCompatibleKeyAndCFType()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testInjectedPropertyReaderPreservesCompatibleKeyAndCFType",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.11s",
+                  "durationInSeconds" : 0.10866892337799072,
+                  "name" : "testManagedAudioActivationFailureBeforeReplacementPreservesAcceptedFallback()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testManagedAudioActivationFailureBeforeReplacementPreservesAcceptedFallback()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testManagedAudioActivationFailureBeforeReplacementPreservesAcceptedFallback",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "44秒",
+                  "durationInSeconds" : 44.383389949798584,
+                  "name" : "testManagedAudioAutoplayPreparationFailureAndRetiredBackendCleanup()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testManagedAudioAutoplayPreparationFailureAndRetiredBackendCleanup()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testManagedAudioAutoplayPreparationFailureAndRetiredBackendCleanup",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.039s",
+                  "durationInSeconds" : 0.039134979248046875,
+                  "name" : "testManagedAudioTerminalOutputFailureReleasesCurrentLeaseExactlyOnce()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testManagedAudioTerminalOutputFailureReleasesCurrentLeaseExactlyOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testManagedAudioTerminalOutputFailureReleasesCurrentLeaseExactlyOnce",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0023s",
+                  "durationInSeconds" : 0.0022810697555541992,
+                  "name" : "testOpusTrackCandidateFailureKeepsCurrentRendererAndCursor()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testOpusTrackCandidateFailureKeepsCurrentRendererAndCursor()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testOpusTrackCandidateFailureKeepsCurrentRendererAndCursor",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.29s",
+                  "durationInSeconds" : 0.2862889766693115,
+                  "name" : "testOpusTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testOpusTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testOpusTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0094s",
+                  "durationInSeconds" : 0.009361982345581055,
+                  "name" : "testPreferredHostRejectsUnadmittedUnknownAndSoftware()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testPreferredHostRejectsUnadmittedUnknownAndSoftware()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testPreferredHostRejectsUnadmittedUnknownAndSoftware",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0019s",
+                  "durationInSeconds" : 0.0018990039825439453,
+                  "name" : "testPreferredPipelineRejectsUnadmittedUnknownDecoder()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testPreferredPipelineRejectsUnadmittedUnknownDecoder()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testPreferredPipelineRejectsUnadmittedUnknownDecoder",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.013s",
+                  "durationInSeconds" : 0.013499975204467773,
+                  "name" : "testPreparedCandidateIsSilentAndDiscardPreventsTransfer()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testPreparedCandidateIsSilentAndDiscardPreventsTransfer()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testPreparedCandidateIsSilentAndDiscardPreventsTransfer",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00082s",
+                  "durationInSeconds" : 0.000823974609375,
+                  "name" : "testPresentationChoosesFramesAtQuarterNormalDoubleAndQuadrupleRate()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testPresentationChoosesFramesAtQuarterNormalDoubleAndQuadrupleRate()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testPresentationChoosesFramesAtQuarterNormalDoubleAndQuadrupleRate",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.017s",
+                  "durationInSeconds" : 0.016865015029907227,
+                  "name" : "testRealHardwareRequiredFixtureCommitsHardwareOrTruthfullyRejects()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testRealHardwareRequiredFixtureCommitsHardwareOrTruthfullyRejects()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testRealHardwareRequiredFixtureCommitsHardwareOrTruthfullyRejects",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0013s",
+                  "durationInSeconds" : 0.001314997673034668,
+                  "name" : "testRequiredPipelineRecreationRejectsUnknownBeforeInstall()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testRequiredPipelineRecreationRejectsUnknownBeforeInstall()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testRequiredPipelineRecreationRejectsUnknownBeforeInstall",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0015s",
+                  "durationInSeconds" : 0.0015289783477783203,
+                  "name" : "testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testRequiredPipelineRejectsSoftwareBeforeDecoderInstallation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.049s",
+                  "durationInSeconds" : 0.049324989318847656,
+                  "name" : "testSeekRecreatesDecoderAndRejectsOldOutputBeforeNewFrame()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testSeekRecreatesDecoderAndRejectsOldOutputBeforeNewFrame()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testSeekRecreatesDecoderAndRejectsOldOutputBeforeNewFrame",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.12s",
+                  "durationInSeconds" : 0.12478601932525635,
+                  "name" : "testStopAndDisposeRejectHeldDecodeOutputAndReleasePackets()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStopAndDisposeRejectHeldDecodeOutputAndReleasePackets()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStopAndDisposeRejectHeldDecodeOutputAndReleasePackets",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.14s",
+                  "durationInSeconds" : 0.14123594760894775,
+                  "name" : "testStrictCommittedSeekRejectsRecreatedSoftwareAndLateFrames()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStrictCommittedSeekRejectsRecreatedSoftwareAndLateFrames()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStrictCommittedSeekRejectsRecreatedSoftwareAndLateFrames",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.1s",
+                  "durationInSeconds" : 0.1023629903793335,
+                  "name" : "testStrictHostDeadlineCannotCommitLateProvenDecoder()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStrictHostDeadlineCannotCommitLateProvenDecoder()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStrictHostDeadlineCannotCommitLateProvenDecoder",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.016s",
+                  "durationInSeconds" : 0.01562798023223877,
+                  "name" : "testStrictHostReplacementRespectsPlatformDecoderPermit()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStrictHostReplacementRespectsPlatformDecoderPermit()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStrictHostReplacementRespectsPlatformDecoderPermit",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.037s",
+                  "durationInSeconds" : 0.03700399398803711,
+                  "name" : "testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0024s",
+                  "durationInSeconds" : 0.0023900270462036133,
+                  "name" : "testStrictInspectedFormatRecreationRejectsSoftware()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStrictInspectedFormatRecreationRejectsSoftware()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStrictInspectedFormatRecreationRejectsSoftware",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.049s",
+                  "durationInSeconds" : 0.048622965812683105,
+                  "name" : "testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testStrictSoftwareAndUnknownCandidatesPreserveAcceptedSession",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.15s",
+                  "durationInSeconds" : 0.15175509452819824,
+                  "name" : "testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.083s",
+                  "durationInSeconds" : 0.08321499824523926,
+                  "name" : "testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "3秒",
+                  "durationInSeconds" : 3.4865039587020874,
+                  "name" : "testTerminalSessionCompletesWhenDecodedVideoOutlastsAudio()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionCompletesWhenDecodedVideoOutlastsAudio()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionCompletesWhenDecodedVideoOutlastsAudio",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.028s",
+                  "durationInSeconds" : 0.02815103530883789,
+                  "name" : "testTerminalSessionDefaultAndTrackReplacementReevaluateEligibility()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionDefaultAndTrackReplacementReevaluateEligibility()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionDefaultAndTrackReplacementReevaluateEligibility",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.027s",
+                  "durationInSeconds" : 0.027287006378173828,
+                  "name" : "testTerminalSessionEligibilityUsesRecipeAndDefaultOptOut()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionEligibilityUsesRecipeAndDefaultOptOut()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionEligibilityUsesRecipeAndDefaultOptOut",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.24s",
+                  "durationInSeconds" : 0.24462902545928955,
+                  "name" : "testTerminalSessionEOFWaitsForAudioFenceThenCompletes()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionEOFWaitsForAudioFenceThenCompletes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionEOFWaitsForAudioFenceThenCompletes",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.028s",
+                  "durationInSeconds" : 0.028269052505493164,
+                  "name" : "testTerminalSessionGraphInvalidationFailsOnceAndOldCallbackAfterSeekIsIgnored()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionGraphInvalidationFailsOnceAndOldCallbackAfterSeekIsIgnored()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionGraphInvalidationFailsOnceAndOldCallbackAfterSeekIsIgnored",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "6秒",
+                  "durationInSeconds" : 6.666504979133606,
+                  "name" : "testTerminalSessionLostPlaybackCallbackNeverSynthesizesCompleted()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionLostPlaybackCallbackNeverSynthesizesCompleted()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionLostPlaybackCallbackNeverSynthesizesCompleted",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+                        "lineNumber" : 371
+                      }
+                    }
+                  ],
+                  "duration" : "5秒",
+                  "durationInSeconds" : 5.057102084159851,
+                  "name" : "testTerminalSessionRealConverterOutputControlsAndEOF()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSessionRealConverterOutputControlsAndEOF()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSessionRealConverterOutputControlsAndEOF",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0017s",
+                  "durationInSeconds" : 0.001716017723083496,
+                  "name" : "testTerminalSubmissionAnchorPreservesPausedPresentationAndResume()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSubmissionAnchorPreservesPausedPresentationAndResume()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSubmissionAnchorPreservesPausedPresentationAndResume",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0014s",
+                  "durationInSeconds" : 0.0013960599899291992,
+                  "name" : "testTerminalSubmissionAnchorStillMapsInitialAndSeekedPlayback()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTerminalSubmissionAnchorStillMapsInitialAndSeekedPlayback()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTerminalSubmissionAnchorStillMapsInitialAndSeekedPlayback",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0028s",
+                  "durationInSeconds" : 0.0028110742568969727,
+                  "name" : "testVorbisTrackCandidateFailureKeepsCurrentRendererAndCursor()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testVorbisTrackCandidateFailureKeepsCurrentRendererAndCursor()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testVorbisTrackCandidateFailureKeepsCurrentRendererAndCursor",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.29s",
+                  "durationInSeconds" : 0.2883380651473999,
+                  "name" : "testVorbisTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testVorbisTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testVorbisTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.003s",
+                  "durationInSeconds" : 0.0029619932174682617,
+                  "name" : "testVP9RecreationCannotFallBackToSoftware()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testVP9RecreationCannotFallBackToSoftware()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testVP9RecreationCannotFallBackToSoftware",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.002s",
+                  "durationInSeconds" : 0.0020290613174438477,
+                  "name" : "testVP9RejectsUnverifiedDecoderEvenWithoutRequiredPolicy()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testVP9RejectsUnverifiedDecoderEvenWithoutRequiredPolicy()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testVP9RejectsUnverifiedDecoderEvenWithoutRequiredPolicy",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0017s",
+                  "durationInSeconds" : 0.0017069578170776367,
+                  "name" : "testWebMVODRequiresCodecInspectionBeforeFallbackCommit()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testWebMVODRequiresCodecInspectionBeforeFallbackCommit()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testWebMVODRequiresCodecInspectionBeforeFallbackCommit",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlManagedFallbackCharacterizationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.019s",
+                  "durationInSeconds" : 0.018874049186706543,
+                  "name" : "testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.2200250625610352,
+                  "name" : "testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlManagedSoftwareAudioTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

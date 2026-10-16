@@ -1,0 +1,259 @@
+{
+  "base": "094d7524eab956ca10f3b7af969ad6e347838524",
+  "inputs": {
+    "packages/yl_player/example/assets/test_media/pcm_alignment/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    },
+    "packages/yl_player/example/assets/test_media/pcm_alignment/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "packages/yl_player/example/ios/Runner.xcodeproj/project.pbxproj": {
+      "bytes": 69327,
+      "sha256": "c3efc58933b757a2ec66233df7f251e09b08434c393e8ccec6a7148fe2362986"
+    },
+    "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift": {
+      "bytes": 24035,
+      "sha256": "6dd7d3c146479267cf7d0edd006e265180626725a624dea7a07c09400c80d819"
+    },
+    "packages/yl_player/example/ios/RunnerTests/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    },
+    "packages/yl_player/example/ios/RunnerTests/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "packages/yl_player/example/macos/Runner.xcodeproj/project.pbxproj": {
+      "bytes": 76158,
+      "sha256": "20d920b3482644c31d37f4ed833e7562a49141af78c23e7a88223cb21de3856c"
+    },
+    "packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift": {
+      "bytes": 24035,
+      "sha256": "6dd7d3c146479267cf7d0edd006e265180626725a624dea7a07c09400c80d819"
+    },
+    "packages/yl_player/example/macos/RunnerTests/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    },
+    "packages/yl_player/example/macos/RunnerTests/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlFormatDecodeInstrumentedTest.kt": {
+      "bytes": 26756,
+      "sha256": "9eb6dc344b9bf6b182b504eab671c85aa0e07e6fc7827dba915d29c7748a5572"
+    },
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmOutputInstrumentedTest.kt": {
+      "bytes": 5527,
+      "sha256": "72534948626da69ac01ba9fba945dbd3ac8df73a4d8b78a5703f896369b72279"
+    },
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmReference.kt": {
+      "bytes": 3886,
+      "sha256": "e17c6b2bb6a0420b20815e94a692382eadf511c4eaf90b4cd958afb5b0658a2c"
+    },
+    "packages/yl_player_android/android/src/main/cpp/yl_player_ffmpeg.cpp": {
+      "bytes": 45520,
+      "sha256": "7253f888801268de1d0bdfa3823680601112ecbb3247bd74cd48d0e196911007"
+    },
+    "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so": {
+      "bytes": 4767232,
+      "sha256": "ade6746bb2c4f9bb4b561cbfc821093fd11d1a2f4da5655a5a756de978cebe1c"
+    },
+    "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so": {
+      "bytes": 3213156,
+      "sha256": "df5fc2fad6801e18496dc25474f2df06f47b36464ecd3128c3f6c38df85b993b"
+    },
+    "packages/yl_player_android/android/src/main/jniLibs/bridge-artifact.json": {
+      "bytes": 6744,
+      "sha256": "ebe6893c153fee3e1b1699e36bee1bd43c87d4f8492fba2a63f4d15f2d27258f"
+    },
+    "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so": {
+      "bytes": 5026848,
+      "sha256": "b59c1a87defef52275ba93b5f24a4bce1b7e42c839e6315a5d5ae1d935ee2427"
+    },
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFfmpegBridge.kt": {
+      "bytes": 8634,
+      "sha256": "6de7b0e4d6ac3afe9275f4a12bb515fe707e6e6b6213e5be446b4fa1a041e306"
+    },
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeModels.kt": {
+      "bytes": 6541,
+      "sha256": "e95139861d3501b8528ad8f85fc35a0667804e7d512fcaf880b795f8f2971618"
+    },
+    "packages/yl_player_apple/THIRD_PARTY_NOTICES.md": {
+      "bytes": 8640,
+      "sha256": "11cde02bcbcf07a9658c00b1117bfed3273b4d0f650f942e9ba1e99e2d75d706"
+    },
+    "packages/yl_player_apple/darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": {
+      "bytes": 79856,
+      "sha256": "76afc0ab473e58dea3b0142ac9ef97eaed9734e69338c4cb5eb80d92f71a0348"
+    },
+    "packages/yl_player_apple/darwin/native/YlFFmpegBridge/include/YlFFmpegBridge.h": {
+      "bytes": 16851,
+      "sha256": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
+      "bytes": 16851,
+      "sha256": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "bytes": 4326176,
+      "sha256": "bb636c178640968b4df6748a54729eda3059cbe8b2f0768309aa8ba3c10c1591"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
+      "bytes": 16851,
+      "sha256": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "bytes": 8705952,
+      "sha256": "e07cbd1e9a6cbcc7e66ddaa6af10a62736be51e84b98db0964f6cdac55609dec"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Headers/YlFFmpegBridge.h": {
+      "bytes": 16851,
+      "sha256": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
+      "bytes": 8701360,
+      "sha256": "0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": {
+      "bytes": 70792,
+      "sha256": "0f536ea305b6d70bcca051fcafcf925ea5d0284745e61c162ca92285612e42fe"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlDtsAudioConverter.swift": {
+      "bytes": 9261,
+      "sha256": "5ebe7fea5b2943fab04d7059370f1bb8cfd8d9ba984d27d2db5252a5fa88d550"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift": {
+      "bytes": 21483,
+      "sha256": "416695affe5e144662cc87d125eaedcd91e2dd8318c54ed3da897a3ca295dd1d"
+    },
+    "packages/yl_player_apple/tool/apple_ffmpeg/bridge-artifact.lock": {
+      "bytes": 9912,
+      "sha256": "87c426016bacbf4325678a8f22d9638127198ee78773e2f388345325427689e9"
+    },
+    "packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh": {
+      "bytes": 19510,
+      "sha256": "16ed11c3f8994c7f76f339a53fdd854fd448549a2dfac2b2bb2c6c39e6ec87ce"
+    },
+    "packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh": {
+      "bytes": 10144,
+      "sha256": "3e850350417159c997574cda1c392b83c529f85c18f2d26205fbd68dab896ac1"
+    },
+    "packages/yl_player_apple/tool/apple_ffmpeg/verify_artifact.py": {
+      "bytes": 5064,
+      "sha256": "f2056bfb12705898427d47d3300d369785201a0ba84f464e906c8e9a4667f5ac"
+    },
+    "tool/consumer_fixtures/apple_flutter/Resources/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    },
+    "tool/consumer_fixtures/apple_flutter/Resources/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift": {
+      "bytes": 24035,
+      "sha256": "6dd7d3c146479267cf7d0edd006e265180626725a624dea7a07c09400c80d819"
+    },
+    "tool/consumer_fixtures/apple_flutter/allowed-hardware-skips.json": {
+      "bytes": 6032,
+      "sha256": "62c8d96e663876f6f39471a55b924a961c02200f984cf54543c0953bfadc9ef1"
+    },
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": {
+      "bytes": 17407,
+      "sha256": "9c9241c558cc7ed31c7c91bb2bd8ad8aef8d2cff8409d1d432dcbac9431a6a81"
+    },
+    "tool/consumer_fixtures/apple_flutter/new-tests-manifest.json": {
+      "bytes": 57734,
+      "sha256": "da5c8e13c07b0668de9a4976639b4609601fbdf691e6ccf63bffece1e67a38c1"
+    },
+    "tool/media_matrix/README.md": {
+      "bytes": 9348,
+      "sha256": "c6977f90f0d21cc6a59918e0df9104ff7dbb3cb50edfa0cf6684f1e1a16d8ac3"
+    },
+    "tool/media_matrix/check_dolby_bridge.py": {
+      "bytes": 5440,
+      "sha256": "983bf5d54a93d5b9b50bc7b721be19662d1817f0cac8521d268a1e1d2ffca77e"
+    },
+    "tool/media_matrix/prepare_pcm_alignment.py": {
+      "bytes": 5006,
+      "sha256": "096f9a5bd1391063ad1350caced6dd963c0ccef4bcb159f6d29ce6388e0f17ba"
+    }
+  },
+  "products": {
+    "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
+      "bytes": 8701360,
+      "sha256": "0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764"
+    },
+    "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example": {
+      "bytes": 40224,
+      "sha256": "bafbc185193754ccf2c52993ba31e8ced93c5f7ec07219b739abe123f7427bcc"
+    },
+    "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/Frameworks/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
+      "bytes": 8701360,
+      "sha256": "0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764"
+    },
+    "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/PlugIns/RunnerTests.xctest/Contents/MacOS/RunnerTests": {
+      "bytes": 14989224,
+      "sha256": "6c9cc34b4272ddc9800730bcbcabaea5f582e85f458f4acb0e6734cb92ccf66b"
+    },
+    "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/PlugIns/RunnerTests.xctest/Contents/Resources/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/PlugIns/RunnerTests.xctest/Contents/Resources/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    },
+    "packages/yl_player/example/build/native-ios-tests/Build/Products/Debug-iphonesimulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "bytes": 8705952,
+      "sha256": "e07cbd1e9a6cbcc7e66ddaa6af10a62736be51e84b98db0964f6cdac55609dec"
+    },
+    "packages/yl_player/example/build/native-ios-tests/Build/Products/Debug-iphonesimulator/Runner.app/Runner": {
+      "bytes": 40216,
+      "sha256": "f4c84f3bc4d45e866793d59e915b4b43bb6f92b6214a9afc0fd7fb974097ee8c"
+    },
+    "packages/yl_player/example/build/native-ios-tests/Build/Products/Debug-iphonesimulator/Runner.app/Frameworks/YlFFmpegBridge.framework/YlFFmpegBridge": {
+      "bytes": 8705952,
+      "sha256": "e07cbd1e9a6cbcc7e66ddaa6af10a62736be51e84b98db0964f6cdac55609dec"
+    },
+    "packages/yl_player/example/build/native-ios-tests/Build/Products/Debug-iphonesimulator/Runner.app/PlugIns/RunnerTests.xctest/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "packages/yl_player/example/build/native-ios-tests/Build/Products/Debug-iphonesimulator/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests": {
+      "bytes": 12390120,
+      "sha256": "0dfd63197a0df4490077d3cbd3812d6460d439c10e1cb3cbd077f41b5e36cfdc"
+    },
+    "packages/yl_player/example/build/native-ios-tests/Build/Products/Debug-iphonesimulator/Runner.app/PlugIns/RunnerTests.xctest/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    },
+    "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk": {
+      "bytes": 47993762,
+      "sha256": "71c5706d8e608c00e9d02360d9062db42e030be8fedca1cbf30921fb398031ac"
+    },
+    "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk!/assets/pcm_alignment/p03-pcm-switch.mkv": {
+      "bytes": 992721,
+      "sha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be"
+    },
+    "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk!/lib/arm64-v8a/libyl_player_ffmpeg.so": {
+      "bytes": 4767232,
+      "sha256": "ade6746bb2c4f9bb4b561cbfc821093fd11d1a2f4da5655a5a756de978cebe1c"
+    },
+    "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk!/lib/armeabi-v7a/libyl_player_ffmpeg.so": {
+      "bytes": 3213156,
+      "sha256": "df5fc2fad6801e18496dc25474f2df06f47b36464ecd3128c3f6c38df85b993b"
+    },
+    "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk!/lib/x86_64/libyl_player_ffmpeg.so": {
+      "bytes": 5026848,
+      "sha256": "b59c1a87defef52275ba93b5f24a4bce1b7e42c839e6315a5d5ae1d935ee2427"
+    },
+    "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk!/assets/pcm_alignment/p03-pcm-reference.json": {
+      "bytes": 2033478,
+      "sha256": "d7c9cabd286289284e978358c096d997b6806fa87fc169d9fc9f074d7b4e2cbd"
+    }
+  }
+}

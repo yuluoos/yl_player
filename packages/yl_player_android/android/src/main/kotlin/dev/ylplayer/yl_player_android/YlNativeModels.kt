@@ -58,6 +58,9 @@ internal data class YlNativePacket(
     val ownership: AutoCloseable? = null,
 ) : AutoCloseable { override fun close() { ownership?.close() } }
 
+/** Owned little-endian, interleaved signed 16-bit PCM. [presentationTimeUs]
+ * identifies the first stored frame, before the output's presentation-floor trim;
+ * decoded preroll can have negative PTS. [data] contains complete sample frames. */
 internal data class YlNativePcmChunk(
     val data: ByteArray,
     val sampleRate: Int,

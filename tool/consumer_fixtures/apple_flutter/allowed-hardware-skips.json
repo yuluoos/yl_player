@@ -44,17 +44,19 @@
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins; every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "f0d795e3650937397f729068bf69b4268e07d2a84e343b01424fc675d8908a99",
+      "source_sha256": "6dd7d3c146479267cf7d0edd006e265180626725a624dea7a07c09400c80d819",
       "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
-      "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition."
+      "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition.",
+      "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition."
     },
     "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": {
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins; every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "f0d795e3650937397f729068bf69b4268e07d2a84e343b01424fc675d8908a99",
+      "source_sha256": "6dd7d3c146479267cf7d0edd006e265180626725a624dea7a07c09400c80d819",
       "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
-      "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition."
+      "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition.",
+      "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition."
     }
   },
   "hardening_r19": {

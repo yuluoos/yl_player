@@ -1,0 +1,78 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1792120235.115,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift"
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1792120198.897,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertEqualWithAccuracy failed: (\"2523000\") is not equal to (\"2500000\") +/- (\"1\")",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail",
+      "testName" : "testCodecTrackSwitchPreservesTargetSamplesAndTail()"
+    },
+    {
+      "failureText" : "XCTAssertEqualWithAccuracy failed: (\"-5000\") is not equal to (\"0\") +/- (\"1\")",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlContainerOutputTests/testRealConvertersPreserveFirstAndLastSamples()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testRealConvertersPreserveFirstAndLastSamples",
+      "testName" : "testRealConvertersPreserveFirstAndLastSamples()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "4 runs of 1 test failed with failed - Missing reference window"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertEqualWithAccuracy failed: (\"2523000\") is not equal to (\"2500000\") +/- (\"1\")"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertEqual failed: (\"70368\") is not equal to (\"71760\") - Lost/duplicated head or tail PCM"
+    }
+  ],
+  "totalTestCount" : 2
+}

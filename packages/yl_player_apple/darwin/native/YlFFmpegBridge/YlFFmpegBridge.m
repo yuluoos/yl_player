@@ -279,9 +279,10 @@ static int32_t ylf_discover_streams(struct YLFMediaContext *context,
     return YLFResultUnsupportedContainer;
   }
   // Discovery must not instantiate newly linked software video decoders before
-  // device admission. Keep the historical audio-only probe behavior explicit.
+  // device admission. Permit only the supported audio decoders: Dolby probing
+  // supplies encoded speaker roles, which container channel counts cannot prove.
   av_freep(&context->format->codec_whitelist);
-  context->format->codec_whitelist = av_strdup("dca,vorbis");
+  context->format->codec_whitelist = av_strdup("dca,ac3,eac3,vorbis");
   if (!context->format->codec_whitelist) return YLFResultOpenFailed;
   if (avformat_find_stream_info(context->format, NULL) < 0) {
     return ylf_callback_failure(context, YLFResultOpenFailed);
@@ -1747,6 +1748,56 @@ int32_t ylf_dts_decode(YLFDtsDecoderRef d, const uint8_t *data, size_t size,
 }
 void ylf_dts_reset(YLFDtsDecoderRef d) { if (d) avcodec_flush_buffers(d->codec); }
 void ylf_dts_free(YLFDtsDecoderRef d) {
+  if (!d) return;
+  avcodec_free_context(&d->codec); av_frame_free(&d->frame); av_packet_free(&d->packet); free(d);
+}
+
+struct YLFDolbyDecoder {
+  AVCodecContext *codec; AVFrame *frame; AVPacket *packet;
+  int sample_rate, channels; uint64_t channel_mask; bool failed;
+};
+YLFDolbyDecoderRef ylf_dolby_create(int32_t kind, int32_t sample_rate,
+    int32_t channels, uint64_t channel_mask) {
+  if ((kind != YLFCodecAC3 && kind != YLFCodecEAC3) || sample_rate <= 0 ||
+      sample_rate > 48000 || channels < 1 || channels > 8 ||
+      !channel_mask || __builtin_popcountll(channel_mask) != channels) return NULL;
+  const AVCodec *codec = avcodec_find_decoder(kind == YLFCodecAC3 ? AV_CODEC_ID_AC3 : AV_CODEC_ID_EAC3);
+  if (!codec) return NULL;
+  struct YLFDolbyDecoder *d = calloc(1, sizeof(*d));
+  if (!d) return NULL;
+  d->codec = avcodec_alloc_context3(codec); d->frame = av_frame_alloc(); d->packet = av_packet_alloc();
+  d->sample_rate = sample_rate; d->channels = channels; d->channel_mask = channel_mask;
+  if (!d->codec || !d->frame || !d->packet) { ylf_dolby_free(d); return NULL; }
+  d->codec->thread_count = 1;
+  if (avcodec_open2(d->codec, codec, NULL) < 0) { ylf_dolby_free(d); return NULL; }
+  return d;
+}
+int32_t ylf_dolby_decode(YLFDolbyDecoderRef d, const uint8_t *data, size_t size,
+    float *samples, int32_t capacity_frames, int32_t *out_frames) {
+  if (out_frames) *out_frames = 0;
+  if (!d || !data || !size || size > 65536 || !samples || capacity_frames < 1536 ||
+      !out_frames) return YLFResultInvalidArgument;
+  if (d->failed) return YLFResultReadFailed;
+  av_packet_unref(d->packet);
+  if (av_new_packet(d->packet, (int)size) < 0) return YLFResultReadFailed;
+  memcpy(d->packet->data, data, size);
+  int result = avcodec_send_packet(d->codec, d->packet);
+  av_packet_unref(d->packet); av_frame_unref(d->frame);
+  if (result < 0 || avcodec_receive_frame(d->codec, d->frame) < 0) goto failed;
+  AVFrame *f = d->frame;
+  if (f->nb_samples <= 0 || f->nb_samples > 1536 || f->sample_rate != d->sample_rate ||
+      f->ch_layout.nb_channels != d->channels || f->ch_layout.order != AV_CHANNEL_ORDER_NATIVE ||
+      f->ch_layout.u.mask != d->channel_mask || f->format != AV_SAMPLE_FMT_FLTP) goto failed;
+  for (int i = 0; i < f->nb_samples; i++) for (int c = 0; c < d->channels; c++)
+    samples[i*d->channels+c] = ((const float *)f->extended_data[c])[i];
+  *out_frames = f->nb_samples; av_frame_unref(f); return YLFResultOK;
+failed:
+  d->failed = true; av_frame_unref(d->frame); return YLFResultReadFailed;
+}
+void ylf_dolby_reset(YLFDolbyDecoderRef d) {
+  if (d) { avcodec_flush_buffers(d->codec); av_frame_unref(d->frame); av_packet_unref(d->packet); d->failed = false; }
+}
+void ylf_dolby_free(YLFDolbyDecoderRef d) {
   if (!d) return;
   avcodec_free_context(&d->codec); av_frame_free(&d->frame); av_packet_free(&d->packet); free(d);
 }

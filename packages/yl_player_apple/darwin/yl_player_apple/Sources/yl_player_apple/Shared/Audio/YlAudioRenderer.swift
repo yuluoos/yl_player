@@ -117,6 +117,10 @@ struct YlCompressedAudioPacket {
   let generation: UInt64
   var skipSamples: UInt32 = 0
   var discardSamples: UInt32 = 0
+  /// Decode earlier packets for codec history, but omit samples before this
+  /// programme timestamp for Opus/Vorbis, Dolby, DTS and FLAC. For Dolby/DTS/
+  /// FLAC, nil preserves packet PTS and all PCM for a caller-owned window (DASH).
+  /// Opus/Vorbis retain their codec-specific initial policy. This is not a delay.
   var presentationStartUs: Int64? = nil
 }
 
@@ -132,6 +136,38 @@ struct YlScheduledAudioBuffer {
   let durationUs: Int64
   let byteCount: Int
   let generation: UInt64
+}
+
+/// Trims Float32 PCM in place after decoding, preserving the original capacity
+/// reservation. The first retained sample is at/after the target; returned PTS
+/// rounds up to microseconds. Nil means the whole decoded block was preroll.
+/// Checked arithmetic rejects invalid timestamps before indexing sample memory.
+func ylTrimPCMToPresentationStart(_ pcm: AVAudioPCMBuffer, ptsUs: Int64, targetUs: Int64) throws -> Int64? {
+  guard ptsUs != Int64.min, targetUs >= 0, pcm.format.sampleRate.isFinite,
+        pcm.format.sampleRate > 0, pcm.format.sampleRate <= 384_000,
+        pcm.format.sampleRate.rounded() == pcm.format.sampleRate,
+        let data = pcm.floatChannelData else { throw YlAudioImplementationError.conversionFailed }
+  guard ptsUs < targetUs else { return ptsUs }
+  let rate = Int64(pcm.format.sampleRate)
+  let difference = targetUs.subtractingReportingOverflow(ptsUs)
+  guard !difference.overflow else { throw YlAudioImplementationError.conversionFailed }
+  // Compare duration first: a distant seek cannot overflow sample arithmetic.
+  let duration = (Int64(pcm.frameLength) * 1_000_000 + rate - 1) / rate
+  guard difference.partialValue < duration else { return nil }
+  let skip = (difference.partialValue * rate + 999_999) / 1_000_000
+  guard skip < Int64(pcm.frameLength) else { return nil }
+  let shifted = ptsUs.addingReportingOverflow((skip * 1_000_000 + rate - 1) / rate)
+  guard !shifted.overflow else { throw YlAudioImplementationError.conversionFailed }
+  let retained = Int(pcm.frameLength) - Int(skip), channels = Int(pcm.format.channelCount)
+  if pcm.format.isInterleaved {
+    memmove(data[0], data[0].advanced(by: Int(skip) * channels), retained * channels * MemoryLayout<Float>.size)
+  } else {
+    for channel in 0..<channels {
+      memmove(data[channel], data[channel].advanced(by: Int(skip)), retained * MemoryLayout<Float>.size)
+    }
+  }
+  pcm.frameLength = AVAudioFrameCount(retained)
+  return shifted.partialValue
 }
 
 enum YlAudioEnqueueResult: Equatable {
@@ -1088,6 +1124,7 @@ final class YlAudioRenderer: YlAudioRendering {
 
 final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   var reservesOutputBuffers: Bool { true }
+  private var dolbyConverter: YlDolbyAudioConverter?
   private var dtsConverter: YlDtsAudioConverter?
   private var opusConverter: YlOpusAudioConverter?
   private var vorbisConverter: YlVorbisAudioConverter?
@@ -1095,15 +1132,17 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   private var converter: AVAudioConverter?
   private var inputFormat: AVAudioFormat?
   private var outputFormat: AVAudioFormat?
-  var pcmFormat: AVAudioFormat? { vorbisConverter?.pcmFormat ?? opusConverter?.pcmFormat ?? (dtsConverter == nil ? outputFormat : nil) }
+  var pcmFormat: AVAudioFormat? { dolbyConverter?.pcmFormat ?? vorbisConverter?.pcmFormat ?? opusConverter?.pcmFormat ?? (dtsConverter == nil ? outputFormat : nil) }
   private var framesPerPacket: UInt32 = 0
   private var batchesInput = YlAppleCompatibility.current.batchesAudioInput
   private var variablePacketFrames = false
+  private var trimsPresentationPCM = false
   private var flacConfiguration: YlFLACConfiguration?
   private var pendingPackets: [YlCompressedAudioPacket] = []
   private var pendingOutputPackets: [YlCompressedAudioPacket] = []
 
   func configure(stream: YlAudioStreamConfiguration) throws {
+    dolbyConverter = nil
     dtsConverter = nil
     opusConverter = nil
     vorbisConverter = nil
@@ -1129,9 +1168,15 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       dtsConverter = dts
       return
     }
-    let isDolby = stream.codec == .ac3 || stream.codec == .eac3
+    if stream.codec == .ac3 || stream.codec == .eac3 {
+      let dolby = YlDolbyAudioConverter()
+      dolby.bufferScope = bufferScope
+      try dolby.configure(stream: stream)
+      dolbyConverter = dolby
+      return
+    }
     let flac = stream.codec == .flac ? YlFLACConfiguration(stream: stream) : nil
-    guard stream.codec == .aac || stream.codec == .mp3 || isDolby || flac != nil,
+    guard stream.codec == .aac || stream.codec == .mp3 || flac != nil,
           stream.sampleRate > 0,
           (1...8).contains(stream.channelCount),
           stream.codec != .aac || !stream.magicCookie.isEmpty else {
@@ -1141,14 +1186,12 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     switch stream.codec {
     case .aac: formatID = kAudioFormatMPEG4AAC
     case .mp3: formatID = kAudioFormatMPEGLayer3
-    case .ac3: formatID = kAudioFormatAC3
-    case .eac3: formatID = kAudioFormatEnhancedAC3
     case .flac: formatID = kAudioFormatFLAC
     default: throw YlAudioImplementationError.invalidConfiguration
     }
     let formatFlags: AudioFormatFlags = flac?.formatFlags ?? (stream.codec == .aac && !YlAppleCompatibility.current.batchesAudioInput
       ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue) : 0)
-    let inputFramesPerPacket: UInt32 = flac?.maxBlockSize ?? (isDolby ? 1536 : (stream.codec == .aac ? 1024 : 1152))
+    let inputFramesPerPacket: UInt32 = flac?.maxBlockSize ?? (stream.codec == .aac ? 1024 : 1152)
     let magicCookie = flac?.coreAudioCookie ?? (stream.codec == .aac && YlAppleCompatibility.current.batchesAudioInput
       ? Self.aacMagicCookie(audioSpecificConfig: stream.magicCookie)
       : stream.magicCookie)
@@ -1157,7 +1200,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       mFormatID: formatID,
       mFormatFlags: formatFlags,
       mBytesPerPacket: 0,
-      mFramesPerPacket: stream.codec == .eac3 ? 0 : inputFramesPerPacket,
+      mFramesPerPacket: inputFramesPerPacket,
       mBytesPerFrame: 0,
       mChannelsPerFrame: UInt32(stream.channelCount),
       mBitsPerChannel: 0,
@@ -1180,13 +1223,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     }
     let layout: AVAudioChannelLayout?
     let output: AVAudioFormat?
-    if isDolby {
-      let speakers = try Self.dolbyChannelLayout(mask: stream.channelMask, channelCount: stream.channelCount)
-      layout = speakers
-      output = AVAudioFormat(commonFormat: .pcmFormatFloat32,
-        sampleRate: stream.sampleRate, interleaved: YlAudioFormatPolicy.usesInterleavedPCM,
-        channelLayout: speakers)
-    } else if stream.channelCount > 2 {
+    if stream.channelCount > 2 {
       // A channel count alone is insufficient for surround AVAudioFormats.
       // Read the encoded speaker order from ESDS, including any AAC PCE, and
       // preserve that layout through PCM conversion and the output graph.
@@ -1211,11 +1248,12 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     if stream.codec == .aac || flac != nil {
       converter.magicCookie = magicCookie
     }
-    // Dolby and FLAC frames are self-contained; preserve one packet's timing per
+    // FLAC frames are self-contained; preserve one packet's timing per
     // output instead of applying the macOS AAC look-ahead batching policy.
-    batchesInput = YlAppleCompatibility.current.batchesAudioInput && !isDolby && flac == nil
-    variablePacketFrames = stream.codec == .eac3 || flac != nil
-    if isDolby || flac != nil { converter.primeMethod = .none }
+    batchesInput = YlAppleCompatibility.current.batchesAudioInput && flac == nil
+    variablePacketFrames = flac != nil
+    trimsPresentationPCM = flac != nil
+    if flac != nil { converter.primeMethod = .none }
     flacConfiguration = flac
     self.inputFormat = input
     self.outputFormat = output
@@ -1226,6 +1264,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+    if let dolbyConverter { return dolbyConverter.estimateOutput(for: packet) }
     if let vorbisConverter { return vorbisConverter.estimateOutput(for: packet) }
     if let opusConverter { return opusConverter.estimateOutput(for: packet) }
     if let dtsConverter { return dtsConverter.estimateOutput(for: packet) }
@@ -1252,6 +1291,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+    if let dolbyConverter { return try dolbyConverter.convert(packet: packet) }
     if let vorbisConverter { return try vorbisConverter.convert(packet: packet) }
     if let opusConverter { return try opusConverter.convert(packet: packet) }
     if let dtsConverter { return try dtsConverter.convert(packet: packet) }
@@ -1339,17 +1379,24 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       throw YlAudioImplementationError.conversionFailed
     }
     let outputPacket = pendingOutputPackets.removeFirst()
+    defer { outputPacket.reservation?.endQueuedTiming() }
+    let ptsUs: Int64
+    if trimsPresentationPCM, let target = outputPacket.presentationStartUs {
+      guard let trimmed = try ylTrimPCMToPresentationStart(pcm, ptsUs: outputPacket.ptsUs,
+        targetUs: max(0, target)) else { return nil }
+      ptsUs = trimmed
+    } else { ptsUs = outputPacket.ptsUs }
     let durationUs = Int64(
       (Double(pcm.frameLength) * 1_000_000 / pcm.format.sampleRate).rounded(.towardZero)
     )
-    guard pcmReservation?.carryTiming(ptsUs: outputPacket.ptsUs, durationUs: durationUs, from: outputPacket.reservation) ?? true else {
+    guard pcmReservation?.carryTiming(ptsUs: ptsUs, durationUs: durationUs, from: outputPacket.reservation) ?? true else {
       throw YlManagedBufferLedger.unsupported("PCM timing pts=\(outputPacket.ptsUs) duration=\(durationUs)")
     }
     outputPacket.reservation?.endQueuedTiming()
     return YlScheduledAudioBuffer(
       reservation: pcmReservation,
       payload: pcm,
-      ptsUs: outputPacket.ptsUs,
+      ptsUs: ptsUs,
       durationUs: durationUs,
       byteCount: YlAudioFormatPolicy.byteCount(
         frameCount: Int(pcm.frameLength),
@@ -1361,6 +1408,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
   }
 
   func reset() {
+    dolbyConverter?.reset()
     dtsConverter?.reset()
     opusConverter?.reset()
     vorbisConverter?.reset()
@@ -1369,7 +1417,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     pendingOutputPackets.removeAll(keepingCapacity: true)
   }
 
-  private static func dolbyChannelLayout(mask: UInt64, channelCount: Int) throws -> AVAudioChannelLayout {
+  static func dolbyChannelLayout(mask: UInt64, channelCount: Int) throws -> AVAudioChannelLayout {
     // FFmpeg's native mask identifies speakers, not just a channel count.
     // Keep that order in explicit CoreAudio descriptions so center/LFE and
     // side/back surrounds cannot be silently interchanged.

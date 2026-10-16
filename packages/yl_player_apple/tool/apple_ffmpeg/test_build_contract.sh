@@ -27,7 +27,7 @@ assert dav1d_pins == {'DAV1D_VERSION':'1.5.3',
  'DAV1D_URL':'https://downloads.videolan.org/pub/videolan/dav1d/1.5.3/dav1d-1.5.3.tar.xz',
  'DAV1D_SHA256':'732010aa5ef461fa93355ed2c6c5fedb48ddc4b74e697eaabe8907eaeb943011'}
 allowed_enables = {'--enable-cross-compile','--enable-avutil','--enable-avcodec','--enable-avformat',
- '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264','--enable-decoder=dca,vorbis,libdav1d,vp9','--enable-libdav1d','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9',
+ '--enable-bsf=dovi_rpu','--enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264','--enable-decoder=dca,ac3,eac3,vorbis,libdav1d,vp9','--enable-libdav1d','--enable-protocol=file','--enable-parser=aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9',
  '--enable-pic','--enable-static'}
 required_disables = {'--disable-everything','--disable-autodetect','--disable-network',
  '--disable-swresample','--disable-programs','--disable-doc','--disable-avdevice','--disable-avfilter','--disable-swscale',

@@ -11,7 +11,7 @@ import kotlin.math.*
  * conversion/downmix and seek markers, not speakers or physical A/V latency. */
 class YlPcmOutputInstrumentedTest {
     private fun open(name: String): YlFfmpegSession {
-        val bytes = InstrumentationRegistry.getInstrumentation().context.assets.open("format_matrix/$name.mkv").use { it.readBytes() }
+        val bytes = InstrumentationRegistry.getInstrumentation().context.assets.open(if(name=="p03-pcm-switch") "pcm_alignment/$name.mkv" else "format_matrix/$name.mkv").use { it.readBytes() }
         return YlFfmpegSession.open(object : YlNativeByteSource {
             var position = 0
             override fun read(target: ByteBuffer): Int {
@@ -83,4 +83,18 @@ class YlPcmOutputInstrumentedTest {
     @Test fun eac3ChannelsAndBidirectionalSeek() = check("mkv-avc-eac3")
     @Test fun dtsChannelsAndBidirectionalSeek() = check("mkv-avc-dts")
     @Test fun flacChannelsAndBidirectionalSeek() = check("mkv-avc-flac")
+    @Test fun allCodecFirstAndLastSamplesMatchPinnedReference() {
+        for (index in 1..4) open("p03-pcm-switch").use { session ->
+            assertTrue(session.configureSoftwareAudio(index))
+            val rows=mutableListOf<YlNativePcmChunk>()
+            while(true) {
+                val packet=session.readPacket() ?: break
+                packet.use { if(it.streamIndex==index) session.decodeSoftwareAudio(it)?.let { pcm ->
+                    trimNativePcm(pcm,0)?.let(rows::add)
+                } }
+            }
+            YlPcmReference.verify(index,rows,0)
+        }
+    }
+
 }

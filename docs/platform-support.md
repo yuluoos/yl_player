@@ -789,3 +789,20 @@ fixed short protocol and actual pixel controls. Sustained thermal qualification,
 independent verification and the matching product/device build are still needed
 before production admission. This work does not change long-play or weak-network
 ABR tooling.
+
+2026-10-15 P03 PCM follow-up: owned Apple Dolby packets use the existing minimal
+FFmpeg bridge to preserve priming/final frames and native speaker layout.
+Dolby/DTS/FLAC seek and track switches decode preroll, then clip actual PCM at
+the programme target. Android Dolby no longer applies codec initial padding a
+second time. Pinned boundary/switch controls compare sample counts, packet PTS
+and unshifted first/last windows; host Lo/Ro references explicitly match the
+integer stereo policy. This is separate-build regression evidence (shared
+FFmpeg ancestry except CoreAudio FLAC), not physical audio or full CAP acceptance.
+See the [PCM follow-up evidence](superpowers/reports/evidence/2026-10-15-p03-pcm-alignment/README.md).
+
+The final PCM bridge was remeasured with five fresh optimized processes and six
+AVC controls; the short protocol is valid for its exact new binary identity.
+Production eligibility remains false because sustained thermal and independent
+product verification evidence are absent. Focused native results are macOS74,
+iOS7 (pure audio), Android22, all passing with no skips; this does not replace
+the previously recorded required hardware/combined-output gaps.

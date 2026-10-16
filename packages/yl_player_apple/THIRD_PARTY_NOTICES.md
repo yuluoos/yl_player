@@ -13,7 +13,7 @@ seek preroll. SILK, hybrid and CELT are supported within this family-0 scope;
 strict Opus policies remain unsupported.
 
 The minimized allowlist enables `matroska,flv,mov,mpegts,mpegps,avi,h264` demuxers;
-`aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9` parsers; `dca,vorbis,libdav1d,vp9` decoders; the `dovi_rpu`
+`aac,h264,hevc,mpegaudio,dca,ac3,av1,vp9` parsers; `dca,ac3,eac3,vorbis,libdav1d,vp9` decoders; the `dovi_rpu`
 bitstream filter; and the `file` protocol used by package-owned custom AVIO.
 FFmpeg's native Opus decoder and `libswresample` remain disabled.
 Test-only host libopus provides a PCM reference independent of bridge

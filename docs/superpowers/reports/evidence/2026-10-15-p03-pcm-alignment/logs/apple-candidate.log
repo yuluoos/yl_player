@@ -1,0 +1,18 @@
+gpg: no gpg-agent running in this session
+gpg: Signature made Tue Aug 11 20:42:43 2026 PDT
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+[GNUPG:] NEWSIG ffmpeg-devel@ffmpeg.org
+[GNUPG:] KEY_CONSIDERED FCF986EA15E6E293A5644F10B4322F04D67658D8 0
+[GNUPG:] SIG_ID /cMaRf1z+P1mlrauTJGdDOFEINk 2026-08-12 1786506163
+[GNUPG:] GOODSIG B4322F04D67658D8 FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>
+[GNUPG:] VALIDSIG FCF986EA15E6E293A5644F10B4322F04D67658D8 2026-08-12 1786506163 0 4 0 1 10 00 FCF986EA15E6E293A5644F10B4322F04D67658D8
+[GNUPG:] TRUST_UNDEFINED 0 pgp ffmpeg-devel@ffmpeg.org
+patching file 'libavcodec/aarch64/vorbisdsp_neon.S'
+patching file 'libavcodec/libdav1d.c'
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/tool/apple_ffmpeg/build_dav1d.sh: line 27: meson: command not found
+kept FFmpeg build directory: /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T//yl-apple-ffmpeg.BPYG7e

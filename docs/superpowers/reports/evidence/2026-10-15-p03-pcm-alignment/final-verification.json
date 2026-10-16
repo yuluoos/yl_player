@@ -1,0 +1,64 @@
+{
+  "base": "094d7524eab956ca10f3b7af969ad6e347838524",
+  "native": {
+    "macos": {
+      "passed": 74,
+      "failed": 0,
+      "skipped": 0,
+      "summary": "macos-final3-summary.json"
+    },
+    "ios": {
+      "passed": 7,
+      "failed": 0,
+      "skipped": 0,
+      "summary": "ios-pcm-final-summary.json"
+    },
+    "android": {
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "xml": "android-native22.xml"
+    }
+  },
+  "pythonTests": {
+    "mediaMatrix": 23,
+    "decoderProbe": 21
+  },
+  "dolbyABIChecks": 1035,
+  "apple": {
+    "canonicalEntries": 18,
+    "targets": 5,
+    "consumerSymbols": 57,
+    "negativeContractChecks": 9,
+    "lockSha256": "87c426016bacbf4325678a8f22d9638127198ee78773e2f388345325427689e9"
+  },
+  "android": {
+    "abis": 3,
+    "minimumAPI": 24,
+    "relinkedVerifiedStaticInputs": true
+  },
+  "software": {
+    "measurementValid": true,
+    "productionEligible": false,
+    "repetitions": 5,
+    "positiveControls": 6,
+    "framesPerProcess": 288,
+    "samplesPerProcess": 65
+  },
+  "review": {
+    "importantFindings": 1,
+    "resolved": 1,
+    "remaining": 0,
+    "fixPasses": 1
+  },
+  "retainedLimitations": [
+    "three preexisting macOS fixture mirror differences",
+    "iOS complete player track switch requires supported video hardware",
+    "independent implementation/physical/combined-output full acceptance incomplete",
+    "sustained thermal and independent product verification missing"
+  ],
+  "excludedWork": [
+    "tool/playback_benchmark/",
+    "preexisting tool/consumer_fixtures/apple_flutter/__pycache__/"
+  ]
+}

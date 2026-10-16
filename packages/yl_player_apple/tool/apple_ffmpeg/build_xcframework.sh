@@ -30,7 +30,7 @@ common_flags=(
   --enable-avcodec
   --enable-avformat
   --enable-demuxer=matroska,flv,mov,mpegts,mpegps,avi,h264
-  --enable-decoder=dca,vorbis,libdav1d,vp9
+  --enable-decoder=dca,ac3,eac3,vorbis,libdav1d,vp9
   --enable-libdav1d
   --pkg-config-flags=--static
   --enable-bsf=dovi_rpu
@@ -281,6 +281,10 @@ PYPC
     _ylf_opus_decode \
     _ylf_opus_reset \
     _ylf_opus_free \
+    _ylf_dolby_create \
+    _ylf_dolby_decode \
+    _ylf_dolby_reset \
+    _ylf_dolby_free \
     _ylf_dts_create \
     _ylf_dts_decode \
     _ylf_dts_reset \

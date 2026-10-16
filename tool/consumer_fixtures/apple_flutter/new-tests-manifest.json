@@ -838,15 +838,21 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift",
-    "sha256": "f0d795e3650937397f729068bf69b4268e07d2a84e343b01424fc675d8908a99",
+    "sha256": "6dd7d3c146479267cf7d0edd006e265180626725a624dea7a07c09400c80d819",
     "methods": [
       "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
       "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
       "testAC3SurroundActualPixelsSixChannelPCMAndSeek",
       "testEAC3ActualPixelsPCMAndSeek",
       "testDTSActualPixelsPCMAndSeek",
-      "testFLACActualPixelsPCMAndSeek"
-    ]
+      "testFLACActualPixelsPCMAndSeek",
+      "testRealConvertersPreserveFirstAndLastSamples",
+      "testCodecTrackSwitchPreservesTargetSamplesAndTail",
+      "testPCMTrimRoundsForwardAndRejectsTimestampOverflow",
+      "testDolbyTrimRetainsAllocationAndResetsHistory",
+      "testDASHWindowOwnsNegativePCMClipping"
+    ],
+    "p03_pcm_followup": "Pinned unshifted PCM boundaries and cold codec track switches; actual converter, output and accounting."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-ps-avc-mp3.mpg",

@@ -1,0 +1,17 @@
+[ac3 @ 0x76852a3480] Codec (ac3) not on whitelist 'dca,vorbis'
+[matroska,webm @ 0x7684f40000] Failed to open codec in avformat_find_stream_info
+[ac3 @ 0x76852a3480] Codec (ac3) not on whitelist 'dca,vorbis'
+[eac3 @ 0x76852a3480] Codec (eac3) not on whitelist 'dca,vorbis'
+[matroska,webm @ 0x7684f40000] Failed to open codec in avformat_find_stream_info
+[eac3 @ 0x76852a3480] Codec (eac3) not on whitelist 'dca,vorbis'
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/check_dolby_bridge.py", line 99, in <module>
+    run(parser.parse_args().framework)
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/check_dolby_bridge.py", line 57, in run
+    checks += check_discovery(lib, media_root/'format_matrix'/f'{name}.mkv', [(1,codec,channels,mask)])
+              ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/check_dolby_bridge.py", line 37, in check_discovery
+    assert actual == (codec, 48000, channels, mask), (path.name, index, actual)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('mkv-avc-eac3.mkv', 1, (7, 48000, 2, 0))

@@ -113,6 +113,8 @@
 		F331CC72B45CF2B10650905D /* YlByteRingBufferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8048684C57A62ABB3E04D95 /* YlByteRingBufferTests.swift */; };
 		F671D2612D05B09B54372859 /* YlFallbackBufferBudgetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB5CBCF374E238AE0921D63 /* YlFallbackBufferBudgetTests.swift */; };
 		FE3A4AEE8C06A75FECF71E88 /* YlMacosOpenCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F38BA5B23113A06B10DBA6A8 /* YlMacosOpenCoordinatorTests.swift */; };
+		AFB43A6C9E8F1D57F178D37D /* p03-pcm-switch.mkv in Resources */ = {isa = PBXBuildFile; fileRef = CB51CC43D37A42D98C612CCB /* p03-pcm-switch.mkv */; };
+		F4DBC2E617F7D1B3069694E5 /* p03-pcm-reference.json in Resources */ = {isa = PBXBuildFile; fileRef = 34A63C83862933FEA19F536C /* p03-pcm-reference.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -256,6 +258,8 @@
 		F46174D8E67323FE3A505CEC /* hls_key.bin */ = {isa = PBXFileReference; includeInIndex = 1; path = hls_key.bin; sourceTree = "<group>"; };
 		FB2EFBB9E75B58722FD53A37 /* YlFairPlayKeySessionTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFairPlayKeySessionTests.swift; sourceTree = "<group>"; };
 		FC53E1C867EB626EF8E8CB17 /* YlDashHlsCompilerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlDashHlsCompilerTests.swift; sourceTree = "<group>"; };
+		CB51CC43D37A42D98C612CCB /* p03-pcm-switch.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-pcm-switch.mkv"; sourceTree = "<group>"; };
+		34A63C83862933FEA19F536C /* p03-pcm-reference.json */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-pcm-reference.json"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -348,6 +352,8 @@
 				D2930D5C73B77DB4B8813E4C /* hevc_aac.ts */,
 				F6A3CCD1476E2F80C30C74B8 /* p03-webm-vp9-vorbis.webm */,
 				B8E5A82E2970C9064CF6EFDE /* p03-mkv-avc-flac.mkv */,
+				34A63C83862933FEA19F536C /* p03-pcm-reference.json */,
+				CB51CC43D37A42D98C612CCB /* p03-pcm-switch.mkv */,
 				0982A7AF0F764E4DB9EAA11E /* p03-mkv-avc-dts.mkv */,
 				B926F84700D1C3D6BEB37846 /* p03-mkv-avc-eac3.mkv */,
 				3CC6917818EA286FDC7BC1E6 /* p03-mkv-avc-ac3-51.mkv */,
@@ -577,6 +583,8 @@
 				B0748004F715FE005444B080 /* hevc_aac.ts in Resources */,
 				52EF0FF3DE9736231C652645 /* p03-webm-vp9-vorbis.webm in Resources */,
 				4E74B3068D027894CBF1DA2F /* p03-mkv-avc-flac.mkv in Resources */,
+				F4DBC2E617F7D1B3069694E5 /* p03-pcm-reference.json in Resources */,
+				AFB43A6C9E8F1D57F178D37D /* p03-pcm-switch.mkv in Resources */,
 				338EB82A111F23ECD1F7193B /* p03-mkv-avc-dts.mkv in Resources */,
 				2731DBD64CA5527DC2BDCEE2 /* p03-mkv-avc-eac3.mkv in Resources */,
 				0849E06CEBB0488FE6BE85B6 /* p03-mkv-avc-ac3-51.mkv in Resources */,

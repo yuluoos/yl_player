@@ -181,6 +181,21 @@ YLF_EXPORT int32_t ylf_dts_decode(YLFDtsDecoderRef decoder, const uint8_t *data,
 YLF_EXPORT void ylf_dts_reset(YLFDtsDecoderRef decoder);
 YLF_EXPORT void ylf_dts_free(YLFDtsDecoderRef decoder);
 
+// Dolby packet PCM preserves decoder priming and complete final frames. The
+// caller owns programme-time trimming; no encoder delay is silently removed.
+// Layout must be a native channel mask with 1..8 speakers; no downmix is applied.
+// Decode writes interleaved float samples in native mask order, with at most
+// 1536 frames. Capacity must cover 1536 frames * the configured channel count.
+// Invalid arguments do not consume input. A decode failure requires reset.
+typedef struct YLFDolbyDecoder *YLFDolbyDecoderRef;
+YLF_EXPORT YLFDolbyDecoderRef ylf_dolby_create(int32_t codec, int32_t sample_rate,
+    int32_t channels, uint64_t channel_mask);
+YLF_EXPORT int32_t ylf_dolby_decode(YLFDolbyDecoderRef decoder, const uint8_t *data,
+    size_t size, float *samples, int32_t capacity_frames, int32_t *out_frames);
+// Reset codec history after seek/reconfiguration before feeding preroll again.
+YLF_EXPORT void ylf_dolby_reset(YLFDolbyDecoderRef decoder);
+YLF_EXPORT void ylf_dolby_free(YLFDolbyDecoderRef decoder);
+
 YLF_EXPORT int32_t ylf_copy_stream_info(YLFMediaContextRef context,
                                         int32_t stream_index,
                                         YLFStreamInfo *out_info);

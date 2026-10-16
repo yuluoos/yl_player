@@ -379,6 +379,14 @@ final class YlDemuxPipeline {
       let isOpus = Int(selectedAudioStream?.codec ?? 0) == YLFCodecOpus
       let isVorbis = Int(selectedAudioStream?.codec ?? 0) == YLFCodecVorbis
       let usesPreroll = isOpus || isVorbis
+      // Decode overlapping packets before the target so transform history and
+      // the target packet's retained samples survive seek and cold track switches.
+      let trimsPCM = usesPreroll || [YLFCodecAC3, YLFCodecEAC3, YLFCodecDTS, YLFCodecFLAC]
+        .contains(Int(selectedAudioStream?.codec ?? 0))
+      // Ordinary containers own a nonnegative programme floor even at initial
+      // playback. DASH bypasses this path and retains its own rational clipping.
+      let presentationStartUs: Int64? = usesPreroll ? output.demuxAudioPresentationStartUs
+        : (trimsPCM ? max(0, output.demuxAudioPresentationStartUs ?? 0) : nil)
       var skip: UInt32 = 0, discard: UInt32 = 0
       if usesPreroll && (ylf_packet_size(ownedPacket) > 65536 || ylf_packet_audio_trim(ownedPacket, &skip, &discard) != 0) {
         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(isVorbis ? ylVorbisPacketError() : ylOpusPacketError()); return
@@ -390,10 +398,10 @@ final class YlDemuxPipeline {
         durationUs: packetDuration,
         generation: output.demuxAudioGeneration,
         skipSamples: skip, discardSamples: discard,
-        presentationStartUs: usesPreroll ? output.demuxAudioPresentationStartUs : nil
+        presentationStartUs: presentationStartUs
       )
       ylf_packet_release(&packet)
-      if !usesPreroll && !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
+      if !trimsPCM && !output.acceptsDemuxAudio(ptsUs: audioPacket.ptsUs) {
         output.setDemuxPumping(false)
         output.requestAudioPump()
         return

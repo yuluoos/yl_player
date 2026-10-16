@@ -256,11 +256,14 @@ class YlFormatDecodeInstrumentedTest {
     @Test fun nativeFailedAudioSwitchSeekRetainsSelectedTrack() = kotlinx.coroutines.runBlocking {
         checkTimelineReset("avi-two-audio-control.avi", true, true)
     }
-    private suspend fun checkTimelineReset(fixture: String, switch: Boolean, failSeek: Boolean = false) {
+    @Test fun nativeCodecSwitchRetainsTargetSamplesAndTail() = kotlinx.coroutines.runBlocking {
+        for(index in listOf(2,3,4,1)) checkTimelineReset("p03-pcm-switch.mkv",true,referenceTrack=index)
+    }
+    private suspend fun checkTimelineReset(fixture: String, switch: Boolean, failSeek: Boolean = false, referenceTrack: Int? = null) {
         val instrumentation=InstrumentationRegistry.getInstrumentation()
         val context=instrumentation.targetContext
         val file=File(context.cacheDir,"p03-reset-$fixture")
-        instrumentation.context.assets.open("format_matrix/$fixture").use { source -> file.outputStream().use(source::copyTo) }
+        instrumentation.context.assets.open(if(referenceTrack != null) "pcm_alignment/$fixture" else "format_matrix/$fixture").use { source -> file.outputStream().use(source::copyTo) }
         val texture=android.graphics.SurfaceTexture(false)
         val entry=object : io.flutter.view.TextureRegistry.SurfaceTextureEntry {
             override fun id()=904L
@@ -301,6 +304,11 @@ class YlFormatDecodeInstrumentedTest {
                 kotlinx.coroutines.withTimeout(5000) { while(pcm.isEmpty() || video.isEmpty()) kotlinx.coroutines.delay(5) }
                 engine.pause()
                 floorUs=snapshot.get().timeline.positionMs*1000
+                if(referenceTrack != null) {
+                    if(referenceTrack==1) engine.selectAudioTrack("ffmpeg-audio-2")
+                    engine.seekTo(2500)
+                    floorUs=2_500_000L
+                }
                 pcm.clear();video.clear();luminance.clear()
                 rejectSeek=failSeek
                 if(failSeek) {
@@ -309,10 +317,16 @@ class YlFormatDecodeInstrumentedTest {
                     assertEquals("ffmpeg-audio-1",snapshot.get().audioTracks.single {it.isSelected}.id)
                     return
                 }
-                engine.selectAudioTrack("ffmpeg-audio-2")
+                engine.selectAudioTrack("ffmpeg-audio-${referenceTrack ?: 2}")
             }
             engine.play()
             kotlinx.coroutines.withTimeout(5000) { while(pcm.isEmpty() || video.isEmpty() || luminance.isEmpty()) {assertTrue(errors.toString(),errors.isEmpty());kotlinx.coroutines.delay(5)} }
+            if(referenceTrack != null) {
+                kotlinx.coroutines.withTimeout(8000) { while(snapshot.get().status != AndroidPlaybackStatus.COMPLETED) {
+                    assertTrue(errors.toString(),errors.isEmpty());kotlinx.coroutines.delay(10)
+                } }
+                YlPcmReference.verify(referenceTrack,pcm.toList(),floorUs)
+            }
             engine.pause()
             assertTrue("$fixture preroll PCM escaped: ${pcm.map {it.presentationTimeUs}}",pcm.all {it.presentationTimeUs>=floorUs})
             assertTrue("$fixture old/preroll video escaped: $video",video.all {it>=floorUs})

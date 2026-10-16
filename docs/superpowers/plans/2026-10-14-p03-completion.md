@@ -330,6 +330,12 @@ sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
 
 Task 1–6 的勾选表示工程步骤和记录的受控验证已执行，不将未测设备视为支持。Task 7 已执行三端严格矩阵，失败行保留；新增 AC-3/E-AC-3/DTS/FLAC 原生 PCM 验证了音调、布局/降混和 seek，但逐格式独立首尾样本及切轨对齐的完整证明仍不足，故该复合项保留未勾选。iOS 当前模拟器缺少多数路径所需的正向硬解证据。Task 8 短协议五次测量有效，但没有匹配持续热证据，生产档位冻结/独立产品复验的条件未满足。完整 CAP-FORMAT/CAP-DECODE 不宣告通过。详见 [执行报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
 
+### 2026-10-15 PCM 续做
+
+首尾与切轨受控项已扩展到原 AC-3 5.1、E-AC-3、DTS、FLAC 压缩包复制的四音轨素材，逐包 PTS/帧数、首尾与 2.5 秒切轨窗口使用固定参考，不做波形找齐。Apple 按样本裁剪且保持分配计费，Android Dolby 移除重复 delay 处理；DASH 保留自己的精确时间窗裁剪归属。最终原生计数、制品独立重建及新桥接短测量见[本轮证据](../reports/evidence/2026-10-15-p03-pcm-alignment/README.md)。
+
+该项提供四个控制的分离构建回归证据。Dolby/DTS/Android 与主机参考共享 FFmpeg 血统；逐格式独立实现、iOS 真实播放器切轨和同次产品身份绑定的完整音画验收仍未覆盖，Task 7 复合项继续保留未勾选。历史硬件失败与旧测量不被替换或转移到新制品。
+
 ## 自查覆盖与执行记录要求
 
 设计中的容器/音频由 Task 1/2/6 覆盖，解码接口/AV1/VP9/FEL 保持由 Task 3/4/5/6 覆盖，managed/旧系统/错误扩展名由 Task 2/5/7 覆盖，资源/测量由 Task 3/8 覆盖，完整输出/跨计划回归由 Task 7/8 覆盖。五项 Review Focus 均有对应失败测试。

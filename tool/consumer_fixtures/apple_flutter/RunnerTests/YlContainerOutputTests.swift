@@ -2,6 +2,7 @@
 import AVFoundation
 import CoreImage
 import XCTest
+import YlFFmpegBridge
 
 private final class ContainerTexture: YlTextureOutput {
   let textureId: Int64 = 993
@@ -53,6 +54,7 @@ private final class ContainerPCM: YlAudioPacketConverting {
     return output
   }
   func reset() { converter.reset() }
+  var evidence: [Block] { lock.withLock { blocks } }
   func clearEvidence() { lock.withLock { blocks.removeAll() } }
   func verifyTone(start: Int64, end: Int64, expected: Double, channels: Int = 2, file: StaticString = #filePath, line: UInt = #line) {
     let rows = lock.withLock { blocks }
@@ -78,11 +80,70 @@ private final class ContainerPCM: YlAudioPacketConverting {
   }
 }
 private final class ContainerAudioFactory: YlAudioRendererMaking {
-  let pcm = ContainerPCM()
+  private(set) var pcm = ContainerPCM()
   func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
     // Real platform output and consumed audio clock; record the decoded PCM
     // without replacing the device output with a fabricated completion clock.
-    YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+    pcm = ContainerPCM()
+    return YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+  }
+}
+
+/// Pinned host decoder PCM, including encoded delay/padding. Timestamp lookup
+/// uses the independent demux frame table; there is no correlation/re-alignment.
+private struct ContainerReference: Decodable {
+  struct Packet: Decodable { let ptsUs: Int64; let offset: Int; let count: Int }
+  struct Window: Decodable { let start: Int; let count: Int; let f32le: String }
+  struct Track: Decodable {
+    let track: Int; let channels: Int; let rate: Int; let frames: Int
+    let packetFrames: [Packet]; let windows: [Window]
+    func start(at target: Int64) -> (index: Int, pts: Int64) {
+      for packet in packetFrames {
+        let skip = max(0, Int((target - packet.ptsUs) * Int64(rate) + 999_999) / 1_000_000)
+        if skip < packet.count {
+          return (packet.offset + skip, packet.ptsUs + (Int64(skip) * 1_000_000 + Int64(rate)-1) / Int64(rate))
+        }
+      }
+      return (frames, -1)
+    }
+    func verify(_ rows: [ContainerPCM.Block], target: Int64, file: StaticString = #filePath, line: UInt = #line) throws {
+      let start = start(at: target)
+      XCTAssertEqual(try XCTUnwrap(rows.first, file: file, line: line).pts, start.pts, accuracy: 1, file: file, line: line)
+      XCTAssertTrue(rows.allSatisfy { $0.samples.count == channels && $0.rate == Double(rate) }, file: file, line: line)
+      let samples = rows.flatMap { block in (0..<(block.samples.first?.count ?? 0)).flatMap { frame in block.samples.map { $0[frame] } } }
+      let expectedPackets = packetFrames.compactMap { packet -> (Int64, Int)? in
+        let skip = max(0, Int((target - packet.ptsUs) * Int64(rate) + 999_999) / 1_000_000)
+        guard skip < packet.count else { return nil }
+        return (packet.ptsUs + (Int64(skip) * 1_000_000 + Int64(rate)-1) / Int64(rate), packet.count - skip)
+      }
+      XCTAssertEqual(rows.count, expectedPackets.count, "Missing/duplicated PCM packet", file: file, line: line)
+      for (row, expected) in zip(rows, expectedPackets) {
+        XCTAssertEqual(row.pts, expected.0, accuracy: 1, file: file, line: line)
+        XCTAssertEqual(row.samples[0].count, expected.1, file: file, line: line)
+      }
+      XCTAssertEqual(samples.count / channels, frames - start.index, "Lost/duplicated head or tail PCM", file: file, line: line)
+      // First and last 4096 frames include codec priming and the short FLAC tail.
+      for index in [start.index, frames - 4096] {
+        let window = try XCTUnwrap(windows.first { $0.start <= index && $0.start + $0.count >= index + 4096 }, file: file, line: line)
+        let data = try XCTUnwrap(Data(base64Encoded: window.f32le), file: file, line: line)
+        let reference = data.withUnsafeBytes { bytes in stride(from: 0, to: data.count, by: 4).map { Float(bitPattern: UInt32(littleEndian: bytes.loadUnaligned(fromByteOffset: $0, as: UInt32.self))) } }
+        let actualOffset = (index - start.index) * channels, refOffset = (index - window.start) * channels
+        guard actualOffset >= 0, actualOffset + 4096 * channels <= samples.count else { XCTFail("Missing reference window", file: file, line: line); continue }
+        var peak: Float = 0
+        for i in 0..<(4096 * channels) { peak = max(peak, abs(samples[actualOffset+i] - reference[refOffset+i])) }
+        XCTAssertLessThan(peak, 0.0002, "track=\(track) window=\(index) unshifted PCM mismatch", file: file, line: line)
+      }
+      let last = try XCTUnwrap(rows.last, file: file, line: line)
+      let expectedLast = try XCTUnwrap(packetFrames.last, file: file, line: line)
+      XCTAssertEqual(last.pts + Int64(last.samples[0].count) * 1_000_000 / Int64(rate),
+        expectedLast.ptsUs + Int64(expectedLast.count) * 1_000_000 / Int64(rate), accuracy: 1, file: file, line: line)
+      print("P03_PCM_BOUNDARY track=\(track) channels=\(channels) target=\(target) frames=\(samples.count/channels) first=\(rows.first!.pts) last=\(last.pts) pinned_reference_windows=true")
+    }
+  }
+  let tracks: [Track]
+  static func load() throws -> Self {
+    let url = try XCTUnwrap(Bundle(for: YlContainerOutputTests.self).url(forResource: "p03-pcm-reference", withExtension: "json"))
+    return try JSONDecoder().decode(Self.self, from: Data(contentsOf: url))
   }
 }
 
@@ -165,6 +226,185 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
   }
   func testFLACActualPixelsPCMAndSeek() async throws {
     try await checkOutput(name: "p03-mkv-avc-flac", ext: "mkv", format: .matroska)
+  }
+
+  func testRealConvertersPreserveFirstAndLastSamples() throws {
+    let reference = try ContainerReference.load()
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p03-pcm-switch", withExtension: "mkv"))
+    for track in reference.tracks where track.track != 1 || track.channels == 6 {
+      var context: YLFMediaContextRef?; var info = YLFMediaInfo()
+      XCTAssertEqual(ylf_open_local(url.path, &context, &info), 0)
+      defer { ylf_close(&context) }
+      let opened = try XCTUnwrap(context)
+      var stream = YLFStreamInfo()
+      XCTAssertEqual(ylf_copy_stream_info(opened, Int32(track.track), &stream), 0)
+      let count = ylf_stream_codec_config_size(opened, stream.index)
+      var cookie = Data(count: count)
+      if count > 0 { XCTAssertEqual(cookie.withUnsafeMutableBytes {
+        ylf_copy_stream_codec_config(opened, stream.index, $0.bindMemory(to: UInt8.self).baseAddress, count)
+      }, 0) }
+      let pcm = ContainerPCM()
+      try pcm.configure(stream: .init(codec: .init(bridgeCodec: stream.codec), sampleRate: Double(stream.sample_rate),
+        channelCount: Int(stream.channel_count), magicCookie: cookie, generation: 1, channelMask: stream.channel_layout_mask))
+      while true {
+        var packet: YLFPacketRef?
+        let result = ylf_read_packet(opened, &packet)
+        if result == YLFResultEOF { break }
+        XCTAssertEqual(result, 0)
+        defer { ylf_packet_release(&packet) }
+        let owned = try XCTUnwrap(packet)
+        guard ylf_packet_stream_index(owned) == stream.index else { continue }
+        _ = try pcm.convert(packet: .init(data: Data(bytes: try XCTUnwrap(ylf_packet_data(owned)), count: ylf_packet_size(owned)),
+          ptsUs: ylf_packet_pts_us(owned), durationUs: ylf_packet_duration_us(owned), generation: 1, presentationStartUs: 0))
+      }
+      try track.verify(pcm.evidence, target: 0)
+    }
+  }
+
+  func testCodecTrackSwitchPreservesTargetSamplesAndTail() async throws {
+    let reference = try ContainerReference.load()
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p03-pcm-switch", withExtension: "mkv"))
+    let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: .matroska), requireHardwareProbe: false)
+    let texture = ContainerTexture(), audio = ContainerAudioFactory()
+    var display: ContainerDisplay?, state: YlNativeState?, errors = [NativePlayerError]()
+    let backend = try YlFallbackBackend(playerId: 994,
+      services: .init(platform: .current, textureOutput: texture, makeDisplayDriver: { let d = ContainerDisplay($0); display = d; return d }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+      audioRendererFactory: audio, emit: {
+        if case .state(let value) = $0.event { state = value }
+        if case .failure(let error) = $0.event { errors.append(error) }
+      })
+    defer { backend.dispose() }
+    try backend.activate()
+    for index in [2,3,4,1] {
+      try backend.pause()
+      try await Task.detached { try backend.seek(toMs: 2500, cancellationToken: nil) }.value
+      try backend.selectAudioTrack("audio-\(index)")
+      let pcm = audio.pcm
+      try backend.play()
+      let deadline = ProcessInfo.processInfo.systemUptime + 8
+      repeat {
+        display?.fire(); backend.emitState(); try await Task.sleep(nanoseconds: 10_000_000)
+      } while state?.status != "completed" && errors.isEmpty && ProcessInfo.processInfo.systemUptime < deadline
+      XCTAssertTrue(errors.isEmpty, errors.map(\.code).joined(separator: ","))
+      XCTAssertEqual(state?.status, "completed")
+      let track = try XCTUnwrap(reference.tracks.first { $0.track == index && ($0.channels == 6 || index != 1) })
+      try track.verify(pcm.evidence, target: 2_500_000)
+    }
+  }
+
+  func testDASHWindowOwnsNegativePCMClipping() throws {
+    let reference = try ContainerReference.load()
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p03-pcm-switch", withExtension: "mkv"))
+    for track in reference.tracks where track.track != 1 || track.channels == 6 {
+      var context: YLFMediaContextRef?; var info = YLFMediaInfo()
+      XCTAssertEqual(ylf_open_local(url.path, &context, &info), 0)
+      defer { ylf_close(&context) }
+      let opened = try XCTUnwrap(context)
+      var stream = YLFStreamInfo()
+      XCTAssertEqual(ylf_copy_stream_info(opened, Int32(track.track), &stream), 0)
+      let size = ylf_stream_codec_config_size(opened, stream.index)
+      var cookie = Data(count: size)
+      if size > 0 { XCTAssertEqual(cookie.withUnsafeMutableBytes {
+        ylf_copy_stream_codec_config(opened, stream.index, $0.bindMemory(to: UInt8.self).baseAddress, size)
+      }, 0) }
+      var bytes: Data?
+      while bytes == nil {
+        var packet: YLFPacketRef?
+        XCTAssertEqual(ylf_read_packet(opened, &packet), 0)
+        defer { ylf_packet_release(&packet) }
+        let owned = try XCTUnwrap(packet)
+        if ylf_packet_stream_index(owned) == stream.index {
+          bytes = Data(bytes: try XCTUnwrap(ylf_packet_data(owned)), count: ylf_packet_size(owned))
+        }
+      }
+      let scope = try YlManagedBufferLedger().makeScope(maxBytes: nil)
+      let window = try YlDashProgramTimeline.Window(start: YlDashProgramTime(0), end: YlDashProgramTime(1))
+      let converter = YlDashAudioConverter(window: window, scope: scope)
+      // These owned controls have known encoded layouts; this test isolates the
+      // rational DASH timestamp owner from the separate discovery assertions.
+      let mask: UInt64 = track.track == 1 ? 0x60f : (track.track == 2 ? 3 : stream.channel_layout_mask)
+      try converter.configure(stream: .init(codec: .init(bridgeCodec: stream.codec), sampleRate: 48000,
+        channelCount: track.channels, magicCookie: cookie, generation: 1, channelMask: mask))
+      let data = try XCTUnwrap(bytes)
+      let input = YlCompressedAudioPacket(data: data, ptsUs: -5000, durationUs: 32000, generation: 1)
+      XCTAssertNil(input.presentationStartUs)
+      try converter.register(YlDashProgramTime(-1, 200), forMicroseconds: -5000)
+      let output = try XCTUnwrap(converter.convert(packet: input))
+      let pcm = try XCTUnwrap(output.payload as? AVAudioPCMBuffer)
+      XCTAssertEqual(output.ptsUs, 0)
+      XCTAssertEqual(Int(pcm.frameLength), try XCTUnwrap(track.packetFrames.first).count - 240)
+      converter.reset()
+      // A fully clipped packet must still retire its timestamp entry. Exceed
+      // the adapter's 256-entry bound without retaining any decoded output.
+      for index in 0..<260 {
+        let pts = Int64(-1_000_000 - index * 32_000)
+        try converter.register(YlDashProgramTime(pts, 1_000_000), forMicroseconds: pts)
+        XCTAssertNil(try converter.convert(packet: .init(data: data, ptsUs: pts, durationUs: 32000, generation: 1)))
+      }
+      converter.reset()
+    }
+  }
+
+  func testPCMTrimRoundsForwardAndRejectsTimestampOverflow() throws {
+    for interleaved in [false, true] {
+      let format = try XCTUnwrap(AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 44100, channels: 2, interleaved: interleaved))
+      let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 3))
+      pcm.frameLength = 3
+      let samples = try XCTUnwrap(pcm.floatChannelData)
+      for frame in 0..<3 { for channel in 0..<2 {
+        if interleaved { samples[0][frame * 2 + channel] = Float(frame * 10 + channel) }
+        else { samples[channel][frame] = Float(frame * 10 + channel) }
+      } }
+      XCTAssertEqual(try ylTrimPCMToPresentationStart(pcm, ptsUs: 100, targetUs: 101), 123)
+      XCTAssertEqual(pcm.frameLength, 2)
+      XCTAssertEqual(samples[0][0], 10)
+      XCTAssertEqual(interleaved ? samples[0][1] : samples[1][0], 11)
+      XCTAssertThrowsError(try ylTrimPCMToPresentationStart(pcm, ptsUs: Int64.max - 1, targetUs: Int64.max))
+      XCTAssertEqual(pcm.frameLength, 2, "Reject overflow before moving samples")
+      XCTAssertNil(try ylTrimPCMToPresentationStart(pcm, ptsUs: 0, targetUs: 1_000_000))
+    }
+  }
+
+  func testDolbyTrimRetainsAllocationAndResetsHistory() throws {
+    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p03-pcm-switch", withExtension: "mkv"))
+    var context: YLFMediaContextRef?; var info = YLFMediaInfo()
+    XCTAssertEqual(ylf_open_local(url.path, &context, &info), 0)
+    defer { ylf_close(&context) }
+    let opened = try XCTUnwrap(context)
+    var bytes: Data?
+    while bytes == nil {
+      var packet: YLFPacketRef?
+      XCTAssertEqual(ylf_read_packet(opened, &packet), 0)
+      defer { ylf_packet_release(&packet) }
+      let owned = try XCTUnwrap(packet)
+      if ylf_packet_stream_index(owned) == 2 {
+        bytes = Data(bytes: try XCTUnwrap(ylf_packet_data(owned)), count: ylf_packet_size(owned))
+      }
+    }
+    let ledger = YlManagedBufferLedger(), converter = YlAppleCompressedAudioConverter()
+    let scope = try ledger.makeScope(maxBytes: nil)
+    converter.bufferScope = scope
+    try converter.configure(stream: .init(codec: .eac3, sampleRate: 48000,
+      channelCount: 2, magicCookie: Data(), generation: 1, channelMask: 3))
+    let packet = YlCompressedAudioPacket(data: try XCTUnwrap(bytes), ptsUs: -5000, durationUs: 32000, generation: 1, presentationStartUs: 0)
+    var firstSamples = [Float]()
+    for _ in 0..<2 {
+      var result = try converter.convert(packet: packet)
+      XCTAssertEqual(result?.ptsUs, 0)
+      XCTAssertEqual((result?.payload as? AVAudioPCMBuffer)?.frameLength, 1296)
+      XCTAssertEqual(result?.reservation?.bytes, 1536 * 2 * 4, "Trim must retain original allocation charge")
+      XCTAssertEqual(ledger.snapshot.currentBytes, 1536 * 2 * 4)
+      let data = try XCTUnwrap((result?.payload as? AVAudioPCMBuffer)?.floatChannelData)
+      let samples = (0..<16).map { data[0][$0] }
+      if firstSamples.isEmpty { firstSamples = samples } else { XCTAssertEqual(samples, firstSamples) }
+      result = nil
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+      converter.reset()
+    }
+    var preroll = packet; preroll.presentationStartUs = 1_000_000
+    XCTAssertNil(try converter.convert(packet: preroll))
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0, "Discarded preroll must release scratch and PCM")
   }
 
 }

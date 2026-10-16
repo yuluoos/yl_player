@@ -74,6 +74,9 @@ internal class YlFfmpegSession private constructor(
     fun renderSoftwareVideoFrame(): Boolean =
         YlFfmpegBridge.nativeRenderSoftwareVideoFrame(handle)
 
+    /** Decodes the selected stream with retained codec history. This returns
+     * untrimmed PCM; YlPcmAudioOutput removes seek/initial preroll before enqueue.
+     * Reconfiguration/flush resets history and requires feeding preroll again. */
     fun decodeSoftwareAudio(packet: YlNativePacket): YlNativePcmChunk? {
         val metadata = YlFfmpegBridge.nativeDecodeSoftwareAudio(handle, packet.data, packet.presentationTimeUs) ?: return null
         return YlNativePcmChunk(YlFfmpegBridge.nativeTakePcmData(handle), metadata[0].toInt(), metadata[1].toInt(), metadata[2])

@@ -1,0 +1,21 @@
+/private/tmp/yl-p03-pcm-20261015/prime-frames.swift:16:9: warning: result of call to 'withUnsafeBytes' is unused [#NoUsage]
+14 |    let size=data.withUnsafeBytes {Int($0.loadUnaligned(fromByteOffset:offset,as:UInt32.self))};offset+=4
+15 |    let compressed=AVAudioCompressedBuffer(format:input,packetCapacity:1,maximumPacketSize:size)
+16 |    data.withUnsafeBytes {memcpy(compressed.data,$0.baseAddress!.advanced(by:offset),size)};offset+=size
+   |         `- warning: result of call to 'withUnsafeBytes' is unused [#NoUsage]
+17 |    compressed.packetDescriptions!.pointee = .init(mStartOffset:0,mVariableFramesInPacket:zero ? 1536 : 0,mDataByteSize:UInt32(size));compressed.byteLength=UInt32(size);compressed.packetCount=1
+18 |    let pcm=AVAudioPCMBuffer(pcmFormat:output,frameCapacity:3072)!;var sent=false;var error:NSError?
+
+[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>
+config 0 false prime 0 0
+frames 191712 head [1248, 1536, 1536, 1536] tail [1536, 1536, 1536, 1536] prime 0 0
+drain 2 0 nil
+config 0 true prime 0 0
+frames 191712 head [1248, 1536, 1536, 1536] tail [1536, 1536, 1536, 1536] prime 0 0
+drain 2 0 nil
+config 1536 false prime 0 0
+frames 191712 head [1248, 1536, 1536, 1536] tail [1536, 1536, 1536, 1536] prime 0 0
+drain 2 0 nil
+config 1536 true prime 0 0
+frames 191712 head [1248, 1536, 1536, 1536] tail [1536, 1536, 1536, 1536] prime 0 0
+drain 2 0 nil
