@@ -12,6 +12,61 @@ import CommonCrypto
 
 
 @MainActor
+final class YlHeaderedProgressivePlaybackTests: XCTestCase {
+  func testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat() async throws {
+    try await checkPlayback(asset: "mp4-avc-aac.mp4", format: .mp4)
+  }
+
+  func testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat() async throws {
+    try await checkPlayback(asset: "mov-hevc-aac.mov", format: .mov)
+  }
+
+  private func checkPlayback(asset: String, format: AppleMediaFormat) async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL)
+      .appendingPathComponent("flutter_assets/assets/test_media/format_matrix/" + asset)
+    let required = ["User-Agent": "headered-progressive-test", "X-Playback-Token": "fixture-secret"]
+    for hint in [format, .automatic] {
+      let server = try ReactivationMediaServer(data: Data(contentsOf: media), requiredHeaders: required)
+      defer { server.close() }
+      let fixture = AppleHostFixture()
+      defer { fixture.host.close() }
+      try fixture.host.attach()
+      // Extensionless proxy URLs require byte inspection before choosing an engine.
+      let url = server.url.deletingLastPathComponent().appendingPathComponent("proxy")
+      var request = AppleHostFixture.request("headered-\(asset)-\(hint)",
+        url: url.absoluteString, format: hint, autoplay: true)
+      request.source.request = .init(headers: ["User-Agent": required["User-Agent"]!],
+        credentials: ["X-Playback-Token": required["X-Playback-Token"]!])
+      let loaded = try await fixture.load(request)
+      XCTAssertEqual(fixture.host.initialState.engine, .managedFallback)
+      XCTAssertNil(fixture.av.currentItem)
+      try await AppleHostCharacterizations.waitFor {
+        !fixture.output.frames.isEmpty && fixture.host.initialState.timeline.positionMs > 200
+      }
+      let image = try XCTUnwrap(fixture.output.frames.last)
+      XCTAssertGreaterThan(CVPixelBufferGetWidth(image), 0)
+      XCTAssertGreaterThan(CVPixelBufferGetHeight(image), 0)
+      for position: Int64 in [2000, 500] {
+        try await fixture.host.pause(command: .init(sessionId: loaded.sessionId))
+        try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: position))
+        try await AppleHostCharacterizations.waitFor {
+          abs(fixture.host.initialState.timeline.positionMs - position) < 150
+        }
+        let before = fixture.output.frames.count
+        try await fixture.host.play(command: .init(sessionId: loaded.sessionId))
+        try await AppleHostCharacterizations.waitFor {
+          fixture.output.frames.count > before && fixture.host.initialState.timeline.positionMs > position + 150
+        }
+      }
+      XCTAssertNil(fixture.host.initialState.failure)
+      XCTAssertTrue(fixture.callbacks.failures.isEmpty)
+    }
+  }
+}
+
+@MainActor
 final class YlAppleHlsProbeTests: XCTestCase {
   func testHeaderedLiveHlsPublishesActualOriginTraffic() async throws {
     let server = try HlsProbeServer(segment: clearH264Segment(), live: true)
@@ -958,6 +1013,38 @@ final class YlEngineAssessmentTests: XCTestCase {
     }
   }
 
+  func testHeaderedProgressiveInspectionAndExistingRouteBoundaries() {
+    for format: YlSourceFormat in [.mp4, .mov] {
+      for credentialsOnly in [false, true] {
+        var source = YlAppleSourceDescriptor(uri: "https://media.test/proxy", kind: .network)
+        if credentialsOnly { source.credentials = ["X-Token": "secret"] }
+        else { source.headers = ["User-Agent": "fixture"] }
+        XCTAssertEqual(YlEngineRouter.assess(source).candidate, .inspect)
+        let inspected = YlSourceInspection(format: format, demuxerSupported: true,
+          codecsSupported: true, hasVideo: true, hardwareAccelerated: nil)
+        let result = YlEngineRouter.assess(source, inspection: inspected)
+        XCTAssertEqual(result.candidate, .progressiveMp4)
+        XCTAssertEqual(result.engine, .managedFallback)
+        XCTAssertEqual(result.outcome, .compatible)
+        XCTAssertFalse(result.limitations.contains(.networkSystemStackOpaque))
+        XCTAssertFalse(result.satisfiedRequirements.contains(.networkManaged))
+        source.formatHint = format
+        source.intent = .live
+        XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.unsupported")
+        source.intent = .onDemand
+        source.kind = .file
+        source.uri = "file:///tmp/media"
+        XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.headers_require_fallback")
+        source.headers = [:]; source.credentials = [:]
+        for kind: YlSourceKind in [.file, .network] {
+          source.kind = kind
+          source.uri = kind == .file ? "file:///tmp/media" : "https://media.test/media"
+          XCTAssertEqual(YlEngineRouter.assess(source).candidate, .avPlayer)
+        }
+      }
+    }
+  }
+
   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
 
   func testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes() {
@@ -1044,7 +1131,11 @@ final class YlEngineAssessmentTests: XCTestCase {
         else { source.credentials = ["X-Custom-Secret": "private"] }
         let result = YlEngineRouter.assess(source)
         if format == .hls { XCTAssertEqual(result.candidate, .headeredHls) }
-        else if [.mp4, .mov].contains(format) { XCTAssertEqual(result.rejection?.code, "container.headers_require_fallback") }
+        else if [.mp4, .mov].contains(format) {
+          XCTAssertEqual(result.candidate, .progressiveMp4)
+          XCTAssertEqual(result.outcome, .requiresInspection)
+          XCTAssertNil(result.rejection)
+        }
         else { XCTAssertEqual(result.engine, .managedFallback) }
       }
     }

@@ -12,7 +12,7 @@ actual source and requirements before Load.
 |---|---|---|---|
 | Android `content:` URI | Supported; Android only | Rejected as invalid | Rejected as invalid |
 | Local MP4/MOV and platform-native progressive media | Supported subject to Media3 extractor/codec | Default route, subject to AVFoundation/codec | MP4/MOV use owned samples for strict policy requests; other native formats retain their prior route |
-| Network MP4/MOV | Supported with Media3 | Default route without request headers or credentials | Inspected VOD with managed networking, bounded buffering or hardwareRequired uses owned samples |
+| Network MP4/MOV | Supported with Media3 | Default route without request headers or credentials | VOD with request headers/credentials, managed networking, bounded buffering or hardwareRequired uses owned samples after inspection |
 | HLS without request metadata | Supported | Supported; VOD HEVC-in-MPEG-TS media playlists use managed demux + VideoToolbox | Managed request rejected |
 | HLS with ordinary headers or credentials | Supported subject to Android origin filtering | Inspection-dependent controlled manifest/key/media-proxy route; same-origin credentials enforced | Managed request rejected |
 | Static clear DASH (`dash` or `.mpd`) | Owned Media3 1.11.0 DASH route; current validation described below | Retained private HLS adapter for its compatible subset | Owned sample programme route for admitted static AVC/HEVC/AAC fMP4 |

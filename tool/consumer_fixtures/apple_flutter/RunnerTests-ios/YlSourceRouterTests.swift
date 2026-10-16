@@ -2,7 +2,7 @@
 import XCTest
 
 final class YlSourceRouterTests: XCTestCase {
-  func testLocalMkvRoutesToFallback() {
+  func testAutomaticLocalMkvRequiresInspection() {
     let source = YlAppleSourceDescriptor(
       uri: "file:///tmp/movie.mkv",
       kind: .file,
@@ -10,7 +10,7 @@ final class YlSourceRouterTests: XCTestCase {
       intent: .automatic, headers: [:]
     )
 
-    XCTAssertEqual(YlSourceRouter.route(source), .localMatroska)
+    XCTAssertEqual(YlSourceRouter.route(source), .inspect)
   }
 
   func testExplicitLocalMatroskaRoutesToFallback() {
@@ -35,7 +35,7 @@ final class YlSourceRouterTests: XCTestCase {
     XCTAssertEqual(YlSourceRouter.route(source), .networkMatroska)
   }
 
-  func testAutomaticRemoteMkvRoutesToNetworkFallback() {
+  func testAutomaticRemoteMkvRequiresInspection() {
     let source = YlAppleSourceDescriptor(
       uri: "https://media.test/movie.mkv?token=secret",
       kind: .network,
@@ -43,7 +43,7 @@ final class YlSourceRouterTests: XCTestCase {
       intent: .automatic, headers: [:]
     )
 
-    XCTAssertEqual(YlSourceRouter.route(source), .networkMatroska)
+    XCTAssertEqual(YlSourceRouter.route(source), .inspect)
   }
 
   func testRemoteMkvLiveIsRejected() {
@@ -71,21 +71,21 @@ final class YlSourceRouterTests: XCTestCase {
     XCTAssertEqual(YlSourceRouter.route(source), .headeredHls)
   }
 
-  func testHeaderedProgressiveMp4StaysRejected() {
+  func testHeaderedProgressiveMp4RoutesToFallback() {
     let source = YlAppleSourceDescriptor(
       uri: "https://media.test/movie.mp4",
       kind: .network,
-      formatHint: .automatic,
+      formatHint: .mp4,
       intent: .automatic, headers: ["X-Test": "test"]
     )
 
     XCTAssertEqual(
-      YlSourceRouter.route(source).rejectionCode,
-      "container.headers_require_fallback"
+      YlSourceRouter.route(source),
+      .progressiveMp4
     )
   }
 
-  func testHttpFlvRoutesToSequentialFallback() {
+  func testAutomaticHttpFlvRequiresInspection() {
     let source = YlAppleSourceDescriptor(
       uri: "https://media.test/live.flv?token=secret",
       kind: .network,
@@ -93,7 +93,7 @@ final class YlSourceRouterTests: XCTestCase {
       intent: .live, headers: ["X-Test": "test"]
     )
 
-    XCTAssertEqual(YlSourceRouter.route(source), .networkFlv)
+    XCTAssertEqual(YlSourceRouter.route(source), .inspect)
   }
 
   func testExplicitHttpFlvHintRoutesWithoutFlvExtension() {

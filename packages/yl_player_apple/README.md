@@ -111,6 +111,10 @@ validated. MPEG-2 video remains a diagnostic case outside the required codec set
 Automatic progressive sources inspect at most 4 KiB before choosing a container,
 including familiar but wrong extensions. On older Apple systems without MIME
 override support, renamed inspected MP4 uses owned sample playback.
+Network MP4/MOV VOD with request headers or credentials automatically uses the
+owned progressive fallback, preserving metadata during inspection, loading and
+seeking. Unheadered default sources retain AVPlayer; HLS routing and progressive
+live restrictions are unchanged.
 
 
 P03 software candidate bridge now includes pinned dav1d AV1 Main 8/10-bit 420

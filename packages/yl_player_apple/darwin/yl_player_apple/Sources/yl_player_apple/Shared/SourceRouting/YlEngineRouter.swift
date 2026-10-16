@@ -95,9 +95,11 @@ enum YlEngineRouter {
     if format == .dash && (bounded || source.kind != .network || source.isLive) {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
     }
-    // Strict progressive policies require owned bytes, decoder evidence and
-    // output accounting. Never advertise these guarantees for opaque AVPlayer.
-    let ownedMp4 = strict && [YlSourceFormat.mp4, .mov].contains(format)
+    // Progressive HTTP metadata requires owned I/O, just like strict policies.
+    // AVPlayer cannot enforce these headers; retain them through the existing
+    // fallback byte source without upgrading the caller's network policy.
+    let headeredNetwork = source.kind == .network && source.hasHeaders
+    let ownedMp4 = (strict || headeredNetwork) && [YlSourceFormat.mp4, .mov].contains(format)
     if ownedMp4 && source.isLive { return reject("container", "container.unsupported") }
     let av = [YlSourceFormat.hls, .mp4, .mov].contains(format) && !ownedMp4
     if strict && (av || (managed && !availability.managedNetwork) ||

@@ -21,15 +21,15 @@ final class YlMacosNetworkTests: XCTestCase {
 
   func testRoutesSupportedFallbackAndHeaderedSources() {
     XCTAssertEqual(
-      YlSourceRouter.route(descriptor("file:///tmp/movie.mkv", kind: .file)),
+      YlSourceRouter.route(descriptor("file:///tmp/movie.mkv", kind: .file, hint: .matroska)),
       .localMatroska
     )
     XCTAssertEqual(
-      YlSourceRouter.route(descriptor("https://media.test/movie.mkv")),
+      YlSourceRouter.route(descriptor("https://media.test/movie.mkv", hint: .matroska)),
       .networkMatroska
     )
     XCTAssertEqual(
-      YlSourceRouter.route(descriptor("https://media.test/live.flv", live: true)),
+      YlSourceRouter.route(descriptor("https://media.test/live.flv", hint: .flv, live: true)),
       .networkFlv
     )
     XCTAssertEqual(
@@ -43,13 +43,14 @@ final class YlMacosNetworkTests: XCTestCase {
     )
   }
 
-  func testRejectsHeadersForUnsupportedProgressiveMedia() {
+  func testRoutesHeaderedProgressiveMediaToFallback() {
     XCTAssertEqual(
       YlSourceRouter.route(descriptor(
         "https://media.test/movie.mp4",
+        hint: .mp4,
         headers: true
-      )).rejectionCode,
-      "container.headers_require_fallback"
+      )),
+      .progressiveMp4
     )
   }
 
