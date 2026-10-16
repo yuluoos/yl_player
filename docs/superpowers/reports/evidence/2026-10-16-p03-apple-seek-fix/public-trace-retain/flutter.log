@@ -1,0 +1,110 @@
+YL_BOUND_RESULT=/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/p03-public-67654767-b7cb-4ddd-917a-3460eb4ab3da
+2026-10-16 02:26:51.345 yl_player_example[81674:4536201] Running with merged UI and platform thread. Experimental.
+flutter: The Dart VM service is listening on http://127.0.0.1:61645/xpa2rV9Q4kE=/
+flutter: 00:00 +0: public Flutter same-build same-session AV
+flutter: P03_PUBLIC begin mkv-avc-eac3
+flutter: P03_PUBLIC ready apple-1-s1
+flutter: P03_PUBLIC completed apple-1-s1
+flutter: P03_PUBLIC seek apple-1-s1 1250
+flutter: P03_PUBLIC seek accepted apple-1-s1 1250
+flutter: P03_PUBLIC seek apple-1-s1 2250
+flutter: P03_PUBLIC seek accepted apple-1-s1 2250
+flutter: P03_PUBLIC seek apple-1-s1 0
+flutter: P03_PUBLIC seek accepted apple-1-s1 0
+flutter: P03_PUBLIC disposing apple-1-s1
+flutter: P03_PUBLIC begin mkv-avc-dts
+flutter: P03_PUBLIC ready apple-2-s1
+flutter: P03_PUBLIC completed apple-2-s1
+flutter: P03_PUBLIC seek apple-2-s1 1250
+flutter: P03_PUBLIC seek accepted apple-2-s1 1250
+flutter: P03_PUBLIC seek apple-2-s1 2250
+flutter: P03_PUBLIC seek accepted apple-2-s1 2250
+flutter: P03_PUBLIC seek apple-2-s1 0
+flutter: P03_PUBLIC seek accepted apple-2-s1 0
+flutter: P03_PUBLIC disposing apple-2-s1
+flutter: P03_PUBLIC begin mkv-avc-flac
+flutter: P03_PUBLIC ready apple-3-s1
+flutter: P03_PUBLIC completed apple-3-s1
+flutter: P03_PUBLIC seek apple-3-s1 1250
+flutter: P03_PUBLIC seek accepted apple-3-s1 1250
+flutter: P03_PUBLIC seek apple-3-s1 2250
+flutter: P03_PUBLIC seek accepted apple-3-s1 2250
+flutter: P03_PUBLIC seek apple-3-s1 0
+flutter: P03_PUBLIC seek accepted apple-3-s1 0
+flutter: P03_PUBLIC disposing apple-3-s1
+flutter: P03_PUBLIC begin webm-vp9-vorbis
+[vp9 @ 0x74ec2a4e00] Codec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x74e9151900] Failed to open codec in avformat_find_stream_info
+[vp9 @ 0x74ec2a4e00] Codec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+flutter: P03_PUBLIC ready apple-4-s1
+[vorbis @ 0x74ec2a5180] Could not update timestamps for discarded samples.
+flutter: P03_PUBLIC completed apple-4-s1
+flutter: P03_PUBLIC seek apple-4-s1 1250
+flutter: P03_PUBLIC seek accepted apple-4-s1 1250
+flutter: P03_PUBLIC seek apple-4-s1 2250
+flutter: P03_PUBLIC seek accepted apple-4-s1 2250
+flutter: P03_PUBLIC seek apple-4-s1 0
+flutter: P03_PUBLIC seek accepted apple-4-s1 0
+flutter: P03_PUBLIC disposing apple-4-s1
+flutter: P03_PUBLIC begin mkv-avc-ac3-51
+flutter: P03_PUBLIC ready apple-5-s1
+flutter: P03_PUBLIC completed apple-5-s1
+flutter: P03_PUBLIC seek apple-5-s1 1250
+flutter: P03_PUBLIC seek accepted apple-5-s1 1250
+flutter: P03_PUBLIC seek apple-5-s1 2250
+flutter: P03_PUBLIC seek accepted apple-5-s1 2250
+flutter: P03_PUBLIC seek apple-5-s1 0
+flutter: P03_PUBLIC seek accepted apple-5-s1 0
+flutter: P03_PUBLIC disposing apple-5-s1
+flutter: P03_PUBLIC begin ps-avc-mp3
+[mpeg @ 0x74e9169680] Could not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+flutter: P03_PUBLIC ready apple-6-s1
+flutter: P03_PUBLIC completed apple-6-s1
+flutter: P03_PUBLIC seek apple-6-s1 1250
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+[NULL @ 0x74ec425f80] non-existing PPS 0 referenced
+flutter: P03_PUBLIC seek accepted apple-6-s1 1250
+flutter: P03_PUBLIC timeout native={pixels: [], phase: seek-1250, sessionId: apple-6-s1, readbackTrace: [{hostStatus: paused, clock: 1422937, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {clock: 1550666, hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: paused, clock: 1678395, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 1806125}, {hostStatus: paused, clock: 1933854, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: paused, clock: 2061583, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 2189250, hostStatus: paused}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: paused, clock: 2316958}, {clock: 2444687, hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 2572416}, {clock: 2700145, hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: paused, clock: 2827875, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 2955541, hostStatus: paused}, {clock: 3083250, hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 3210979, hostStatus: paused}, {clock: 3338708, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: paused}, {clock: 3466437, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: paused}, {hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 3594166}, {clock: 3721895, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: paused}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 3849604, hostStatus: paused}, {hostStatus: paused, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 3977333}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: paused}, {hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: completed, clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {hostStatus: completed, clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed, clock: 4032000}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {hostStatus: completed, clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed, clock: 4032000}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed, clock: 4032000}, {hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {hostStatus: completed, clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {clock: 4032000, hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {hostStatus: completed, clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil}, {readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000, hostStatus: completed}, {hostStatus: completed, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, clock: 4032000}, {clock: 4032000, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, hostStatus: completed}], stamp: ObjectIdentifier(0x00000074ebc73580)-3, readback: layer=ObjectIdentifier(0x00000074ebfe0aa0) control=false rate=0.0 effectiveRate=1.0 ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, state: AppleStateMessage(loadRequestId: Optional("load-1"), sessionId: Optional("apple-6-s1"), revision: 222, sequence: 224, status: completed, timeline: AppleTimelineMessage(positionMs: 4034, durationMs: Optional(4023), bufferedPositionMs: 4034, isSeekable: true, isLive: false, isAtLiveEdge: nil, liveOffsetMs: nil, dvrWindow: nil), geometry: Optional(AppleVideoGeometryMessage(encodedSize: AppleSizeMessage(width: 320.0, height: 180.0), displaySize: AppleSizeMessage(width: 320.0, height: 180.0), pixelAspectRatio: 1.0, rotationDegrees: 0)), audioTracks: [AppleTrackMessage(id: audio-1, kind: audio, label: Optional("MP3 1"), language: nil, codec: Optional("MP3"), bitrate: nil, width: nil, height: nil, isSelected: true)], videoTracks: [AppleTrackMessage(id: video-0, kind: video, label: nil, language: nil, codec: Optional("video/avc"), bitrate: nil, width: Optional(320), height: Optional(180), isSelected: true)], engine: managedFallback, decoderMode: hardware, decoderIdentity: Optional("VideoToolbox"), metrics: AppleMetricsMessage(loadToReadyMs: Optional(13), loadToFirstFrameMs: Optional(14), rebufferCount: Optional(1), rebufferDurationMs: Optional(5), droppedVideoFrames: Optional(0), audioUnderruns: Optional(4), estimatedBitrate: nil, managedBufferedDurationMs: nil, managedBufferedBytes: nil, liveOffsetMs: nil, reconnectCount: Optional(0)), failure: nil, videoSelection: Optional(AppleVideoSelectionMessage(fixedTrackId: nil, reason: initial)), livePlayback: nil), runId: 67654767-b7cb-4ddd-917a-3460eb4ab3da, buildSha256: 391396d3e823a336d71bdfe2ab51a3189bc7e72446bff3f8f242b1aa0ed9f5b9, clock: ended(positionUs: 4032000, hostTimeUs: 109320357284), pcmBlocks: 115} public=YlPlaybackStatus.completed position=0:00:04.034000 observed=null
+flutter: 01:19 +0: public Flutter same-build same-session AV [E]
+flutter:   Test failed. See exception logs above.
+  The test description was: public Flutter same-build same-session AV
+flutter:   
+flutter: 01:19 +0 -1: (tearDownAll)
+flutter: 01:19 +1 -1: Some tests failed.

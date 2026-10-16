@@ -90,3 +90,32 @@ failure poisoning. Host references share FFmpeg decoder ancestry with Dolby,
 DTS and Android; CoreAudio FLAC remains an independent implementation. This
 separate-build regression proof does not replace independent decoder or physical
 speaker/A/V qualification. Neither script changes production admission profiles.
+
+### Apple 公开 Flutter 暂停快照
+
+`run_bound_flutter_apple.py` 在一次构建后冻结整个 opt-in Debug app，再经公开
+controller/session/view 运行六控制、完成和三次 seek。`bound_av.py` 要求同一
+run/build/session 的 PCM、实际消费位置与显示层像素，以及 Flutter 框架最终成功。
+`--negative-identity` 和 `--negative-framework` 分别验证播放前身份拒绝和
+原始记录通过后框架失败仍拒绝。不要在运行期间重建 app。
+
+Apple 的 `displayedPixelBuffer()` 要求渲染器实际速率为零。公开 pause 的完成
+不代表该条件成立：无 `controlTimebase` 的显示层仍使用速率为一的主机时钟。
+seek 后先等待实际音频消费时钟就绪再公开暂停，避免将尚未启动的输出冻结在
+无效时钟状态；该就绪观察只决定能否暂停，配对证据仍单独读取之后的暂停时钟。
+显式 `DEBUG && YL_BOUND_AV` 采集器等待实际显示层就绪后冻结同一层，读回为空时
+保持音频暂停；空读回时归还显示时钟，让已排队画面在下一次轮询前完成呈现，
+随后再次冻结。成功后恢复时钟再由公开 API 继续播放。已有停止时基按对象身份
+归还；原来隐式的主机时钟以显式速率一时基保留到该采集表面释放，因为当前 SDK
+清除时基为 nil 会让内部渲染器停在零。门禁要求 `paused-layer-timebase-v1`
+协议及每个像素的实际 `displayRate=0`；旧记录缺少这些字段不能升级为新协议证据。
+
+macOS 验收还要求 `owned-all-spaces-window-v1` 与逐像素 `windowVisible=true`：
+只有实际窗口位于当前桌面且未被系统标记为遮挡时才采样。验收窗口临时以400×260
+的浮动小窗口显示在屏幕角落，可跨桌面显示，不激活应用或切换用户桌面。结束后恢复
+本窗口原设置，过程中关闭窗口几何自动保存，不控制其他应用。旧记录缺少可见性字段
+也不能作为当前门禁通过证据。
+
+这些是 clear 内容的受控暂停快照，采集会调整显示时钟和验收窗口，不证明未经仪器干预的
+连续显示、受保护读回、物理扬声器/屏幕同步、release 或完整格式矩阵。生产
+解码准入、调度和显示实现不因采集而更改。

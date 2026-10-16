@@ -1,0 +1,487 @@
+{
+  "artifactsUnchanged": true,
+  "errors": [
+    "incomplete_rows",
+    "pixel_audio_pair_missing"
+  ],
+  "fullAcceptance": false,
+  "measurements": [
+    {
+      "caseId": "mkv-avc-eac3",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.039987953318687354,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.04000611216623639,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040016825266642124,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.03999129353086537,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04003398965693501,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.03998381488290379,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04003350020187653,
+              "channel": 0,
+              "frequencyHz": 1100
+            },
+            {
+              "amplitude": 0.039989912229131196,
+              "channel": 1,
+              "frequencyHz": 1155
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040016853819360314,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.039991410730491714,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04003405856864767,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.03998377963495721,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039987989297879015,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.039993973583045794,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.03995904754262141,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.04000270704698249,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03995831955277116,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.040002495423817154,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04003645645459309,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.040017129648370287,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039967752824313786,
+              "channel": 0,
+              "frequencyHz": 1100
+            },
+            {
+              "amplitude": 0.03999341624936306,
+              "channel": 1,
+              "frequencyHz": 1155
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03995831955277116,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.040002497908235825,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039991480348987155,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.03998553221495315,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04002114911559835,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.03999412492673631,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.03995947345053279,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.03999071910662373,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039969420782508355,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.040008689138117455,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039980783567760386,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.040016774950891176,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03999167910010666,
+              "channel": 0,
+              "frequencyHz": 1100
+            },
+            {
+              "amplitude": 0.04001828282894833,
+              "channel": 1,
+              "frequencyHz": 1155
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039969420782508355,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.04000868907102218,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039980783567760386,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.040016775044772614,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03995947345053279,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.040009280530208156,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.039985547179165304,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.03957771536449736,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04003721592083833,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.037262315072607716,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03996514455722311,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.03989616404889325,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.0400391460947147,
+              "channel": 0,
+              "frequencyHz": 1100
+            },
+            {
+              "amplitude": 0.03999117172864802,
+              "channel": 1,
+              "frequencyHz": 1155
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039965945515029015,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.039418270653770834,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040018369264013684,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.039892348169856616,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04003293833435015,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.03991079772529399,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    }
+  ],
+  "negativeFramework": true,
+  "negativeIdentity": false,
+  "processExit": -15,
+  "publicTestPassed": false,
+  "requiredRows": 6,
+  "runtimeIdentityVerified": true,
+  "scopeAcceptance": false,
+  "statusRunMatches": true,
+  "supportedRows": 4
+}

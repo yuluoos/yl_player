@@ -115,7 +115,8 @@ def validate(plan, rows):
                 require(row.get('publicSessionId')==session and row.get('publicApi')=='YlPlayerController/YlPlayerView' and row.get('pixelSource')==pixel_source,'public_session_unverified')
                 if apple:
                     require(row.get('nativeViewAttached') is True,'public_view_unverified')
-                    require(row.get('audioClockMethod')=='renderer-paused-consumption','paused_readback_unverified')
+                    if plan['platform']=='macos':require(row.get('windowVisibilityMethod')=='owned-all-spaces-window-v1','window_visibility_unverified')
+                    require(row.get('audioClockMethod')=='renderer-paused-consumption' and row.get('displayReadbackProtocol')=='paused-layer-timebase-v1','paused_readback_unverified')
                 lifecycle=row.get('publicLifecycle',{})
                 require(isinstance(lifecycle,dict) and all(lifecycle.get(k) is True for k in ('created','ready','firstFrame','completed','disposed')),'public_lifecycle_unverified')
             if plan['platform']=='android':require(row.get('audioClockMethod')=='audiotrack-playback-head','consumption_clock_unverified')
@@ -127,6 +128,9 @@ def validate(plan, rows):
                 origin(phase,row)
                 pixels=phase.get('pixels',[])
                 require(isinstance(pixels,list) and pixels and all(isinstance(p,dict) for p in pixels),'pixels_missing')
+                if plan.get('artifactKind')=='apple-public-flutter-debug-app':
+                    require(all(type(p.get('displayRate')) in (int,float) and p['displayRate']==0 for p in pixels),'display_clock_not_stopped')
+                    if plan['platform']=='macos':require(all(p.get('windowVisible') is True for p in pixels),'window_not_visible')
                 times=[p.get('hostTimeUs') for p in pixels]
                 require(all(type(t) is int and t>=0 for t in times) and times==sorted(times),'pixel_host_order')
                 windows=phase.get('pcmWindows',[])

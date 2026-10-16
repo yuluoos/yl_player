@@ -1,0 +1,42 @@
+{
+  "consumption-public-final": {
+    "rawAccepted": true,
+    "supportedRows": 6,
+    "frameworkPassed": true,
+    "scopeAcceptance": true,
+    "runtimeIdentityVerified": true,
+    "hostProductUnchangedAtAudit": true,
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "runId": "244f9b01-7cae-4cad-bbad-9796b7a3cad9"
+  },
+  "consumption-framework-negative": {
+    "rawAccepted": true,
+    "supportedRows": 6,
+    "frameworkPassed": false,
+    "scopeAcceptance": false,
+    "runtimeIdentityVerified": true,
+    "hostProductUnchangedAtAudit": true,
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "runId": "44d4de80-1f8f-4c18-ba86-7edab806d678"
+  },
+  "consumption-identity-negative": {
+    "rawAccepted": false,
+    "supportedRows": 0,
+    "frameworkPassed": false,
+    "scopeAcceptance": false,
+    "runtimeIdentityVerified": false,
+    "hostProductUnchangedAtAudit": true,
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "runId": "fe4f2ce8-6656-423c-a3c8-5c23e6f8971a"
+  },
+  "consumption-public-repeat": {
+    "rawAccepted": true,
+    "supportedRows": 6,
+    "frameworkPassed": true,
+    "scopeAcceptance": true,
+    "runtimeIdentityVerified": true,
+    "hostProductUnchangedAtAudit": true,
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "runId": "4bbe684f-7c42-48d7-9737-7502d4bbb522"
+  }
+}

@@ -114,7 +114,10 @@ class BoundAVTest(unittest.TestCase):
         self.row.update(publicSessionId=self.row['sessionId'],publicApi='YlPlayerController/YlPlayerView',
             publicLifecycle=dict(created=True,ready=True,firstFrame=True,completed=True,disposed=True),
             pixelSource='flutter-native-view-display-layer',nativeViewAttached=True,
-            audioClockMethod='renderer-paused-consumption')
+            audioClockMethod='renderer-paused-consumption',displayReadbackProtocol='paused-layer-timebase-v1',
+            windowVisibilityMethod='owned-all-spaces-window-v1')
+        for phase in self.row['phases']:
+            for pixel in phase['pixels']:pixel.update(displayRate=0,windowVisible=True)
         self.assertTrue(self.result()['scopeAcceptance'])
         status=dict(passed=True,identityVerified=True,artifactsUnchanged=True,runId=self.plan['runId'])
         self.assertTrue(apple_acceptance(self.plan,[self.row],status,True)['scopeAcceptance'])
@@ -122,9 +125,15 @@ class BoundAVTest(unittest.TestCase):
             bad=dict(status);bad[key]=False
             self.assertFalse(apple_acceptance(self.plan,[self.row],bad,True)['scopeAcceptance'],key)
         self.assertFalse(apple_acceptance(self.plan,[self.row],status,False)['scopeAcceptance'])
-        for key,value in [('publicSessionId','other'),('pixelSource','native-test-texture'),('nativeViewAttached',False),('audioClockMethod','running-readback')]:
+        for key,value in [('publicSessionId','other'),('pixelSource','native-test-texture'),('nativeViewAttached',False),('audioClockMethod','running-readback'),('displayReadbackProtocol',None),('displayReadbackProtocol','host-clock'),('windowVisibilityMethod',None)]:
             bad=copy.deepcopy(self.row);bad[key]=value
             self.assertFalse(self.result([bad])['scopeAcceptance'])
+        for rate in [None,1,-1,True,'0']:
+            bad=copy.deepcopy(self.row);bad['phases'][1]['pixels'][0]['displayRate']=rate
+            self.assertFalse(self.result([bad])['scopeAcceptance'],rate)
+        for visible in [None,False,1]:
+            bad=copy.deepcopy(self.row);bad['phases'][1]['pixels'][0]['windowVisible']=visible
+            self.assertFalse(self.result([bad])['scopeAcceptance'],visible)
         self.row['publicLifecycle']['disposed']=False
         self.assertFalse(self.result()['scopeAcceptance'])
 

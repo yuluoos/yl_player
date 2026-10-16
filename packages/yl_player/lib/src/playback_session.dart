@@ -23,6 +23,8 @@ final class YlPlaybackSession {
   Future<void> play() => _command(() => _player._backend.play(id));
 
   /// Pauses this session without discarding its source or selected tracks.
+  /// Completion acknowledges the command; native display readback availability
+  /// and renderer-clock readiness must be observed separately.
   Future<void> pause() => _command(() => _player._backend.pause(id));
 
   /// Seeks to a nonnegative programme position. Completion acknowledges the seek;

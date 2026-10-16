@@ -1,0 +1,32 @@
+{
+  "ordinary-debug": {
+    "path": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example.debug.dylib",
+    "sha256": "83a4a79d100b26266d5bf3e0266f47a8055b684d0803bdadbd6d2fa335abdfb1",
+    "symbolCounts": {
+      "YlBoundFlutterProbe": 0,
+      "YlBoundDisplayReadback": 0,
+      "YlBoundWindowVisibility": 0
+    },
+    "productRegistryPresent": true
+  },
+  "opted-in-debug": {
+    "path": "/private/tmp/yl-p03-seek-fix-20261016/build-public/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example.debug.dylib",
+    "sha256": "e4e29b9e088126ebc6d21c9084951ac9cc68622f81f4488ec6402da8d1533aaf",
+    "symbolCounts": {
+      "YlBoundFlutterProbe": 167,
+      "YlBoundDisplayReadback": 31,
+      "YlBoundWindowVisibility": 39
+    },
+    "productRegistryPresent": true
+  },
+  "release-with-opt-in-define": {
+    "path": "/private/tmp/yl-p03-seek-fix-20261016/build-release/Build/Products/Release/yl_player_example.app/Contents/MacOS/yl_player_example",
+    "sha256": "b0ada3f5ab69cad1bf22f30d649e0abf5759b9019aeebb953622a8f01eb01408",
+    "symbolCounts": {
+      "YlBoundFlutterProbe": 0,
+      "YlBoundDisplayReadback": 0,
+      "YlBoundWindowVisibility": 0
+    },
+    "productRegistryPresent": true
+  }
+}

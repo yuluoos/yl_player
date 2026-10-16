@@ -259,8 +259,11 @@ final class YlHardwareDecoderLeasePool {
   }
 }
 
+/// Decoder lifetime and output contract; admission requires explicit evidence.
 protocol YlVTSession: AnyObject {
+  /// Legacy convenience flag; this alone cannot establish hardware admission.
   var usesHardwareDecoder: Bool { get }
+  /// Evidence from the initialized decoder. Boolean-only implementations stay unknown.
   var hardwareEvidence: YlHardwareDecoderEvidence { get }
   func decode(
     _ sample: CMSampleBuffer,

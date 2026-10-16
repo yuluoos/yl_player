@@ -359,3 +359,13 @@ Task 7 的六控制计划现在显式冻结 engine：VP9/Vorbis 使用产品 Med
 ### 2026-10-16 Apple 公开 Flutter 同次构建采集续做
 
 已接入实际公开controller/session/view、运行时bundle/加载镜像核验、同会话PCM/显示层/消费位置及框架最终状态。复审修复观察装饰器bufferScope遗漏，补齐API注释。SDK要求显示层读回时速率为零，因此最终改为公开暂停/读回/恢复协议并强化门禁；旧播放中采样的6/6仅作历史，不转移到新协议。最终macOS仍在seek阶段缺少有效像素，身份与制品稳定性通过而音画门禁失败；正确拒绝错误身份。Python48、Flutter24通过，普通原生40项中39通过1失败，完整失败历史保存。最终协议六控制通过、末尾框架负例实跑与完整P03仍未完成，Task7/8保持开放。详见[本轮记录](../reports/evidence/2026-10-16-p03-apple-public-av/README.md)。
+
+### 2026-10-16 macOS 公开 Flutter seek 采集修复
+
+沿获批 Task 7 修复暂停快照时基、空读回恢复、当前桌面窗口可见性，以及 seek 后真实音频消费就绪前过早暂停的问题。均限显式 opt-in Debug 采集；生产准入、音频调度与显示实现未改变。原生 retirement 回归根因在 YlFallbackBackend 构造：生命周期测试替身缺少明确硬件证据，已补齐并纠正上一轮定位。相关 API 注释已补充。
+
+最终同一冻结 app 的两次独立正向均6/6；六行原始数据通过后的框架故意失败、播放前错误身份两项负例都正确拒绝。Flutter example76/76、受影响 macOS 原生43/43（零跳过）、Python48/48、静态分析和公开 API 检查通过。固定样本与容差保持不变。一次独立复核的 Important 已经 RED→GREEN 及同包对照闭环，没有延期 Minor。历史失败完整保留。
+
+该证据仍是 clear 内容、调整同层显示时钟和自有验收窗口的受控暂停快照；完整格式/release、iOS 正向硬件、物理输出、独立参考与持续热资格不由此覆盖，Task 7/8 保持开放。详见[本轮证据](../reports/evidence/2026-10-16-p03-apple-seek-fix/README.md)。
+
+普通 Debug/Release 构建及验收桥隔离检查通过，iOS Simulator 共用代码编译通过（既有警告保留）；这些编译结果不代替对应平台音画验收。

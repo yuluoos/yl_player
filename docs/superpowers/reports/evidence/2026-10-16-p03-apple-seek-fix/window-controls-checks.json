@@ -1,0 +1,49 @@
+{
+  "window-public-final": {
+    "code": 0,
+    "artifactsUnchanged": true,
+    "errors": [],
+    "fullAcceptance": false,
+    "negativeFramework": false,
+    "negativeIdentity": false,
+    "processExit": -15,
+    "publicTestPassed": true,
+    "requiredRows": 6,
+    "runtimeIdentityVerified": true,
+    "scopeAcceptance": true,
+    "statusRunMatches": true,
+    "supportedRows": 6
+  },
+  "window-framework-negative": {
+    "code": 1,
+    "artifactsUnchanged": true,
+    "errors": [],
+    "fullAcceptance": false,
+    "negativeFramework": true,
+    "negativeIdentity": false,
+    "processExit": -15,
+    "publicTestPassed": false,
+    "requiredRows": 6,
+    "runtimeIdentityVerified": true,
+    "scopeAcceptance": false,
+    "statusRunMatches": true,
+    "supportedRows": 6
+  },
+  "window-identity-negative": {
+    "code": 1,
+    "artifactsUnchanged": false,
+    "errors": [
+      "incomplete_rows"
+    ],
+    "fullAcceptance": false,
+    "negativeFramework": false,
+    "negativeIdentity": true,
+    "processExit": -15,
+    "publicTestPassed": false,
+    "requiredRows": 6,
+    "runtimeIdentityVerified": false,
+    "scopeAcceptance": false,
+    "statusRunMatches": true,
+    "supportedRows": 0
+  }
+}

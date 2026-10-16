@@ -1,0 +1,282 @@
+{
+  "consumption-framework-negative": {
+    "rawAccepted": true,
+    "rawSupported": 6,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "44d4de80-1f8f-4c18-ba86-7edab806d678",
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "errors": []
+  },
+  "consumption-identity-negative": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "fe4f2ce8-6656-423c-a3c8-5c23e6f8971a",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "consumption-public-final": {
+    "rawAccepted": true,
+    "rawSupported": 6,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": true,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "244f9b01-7cae-4cad-bbad-9796b7a3cad9",
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "errors": []
+  },
+  "consumption-public-repeat": {
+    "rawAccepted": true,
+    "rawSupported": 6,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": true,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "4bbe684f-7c42-48d7-9737-7502d4bbb522",
+    "buildSha256": "792aa0edcc9266fe0e2731039a43b679040e90cc9e90b78779db6b2bd322485e",
+    "errors": []
+  },
+  "framework-negative-verified": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "a67e5ed2-ed41-4c16-9723-22fc7d52d639",
+    "buildSha256": "3a1688e035184f7ed9e3d170c55397157ad4f9e07868362ec033638fefcf4baf",
+    "errors": [
+      "window_visibility_unverified"
+    ]
+  },
+  "identity-negative-verified": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "7f8c7407-c44e-4403-982e-8a943e2dbcb0",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "negative-framework-final": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "12bfee89-f9f6-4e29-8908-17a3a9129f69",
+    "buildSha256": "24f92f91b87cab52182c277029002c42148c177b1ca3c24a739e3aed36383cd0",
+    "errors": [
+      "incomplete_rows",
+      "window_visibility_unverified"
+    ]
+  },
+  "public-final": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "e0b6c4ea-9735-44d6-912d-6124a4bc3ed9",
+    "buildSha256": "6ce13ce4a135004b47f11413825dda2ed1d49a489eb136a4ff0686aa4c0d92dd",
+    "errors": [
+      "incomplete_rows",
+      "window_visibility_unverified"
+    ]
+  },
+  "public-final2": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "124f44db-d942-48d0-b10c-f74d0f527452",
+    "buildSha256": "24f92f91b87cab52182c277029002c42148c177b1ca3c24a739e3aed36383cd0",
+    "errors": [
+      "window_visibility_unverified"
+    ]
+  },
+  "public-repeat-verified": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "fc56d52d-e5e9-485c-98a6-2f03f43b2344",
+    "buildSha256": "3a1688e035184f7ed9e3d170c55397157ad4f9e07868362ec033638fefcf4baf",
+    "errors": [
+      "incomplete_rows",
+      "window_visibility_unverified"
+    ]
+  },
+  "public-trace": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "043102d9-4f61-4c07-968f-970179f39103",
+    "buildSha256": "04fc062fa51cbe4dc7799d4a9a430202844ee0881b0a41faa981ccdc6c3a7c77",
+    "errors": [
+      "window_visibility_unverified"
+    ]
+  },
+  "public-trace-retain": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "67654767-b7cb-4ddd-917a-3460eb4ab3da",
+    "buildSha256": "391396d3e823a336d71bdfe2ab51a3189bc7e72446bff3f8f242b1aa0ed9f5b9",
+    "errors": [
+      "incomplete_rows",
+      "window_visibility_unverified"
+    ]
+  },
+  "public-verified": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "c1992a33-a88c-4d1a-92ee-9106d2d4d2d9",
+    "buildSha256": "3a1688e035184f7ed9e3d170c55397157ad4f9e07868362ec033638fefcf4baf",
+    "errors": [
+      "window_visibility_unverified"
+    ]
+  },
+  "visibility-diagnostic": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "63d770b2-2122-481c-b90a-03c169fa0b6b",
+    "buildSha256": "2a7385ebb0970bd9e6e14db2ecc7568e405cdd61923cfff371915c25d8258360",
+    "errors": [
+      "window_visibility_unverified"
+    ]
+  },
+  "visibility-repeat": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "2bdac44a-0e15-4e94-a6e0-3b79e3103169",
+    "buildSha256": "2a7385ebb0970bd9e6e14db2ecc7568e405cdd61923cfff371915c25d8258360",
+    "errors": [
+      "incomplete_rows",
+      "window_visibility_unverified"
+    ]
+  },
+  "window-framework-negative": {
+    "rawAccepted": true,
+    "rawSupported": 6,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "c3aa08d1-be13-4bc1-a64e-982685ec1a77",
+    "buildSha256": "5b432af068964e34c5ce29b24f48f052fcd7a022124bb0cda6a4c59c48f72305",
+    "errors": []
+  },
+  "window-identity-negative": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "e110d2cb-57e5-416b-9fc8-e4ec7caa7218",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "window-public-final": {
+    "rawAccepted": true,
+    "rawSupported": 6,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": true,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "f2161940-de06-4951-8e2e-5928334734e7",
+    "buildSha256": "5b432af068964e34c5ce29b24f48f052fcd7a022124bb0cda6a4c59c48f72305",
+    "errors": []
+  },
+  "window-public-repeat": {
+    "rawAccepted": false,
+    "rawSupported": 4,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "74704abf-d5d6-4d87-8987-334a8dbf3f91",
+    "buildSha256": "5b432af068964e34c5ce29b24f48f052fcd7a022124bb0cda6a4c59c48f72305",
+    "errors": [
+      "incomplete_rows"
+    ]
+  }
+}

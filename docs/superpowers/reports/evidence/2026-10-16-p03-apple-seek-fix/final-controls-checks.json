@@ -1,0 +1,32 @@
+{
+  "public-verified": {
+    "code": 0,
+    "artifactsUnchanged": true,
+    "errors": [],
+    "fullAcceptance": false,
+    "negativeFramework": false,
+    "negativeIdentity": false,
+    "processExit": -15,
+    "publicTestPassed": true,
+    "requiredRows": 6,
+    "runtimeIdentityVerified": true,
+    "scopeAcceptance": true,
+    "statusRunMatches": true,
+    "supportedRows": 6
+  },
+  "framework-negative-verified": {
+    "code": 1,
+    "artifactsUnchanged": true,
+    "errors": [],
+    "fullAcceptance": false,
+    "negativeFramework": true,
+    "negativeIdentity": false,
+    "processExit": -15,
+    "publicTestPassed": false,
+    "requiredRows": 6,
+    "runtimeIdentityVerified": true,
+    "scopeAcceptance": false,
+    "statusRunMatches": true,
+    "supportedRows": 6
+  }
+}

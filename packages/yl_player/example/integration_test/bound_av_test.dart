@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'support/paused_frame_capture.dart';
 
 /// Built once and launched with a host-frozen plan. Only public APIs drive playback.
 /// The opt-in native bridge observes this same session and verifies installed bytes.
@@ -132,18 +133,43 @@ void main() {
               if (Platform.isMacOS || Platform.isIOS) {
                 final completed =
                     player!.state.status == YlPlaybackStatus.completed;
-                if (!completed) {
-                  await session.pause().timeout(const Duration(seconds: 12));
-                }
-                // The system renderer applies the stopped timebase asynchronously.
-                // Allow presentation to settle without advancing the audio clock.
-                await Future<void>.delayed(const Duration(milliseconds: 50));
-                observedNativeClock = await bridge.invokeMethod<int>(
-                  'capture',
+                Future<void> releaseReadback() => bridge.invokeMethod<void>(
+                  'endReadback',
                   {'sessionId': sessionId},
                 );
-                if (!completed) {
-                  await session.play().timeout(const Duration(seconds: 12));
+                try {
+                  observedNativeClock = await capturePausedFrame(
+                    readyToPause: () async =>
+                        await bridge.invokeMethod<bool>('consumptionReady', {
+                          'sessionId': sessionId,
+                        }) ==
+                        true,
+                    pause: () async {
+                      if (!completed) {
+                        await session.pause().timeout(
+                          const Duration(seconds: 12),
+                        );
+                      }
+                    },
+                    read: () => bridge.invokeMethod<int>('capture', {
+                      'sessionId': sessionId,
+                    }),
+                    resume: () async {
+                      await releaseReadback();
+                      if (!completed) {
+                        await session.play().timeout(
+                          const Duration(seconds: 12),
+                        );
+                      }
+                    },
+                  );
+                } catch (_) {
+                  await bridge.invokeMethod('diagnostics', {
+                    'sessionId': sessionId,
+                  });
+                  rethrow;
+                } finally {
+                  await releaseReadback();
                 }
                 continue;
               }

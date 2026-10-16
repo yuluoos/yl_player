@@ -10,8 +10,153 @@ import FlutterMacOS
 import Flutter
 #endif
 
+/// Temporarily stops an already-paused clear surface's renderer clock for readback.
+/// The immediate renderer otherwise retains a host-clock rate of one even when
+/// the public player is paused. No frame, surface, or media timestamp is replaced.
+final class YlBoundDisplayReadback {
+  let layer: AVSampleBufferDisplayLayer
+  private let original: CMTimebase?
+  private let frozen: CMTimebase
+  private var active = true
+  init(layer: AVSampleBufferDisplayLayer) throws {
+    precondition(Thread.isMainThread)
+    guard #available(macOS 14.4, iOS 17.4, *) else {
+      throw NSError(domain: "P03BoundAV", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "Renderer clock readback is unavailable"])
+    }
+    guard layer.isReadyForDisplay else {
+      throw NSError(domain: "P03BoundAV", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "Wait for the first displayed frame before freezing"])
+    }
+    self.layer = layer
+    original = layer.controlTimebase
+    if let original, CMTimebaseGetEffectiveRate(original) != 0 {
+      throw NSError(domain: "P03BoundAV", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "Readback requires a paused presentation timeline"])
+    }
+    var created: CMTimebase?
+    let result = CMTimebaseCreateWithSourceClock(allocator: kCFAllocatorDefault,
+      sourceClock: CMClockGetHostTimeClock(), timebaseOut: &created)
+    guard result == noErr, let created else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(result)) }
+    frozen = created
+    let time = CMTimebaseGetTime(original ?? layer.sampleBufferRenderer.timebase)
+    let status = CMTimebaseSetTime(frozen, time: time)
+    guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
+    layer.controlTimebase = frozen // A new timebase starts stopped, at the same time.
+  }
+  /// Freezes the owned host clock again after the next public pause.
+  func freeze() throws {
+    precondition(Thread.isMainThread)
+    if active { return }
+    guard layer.controlTimebase === (original ?? frozen) else {
+      throw NSError(domain: "P03BoundAV", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "Display clock ownership changed"])
+    }
+    if let original, CMTimebaseGetEffectiveRate(original) != 0 {
+      throw NSError(domain: "P03BoundAV", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "Readback requires a paused presentation timeline"])
+    }
+    guard CMTimebaseSetRate(frozen, rate: 0) == noErr,
+      CMTimebaseSetTime(frozen, time: original.map(CMTimebaseGetTime)
+        ?? CMClockGetTime(CMClockGetHostTimeClock())) == noErr else {
+      throw NSError(domain: "P03BoundAV", code: 3)
+    }
+    layer.controlTimebase = frozen
+    active = true
+  }
+  /// Reads the owned surface only at actual rate zero. An unavailable image lets
+  /// queued presentation progress between retries, without resuming player/audio.
+  /// Readiness alone does not prove the first image has reached the display target.
+  @available(macOS 14.4, iOS 17.4, *)
+  func pixelBuffer() throws -> CVPixelBuffer? {
+    var pixel: CVPixelBuffer?
+    if layer.isReadyForDisplay {
+      try freeze()
+      // Allow an asynchronous stop to settle before attempting a read.
+      guard CMTimebaseGetEffectiveRate(layer.sampleBufferRenderer.timebase) == 0 else { return nil }
+      pixel = layer.sampleBufferRenderer.displayedPixelBuffer()
+    }
+    if pixel == nil && !restore() {
+      throw NSError(domain: "P03BoundAV", code: 3,
+        userInfo: [NSLocalizedDescriptionKey: "Display clock ownership changed during recovery"])
+    }
+    return pixel
+  }
+  /// Returns the original custom clock, or restores explicit host-clock semantics.
+  /// Clearing a temporary clock to nil leaves AVFoundation's renderer stopped.
+  /// For an originally implicit host clock, retain the owned clock at rate one
+  /// until this acceptance surface is disposed. Never replace another owner's clock.
+  @discardableResult func restore() -> Bool {
+    precondition(Thread.isMainThread)
+    if !active { return layer.controlTimebase === (original ?? frozen) }
+    guard layer.controlTimebase === frozen else { return false }
+    if let original {
+      layer.controlTimebase = original
+    } else {
+      guard CMTimebaseSetTime(frozen, time: CMClockGetTime(CMClockGetHostTimeClock())) == noErr,
+        CMTimebaseSetRate(frozen, rate: 1) == noErr else { return false }
+    }
+    active = false
+    return true
+  }
+  deinit { restore() }
+}
+
+#if os(macOS)
+/// Owns only the acceptance app's window settings for a bounded GUI run.
+final class YlBoundWindowVisibility {
+  let window: NSWindow
+  private let frame: NSRect
+  private let minimum: NSSize
+  private let level: NSWindow.Level
+  private let behavior: NSWindow.CollectionBehavior
+  private let autosave: NSWindow.FrameAutosaveName
+  private let wasVisible: Bool
+  private var restored = false
+  init(window: NSWindow) {
+    precondition(Thread.isMainThread)
+    self.window = window; frame = window.frame; minimum = window.minSize
+    level = window.level; behavior = window.collectionBehavior
+    autosave = window.frameAutosaveName; wasVisible = window.isVisible
+    window.setFrameAutosaveName("") // Do not persist acceptance-only geometry.
+    window.minSize = .zero
+    window.setContentSize(NSSize(width: 400, height: 260))
+    var visibleBehavior = behavior.subtracting([.moveToActiveSpace, .fullScreenPrimary, .fullScreenNone])
+    visibleBehavior.formUnion([.canJoinAllSpaces, .fullScreenAuxiliary])
+    if #available(macOS 13.0, *) {
+      visibleBehavior.subtract([.primary, .auxiliary])
+      visibleBehavior.insert(.canJoinAllApplications)
+    }
+    window.collectionBehavior = visibleBehavior
+    window.level = .floating
+    if let screen = window.screen ?? NSScreen.main {
+      let available = screen.visibleFrame
+      window.setFrameOrigin(NSPoint(x: max(available.minX, available.maxX - window.frame.width - 24),
+        y: max(available.minY, available.maxY - window.frame.height - 24)))
+    }
+    window.orderFrontRegardless() // Keep the user's active app/Space unchanged.
+  }
+  var isVisible: Bool {
+    window.isVisible && !window.isMiniaturized && window.isOnActiveSpace &&
+      window.occlusionState.contains(.visible) && !NSApplication.shared.isHidden
+  }
+  /// Restores this window only; no activation, Space switch, or other app control.
+  func restore() {
+    precondition(Thread.isMainThread)
+    guard !restored else { return }; restored = true
+    window.level = level; window.collectionBehavior = behavior
+    window.setFrame(frame, display: true); window.minSize = minimum
+    window.setFrameAutosaveName(autosave)
+    if !wasVisible { window.orderOut(nil) }
+  }
+  deinit { restore() }
+}
+#endif
+
 /// Explicit acceptance-build observer. Public Flutter commands own all playback;
 /// this bridge never creates a player, swaps a surface, or admits a decoder.
+/// Paused pixel sampling temporarily controls the same layer clock and restores
+/// it before public playback resumes; this is a controlled snapshot protocol.
 final class YlBoundFlutterProbe {
   static var current: YlBoundFlutterProbe?
   private var plan: [String: Any] = [:]
@@ -24,6 +169,9 @@ final class YlBoundFlutterProbe {
   private var readbackState = "not sampled"
   private let context = CIContext(options: [.cacheIntermediates: false,
     .workingColorSpace: NSNull(), .outputColorSpace: NSNull()])
+  #if os(macOS)
+  private var windowVisibility: YlBoundWindowVisibility?
+  #endif
   private let channel: FlutterMethodChannel
   #if os(macOS)
   private let platform = "macos"
@@ -35,13 +183,7 @@ final class YlBoundFlutterProbe {
     guard let encoded = ProcessInfo.processInfo.environment["YL_P03_BOUND_PLAN"] else { return }
     let probe = YlBoundFlutterProbe(messenger: messenger, encoded: encoded)
     current = probe
-    #if os(macOS)
-    if probe.identityVerified {
-      // A GUI output acceptance run needs the actual test window visible.
-      // Activate only this process; never inspect or control another app.
-      DispatchQueue.main.async { NSApplication.shared.activate(ignoringOtherApps: true) }
-    }
-    #endif
+
   }
   private init(messenger: FlutterBinaryMessenger, encoded: String) {
     channel = FlutterMethodChannel(name: "yl_player_example/debug/bound_av", binaryMessenger: messenger)
@@ -107,6 +249,9 @@ final class YlBoundFlutterProbe {
     try JSONSerialization.data(withJSONObject: value, options: [.sortedKeys]).write(to: directory.appendingPathComponent(name), options: .atomic)
   }
   private func writeStatus(passed: Bool) throws {
+    #if os(macOS)
+    defer { windowVisibility?.restore() }
+    #endif
     var stable = false
     if identityVerified { do { try verifyProduct(); stable = true } catch { failure = String(describing: error) } }
     try write("rows.json", rows)
@@ -133,6 +278,13 @@ final class YlBoundFlutterProbe {
       current?.readbackState = "missing/empty container: \(String(describing: container?.bounds))"
       return nil
     }
+    #if os(macOS)
+    guard current?.windowVisibility?.isVisible == true else {
+      _ = current?.capture?.readback?.restore()
+      current?.readbackState = "acceptance window is not visible on the active Space"
+      return nil
+    }
+    #endif
     guard #available(macOS 14.4, iOS 17.4, *) else { return nil }
     var layers = [AVSampleBufferDisplayLayer]()
     func visit(_ layer: CALayer) {
@@ -144,15 +296,42 @@ final class YlBoundFlutterProbe {
       current?.readbackState = "display layer count: \(layers.count)"
       return nil
     }
-    let rate = layer.controlTimebase.map { CMTimebaseGetRate($0) } ?? 0
-    let pixel = layer.isReadyForDisplay && rate == 0 ? layer.sampleBufferRenderer.displayedPixelBuffer() : nil
-    current?.readbackState = "rate=\(rate) ready=\(layer.isReadyForDisplay) status=\(layer.status.rawValue) pixel=\(pixel != nil) bounds=\(layer.bounds) error=\(String(describing: layer.error))"
+    guard let capture = current?.capture else { return nil }
+    guard layer.isReadyForDisplay || capture.readback?.layer === layer else {
+      current?.readbackState = "waiting for first display: \(ObjectIdentifier(layer))"
+      return nil
+    }
+    if capture.readback?.layer !== layer {
+      guard capture.readback?.restore() != false else { return nil }
+      do { capture.readback = try YlBoundDisplayReadback(layer: layer) }
+      catch { current?.readbackState = "readback clock: \(error)"; return nil }
+    }
+    let pixel: CVPixelBuffer?
+    do { pixel = try capture.readback?.pixelBuffer() }
+    catch { current?.readbackState = "readback clock: \(error)"; return nil }
+    let rate = CMTimebaseGetEffectiveRate(layer.sampleBufferRenderer.timebase)
+    current?.readbackState = "layer=\(ObjectIdentifier(layer)) control=\(layer.controlTimebase != nil) rate=\(rate) effectiveRate=\(CMTimebaseGetEffectiveRate(layer.sampleBufferRenderer.timebase)) ready=\(layer.isReadyForDisplay) status=\(layer.status.rawValue) pixel=\(pixel != nil) bounds=\(layer.bounds) error=\(String(describing: layer.error))"
+    #if os(macOS)
+    let windows = NSApplication.shared.windows.map {
+      "\($0.windowNumber):visible=\($0.isVisible),occlusion=\($0.occlusionState.contains(.visible)),mini=\($0.isMiniaturized),space=\($0.isOnActiveSpace),level=\($0.level.rawValue)"
+    }.joined(separator: ";")
+    current?.readbackState += " appActive=\(NSApplication.shared.isActive) hidden=\(NSApplication.shared.isHidden) windows=\(windows)"
+    #endif
     return pixel
   }
   private func handle(_ call: FlutterMethodCall, reply: @escaping FlutterResult) throws {
     precondition(Thread.isMainThread)
     let args = call.arguments as? [String: Any] ?? [:]
-    if call.method == "plan" { reply(plan); return }
+    if call.method == "plan" {
+      #if os(macOS)
+      if windowVisibility == nil {
+        let windows = NSApplication.shared.windows.filter { $0.contentViewController is FlutterViewController }
+        try require(windows.count == 1, "expected one owned Flutter acceptance window")
+        windowVisibility = YlBoundWindowVisibility(window: windows[0])
+      }
+      #endif
+      reply(plan); return
+    }
     if call.method == "begin" {
       let planned = plan["planned"] as? [[String: Any]] ?? []
       try require(capture == nil && rows.count < planned.count, "unexpected begin")
@@ -170,16 +349,34 @@ final class YlBoundFlutterProbe {
     }
     try require(session == c.session && !c.session.isEmpty, "stale public session")
     switch call.method {
+    case "endReadback":
+      try require(c.readback?.restore() != false, "display clock ownership changed during readback")
+      reply(nil)
     case "diagnostics":
       var details = origin(c)
       details.merge(["phase": c.phase, "state": String(describing: host.initialState),
         "clock": c.factory?.diagnosticClock ?? "no renderer", "pixels": c.pixels,
         "readback": readbackState,
+        "readbackTrace": c.readbackTrace,
         "pcmBlocks": c.factory?.pcm.evidence.count ?? 0, "stamp": c.factory?.stamp ?? "none"]) { _, rhs in rhs }
       try write("unfinished.json", details)
       reply(details)
+    case "consumptionReady":
+      let ready = c.factory?.consumptionReady(completed: host.initialState.status == .completed) == true
+      if !ready && c.readbackTrace.count < 100 {
+        c.readbackTrace.append(["waitingForConsumption": c.factory?.diagnosticClock ?? "missing",
+          "hostStatus": String(describing: host.initialState.status)])
+      }
+      reply(ready)
     case "capture":
-      guard let audio = c.factory, let clock = audio.clock() else { reply(nil); return }
+      try require(host.initialState.status == .paused || host.initialState.status == .completed,
+        "readback requires public pause/completion")
+      guard let audio = c.factory, let clock = audio.clock() else {
+        if c.readbackTrace.count < 100 {
+          c.readbackTrace.append(["clockUnavailable": c.factory?.diagnosticClock ?? "missing", "hostStatus": String(describing: host.initialState.status)])
+        }
+        reply(nil); return
+      }
       let before = ProcessInfo.processInfo.systemUptime
       let pixel: CVPixelBuffer?
       #if os(macOS)
@@ -187,13 +384,20 @@ final class YlBoundFlutterProbe {
       #else
       pixel = (c.output as? YlIosTextureOutput)?.boundDisplayedPixelBuffer()
       #endif
+      if c.readbackTrace.count < 100 {
+        c.readbackTrace.append(["clock": clock, "hostStatus": String(describing: host.initialState.status), "readback": readbackState])
+      }
       if let pixel, c.pixels.count < 1000, ProcessInfo.processInfo.systemUptime - before <= 0.2 {
         let image = CIImage(cvPixelBuffer: pixel)
         var rgba = [UInt8](repeating: 0, count: 4)
         context.render(image, toBitmap: &rgba, rowBytes: 4,
           bounds: CGRect(x: image.extent.midX, y: image.extent.midY, width: 1, height: 1), format: .RGBA8, colorSpace: nil)
-        c.pixels.append(["value": rgba.prefix(3).map(Int.init), "format": "rgb8", "audioClockUs": clock,
-          "hostTimeUs": Int64(before * 1_000_000)])
+        var observed: [String: Any] = ["value": rgba.prefix(3).map(Int.init), "format": "rgb8", "audioClockUs": clock, "displayRate": 0,
+          "hostTimeUs": Int64(before * 1_000_000)]
+        #if os(macOS)
+        observed["windowVisible"] = windowVisibility?.isVisible == true
+        #endif
+        c.pixels.append(observed)
         c.viewAttached = true
         reply(clock); return
       }
@@ -202,7 +406,7 @@ final class YlBoundFlutterProbe {
       let target = (args["targetMs"] as? NSNumber)?.intValue ?? -1
       let phases = plan["phases"] as? [[String: Any]] ?? []
       try require(c.phases.count < phases.count && phases[c.phases.count]["phase"] as? String == "seek-\(target)", "seek order changed")
-      c.phase = "seek-\(target)"; c.pixels.removeAll()
+      c.phase = "seek-\(target)"; c.pixels.removeAll(); c.readbackTrace.removeAll()
       c.beforeSeek = c.factory?.stamp; c.factory?.pcm.clear(); reply(nil)
     case "awaitPhase":
       try require(c.beforeSeek != nil && c.factory?.stamp != c.beforeSeek, "actual audio reset not observed")
@@ -223,6 +427,10 @@ final class YlBoundFlutterProbe {
         "publicSessionId": c.session, "publicApi": "YlPlayerController/YlPlayerView", "publicLifecycle": lifecycle,
         "pixelSource": "flutter-native-view-display-layer", "nativeViewAttached": c.viewAttached]) { _, rhs in rhs }
       row["audioClockMethod"] = "renderer-paused-consumption"
+      row["displayReadbackProtocol"] = "paused-layer-timebase-v1"
+      #if os(macOS)
+      row["windowVisibilityMethod"] = "owned-all-spaces-window-v1"
+      #endif
       rows.append(row); capture = nil; try write("rows.json", rows); reply(nil)
     default: reply(FlutterMethodNotImplemented)
     }
@@ -251,7 +459,8 @@ final class YlBoundFlutterProbe {
         "frames": channels > 0 ? samples.count / channels : 0, "pcmF32LE": raw.base64EncodedString(), "pcmSha256": Self.digest(raw)]) { _, rhs in rhs }
       windows.append(window)
     }
-    var row = origin(c); row.merge(["phase": c.phase, "pixels": c.pixels, "pcmWindows": windows]) { _, rhs in rhs }; return row
+    var row = origin(c); row.merge(["phase": c.phase, "pixels": c.pixels, "pcmWindows": windows,
+      "readbackTrace": c.readbackTrace]) { _, rhs in rhs }; return row
   }
   private final class Capture {
     let item: [String: Any]; let path: String
@@ -259,6 +468,8 @@ final class YlBoundFlutterProbe {
     var session = "", phase = "play", completed = false, viewAttached = false
     var beforeSeek: String?
     var pixels = [[String: Any]](), phases = [[String: Any]]()
+    var readbackTrace = [[String: Any]]()
+    var readback: YlBoundDisplayReadback?
     init(item: [String: Any], path: String) { self.item = item; self.path = path }
   }
 }
@@ -320,6 +531,17 @@ private final class BoundAudioFactory: YlAudioRendererMaking {
   }
   var diagnosticClock: String {
     renderer.map { String(describing: $0.clockObservation(expectedGeneration: pcm.generation)) } ?? "missing"
+  }
+  /// Eligibility only: observe real output consumption before public pause.
+  /// Never freeze a newly reset/unstarted renderer or use this running sample
+  /// as paired pixel evidence; capture() reads its later paused clock separately.
+  func consumptionReady(completed: Bool) -> Bool {
+    guard let renderer else { return false }
+    switch renderer.clockObservation(expectedGeneration: pcm.generation) {
+    case .running, .ended: return true
+    case .paused: return completed
+    default: return false
+    }
   }
   func clock() -> Int64? {
     guard let renderer else { return nil }
