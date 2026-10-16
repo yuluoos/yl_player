@@ -555,7 +555,7 @@ final class _Factory implements AppleFactoryTransport {
   @override
   Future<AppleCreateReply> create(AppleCreateRequest request) async =>
       AppleCreateReply(
-        schemaMajor: 6,
+        schemaMajor: 7,
         spiMajor: 2,
         platform: ApplePlatform.ios,
         channelSuffix: 'controller-test',
