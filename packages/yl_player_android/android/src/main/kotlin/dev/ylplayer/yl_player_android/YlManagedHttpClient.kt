@@ -45,8 +45,25 @@ internal class YlManagedHttpClient(
     private val onRetry: (Int, Long) -> Unit = { _, _ -> },
     transport: OkHttpClient = OkHttpClient(),
     private val dashCandidates: ((HttpUrl) -> List<HttpUrl>)? = null,
+    private val networkBytes: YlNetworkByteCounter? = null,
 ) : Call.Factory {
     private val client = transport.newBuilder().followRedirects(false).followSslRedirects(false).apply {
+        if (networkBytes != null) addNetworkInterceptor { chain ->
+            val response = chain.proceed(chain.request())
+            val body = response.body
+            if (body == null) response else {
+                // Network interceptor precedes transparent decompression and body retries.
+                val counted = object : okio.ForwardingSource(body.source()) {
+                    override fun read(sink: Buffer, byteCount: Long): Long =
+                        super.read(sink, byteCount).also { networkBytes.received(it) }
+                }.buffer()
+                response.newBuilder().body(object : ResponseBody() {
+                    override fun contentType() = body.contentType()
+                    override fun contentLength() = body.contentLength()
+                    override fun source(): BufferedSource = counted
+                }).build()
+            }
+        }
         if (network != null) {
             retryOnConnectionFailure(false)
             // A single cancellable deadline covers DNS/connect/TLS/server header wait. Neither

@@ -17,6 +17,7 @@ internal class YlRtmpTransport(
     private val setupMs: Long = 10000,
     private val inactivityMs: Long = 15000,
     private val socket: Socket = Socket(),
+    private val networkBytes: YlNetworkByteCounter? = null,
 ) : AutoCloseable {
     companion object {
         private val timers = ScheduledThreadPoolExecutor(1) { r -> Thread(r,"yl-rtmp-deadlines").apply { isDaemon=true } }.apply { removeOnCancelPolicy = true }
@@ -111,6 +112,7 @@ internal class YlRtmpTransport(
                 val amount = if (ackWindow > 0) minOf(len.toLong(), (ackWindow-(bytesReceived-lastAcknowledged)).coerceAtLeast(1)).toInt() else len
                 if (::flow.isInitialized) flow.flush()
                 val n=rawInput.read(b,off,amount)
+                networkBytes?.received(n.toLong())
                 checkState()
                 if(n>0) {
                     bytesReceived+=n

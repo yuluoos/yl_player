@@ -13,6 +13,25 @@ import CommonCrypto
 
 @MainActor
 final class YlAppleHlsProbeTests: XCTestCase {
+  func testHeaderedLiveHlsPublishesActualOriginTraffic() async throws {
+    let server = try HlsProbeServer(segment: clearH264Segment(), live: true)
+    defer { server.close() }
+    let fixture = AppleHostFixture()
+    defer { fixture.host.close() }
+    try fixture.host.attach()
+    var request = AppleHostFixture.request("hls-traffic", url: server.url.absoluteString, format: .hls)
+    request.source.intent = .live
+    request.source.request = .init(headers: ["X-Traffic-Fixture": "1"], credentials: [:])
+    _ = try await fixture.host.load(request: request)
+    for _ in 0..<200 where (fixture.callbacks.traffic.last?.1 ?? 0) == 0 {
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertEqual(fixture.callbacks.traffic.last?.0, "hls-traffic")
+    XCTAssertGreaterThan(fixture.callbacks.traffic.last?.1 ?? 0, 0)
+    XCTAssertGreaterThan(fixture.host.initialState.metrics.networkBytesReceived ?? 0, 0)
+    XCTAssertNil(fixture.host.initialState.metrics.estimatedBitrate)
+  }
+
   func testH264ProbeCleanupCommitsAvPlayerAndReachesReady() async throws {
     let server = try HlsProbeServer(segment: clearH264Segment())
     defer { server.close() }
@@ -328,11 +347,11 @@ final class YlAppleRegistryTests: XCTestCase {
       }
     }
     XCTAssertEqual(allocations, 0)
-    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 6,
+    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 7,
       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
         audioPolicy: .appManaged, positionUpdateIntervalMs: 0))))
     XCTAssertEqual(allocations, 0)
-    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 6,
+    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 7,
       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
         audioPolicy: .appManaged, positionUpdateIntervalMs: 5000)))
     XCTAssertEqual(allocations, 1)
@@ -352,7 +371,7 @@ final class YlAppleRegistryTests: XCTestCase {
     }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
       lifecycle: lifecycle)
     defer { registry.detach() }
-    let created = try registry.create(request: .init(schemaMajor: 6,
+    let created = try registry.create(request: .init(schemaMajor: 7,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged,
         positionUpdateIntervalMs: 500)))
     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
@@ -389,6 +408,7 @@ final class AppleTestDisplay: YlDisplayDriving {
   func invalidate() {}
 }
 final class AppleRecordingCallbacks: ApplePlayerFlutterApiProtocol {
+  var traffic = [(String, Int64?)]()
   var states = [AppleStateMessage]()
   var deltas = [AppleStateDeltaMessage]()
   var frames = [AppleFirstFrameMessage]()
@@ -397,6 +417,7 @@ final class AppleRecordingCallbacks: ApplePlayerFlutterApiProtocol {
   var failures = [ApplePlaybackFailedMessage]()
   var order = [String]()
   var acknowledge: (() async throws -> Void)?
+  func onNetworkBytesReceived(loadRequestId: String, bytes: Int64?) async throws { traffic.append((loadRequestId, bytes)) }
   func onState(state: AppleStateMessage) async throws { states.append(state); order.append("state"); try await acknowledge?() }
   func onStateDelta(delta: AppleStateDeltaMessage) async throws { deltas.append(delta); order.append("delta"); try await acknowledge?() }
   func onFirstFrame(event: AppleFirstFrameMessage) async throws { frames.append(event); order.append("frame"); try await acknowledge?() }
@@ -647,7 +668,7 @@ final class YlAppleHostDeliveryTests: XCTestCase {
     let registry = YlApplePlayerRegistry(makeServices: { _ in textures.services() },
       makeCallbacks: { _ in callbacks }, installHost: { suffix, host in if host == nil { removed.append(suffix) } })
     defer { registry.detach() }
-    let created = try registry.create(request: .init(schemaMajor: 6,
+    let created = try registry.create(request: .init(schemaMajor: 7,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100)))
     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
     XCTAssertTrue(callbacks.states.isEmpty, "Create stays silent until attach")
@@ -1141,7 +1162,7 @@ final class YlAudioOwnershipTests: XCTestCase {
       makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in }, audioOwnership: coordinator)
   }
   func create(_ registry: YlApplePlayerRegistry, managed: Bool = true) throws -> YlApplePlayerHost {
-    let reply = try registry.create(request: .init(schemaMajor: 6,
+    let reply = try registry.create(request: .init(schemaMajor: 7,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: managed ? .pluginManagedMediaPlayback : .appManaged, positionUpdateIntervalMs: 100)))
     return try XCTUnwrap(registry.host(for: reply.channelSuffix))
   }
@@ -1436,6 +1457,40 @@ final class YlAvPlayerNonblockingMetadataTests: XCTestCase {
 }
 
 final class YlGeometryAndMetricTests: XCTestCase {
+  func testNetworkTrafficIsCumulativeAcrossMediaGenerationsAndSeparatePerLoad() throws {
+    let ledger = YlManagedBufferLedger()
+    let scope = try ledger.makeScope(maxBytes: nil)
+    let collector = YlMetricsCollector(scope: scope)
+    XCTAssertNil(collector.snapshot.networkBytesReceived)
+    scope.recordNetworkBytes(0)
+    XCTAssertEqual(collector.snapshot.networkBytesReceived, 0)
+    scope.recordNetworkBytes(512)
+    scope.beginMediaGeneration()
+    scope.recordNetworkBytes(256)
+    XCTAssertEqual(collector.snapshot.networkBytesReceived, 768)
+    XCTAssertEqual(YlApplePlayerHost.metrics(collector.snapshot).networkBytesReceived, 768)
+    let nextLoad = try ledger.makeScope(maxBytes: nil)
+    XCTAssertNil(nextLoad.networkBytesReceived)
+    nextLoad.recordNetworkBytes(0)
+    scope.recordNetworkBytes(100)
+    XCTAssertEqual(nextLoad.networkBytesReceived, 0)
+    scope.recordNetworkBytes(Int.max)
+    XCTAssertEqual(scope.networkBytesReceived, Int64.max)
+  }
+
+  func testAccessLogCountsActualBytesAcrossItemReplacementAndResetsPerLoad() {
+    let collector = YlMetricsCollector()
+    let first = NSObject(), second = NSObject()
+    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: []))
+    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: [-1]))
+    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [0]), 0)
+    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 50]), 150)
+    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
+    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
+    XCTAssertEqual(collector.accessLogNetworkBytes(item: second, transferred: [25]), 200)
+    XCTAssertEqual(YlMetricsCollector().accessLogNetworkBytes(item: second, transferred: [25]), 25)
+  }
+
   func testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease() throws {
     let ledger = YlManagedBufferLedger(maxBytes: 4096)
     let scope = try ledger.makeScope(maxBytes: 4096)

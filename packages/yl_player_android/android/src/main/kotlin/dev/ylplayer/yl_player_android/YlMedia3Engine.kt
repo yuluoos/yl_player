@@ -28,6 +28,7 @@ internal class YlMedia3Engine(
     private val protectedPlayback: YlProtectedPlayback? = null,
     // Internal clear-content observation seams; the factory still receives Core's codec policy.
     private val renderersFactory: ((Context, YlVideoOutputObserver) -> YlOutputRenderersFactory)? = null,
+    private val networkBytes: YlNetworkByteCounter? = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null,
     private val surfaceForOutput: ((YlVideoOutput) -> android.view.Surface)? = null,
 ) : YlPlaybackEngineAdapter {
     init {
@@ -90,7 +91,7 @@ internal class YlMedia3Engine(
             val candidate = YlCandidateVideoOutput(context, protectedPlayback != null).also { privateOutput = it }
             protectedDrm = protectedPlayback?.let { route -> YlMedia3DrmSessionManager(route.identity, route.cbcs, route.timeoutMs, route.exchange) }
             core = YlMedia3Core(context, identity, source, options, createMedia3Configuration(source, options, playerOptions),
-                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm, renderersFactoryOverride = renderersFactory)
+                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm, networkBytes = networkBytes, renderersFactoryOverride = renderersFactory)
             requireCore().initialize()
             requireCore().prepare()
         }
@@ -242,8 +243,7 @@ internal class YlMedia3SessionFactory(
     private val protectedViews: YlProtectedViewRegistry? = null,
     // Optional internal observation factory; recovery policy and protected routing are unchanged.
     private val createFallback: ((YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter)? = null,
-    private val createEngine: (YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter =
-        { identity, source, load, player -> YlMedia3Engine(context, identity, source, load, player, dispatcher) },
+    private val createEngine: ((YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter)? = null,
 ) : YlPlayerSessionFactory {
     private var nextPlayerId = 0L
     override fun prepare(options: AndroidPlayerOptionsMessage): (TextureRegistry.SurfaceTextureEntry) -> YlPlayerSession {
@@ -257,10 +257,12 @@ internal class YlMedia3SessionFactory(
                       YlMedia3Engine(context, identity, source, loadOptions, options, dispatcher, playback)
                   override fun create(identity: YlSessionIdentity, source: AndroidSourceMessage, loadOptions: AndroidLoadOptionsMessage): YlPlaybackEngineAdapter {
 
-                    val primary = createEngine(identity, source, loadOptions, options)
+                    val networkBytes = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null
+                    val primary = createEngine?.invoke(identity, source, loadOptions, options)
+                        ?: YlMedia3Engine(context, identity, source, loadOptions, options, dispatcher, networkBytes = networkBytes)
                     return YlManagedAndroidEngine(identity, primary, {
                         createFallback?.invoke(identity, source, loadOptions, options)
-                            ?: YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
+                            ?: YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher, networkBytes = networkBytes)
                     }, dispatcher, allowFallback = !YlRtmpSourcePolicy.isRtmp(source) && source.format != AndroidMediaFormat.DASH &&
                         runCatching { java.net.URI(source.locator).path?.lowercase()?.endsWith(".mpd") }.getOrNull() != true)
                 } }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) }, protectedViews = protectedViews)

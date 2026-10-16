@@ -9,22 +9,70 @@ Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
-  test('video command sends nullable auto ID without asserting a state change', () async {
-    final transport = FakeTransport();
-    final player = await createFake(transport);
-    addTearDown(player.dispose);
-    final session = (await commit(transport, player)).sessionId;
-    await player.selectVideoTrack(session, null);
-    expect(transport.calls.last, 'video-track:s1:null');
-    expect(player.state.videoSelection.isAutomatic, isTrue);
-    expect(player.state.videoSelection.reason, YlVideoSelectionReason.initial);
-    await expectLater(player.selectVideoTrack(session, ''), throwsArgumentError);
-    await player.stop();
-    await expectLater(
-      player.selectVideoTrack(session, 'v0'),
-      failsWith(YlFailureCodes.sessionStale),
-    );
-  });
+  test(
+    'network traffic is observable while opening and fenced on replacement and stop',
+    () async {
+      final t = FakeTransport();
+      final p = await createFake(t);
+      addTearDown(p.dispose);
+      final bytes = <int?>[];
+      final subscription = p.networkBytesReceived.listen(bytes.add);
+      addTearDown(subscription.cancel);
+      final first = p
+          .load(source)
+          .then<Object?>((value) => value, onError: (Object error) => error);
+      await flush();
+      t.callbacks!.onNetworkBytesReceived('load-1', 0);
+      t.callbacks!.onNetworkBytesReceived('load-1', 123);
+      t.callbacks!.onNetworkBytesReceived('other', 999);
+      await flush();
+      expect(bytes, [null, null, 0, 123]);
+      expect(await p.networkBytesReceived.first, 123);
+      expect(p.state.sessionId, isNull);
+      final second = p
+          .load(source)
+          .then<Object?>((value) => value, onError: (Object error) => error);
+      await flush();
+      t.callbacks!.onNetworkBytesReceived('load-1', 456);
+      t.callbacks!.onNetworkBytesReceived('load-2', 7);
+      await flush();
+      expect(bytes.last, 7);
+      expect(bytes, isNot(contains(456)));
+      await p.stop();
+      t.callbacks!.onNetworkBytesReceived('load-2', 777);
+      await flush();
+      expect(bytes.last, isNull);
+      expect(bytes, isNot(contains(777)));
+      await first;
+      await second;
+    },
+  );
+
+  test(
+    'video command sends nullable auto ID without asserting a state change',
+    () async {
+      final transport = FakeTransport();
+      final player = await createFake(transport);
+      addTearDown(player.dispose);
+      final session = (await commit(transport, player)).sessionId;
+      await player.selectVideoTrack(session, null);
+      expect(transport.calls.last, 'video-track:s1:null');
+      expect(player.state.videoSelection.isAutomatic, isTrue);
+      expect(
+        player.state.videoSelection.reason,
+        YlVideoSelectionReason.initial,
+      );
+      await expectLater(
+        player.selectVideoTrack(session, ''),
+        throwsArgumentError,
+      );
+      await player.stop();
+      await expectLater(
+        player.selectVideoTrack(session, 'v0'),
+        failsWith(YlFailureCodes.sessionStale),
+      );
+    },
+  );
   test('completion-window deltas use the latest authoritative state', () async {
     final t = FakeTransport();
     final p = await createFake(t);

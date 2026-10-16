@@ -14,6 +14,7 @@ import 'pigeon/yl_player_apple.g.dart';
 final class ApplePlayer
     implements
         YlPlatformPlayer,
+        YlNetworkTrafficPlatformPlayer,
         YlLivePlaybackPlatformPlayer,
         YlPlatformDrmSourceSupport,
         YlPlatformDrmLicenseTransport,
@@ -35,6 +36,12 @@ final class ApplePlayer
       initialState: initial,
       initialSequence: sequence,
       onFullState: _receiveState,
+      onNetworkBytes: (requestId, bytes) {
+        if (!_disposed && _terminal == null && requestId == _trafficRequestId) {
+          _latestNetworkBytes = bytes;
+          _networkBytes.add(bytes);
+        }
+      },
       onLiveState: (snapshot) {
         final live = snapshot.livePlayback;
         if (live != null && snapshot.sessionId != null) {
@@ -47,7 +54,14 @@ final class ApplePlayer
         }
       },
       onDelta: _receiveDelta,
-      onAcceptedState: _states.add,
+      onAcceptedState: (snapshot) {
+        if (snapshot.status == YlPlaybackStatus.idle && _pending == null ||
+            snapshot.status == YlPlaybackStatus.failed &&
+                _currentRequestId == _trafficRequestId) {
+          _resetTraffic();
+        }
+        _states.add(snapshot);
+      },
       onEvent: _receiveEvent,
       onInvalid: () =>
           _terminate(AppleCodec.problem(YlFailureCodes.protocolMismatch)),
@@ -249,6 +263,25 @@ final class ApplePlayer
   _PendingLoad? _pending;
   int _requestCounter = 0;
   String? _currentRequestId;
+  String? _trafficRequestId;
+  final _networkBytes = StreamController<int?>.broadcast();
+  int? _latestNetworkBytes;
+  @override
+  Stream<int?> get networkBytesReceived => Stream.multi((listener) {
+    listener.add(_latestNetworkBytes);
+    final subscription = _networkBytes.stream.listen(
+      listener.add,
+      onError: listener.addError,
+      onDone: listener.close,
+    );
+    listener.onCancel = subscription.cancel;
+  }, isBroadcast: true);
+  void _resetTraffic([String? requestId]) {
+    _trafficRequestId = requestId;
+    _latestNetworkBytes = null;
+    _networkBytes.add(null);
+  }
+
   YlPlayerException? _terminal;
   bool _disposed = false;
   Future<void>? _disposeFuture;
@@ -369,6 +402,7 @@ final class ApplePlayer
       _liveModes.cancelAll(_cancelled);
       _cancelLoad(_cancelled);
       _drm?.begin(request.loadRequestId, source);
+      _resetTraffic(request.loadRequestId);
       final pending = _PendingLoad(request.loadRequestId);
       _pending = pending;
       // The public barrier is installed before assessment begins.
@@ -614,6 +648,7 @@ final class ApplePlayer
     final pending = _pending;
     if (pending == null) return;
     _pending = null;
+    if (_trafficRequestId == pending.requestId) _resetTraffic();
     _drm?.cancel(pending.requestId);
     pending.deadline?.cancel();
     pending.publication?.cancel();
@@ -816,6 +851,7 @@ final class ApplePlayer
   Future<void> stop() async {
     _checkAlive();
     final captured = state.sessionId;
+    _resetTraffic();
     _liveModes.cancelAll(_cancelled);
     _cancelLoad(_cancelled);
     _drm?.stop();
@@ -830,6 +866,7 @@ final class ApplePlayer
   void _terminate(YlPlayerException error) {
     if (_terminal != null || _disposed) return;
     _terminal = error;
+    _resetTraffic();
     final revisionExhausted = state.revision == 0x7fffffffffffffff;
     _callbacks.state = state.copyWith(
       revision: revisionExhausted ? state.revision : state.revision + 1,
@@ -861,6 +898,7 @@ final class ApplePlayer
   Future<void> dispose() {
     if (_disposeFuture case final result?) return result;
     _disposed = true;
+    _resetTraffic();
     _drm?.close();
     _protectedFrame = null;
     _callbacks.close();
@@ -891,6 +929,7 @@ final class ApplePlayer
     // Closing paused broadcast streams may wait for outside observers forever.
     unawaited(_states.close());
     unawaited(_events.close());
+    unawaited(_networkBytes.close());
     _texture.value = null;
     _texture.dispose();
   }

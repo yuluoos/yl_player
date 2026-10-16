@@ -48,8 +48,8 @@ final class YlAppleMemoryWarningTests: XCTestCase {
       lifecycle: YlIosLifecycle(center: center))
     defer { registry.detach() }
     let options = ApplePlayerOptionsMessage(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 500)
-    let a = try registry.create(request: .init(schemaMajor: 6, options: options))
-    let b = try registry.create(request: .init(schemaMajor: 6, options: options))
+    let a = try registry.create(request: .init(schemaMajor: 7, options: options))
+    let b = try registry.create(request: .init(schemaMajor: 7, options: options))
     let old = try XCTUnwrap(registry.host(for: a.channelSuffix))
     let current = try XCTUnwrap(registry.host(for: b.channelSuffix))
     _ = try await old.load(request: AppleHostFixture.request("old"))
@@ -82,7 +82,7 @@ final class YlAppleMemoryWarningTests: XCTestCase {
         makeDisplayDriver: { AppleClockDisplay(onTick: $0) }, activateAudioSession: {})
     }, makeCallbacks: { _ in callbacks }, installHost: { _, _ in }, lifecycle: lifecycle)
     defer { registry.detach() }
-    let created = try registry.create(request: .init(schemaMajor: 6,
+    let created = try registry.create(request: .init(schemaMajor: 7,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 500)))
     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
     try host.attach()

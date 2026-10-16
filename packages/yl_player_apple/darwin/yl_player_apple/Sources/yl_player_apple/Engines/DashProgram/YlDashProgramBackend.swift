@@ -392,7 +392,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
         videoWidth: videoTrack.map { Int($0.width) }, videoHeight: videoTrack.map { Int($0.height) },
         engine: .managedFallback, isHardwareDecoding: pipeline?.video.usesHardwareDecoder ?? false,
         decoderName: stopped ? nil : pipeline?.video.hardwareEvidence.decoderName, audioTracks: stopped ? [] : audioTracks, videoTracks: stopped ? [] : videoTracks,
-        metrics: .init(bufferedDurationMs: (pipeline?.scheduler.bufferedDurationUs ?? 0) / 1000,
+        metrics: .init(networkBytesReceived: prepared.scope.networkBytesReceived, bufferedDurationMs: (pipeline?.scheduler.bufferedDurationUs ?? 0) / 1000,
           bufferedBytes: prepared.scope.ledger.snapshot.currentBytes,
           droppedVideoFrames: pipeline?.scheduler.lateFrameDropCount, audioUnderruns: pipeline?.audio?.underrunCount),
         error: failure, decoderEvidence: pipeline?.video.hardwareEvidence, geometry: geometry, videoSelection: selection)

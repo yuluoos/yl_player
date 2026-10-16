@@ -114,6 +114,7 @@ void validateYlPlaybackMetrics(YlPlaybackMetrics metrics) {
     metrics.estimatedBitrate,
     metrics.managedBufferedBytes,
     metrics.reconnectCount,
+    metrics.networkBytesReceived,
   ]) {
     if (count != null) _integer(count);
   }

@@ -1,9 +1,51 @@
+import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/src/player_controller.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'support/fake_player_platform.dart';
 
 void main() {
+  test(
+    'download rates are available before load commits and stop on disposal',
+    () async {
+      final backend = _TrafficPlayer();
+      final player = await YlPlayerController.create(
+        platform: FakePlayerPlatform(backend),
+      );
+      final rates = <int?>[];
+      final subscription = player.downloadBytesPerSecond.listen(rates.add);
+      final loading = player.load(
+        YlNetworkSource(Uri.parse('https://fixture.invalid/live')),
+      );
+      final cancelled = expectLater(loading, throwsA(isA<YlPlayerException>()));
+      await Future<void>.delayed(Duration.zero);
+      backend.traffic.add(0);
+      backend.traffic.add(4096);
+      final rate = await player.downloadBytesPerSecond.firstWhere(
+        (rate) => rate != null && rate > 0,
+      );
+      expect(rate, greaterThan(0));
+      expect(player.state.status, YlPlaybackStatus.idle);
+      expect(backend.loads.single.isCompleted, isFalse);
+      await player.dispose();
+      await cancelled;
+      expect(backend.traffic.hasListener, isFalse);
+      await subscription.cancel();
+      await backend.traffic.close();
+    },
+  );
+
+  test(
+    'download rates stay unknown for a backend without traffic observations',
+    () async {
+      final player = await YlPlayerController.create(
+        platform: FakePlayerPlatform(FakePlatformPlayer()),
+      );
+      expect(await player.downloadBytesPerSecond.first, isNull);
+      await player.dispose();
+    },
+  );
+
   test('explicit creation exposes capabilities and attaches streams', () async {
     final backend = FakePlatformPlayer();
     final platform = FakePlayerPlatform(backend);
@@ -245,4 +287,11 @@ void _publishSession(
       ),
     ),
   );
+}
+
+class _TrafficPlayer extends FakePlatformPlayer
+    implements YlNetworkTrafficPlatformPlayer {
+  final traffic = StreamController<int?>.broadcast(sync: true);
+  @override
+  Stream<int?> get networkBytesReceived => traffic.stream;
 }

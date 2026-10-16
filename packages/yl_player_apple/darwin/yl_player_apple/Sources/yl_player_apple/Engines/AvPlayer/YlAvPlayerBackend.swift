@@ -1481,12 +1481,26 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     callbackBinding.emit(YlNativeBackendCallback(generation: channelGeneration, loadRequestId: lastSource?.loadRequestId, event: event))
   }
 
+  // Access logs report actual transferred media bytes, but AVFoundation may
+  // update them in batches. No observed/indicated bitrate is used as traffic.
+  var networkBytesReceived: Int64? {
+    guard lastSource?.url?.isFileURL == false, let item = player.currentItem else { return nil }
+    // Custom HLS loads may replay cached bytes over loopback: count only the
+    // origin URLSession callbacks, never AVPlayer's local proxy transfers.
+    if let loader = hlsResourceLoader { return loader.trafficScope?.networkBytesReceived }
+    guard let bytes = metricsCollector.accessLogNetworkBytes(item: item,
+      transferred: item.accessLog()?.events.map(\.numberOfBytesTransferred) ?? []) else { return nil }
+    let total = bytes.addingReportingOverflow(lastSource?.bufferScope?.networkBytesReceived ?? 0)
+    return total.overflow ? Int64.max : total.partialValue
+  }
+
   private func collectMetrics(liveOffsetMs: Int64?) -> YlNativeMetrics {
     if let ready = openDurationMs { metricsCollector.observe(.ready(durationMs: ready)) }
     if let frame = firstFrameDurationMs { metricsCollector.observe(.firstFrame(durationMs: frame)) }
     metricsCollector.observe(.playback(status))
     var metrics = metricsCollector.snapshot
     metrics.liveOffsetMs = liveOffsetMs
+    metrics.networkBytesReceived = networkBytesReceived
     return metrics
   }
 
@@ -1641,6 +1655,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func removeCurrentItem(releaseReplacement: Bool = true, clearOutput: Bool = true, preserveDashCatalog: Bool = false, preserveAudioIdentity: Bool = false) {
+    _ = networkBytesReceived
     automaticDashCandidate?.discard(); automaticDashCandidate = nil
     fixedRecoveryDeadline?.cancel(); fixedRecoveryDeadline = nil
     unconfirmedFixedLanding = false

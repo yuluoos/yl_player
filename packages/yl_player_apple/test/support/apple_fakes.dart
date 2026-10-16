@@ -47,7 +47,7 @@ AppleFailureMessage wireFailure({
   diagnosticId: 'apple-network-1',
 );
 AppleCreateReply wireCreate({String suffix = 'instance-1'}) => AppleCreateReply(
-  schemaMajor: 6,
+  schemaMajor: 7,
   spiMajor: 2,
   platform: ApplePlatform.ios,
   channelSuffix: suffix,

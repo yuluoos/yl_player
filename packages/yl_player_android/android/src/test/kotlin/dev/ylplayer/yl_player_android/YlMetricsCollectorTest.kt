@@ -132,17 +132,19 @@ class YlMetricsCollectorTest {
         val geometry = AndroidVideoGeometryMessage(AndroidSizeMessage(1920.0, 1080.0), AndroidSizeMessage(1080.0, 1920.0), 2.0, 0)
         reducer.snapshot(YlEngineSnapshot(status = AndroidPlaybackStatus.READY, geometry = geometry))
         val count = events.states.size
-        reducer.tick(emptyTimeline().copy(positionMs = 50), AndroidMetricsMessage(estimatedBitrate = 100, mediaClockPositionMs = 12_000))
+        reducer.tick(emptyTimeline().copy(positionMs = 50), AndroidMetricsMessage(estimatedBitrate = 100, mediaClockPositionMs = 12_000, networkBytesReceived = 4096))
         assertEquals(count, events.states.size)
         assertEquals(1, events.deltas.size)
         assertEquals(geometry, reducer.state.geometry)
         assertEquals(100L, events.deltas.single().metrics?.estimatedBitrate)
         assertEquals(true, events.deltas.single().metrics?.hasMediaClockPositionMs)
         assertEquals(12_000L, events.deltas.single().metrics?.mediaClockPositionMs)
+        assertEquals(true, events.deltas.single().metrics?.hasNetworkBytesReceived)
+        assertEquals(4096L, events.deltas.single().metrics?.networkBytesReceived)
     }
     @Test fun `real core fresh metrics do not claim unobserved zero or managed allocator bytes`() = withCore { core, _, events ->
         core.emitState()
-        assertEquals(AndroidMetricsMessage(), events.lastSnapshot().metrics)
+        assertEquals(AndroidMetricsMessage(networkBytesReceived = 0), events.lastSnapshot().metrics)
     }
     @Test fun `real core keeps PAR out of rendered dimensions and uses coded format dimensions`() = withCore { core, player, events ->
         val format = Format.Builder().setWidth(1920).setHeight(1080).setRotationDegrees(90).setPixelWidthHeightRatio(0.5f).build()

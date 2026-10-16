@@ -274,6 +274,7 @@ class AppleMetricsMessage {
   int? managedBufferedBytes;
   int? liveOffsetMs;
   int? reconnectCount;
+  int? networkBytesReceived;
 }
 
 class AppleFailureMessage {
@@ -339,8 +340,10 @@ class AppleMetricsDeltaMessage {
   int? managedBufferedBytes;
   bool hasLiveOffsetMs;
   int? liveOffsetMs;
+  bool hasNetworkBytesReceived;
   bool hasReconnectCount;
   int? reconnectCount;
+  int? networkBytesReceived;
 }
 
 class AppleFirstFrameMessage {
@@ -425,6 +428,7 @@ abstract class ApplePlayerHostApi {
 
 @FlutterApi()
 abstract class ApplePlayerFlutterApi {
+  void onNetworkBytesReceived(String loadRequestId, int? bytes);
   void onState(AppleStateMessage state);
   void onStateDelta(AppleStateDeltaMessage delta);
   void onFirstFrame(AppleFirstFrameMessage event);

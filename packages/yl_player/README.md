@@ -97,6 +97,25 @@ until the current session's First Frame. Subscribe to `player.states`,
 events are authoritative native observations; command rejection does not
 invent either.
 
+### Download rate
+
+Subscribe to `player.downloadBytesPerSecond` before calling `load` to observe
+opening traffic as well as later buffering. The stream yields nullable bytes
+per second: `null` means no reliable observation; `0` is an observed idle window.
+The SDK measures changes in actual received network bytes using elapsed time;
+applications do not need to poll metrics or calculate rates. Cancel the
+subscription when it is no longer needed. Sampling starts with the first
+subscriber, stops with the last, and is cleaned up by `dispose`.
+
+The stream follows the newest requested load, independently of the committed
+playback state, and resets on replacement, stop, and failure. A rejected load
+does not change the committed playback session. A first counter observation
+establishes a baseline, so subscribing mid-playback never reports all earlier
+bytes as a new burst. This is download only, not upload or media bitrate.
+AVPlayer observations come from actual access-log byte counts and can arrive
+in batches or remain unavailable. When the media URL points to a local proxy,
+the rate measures bytes received by the player, not the proxy's origin fetch.
+
 ## Sources and policies
 
 Use `YlFileSource`, `YlNetworkSource`, or Android-only

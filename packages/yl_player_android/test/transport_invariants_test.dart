@@ -22,6 +22,8 @@ void main() {
         hasLiveOffsetMs: true,
         liveOffsetMs: _maxInt64,
         metrics: AndroidMetricsDeltaMessage(
+          hasNetworkBytesReceived: true,
+          networkBytesReceived: _maxInt64,
           hasMediaClockPositionMs: true,
           mediaClockPositionMs: _maxInt64,
           hasLoadToReadyMs: true,
@@ -56,6 +58,7 @@ void main() {
 
       expect(bytes.lengthInBytes, lessThan(768));
       expect(decoded.sessionId, 'a$_maxInt64-s$_maxInt64');
+      expect(decoded.metrics!.networkBytesReceived, _maxInt64);
       expect(decoded.previousRevision, _maxInt64 - 1);
       expect(decoded.revision, _maxInt64);
       expect(decoded.sequence, _maxInt64);
@@ -81,6 +84,7 @@ void main() {
       hasIsAtLiveEdge: true,
       hasLiveOffsetMs: true,
       metrics: AndroidMetricsDeltaMessage(
+        hasNetworkBytesReceived: false,
         hasMediaClockPositionMs: true,
         hasLoadToReadyMs: true,
         hasLoadToFirstFrameMs: true,

@@ -159,6 +159,19 @@ final class YlManagedBufferLedger {
 final class YlManagedBufferScope {
   let ledger: YlManagedBufferLedger
   private let id: UUID
+  // Load-scoped transfer accounting survives seeks/retries, independently of
+  // retained buffer memory and media generations. nil means no instrumented IO.
+  private let trafficLock = NSLock()
+  private var receivedNetworkBytes: Int64?
+  var networkBytesReceived: Int64? {
+    trafficLock.lock(); defer { trafficLock.unlock() }; return receivedNetworkBytes
+  }
+  func recordNetworkBytes(_ count: Int) {
+    guard count >= 0 else { return }
+    trafficLock.lock(); defer { trafficLock.unlock() }
+    let sum = (receivedNetworkBytes ?? 0).addingReportingOverflow(Int64(count))
+    receivedNetworkBytes = sum.overflow ? Int64.max : sum.partialValue
+  }
   private let timelineLock = NSLock()
   private var plan: YlBoundedBufferPlan?
   private var mediaEpoch: UInt64 = 0

@@ -1708,6 +1708,7 @@ class AppleMetricsMessage {
     this.managedBufferedBytes,
     this.liveOffsetMs,
     this.reconnectCount,
+    this.networkBytesReceived,
   });
 
   int? loadToReadyMs;
@@ -1732,6 +1733,8 @@ class AppleMetricsMessage {
 
   int? reconnectCount;
 
+  int? networkBytesReceived;
+
   List<Object?> _toList() {
     return <Object?>[
       loadToReadyMs,
@@ -1745,6 +1748,7 @@ class AppleMetricsMessage {
       managedBufferedBytes,
       liveOffsetMs,
       reconnectCount,
+      networkBytesReceived,
     ];
   }
 
@@ -1765,6 +1769,7 @@ class AppleMetricsMessage {
       managedBufferedBytes: result[8] as int?,
       liveOffsetMs: result[9] as int?,
       reconnectCount: result[10] as int?,
+      networkBytesReceived: result[11] as int?,
     );
   }
 
@@ -1777,7 +1782,7 @@ class AppleMetricsMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(reconnectCount, other.reconnectCount);
+    return _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(networkBytesReceived, other.networkBytesReceived);
   }
 
   @override
@@ -1786,7 +1791,7 @@ class AppleMetricsMessage {
 
   @override
   String toString() {
-    return 'AppleMetricsMessage(loadToReadyMs: $loadToReadyMs, loadToFirstFrameMs: $loadToFirstFrameMs, rebufferCount: $rebufferCount, rebufferDurationMs: $rebufferDurationMs, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDurationMs: $managedBufferedDurationMs, managedBufferedBytes: $managedBufferedBytes, liveOffsetMs: $liveOffsetMs, reconnectCount: $reconnectCount)';
+    return 'AppleMetricsMessage(loadToReadyMs: $loadToReadyMs, loadToFirstFrameMs: $loadToFirstFrameMs, rebufferCount: $rebufferCount, rebufferDurationMs: $rebufferDurationMs, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDurationMs: $managedBufferedDurationMs, managedBufferedBytes: $managedBufferedBytes, liveOffsetMs: $liveOffsetMs, reconnectCount: $reconnectCount, networkBytesReceived: $networkBytesReceived)';
   }
 }
 
@@ -2097,8 +2102,10 @@ class AppleMetricsDeltaMessage {
     this.managedBufferedBytes,
     required this.hasLiveOffsetMs,
     this.liveOffsetMs,
+    required this.hasNetworkBytesReceived,
     required this.hasReconnectCount,
     this.reconnectCount,
+    this.networkBytesReceived,
   });
 
   bool hasLoadToReadyMs;
@@ -2141,9 +2148,13 @@ class AppleMetricsDeltaMessage {
 
   int? liveOffsetMs;
 
+  bool hasNetworkBytesReceived;
+
   bool hasReconnectCount;
 
   int? reconnectCount;
+
+  int? networkBytesReceived;
 
   List<Object?> _toList() {
     return <Object?>[
@@ -2167,8 +2178,10 @@ class AppleMetricsDeltaMessage {
       managedBufferedBytes,
       hasLiveOffsetMs,
       liveOffsetMs,
+      hasNetworkBytesReceived,
       hasReconnectCount,
       reconnectCount,
+      networkBytesReceived,
     ];
   }
 
@@ -2198,8 +2211,10 @@ class AppleMetricsDeltaMessage {
       managedBufferedBytes: result[17] as int?,
       hasLiveOffsetMs: result[18]! as bool,
       liveOffsetMs: result[19] as int?,
-      hasReconnectCount: result[20]! as bool,
-      reconnectCount: result[21] as int?,
+      hasNetworkBytesReceived: result[20]! as bool,
+      hasReconnectCount: result[21]! as bool,
+      reconnectCount: result[22] as int?,
+      networkBytesReceived: result[23] as int?,
     );
   }
 
@@ -2212,7 +2227,7 @@ class AppleMetricsDeltaMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(hasLoadToReadyMs, other.hasLoadToReadyMs) && _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(hasRebufferCount, other.hasRebufferCount) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(hasRebufferDurationMs, other.hasRebufferDurationMs) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(hasDroppedVideoFrames, other.hasDroppedVideoFrames) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(hasAudioUnderruns, other.hasAudioUnderruns) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(hasEstimatedBitrate, other.hasEstimatedBitrate) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(hasManagedBufferedBytes, other.hasManagedBufferedBytes) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(hasLiveOffsetMs, other.hasLiveOffsetMs) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(hasReconnectCount, other.hasReconnectCount) && _deepEquals(reconnectCount, other.reconnectCount);
+    return _deepEquals(hasLoadToReadyMs, other.hasLoadToReadyMs) && _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(hasRebufferCount, other.hasRebufferCount) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(hasRebufferDurationMs, other.hasRebufferDurationMs) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(hasDroppedVideoFrames, other.hasDroppedVideoFrames) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(hasAudioUnderruns, other.hasAudioUnderruns) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(hasEstimatedBitrate, other.hasEstimatedBitrate) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(hasManagedBufferedBytes, other.hasManagedBufferedBytes) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(hasLiveOffsetMs, other.hasLiveOffsetMs) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(hasNetworkBytesReceived, other.hasNetworkBytesReceived) && _deepEquals(hasReconnectCount, other.hasReconnectCount) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(networkBytesReceived, other.networkBytesReceived);
   }
 
   @override
@@ -2221,7 +2236,7 @@ class AppleMetricsDeltaMessage {
 
   @override
   String toString() {
-    return 'AppleMetricsDeltaMessage(hasLoadToReadyMs: $hasLoadToReadyMs, loadToReadyMs: $loadToReadyMs, hasLoadToFirstFrameMs: $hasLoadToFirstFrameMs, loadToFirstFrameMs: $loadToFirstFrameMs, hasRebufferCount: $hasRebufferCount, rebufferCount: $rebufferCount, hasRebufferDurationMs: $hasRebufferDurationMs, rebufferDurationMs: $rebufferDurationMs, hasDroppedVideoFrames: $hasDroppedVideoFrames, droppedVideoFrames: $droppedVideoFrames, hasAudioUnderruns: $hasAudioUnderruns, audioUnderruns: $audioUnderruns, hasEstimatedBitrate: $hasEstimatedBitrate, estimatedBitrate: $estimatedBitrate, hasManagedBufferedDurationMs: $hasManagedBufferedDurationMs, managedBufferedDurationMs: $managedBufferedDurationMs, hasManagedBufferedBytes: $hasManagedBufferedBytes, managedBufferedBytes: $managedBufferedBytes, hasLiveOffsetMs: $hasLiveOffsetMs, liveOffsetMs: $liveOffsetMs, hasReconnectCount: $hasReconnectCount, reconnectCount: $reconnectCount)';
+    return 'AppleMetricsDeltaMessage(hasLoadToReadyMs: $hasLoadToReadyMs, loadToReadyMs: $loadToReadyMs, hasLoadToFirstFrameMs: $hasLoadToFirstFrameMs, loadToFirstFrameMs: $loadToFirstFrameMs, hasRebufferCount: $hasRebufferCount, rebufferCount: $rebufferCount, hasRebufferDurationMs: $hasRebufferDurationMs, rebufferDurationMs: $rebufferDurationMs, hasDroppedVideoFrames: $hasDroppedVideoFrames, droppedVideoFrames: $droppedVideoFrames, hasAudioUnderruns: $hasAudioUnderruns, audioUnderruns: $audioUnderruns, hasEstimatedBitrate: $hasEstimatedBitrate, estimatedBitrate: $estimatedBitrate, hasManagedBufferedDurationMs: $hasManagedBufferedDurationMs, managedBufferedDurationMs: $managedBufferedDurationMs, hasManagedBufferedBytes: $hasManagedBufferedBytes, managedBufferedBytes: $managedBufferedBytes, hasLiveOffsetMs: $hasLiveOffsetMs, liveOffsetMs: $liveOffsetMs, hasNetworkBytesReceived: $hasNetworkBytesReceived, hasReconnectCount: $hasReconnectCount, reconnectCount: $reconnectCount, networkBytesReceived: $networkBytesReceived)';
   }
 }
 
@@ -3898,6 +3913,8 @@ class ApplePlayerHostApi {
 abstract class ApplePlayerFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
+  void onNetworkBytesReceived(String loadRequestId, int? bytes);
+
   void onState(AppleStateMessage state);
 
   void onStateDelta(AppleStateDeltaMessage delta);
@@ -3912,6 +3929,28 @@ abstract class ApplePlayerFlutterApi {
 
   static void setUp(ApplePlayerFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_apple.ApplePlayerFlutterApi.onNetworkBytesReceived$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_loadRequestId = args[0]! as String;
+          final int? arg_bytes = args[1] as int?;
+          try {
+            api.onNetworkBytesReceived(arg_loadRequestId, arg_bytes);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.yl_player_apple.ApplePlayerFlutterApi.onState$messageChannelSuffix', pigeonChannelCodec,

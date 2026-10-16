@@ -119,6 +119,7 @@ void main() {
         estimatedBitrate: 5000000,
         managedBufferedDurationMs: 3000,
         managedBufferedBytes: 1000000,
+        networkBytesReceived: 9876543210,
         liveOffsetMs: 3000,
         reconnectCount: 1,
       ),
@@ -176,6 +177,8 @@ void main() {
       hasLiveOffsetMs: true,
       liveOffsetMs: null,
       metrics: AppleMetricsDeltaMessage(
+        hasNetworkBytesReceived: true,
+        networkBytesReceived: 9876543211,
         hasLoadToReadyMs: false,
         loadToReadyMs: null,
         hasLoadToFirstFrameMs: false,

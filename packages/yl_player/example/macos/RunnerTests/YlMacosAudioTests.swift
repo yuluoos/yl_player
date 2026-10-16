@@ -2014,7 +2014,8 @@ final class YlMacosAudioTests: XCTestCase {
     private var counts: [String: Int] = [:]
     func record(_ key: String) { lock.withLock { counts[key, default: 0] += 1 } }
     var snapshot: [String: Int] { lock.withLock { counts } }
-    func onState(state: AppleStateMessage) async throws { record("publications"); if state.status == .completed { record("completed") } }
+    func onNetworkBytesReceived(loadRequestId: String, bytes: Int64?) async throws {}
+  func onState(state: AppleStateMessage) async throws { record("publications"); if state.status == .completed { record("completed") } }
     func onStateDelta(delta: AppleStateDeltaMessage) async throws { record("publications") }
     func onFirstFrame(event: AppleFirstFrameMessage) async throws { record("publications"); record("firstFrames") }
     func onRetryScheduled(event: AppleRetryScheduledMessage) async throws { record("publications"); record("retries") }

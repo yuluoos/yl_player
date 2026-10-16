@@ -67,7 +67,7 @@ void main() {
       final calls = <String>[];
       factory((message) {
         final request = (message as List).single as AndroidCreateRequest;
-        expect(request.schemaMajor, 6);
+        expect(request.schemaMajor, 7);
         expect(request.options.audioPolicy, AndroidAudioPolicy.appManaged);
         return [wireCreate()];
       });

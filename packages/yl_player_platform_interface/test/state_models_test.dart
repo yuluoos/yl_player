@@ -37,6 +37,29 @@ YlPlayerState snapshot() => YlPlayerState(
 
 void main() {
   test(
+    'network receive metric distinguishes unknown and zero and validates',
+    () {
+      const unknown = YlPlaybackMetrics();
+      final zero = unknown.copyWith(networkBytesReceived: 0);
+      expect(unknown.networkBytesReceived, isNull);
+      expect(zero.networkBytesReceived, 0);
+      expect(zero, isNot(unknown));
+      expect(zero.copyWith(), zero);
+      expect(zero.copyWith().hashCode, zero.hashCode);
+      expect(zero.copyWith(networkBytesReceived: null), unknown);
+      final measured = zero.copyWith(networkBytesReceived: 4096);
+      expect(measured.networkBytesReceived, 4096);
+      expect(measured, isNot(zero));
+      validateYlPlaybackMetrics(measured);
+      expect(
+        () =>
+            validateYlPlaybackMetrics(zero.copyWith(networkBytesReceived: -1)),
+        throwsArgumentError,
+      );
+    },
+  );
+
+  test(
     'media clock metric retains null, observed zero, copy and validation',
     () {
       const unknown = YlPlaybackMetrics();

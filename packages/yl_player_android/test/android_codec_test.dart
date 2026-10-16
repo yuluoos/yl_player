@@ -110,6 +110,52 @@ void main() {
   });
 
   test(
+    'network bytes survive full snapshots and absent, set, cleared deltas',
+    () {
+      final wire = wireState(session: 's1', revision: 4);
+      wire.metrics.networkBytesReceived = 12000;
+      final state = AndroidCodec.state(
+        AndroidStateMessage.decode(wire.encode()),
+      );
+      expect(state.metrics.networkBytesReceived, 12000);
+      final delta = wireDelta(previous: 4, revision: 5, sequence: 11);
+      expect(
+        AndroidCodec.delta(state, delta).metrics.networkBytesReceived,
+        12000,
+      );
+      final changes = AndroidMetricsDeltaMessage(
+        hasNetworkBytesReceived: true,
+        hasLoadToReadyMs: false,
+        hasLoadToFirstFrameMs: false,
+        hasRebufferCount: false,
+        hasRebufferDurationMs: false,
+        hasDroppedVideoFrames: false,
+        hasAudioUnderruns: false,
+        hasEstimatedBitrate: false,
+        hasManagedBufferedDurationMs: false,
+        hasManagedBufferedBytes: false,
+        hasLiveOffsetMs: false,
+        hasReconnectCount: false,
+        hasMediaClockPositionMs: false,
+        networkBytesReceived: 13000,
+      );
+      delta.metrics = changes;
+      expect(
+        AndroidCodec.delta(state, delta).metrics.networkBytesReceived,
+        13000,
+      );
+      changes.networkBytesReceived = 0;
+      expect(AndroidCodec.delta(state, delta).metrics.networkBytesReceived, 0);
+      changes.networkBytesReceived = -1;
+      expect(() => AndroidCodec.delta(state, delta), throwsArgumentError);
+      changes.networkBytesReceived = null;
+      expect(
+        AndroidCodec.delta(state, delta).metrics.networkBytesReceived,
+        isNull,
+      );
+    },
+  );
+  test(
     'media clock survives full snapshots and absent, set, cleared deltas',
     () {
       final wire = wireState(session: 's1', revision: 4);
@@ -122,6 +168,7 @@ void main() {
         const Duration(seconds: 12),
       );
       final changes = AndroidMetricsDeltaMessage(
+        hasNetworkBytesReceived: false,
         hasLoadToReadyMs: false,
         hasLoadToFirstFrameMs: false,
         hasRebufferCount: false,
@@ -245,6 +292,7 @@ void main() {
   test('metrics deltas distinguish every absent, set and cleared field', () {
     final state = AndroidCodec.state(wireState(session: 's1', revision: 4));
     final changes = AndroidMetricsDeltaMessage(
+      hasNetworkBytesReceived: false,
       hasMediaClockPositionMs: false,
       hasLoadToReadyMs: true,
       loadToReadyMs: 12,
@@ -287,6 +335,7 @@ void main() {
       ),
     );
     final absent = AndroidMetricsDeltaMessage(
+      hasNetworkBytesReceived: false,
       hasMediaClockPositionMs: false,
       hasLoadToReadyMs: false,
       hasLoadToFirstFrameMs: false,

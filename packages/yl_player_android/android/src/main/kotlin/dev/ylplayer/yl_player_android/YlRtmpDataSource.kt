@@ -10,7 +10,7 @@ import androidx.media3.datasource.DataSpec
 
 /** Source lifetime ownership is independent of the Media3 loader's open/close lifecycle. */
 @OptIn(UnstableApi::class)
-internal class YlRtmpDataSources(private val locator:String) {
+internal class YlRtmpDataSources(private val locator:String, private val networkBytes: YlNetworkByteCounter? = null) {
     private val active=mutableSetOf<YlRtmpTransport>()
     private var generation=0L
     private var playbackPaused=false
@@ -22,7 +22,7 @@ internal class YlRtmpDataSources(private val locator:String) {
                 transport.setPlaybackPaused(playbackPaused)
                 active.add(transport)
             }
-        }, { transport -> synchronized(this) { active.remove(transport) } }) }
+        }, { transport -> synchronized(this) { active.remove(transport) } }, networkBytes) }
     }
     @Synchronized fun setPlaybackPaused(paused:Boolean) {
         playbackPaused=paused
@@ -33,13 +33,13 @@ internal class YlRtmpDataSources(private val locator:String) {
 
 @OptIn(UnstableApi::class)
 internal class YlRtmpDataSource(private val locator:String, private val register:(YlRtmpTransport)->Unit,
-    private val unregister:(YlRtmpTransport)->Unit) : BaseDataSource(true) {
+    private val unregister:(YlRtmpTransport)->Unit, private val networkBytes: YlNetworkByteCounter? = null) : BaseDataSource(true) {
     @Volatile private var transport:YlRtmpTransport?=null
     private var opened=false
     override fun open(dataSpec:DataSpec):Long {
         if(dataSpec.position!=0L) throw YlRtmpException(YlFailureKind.POLICY_UNSUPPORTED)
         transferInitializing(dataSpec)
-        val owner=YlRtmpTransport(YlRtmpSourcePolicy.parse(locator))
+        val owner=YlRtmpTransport(YlRtmpSourcePolicy.parse(locator), networkBytes = networkBytes)
         transport=owner
         try {
             register(owner) // Published before DNS, TCP, handshake or reads.

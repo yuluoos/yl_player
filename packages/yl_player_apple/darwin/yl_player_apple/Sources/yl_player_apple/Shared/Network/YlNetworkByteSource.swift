@@ -44,6 +44,7 @@ final class YlNetworkByteSource: NSObject, YlByteSource {
     managedTransportFactory: YlManagedHTTPTransport.Factory? = YlManagedHTTPTransport.make
   ) {
     self.recipe = recipe
+    recipe.bufferScope?.recordNetworkBytes(0)
     self.managedPolicy = managedPolicy
     self.managedTransportFactory = managedTransportFactory
     policy = YlNetworkRequestPolicy(recipe: recipe)
@@ -528,6 +529,7 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
       guard !cancelled, currentTaskIdentifier == identifier else { return nil }
       return (writeOffset, ring.writeGeneration)
     }) else { return }
+    recipe.bufferScope?.recordNetworkBytes(data.count)
     do {
       let callbackReservation = try identifier >= 0
         ? recipe.bufferScope?.require(category: .networkCache, bytes: data.count) : nil

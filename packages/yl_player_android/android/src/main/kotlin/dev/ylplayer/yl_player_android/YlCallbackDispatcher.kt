@@ -5,6 +5,7 @@ import kotlinx.coroutines.*
 
 /** Reducer ingress. Called on the main looper with the identity of the original event. */
 internal interface YlPlayerEventSink {
+    fun onNetworkBytesReceived(loadRequestId: String, bytes: Long?) {}
     fun onState(state: AndroidStateMessage)
     /** Synchronous ingress failure is terminal; previously enqueued states are irrevocable. */
     fun onBoundaryFailure(error: Throwable) {}
@@ -17,6 +18,7 @@ internal interface YlPlayerEventSink {
 
 /** Each method completes only when Flutter acknowledges that exact invocation. */
 internal interface YlPlayerCallbacks {
+    suspend fun onNetworkBytesReceived(loadRequestId: String, bytes: Long?) {}
     suspend fun onState(state: AndroidStateMessage)
     suspend fun onStateDelta(delta: AndroidStateDeltaMessage)
     suspend fun onFirstFrame(event: AndroidFirstFrameMessage)
@@ -26,6 +28,7 @@ internal interface YlPlayerCallbacks {
 }
 
 internal class YlPigeonCallbacks(private val api: AndroidPlayerFlutterApi) : YlPlayerCallbacks {
+    override suspend fun onNetworkBytesReceived(loadRequestId: String, bytes: Long?) = api.onNetworkBytesReceived(loadRequestId, bytes)
     override suspend fun onState(state: AndroidStateMessage) = api.onState(state)
     override suspend fun onStateDelta(delta: AndroidStateDeltaMessage) = api.onStateDelta(delta)
     override suspend fun onFirstFrame(event: AndroidFirstFrameMessage) = api.onFirstFrame(event)
@@ -72,6 +75,7 @@ internal class YlCallbackDispatcher(
         val snapshot = state.copy(audioTracks = state.audioTracks.toList(), videoTracks = state.videoTracks.toList())
         enqueue { callbacks.onState(snapshot) }
     }
+    override fun onNetworkBytesReceived(loadRequestId: String, bytes: Long?) = enqueue { callbacks.onNetworkBytesReceived(loadRequestId, bytes) }
     override fun onStateDelta(delta: AndroidStateDeltaMessage) = enqueue { callbacks.onStateDelta(delta) }
     override fun onFirstFrame(event: AndroidFirstFrameMessage) = enqueue { callbacks.onFirstFrame(event) }
     override fun onRetryScheduled(event: AndroidRetryScheduledMessage) = enqueue { callbacks.onRetryScheduled(event) }

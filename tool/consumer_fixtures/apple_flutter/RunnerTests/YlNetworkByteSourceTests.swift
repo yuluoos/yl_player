@@ -155,6 +155,41 @@ private final class ScriptedURLProtocol: URLProtocol {
 }
 
 final class YlNetworkByteSourceTests: XCTestCase {
+  func testManagedHttpCountsBodyBytesWithoutFraming() throws {
+    let server = try ManagedScriptServer { _ in
+      "HTTP/1.1 200 OK\r\nContent-Length: 3\r\nConnection: close\r\n\r\nabc"
+    }
+    defer { server.close() }
+    let scope = try YlManagedBufferLedger().makeScope(maxBytes: nil)
+    let source = YlNetworkByteSource(recipe: .init(url: server.url, headers: [:],
+      configuration: .init(map: [:]), managedIntent: .init(), bufferScope: scope), capacity: 32)
+    defer { source.cancel() }
+    XCTAssertEqual(try readToEnd(source), Array("abc".utf8))
+    XCTAssertEqual(scope.networkBytesReceived, 3)
+  }
+
+  func testReceivedBodyBytesCountBeforeReadAndSurviveReopen() throws {
+    let url = ScriptedURLProtocol.configure([
+      .response(status: 200, headers: ["Content-Length": "3"], chunks: [(0, Data([1, 2, 3]))]),
+      .response(status: 200, headers: ["Content-Length": "2"], chunks: [(0, Data([4, 5]))])])
+    let scope = try YlManagedBufferLedger().makeScope(maxBytes: nil)
+    let recipe = YlNetworkRequestRecipe(url: url, headers: [:],
+      configuration: YlNetworkConfiguration(map: [:]), bufferScope: scope)
+    let config = URLSessionConfiguration.ephemeral
+    config.protocolClasses = [ScriptedURLProtocol.self]
+    let first = YlNetworkByteSource(recipe: recipe, capacity: 32, sessionConfiguration: config)
+    defer { first.cancel() }
+    let deadline = Date().addingTimeInterval(2)
+    while (scope.networkBytesReceived ?? 0) < 3 && Date() < deadline { Thread.sleep(forTimeInterval: 0.01) }
+    XCTAssertEqual(scope.networkBytesReceived, 3, "Reception counts before the demux consumer reads")
+    XCTAssertEqual(try readToEnd(first), [1, 2, 3])
+    XCTAssertEqual(scope.networkBytesReceived, 3, "Reading buffered data must not double count")
+    let second = YlNetworkByteSource(recipe: recipe, capacity: 32, sessionConfiguration: config)
+    defer { second.cancel() }
+    XCTAssertEqual(try readToEnd(second), [4, 5])
+    XCTAssertEqual(scope.networkBytesReceived, 5)
+  }
+
   func testTransportErrorClassifiesOnlyStructuredDnsEvidence() {
     let secret = "private-host.example?token=secret"
     let direct = YlNetworkByteSource.transportError(URLError(.cannotFindHost,

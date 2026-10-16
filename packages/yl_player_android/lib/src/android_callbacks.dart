@@ -15,6 +15,7 @@ final class AndroidCallbacks implements AndroidPlayerFlutterApi {
     required this.onEvent,
     required this.onInvalid,
     this.onLiveState,
+    this.onNetworkBytes,
   }) : state = initialState,
        _sequence = initialSequence;
 
@@ -31,6 +32,17 @@ final class AndroidCallbacks implements AndroidPlayerFlutterApi {
   final void Function(YlPlayerEvent event, int sequence) onEvent;
   final void Function() onInvalid;
   final void Function(AndroidStateMessage)? onLiveState;
+
+  final void Function(String loadRequestId, int? bytes)? onNetworkBytes;
+
+  @override
+  void onNetworkBytesReceived(String loadRequestId, int? bytes) => _decode(() {
+    if (loadRequestId.isEmpty) {
+      throw ArgumentError('Missing load request identity');
+    }
+    if (bytes != null) AndroidCodec.integer(bytes);
+    onNetworkBytes?.call(loadRequestId, bytes);
+  });
 
   void _decode(void Function() action) {
     if (closed) return;

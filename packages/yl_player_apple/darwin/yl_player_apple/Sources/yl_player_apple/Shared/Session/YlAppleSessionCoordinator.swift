@@ -56,6 +56,27 @@ final class YlAppleSessionCoordinator: NSObject {
   private var pendingPauseIntent: UInt64?
   private var lastVolume: Float = 1
   private var lastPlaybackSpeed: Float = 1
+  var onNetworkBytesReceived: ((String, Int64?) -> Void)?
+  private var trafficTimer: Timer?
+  private var trafficSource: YlAppleSourceDescriptor?
+  private func startTraffic(_ source: YlAppleSourceDescriptor) {
+    trafficTimer?.invalidate()
+    trafficSource = source
+    trafficTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+      guard let self, !self.disposed, let source = self.trafficSource,
+            let requestId = source.loadRequestId else { return }
+      let committed = self.identity?.loadRequestId == requestId && self.pendingLoadRequestId == nil
+      let bytes = committed && self.slot.current === self.avBackend
+        ? self.avBackend.networkBytesReceived : source.bufferScope?.networkBytesReceived
+      self.onNetworkBytesReceived?(requestId, bytes)
+      // Wall time is required while AVPlayer is loading/paused and its media
+      // time observer does not advance. Existing backend snapshots stay fenced.
+      if committed { self.slot.current.emitState() }
+    }
+  }
+  private func stopTraffic() {
+    trafficTimer?.invalidate(); trafficTimer = nil; trafficSource = nil
+  }
   private var pendingLoadRequestId: String?
   private(set) var identity: YlAppleSessionIdentity?
   private var activeEvents: YlAppleCommitEmitter?
@@ -120,6 +141,7 @@ final class YlAppleSessionCoordinator: NSObject {
       source.bufferScope = try bufferLedger.makeScope(maxBytes: source.boundedPlan?.maxBytes)
     } catch let error as NativePlayerError { completion(.failure(error)); return }
     catch { completion(.failure(YlManagedBufferLedger.unsupported())); return }
+    startTraffic(source)
     beginOpen(source, decision: assessment, identity: identity, willCommit: willCommit,
       didCommit: didCommit, didRollback: didRollback, completion: completion)
   }
@@ -332,6 +354,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func stop() {
+      stopTraffic()
       capsCoordinator.cancelCurrent()
       commandCoordinator.cancelCurrent()
       openCoordinator.cancelCurrent()
@@ -469,6 +492,9 @@ final class YlAppleSessionCoordinator: NSObject {
       },
       completion: { [weak self] result in
         if self?.pendingLoadRequestId == requestedLoadRequestId { self?.pendingLoadRequestId = nil }
+        if case .failure = result, self?.trafficSource?.loadRequestId == requestedLoadRequestId {
+          self?.stopTraffic()
+        }
         completion(result)
       }
     )
@@ -1066,7 +1092,7 @@ final class YlAppleSessionCoordinator: NSObject {
       cancellationToken: token,
       dashSnapshot: dashSnapshot,
       credentialContext: credentialContext,
-      opaqueRetention: try bufferLedger.acquireOpaqueHlsRetention()
+      opaqueRetention: try bufferLedger.acquireOpaqueHlsRetention(), trafficScope: source.bufferScope
     )
     if fixedTrackId != nil {
       prepared.automaticCandidate = try prepareHeaderedHls(source: source, token: token,
@@ -1206,6 +1232,7 @@ final class YlAppleSessionCoordinator: NSObject {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    stopTraffic()
     capsCoordinator.cancelCurrent()
     committedHlsCredentials = nil
     committedDashSnapshot = nil

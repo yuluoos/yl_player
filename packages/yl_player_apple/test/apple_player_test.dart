@@ -10,6 +10,108 @@ Matcher failsWith(String code) => throwsA(
   isA<YlPlayerException>().having((e) => e.failure.code, 'code', code),
 );
 void main() {
+  test(
+    'traffic before commit is replayed and fenced by Load and Stop',
+    () async {
+      final transport = FakeTransport();
+      final player = await createFake(transport);
+      addTearDown(player.dispose);
+      final samples = <int?>[];
+      final subscription = player.networkBytesReceived.listen(samples.add);
+      addTearDown(subscription.cancel);
+      final first = player.load(source);
+      final firstCancelled = expectLater(
+        first,
+        failsWith(YlFailureCodes.loadCancelled),
+      );
+      await flush();
+      final firstId = transport.requests.last.loadRequestId;
+      transport.callbacks!.onNetworkBytesReceived(firstId, 0);
+      transport.callbacks!.onNetworkBytesReceived(firstId, 4096);
+      await flush();
+      expect(player.state.sessionId, isNull);
+      expect(samples.sublist(samples.length - 2), [0, 4096]);
+      expect(await player.networkBytesReceived.first, 4096);
+      final second = player.load(source);
+      final secondCancelled = expectLater(
+        second,
+        failsWith(YlFailureCodes.loadCancelled),
+      );
+      await firstCancelled;
+      await flush();
+      final secondId = transport.requests.last.loadRequestId;
+      transport.callbacks!.onNetworkBytesReceived(firstId, 8192);
+      transport.callbacks!.onNetworkBytesReceived(secondId, 20);
+      await flush();
+      expect(samples.last, 20);
+      expect(samples, isNot(contains(8192)));
+      await player.stop();
+      await secondCancelled;
+      transport.callbacks!.onNetworkBytesReceived(secondId, 30);
+      await flush();
+      expect(samples.last, isNull);
+      expect(samples, isNot(contains(30)));
+    },
+  );
+
+  test(
+    'traffic unknown and zero are distinct and negative input is rejected',
+    () async {
+      final transport = FakeTransport();
+      final player = await createFake(transport);
+      addTearDown(player.dispose);
+      final loading = player.load(source);
+      final cancelled = expectLater(
+        loading,
+        failsWith(YlFailureCodes.loadCancelled),
+      );
+      await flush();
+      final request = transport.requests.last.loadRequestId;
+      transport.callbacks!.onNetworkBytesReceived(request, 0);
+      expect(await player.networkBytesReceived.first, 0);
+      transport.callbacks!.onNetworkBytesReceived(request, -1);
+      expect(await player.networkBytesReceived.first, 0);
+      transport.callbacks!.onNetworkBytesReceived(request, null);
+      expect(await player.networkBytesReceived.first, isNull);
+      await player.stop();
+      await cancelled;
+    },
+  );
+  test(
+    'active failures clear replayed traffic and fence late samples',
+    () async {
+      for (final terminal in [false, true]) {
+        final transport = FakeTransport();
+        final player = await createFake(transport);
+        final loaded = await commit(transport, player);
+        final request = transport.requests.last.loadRequestId;
+        transport.callbacks!.onNetworkBytesReceived(request, 100);
+        expect(await player.networkBytesReceived.first, 100);
+        if (terminal) {
+          transport.playing = () =>
+              Future.error(PlatformException(code: 'channel-error'));
+          await expectLater(
+            player.play(loaded.sessionId),
+            failsWith(YlFailureCodes.platformUnavailable),
+          );
+        } else {
+          transport.callbacks!.onState(
+            wireState(
+              session: 's1',
+              revision: 5,
+              sequence: 11,
+              status: ApplePlaybackStatus.failed,
+            )..failure = wireFailure(),
+          );
+        }
+        expect(await player.networkBytesReceived.first, isNull);
+        transport.callbacks?.onNetworkBytesReceived(request, 200);
+        expect(await player.networkBytesReceived.first, isNull);
+        await player.dispose();
+      }
+    },
+  );
+
   test('Apple exposes the optional video selection operation', () async {
     final player = await createFake(FakeTransport());
     addTearDown(player.dispose);

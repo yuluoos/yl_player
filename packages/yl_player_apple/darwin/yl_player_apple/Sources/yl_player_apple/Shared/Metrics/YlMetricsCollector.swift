@@ -27,6 +27,29 @@ final class YlMetricsCollector {
   private var completedBufferingMs: Int64 = 0
   private var lastReconnect: UInt64?
   private var playbackStarted = false
+  private var accessLogItem: ObjectIdentifier?
+  private var accessLogBytes: Int64 = 0
+  private var completedAccessLogBytes: Int64 = 0
+
+  func accessLogNetworkBytes(item: AnyObject, transferred: [Int64]) -> Int64? {
+    lock.withLock {
+      let identity = ObjectIdentifier(item)
+      if accessLogItem != identity {
+        let sum = completedAccessLogBytes.addingReportingOverflow(accessLogBytes)
+        completedAccessLogBytes = sum.overflow ? Int64.max : sum.partialValue
+        accessLogBytes = 0; accessLogItem = identity
+      }
+      let known = transferred.filter { $0 >= 0 }
+      guard !known.isEmpty else { return nil }
+      let total = known.reduce(Int64(0)) { total, bytes in
+        let sum = total.addingReportingOverflow(bytes)
+        return sum.overflow ? Int64.max : sum.partialValue
+      }
+      accessLogBytes = max(accessLogBytes, total)
+      let sum = completedAccessLogBytes.addingReportingOverflow(accessLogBytes)
+      return sum.overflow ? Int64.max : sum.partialValue
+    }
+  }
 
   init(scope: YlManagedBufferScope? = nil, bounded: Bool = false,
        clock: @escaping () -> Int64 = YlAppleSafeDiagnostics.nowMilliseconds) {
@@ -75,6 +98,7 @@ final class YlMetricsCollector {
       return copy
     }
     // No second ledger and no payload/generation ownership mutation.
+    result.networkBytesReceived = scope?.networkBytesReceived
     result.bufferedBytes = managedBufferedBytes
     result.bufferedDurationMs = managedBufferedDurationMs
     return result

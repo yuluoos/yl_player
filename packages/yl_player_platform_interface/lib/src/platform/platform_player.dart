@@ -92,3 +92,14 @@ abstract interface class YlLivePlaybackPlatformPlayer {
     YlLivePlaybackMode mode,
   );
 }
+
+/// Optional byte observations for the newest requested network load, available
+/// before playback commit. This must never commit or replace playback state.
+///
+/// Replay the latest observation to a new listener. Emit null at load/stop or
+/// when observation is unavailable, then cumulative nonnegative signed64 bytes.
+/// Counters reset per load and include retries; reject obsolete load callbacks.
+/// Close on disposal. Unknown and observed zero are distinct.
+abstract interface class YlNetworkTrafficPlatformPlayer {
+  Stream<int?> get networkBytesReceived;
+}

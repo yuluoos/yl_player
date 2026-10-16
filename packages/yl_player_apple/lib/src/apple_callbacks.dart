@@ -16,6 +16,7 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
     required this.onEvent,
     required this.onInvalid,
     this.onLiveState,
+    this.onNetworkBytes,
   }) : state = initialState,
        _sequence = initialSequence;
 
@@ -37,6 +38,14 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
   final void Function(YlPlayerEvent event, int sequence) onEvent;
   final void Function() onInvalid;
   final void Function(AppleStateMessage)? onLiveState;
+  final void Function(String, int?)? onNetworkBytes;
+
+  @override
+  void onNetworkBytesReceived(String loadRequestId, int? bytes) => _decode(() {
+    if (loadRequestId.isEmpty) throw ArgumentError('Empty traffic request.');
+    if (bytes != null) AppleCodec.integer(bytes);
+    onNetworkBytes?.call(loadRequestId, bytes);
+  });
 
   void _decode(void Function() action) {
     if (closed) return;

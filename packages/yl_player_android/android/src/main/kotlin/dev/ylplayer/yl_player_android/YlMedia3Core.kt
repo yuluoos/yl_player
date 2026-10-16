@@ -36,6 +36,7 @@ internal class YlMedia3Core(
     private val resetDecoderGate: () -> Unit = {},
     private val protectedDrm: androidx.media3.exoplayer.drm.DrmSessionManager? = null,
     // Nullable internal factory seam: codec admission below remains authoritative.
+    private val networkBytes: YlNetworkByteCounter? = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null,
     private val renderersFactoryOverride: ((Context, YlVideoOutputObserver) -> YlOutputRenderersFactory)? = null,
 ) : Player.Listener, AnalyticsListener {
     // Entire class, including construction, lives on the owned engine application Looper.
@@ -57,7 +58,7 @@ internal class YlMedia3Core(
     private var rtmpPendingFailure: YlRtmpException? = null
     private val managedNetwork = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private var inspectingDecoder = false
-    private val sourceFactory = YlMediaSourceFactory(source, configuration.network, protectedDrm) { attempt, delayMs ->
+    private val sourceFactory = YlMediaSourceFactory(source, configuration.network, protectedDrm, networkBytes) { attempt, delayMs ->
         val occurredAtMs = SystemClock.elapsedRealtime()
         handler.post { if (!disposed && !stopped) recordRetry(attempt, delayMs, occurredAtMs) }
     }.also { trackSelector.isDashGapGroup = it::isDashGapGroup }
@@ -1192,7 +1193,7 @@ internal class YlMedia3Core(
 
     private fun metrics(timeline: AndroidTimelineMessage) = metricsCollector.snapshot(SystemClock.elapsedRealtime(),
         if (active && hasBeenReady) (timeline.bufferedPositionMs - timeline.positionMs).coerceAtLeast(0) else null,
-        timeline.liveOffsetMs).copy(mediaClockPositionMs = mediaClockPositionMs())
+        timeline.liveOffsetMs).copy(mediaClockPositionMs = mediaClockPositionMs(), networkBytesReceived = networkBytes?.bytesReceived)
 
     override fun onVideoEnabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
         if (isCurrentEvent(eventTime)) metricsCollector.videoEnabled()

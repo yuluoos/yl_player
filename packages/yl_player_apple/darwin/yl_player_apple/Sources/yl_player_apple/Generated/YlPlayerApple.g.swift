@@ -1549,6 +1549,7 @@ struct AppleMetricsMessage: Hashable, CustomStringConvertible {
   var managedBufferedBytes: Int64? = nil
   var liveOffsetMs: Int64? = nil
   var reconnectCount: Int64? = nil
+  var networkBytesReceived: Int64? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -1564,6 +1565,7 @@ struct AppleMetricsMessage: Hashable, CustomStringConvertible {
     let managedBufferedBytes: Int64? = nilOrValue(pigeonVar_list[8])
     let liveOffsetMs: Int64? = nilOrValue(pigeonVar_list[9])
     let reconnectCount: Int64? = nilOrValue(pigeonVar_list[10])
+    let networkBytesReceived: Int64? = nilOrValue(pigeonVar_list[11])
 
     return AppleMetricsMessage(
       loadToReadyMs: loadToReadyMs,
@@ -1576,7 +1578,8 @@ struct AppleMetricsMessage: Hashable, CustomStringConvertible {
       managedBufferedDurationMs: managedBufferedDurationMs,
       managedBufferedBytes: managedBufferedBytes,
       liveOffsetMs: liveOffsetMs,
-      reconnectCount: reconnectCount
+      reconnectCount: reconnectCount,
+      networkBytesReceived: networkBytesReceived
     )
   }
   func toList() -> [Any?] {
@@ -1592,13 +1595,14 @@ struct AppleMetricsMessage: Hashable, CustomStringConvertible {
       managedBufferedBytes,
       liveOffsetMs,
       reconnectCount,
+      networkBytesReceived,
     ]
   }
   static func == (lhs: AppleMetricsMessage, rhs: AppleMetricsMessage) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.loadToReadyMs, rhs.loadToReadyMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadToFirstFrameMs, rhs.loadToFirstFrameMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferCount, rhs.rebufferCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferDurationMs, rhs.rebufferDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.droppedVideoFrames, rhs.droppedVideoFrames) && YlPlayerApplePigeonInternal.deepEquals(lhs.audioUnderruns, rhs.audioUnderruns) && YlPlayerApplePigeonInternal.deepEquals(lhs.estimatedBitrate, rhs.estimatedBitrate) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedDurationMs, rhs.managedBufferedDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedBytes, rhs.managedBufferedBytes) && YlPlayerApplePigeonInternal.deepEquals(lhs.liveOffsetMs, rhs.liveOffsetMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.reconnectCount, rhs.reconnectCount)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.loadToReadyMs, rhs.loadToReadyMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadToFirstFrameMs, rhs.loadToFirstFrameMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferCount, rhs.rebufferCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferDurationMs, rhs.rebufferDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.droppedVideoFrames, rhs.droppedVideoFrames) && YlPlayerApplePigeonInternal.deepEquals(lhs.audioUnderruns, rhs.audioUnderruns) && YlPlayerApplePigeonInternal.deepEquals(lhs.estimatedBitrate, rhs.estimatedBitrate) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedDurationMs, rhs.managedBufferedDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedBytes, rhs.managedBufferedBytes) && YlPlayerApplePigeonInternal.deepEquals(lhs.liveOffsetMs, rhs.liveOffsetMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.reconnectCount, rhs.reconnectCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.networkBytesReceived, rhs.networkBytesReceived)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1614,10 +1618,11 @@ struct AppleMetricsMessage: Hashable, CustomStringConvertible {
     YlPlayerApplePigeonInternal.deepHash(value: managedBufferedBytes, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: liveOffsetMs, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: reconnectCount, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: networkBytesReceived, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleMetricsMessage(loadToReadyMs: \(String(describing: loadToReadyMs)), loadToFirstFrameMs: \(String(describing: loadToFirstFrameMs)), rebufferCount: \(String(describing: rebufferCount)), rebufferDurationMs: \(String(describing: rebufferDurationMs)), droppedVideoFrames: \(String(describing: droppedVideoFrames)), audioUnderruns: \(String(describing: audioUnderruns)), estimatedBitrate: \(String(describing: estimatedBitrate)), managedBufferedDurationMs: \(String(describing: managedBufferedDurationMs)), managedBufferedBytes: \(String(describing: managedBufferedBytes)), liveOffsetMs: \(String(describing: liveOffsetMs)), reconnectCount: \(String(describing: reconnectCount)))"
+    return "AppleMetricsMessage(loadToReadyMs: \(String(describing: loadToReadyMs)), loadToFirstFrameMs: \(String(describing: loadToFirstFrameMs)), rebufferCount: \(String(describing: rebufferCount)), rebufferDurationMs: \(String(describing: rebufferDurationMs)), droppedVideoFrames: \(String(describing: droppedVideoFrames)), audioUnderruns: \(String(describing: audioUnderruns)), estimatedBitrate: \(String(describing: estimatedBitrate)), managedBufferedDurationMs: \(String(describing: managedBufferedDurationMs)), managedBufferedBytes: \(String(describing: managedBufferedBytes)), liveOffsetMs: \(String(describing: liveOffsetMs)), reconnectCount: \(String(describing: reconnectCount)), networkBytesReceived: \(String(describing: networkBytesReceived)))"
   }
 }
 
@@ -1898,8 +1903,10 @@ struct AppleMetricsDeltaMessage: Hashable, CustomStringConvertible {
   var managedBufferedBytes: Int64? = nil
   var hasLiveOffsetMs: Bool
   var liveOffsetMs: Int64? = nil
+  var hasNetworkBytesReceived: Bool
   var hasReconnectCount: Bool
   var reconnectCount: Int64? = nil
+  var networkBytesReceived: Int64? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -1924,8 +1931,10 @@ struct AppleMetricsDeltaMessage: Hashable, CustomStringConvertible {
     let managedBufferedBytes: Int64? = nilOrValue(pigeonVar_list[17])
     let hasLiveOffsetMs = pigeonVar_list[18] as! Bool
     let liveOffsetMs: Int64? = nilOrValue(pigeonVar_list[19])
-    let hasReconnectCount = pigeonVar_list[20] as! Bool
-    let reconnectCount: Int64? = nilOrValue(pigeonVar_list[21])
+    let hasNetworkBytesReceived = pigeonVar_list[20] as! Bool
+    let hasReconnectCount = pigeonVar_list[21] as! Bool
+    let reconnectCount: Int64? = nilOrValue(pigeonVar_list[22])
+    let networkBytesReceived: Int64? = nilOrValue(pigeonVar_list[23])
 
     return AppleMetricsDeltaMessage(
       hasLoadToReadyMs: hasLoadToReadyMs,
@@ -1948,8 +1957,10 @@ struct AppleMetricsDeltaMessage: Hashable, CustomStringConvertible {
       managedBufferedBytes: managedBufferedBytes,
       hasLiveOffsetMs: hasLiveOffsetMs,
       liveOffsetMs: liveOffsetMs,
+      hasNetworkBytesReceived: hasNetworkBytesReceived,
       hasReconnectCount: hasReconnectCount,
-      reconnectCount: reconnectCount
+      reconnectCount: reconnectCount,
+      networkBytesReceived: networkBytesReceived
     )
   }
   func toList() -> [Any?] {
@@ -1974,15 +1985,17 @@ struct AppleMetricsDeltaMessage: Hashable, CustomStringConvertible {
       managedBufferedBytes,
       hasLiveOffsetMs,
       liveOffsetMs,
+      hasNetworkBytesReceived,
       hasReconnectCount,
       reconnectCount,
+      networkBytesReceived,
     ]
   }
   static func == (lhs: AppleMetricsDeltaMessage, rhs: AppleMetricsDeltaMessage) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.hasLoadToReadyMs, rhs.hasLoadToReadyMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadToReadyMs, rhs.loadToReadyMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasLoadToFirstFrameMs, rhs.hasLoadToFirstFrameMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadToFirstFrameMs, rhs.loadToFirstFrameMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasRebufferCount, rhs.hasRebufferCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferCount, rhs.rebufferCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasRebufferDurationMs, rhs.hasRebufferDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferDurationMs, rhs.rebufferDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasDroppedVideoFrames, rhs.hasDroppedVideoFrames) && YlPlayerApplePigeonInternal.deepEquals(lhs.droppedVideoFrames, rhs.droppedVideoFrames) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasAudioUnderruns, rhs.hasAudioUnderruns) && YlPlayerApplePigeonInternal.deepEquals(lhs.audioUnderruns, rhs.audioUnderruns) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasEstimatedBitrate, rhs.hasEstimatedBitrate) && YlPlayerApplePigeonInternal.deepEquals(lhs.estimatedBitrate, rhs.estimatedBitrate) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasManagedBufferedDurationMs, rhs.hasManagedBufferedDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedDurationMs, rhs.managedBufferedDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasManagedBufferedBytes, rhs.hasManagedBufferedBytes) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedBytes, rhs.managedBufferedBytes) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasLiveOffsetMs, rhs.hasLiveOffsetMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.liveOffsetMs, rhs.liveOffsetMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasReconnectCount, rhs.hasReconnectCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.reconnectCount, rhs.reconnectCount)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.hasLoadToReadyMs, rhs.hasLoadToReadyMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadToReadyMs, rhs.loadToReadyMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasLoadToFirstFrameMs, rhs.hasLoadToFirstFrameMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.loadToFirstFrameMs, rhs.loadToFirstFrameMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasRebufferCount, rhs.hasRebufferCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferCount, rhs.rebufferCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasRebufferDurationMs, rhs.hasRebufferDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.rebufferDurationMs, rhs.rebufferDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasDroppedVideoFrames, rhs.hasDroppedVideoFrames) && YlPlayerApplePigeonInternal.deepEquals(lhs.droppedVideoFrames, rhs.droppedVideoFrames) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasAudioUnderruns, rhs.hasAudioUnderruns) && YlPlayerApplePigeonInternal.deepEquals(lhs.audioUnderruns, rhs.audioUnderruns) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasEstimatedBitrate, rhs.hasEstimatedBitrate) && YlPlayerApplePigeonInternal.deepEquals(lhs.estimatedBitrate, rhs.estimatedBitrate) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasManagedBufferedDurationMs, rhs.hasManagedBufferedDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedDurationMs, rhs.managedBufferedDurationMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasManagedBufferedBytes, rhs.hasManagedBufferedBytes) && YlPlayerApplePigeonInternal.deepEquals(lhs.managedBufferedBytes, rhs.managedBufferedBytes) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasLiveOffsetMs, rhs.hasLiveOffsetMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.liveOffsetMs, rhs.liveOffsetMs) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasNetworkBytesReceived, rhs.hasNetworkBytesReceived) && YlPlayerApplePigeonInternal.deepEquals(lhs.hasReconnectCount, rhs.hasReconnectCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.reconnectCount, rhs.reconnectCount) && YlPlayerApplePigeonInternal.deepEquals(lhs.networkBytesReceived, rhs.networkBytesReceived)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -2007,12 +2020,14 @@ struct AppleMetricsDeltaMessage: Hashable, CustomStringConvertible {
     YlPlayerApplePigeonInternal.deepHash(value: managedBufferedBytes, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: hasLiveOffsetMs, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: liveOffsetMs, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: hasNetworkBytesReceived, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: hasReconnectCount, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: reconnectCount, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: networkBytesReceived, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleMetricsDeltaMessage(hasLoadToReadyMs: \(String(describing: hasLoadToReadyMs)), loadToReadyMs: \(String(describing: loadToReadyMs)), hasLoadToFirstFrameMs: \(String(describing: hasLoadToFirstFrameMs)), loadToFirstFrameMs: \(String(describing: loadToFirstFrameMs)), hasRebufferCount: \(String(describing: hasRebufferCount)), rebufferCount: \(String(describing: rebufferCount)), hasRebufferDurationMs: \(String(describing: hasRebufferDurationMs)), rebufferDurationMs: \(String(describing: rebufferDurationMs)), hasDroppedVideoFrames: \(String(describing: hasDroppedVideoFrames)), droppedVideoFrames: \(String(describing: droppedVideoFrames)), hasAudioUnderruns: \(String(describing: hasAudioUnderruns)), audioUnderruns: \(String(describing: audioUnderruns)), hasEstimatedBitrate: \(String(describing: hasEstimatedBitrate)), estimatedBitrate: \(String(describing: estimatedBitrate)), hasManagedBufferedDurationMs: \(String(describing: hasManagedBufferedDurationMs)), managedBufferedDurationMs: \(String(describing: managedBufferedDurationMs)), hasManagedBufferedBytes: \(String(describing: hasManagedBufferedBytes)), managedBufferedBytes: \(String(describing: managedBufferedBytes)), hasLiveOffsetMs: \(String(describing: hasLiveOffsetMs)), liveOffsetMs: \(String(describing: liveOffsetMs)), hasReconnectCount: \(String(describing: hasReconnectCount)), reconnectCount: \(String(describing: reconnectCount)))"
+    return "AppleMetricsDeltaMessage(hasLoadToReadyMs: \(String(describing: hasLoadToReadyMs)), loadToReadyMs: \(String(describing: loadToReadyMs)), hasLoadToFirstFrameMs: \(String(describing: hasLoadToFirstFrameMs)), loadToFirstFrameMs: \(String(describing: loadToFirstFrameMs)), hasRebufferCount: \(String(describing: hasRebufferCount)), rebufferCount: \(String(describing: rebufferCount)), hasRebufferDurationMs: \(String(describing: hasRebufferDurationMs)), rebufferDurationMs: \(String(describing: rebufferDurationMs)), hasDroppedVideoFrames: \(String(describing: hasDroppedVideoFrames)), droppedVideoFrames: \(String(describing: droppedVideoFrames)), hasAudioUnderruns: \(String(describing: hasAudioUnderruns)), audioUnderruns: \(String(describing: audioUnderruns)), hasEstimatedBitrate: \(String(describing: hasEstimatedBitrate)), estimatedBitrate: \(String(describing: estimatedBitrate)), hasManagedBufferedDurationMs: \(String(describing: hasManagedBufferedDurationMs)), managedBufferedDurationMs: \(String(describing: managedBufferedDurationMs)), hasManagedBufferedBytes: \(String(describing: hasManagedBufferedBytes)), managedBufferedBytes: \(String(describing: managedBufferedBytes)), hasLiveOffsetMs: \(String(describing: hasLiveOffsetMs)), liveOffsetMs: \(String(describing: liveOffsetMs)), hasNetworkBytesReceived: \(String(describing: hasNetworkBytesReceived)), hasReconnectCount: \(String(describing: hasReconnectCount)), reconnectCount: \(String(describing: reconnectCount)), networkBytesReceived: \(String(describing: networkBytesReceived)))"
   }
 }
 
@@ -3555,6 +3570,7 @@ class ApplePlayerHostApiSetup {
 
 /// Generated protocol from Pigeon that represents Flutter messages that can be called from Swift.
 protocol ApplePlayerFlutterApiProtocol {
+  func onNetworkBytesReceived(loadRequestId loadRequestIdArg: String, bytes bytesArg: Int64?) async throws
   func onState(state stateArg: AppleStateMessage) async throws
   func onStateDelta(delta deltaArg: AppleStateDeltaMessage) async throws
   func onFirstFrame(event eventArg: AppleFirstFrameMessage) async throws
@@ -3571,6 +3587,26 @@ class ApplePlayerFlutterApi: ApplePlayerFlutterApiProtocol {
   }
   var codec: YlPlayerApplePigeonCodec {
     return YlPlayerApplePigeonCodec.shared
+  }
+  func onNetworkBytesReceived(loadRequestId loadRequestIdArg: String, bytes bytesArg: Int64?) async throws {
+    return try await withCheckedThrowingContinuation { continuation in
+      let channelName: String = "dev.flutter.pigeon.yl_player_apple.ApplePlayerFlutterApi.onNetworkBytesReceived\(messageChannelSuffix)"
+      let channel = FlutterBasicMessageChannel(name: channelName, binaryMessenger: binaryMessenger, codec: codec)
+      channel.sendMessage([loadRequestIdArg, bytesArg] as [Any?]) { response in
+        guard let listResponse = response as? [Any?] else {
+          continuation.resume(throwing: createConnectionError(withChannelName: channelName))
+          return
+        }
+        if listResponse.count > 1 {
+          let code: String = listResponse[0] as! String
+          let message: String? = nilOrValue(listResponse[1])
+          let details: String? = nilOrValue(listResponse[2])
+          continuation.resume(throwing: PigeonError(code: code, message: message, details: details))
+        } else {
+          continuation.resume()
+        }
+      }
+    }
   }
   func onState(state stateArg: AppleStateMessage) async throws {
     return try await withCheckedThrowingContinuation { continuation in

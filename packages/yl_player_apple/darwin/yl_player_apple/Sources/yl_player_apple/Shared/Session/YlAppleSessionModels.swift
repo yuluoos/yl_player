@@ -35,6 +35,7 @@ struct YlNativeTrack {
 }
 
 struct YlNativeMetrics {
+  var networkBytesReceived: Int64? = nil
   var openDurationMs: Int64? = nil
   var firstFrameDurationMs: Int64? = nil
   var rebufferCount: Int? = nil

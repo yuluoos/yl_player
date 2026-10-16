@@ -4,6 +4,30 @@ import Network
 import XCTest
 
 final class YlRtmpTransportTests: XCTestCase {
+  @MainActor
+  func testOpeningTrafficArrivesBeforeSessionCommitAndStopsAfterCancellation() async throws {
+    let peer = try RtmpSilentPeer(initialBytes: Data([3]))
+    defer { peer.close() }
+    let fixture = AppleHostFixture()
+    defer { fixture.host.close() }
+    try fixture.host.attach()
+    var request = AppleHostFixture.request("traffic-opening",
+      url: "rtmp://127.0.0.1:\(peer.port)/live/test", format: .flv)
+    request.source.intent = .live
+    let loading = Task { try await fixture.host.load(request: request) }
+    for _ in 0..<150 where fixture.callbacks.traffic.last?.1 != 1 {
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertNil(fixture.host.sessionId, "Traffic does not commit the pending playback session")
+    XCTAssertEqual(fixture.callbacks.traffic.last?.0, "traffic-opening")
+    XCTAssertEqual(fixture.callbacks.traffic.last?.1, 1, "Received handshake payload is observable while opening")
+    try await fixture.host.stop()
+    _ = try? await loading.value
+    let count = fixture.callbacks.traffic.count
+    try await Task.sleep(nanoseconds: 1_100_000_000)
+    XCTAssertEqual(fixture.callbacks.traffic.count, count)
+  }
+
   func testAbsoluteSetupDeadlineWithSilentRealSocket() throws {
     let peer = try RtmpSilentPeer(); defer { peer.close() }
     let source = try makeSource(port: peer.port, setupMs: 120)
@@ -96,7 +120,7 @@ private final class RtmpSilentPeer {
   private(set) var port: UInt16 = 0
   var didAccept: Bool { condition.lock(); defer { condition.unlock() }; return accepted }
   var didClose: Bool { condition.lock(); defer { condition.unlock() }; return closed }
-  init() throws {
+  init(initialBytes: Data? = nil) throws {
     listener = try NWListener(using: .tcp, on: .any)
     let ready = DispatchSemaphore(value: 0)
     listener.stateUpdateHandler = { state in if case .ready = state { ready.signal() } }
@@ -104,6 +128,7 @@ private final class RtmpSilentPeer {
       guard let self else { connection.cancel(); return }
       self.condition.lock(); self.connection = connection; self.accepted = true; self.condition.broadcast(); self.condition.unlock()
       connection.start(queue: self.queue)
+      if let initialBytes { connection.send(content: initialBytes, completion: .contentProcessed { _ in }) }
       self.receive(connection)
     }
     listener.start(queue: queue)

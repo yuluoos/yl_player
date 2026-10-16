@@ -270,6 +270,7 @@ class AndroidMetricsMessage {
   int? liveOffsetMs;
   int? reconnectCount;
   int? mediaClockPositionMs;
+  int? networkBytesReceived;
 }
 
 class AndroidFailureMessage {
@@ -339,6 +340,8 @@ class AndroidMetricsDeltaMessage {
   int? reconnectCount;
   bool hasMediaClockPositionMs;
   int? mediaClockPositionMs;
+  bool hasNetworkBytesReceived;
+  int? networkBytesReceived;
 }
 
 class AndroidFirstFrameMessage {
@@ -424,6 +427,7 @@ abstract class AndroidPlayerHostApi {
 
 @FlutterApi()
 abstract class AndroidPlayerFlutterApi {
+  void onNetworkBytesReceived(String loadRequestId, int? bytes);
   void onState(AndroidStateMessage state);
   void onStateDelta(AndroidStateDeltaMessage delta);
   void onFirstFrame(AndroidFirstFrameMessage event);

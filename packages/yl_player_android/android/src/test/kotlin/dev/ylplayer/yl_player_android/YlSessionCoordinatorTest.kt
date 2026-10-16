@@ -7,6 +7,25 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `candidate traffic arrives before commit and old candidate cannot publish after stop`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val held = FakeSessionEngine().apply { preparation = CompletableDeferred() }
+        f.next = held
+        val load = async { runCatching { f.coordinator.load(request("opening")) } }
+        runCurrent()
+        val before = f.coordinator.initialState
+        held.emit(YlEngineEvent.Tick(emptyTimeline(), AndroidMetricsMessage(networkBytesReceived = 123)))
+        assertEquals("opening", f.events.traffic.single().first)
+        assertEquals(123L, f.events.traffic.single().second)
+        assertEquals(before, f.coordinator.initialState)
+        assertFalse(load.isCompleted)
+        f.coordinator.stop()
+        held.emit(YlEngineEvent.Tick(emptyTimeline(), AndroidMetricsMessage(networkBytesReceived = 456)))
+        assertEquals(1, f.events.traffic.size)
+        held.preparation?.complete(Unit)
+        runCurrent(); load.await(); f.finish()
+    }
+
     @Test fun `fixed semantic restore point survives replacement rollback and old session cannot affect replacement or stop`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         val original = f.coordinator.load(request("fixed-original"))
@@ -940,6 +959,8 @@ internal class SessionEvents : YlPlayerEventSink {
     var stateObserved: ((AndroidStateMessage) -> Unit)? = null
     val states = mutableListOf<AndroidStateMessage>()
     val deltas = mutableListOf<AndroidStateDeltaMessage>()
+    val traffic = mutableListOf<Pair<String, Long?>>()
+    override fun onNetworkBytesReceived(loadRequestId: String, bytes: Long?) { traffic += loadRequestId to bytes }
     val failures = mutableListOf<AndroidPlaybackFailedMessage>()
     val frames = mutableListOf<AndroidFirstFrameMessage>()
     val retries = mutableListOf<AndroidRetryScheduledMessage>()

@@ -1692,6 +1692,7 @@ class AndroidMetricsMessage {
     this.liveOffsetMs,
     this.reconnectCount,
     this.mediaClockPositionMs,
+    this.networkBytesReceived,
   });
 
   int? loadToReadyMs;
@@ -1718,6 +1719,8 @@ class AndroidMetricsMessage {
 
   int? mediaClockPositionMs;
 
+  int? networkBytesReceived;
+
   List<Object?> _toList() {
     return <Object?>[
       loadToReadyMs,
@@ -1732,6 +1735,7 @@ class AndroidMetricsMessage {
       liveOffsetMs,
       reconnectCount,
       mediaClockPositionMs,
+      networkBytesReceived,
     ];
   }
 
@@ -1753,6 +1757,7 @@ class AndroidMetricsMessage {
       liveOffsetMs: result[9] as int?,
       reconnectCount: result[10] as int?,
       mediaClockPositionMs: result[11] as int?,
+      networkBytesReceived: result[12] as int?,
     );
   }
 
@@ -1765,7 +1770,7 @@ class AndroidMetricsMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(mediaClockPositionMs, other.mediaClockPositionMs);
+    return _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(mediaClockPositionMs, other.mediaClockPositionMs) && _deepEquals(networkBytesReceived, other.networkBytesReceived);
   }
 
   @override
@@ -1774,7 +1779,7 @@ class AndroidMetricsMessage {
 
   @override
   String toString() {
-    return 'AndroidMetricsMessage(loadToReadyMs: $loadToReadyMs, loadToFirstFrameMs: $loadToFirstFrameMs, rebufferCount: $rebufferCount, rebufferDurationMs: $rebufferDurationMs, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDurationMs: $managedBufferedDurationMs, managedBufferedBytes: $managedBufferedBytes, liveOffsetMs: $liveOffsetMs, reconnectCount: $reconnectCount, mediaClockPositionMs: $mediaClockPositionMs)';
+    return 'AndroidMetricsMessage(loadToReadyMs: $loadToReadyMs, loadToFirstFrameMs: $loadToFirstFrameMs, rebufferCount: $rebufferCount, rebufferDurationMs: $rebufferDurationMs, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDurationMs: $managedBufferedDurationMs, managedBufferedBytes: $managedBufferedBytes, liveOffsetMs: $liveOffsetMs, reconnectCount: $reconnectCount, mediaClockPositionMs: $mediaClockPositionMs, networkBytesReceived: $networkBytesReceived)';
   }
 }
 
@@ -2089,6 +2094,8 @@ class AndroidMetricsDeltaMessage {
     this.reconnectCount,
     required this.hasMediaClockPositionMs,
     this.mediaClockPositionMs,
+    required this.hasNetworkBytesReceived,
+    this.networkBytesReceived,
   });
 
   bool hasLoadToReadyMs;
@@ -2139,6 +2146,10 @@ class AndroidMetricsDeltaMessage {
 
   int? mediaClockPositionMs;
 
+  bool hasNetworkBytesReceived;
+
+  int? networkBytesReceived;
+
   List<Object?> _toList() {
     return <Object?>[
       hasLoadToReadyMs,
@@ -2165,6 +2176,8 @@ class AndroidMetricsDeltaMessage {
       reconnectCount,
       hasMediaClockPositionMs,
       mediaClockPositionMs,
+      hasNetworkBytesReceived,
+      networkBytesReceived,
     ];
   }
 
@@ -2198,6 +2211,8 @@ class AndroidMetricsDeltaMessage {
       reconnectCount: result[21] as int?,
       hasMediaClockPositionMs: result[22]! as bool,
       mediaClockPositionMs: result[23] as int?,
+      hasNetworkBytesReceived: result[24]! as bool,
+      networkBytesReceived: result[25] as int?,
     );
   }
 
@@ -2210,7 +2225,7 @@ class AndroidMetricsDeltaMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(hasLoadToReadyMs, other.hasLoadToReadyMs) && _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(hasRebufferCount, other.hasRebufferCount) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(hasRebufferDurationMs, other.hasRebufferDurationMs) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(hasDroppedVideoFrames, other.hasDroppedVideoFrames) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(hasAudioUnderruns, other.hasAudioUnderruns) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(hasEstimatedBitrate, other.hasEstimatedBitrate) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(hasManagedBufferedBytes, other.hasManagedBufferedBytes) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(hasLiveOffsetMs, other.hasLiveOffsetMs) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(hasReconnectCount, other.hasReconnectCount) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(hasMediaClockPositionMs, other.hasMediaClockPositionMs) && _deepEquals(mediaClockPositionMs, other.mediaClockPositionMs);
+    return _deepEquals(hasLoadToReadyMs, other.hasLoadToReadyMs) && _deepEquals(loadToReadyMs, other.loadToReadyMs) && _deepEquals(hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && _deepEquals(loadToFirstFrameMs, other.loadToFirstFrameMs) && _deepEquals(hasRebufferCount, other.hasRebufferCount) && _deepEquals(rebufferCount, other.rebufferCount) && _deepEquals(hasRebufferDurationMs, other.hasRebufferDurationMs) && _deepEquals(rebufferDurationMs, other.rebufferDurationMs) && _deepEquals(hasDroppedVideoFrames, other.hasDroppedVideoFrames) && _deepEquals(droppedVideoFrames, other.droppedVideoFrames) && _deepEquals(hasAudioUnderruns, other.hasAudioUnderruns) && _deepEquals(audioUnderruns, other.audioUnderruns) && _deepEquals(hasEstimatedBitrate, other.hasEstimatedBitrate) && _deepEquals(estimatedBitrate, other.estimatedBitrate) && _deepEquals(hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && _deepEquals(managedBufferedDurationMs, other.managedBufferedDurationMs) && _deepEquals(hasManagedBufferedBytes, other.hasManagedBufferedBytes) && _deepEquals(managedBufferedBytes, other.managedBufferedBytes) && _deepEquals(hasLiveOffsetMs, other.hasLiveOffsetMs) && _deepEquals(liveOffsetMs, other.liveOffsetMs) && _deepEquals(hasReconnectCount, other.hasReconnectCount) && _deepEquals(reconnectCount, other.reconnectCount) && _deepEquals(hasMediaClockPositionMs, other.hasMediaClockPositionMs) && _deepEquals(mediaClockPositionMs, other.mediaClockPositionMs) && _deepEquals(hasNetworkBytesReceived, other.hasNetworkBytesReceived) && _deepEquals(networkBytesReceived, other.networkBytesReceived);
   }
 
   @override
@@ -2219,7 +2234,7 @@ class AndroidMetricsDeltaMessage {
 
   @override
   String toString() {
-    return 'AndroidMetricsDeltaMessage(hasLoadToReadyMs: $hasLoadToReadyMs, loadToReadyMs: $loadToReadyMs, hasLoadToFirstFrameMs: $hasLoadToFirstFrameMs, loadToFirstFrameMs: $loadToFirstFrameMs, hasRebufferCount: $hasRebufferCount, rebufferCount: $rebufferCount, hasRebufferDurationMs: $hasRebufferDurationMs, rebufferDurationMs: $rebufferDurationMs, hasDroppedVideoFrames: $hasDroppedVideoFrames, droppedVideoFrames: $droppedVideoFrames, hasAudioUnderruns: $hasAudioUnderruns, audioUnderruns: $audioUnderruns, hasEstimatedBitrate: $hasEstimatedBitrate, estimatedBitrate: $estimatedBitrate, hasManagedBufferedDurationMs: $hasManagedBufferedDurationMs, managedBufferedDurationMs: $managedBufferedDurationMs, hasManagedBufferedBytes: $hasManagedBufferedBytes, managedBufferedBytes: $managedBufferedBytes, hasLiveOffsetMs: $hasLiveOffsetMs, liveOffsetMs: $liveOffsetMs, hasReconnectCount: $hasReconnectCount, reconnectCount: $reconnectCount, hasMediaClockPositionMs: $hasMediaClockPositionMs, mediaClockPositionMs: $mediaClockPositionMs)';
+    return 'AndroidMetricsDeltaMessage(hasLoadToReadyMs: $hasLoadToReadyMs, loadToReadyMs: $loadToReadyMs, hasLoadToFirstFrameMs: $hasLoadToFirstFrameMs, loadToFirstFrameMs: $loadToFirstFrameMs, hasRebufferCount: $hasRebufferCount, rebufferCount: $rebufferCount, hasRebufferDurationMs: $hasRebufferDurationMs, rebufferDurationMs: $rebufferDurationMs, hasDroppedVideoFrames: $hasDroppedVideoFrames, droppedVideoFrames: $droppedVideoFrames, hasAudioUnderruns: $hasAudioUnderruns, audioUnderruns: $audioUnderruns, hasEstimatedBitrate: $hasEstimatedBitrate, estimatedBitrate: $estimatedBitrate, hasManagedBufferedDurationMs: $hasManagedBufferedDurationMs, managedBufferedDurationMs: $managedBufferedDurationMs, hasManagedBufferedBytes: $hasManagedBufferedBytes, managedBufferedBytes: $managedBufferedBytes, hasLiveOffsetMs: $hasLiveOffsetMs, liveOffsetMs: $liveOffsetMs, hasReconnectCount: $hasReconnectCount, reconnectCount: $reconnectCount, hasMediaClockPositionMs: $hasMediaClockPositionMs, mediaClockPositionMs: $mediaClockPositionMs, hasNetworkBytesReceived: $hasNetworkBytesReceived, networkBytesReceived: $networkBytesReceived)';
   }
 }
 
@@ -3885,6 +3900,8 @@ class AndroidPlayerHostApi {
 abstract class AndroidPlayerFlutterApi {
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
+  void onNetworkBytesReceived(String loadRequestId, int? bytes);
+
   void onState(AndroidStateMessage state);
 
   void onStateDelta(AndroidStateDeltaMessage delta);
@@ -3899,6 +3916,28 @@ abstract class AndroidPlayerFlutterApi {
 
   static void setUp(AndroidPlayerFlutterApi? api, {BinaryMessenger? binaryMessenger, String messageChannelSuffix = '',}) {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
+    {
+      final pigeonVar_channel = BasicMessageChannel<Object?>(
+          'dev.flutter.pigeon.yl_player_android.AndroidPlayerFlutterApi.onNetworkBytesReceived$messageChannelSuffix', pigeonChannelCodec,
+          binaryMessenger: binaryMessenger);
+      if (api == null) {
+        pigeonVar_channel.setMessageHandler(null);
+      } else {
+        pigeonVar_channel.setMessageHandler((Object? message) async {
+          final List<Object?> args = message! as List<Object?>;
+          final String arg_loadRequestId = args[0]! as String;
+          final int? arg_bytes = args[1] as int?;
+          try {
+            api.onNetworkBytesReceived(arg_loadRequestId, arg_bytes);
+            return wrapResponse(empty: true);
+          } on PlatformException catch (e) {
+            return wrapResponse(error: e);
+          }          catch (e) {
+            return wrapResponse(error: PlatformException(code: 'error', message: e.toString()));
+          }
+        });
+      }
+    }
     {
       final pigeonVar_channel = BasicMessageChannel<Object?>(
           'dev.flutter.pigeon.yl_player_android.AndroidPlayerFlutterApi.onState$messageChannelSuffix', pigeonChannelCodec,

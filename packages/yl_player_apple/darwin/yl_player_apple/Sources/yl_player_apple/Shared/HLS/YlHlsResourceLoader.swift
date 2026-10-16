@@ -207,6 +207,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   private let headerPolicy: YlHlsHeaderPolicy
   private let configuration: YlNetworkConfiguration
   private let mediaProxy: YlHlsMediaProxy
+  let trafficScope: YlManagedBufferScope?
   private let stateLock = NSLock()
   private var records: [Int: TaskRecord] = [:]
   private var cachedResponses: [String: CachedResponse] = [:]
@@ -224,10 +225,13 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil,
+    trafficScope: YlManagedBufferScope? = nil,
     sessionFactory: (URLSessionConfiguration, URLSessionDelegate, OperationQueue) -> URLSession = {
       URLSession(configuration: $0, delegate: $1, delegateQueue: $2)
     }
   ) throws {
+    self.trafficScope = trafficScope
+    trafficScope?.recordNetworkBytes(0)
     self.isDash = isDash
     self.videoConstraints = videoConstraints
     self.fixedTrackId = fixedTrackId
@@ -244,7 +248,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
       headers: headers,
       credentials: credentials,
       configuration: configuration,
-      credentialContext: credentialContext, opaqueRetention: opaqueRetention
+      credentialContext: credentialContext, opaqueRetention: opaqueRetention, trafficScope: trafficScope
     )
     super.init()
 
@@ -814,6 +818,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
   ) {
     guard let record = record(for: dataTask), isCurrent(record, task: dataTask)
     else { return }
+    trafficScope?.recordNetworkBytes(data.count)
     if let fetch = record.indexRequest {
       guard data.count <= fetch.requestedLength - record.manifestData.count else {
         finish(task: dataTask, result: .failure(Self.indexRangeError()))
@@ -968,7 +973,8 @@ final class YlPreparedHlsAsset {
     dashSnapshot: YlDashManifestSnapshot? = nil,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
-    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil
+    opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil,
+    trafficScope: YlManagedBufferScope? = nil
   ) throws {
     let loader = try YlHlsResourceLoader(
       originURL: originURL,
@@ -978,7 +984,7 @@ final class YlPreparedHlsAsset {
       credentials: credentials,
       configuration: configuration,
       credentialContext: credentialContext,
-      sessionConfiguration: sessionConfiguration, opaqueRetention: opaqueRetention
+      sessionConfiguration: sessionConfiguration, opaqueRetention: opaqueRetention, trafficScope: trafficScope
     )
     self.loader = loader
     do {

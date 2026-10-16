@@ -22,6 +22,7 @@ void main() {
         hasLiveOffsetMs: true,
         liveOffsetMs: _maxInt64,
         metrics: AppleMetricsDeltaMessage(
+          hasNetworkBytesReceived: false,
           hasLoadToReadyMs: true,
           loadToReadyMs: _maxInt64,
           hasLoadToFirstFrameMs: true,
@@ -78,6 +79,7 @@ void main() {
       hasIsAtLiveEdge: true,
       hasLiveOffsetMs: true,
       metrics: AppleMetricsDeltaMessage(
+        hasNetworkBytesReceived: false,
         hasLoadToReadyMs: true,
         hasLoadToFirstFrameMs: true,
         hasRebufferCount: true,

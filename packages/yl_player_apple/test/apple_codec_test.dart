@@ -239,6 +239,8 @@ void main() {
   test('metrics deltas distinguish every absent, set and cleared field', () {
     final state = AppleCodec.state(wireState(session: 's1', revision: 4));
     final changes = AppleMetricsDeltaMessage(
+      hasNetworkBytesReceived: true,
+      networkBytesReceived: 12,
       hasLoadToReadyMs: true,
       loadToReadyMs: 12,
       hasLoadToFirstFrameMs: true,
@@ -277,9 +279,11 @@ void main() {
         managedBufferedBytes: 12,
         liveOffset: Duration(milliseconds: 12),
         reconnectCount: 12,
+        networkBytesReceived: 12,
       ),
     );
     final absent = AppleMetricsDeltaMessage(
+      hasNetworkBytesReceived: false,
       hasLoadToReadyMs: false,
       hasLoadToFirstFrameMs: false,
       hasRebufferCount: false,
@@ -310,6 +314,7 @@ void main() {
     changes.managedBufferedBytes = null;
     changes.liveOffsetMs = null;
     changes.reconnectCount = null;
+    changes.networkBytesReceived = null;
     expect(
       AppleCodec.delta(
         set,
@@ -668,6 +673,7 @@ void main() {
           managedBufferedBytes: 9,
           liveOffsetMs: -1,
           reconnectCount: 10,
+          networkBytesReceived: 11,
         ),
       );
       expect(
@@ -684,6 +690,7 @@ void main() {
           managedBufferedBytes: 9,
           liveOffset: Duration.zero,
           reconnectCount: 10,
+          networkBytesReceived: 11,
         ),
       );
       final wire = wireState()

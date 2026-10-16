@@ -197,7 +197,7 @@ class YlPlayerRegistryTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         val first = fixture.registry.create(createRequest())
         val second = fixture.registry.create(createRequest())
-        assertEquals(6L, first.schemaMajor)
+        assertEquals(7L, first.schemaMajor)
         assertEquals(2L, first.spiMajor)
         assertEquals(41L, first.textureId)
         assertTrue(first.channelSuffix.matches(Regex("p1-[a-zA-Z0-9-]+")))
@@ -499,7 +499,7 @@ class YlPlayerRegistryTest {
     }
 }
 
-internal fun createRequest() = AndroidCreateRequest(6, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
+internal fun createRequest() = AndroidCreateRequest(7, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
 
 internal class RegistryFixture(dispatcher: CoroutineDispatcher, factory: YlPlayerSessionFactory? = null) {
     val messenger = mock(BinaryMessenger::class.java)

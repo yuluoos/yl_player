@@ -73,6 +73,12 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       audioTerminalCandidateEnabled: audioTerminalCandidateEnabled, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
+    coordinator.onNetworkBytesReceived = { [weak self] requestId, bytes in
+      guard let self, self.attached, !self.disposed else { return }
+      self.outbound.enqueue { [callbacks = self.callbacks] in
+        try await callbacks.onNetworkBytesReceived(loadRequestId: requestId, bytes: bytes)
+      }
+    }
     reducer.onOutput = { [weak self] output in self?.send(output) }
     reducer.onExhausted = { [weak self] in self?.close() }
     outbound.onFailure = { [weak self] in self?.close() }
@@ -630,7 +636,8 @@ extension YlApplePlayerHost {
       audioUnderruns: value.audioUnderruns.map(Int64.init),
       managedBufferedDurationMs: value.bufferedDurationMs,
       managedBufferedBytes: value.bufferedBytes.map(Int64.init),
-      liveOffsetMs: YlAppleTimeline.liveOffset(value.liveOffsetMs), reconnectCount: value.reconnectCount.map(Int64.init))
+      liveOffsetMs: YlAppleTimeline.liveOffset(value.liveOffsetMs), reconnectCount: value.reconnectCount.map(Int64.init),
+      networkBytesReceived: value.networkBytesReceived)
   }
   func send(_ output: YlAppleReducerOutput) {
     guard attached, !disposed else { return }
@@ -656,7 +663,8 @@ extension YlApplePlayerHost {
           managedBufferedDurationMs: m.managedBufferedDurationMs,
           hasManagedBufferedBytes: true, managedBufferedBytes: m.managedBufferedBytes,
           hasLiveOffsetMs: true, liveOffsetMs: m.liveOffsetMs,
-          hasReconnectCount: true, reconnectCount: m.reconnectCount))
+          hasNetworkBytesReceived: true,
+          hasReconnectCount: true, reconnectCount: m.reconnectCount, networkBytesReceived: m.networkBytesReceived))
       call = { [callbacks] in try await callbacks.onStateDelta(delta: delta) }
     case .firstFrame(let m):
       let event = AppleFirstFrameMessage(sessionId: m.identity.sessionId,

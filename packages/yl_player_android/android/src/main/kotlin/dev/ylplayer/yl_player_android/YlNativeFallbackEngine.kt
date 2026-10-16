@@ -25,6 +25,7 @@ internal class YlNativeFallbackEngine(
     // Test observers must return promptly and must not retain production buffers.
     private val observeAudioClock: ((Long) -> Unit)? = null,
     private val seekNative: (YlFfmpegSession, Long) -> Boolean = { native, target -> native.seekTo(target) },
+    private val networkBytes: YlNetworkByteCounter? = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null,
     private val surfaceForOutput: (YlVideoOutput) -> Surface = { it.borrowSurface() },
 ) : YlPlaybackEngineAdapter {
     private val softwareServices by lazy { softwareServicesOverride ?: YlSoftwareDecodeServices.production(context) }
@@ -73,10 +74,17 @@ internal class YlNativeFallbackEngine(
 
     override suspend fun prepare() = withContext(worker) {
         preparedAtMs = SystemClock.elapsedRealtime()
-        val byteSource = YlNativeByteSourceFactory.create(context, source, options) { index, delay ->
+        val byteSource = YlNativeByteSourceFactory.create(context, source, options, networkBytes) { index, delay ->
             emit(YlEngineEvent.Retry(index.toLong(), delay, SystemClock.elapsedRealtime()))
         }
-        val opened = YlFfmpegSession.open(byteSource)
+        val openingTraffic = events.launch {
+            while (isActive && !closed) {
+                callback?.invoke(identity, YlEngineEvent.Tick(emptyTimeline(),
+                    AndroidMetricsMessage(networkBytesReceived = networkBytes?.bytesReceived)))
+                delay(1000)
+            }
+        }
+        val opened = try { YlFfmpegSession.open(byteSource) } finally { openingTraffic.cancel() }
         session = opened
         val media = opened.mediaInfo
         video = selectVideo(media.streams)
@@ -434,6 +442,7 @@ internal class YlNativeFallbackEngine(
         requireSession().mediaInfo.seekable, source.intent == AndroidStreamIntent.LIVE,
         isAtLiveEdge = source.intent == AndroidStreamIntent.LIVE)
     private fun metrics() = AndroidMetricsMessage(
+        networkBytesReceived = networkBytes?.bytesReceived,
         loadToReadyMs = readyAtMs.takeIf { it > 0 }?.minus(preparedAtMs),
         loadToFirstFrameMs = firstFrameAtMs.takeIf { it > 0 }?.minus(preparedAtMs),
     )

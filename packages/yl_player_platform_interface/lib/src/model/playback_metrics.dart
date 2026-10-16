@@ -17,6 +17,7 @@ final class YlPlaybackMetrics {
     this.liveOffset,
     this.reconnectCount,
     this.mediaClockPosition,
+    this.networkBytesReceived,
   });
 
   final Duration? loadToReady;
@@ -47,6 +48,12 @@ final class YlPlaybackMetrics {
   /// as a seek target. Null means the backend has no observation.
   final Duration? mediaClockPosition;
 
+  /// Actual received network bytes for this load, including retries. Null
+  /// means no observation; zero means observed with no bytes received yet.
+  /// This is not media bitrate or buffered bytes. Protocol overhead coverage
+  /// and observation cadence depend on the backend (AVPlayer uses access logs).
+  final int? networkBytesReceived;
+
   /// Omitted fields are preserved; explicit null clears nullable fields.
   YlPlaybackMetrics copyWith({
     Object? loadToReady = _absent,
@@ -61,6 +68,7 @@ final class YlPlaybackMetrics {
     Object? liveOffset = _absent,
     Object? reconnectCount = _absent,
     Object? mediaClockPosition = _absent,
+    Object? networkBytesReceived = _absent,
   }) => YlPlaybackMetrics(
     loadToReady: identical(loadToReady, _absent)
         ? this.loadToReady
@@ -95,6 +103,9 @@ final class YlPlaybackMetrics {
     mediaClockPosition: identical(mediaClockPosition, _absent)
         ? this.mediaClockPosition
         : ylNullableValue<Duration>(mediaClockPosition),
+    networkBytesReceived: identical(networkBytesReceived, _absent)
+        ? this.networkBytesReceived
+        : ylNullableValue<int>(networkBytesReceived),
     reconnectCount: identical(reconnectCount, _absent)
         ? this.reconnectCount
         : ylNullableValue<int>(reconnectCount),
@@ -116,7 +127,8 @@ final class YlPlaybackMetrics {
         managedBufferedBytes == other.managedBufferedBytes &&
         liveOffset == other.liveOffset &&
         reconnectCount == other.reconnectCount &&
-        mediaClockPosition == other.mediaClockPosition,
+        mediaClockPosition == other.mediaClockPosition &&
+        networkBytesReceived == other.networkBytesReceived,
   );
 
   @override
@@ -133,9 +145,10 @@ final class YlPlaybackMetrics {
     liveOffset,
     reconnectCount,
     mediaClockPosition,
+    networkBytesReceived,
   ]);
 
   @override
   String toString() =>
-      'YlPlaybackMetrics(loadToReady: $loadToReady, loadToFirstFrame: $loadToFirstFrame, rebufferCount: $rebufferCount, rebufferDuration: $rebufferDuration, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDuration: $managedBufferedDuration, managedBufferedBytes: $managedBufferedBytes, liveOffset: $liveOffset, reconnectCount: $reconnectCount, mediaClockPosition: $mediaClockPosition)';
+      'YlPlaybackMetrics(loadToReady: $loadToReady, loadToFirstFrame: $loadToFirstFrame, rebufferCount: $rebufferCount, rebufferDuration: $rebufferDuration, droppedVideoFrames: $droppedVideoFrames, audioUnderruns: $audioUnderruns, estimatedBitrate: $estimatedBitrate, managedBufferedDuration: $managedBufferedDuration, managedBufferedBytes: $managedBufferedBytes, liveOffset: $liveOffset, reconnectCount: $reconnectCount, mediaClockPosition: $mediaClockPosition, networkBytesReceived: $networkBytesReceived)';
 }

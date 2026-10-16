@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'network_traffic.dart';
 import 'drm/license_client.dart';
 import 'subtitles/text_subtitle_runtime.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,12 @@ final class YlPlayerController implements Listenable {
   YlPlayerController._(this._backend, this._textSubtitles)
     : _state = _backend.state,
       _backendRevision = _backend.state.revision,
-      _texture = ValueNotifier(_backend.textureId.value);
+      _texture = ValueNotifier(_backend.textureId.value),
+      _networkTraffic = NetworkTrafficSampler(
+        _backend is YlNetworkTrafficPlatformPlayer
+            ? (_backend as YlNetworkTrafficPlatformPlayer).networkBytesReceived
+            : const Stream<int?>.empty(),
+      );
 
   /// Creates a player with one subtitle owner.
   ///
@@ -131,6 +137,15 @@ final class YlPlayerController implements Listenable {
     int viewId,
   ) => (_backend as YlPlatformProtectedVideoSurfaceProvider)
       .detachProtectedView(surface, viewId);
+
+  final NetworkTrafficSampler _networkTraffic;
+
+  /// Actual download bytes per second for the newest requested load, including
+  /// its opening phase before playback is committed. Null means unavailable;
+  /// zero means an observed idle window. Sampling runs only with subscribers.
+  /// This does not measure upload or estimate rate from media bitrate.
+  /// Native observation cadence may be coarser (for example AVPlayer logs).
+  Stream<int?> get downloadBytesPerSecond => _networkTraffic.rates;
 
   final YlPlatformPlayer _backend;
   final TextSubtitleRuntime? _textSubtitles;
@@ -556,6 +571,7 @@ final class YlPlayerController implements Listenable {
     }
     _licenseClient.close();
     _disposed = true;
+    await _networkTraffic.dispose();
     _cancelLoad(YlFailureCodes.playerDisposed);
     final presentationChanged = isCurrentFramePresented;
     _milestones?.fail(_exception(YlFailureCodes.playerDisposed));

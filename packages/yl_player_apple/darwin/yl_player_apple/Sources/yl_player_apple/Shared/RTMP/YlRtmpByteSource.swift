@@ -31,6 +31,7 @@ final class YlRtmpByteSource: YlByteSource {
 
   init(recipe: YlRtmpRequestRecipe, setupMs: Int = 10000, inactivityMs: Int = 15000) {
     self.recipe = recipe
+    recipe.bufferScope.recordNetworkBytes(0)
     setupNanos = UInt64(max(1,setupMs)) * 1_000_000
     inactivityNanos = UInt64(max(1,inactivityMs)) * 1_000_000
     remaining = inactivityNanos
@@ -205,6 +206,7 @@ final class YlRtmpByteSource: YlByteSource {
     connection!.receive(minimumIncompleteLength: 1, maximumLength: count) { [weak self] data, _, eof, error in
       guard let self else { return }; self.condition.lock()
       if self.cancelled || self.failure != nil { self.ioFinished = true; self.condition.broadcast(); self.condition.unlock(); return }
+      if let data { self.recipe.bufferScope.recordNetworkBytes(data.count) }
       self.ioBytes = data
       if (error != nil || (eof && (data?.isEmpty ?? true))) && self.failure == nil && !self.cancelled {
         self.failure = self.transportErrorLocked()

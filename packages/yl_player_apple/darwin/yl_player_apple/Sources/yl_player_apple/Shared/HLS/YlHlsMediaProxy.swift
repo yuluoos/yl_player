@@ -43,6 +43,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   private let accessToken = UUID().uuidString.lowercased()
   private var session: URLSession!
   private var connections: [ObjectIdentifier: NWConnection] = [:]
+  private let trafficScope: YlManagedBufferScope?
   private let credentialContext: YlHlsCredentialContext
   private var taskRecords: [Int: TaskRecord] = [:]
   private var connectionTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
@@ -56,10 +57,12 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     configuration: YlNetworkConfiguration,
     credentialContext: YlHlsCredentialContext = YlHlsCredentialContext(),
     opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil,
+    trafficScope: YlManagedBufferScope? = nil,
     sessionFactory: (URLSessionConfiguration, URLSessionDelegate, OperationQueue) -> URLSession = {
       URLSession(configuration: $0, delegate: $1, delegateQueue: $2)
     }
   ) throws {
+    self.trafficScope = trafficScope
     self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
     headerPolicy = YlHlsHeaderPolicy(originURL: originURL, headers: headers, credentials: credentials)
@@ -393,6 +396,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   ) {
     guard let record = lock.withLock({ taskRecords[dataTask.taskIdentifier] }),
           record.method != "HEAD" else { return }
+    trafficScope?.recordNetworkBytes(data.count)
     let payload: Data
     if record.usesChunkedTransfer {
       var chunk = Data(String(data.count, radix: 16).utf8)

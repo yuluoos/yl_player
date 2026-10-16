@@ -1622,7 +1622,8 @@ data class AndroidMetricsMessage (
   val managedBufferedBytes: Long? = null,
   val liveOffsetMs: Long? = null,
   val reconnectCount: Long? = null,
-  val mediaClockPositionMs: Long? = null
+  val mediaClockPositionMs: Long? = null,
+  val networkBytesReceived: Long? = null
 )
  {
   companion object {
@@ -1639,7 +1640,8 @@ data class AndroidMetricsMessage (
       val liveOffsetMs = pigeonVar_list[9] as Long?
       val reconnectCount = pigeonVar_list[10] as Long?
       val mediaClockPositionMs = pigeonVar_list[11] as Long?
-      return AndroidMetricsMessage(loadToReadyMs, loadToFirstFrameMs, rebufferCount, rebufferDurationMs, droppedVideoFrames, audioUnderruns, estimatedBitrate, managedBufferedDurationMs, managedBufferedBytes, liveOffsetMs, reconnectCount, mediaClockPositionMs)
+      val networkBytesReceived = pigeonVar_list[12] as Long?
+      return AndroidMetricsMessage(loadToReadyMs, loadToFirstFrameMs, rebufferCount, rebufferDurationMs, droppedVideoFrames, audioUnderruns, estimatedBitrate, managedBufferedDurationMs, managedBufferedBytes, liveOffsetMs, reconnectCount, mediaClockPositionMs, networkBytesReceived)
     }
   }
   fun toList(): List<Any?> {
@@ -1656,6 +1658,7 @@ data class AndroidMetricsMessage (
       liveOffsetMs,
       reconnectCount,
       mediaClockPositionMs,
+      networkBytesReceived,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -1666,7 +1669,7 @@ data class AndroidMetricsMessage (
       return true
     }
     val other = other as AndroidMetricsMessage
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadToReadyMs, other.loadToReadyMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadToFirstFrameMs, other.loadToFirstFrameMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferCount, other.rebufferCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferDurationMs, other.rebufferDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.droppedVideoFrames, other.droppedVideoFrames) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioUnderruns, other.audioUnderruns) && YlPlayerAndroidPigeonUtils.deepEquals(this.estimatedBitrate, other.estimatedBitrate) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedDurationMs, other.managedBufferedDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedBytes, other.managedBufferedBytes) && YlPlayerAndroidPigeonUtils.deepEquals(this.liveOffsetMs, other.liveOffsetMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.reconnectCount, other.reconnectCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.mediaClockPositionMs, other.mediaClockPositionMs)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadToReadyMs, other.loadToReadyMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadToFirstFrameMs, other.loadToFirstFrameMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferCount, other.rebufferCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferDurationMs, other.rebufferDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.droppedVideoFrames, other.droppedVideoFrames) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioUnderruns, other.audioUnderruns) && YlPlayerAndroidPigeonUtils.deepEquals(this.estimatedBitrate, other.estimatedBitrate) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedDurationMs, other.managedBufferedDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedBytes, other.managedBufferedBytes) && YlPlayerAndroidPigeonUtils.deepEquals(this.liveOffsetMs, other.liveOffsetMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.reconnectCount, other.reconnectCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.mediaClockPositionMs, other.mediaClockPositionMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.networkBytesReceived, other.networkBytesReceived)
   }
 
   override fun hashCode(): Int {
@@ -1683,10 +1686,11 @@ data class AndroidMetricsMessage (
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.liveOffsetMs)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.reconnectCount)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.mediaClockPositionMs)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.networkBytesReceived)
     return result
   }
   override fun toString(): String {
-    return "AndroidMetricsMessage(loadToReadyMs=$loadToReadyMs, loadToFirstFrameMs=$loadToFirstFrameMs, rebufferCount=$rebufferCount, rebufferDurationMs=$rebufferDurationMs, droppedVideoFrames=$droppedVideoFrames, audioUnderruns=$audioUnderruns, estimatedBitrate=$estimatedBitrate, managedBufferedDurationMs=$managedBufferedDurationMs, managedBufferedBytes=$managedBufferedBytes, liveOffsetMs=$liveOffsetMs, reconnectCount=$reconnectCount, mediaClockPositionMs=$mediaClockPositionMs)"
+    return "AndroidMetricsMessage(loadToReadyMs=$loadToReadyMs, loadToFirstFrameMs=$loadToFirstFrameMs, rebufferCount=$rebufferCount, rebufferDurationMs=$rebufferDurationMs, droppedVideoFrames=$droppedVideoFrames, audioUnderruns=$audioUnderruns, estimatedBitrate=$estimatedBitrate, managedBufferedDurationMs=$managedBufferedDurationMs, managedBufferedBytes=$managedBufferedBytes, liveOffsetMs=$liveOffsetMs, reconnectCount=$reconnectCount, mediaClockPositionMs=$mediaClockPositionMs, networkBytesReceived=$networkBytesReceived)"
   }
 }
 
@@ -1946,7 +1950,9 @@ data class AndroidMetricsDeltaMessage (
   val hasReconnectCount: Boolean,
   val reconnectCount: Long? = null,
   val hasMediaClockPositionMs: Boolean,
-  val mediaClockPositionMs: Long? = null
+  val mediaClockPositionMs: Long? = null,
+  val hasNetworkBytesReceived: Boolean,
+  val networkBytesReceived: Long? = null
 )
  {
   companion object {
@@ -1975,7 +1981,9 @@ data class AndroidMetricsDeltaMessage (
       val reconnectCount = pigeonVar_list[21] as Long?
       val hasMediaClockPositionMs = pigeonVar_list[22] as Boolean
       val mediaClockPositionMs = pigeonVar_list[23] as Long?
-      return AndroidMetricsDeltaMessage(hasLoadToReadyMs, loadToReadyMs, hasLoadToFirstFrameMs, loadToFirstFrameMs, hasRebufferCount, rebufferCount, hasRebufferDurationMs, rebufferDurationMs, hasDroppedVideoFrames, droppedVideoFrames, hasAudioUnderruns, audioUnderruns, hasEstimatedBitrate, estimatedBitrate, hasManagedBufferedDurationMs, managedBufferedDurationMs, hasManagedBufferedBytes, managedBufferedBytes, hasLiveOffsetMs, liveOffsetMs, hasReconnectCount, reconnectCount, hasMediaClockPositionMs, mediaClockPositionMs)
+      val hasNetworkBytesReceived = pigeonVar_list[24] as Boolean
+      val networkBytesReceived = pigeonVar_list[25] as Long?
+      return AndroidMetricsDeltaMessage(hasLoadToReadyMs, loadToReadyMs, hasLoadToFirstFrameMs, loadToFirstFrameMs, hasRebufferCount, rebufferCount, hasRebufferDurationMs, rebufferDurationMs, hasDroppedVideoFrames, droppedVideoFrames, hasAudioUnderruns, audioUnderruns, hasEstimatedBitrate, estimatedBitrate, hasManagedBufferedDurationMs, managedBufferedDurationMs, hasManagedBufferedBytes, managedBufferedBytes, hasLiveOffsetMs, liveOffsetMs, hasReconnectCount, reconnectCount, hasMediaClockPositionMs, mediaClockPositionMs, hasNetworkBytesReceived, networkBytesReceived)
     }
   }
   fun toList(): List<Any?> {
@@ -2004,6 +2012,8 @@ data class AndroidMetricsDeltaMessage (
       reconnectCount,
       hasMediaClockPositionMs,
       mediaClockPositionMs,
+      hasNetworkBytesReceived,
+      networkBytesReceived,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -2014,7 +2024,7 @@ data class AndroidMetricsDeltaMessage (
       return true
     }
     val other = other as AndroidMetricsDeltaMessage
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.hasLoadToReadyMs, other.hasLoadToReadyMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadToReadyMs, other.loadToReadyMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadToFirstFrameMs, other.loadToFirstFrameMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasRebufferCount, other.hasRebufferCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferCount, other.rebufferCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasRebufferDurationMs, other.hasRebufferDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferDurationMs, other.rebufferDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasDroppedVideoFrames, other.hasDroppedVideoFrames) && YlPlayerAndroidPigeonUtils.deepEquals(this.droppedVideoFrames, other.droppedVideoFrames) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasAudioUnderruns, other.hasAudioUnderruns) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioUnderruns, other.audioUnderruns) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasEstimatedBitrate, other.hasEstimatedBitrate) && YlPlayerAndroidPigeonUtils.deepEquals(this.estimatedBitrate, other.estimatedBitrate) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedDurationMs, other.managedBufferedDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasManagedBufferedBytes, other.hasManagedBufferedBytes) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedBytes, other.managedBufferedBytes) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasLiveOffsetMs, other.hasLiveOffsetMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.liveOffsetMs, other.liveOffsetMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasReconnectCount, other.hasReconnectCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.reconnectCount, other.reconnectCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasMediaClockPositionMs, other.hasMediaClockPositionMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.mediaClockPositionMs, other.mediaClockPositionMs)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.hasLoadToReadyMs, other.hasLoadToReadyMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadToReadyMs, other.loadToReadyMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasLoadToFirstFrameMs, other.hasLoadToFirstFrameMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.loadToFirstFrameMs, other.loadToFirstFrameMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasRebufferCount, other.hasRebufferCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferCount, other.rebufferCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasRebufferDurationMs, other.hasRebufferDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.rebufferDurationMs, other.rebufferDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasDroppedVideoFrames, other.hasDroppedVideoFrames) && YlPlayerAndroidPigeonUtils.deepEquals(this.droppedVideoFrames, other.droppedVideoFrames) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasAudioUnderruns, other.hasAudioUnderruns) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioUnderruns, other.audioUnderruns) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasEstimatedBitrate, other.hasEstimatedBitrate) && YlPlayerAndroidPigeonUtils.deepEquals(this.estimatedBitrate, other.estimatedBitrate) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasManagedBufferedDurationMs, other.hasManagedBufferedDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedDurationMs, other.managedBufferedDurationMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasManagedBufferedBytes, other.hasManagedBufferedBytes) && YlPlayerAndroidPigeonUtils.deepEquals(this.managedBufferedBytes, other.managedBufferedBytes) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasLiveOffsetMs, other.hasLiveOffsetMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.liveOffsetMs, other.liveOffsetMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasReconnectCount, other.hasReconnectCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.reconnectCount, other.reconnectCount) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasMediaClockPositionMs, other.hasMediaClockPositionMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.mediaClockPositionMs, other.mediaClockPositionMs) && YlPlayerAndroidPigeonUtils.deepEquals(this.hasNetworkBytesReceived, other.hasNetworkBytesReceived) && YlPlayerAndroidPigeonUtils.deepEquals(this.networkBytesReceived, other.networkBytesReceived)
   }
 
   override fun hashCode(): Int {
@@ -2043,10 +2053,12 @@ data class AndroidMetricsDeltaMessage (
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.reconnectCount)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.hasMediaClockPositionMs)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.mediaClockPositionMs)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.hasNetworkBytesReceived)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.networkBytesReceived)
     return result
   }
   override fun toString(): String {
-    return "AndroidMetricsDeltaMessage(hasLoadToReadyMs=$hasLoadToReadyMs, loadToReadyMs=$loadToReadyMs, hasLoadToFirstFrameMs=$hasLoadToFirstFrameMs, loadToFirstFrameMs=$loadToFirstFrameMs, hasRebufferCount=$hasRebufferCount, rebufferCount=$rebufferCount, hasRebufferDurationMs=$hasRebufferDurationMs, rebufferDurationMs=$rebufferDurationMs, hasDroppedVideoFrames=$hasDroppedVideoFrames, droppedVideoFrames=$droppedVideoFrames, hasAudioUnderruns=$hasAudioUnderruns, audioUnderruns=$audioUnderruns, hasEstimatedBitrate=$hasEstimatedBitrate, estimatedBitrate=$estimatedBitrate, hasManagedBufferedDurationMs=$hasManagedBufferedDurationMs, managedBufferedDurationMs=$managedBufferedDurationMs, hasManagedBufferedBytes=$hasManagedBufferedBytes, managedBufferedBytes=$managedBufferedBytes, hasLiveOffsetMs=$hasLiveOffsetMs, liveOffsetMs=$liveOffsetMs, hasReconnectCount=$hasReconnectCount, reconnectCount=$reconnectCount, hasMediaClockPositionMs=$hasMediaClockPositionMs, mediaClockPositionMs=$mediaClockPositionMs)"
+    return "AndroidMetricsDeltaMessage(hasLoadToReadyMs=$hasLoadToReadyMs, loadToReadyMs=$loadToReadyMs, hasLoadToFirstFrameMs=$hasLoadToFirstFrameMs, loadToFirstFrameMs=$loadToFirstFrameMs, hasRebufferCount=$hasRebufferCount, rebufferCount=$rebufferCount, hasRebufferDurationMs=$hasRebufferDurationMs, rebufferDurationMs=$rebufferDurationMs, hasDroppedVideoFrames=$hasDroppedVideoFrames, droppedVideoFrames=$droppedVideoFrames, hasAudioUnderruns=$hasAudioUnderruns, audioUnderruns=$audioUnderruns, hasEstimatedBitrate=$hasEstimatedBitrate, estimatedBitrate=$estimatedBitrate, hasManagedBufferedDurationMs=$hasManagedBufferedDurationMs, managedBufferedDurationMs=$managedBufferedDurationMs, hasManagedBufferedBytes=$hasManagedBufferedBytes, managedBufferedBytes=$managedBufferedBytes, hasLiveOffsetMs=$hasLiveOffsetMs, liveOffsetMs=$liveOffsetMs, hasReconnectCount=$hasReconnectCount, reconnectCount=$reconnectCount, hasMediaClockPositionMs=$hasMediaClockPositionMs, mediaClockPositionMs=$mediaClockPositionMs, hasNetworkBytesReceived=$hasNetworkBytesReceived, networkBytesReceived=$networkBytesReceived)"
   }
 }
 
@@ -3783,6 +3795,25 @@ class AndroidPlayerFlutterApi(private val binaryMessenger: BinaryMessenger, priv
     /** The codec used by AndroidPlayerFlutterApi. */
     val codec: MessageCodec<Any?> by lazy {
       YlPlayerAndroidPigeonCodec()
+    }
+  }
+  suspend fun onNetworkBytesReceived(loadRequestIdArg: String, bytesArg: Long?)
+{
+    val separatedMessageChannelSuffix = if (messageChannelSuffix.isNotEmpty()) ".$messageChannelSuffix" else ""
+    return suspendCancellableCoroutine { continuation ->
+      val channelName = "dev.flutter.pigeon.yl_player_android.AndroidPlayerFlutterApi.onNetworkBytesReceived$separatedMessageChannelSuffix"
+      val channel = BasicMessageChannel<Any?>(binaryMessenger, channelName, codec)
+      channel.send(listOf(loadRequestIdArg, bytesArg)) {
+        if (it is List<*>) {
+          if (it.size > 1) {
+            continuation.resumeWithException(FlutterError(it[0] as String, it[1] as String, it[2] as String?))
+          } else {
+            continuation.resume(Unit)
+          }
+        } else {
+          continuation.resumeWithException(YlPlayerAndroidPigeonUtils.createConnectionError(channelName))
+        } 
+      }
     }
   }
   suspend fun onState(stateArg: AndroidStateMessage)

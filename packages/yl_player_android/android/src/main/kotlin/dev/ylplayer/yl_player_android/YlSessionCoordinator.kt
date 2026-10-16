@@ -501,8 +501,25 @@ internal class YlSessionCoordinator(
         override fun restorationFailed() { releaseAudio(); resourcesFailed = true; transacting = false; reducer.fail(YlFailureKind.RESOURCE_EXHAUSTED) }
     }
 
+    private var trafficIdentity: YlSessionIdentity? = null
+    private var trafficEmittedAtMs = Long.MIN_VALUE
+
     private fun onEngineEvent(identity: YlSessionIdentity, event: YlEngineEvent) {
         if (closed) return
+        // Candidate traffic is observable without committing its playback state.
+        val measured = when (event) {
+            is YlEngineEvent.Snapshot -> event.value.metrics
+            is YlEngineEvent.Tick -> event.metrics
+            else -> null
+        }
+        if (measured != null && (pendingIdentity == identity ||
+                pendingIdentity == null && active?.identity == identity)) {
+            val now = System.nanoTime() / 1_000_000
+            if (trafficIdentity != identity || now - trafficEmittedAtMs >= 1000) {
+                trafficIdentity = identity; trafficEmittedAtMs = now
+                eventSink?.onNetworkBytesReceived(identity.loadRequestId, measured.networkBytesReceived)
+            }
+        }
         if (pendingIdentity == identity) {
             when (event) {
                 is YlEngineEvent.Snapshot -> candidateSnapshot = event.value

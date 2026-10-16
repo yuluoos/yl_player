@@ -36,7 +36,7 @@ void main() {
           ),
         ),
       );
-      expect(AndroidCodec.schemaMajor, 6);
+      expect(AndroidCodec.schemaMajor, 7);
     },
   );
 }

@@ -173,6 +173,7 @@ void main() {
       hasLiveOffsetMs: true,
       liveOffsetMs: null,
       metrics: AndroidMetricsDeltaMessage(
+        hasNetworkBytesReceived: false,
         hasMediaClockPositionMs: false,
         hasLoadToReadyMs: false,
         loadToReadyMs: null,

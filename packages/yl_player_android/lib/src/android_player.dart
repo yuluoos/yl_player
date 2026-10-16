@@ -14,6 +14,7 @@ import 'pigeon/yl_player_android.g.dart';
 final class AndroidPlayer
     implements
         YlPlatformPlayer,
+        YlNetworkTrafficPlatformPlayer,
         YlLivePlaybackPlatformPlayer,
         YlVideoTrackSelectionPlatformPlayer,
         YlPlatformDrmSourceSupport,
@@ -45,6 +46,7 @@ final class AndroidPlayer
         }
       },
       onDelta: _receiveDelta,
+      onNetworkBytes: _receiveNetworkBytes,
       onAcceptedState: _states.add,
       onEvent: _receiveEvent,
       onInvalid: () =>
@@ -212,6 +214,35 @@ final class AndroidPlayer
   @override
   Stream<YlPlayerEvent> get events => _events.stream;
 
+  final _networkBytes = StreamController<int?>.broadcast();
+  String? _trafficRequestId;
+  int? _latestNetworkBytes;
+  late final Stream<int?> _networkBytesStream = Stream<int?>.multi((sink) {
+    sink.add(_latestNetworkBytes);
+    final subscription = _networkBytes.stream.listen(
+      sink.add,
+      onError: sink.addError,
+      onDone: sink.close,
+    );
+    sink.onCancel = subscription.cancel;
+  }, isBroadcast: true);
+  @override
+  Stream<int?> get networkBytesReceived => _networkBytesStream;
+
+  void _receiveNetworkBytes(String requestId, int? bytes) {
+    if (_disposed || _terminal != null || requestId != _trafficRequestId) {
+      return;
+    }
+    _latestNetworkBytes = bytes;
+    _networkBytes.add(bytes);
+  }
+
+  void _resetTraffic([String? requestId]) {
+    _trafficRequestId = requestId;
+    _latestNetworkBytes = null;
+    if (!_networkBytes.isClosed) _networkBytes.add(null);
+  }
+
   final _liveModes = LiveModeBarrier();
   int _liveTransports = 0;
 
@@ -342,6 +373,7 @@ final class AndroidPlayer
       _drm?.begin(request.loadRequestId, source);
       final pending = _PendingLoad(request.loadRequestId);
       _pending = pending;
+      _resetTraffic(request.loadRequestId);
       // The public barrier is installed before assessment begins.
       unawaited(_load(pending, request));
       return pending.completion.future;
@@ -447,6 +479,10 @@ final class AndroidPlayer
         _currentRequestId = null;
       }
       _callbacks.acceptState(next, sequence);
+      if ((next.failure != null && requestId == _trafficRequestId) ||
+          (session == null && _pending == null)) {
+        _resetTraffic();
+      }
       // A retained session may fail while an unrelated candidate is assessed
       // or paired. Only a failure attributed to this candidate cancels it.
       if (next.failure case final failure?) {
@@ -589,6 +625,7 @@ final class AndroidPlayer
     if (!_callbacks.acceptEvent(event, sequence)) return;
     _events.add(event);
     if (event is YlPlaybackFailedEvent) {
+      if (_trafficRequestId == _currentRequestId) _resetTraffic();
       if (event.failure.scope == YlFailureScope.player) {
         _terminate(YlPlayerException(event.failure));
       } else if (_pending?.reply == event.sessionId) {
@@ -601,6 +638,7 @@ final class AndroidPlayer
     final pending = _pending;
     if (pending == null) return;
     _pending = null;
+    if (_trafficRequestId == pending.requestId) _resetTraffic();
     _drm?.cancel(pending.requestId);
     pending.deadline?.cancel();
     pending.publication?.cancel();
@@ -794,6 +832,7 @@ final class AndroidPlayer
   Future<void> stop() async {
     _checkAlive();
     final captured = state.sessionId;
+    _resetTraffic();
     _liveModes.cancelAll(_cancelled);
     _cancelLoad(_cancelled);
     _drm?.stop();
@@ -837,6 +876,7 @@ final class AndroidPlayer
   Future<void> dispose() {
     if (_disposeFuture case final result?) return result;
     _disposed = true;
+    _resetTraffic();
     _drm?.close();
     _protectedFrame = null;
     _callbacks.closed = true;
@@ -865,6 +905,7 @@ final class AndroidPlayer
     // Closing paused broadcast streams may wait for outside observers forever.
     unawaited(_states.close());
     unawaited(_events.close());
+    unawaited(_networkBytes.close());
     _texture.value = null;
     _texture.dispose();
   }

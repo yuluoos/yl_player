@@ -40,7 +40,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
   func create(request: AppleCreateRequest) throws -> AppleCreateReply {
     do {
       guard !detached else { throw NativePlayerError(category: "resource", code: "player.detached", message: "Plugin detached.") }
-      guard request.schemaMajor == 6 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
+      guard request.schemaMajor == 7 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
       guard request.options.positionUpdateIntervalMs > 0,
         request.options.positionUpdateIntervalMs <= Int64(Int32.max) else { throw YlAppleFailureMapper.invalid() }
       guard nextPlayerId < Int64.max else { throw NativePlayerError(category: "resource", code: "resource.exhausted", message: "Player identifiers exhausted.") }
@@ -93,7 +93,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       players[suffix] = host
       installHost(suffix, host)
       if backgrounded || (managed && audioInterrupted) { host.suspend() }
-      return AppleCreateReply(schemaMajor: 6, spiMajor: 2, channelSuffix: suffix,
+      return AppleCreateReply(schemaMajor: 7, spiMajor: 2, channelSuffix: suffix,
         textureId: services.textureOutput.textureId,
         platform: services.platform == .ios ? .ios : .macos,
         implementationName: "yl_player_apple", implementationVersion: "0.2.0-dev.2",

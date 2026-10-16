@@ -38,6 +38,7 @@ internal object YlNativeByteSourceFactory {
         context: Context,
         source: AndroidSourceMessage,
         options: AndroidLoadOptionsMessage,
+        networkBytes: YlNetworkByteCounter? = null,
         onRetry: (Int, Long) -> Unit,
     ): YlNativeByteSource {
         if (source.kind == AndroidSourceKind.FILE) {
@@ -58,7 +59,7 @@ internal object YlNativeByteSourceFactory {
         val network = source.networkPolicy?.takeIf { it.kind == AndroidNetworkPolicyKind.MANAGED }?.let {
             createMedia3Configuration(source, options, defaultNativePlayerOptions()).network
         }
-        val http = YlManagedHttpClient(credentials, network, onRetry = onRetry)
+        val http = YlManagedHttpClient(credentials, network, onRetry = onRetry, networkBytes = networkBytes)
         return if (source.format == AndroidMediaFormat.HLS || origin.encodedPath.lowercase().endsWith(".m3u8")) {
             YlHlsByteSource(source.locator, http, credentials)
         } else {

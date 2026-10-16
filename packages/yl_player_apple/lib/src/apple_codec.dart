@@ -5,7 +5,7 @@ import 'pigeon/yl_player_apple.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AppleCodec {
-  static const schemaMajor = 6;
+  static const schemaMajor = 7;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -251,6 +251,7 @@ abstract final class AppleCodec {
       droppedVideoFrames: value.droppedVideoFrames,
       audioUnderruns: value.audioUnderruns,
       estimatedBitrate: value.estimatedBitrate,
+      networkBytesReceived: value.networkBytesReceived,
       managedBufferedDuration: _time(value.managedBufferedDurationMs),
       managedBufferedBytes: value.managedBufferedBytes,
       liveOffset: _time(value.liveOffsetMs, liveOffset: true),
@@ -389,6 +390,9 @@ abstract final class AppleCodec {
               audioUnderruns: changed.hasAudioUnderruns
                   ? changed.audioUnderruns
                   : old.audioUnderruns,
+              networkBytesReceived: changed.hasNetworkBytesReceived
+                  ? changed.networkBytesReceived
+                  : old.networkBytesReceived,
               estimatedBitrate: changed.hasEstimatedBitrate
                   ? changed.estimatedBitrate
                   : old.estimatedBitrate,

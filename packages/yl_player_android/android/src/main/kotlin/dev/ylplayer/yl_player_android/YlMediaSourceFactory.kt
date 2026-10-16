@@ -33,9 +33,9 @@ internal fun requiresHlsCredentialAncestry(
 
 /** One factory and provenance graph per source, retained through stop/restore/recovery. */
 @OptIn(UnstableApi::class)
-internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, private val drmManager: androidx.media3.exoplayer.drm.DrmSessionManager? = null, onRetry: (Int, Long) -> Unit) {
+internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: NetworkConfiguration, private val drmManager: androidx.media3.exoplayer.drm.DrmSessionManager? = null, private val networkBytes: YlNetworkByteCounter? = null, onRetry: (Int, Long) -> Unit) {
     private val routeFlvForSeek = requiresOwnedFlvSeek(source.kind, source.intent)
-    private val rtmp = if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpDataSources(source.locator) else null
+    private val rtmp = if (YlRtmpSourcePolicy.isRtmp(source)) YlRtmpDataSources(source.locator, networkBytes) else null
     private val managed = source.networkPolicy?.kind == AndroidNetworkPolicyKind.MANAGED
     private val requestHeaders = source.request?.headers.orEmpty()
     private val requestCredentials = source.request?.credentials.orEmpty()
@@ -46,7 +46,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
         credentials != null && requiresHlsCredentialAncestry(requestHeaders, requestCredentials)
     private val dashCandidates = if (managed && drmManager == null && credentials != null &&
         (source.format == AndroidMediaFormat.DASH || source.locator.toHttpUrl().encodedPath.lowercase().endsWith(".mpd"))) YlDashCandidateRegistry() else null
-    private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry,
+    private val http = credentials?.let { YlManagedHttpClient(it, if (managed) network else null, onRetry = onRetry, networkBytes = networkBytes,
         dashCandidates = dashCandidates?.let { registry -> registry::candidatesFor }) }
     private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
     private val dashGapGroups = YlDashGapGroups()

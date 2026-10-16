@@ -448,7 +448,7 @@ final class YlMacosHostConnectionTests: XCTestCase {
 
   private func create(_ registrar: ConnectionRegistrar) async throws -> AppleCreateReply {
     let values = try await registrar.transport.call("ApplePlayerFactoryHostApi.create", arguments: [
-      AppleCreateRequest(schemaMajor: 6, options: .init(decoderPolicy: .systemDefault,
+      AppleCreateRequest(schemaMajor: 7, options: .init(decoderPolicy: .systemDefault,
         audioPolicy: .appManaged, positionUpdateIntervalMs: 250))])
     return try XCTUnwrap(values.first as? AppleCreateReply)
   }
