@@ -1,0 +1,14 @@
+.F.............
+======================================================================
+FAIL: test_android_estimated_clock_cannot_claim_consumption (test_bound_av.BoundAVTest.test_android_estimated_clock_cannot_claim_consumption)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_av.py", line 85, in test_android_estimated_clock_cannot_claim_consumption
+    self.assertFalse(self.result()['scopeAcceptance'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.645s
+
+FAILED (failures=1)

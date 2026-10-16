@@ -1,0 +1,25 @@
+.E
+======================================================================
+ERROR: test_missing_or_malformed_native_records_fail_closed (test_bound_collectors.CollectorTest.test_missing_or_malformed_native_records_fail_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_collectors.py", line 8, in test_missing_or_malformed_native_records_fail_closed
+    rows,valid=parse_rows(raw)
+               ~~~~~~~~~~^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/run_bound_android.py", line 20, in parse_rows
+    return [json.loads(line) for line in raw.splitlines()], True
+            ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/__init__.py", line 352, in loads
+    return _default_decoder.decode(s)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 345, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/json/decoder.py", line 363, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+FAILED (errors=1)

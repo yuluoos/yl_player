@@ -1,0 +1,89 @@
+{
+  "base": "7a77ede74469550041eab8a249e21c95b5f1bbbe",
+  "scopes": {
+    "macos-final": {
+      "artifactsUnchanged": true,
+      "errors": [],
+      "exportExit": 0,
+      "fullAcceptance": false,
+      "nativeExit": 0,
+      "negativeIdentity": false,
+      "requiredRows": 6,
+      "scopeAcceptance": true,
+      "summaryExit": 0,
+      "supportedRows": 6
+    },
+    "android-final": {
+      "artifactsUnchanged": true,
+      "errors": [
+        "lifecycle_unverified"
+      ],
+      "extractExit": 0,
+      "extractionValid": true,
+      "fullAcceptance": false,
+      "nativeExit": 0,
+      "nativePassed": false,
+      "negativeIdentity": false,
+      "requiredRows": 6,
+      "scopeAcceptance": false,
+      "supportedRows": 5
+    },
+    "ios-final": {
+      "artifactsUnchanged": true,
+      "errors": [
+        "output_release_unverified"
+      ],
+      "exportExit": 0,
+      "fullAcceptance": false,
+      "nativeExit": 65,
+      "negativeIdentity": false,
+      "requiredRows": 6,
+      "scopeAcceptance": false,
+      "summaryExit": 0,
+      "supportedRows": 0
+    },
+    "macos-negative": {
+      "artifactsUnchanged": true,
+      "errors": [
+        "incomplete_rows"
+      ],
+      "exportExit": 0,
+      "fullAcceptance": false,
+      "nativeExit": 65,
+      "negativeIdentity": true,
+      "requiredRows": 6,
+      "scopeAcceptance": false,
+      "summaryExit": 0,
+      "supportedRows": 0
+    },
+    "android-final-negative": {
+      "artifactsUnchanged": true,
+      "errors": [
+        "incomplete_rows"
+      ],
+      "extractExit": 0,
+      "extractionValid": false,
+      "fullAcceptance": false,
+      "nativeExit": 0,
+      "nativePassed": false,
+      "negativeIdentity": true,
+      "requiredRows": 6,
+      "scopeAcceptance": false,
+      "supportedRows": 0
+    }
+  },
+  "pythonTests": 44,
+  "androidUnit": {
+    "total": 534,
+    "passed": 531,
+    "skipped": 3,
+    "failed": 0
+  },
+  "androidNativeRegression": 22,
+  "fixtureHelper": {
+    "passed": 40,
+    "preexistingErrors": 1
+  },
+  "fullP03Acceptance": false,
+  "finalArtifactBytesRechecked": true
+}

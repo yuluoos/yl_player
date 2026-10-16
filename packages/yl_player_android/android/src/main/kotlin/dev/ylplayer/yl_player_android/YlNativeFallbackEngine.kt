@@ -21,6 +21,9 @@ internal class YlNativeFallbackEngine(
     // Internal observation seams sample real output; production has no observer.
     private val observePcm: ((YlNativePcmChunk) -> Unit)? = null,
     private val observeVideo: ((Long) -> Unit)? = null,
+    // Fresh AudioTrack consumption only; excludes both native estimate and wall fallback.
+    // Test observers must return promptly and must not retain production buffers.
+    private val observeAudioClock: ((Long) -> Unit)? = null,
     private val seekNative: (YlFfmpegSession, Long) -> Boolean = { native, target -> native.seekTo(target) },
     private val surfaceForOutput: (YlVideoOutput) -> Surface = { it.borrowSurface() },
 ) : YlPlaybackEngineAdapter {
@@ -62,6 +65,8 @@ internal class YlNativeFallbackEngine(
     private var selectedAudioIndex = -1
     private var playbackGeneration = 0L
     private var initialPositionApplied = false
+    /** Read after awaited disposal; reports ownership, not an acoustic-output claim. */
+    internal val audioOutputClosed: Boolean get() = audioOutput == null
     override val needsExclusiveLease: Boolean get() = video != null
 
     override fun registerCallback(callback: (YlSessionIdentity, YlEngineEvent) -> Unit) { this.callback = callback }
@@ -415,9 +420,15 @@ internal class YlNativeFallbackEngine(
         return result
     }
 
-    private fun currentPositionUs(): Long = audioOutput?.positionUs() ?: if (playing && monotonicAnchorNs != 0L) {
-        positionAnchorUs + ((System.nanoTime() - monotonicAnchorNs) / 1000 * speed).toLong()
-    } else positionUs
+    private fun currentPositionUs(): Long {
+        audioOutput?.positionUs()?.let { audioPosition ->
+            if (observeAudioClock != null) audioOutput?.consumedPositionUs()?.let(observeAudioClock)
+            return audioPosition
+        }
+        return if (playing && monotonicAnchorNs != 0L) {
+            positionAnchorUs + ((System.nanoTime() - monotonicAnchorNs) / 1000 * speed).toLong()
+        } else positionUs
+    }
     private fun timeline() = AndroidTimelineMessage(currentPositionUs().coerceAtLeast(0) / 1000,
         requireSession().mediaInfo.durationUs.takeIf { it >= 0 }?.div(1000), currentPositionUs().coerceAtLeast(0) / 1000,
         requireSession().mediaInfo.seekable, source.intent == AndroidStreamIntent.LIVE,

@@ -1,0 +1,96 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 6,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 6,
+  "finishTime" : 1792127410.075,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1792127400.948,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+      "testName" : "testAC3SurroundActualPixelsSixChannelPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+      "testName" : "testDTSActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 3,
+      "testIdentifierString" : "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+      "testName" : "testEAC3ActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 4,
+      "testIdentifierString" : "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+      "testName" : "testFLACActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 5,
+      "testIdentifierString" : "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+      "testName" : "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 6,
+      "testIdentifierString" : "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+      "testName" : "testProgramStreamActualPixelsPCMAndBidirectionalSeek()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "6 runs of 6 tests failed with failed: caught error: \"Error Domain=P03BoundAV Code=1 \"manifest identity mismatch\" UserInfo={NSLocalizedDescription=manifest identity mismatch}\""
+    }
+  ],
+  "totalTestCount" : 6
+}

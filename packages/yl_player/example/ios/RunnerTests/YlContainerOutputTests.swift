@@ -1,6 +1,8 @@
 @testable import yl_player_apple
 import AVFoundation
 import CoreImage
+import CryptoKit
+import MachO
 import XCTest
 import YlFFmpegBridge
 
@@ -8,6 +10,7 @@ private final class ContainerTexture: YlTextureOutput {
   let textureId: Int64 = 993
   var rgb: [Int] = []
   var history: [[Int]] = []
+  var onImage: (([Int]) -> Void)?
   // Fixture references are encoded RGB values. Do not transform them through
   // this host's display ICC profile; physical display colour is separate proof.
   private let context = CIContext(options: [.cacheIntermediates: false,
@@ -19,7 +22,7 @@ private final class ContainerTexture: YlTextureOutput {
     context.render(image, toBitmap: &rgba, rowBytes: 4,
       bounds: CGRect(x: image.extent.midX, y: image.extent.midY, width: 1, height: 1),
       format: .RGBA8, colorSpace: nil)
-    rgb = rgba.prefix(3).map(Int.init); history.append(rgb)
+    rgb = rgba.prefix(3).map(Int.init); history.append(rgb); onImage?(rgb)
   }
   func resize(width: Int, height: Int) {}
   func clear() { rgb = [] }
@@ -40,9 +43,12 @@ private final class ContainerPCM: YlAudioPacketConverting {
   var reservesOutputBuffers: Bool { converter.reservesOutputBuffers }
   private let lock = NSLock()
   private var blocks = [Block]()
+  private var lastGeneration: UInt64 = 0
+  var generation: UInt64 { lock.withLock { lastGeneration } }
   func configure(stream: YlAudioStreamConfiguration) throws { try converter.configure(stream: stream) }
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate { converter.estimateOutput(for: packet) }
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+    lock.withLock { lastGeneration = packet.generation }
     let output = try converter.convert(packet: packet)
     if let output, let pcm = output.payload as? AVAudioPCMBuffer, let data = pcm.floatChannelData {
       let channels = Int(pcm.format.channelCount), frames = Int(pcm.frameLength)
@@ -81,11 +87,21 @@ private final class ContainerPCM: YlAudioPacketConverting {
 }
 private final class ContainerAudioFactory: YlAudioRendererMaking {
   private(set) var pcm = ContainerPCM()
+  private(set) var renderer: YlAudioRenderer?
+  func clock() -> Int64? {
+    guard let renderer else { return nil }
+    switch renderer.clockObservation(expectedGeneration: pcm.generation) {
+    case .running(let sample): return sample.positionUs
+    case .ended(let position, _): return position
+    default: return nil
+    }
+  }
   func makeRenderer(bufferBudget: YlFallbackBufferBudget) -> YlAudioRenderer {
     // Real platform output and consumed audio clock; record the decoded PCM
     // without replacing the device output with a fabricated completion clock.
     pcm = ContainerPCM()
-    return YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+    let created = YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+    renderer = created; return created
   }
 }
 
@@ -150,6 +166,8 @@ private struct ContainerReference: Decodable {
 @MainActor final class YlContainerOutputTests: XCTestCase {
   private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false) async throws {
     let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
+    let bound = try ContainerBoundAV(name: name, media: url)
+    defer { bound?.attach(to: self) }
     let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: format), requireHardwareProbe: false)
     if channels == 6 {
       let stream = try XCTUnwrap(prepared.audioStreams.first)
@@ -157,6 +175,7 @@ private struct ContainerReference: Decodable {
       XCTAssertEqual(stream.channel_layout_mask, 0x60f, "AC3 encoded speaker layout must survive discovery")
     }
     let texture = ContainerTexture(), audio = ContainerAudioFactory()
+    texture.onImage = { bound?.image($0, clock: audio.clock()) }
     var display: ContainerDisplay?, state: YlNativeState?, errors = [NativePlayerError]()
     var initial: YlFallbackBackend?
     do {
@@ -170,15 +189,16 @@ private struct ContainerReference: Decodable {
       try initial?.activate()
     } catch {
       initial?.dispose()
+      bound?.disposed = true; bound?.failureCode = (error as? NativePlayerError)?.code ?? "test.activation"
       #if targetEnvironment(simulator)
-      if allowSimulatorHardwareSkip && (error as? NativePlayerError)?.code == "decoder.video_hardware_unavailable" {
+      if allowSimulatorHardwareSkip && bound == nil && (error as? NativePlayerError)?.code == "decoder.video_hardware_unavailable" {
         throw XCTSkip("iOS Simulator has no hardware decoder for this fixture; no output acceptance.")
       }
       #endif
       throw error
     }
     let backend = try XCTUnwrap(initial)
-    defer { backend.dispose() }
+    defer { backend.dispose(); bound?.disposed = true; bound?.releasedAudioBytes = audio.renderer?.scheduledBytes ?? 0 }
     func advance(until condition: () -> Bool) async throws {
       let deadline = ProcessInfo.processInfo.systemUptime + 10
       while !condition() && errors.isEmpty && ProcessInfo.processInfo.systemUptime < deadline {
@@ -189,6 +209,8 @@ private struct ContainerReference: Decodable {
     }
     try backend.play()
     try await advance(until: { state?.status == "completed" })
+    bound?.completed = state?.status == "completed"
+    bound?.capture(audio.pcm.evidence, markers: [0,1,2,3])
     for expected in [[255,0,0], [0,255,0], [0,0,255], [255,255,255]] {
       XCTAssertTrue(texture.history.contains { rgb in zip(rgb, expected).allSatisfy { abs($0 - $1) < 24 } }, "Missing displayed marker \(expected), observed=\(Set(texture.history))")
     }
@@ -199,12 +221,15 @@ private struct ContainerReference: Decodable {
     for (target, rgb, tone): (Int64, [Int], Double) in [(1250,[0,255,0],660), (2250,[0,0,255],880), (0,[255,0,0],440)] {
       try backend.pause(); audio.pcm.clearEvidence(); texture.history.removeAll()
       try await Task.detached { try backend.seek(toMs: target, cancellationToken: nil) }.value
+      bound?.begin("seek-\(target)")
       try backend.play()
       try await advance(until: { (state?.positionMs ?? 0) >= target + 450 && !texture.history.isEmpty })
       XCTAssertTrue(texture.history.contains { value in zip(value,rgb).allSatisfy { abs($0 - $1) < 24 } }, "seek=\(target), observed=\(Set(texture.history))")
       audio.pcm.verifyTone(start: target * 1000 + 100_000, end: target * 1000 + 400_000, expected: tone, channels: channels)
+      bound?.capture(audio.pcm.evidence, markers: [Int(target / 1000)])
     }
     backend.stop(); backend.dispose(); backend.dispose()
+    bound?.outcome = "passed"; bound?.failureCode = ""
   }
   func testProgramStreamActualPixelsPCMAndBidirectionalSeek() async throws {
     do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs, allowSimulatorHardwareSkip: true) }
@@ -407,4 +432,116 @@ private struct ContainerReference: Decodable {
     XCTAssertEqual(ledger.snapshot.currentBytes, 0, "Discarded preroll must release scratch and PCM")
   }
 
+}
+
+/// Test-only evidence binds the loaded consumer and XCTest code before playback.
+/// No production API exports PCM, filesystem paths or build fingerprints.
+private final class ContainerBoundAV {
+  let plan: [String: Any]
+  let caseId: String
+  let sessionId = UUID().uuidString
+  let mediaHash: String
+  var phases = [[String: Any]]()
+  var pixels = [[String: Any]]()
+  var phase = "play"
+  var completed = false
+  var disposed = false
+  var outcome = "failed"
+  var failureCode = "test.incomplete"
+  var releasedAudioBytes = -1
+  var images = [[String: String]]()
+
+  static func digest(_ data: Data) -> String { SHA256.hash(data: data).map { String(format: "%02x", $0) }.joined() }
+  static func fileHash(_ url: URL) throws -> String {
+    let file = try FileHandle(forReadingFrom: url); defer { try? file.close() }
+    var hash = SHA256()
+    while let chunk = try file.read(upToCount: 1 << 20), !chunk.isEmpty { hash.update(data: chunk) }
+    return hash.finalize().map { String(format: "%02x", $0) }.joined()
+  }
+  private static func require(_ condition: Bool, _ reason: String) throws {
+    if !condition { throw NSError(domain: "P03BoundAV", code: 1, userInfo: [NSLocalizedDescriptionKey: reason]) }
+  }
+  init?(name: String, media: URL) throws {
+    guard let encoded = ProcessInfo.processInfo.environment["YL_P03_BOUND_PLAN"] else { return nil }
+    guard let bytes = Data(base64Encoded: encoded),
+          let plan = try JSONSerialization.jsonObject(with: bytes) as? [String: Any] else {
+      throw NSError(domain: "P03BoundAV", code: 2)
+    }
+    #if os(macOS)
+    let platform = "macos"
+    #else
+    let platform = "ios"
+    #endif
+    try Self.require(plan["platform"] as? String == platform, "runtime platform mismatch")
+    self.plan = plan; caseId = String(name.dropFirst(4)); mediaHash = try Self.fileHash(media)
+    let rows = plan["planned"] as? [[String: Any]] ?? []
+    try Self.require(rows.contains { $0["caseId"] as? String == caseId && $0["mediaHash"] as? String == mediaHash }, "media identity mismatch")
+    var allowed = Set<String>()
+    for (key, root) in [("productManifest", Bundle.main.bundleURL), ("testManifest", Bundle(for: YlContainerOutputTests.self).bundleURL)] {
+      guard let encoded = plan[key] as? String, let data = Data(base64Encoded: encoded),
+            let files = try JSONSerialization.jsonObject(with: data) as? [[String: Any]] else { throw NSError(domain: "P03BoundAV", code: 3) }
+      try Self.require(Self.digest(data) == plan[key == "productManifest" ? "buildSha256" : "testSha256"] as? String, "manifest identity mismatch")
+      for file in files {
+        guard let path = file["path"] as? String, let sha = file["sha256"] as? String else { throw NSError(domain: "P03BoundAV", code: 4) }
+        try Self.require(!path.hasPrefix("/") && !path.split(separator: "/").contains(".."), "invalid artifact path")
+        try Self.require(try Self.fileHash(root.appendingPathComponent(path)) == sha, "artifact changed: \(path)")
+        allowed.insert(sha)
+      }
+    }
+    for index in 0..<_dyld_image_count() {
+      guard let pointer = _dyld_get_image_name(index) else { continue }
+      let path = String(cString: pointer)
+      guard path.hasPrefix(Bundle.main.bundleURL.path + "/") || path.contains("YlFFmpegBridge.framework/") || path.contains("yl_player_apple") else { continue }
+      let sha = try Self.fileHash(URL(fileURLWithPath: path))
+      try Self.require(allowed.contains(sha), "loaded image differs from frozen product: \(path)")
+      images.append(["image": URL(fileURLWithPath: path).lastPathComponent, "sha256": sha])
+    }
+    try Self.require(images.contains { $0["image"] == "YlFFmpegBridge" }, "loaded bridge identity missing")
+  }
+  var origin: [String: Any] { ["runId": plan["runId"]!, "sessionId": sessionId, "buildSha256": plan["buildSha256"]!] }
+  func image(_ rgb: [Int], clock: Int64?) {
+    var value: [String: Any] = ["value": rgb, "format": "rgb8", "hostTimeUs": Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)]
+    if let clock { value["audioClockUs"] = clock }
+    pixels.append(value)
+  }
+  func begin(_ value: String) { phase = value; pixels.removeAll() }
+  func capture(_ rows: [ContainerPCM.Block], markers: [Int]) {
+    var windows = [[String: Any]]()
+    for marker in markers {
+      let start = phase == "play" ? Int64(marker) * 1_000_000 + 250_000 : Int64(phase.dropFirst(5))! * 1000 + 100_000
+      var samples = [Float](), first: Int64?, channels = 0, rate = 0
+      for row in rows {
+        channels = row.samples.count; rate = Int(row.rate)
+        for frame in 0..<(row.samples.first?.count ?? 0) {
+          let pts = row.pts + Int64(Double(frame) * 1_000_000 / row.rate)
+          if pts >= start && pts < start + 500_000 && samples.count < 8192 * channels {
+            if first == nil { first = pts }
+            for channel in row.samples { samples.append(channel[frame]) }
+          }
+        }
+      }
+      let raw = samples.map { $0.bitPattern.littleEndian }.withUnsafeBytes { Data($0) }
+      var window = origin
+      window.merge(["phase": phase, "marker": marker, "rate": rate, "channels": channels,
+        "startUs": first ?? -1, "frames": channels > 0 ? samples.count / channels : 0,
+        "pcmF32LE": raw.base64EncodedString(), "pcmSha256": Self.digest(raw)]) { _, rhs in rhs }
+      windows.append(window)
+    }
+    var row = origin; row.merge(["phase": phase, "pixels": pixels, "pcmWindows": windows]) { _, rhs in rhs }
+    phases.append(row)
+  }
+  func attach(to test: XCTestCase) {
+    var row = origin
+    row.merge(["schema": 1, "platform": plan["platform"]!, "testSha256": plan["testSha256"]!,
+      "caseId": caseId, "mediaHash": mediaHash, "identityVerified": true, "loadedImages": images,
+      "runtime": ProcessInfo.processInfo.operatingSystemVersionString,
+      "outcome": outcome, "failureCode": failureCode, "completed": completed, "disposed": disposed,
+      "releasedAudioBytes": releasedAudioBytes, "phases": phases]) { _, rhs in rhs }
+    do {
+      let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys])
+      let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+      attachment.name = "p03-bound-\(plan["runId"]!)-\(caseId).json"; attachment.lifetime = .keepAlways
+      test.add(attachment)
+    } catch { XCTFail("Cannot preserve bound A/V evidence: \(error)") }
+  }
 }

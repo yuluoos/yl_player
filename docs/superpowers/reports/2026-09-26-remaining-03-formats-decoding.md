@@ -575,3 +575,13 @@ iOS三条截图失败另外执行0.25倍速观测控制，7个播放/seek颜色�
 本轮最终受影响原生回归：macOS 74/74、iOS 纯音频 7/7、Android 22/22，均零失败/跳过。最终复核另修复 nil 裁剪起点破坏 DASH 原始 PTS 匹配的问题，四种编码的负时间部分裁剪及260个完全裁剪包现均通过。iOS 此处验证实际转换器而非缺少视频硬件的完整切轨路径。Apple五目标18项规范制品独立重建逐字节一致，最终锁定 SHA 为 `87c426016bacbf4325678a8f22d9638127198ee78773e2f388345325427689e9`；1035项真实Dolby ABI/探测检查通过，AV1/VP9未准入探测负例保持拒绝。
 
 新制品已另采五个独立优化进程的固定短协议测量（每次2s idle + 12s解码 + 2s释放、65次采样、288个实际AV1图像输出），六行AVC硬件正控通过。`measurementValid=true`，峰值RSS15,777,792 B、footprint7,881,280 B、单次累计进程CPU最大190,131,000 ns；`productionEligible=false`，仍缺持续热与独立产品复验。原测量保持原始构建身份，不覆盖改写。
+
+### 2026-10-15 同次构建身份与音画验收续做
+
+基线 `7a77ede`。沿获批 Task 7 增加 build-once/run-without-building 采集器：运行前冻结实际产品与测试包身份，原生进程核验安装/加载字节和媒体，同一播放器保留图像、音频消费时钟、7 个 8192 帧 PCM 窗口、完成/三次 seek/释放，运行后复核制品未变。Apple 原生 consumer 与 XCTest 分别哈希；Android 明确为含生产 Kotlin/JNI 和测试的 instrumentation library APK，不冒充公开 Flutter release 包。
+
+最终 macOS 六项音画均通过；Android 新 APK 采用实际 AudioTrack playback head 后五项通过，VP9 硬解必需 fallback 路径保持 `DECODER_UNAVAILABLE`，总范围仍为5/6失败；iOS六项身份检查成功后硬解不可用，保持0/6失败。错误构建身份的真实原生负例均在播放前拒绝。原始失败、快照恢复后停滞与同 APK 冷启动对照、旧外推时钟记录、新消费时钟记录分别保留，不能互相覆盖或升级。
+
+一次独立复审指出外推时钟可能掩盖 seek 后音频停滞，已用停滞播放头/前进系统时间测试 RED→GREEN 修复；生产调度时钟未改变。Python44/44，Android单元531通过、3项既有跳过，原有原生PCM/格式22项回归另行保留。API注释补充观察线程、实际消费、flush/close失效和非物理输出边界。三个无关macOS测试镜像差异保留为既有失败，不修改另一会话长播放/弱网ABR。
+
+证据、最终哈希与逐条复审裁定见[本轮归档](evidence/2026-10-15-p03-bound-av/README.md)。完整公开Flutter/release矩阵、Media3 VP9同次音频采集、iOS硬件正向、物理音画、独立参考与持续热资格仍开放，完整P03不宣告完成。

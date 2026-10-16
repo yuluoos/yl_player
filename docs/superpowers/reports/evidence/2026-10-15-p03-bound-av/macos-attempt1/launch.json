@@ -1,0 +1,15 @@
+{
+  "command": [
+    "xcodebuild",
+    "test-without-building",
+    "-xctestrun",
+    "/private/tmp/yl-p03-bound-av-20261015/macos-attempt1/bound.xctestrun",
+    "-destination",
+    "platform=macOS,arch=arm64",
+    "-parallel-testing-enabled",
+    "NO",
+    "-resultBundlePath",
+    "/private/tmp/yl-p03-bound-av-20261015/macos-attempt1/runtime.xcresult"
+  ],
+  "preverified": true
+}

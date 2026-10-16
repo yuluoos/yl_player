@@ -1,0 +1,1194 @@
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :integration_test
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :yl_player_android
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preDebugBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugResources UP-TO-DATE
+> Task :yl_player_android:packageDebugResources UP-TO-DATE
+> Task :yl_player_android:processDebugNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugRFile UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebug UP-TO-DATE
+> Task :yl_player_android:preDebugAndroidTestBuild UP-TO-DATE
+> Task :yl_player_android:generateDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:packageDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :yl_player_android:parseDebugAndroidTestLocalResources UP-TO-DATE
+> Task :yl_player_android:generateDebugAndroidTestRFile UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:generateDebugAndroidTestAssets UP-TO-DATE
+> Task :yl_player_android:generateDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestAssets UP-TO-DATE
+> Task :yl_player_android:compressDebugAndroidTestAssets UP-TO-DATE
+> Task :yl_player_android:desugarDebugAndroidTestFileDependencies UP-TO-DATE
+> Task :yl_player_android:writeDebugAarMetadata UP-TO-DATE
+> Task :yl_player_android:checkDebugAndroidTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:compileDebugAndroidTestNavigationResources UP-TO-DATE
+> Task :yl_player_android:compileDebugLibraryResources UP-TO-DATE
+> Task :yl_player_android:mapDebugAndroidTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:extractDeepLinksDebug UP-TO-DATE
+> Task :yl_player_android:processDebugManifest UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestResources UP-TO-DATE
+> Task :yl_player_android:checkDebugAndroidTestDuplicateClasses UP-TO-DATE
+> Task :yl_player_android:mergeExtDexDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:mergeDebugJniLibFolders UP-TO-DATE
+> Task :yl_player_android:mergeDebugNativeLibs UP-TO-DATE
+> Task :yl_player_android:copyDebugJniLibsProjectOnly UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestJniLibFolders UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestNativeLibs UP-TO-DATE
+> Task :yl_player_android:stripDebugAndroidTestDebugSymbols UP-TO-DATE
+> Task :yl_player_android:validateSigningDebugAndroidTest UP-TO-DATE
+> Task :yl_player_android:writeDebugAndroidTestSigningConfigVersions UP-TO-DATE
+> Task :yl_player_android:preDebugUnitTestBuild UP-TO-DATE
+> Task :yl_player_android:checkDebugUnitTestAarMetadata UP-TO-DATE
+> Task :yl_player_android:mapDebugUnitTestSourceSetPaths UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestManifest UP-TO-DATE
+> Task :yl_player_android:processDebugUnitTestResources UP-TO-DATE
+> Task :yl_player_android:javaPreCompileDebugUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:mergeDebugUnitTestAssets UP-TO-DATE
+> Task :yl_player_android:packageDebugUnitTestForUnitTest UP-TO-DATE
+> Task :yl_player_android:generateDebugUnitTestConfig UP-TO-DATE
+> Task :yl_player_android:compileDebugKotlin
+> Task :yl_player_android:compileDebugJavaWithJavac UP-TO-DATE
+> Task :yl_player_android:processDebugJavaRes UP-TO-DATE
+> Task :yl_player_android:bundleLibRuntimeToDirDebug
+> Task :yl_player_android:bundleLibRuntimeToJarDebug
+> Task :yl_player_android:bundleLibCompileToJarDebug
+> Task :yl_player_android:compileDebugUnitTestKotlin
+> Task :yl_player_android:compileDebugUnitTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:processDebugUnitTestJavaRes UP-TO-DATE
+> Task :yl_player_android:mergeLibDexDebugAndroidTest
+> Task :yl_player_android:compileDebugAndroidTestKotlin
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+
+> Task :yl_player_android:testDebugUnitTest
+
+YlAdaptiveLoadControlTest > new source profile replaces pressure state() PASSED
+
+YlAdaptiveLoadControlTest > loading stops at maximum duration() PASSED
+
+YlAdaptiveLoadControlTest > loading continues below minimum while byte budget remains() PASSED
+
+YlAdaptiveLoadControlTest > pinned Media3 selected tracks callback retains explicit buffer target() PASSED
+
+YlAdaptiveLoadControlTest > memory shrink is idempotent until restore() PASSED
+
+YlAdaptiveLoadControlTest > pinned Media3 prepare callback is implemented without changing adaptive profile() PASSED
+
+YlAdaptiveLoadControlTest > playback start uses bounded initial and rebuffer thresholds() PASSED
+
+YlAdaptiveLoadControlTest > loading continues between duration limits while bytes remain() PASSED
+
+YlAdaptiveLoadControlTest > playback speed reduces playout duration() PASSED
+
+YlAdaptiveLoadControlTest > byte ceiling wins over additional buffer time() PASSED
+
+YlAndroidAudioFocusDriverTest > API26 uses media attributes explicit duck callbacks no delayed focus and same request for abandon() PASSED
+
+YlAndroidAudioFocusDriverTest > real callbacks pause modern duck requests and duck legacy requests on main handler() PASSED
+
+YlAndroidAudioFocusDriverTest > API24 honors real grant result and abandons only granted legacy request() PASSED
+
+YlAndroidAudioFocusDriverTest > one application noisy receiver delivers only matching action then unregisters once() PASSED
+
+YlAnnexBTest > mixed start codes preserve all parameter SEI and picture payloads() PASSED
+
+YlAnnexBTest > canonical packet needs no copy and retains trailing bytes() PASSED
+
+YlAudioFocusCoordinatorTest > denied acquisition never owns focus or receiver and a later play can retry() PASSED
+
+YlAudioFocusCoordinatorTest > permanent loss retires its request immediately and stale gain cannot authorize a denied new request() PASSED
+
+YlAudioFocusCoordinatorTest > first play acquires once and final participant alone releases focus and noisy() PASSED
+
+YlAudioFocusCoordinatorTest > transient loss does not authorize new or repeated play until actual gain() PASSED
+
+YlAudioFocusCoordinatorTest > focus and noisy reach all current participants and stale released listener is ignored() PASSED
+
+YlAudioFocusCoordinatorTest > framework cleanup failure cannot throw across irrevocable session handoff and still abandons owned focus() PASSED
+
+YlAudioSelectionPolicyTest > identity allocation is bounded by group format and text limits() PASSED
+
+YlAudioSelectionPolicyTest > accepted audio intent invalidates real selector even without parameter changes() PASSED
+
+YlAudioSelectionPolicyTest > generic content keys are nested length framed not delimiter concatenations() PASSED
+
+YlAudioSelectionPolicyTest > DASH declared content separates repeated representation ids and follows reordered groups() PASSED
+
+YlAudioSelectionPolicyTest > DASH representation rename bitrate label and rendition order do not define audio identity() PASSED
+
+YlAudioSelectionPolicyTest > unset DASH group positions cannot identify missing metadata and duplicate semantics reject() PASSED
+
+YlAudioSelectionPolicyTest > real Media3 selection binds next Period before output and never mixes groups() PASSED
+
+YlAudioSelectionPolicyTest > unsupported chosen rendition rejects and actual missing group has track code() PASSED
+
+YlAudioSelectionPolicyTest > language case normalizes but content role codec rate and channel changes do not match() PASSED
+
+YlAudioSelectionPolicyTest > real Media3 lookahead missing choice fails before automatic output and preserves error code() PASSED
+
+YlCallbackDispatcherTest > five second acknowledgement deadline is terminal() PASSED
+
+YlCallbackDispatcherTest > snapshot copies caller owned track lists and keeps original load identity() PASSED
+
+YlCallbackDispatcherTest > callback error terminates once and never skips the failed milestone() PASSED
+
+YlCallbackDispatcherTest > detach invalidates in flight acknowledgement and queued items() PASSED
+
+YlCallbackDispatcherTest > attach gates all methods and each acknowledgement permits exactly one following item() PASSED
+
+YlCallbackDispatcherTest > all six generated callback methods share one acknowledged queue and suffix() PASSED
+
+YlCandidateVideoOutputTest > background during actual public replacement retains current unreleased output for foreground() PASSED
+
+YlCandidateVideoOutputTest > foreground during recreate install gap never attaches a released wrapper() PASSED
+
+YlCandidateVideoOutputTest > rollback retains private resources on unacknowledged detach() PASSED
+
+YlCandidateVideoOutputTest > acknowledged detach revokes render eligibility while retaining owned resources() PASSED
+
+YlCandidateVideoOutputTest > worker accepted old frame crossing rebuild cannot consume main public milestone() PASSED
+
+YlCandidateVideoOutputTest > strict reacquisition keeps public surface private until new evidence and acknowledged handoff() PASSED
+
+YlCandidateVideoOutputTest > configuration replacement during strict inspection cannot publish the new public surface() PASSED
+
+YlCandidateVideoOutputTest > private resource releases only after successful public output acknowledgement() PASSED
+
+YlCommandAcceptanceOrderTest > new rejected suspended requests do not take ownership from older valid requests() PASSED
+
+YlCommandAcceptanceOrderTest > worker rejection settles quiescence without losing a newer accepted suspended track() PASSED
+
+YlCommandAcceptanceOrderTest > track and timeline acceptance remain independent across peer quiescence() PASSED
+
+YlCommandAcceptanceOrderTest > new worker rejection does not replace the earlier successfully accepted track() PASSED
+
+YlCommandAcceptanceOrderTest > reviewer probe older active track cannot replace newer accepted suspended track() PASSED
+
+YlCommandAcceptanceOrderTest > older active live edge cannot replace newer suspended position() PASSED
+
+YlCommandAcceptanceOrderTest > stop while peer waits for former command settlement fences every late result() PASSED
+
+YlCommandAcceptanceOrderTest > peer rollback cannot publish before its former players old worker has settled() PASSED
+
+YlCommandAcceptanceOrderTest > host invalidation cancels its worker and settles peer quiescence before late acknowledgement() PASSED
+
+YlCommandAcceptanceOrderTest > pending position yields only to successfully accepted newer timeline intent() PASSED
+
+YlCommandAcceptanceOrderTest > accepted position survives quiescence while its worker is active or queued behind track() PASSED
+
+YlDashCandidateHttpTest > managed DASH starts at declared first candidate regardless of Media3 choice() PASSED
+
+YlDashCandidateHttpTest > body resume stays on validated candidate and shares its retry budget() PASSED
+
+YlDashCandidateHttpTest > foreign fallback and return origin do not restore custom credentials() PASSED
+
+YlDashCandidateHttpTest > candidate switching shares one retry budget rather than retries per URL() PASSED
+
+YlDashCandidateHttpTest > cancel during scheduled candidate retry prevents the next request() PASSED
+
+YlDashCandidateHttpTest > candidate changes cannot refund redirect budget() PASSED
+
+YlDashCandidateHttpTest > caller entity validator pins original candidate rather than restarting at first() PASSED
+
+YlDashCandidateRegistryTest > bounded conflicting graph publication cannot replace accepted alternatives() PASSED
+
+YlDashCandidateRegistryTest > lookup ignores Media3 choice and retains declaration order() PASSED
+
+YlDashManifestParserTest > finite segment endpoints infer omitted static programme duration() PASSED
+
+YlDashManifestParserTest > parser publishes initialization and media alternatives only after graph admission() PASSED
+
+YlDashManifestParserTest > unknown duration rejects disagreement infinite timelines and text-only evidence() PASSED
+
+YlDashManifestParserTest > template child requests inherit same origin and unknown paths stay stripped() PASSED
+
+YlDashManifestParserTest > multiple relative base URLs register their own children() PASSED
+
+YlDashManifestParserTest > timeline list and single file index register actual request URLs() PASSED
+
+YlDashManifestParserTest > unused sibling BaseURL fanout is bounded before downstream copies() PASSED
+
+YlDashManifestParserTest > long BaseURL and finite segment expansion obey retained URI budget() PASSED
+
+YlDashManifestParserTest > manifest byte and representation admission bounds reject before exposure() PASSED
+
+YlDashManifestParserTest > finite preceding Period resolves omitted following start() PASSED
+
+YlDashManifestParserTest > template expansion and numeric padding are bounded before Media3 formatting() PASSED
+
+YlDashManifestParserTest > individual expanded BaseURL rejects before retained children() PASSED
+
+YlDashManifestParserTest > programme retains gaps and clips overlap independently from Media3 period durations() PASSED
+
+YlDashManifestParserTest > rational programme boundaries avoid fractional accumulation and signed rounding errors() PASSED
+
+YlDashManifestParserTest > cross origin BaseURL followed by absolute return origin never restores credentials() PASSED
+
+YlDashManifestParserTest > redirected manifest root taints all returned child requests() PASSED
+
+YlDashManifestParserTest > malformed numeric attributes are sanitized as container errors() PASSED
+
+YlDashManifestParserTest > video coverage retains raw rational PTO and does not fill explicit segment holes() PASSED
+
+YlDashManifestParserTest > dynamic protected and excessive timeline manifests fail before child requests() PASSED
+
+YlDashPcmWindowTest > PCM sink retains clipped buffer across partial writes and duplicate manifest merges() PASSED
+
+YlDashPcmWindowTest > negative preroll keeps only samples in the programme window() PASSED
+
+YlDashPcmWindowTest > fractional endpoints project once to sample grid without accumulating drift() PASSED
+
+YlDashPcmWindowTest > codec preroll is bounded without silently truncating extreme frame duration() PASSED
+
+YlDashPcmWindowTest > seek flush discards partially written gap before accepting new position() PASSED
+
+YlDashPcmWindowTest > final AAC buffer is clipped after decoding not at compressed packet boundary() PASSED
+
+YlDashPcmWindowTest > encoder priming is trimmed from content before leading silence is inserted() PASSED
+
+YlDashProtectedRouteTest > protected DASH does not enter clear programme output transforms() PASSED
+
+YlDashProtectedRouteTest > protected DASH retains original source route and supplied DRM manager() PASSED
+
+YlDashVideoCoverageTest > coverage clips merges and keeps half open holes without timestamp overflow() PASSED
+
+YlDecoderLeaseCoordinatorTest > prepare failure does not touch prior owner() PASSED
+
+YlDecoderLeaseCoordinatorTest > new request waits for safe candidate release then rollback before ownership transfer() PASSED
+
+YlDecoderLeaseCoordinatorTest > quiesce deadline waits for acknowledgement then restores without activation() PASSED
+
+YlDecoderLeaseCoordinatorTest > commit precedes prior deactivation and same player old engine participates() PASSED
+
+YlDecoderLeaseCoordinatorTest > restore deadline quarantines release and late success cannot change ownership() PASSED
+
+YlDecoderLeaseCoordinatorTest > independent nonexclusive activation commits while first awaits acknowledgement() PASSED
+
+YlDecoderLeaseCoordinatorTest > nonexclusive replacements quiesce their own former without touching video peer() PASSED
+
+YlDecoderLeaseCoordinatorTest > same player successors retain one gate through cancelled nonexclusive release() PASSED
+
+YlDecoderLeaseCoordinatorTest > quiesce failure disposes candidate without changing owner() PASSED
+
+YlDecoderLeaseCoordinatorTest > activation and commit failure restore exactly once after candidate release() PASSED
+
+YlDecoderLeaseCoordinatorTest > detach releases previous and candidate without restoring() PASSED
+
+YlDecoderLeaseCoordinatorTest > activation deadline releases candidate and observes asynchronous restore() PASSED
+
+YlDecoderLeaseCoordinatorTest > known audio progresses during exclusive quarantine and retiring video owner() PASSED
+
+YlDecoderLeaseCoordinatorTest > unknown candidate proven nonexclusive restores prior before audio commit() PASSED
+
+YlDecoderLeaseCoordinatorTest > nonexclusive retirement blocks same player only and detach owns every pending participant() PASSED
+
+YlDecoderLeaseCoordinatorTest > restore failure clears resource ownership and reports prior terminal failure() PASSED
+
+YlDrmBridgeTest > redirect rejection retains its actionable failure code() PASSED
+
+YlDrmBridgeTest > coordinator routes DRM through protected factory and license bridge then returns descriptor() PASSED
+
+YlDrmBridgeTest > cancelled native request sends cancellation and never installs late reply() PASSED
+
+YlDrmBridgeTest > view ACK waits for worker attachment and rejects wrong owner() PASSED
+
+YlDrmBridgeTest > cancelling exact pending load preserves current session and cannot cancel a newer request() PASSED
+
+YlDrmBridgeTest > binary reply must match complete exchange identity and standard errors retain meaning() PASSED
+
+YlDrmKeySessionTest > challenge copies and diagnostics never print binary data() PASSED
+
+YlDrmKeySessionTest > pending then key-required starts a renewal without waiting for usable() PASSED
+
+YlDrmKeySessionTest > oversize response and system output restriction fail closed() PASSED
+
+YlDrmKeySessionTest > denial is not expiry and explicit system expiry is distinguished() PASSED
+
+YlDrmKeySessionTest > queued renewal challenge failure completes failure instead of losing its deadline() PASSED
+
+YlDrmKeySessionTest > failed candidate cannot revoke another session and open failure releases driver() PASSED
+
+YlDrmKeySessionTest > synchronous install callbacks are processed after successful installation only() PASSED
+
+YlDrmKeySessionTest > pending status revokes usable state and cannot wait forever() PASSED
+
+YlDrmKeySessionTest > renewal coalesces repeated events and dispose discards late results() PASSED
+
+YlDrmKeySessionTest > timeout cancels transport and late result cannot install even before dispose() PASSED
+
+YlDrmKeySessionTest > background cancels old callbacks and foreground owns a new driver() PASSED
+
+YlDrmKeySessionTest > queued initial key request cannot publish readiness before renewal finishes() PASSED
+
+YlDrmKeySessionTest > deadline includes waiting for system usable keys() PASSED
+
+YlDrmKeySessionTest > HTTP success is not usable keys and duplicate response cannot install twice() PASSED
+
+YlFailureMapperTest > known failures have stable codes and unknown FlutterErrors cannot bypass sanitization() PASSED
+
+YlFailureMapperTest > structured http 403 crosses mapper media and Flutter boundaries without retry() PASSED
+
+YlFailureMapperTest > media cancellation outranks competing dns evidence() PASSED
+
+YlFailureMapperTest > explicit policy and cancellation classifications outrank nested network evidence() PASSED
+
+YlFailureMapperTest > non 403 http status remains conservative() PASSED
+
+YlFailureMapperTest > dns failures are classified from bounded cause chain without leaking prose() PASSED
+
+YlFailureMapperTest > public failures and local diagnostics never contain untrusted exception prose() PASSED
+
+YlFailureMapperTest > logging failure cannot escape the safe boundary() PASSED
+
+YlFailureMapperTest > media playback preserves structured dns cause() PASSED
+
+YlFallbackRoutingPolicyTest > container and decoder failures route once to native fallback() PASSED
+
+YlFallbackRoutingPolicyTest > network source policy and resource failures never route to decoder fallback() PASSED
+
+YlFallbackRoutingPolicyTest > first frame timeout routes only with progressing input and video packets() PASSED
+
+YlFinalBoundaryTest > actual core rejects absent track and nonlive edge before mutating restore inputs() PASSED
+
+YlFinalBoundaryTest > all managed native integer fields preserve min max and reject one past before acceptance() PASSED
+
+YlFinalBoundaryTest > newer position intent wins over live edge captured by held rollback track application() PASSED
+
+YlFinalBoundaryTest > real host waits for worker rejection and returns exactly once without storing rejected intent() PASSED
+
+YlFinalBoundaryTest > real queued host replies reject missing track and VOD live edge without failing playback() PASSED
+
+YlFinalBoundaryTest > production create rejects invalid intervals before texture allocation() PASSED
+
+YlFinalBoundaryTest > core measured live offset preserves unknown and clamps negative for timeline metrics and restore() PASSED
+
+YlFinalBoundaryTest > worker completion after stop or replacement cannot store intent in the new session() PASSED
+
+YlFinalBoundaryTest > accepted track and live edge during held restoration apply after its captured restore point() PASSED
+
+YlFinalBoundaryTest > real host detach settles a pending asynchronous command once and ignores late worker result() PASSED
+
+YlFinalBoundaryTest > managed delays validate signed32 and ordering in actual assess and load() PASSED
+
+YlFinalBoundaryTest > runtime malformed commands leave healthy session and restore inputs unchanged() PASSED
+
+YlFinalBoundaryTest > load constraint ranges reject before cancelling pending load or creating engine() PASSED
+
+YlFinalBoundaryTest > two proven audio coordinators restore independently while first worker is held() PASSED
+
+YlFirstFrameGateTest > only first current-generation callback is accepted() PASSED
+
+YlFirstFrameGateTest > new source generation admits one new first frame() PASSED
+
+YlHardwareCodecSelectorTest > legacy software codec names are rejected() PASSED
+
+YlHardwareCodecSelectorTest > strict gate waits for initialized evidence and admits audio without video callback() PASSED
+
+YlHardwareCodecSelectorTest > positive evidence belongs to initialized codec and unavailable on API28 names() PASSED
+
+YlHardwareCodecSelectorTest > audio codecs pass through normal Media3 selection() PASSED
+
+YlHardwareCodecSelectorTest > HEVC requires an explicit accepted hardware candidate() PASSED
+
+YlHardwareCodecSelectorTest > constrained envelope is capped at 1080p30() PASSED
+
+YlHardwareCodecSelectorTest > strict selector accepts only API29 records and refuses name-only API28 candidates() PASSED
+
+YlHardwareCodecSelectorTest > known vendor codec names are accepted() PASSED
+
+YlHardwareCodecSelectorTest > platform software flag wins over a vendor-looking name() PASSED
+
+YlHardwareCodecSelectorTest > host limits can only tighten an envelope() PASSED
+
+YlHardwareCodecSelectorTest > landscape display does not reject portrait video by encoded height() PASSED
+
+YlHardwareCodecSelectorTest > production inventory reports deduplicated video MIME families excluding software audio and encoders() PASSED
+
+YlHardwareCodecSelectorTest > canonical aliases prove only consistent exact initialized codec metadata() PASSED
+
+YlHardwareCodecSelectorTest > display resolution is a viewport preference and tier limits remain hard() PASSED
+
+YlHardwareCodecSelectorTest > portrait display does not reject landscape video by encoded width() PASSED
+
+YlHardwareCodecSelectorTest > unmeasured Media3 software is never offered for video under any policy() PASSED
+
+YlHlsPlaylistParserTest > aes128 without explicit iv derives it from media sequence() PASSED
+
+YlHlsPlaylistParserTest > parses live media sequence init map byte ranges and aes128 key() PASSED
+
+YlHlsPlaylistParserTest > selects the highest master variant within software envelope() PASSED
+
+YlHlsPlaylistParserTest > endlist marks vod and sample aes is rejected() PASSED
+
+YlLifecyclePolicyTest > focus grace expiry releases and later gain rebuilds() PASSED
+
+YlLifecyclePolicyTest > dispose is emitted exactly once() PASSED
+
+YlLifecyclePolicyTest > explicit pause is never undone by focus gain() PASSED
+
+YlLifecyclePolicyTest > focus gain inside grace resumes only focus-paused playback() PASSED
+
+YlLifecyclePolicyTest > foreground rebuilds a paused source without starting playback() PASSED
+
+YlLifecyclePolicyTest > surface and memory events map to bounded actions() PASSED
+
+YlLifecyclePolicyTest > surface generation rejects stale source and surface callbacks() PASSED
+
+YlLifecyclePolicyTest > background release is idempotent() PASSED
+
+YlManagedAndroidEngineTest > fixed selection delegates and blocks incompatible fallback until authoritative auto snapshot() PASSED
+
+YlManagedAndroidEngineTest > rejected constraints do not poison later fallback policy() PASSED
+
+YlManagedAndroidEngineTest > DASH disabled fallback preserves terminal prepare and asynchronous failures() PASSED
+
+YlManagedAndroidEngineTest > already completed release remains successful with immediate dispatch() PASSED
+
+YlManagedAndroidEngineTest > explicit auto reason survives fallback snapshots and restoration until stop() PASSED
+
+YlManagedAndroidEngineTest > failed borrower release still waits for every other owned release() PASSED
+
+YlManagedAndroidEngineTest > decoder failure during activation switches once and restores controls() PASSED
+
+YlManagedAndroidEngineTest > track unavailable reason survives fallback snapshots and restoration until stop() PASSED
+
+YlManagedAndroidEngineTest > decoder failure during preparation publishes the backend switch() PASSED
+
+YlManagedAndroidEngineTest > disposal acknowledgement waits for owned release and completes without self cancellation() PASSED
+
+YlManagedRedirectInterceptorTest > resumed framing mismatch fails before delivering bytes beyond the validated range() PASSED
+
+YlManagedRedirectInterceptorTest > mismatching resume and cancellation cannot produce concatenated body or extra retry() PASSED
+
+YlManagedRedirectInterceptorTest > managed requests disable transparent gzip and unsafe encoded resume() PASSED
+
+YlManagedRedirectInterceptorTest > connected server header stall expires and body timeout starts only after headers() PASSED
+
+YlManagedRedirectInterceptorTest > chunked shortened range cannot leak wrong bytes inside the original resource length() PASSED
+
+YlManagedRedirectInterceptorTest > actual HLS parser propagates master media key segment and return-origin provenance for both policies() PASSED
+
+YlManagedRedirectInterceptorTest > OkHttp status recovery cannot bypass zero managed retry budget() PASSED
+
+YlManagedRedirectInterceptorTest > both policies keep same origin headers and permanently strip custom credentials across redirects() PASSED
+
+YlManagedRedirectInterceptorTest > chunked full remaining range overrun fails before completing a capped caller read() PASSED
+
+YlManagedRedirectInterceptorTest > managed status retry count and events are exact() PASSED
+
+YlManagedRedirectInterceptorTest > chunked final span EOF probe preserves inactivity retry and cancellation() PASSED
+
+YlManagedRedirectInterceptorTest > managed rejects mismatched initial range and body retry header changes() PASSED
+
+YlManagedRedirectInterceptorTest > chunked premature EOF cannot reset an exhausted retry budget() PASSED
+
+YlManagedRedirectInterceptorTest > chunked short EOF and valid shortened spans resume inside the original retry budget() PASSED
+
+YlManagedRedirectInterceptorTest > injected clock schedules one retry and fresh hop deadlines while preserving counters() PASSED
+
+YlManagedRedirectInterceptorTest > partial body resumes exactly with same budget and strong validator() PASSED
+
+YlManagedRedirectInterceptorTest > nonretryable 421 stays visible and no retry event is emitted() PASSED
+
+YlManagedRedirectInterceptorTest > premature fixed length disconnect resumes with same strong representation() PASSED
+
+YlManagedRedirectInterceptorTest > 307 and 308 retain method body and redirect counter survives retries() PASSED
+
+YlManagedRedirectInterceptorTest > cancellation while body resume retry is scheduled prevents reopening() PASSED
+
+YlManagedRedirectInterceptorTest > header deadline settles while DNS is still blocked and late lookup cannot consume another budget() PASSED
+
+YlManagedRetryPolicyTest > Retry After valid date and seconds replace backoff but excessive value refuses retry() PASSED
+
+YlManagedRetryPolicyTest > retry count excludes initial and exponential delay saturates without jitter() PASSED
+
+YlManagedRetryPolicyTest > only idempotent requests and specified statuses or transient errors retry() PASSED
+
+YlMedia3AcknowledgementTest > throwing native operation remains unsafe and successful operation is acknowledged() PASSED
+
+YlMedia3AcknowledgementTest > successful output operation cannot clear earlier unknown release() PASSED
+
+YlMedia3AcknowledgementTest > normal native return with synchronous timeout callback is not acknowledged() PASSED
+
+YlMedia3AudioIdentityTest > owned gap hides stale video and accepts content commands without publishing silence as an audio track() PASSED
+
+YlMedia3AudioIdentityTest > same declared id with different audio roles never collides() PASSED
+
+YlMedia3AudioIdentityTest > missing format ids follow role when groups reorder() PASSED
+
+YlMedia3AudioIdentityTest > accepted choice survives stale observed selection and invalid command() PASSED
+
+YlMedia3AudioIdentityTest > DASH restore rebinds declared content despite representation names and array order() PASSED
+
+YlMedia3AudioIdentityTest > actual missing audio in nonempty Period reports error instead of replacing choice() PASSED
+
+YlMedia3AudioIdentityTest > lookahead and late Period catalogs never replace public audio directory() PASSED
+
+YlMedia3ConfigurationTest > shared transient pause keeps play intent and existing three second resource grace() PASSED
+
+YlMedia3ConfigurationTest > both actual ExoPlayer audio ownership flags are disabled for both policies() PASSED
+
+YlMedia3ConfigurationTest > typed load strategies map to preserved adaptive profiles with automatic audio ownership disabled() PASSED
+
+YlMedia3DrmSessionTest > bounded key wait maps timeout and never claims expired() PASSED
+
+YlMedia3DrmSessionTest > clear and incompatible encryption do not open driver or send license() PASSED
+
+YlMedia3DrmSessionTest > changed Period initialization has independent session and bounded concurrency() PASSED
+
+YlMedia3DrmSessionTest > last release cancels license and discards late response and callback() PASSED
+
+YlMedia3DrmSessionTest > format bytes copied and ambiguous or oversized init never creates session() PASSED
+
+YlMedia3DrmSessionTest > dispose before scheduled start allocates nothing and bad close cannot escape coroutine() PASSED
+
+YlMedia3DrmSessionTest > DASH capability probe accepts missing manifest PSSH but acquisition still requires init bytes() PASSED
+
+YlMedia3DrmSessionTest > event subscriptions balance duplicate acquires and late subscriber receives current state() PASSED
+
+YlMedia3DrmSessionTest > reference counts retain decoder borrowed keys through manager release and system failure() PASSED
+
+YlMedia3DrmSessionTest > last release closes CDM and clears challenge before playback looper can quit() PASSED
+
+YlMedia3DrmSessionTest > candidate waits for usable system keys and failure ends readiness wait() PASSED
+
+YlMedia3DrmSessionTest > Media3 cannot decode until system keys usable and pending revokes usability() PASSED
+
+YlMedia3FixedVideoTest > finite DASH public clock cannot run beyond programme while AudioTrack drains() PASSED
+
+YlMedia3FixedVideoTest > restore carries semantic fixed intent and rebinds recreated tracks before publication() PASSED
+
+YlMedia3FixedVideoTest > fixed cap conflict leaves policy and restore point unchanged and health cannot downgrade() PASSED
+
+YlMedia3FixedVideoTest > queued earlier output must not borrow the latest input coded format() PASSED
+
+YlMedia3FixedVideoTest > output coded metadata changes even when cropped VideoSize is unchanged() PASSED
+
+YlMedia3FixedVideoTest > same Period explicit quality change publishes output size without waiting for new tracks() PASSED
+
+YlMedia3FixedVideoTest > DASH output coverage follows actual format and half open period clock() PASSED
+
+YlMedia3FixedVideoTest > actual renderer reset hides old picture before a new output can publish() PASSED
+
+YlMedia3FixedVideoTest > output generations fence queued frames and deduplicate without losing reset recovery() PASSED
+
+YlMedia3FixedVideoTest > lookahead and delayed prior Period callbacks cannot release fixed mode and stop fences old callbacks() PASSED
+
+YlMedia3FixedVideoTest > read ahead input and scheduled future size stay pending until current Period mode changes() PASSED
+
+YlMedia3FixedVideoTest > core preserves fixed and catalog across transient emptiness then publishes PD01 and sticky reason() PASSED
+
+YlMedia3SelectedVideoTest > ready video with an unselected declared audio track requests audio fallback() PASSED
+
+YlMedia3SelectedVideoTest > ready audio with unselected declared video is a decoder fallback signal() PASSED
+
+YlMedia3SelectedVideoTest > audio only and selected video remain valid() PASSED
+
+YlMedia3StatePolicyTest > terminal error survives later ready and idle callbacks() PASSED
+
+YlMedia3StatePolicyTest > initial buffering does not establish readiness() PASSED
+
+YlMetricsCollectorTest > real analytics callbacks map bandwidth and observed counters while selected bitrate stays on track() PASSED
+
+YlMetricsCollectorTest > selected representation bitrate is not a bandwidth estimate() PASSED
+
+YlMetricsCollectorTest > timestamped observations exclude initial buffering and preserve immutable snapshots() PASSED
+
+YlMetricsCollectorTest > public texture resizes to renderer dimensions without coded rotation or PAR() PASSED
+
+YlMetricsCollectorTest > live clock preserves real progress behind the sliding window without inventing pause progress() PASSED
+
+YlMetricsCollectorTest > three times speed with sustained frame drops keeps a fixed video playing() PASSED
+
+YlMetricsCollectorTest > measured zero counters and bandwidth remain distinct from unknown and allocator bytes() PASSED
+
+YlMetricsCollectorTest > real core fresh metrics do not claim unobserved zero or managed allocator bytes() PASSED
+
+YlMetricsCollectorTest > real core keeps PAR out of rendered dimensions and uses coded format dimensions() PASSED
+
+YlMetricsCollectorTest > periodic metrics delta does not repeat static video geometry() PASSED
+
+YlNativePcmPrerollTest > negativePrerollAndFractionalTargetNeverEmitAnEarlierSample() PASSED
+
+YlNativePcmPrerollTest > trimsAcrossWholeBlocksAndPreservesPartialInterleavedFrameAlignment() PASSED
+
+YlNativePlaybackPlannerTest > rejects software video above 1080p or 30fps() PASSED
+
+YlNativePlaybackPlannerTest > unmeasured software is not admitted by the historical resolution envelope() PASSED
+
+YlNativePlaybackPlannerTest > rejects software codecs outside approved h264 and hevc scope() PASSED
+
+YlNativePlaybackPlannerTest > uses software for 1080p HEVC when device decoders reject its profile level() PASSED
+
+YlNativePlaybackPlannerTest > uses software for unsupported h264 or hevc configuration within bounded envelope() PASSED
+
+YlNativePlaybackPlannerTest > audio clock interpolates between coarse hardware timestamps() PASSED
+
+YlNativePlaybackPlannerTest > non blocking pcm write retains partial data for a later scheduler turn() PASSED
+
+YlNativePlaybackPlannerTest > software video pacing uses decoded frame time instead of reordered packet time() PASSED
+
+YlNativePlaybackPlannerTest > normal speed does not install muting playback parameters() PASSED
+
+YlNativePlaybackPlannerTest > unknown fps never enters software decoding() PASSED
+
+YlNativePlaybackPlannerTest > uses hardware after FFmpeg demux when codec configuration is supported() PASSED
+
+YlNativePlaybackPlannerTest > audio clock interpolation never advances beyond written pcm() PASSED
+
+YlNativePlaybackPlannerTest > full video queue waits for presentation time instead of rendering a burst() PASSED
+
+YlNativePlaybackPlannerTest > pcm flush discards bytes that were not accepted by audio track() PASSED
+
+YlNativePlaybackPlannerTest > main10 level 62 remains software when hardware configuration probe rejects its level() PASSED
+
+YlPlaybackHealthMonitorTest > downgrade cooldown is sixty seconds and never emits upgrade() PASSED
+
+YlPlaybackHealthMonitorTest > HLS forced live edge recovery is rate limited() PASSED
+
+YlPlaybackHealthMonitorTest > HTTP FLV severe backlog reconnects and then exhausts() PASSED
+
+YlPlaybackHealthMonitorTest > running low memory downgrades adaptive streams but keeps fixed streams alive() PASSED
+
+YlPlaybackHealthMonitorTest > two unhealthy windows downgrade one step() PASSED
+
+YlPlaybackHealthMonitorTest > sustained frame drops cannot terminate a fixed rendition() PASSED
+
+YlPlaybackHealthMonitorTest > rebuffer statistics alone cannot declare a fixed rendition unsupported() PASSED
+
+YlPlaybackHealthMonitorTest > drop ratio and rebuffer thresholds mark a window unhealthy() PASSED
+
+YlPlaybackHealthMonitorTest > HLS catches up gently and resets speed inside target() PASSED
+
+YlPlaybackPolicyTest > running low target is reduced by exactly 25 percent() PASSED
+
+YlPlaybackPolicyTest > constrained requests are clamped but smaller custom values survive() PASSED
+
+YlPlaybackPolicyTest > standard and capable modes retain bounded existing behavior() PASSED
+
+YlPlaybackPolicyTest > any constrained boundary wins() PASSED
+
+YlPlaybackPolicyTest > Android 7 1_5GB 32-bit is constrained() PASSED
+
+YlPlaybackPolicyTest > automatic live suffix and unknown live are deterministic() PASSED
+
+YlPlaybackPolicyTest > constrained automatic profiles match TVBox ceilings() PASSED
+
+YlPlaybackPolicyTest > explicit hint wins and query is ignored() PASSED
+
+YlPlaybackPolicyTest > local sources are classified before URL inspection() PASSED
+
+YlPlaybackPolicyTest > memory signals map to bounded actions() PASSED
+
+YlPlaybackPolicyTest > capable requires every capable signal() PASSED
+
+YlPlaybackStallWatchdogTest > repeated refresh keeps original first frame deadline() PASSED
+
+YlPlaybackStallWatchdogTest > first frame timeout reports network failure() PASSED
+
+YlPlaybackStallWatchdogTest > rebuffer timeout reports network failure after first frame() PASSED
+
+YlPlaybackStallWatchdogTest > playback recovery cancels pending rebuffer failure() PASSED
+
+YlPlaybackStallWatchdogTest > play intent cancellation suppresses pending timeout() PASSED
+
+YlPlayerErrorPolicyTest > resource and live recovery errors are stable() PASSED
+
+YlPlayerErrorPolicyTest > missing hardware decoder has a stable public error() PASSED
+
+YlPlayerErrorPolicyTest > codec diagnostic cannot contain a URL or headers() PASSED
+
+YlPlayerErrorPolicyTest > adaptive decoder initialization can retry only once() PASSED
+
+YlPlayerErrorPolicyTest > capability and decoder failures keep distinct codes() PASSED
+
+YlPlayerRegistryTest > real factories across registries retain one application focus owner until final registry detaches() PASSED
+
+YlPlayerRegistryTest > dispose unregisters and releases once even when called twice() PASSED
+
+YlPlayerRegistryTest > factory or handler setup failure rolls back allocated resources() PASSED
+
+YlPlayerRegistryTest > real production binding creates idle session and incompatible schema allocates nothing() PASSED
+
+YlPlayerRegistryTest > plugin registers only the generated factory and removes its lifecycle registrations() PASSED
+
+YlPlayerRegistryTest > real factory accepts explicit managed audio without idle ownership or allocation() PASSED
+
+YlPlayerRegistryTest > load reply preserves request identity and mismatches fail safely() PASSED
+
+YlPlayerRegistryTest > create registers one unique monotonic suffix per texture and attach is once only() PASSED
+
+YlPlayerRegistryTest > all generated command handlers sanitize thrown session errors() PASSED
+
+YlPlayerRegistryTest > texture allocation failure is typed and creates no session() PASSED
+
+YlPlayerRegistryTest > delivery failure cancels pending load and releases the instance() PASSED
+
+YlPlayerRegistryTest > committed schema 3 bytes reach schema 4 factory version gate() PASSED
+
+YlPlayerRegistryTest > failed texture id read releases every allocated resource() PASSED
+
+YlPlayerRegistryTest > timeout and engine detach settle pending load and ignore late acknowledgement() PASSED
+
+YlPlayerRegistryTest > foreign protected view registration fails attachment without host admission() PASSED
+
+YlPlayerRegistryTest > detach invalidates every host immediately and owns independent cleanup until acknowledged() PASSED
+
+YlPlayerRegistryTest > a transient handler removal failure is retried while all other handlers are removed() PASSED
+
+YlPlayerRegistryTest > new player inherits registry background state() PASSED
+
+YlPlayerRegistryTest > engine detach releases all hosts when a session teardown throws() PASSED
+
+YlPlayerRegistryTest > lifecycle forwarding isolates a failed host and keeps other sessions alive() PASSED
+
+YlPlayerRegistryTest > host catches session exception before generated fallback and attach failure closes instance() PASSED
+
+YlPlayerRegistryTest > dispose waits asynchronously for safe session release before releasing texture() PASSED
+
+YlProgressiveExtractorsTest > AVI timing and FLV seek use the owned route() PASSED
+
+YlProgressiveExtractorsTest > streaming FLV remains available to the standard extractor() PASSED
+
+YlProgressiveExtractorsTest > ordinary MP4 remains available to the standard extractors() PASSED
+
+YlProgressiveExtractorsTest > actual MPEG1 PS cannot fall through to raw MP3 detection() PASSED
+
+YlProgressiveExtractorsTest > pack prefix without valid marker bits is not a PS route() PASSED
+
+YlProtectedCodecSelectorTest > missing secure or actual hardware evidence fails closed() PASSED
+
+YlProtectedCodecSelectorTest > Media3 insecure retry still queries secure codecs and filters false evidence() PASSED
+
+YlProtectedCodecSelectorTest > audio secure requirement is preserved and cannot select unprotected audio() PASSED
+
+YlProtectedOutputTest > frame arriving before attach acknowledgement reveals only after acknowledgement() PASSED
+
+YlProtectedOutputTest > coordinator publishes protected frame identity and failed replacement restores old session() PASSED
+
+YlProtectedOutputTest > holder destruction and retirement detach before returning with attach held() PASSED
+
+YlProtectedOutputTest > uncommitted unknown and duplicate view cannot borrow another candidate() PASSED
+
+YlProtectedOutputTest > destroy waits for worker detach and queued attach rechecks revision() PASSED
+
+YlProtectedOutputTest > protected replacement rejects inactive and inspection branches() PASSED
+
+YlProtectedOutputTest > failed candidate does not retire current and commit fences previous owner() PASSED
+
+YlProtectedOutputTest > declared protected source cannot silently commit clear selected video() PASSED
+
+YlProtectedOutputTest > protected primary never invokes clear native fallback on decoder failure() PASSED
+
+YlProtectedOutputTest > protected core rejects ordinary output before attaching decoder() PASSED
+
+YlProtectedOutputTest > late attachment ACK and frame are fenced across holder recreation and retire() PASSED
+
+YlProtectedOutputTest > protected output rejects insecure switch and inspection before touching decoder() PASSED
+
+YlProtectedOutputTest > native old frame cannot acquire new revision when same surface is rebound() PASSED
+
+YlProtectedViewTest > native fit preserves display aspect ratio within portrait and landscape bounds() PASSED
+
+YlProtectedViewTest > factory secures holder before attaching view and invalid identity remains black() PASSED
+
+YlRedirectCredentialPolicyTest > HLS reload query and cached graph edges cannot restore stripped credentials() PASSED
+
+YlRedirectCredentialPolicyTest > HLS ancestry graph is skipped when requests contain no sensitive credentials() PASSED
+
+YlRedirectCredentialPolicyTest > effective port change strips every credential() PASSED
+
+YlRedirectCredentialPolicyTest > same origin keeps caller credentials including implicit https port() PASSED
+
+YlRedirectCredentialPolicyTest > HLS ancestry graph is retained for every supported credential source() PASSED
+
+YlRedirectCredentialPolicyTest > host change strips every credential but keeps ordinary headers() PASSED
+
+YlRedirectCredentialPolicyTest > scheme downgrade strips every credential() PASSED
+
+YlRedirectCredentialPolicyTest > same origin keeps credentials with implicit http port() PASSED
+
+YlRedirectCredentialPolicyTest > credentials removed on first hop cannot reappear on second hop() PASSED
+
+YlRtmpAdmissionTest > rtmp routes before HTTP conversion() PASSED
+
+YlRtmpAdmissionTest > nested errors map safe phase codes and preserve permanent handshake rejection() PASSED
+
+YlRtmpAdmissionTest > unsupported protocol and policies have stable rejection() PASSED
+
+YlRtmpAdmissionTest > opaque app playpath query and port preserve lexical identity() PASSED
+
+YlRtmpAdmissionTest > malformed and decoded control values rejected() PASSED
+
+YlRtmpControlTest > ping replies retain timestamp and config chatter cannot prevent media timeout() PASSED
+
+YlRtmpControlTest > audio and controls alone cannot complete video setup even when paused() PASSED
+
+YlRtmpControlTest > Core pause freezes an already blocked loader read and resumes same connection() PASSED
+
+YlRtmpControlTest > pause preserves elapsed inactivity instead of granting a new full allowance() PASSED
+
+YlRtmpControlTest > Core pause before registration is inherited and Stop cancels blocked read() PASSED
+
+YlRtmpControlTest > server denial is permanent and contains no remote prose() PASSED
+
+YlRtmpControlTest > close cancels established blocked media read promptly() PASSED
+
+YlRtmpControlTest > wrong transaction is protocol failure instead of false setup success() PASSED
+
+YlRtmpControlTest > acknowledgement crosses a receive window during incomplete video message() PASSED
+
+YlRtmpControlTest > consumer backpressure longer than inactivity does not expire a healthy stream() PASSED
+
+YlRtmpExtractorTest > independent MediaMTX peer feeds AVC AAC samples to pinned extractor() SKIPPED
+
+YlRtmpExtractorTest > independent video-only peer formats every declared track() SKIPPED
+
+YlRtmpExtractorTest > real AVC AAC fixture passes owned FLV adapter into pinned Media3 extractor() STANDARD_OUT
+    AVC samples=20, AAC samples=35, seekable=false, duration=-9223372036854775807
+
+YlRtmpExtractorTest > real AVC AAC fixture passes owned FLV adapter into pinned Media3 extractor() PASSED
+
+YlRtmpExtractorTest > independent peer transfers more than three negotiated ACK windows() SKIPPED
+
+YlRtmpFlowControlTest > hard soft dynamic bandwidth bounds outstanding bytes and ACK drains pending bytes() PASSED
+
+YlRtmpFlowControlTest > pending output is capped before allocation and clear releases queued contents() PASSED
+
+YlRtmpFlowControlTest > ACK unsigned wrap is accepted and future ACK is invalid() PASSED
+
+YlRtmpLifecycleTest > coordinator preserves unsupported protocol before creating engine() PASSED
+
+YlRtmpLifecycleTest > runtime time seek rejects zero and nonzero before changing intent() PASSED
+
+YlRtmpLifecycleTest > Stop discards unreserved paused recovery and play does not resurrect it() PASSED
+
+YlRtmpLifecycleTest > Core pause retains reserved backoff and rapid play cannot lose or double debit continuation() PASSED
+
+YlRtmpLifecycleTest > Core defers transient failure while paused without reserving and Stop discards it() PASSED
+
+YlRtmpLifecycleTest > Core keeps permanent and exhausted failures terminal while paused() PASSED
+
+YlRtmpLifecycleTest > fresh epochs fence stale callbacks and preserve spent automatic budget() PASSED
+
+YlRtmpProtocolTest > timestamp resets are per track and force a fresh epoch() PASSED
+
+YlRtmpProtocolTest > declared codec configurations are immutable within a demux epoch() PASSED
+
+YlRtmpProtocolTest > late AAC after video-only header rejects explicitly before tag output() PASSED
+
+YlRtmpProtocolTest > AMF real object vectors preserve types and enforce recursion entries and strings() PASSED
+
+YlRtmpProtocolTest > fmt zero one two three timestamps inherit and advance() PASSED
+
+YlRtmpProtocolTest > chunk stream count and aggregate reassembly bytes are bounded() PASSED
+
+YlRtmpProtocolTest > recovery only after commit and has one lifetime budget() PASSED
+
+YlRtmpProtocolTest > AVC AAC preserve payload composition and timestamp but reject enhanced codecs() PASSED
+
+YlRtmpProtocolTest > chunk reader handles partial input extended timestamp and multi chunks() PASSED
+
+YlRtmpProtocolTest > bounds reject before allocation and abort releases accounting() PASSED
+
+YlRtmpProtocolTest > valid config reset takes epoch precedence but malformed reset stays permanent() PASSED
+
+YlRtmpProtocolTest > new fmt3 after fmt0 inherits nonzero timestamp as delta including extended values() PASSED
+
+YlRtmpProtocolTest > interleaved chunks reassemble independently and abort drops pending buffer() PASSED
+
+YlRtmpReadinessTest > terminal failure after an automatic epoch reaches original operation waiter() PASSED
+
+YlRtmpReadinessTest > automatic epoch replacement resolves existing restore waiter with fresh decoder evidence() PASSED
+
+YlRtmpReadinessTest > completed epoch never supplies readiness to the next epoch() PASSED
+
+YlRtmpReadinessTest > committed coordinator foreground restore completes through automatic recovery epoch() PASSED
+
+YlRtmpTransportTest > close interrupts a published connecting socket() PASSED
+
+YlRtmpTransportTest > silent and trickling peers cannot extend absolute setup deadline() PASSED
+
+YlRtmpTransportTest > DNS admission remains held after cancellation until actual OS lookup exit() PASSED
+
+YlRtmpTransportTest > close interrupts a blocked socket write() PASSED
+
+YlRtmpTransportTest > close wakes blocked handshake without waiting for setup() PASSED
+
+YlSessionAudioTest > failed same player handoff preserves ownership and ducked latest volume on rollback() PASSED
+
+YlSessionAudioTest > transient gain never overrides later explicit pause or stop() PASSED
+
+YlSessionAudioTest > participant joining an already ducked request inherits multiplier before play and volume edits() PASSED
+
+YlSessionAudioTest > noisy and permanent loss pause all participants and late gain cannot restart them() PASSED
+
+YlSessionAudioTest > last participant release resets shared duck policy without waiting for gain() PASSED
+
+YlSessionAudioTest > permanent loss then play before queued pause acquires a fresh request without stale gain() PASSED
+
+YlSessionAudioTest > two managed players share focus and close of one does not release the other() PASSED
+
+YlSessionAudioTest > app managed play pause background stop and close never touch shared driver() PASSED
+
+YlSessionAudioTest > denied autoplay reports failure after commit without starting engine() PASSED
+
+YlSessionAudioTest > same player successful autoplay handoff retains ownership and nonautoplay replacement releases it() PASSED
+
+YlSessionAudioTest > cross player candidate failure keeps acquired focus throughout quiesce and rollback() PASSED
+
+YlSessionAudioTest > candidate prepare is silent and denied direct play never starts engine() PASSED
+
+YlSessionAudioTest > focus resumes intended current player and duck composes latest volume() PASSED
+
+YlSessionAudioTest > managed explicit play awaiting volume preserves intent through background without playing hidden() PASSED
+
+YlSessionAudioTest > permanent loss across volume acknowledgement retains newer play and retires old request() PASSED
+
+YlSessionAudioTest > focus gain awaiting volume cannot replay into a pending background quiesce() PASSED
+
+YlSessionAudioTest > background waits for quiesce and release acknowledgement then foreground reacquires() PASSED
+
+YlSessionCoordinatorTest > new load in retained background waits without allocation or autoplay() PASSED
+
+YlSessionCoordinatorTest > pending retry events replay once after initial or replacement commit before live retries() PASSED
+
+YlSessionCoordinatorTest > held background release survives stop close and caller cancellation before safe cleanup() PASSED
+
+YlSessionCoordinatorTest > background during held foreground restore retains unapplied explicit play() PASSED
+
+YlSessionCoordinatorTest > committed failure emits failed state and exactly one session failure() PASSED
+
+YlSessionCoordinatorTest > commit publishes correlated loading and uses player local monotonic identity() PASSED
+
+YlSessionCoordinatorTest > candidate failure callback before commit keeps former authoritative() PASSED
+
+YlSessionCoordinatorTest > volume changed after worker assignment follows committed player() PASSED
+
+YlSessionCoordinatorTest > background at committed loading keeps reply and saves not yet dispatched autoplay() PASSED
+
+YlSessionCoordinatorTest > rollback uses current position after earlier seek has advanced() PASSED
+
+YlSessionCoordinatorTest > safe exceptional close waits for other retired engine release before freeing output() PASSED
+
+YlSessionCoordinatorTest > play and pause while backgrounded only change foreground playback intention() PASSED
+
+YlSessionCoordinatorTest > old session command is stale and stop cancels candidate while preserving output() PASSED
+
+YlSessionCoordinatorTest > candidate preparation failure leaves former decoder untouched() PASSED
+
+YlSessionCoordinatorTest > failed and stopped candidates discard provisional retries() PASSED
+
+YlSessionCoordinatorTest > play during held predecessor quiesce cannot bypass shared lease() PASSED
+
+YlSessionCoordinatorTest > play queued during failed quiesce cannot reactivate failed resources() PASSED
+
+YlSessionCoordinatorTest > foreground publishes snapshot observed during held restoration only after acknowledgement() PASSED
+
+YlSessionCoordinatorTest > managed credentials share assessment and load route without interim rejection() PASSED
+
+YlSessionCoordinatorTest > pause of playing background session remains paused after lease restoration() PASSED
+
+YlSessionCoordinatorTest > replacement waits captured background release and cannot lose new lease to its continuation() PASSED
+
+YlSessionCoordinatorTest > safe cleanup error does not touch former or replace original preparation failure() PASSED
+
+YlSessionCoordinatorTest > private frame does not consume public gate and late output frames are ignored() PASSED
+
+YlSessionCoordinatorTest > strict activation deadline reports decoder unavailable and restores former session() PASSED
+
+YlSessionCoordinatorTest > caller cancellation retains completed quiesce snapshot for rollback() PASSED
+
+YlSessionCoordinatorTest > activation failure restores same player old engine before returning() PASSED
+
+YlSessionCoordinatorTest > controls changed while peer activation fails survive rollback() PASSED
+
+YlSessionCoordinatorTest > foreground waits held background quiesce before restoring original play intent() PASSED
+
+YlSessionCoordinatorTest > real managed wrapper stop succeeds for active and pending replacement while load cancels() PASSED
+
+YlSessionCoordinatorTest > background cancels held first load before it can autoplay() PASSED
+
+YlSessionCoordinatorTest > close remains pending until every engine safely releases and main keeps running() PASSED
+
+YlSessionCoordinatorTest > foreground background bounce preserves explicit play until applied() PASSED
+
+YlSessionCoordinatorTest > two nonexclusive sessions suspend on background and retain independent intent() PASSED
+
+YlSessionCoordinatorTest > managed close preserves output until every borrower acknowledges even after failure() PASSED
+
+YlSessionCoordinatorTest > validation and prepare failure retain old session with no new state() PASSED
+
+YlSessionCoordinatorTest > background shares held peer quiesce and completes before candidate disposal() PASSED
+
+YlSessionCoordinatorTest > memory notification reaches candidate held in decoder activation() PASSED
+
+YlSessionCoordinatorTest > stop and close retain lease until acknowledged disposal while stop fences presentation() PASSED
+
+YlSessionCoordinatorTest > background cancels held replacement and foreground restores only saved intent() PASSED
+
+YlSessionCoordinatorTest > stop cancels candidate without waiting for old restoration() PASSED
+
+YlSessionCoordinatorTest > peer retains metadata and reacquires lease on play() PASSED
+
+YlSessionCoordinatorTest > background release stays independent of unacknowledged candidate cleanup() PASSED
+
+YlSessionCoordinatorTest > network on demand activation may continue beyond the live deadline() PASSED
+
+YlSessionCoordinatorTest > quiesce failure cannot retain a false playing state() PASSED
+
+YlSessionCoordinatorTest > held restore cannot acknowledge constraints without worker application() PASSED
+
+YlSessionCoordinatorTest > second load cancels uncommitted candidate and ignores its late callback() PASSED
+
+YlSessionCoordinatorTest > worker rejection does not replace remembered video constraints() PASSED
+
+YlSessionCoordinatorTest > video command rejects unimplemented engine without changing mode() PASSED
+
+YlSessionCoordinatorTest > fixed commands require worker acknowledgement and reject held restoration() PASSED
+
+YlSessionCoordinatorTest > fixed semantic restore point survives replacement rollback and old session cannot affect replacement or stop() PASSED
+
+YlSessionCoordinatorTest > synchronous publication failure closes accepted session without restoring former() PASSED
+
+YlSoftwareDecodeBudgetTest > invalidObservationAndOversizePacketPermanentlyCloseLease() PASSED
+
+YlSoftwareDecodeBudgetTest > metadataRejectsWrongVersionLengthAndIntegerTruncation() PASSED
+
+YlSoftwareDecodeBudgetTest > candidateAndRetainedOldFramesShareTheStrictestCap() PASSED
+
+YlSoftwareDecodeBudgetTest > replacementCannotEraseRecentCpuConsumption() PASSED
+
+YlSoftwareDecodeBudgetTest > exactIdentityAndPositiveRationalAreRequired() PASSED
+
+YlSoftwareDecodeBudgetTest > gapOrReversedCounterFailsAndClosedEmptyLeaseDoesNotConstrainNextOne() PASSED
+
+YlSoftwareDecodeBudgetTest > nativeReceiptsAreIdempotentAndSurviveRetirement() PASSED
+
+YlSoftwareDecodeBudgetTest > unversionedMetadataNeverReachesAdmission() PASSED
+
+YlSourceAssessmentTest > known local content progressive and managed HLS have real routes() PASSED
+
+YlSourceAssessmentTest > automatic DASH path is a known route despite query() PASSED
+
+YlSourceAssessmentTest > malformed descriptors and unimplemented hard buffers reject() PASSED
+
+YlSourceAssessmentTest > unknown containers and attainable strict evidence require inspection() PASSED
+
+YlSourceAssessmentTest > invalid ports and HTTP header values fail before native allocation() PASSED
+
+YlStateReducerTest > failures and public frame milestones deduplicate independently of state revisions() PASSED
+
+YlStateReducerTest > failure shares the monotonic epoch of rendered frame and retry() PASSED
+
+YlStateReducerTest > timeline metadata changes publish full state and metrics only snapshots use delta() PASSED
+
+YlStateReducerTest > output replacement rejects old public output without consuming the milestone() PASSED
+
+YlStateReducerTest > initial buffering remains loading and later buffering retains reached Ready() PASSED
+
+YlStateReducerTest > semantic changes and timeline deltas each own consecutive revisions and sequences() PASSED
+
+YlStopPolicyTest > stopClearsSessionAndAdvancesGenerationWithoutDisposingIdentity() PASSED
+
+YlUnavailableDecoderGateTest > selectedVideoStillWaitsForActualIdentity() PASSED
+
+YlUnavailableDecoderGateTest > declaredButUnselectedVideoCannotWaitForAnImpossibleDecoderIdentity() PASSED
+
+YlVideoSelectionPolicyTest > DASH automatic selection stays in accepted SDR family across Period and restore() PASSED
+
+YlVideoSelectionPolicyTest > absence returns auto and clears override while transient empty groups retain fixed intent() PASSED
+
+YlVideoSelectionPolicyTest > DASH Dolby family retains profile and transfer and rejects unproven FEL path() PASSED
+
+YlVideoSelectionPolicyTest > selection boundary fixes recreated group before next Period prebuffer without changing public intent() PASSED
+
+YlVideoSelectionPolicyTest > missing AVC fixed quality can fall back to supported SDR HEVC while preserving independent caps() PASSED
+
+YlVideoSelectionPolicyTest > unsupported decoder cap conflict unknown constrained metadata and HDR fail safely() PASSED
+
+YlVideoSelectionPolicyTest > DASH actual decoder color cannot contradict accepted manifest family() PASSED
+
+YlVideoSelectionPolicyTest > SDR HEVC fixed quality preserves identity across recreated Period groups() PASSED
+
+YlVideoSelectionPolicyTest > fixed override contains exactly requested track and survives changed IDs and order() PASSED
+
+YlVideoSelectionPolicyTest > explicit high bitdepth AVC metadata is incompatible even when codec profile claims SDR() PASSED
+
+YlVideoSelectionPolicyTest > auto explicit choice and reset have separate stable reasons() PASSED
+
+YlVideoSelectionPolicyTest > same resolution is not identity and duplicate semantic identity is rejected() PASSED
+
+YlWidevineDriverTest > session requests hardware protection and releases exactly once() PASSED
+
+YlWidevineDriverTest > lower protection or unknown API capability never falls back() PASSED
+
+YlWidevineDriverTest > provisioning is explicit and close failure still releases object() PASSED
+
+YlWidevineDriverTest > only current nonempty all-usable statuses are usable and closed callbacks are ignored() PASSED
+
+YlWidevineDriverTest > denied response never maps to expired and streaming has no default URL transport() PASSED
+
+YlWidevineDriverTest > Media3 receives copied secure session handle only while driver is open() PASSED
+
+> Task :yl_player_android:compileDebugAndroidTestJavaWithJavac NO-SOURCE
+> Task :yl_player_android:dexBuilderDebugAndroidTest
+> Task :yl_player_android:mergeDebugAndroidTestGlobalSynthetics UP-TO-DATE
+> Task :yl_player_android:processDebugAndroidTestJavaRes UP-TO-DATE
+> Task :yl_player_android:mergeDebugAndroidTestJavaResource UP-TO-DATE
+> Task :yl_player_android:mergeProjectDexDebugAndroidTest
+> Task :yl_player_android:packageDebugAndroidTest
+> Task :yl_player_android:createDebugAndroidTestApkListingFileRedirect UP-TO-DATE
+> Task :yl_player_android:assembleDebugAndroidTest
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/example/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 25s
+68 actionable tasks: 11 executed, 57 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.1.0/userguide/configuration_cache_enabling.html

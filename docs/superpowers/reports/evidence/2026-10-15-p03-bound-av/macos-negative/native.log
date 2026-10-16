@@ -1,0 +1,69 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /private/tmp/yl-p03-bound-av-20261015/macos-negative/bound.xctestrun -destination platform=macOS,arch=arm64 -parallel-testing-enabled NO -resultBundlePath /private/tmp/yl-p03-bound-av-20261015/macos-negative/runtime.xcresult
+
+Writing result bundle at path:
+	/private/tmp/yl-p03-bound-av-20261015/macos-negative/runtime.xcresult
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Mac Catalyst, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:arm64, variant:DriverKit, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00008103-000571C03CD9001E, name:My Mac }
+2026-10-15 22:10:01.502509-0700 yl_player_example[40114:3864361] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.502875-0700 yl_player_example[40114:3864361] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.503336-0700 yl_player_example[40114:3864370] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.503395-0700 yl_player_example[40114:3864370] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.503975-0700 yl_player_example[40114:3864360] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.503994-0700 yl_player_example[40114:3864360] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.504525-0700 yl_player_example[40114:3864360] [Connection] Will NOT re-try to establish the connection
+2026-10-15 22:10:01.504571-0700 yl_player_example[40114:3864361] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.504644-0700 yl_player_example[40114:3864361] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:10:01.520141-0700 yl_player_example[40114:3864315] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/dev.ylplayer.ylPlayerExample.savedState
+2026-10-15 22:10:01.639138-0700 yl_player_example[40114:3864315] Running with merged UI and platform thread. Experimental.
+flutter: The Dart VM service is listening on http://127.0.0.1:53372/a1nBiZq2qGk=/
+2026-10-15 22:10:02.274955-0700 yl_player_example[40114:3864370] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x749d44cb60> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+Test Suite 'Selected tests' started at 2026-10-15 22:10:02.502.
+Test Suite 'RunnerTests.xctest' started at 2026-10-15 22:10:02.503.
+Test Suite 'YlContainerOutputTests' started at 2026-10-15 22:10:02.503.
+Test Case '-[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:462: error: -[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek] : failed: caught error: "Error Domain=P03BoundAV Code=1 "manifest identity mismatch" UserInfo={NSLocalizedDescription=manifest identity mismatch}"
+Test Case '-[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek]' failed (0.051 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:462: error: -[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek] : failed: caught error: "Error Domain=P03BoundAV Code=1 "manifest identity mismatch" UserInfo={NSLocalizedDescription=manifest identity mismatch}"
+Test Case '-[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek]' failed (0.004 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:462: error: -[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek] : failed: caught error: "Error Domain=P03BoundAV Code=1 "manifest identity mismatch" UserInfo={NSLocalizedDescription=manifest identity mismatch}"
+Test Case '-[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek]' failed (0.003 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:462: error: -[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek] : failed: caught error: "Error Domain=P03BoundAV Code=1 "manifest identity mismatch" UserInfo={NSLocalizedDescription=manifest identity mismatch}"
+Test Case '-[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek]' failed (0.003 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:462: error: -[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek] : failed: caught error: "Error Domain=P03BoundAV Code=1 "manifest identity mismatch" UserInfo={NSLocalizedDescription=manifest identity mismatch}"
+Test Case '-[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek]' failed (0.004 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:462: error: -[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek] : failed: caught error: "Error Domain=P03BoundAV Code=1 "manifest identity mismatch" UserInfo={NSLocalizedDescription=manifest identity mismatch}"
+Test Case '-[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek]' failed (0.005 seconds).
+Test Suite 'YlContainerOutputTests' failed at 2026-10-15 22:10:02.574.
+	 Executed 6 tests, with 6 failures (6 unexpected) in 0.069 (0.071) seconds
+Test Suite 'RunnerTests.xctest' failed at 2026-10-15 22:10:02.575.
+	 Executed 6 tests, with 6 failures (6 unexpected) in 0.069 (0.072) seconds
+Test Suite 'Selected tests' failed at 2026-10-15 22:10:02.575.
+	 Executed 6 tests, with 6 failures (6 unexpected) in 0.069 (0.072) seconds
+2026-10-15 22:10:10.073 xcodebuild[40084:3864115] [MT] IDETestOperationsObserverDebug: 8.990 elapsed -- Testing started completed.
+2026-10-15 22:10:10.073 xcodebuild[40084:3864115] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-15 22:10:10.073 xcodebuild[40084:3864115] [MT] IDETestOperationsObserverDebug: 8.990 sec, +8.990 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/yl-p03-bound-av-20261015/macos-negative/runtime.xcresult
+
+Failing tests:
+	YlContainerOutputTests.testAC3SurroundActualPixelsSixChannelPCMAndSeek()
+	YlContainerOutputTests.testDTSActualPixelsPCMAndSeek()
+	YlContainerOutputTests.testEAC3ActualPixelsPCMAndSeek()
+	YlContainerOutputTests.testFLACActualPixelsPCMAndSeek()
+	YlContainerOutputTests.testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()
+	YlContainerOutputTests.testProgramStreamActualPixelsPCMAndBidirectionalSeek()
+
+** TEST EXECUTE FAILED **
+
+Testing started

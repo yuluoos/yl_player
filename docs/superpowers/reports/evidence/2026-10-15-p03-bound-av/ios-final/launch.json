@@ -1,0 +1,15 @@
+{
+  "command": [
+    "xcodebuild",
+    "test-without-building",
+    "-xctestrun",
+    "/private/tmp/yl-p03-bound-av-20261015/ios-final/bound.xctestrun",
+    "-destination",
+    "platform=iOS Simulator,id=A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6",
+    "-parallel-testing-enabled",
+    "NO",
+    "-resultBundlePath",
+    "/private/tmp/yl-p03-bound-av-20261015/ios-final/runtime.xcresult"
+  ],
+  "preverified": true
+}

@@ -306,6 +306,17 @@ internal class YlPcmAudioOutput(
         }.onSuccess { playbackRateParametersApplied = true }
     }
 
+    /** Fresh AudioTrack consumption observation, with no wall-time extrapolation.
+     * Null before the first PCM origin or after flush/close. Worker-confined;
+     * this programme timestamp is not a physical speaker-latency measurement.
+     */
+    fun consumedPositionUs(): Long? {
+        val audio = output ?: return null
+        if (firstPresentationUs == Long.MIN_VALUE || stream.sampleRate <= 0) return null
+        val frames = audio.playbackHeadPosition.toLong() and 0xffffffffL
+        return firstPresentationUs + frames * 1_000_000L / stream.sampleRate
+    }
+
     fun positionUs(): Long? {
         val audio = output ?: return null
         if (firstPresentationUs == Long.MIN_VALUE || stream.sampleRate <= 0) return null

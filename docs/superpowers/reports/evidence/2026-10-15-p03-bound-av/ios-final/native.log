@@ -1,0 +1,64 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /private/tmp/yl-p03-bound-av-20261015/ios-final/bound.xctestrun -destination "platform=iOS Simulator,id=A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6" -parallel-testing-enabled NO -resultBundlePath /private/tmp/yl-p03-bound-av-20261015/ios-final/runtime.xcresult
+
+Writing result bundle at path:
+	/private/tmp/yl-p03-bound-av-20261015/ios-final/runtime.xcresult
+
+2026-10-15 22:11:17.080 xcodebuild[40391:3865864] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-15 22:12:01.443639-0700 Runner[40728:3868562] [UIFocus] FlutterView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-15 22:12:01.585186-0700 Runner[40728:3869381] flutter: The Dart VM service is listening on http://127.0.0.1:53585/n6NqcJ9CRAM=/
+2026-10-15 22:12:02.004140-0700 Runner[40728:3868562] [XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+Test Suite 'Selected tests' started at 2026-10-15 22:12:03.459.
+Test Suite 'RunnerTests.xctest' started at 2026-10-15 22:12:03.460.
+Test Suite 'YlContainerOutputTests' started at 2026-10-15 22:12:03.460.
+Test Case '-[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:244: error: -[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek] : failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.
+Test Case '-[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek]' failed (1.401 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:198: error: -[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek] : failed: caught error: "Playback operation failed."
+Test Case '-[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek]' failed (0.536 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:198: error: -[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek] : failed: caught error: "Playback operation failed."
+Test Case '-[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek]' failed (0.229 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:198: error: -[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek] : failed: caught error: "Playback operation failed."
+Test Case '-[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek]' failed (0.218 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek]' started.
+[0;36m[vp9 @ 0x125126a00] [0m[1;31mCodec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+[0m[0;35m[matroska,webm @ 0x116758a00] [0m[0;33mFailed to open codec in avformat_find_stream_info
+[0m[0;36m[vp9 @ 0x125126a00] [0m[1;31mCodec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+[0m/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:240: error: -[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek] : failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.
+Test Case '-[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek]' failed (0.225 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek]' started.
+[0;35m[mpeg @ 0x116758780] [0m[0;33mCould not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+[0m/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift:236: error: -[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek] : failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.
+Test Case '-[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek]' failed (0.247 seconds).
+Test Suite 'YlContainerOutputTests' failed at 2026-10-15 22:12:06.321.
+	 Executed 6 tests, with 6 failures (3 unexpected) in 2.856 (2.861) seconds
+Test Suite 'RunnerTests.xctest' failed at 2026-10-15 22:12:06.321.
+	 Executed 6 tests, with 6 failures (3 unexpected) in 2.856 (2.861) seconds
+Test Suite 'Selected tests' failed at 2026-10-15 22:12:06.321.
+	 Executed 6 tests, with 6 failures (3 unexpected) in 2.856 (2.862) seconds
+2026-10-15 22:12:06.609942-0700 Runner[40728:3868562] [UIFocus] FlutterSemanticsScrollView implements focusItemsInRect: - caching for linear focus movement is limited as long as this view is on screen.
+2026-10-15 22:12:06.753 xcodebuild[40391:3865864] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-15 22:12:06.760 xcodebuild[40391:3865864] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-15 22:12:06.774 xcodebuild[40391:3865864] [MT] IDESchemeActionSDKRecord: operatingSystemBuild = <DVTBuildVersion 24A94232>, error = invalidDigitCount(94232).
+2026-10-15 22:13:09.310 xcodebuild[40391:3865864] [MT] IDETestOperationsObserverDebug: 118.478 elapsed -- Testing started completed.
+2026-10-15 22:13:09.311 xcodebuild[40391:3865864] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-15 22:13:09.311 xcodebuild[40391:3865864] [MT] IDETestOperationsObserverDebug: 118.478 sec, +118.478 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/yl-p03-bound-av-20261015/ios-final/runtime.xcresult
+
+Failing tests:
+	YlContainerOutputTests.testAC3SurroundActualPixelsSixChannelPCMAndSeek()
+	YlContainerOutputTests.testDTSActualPixelsPCMAndSeek()
+	YlContainerOutputTests.testEAC3ActualPixelsPCMAndSeek()
+	YlContainerOutputTests.testFLACActualPixelsPCMAndSeek()
+	YlContainerOutputTests.testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()
+	YlContainerOutputTests.testProgramStreamActualPixelsPCMAndBidirectionalSeek()
+
+** TEST EXECUTE FAILED **
+
+Testing started

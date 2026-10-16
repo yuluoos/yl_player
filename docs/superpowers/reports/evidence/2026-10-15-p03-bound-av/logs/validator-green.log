@@ -1,0 +1,14 @@
+.........F.
+======================================================================
+FAIL: test_real_values_can_accept_only_the_frozen_scope (test_bound_av.BoundAVTest.test_real_values_can_accept_only_the_frozen_scope)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_av.py", line 28, in test_real_values_can_accept_only_the_frozen_scope
+    result=self.result();self.assertTrue(result['scopeAcceptance']);self.assertFalse(result['fullAcceptance'])
+                         ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.418s
+
+FAILED (failures=1)

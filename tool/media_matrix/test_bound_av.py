@@ -1,0 +1,90 @@
+"""Synthetic evidence mutations test the gate; these are not player observations."""
+import base64, copy, hashlib, math, struct, unittest
+from bound_av import validate
+
+def tone(marker):
+    return struct.pack('<16384f', *(v for i in range(8192) for v in
+        (0.04*math.sin(2*math.pi*(440+marker*220+c*55)*i/48000) for c in range(2))))
+
+class BoundAVTest(unittest.TestCase):
+    def setUp(self):
+        self.plan=dict(schema=1,runId='run-one',platform='macos',buildSha256='b'*64,testSha256='d'*64,
+            artifactKind='apple-native-consumer',planned=[dict(caseId='mkv-avc-eac3',mediaHash='a'*64,channels=2)],
+            phases=[dict(phase='play',markers=[0,1,2,3]),dict(phase='seek-1250',markers=[1]),dict(phase='seek-2250',markers=[2]),dict(phase='seek-0',markers=[0])])
+        self.origin=dict(runId='run-one',sessionId='player-one',buildSha256='b'*64)
+        self.row=dict(schema=1,**self.origin,platform='macos',testSha256='d'*64,caseId='mkv-avc-eac3',mediaHash='a'*64,
+            identityVerified=True,outcome='passed',disposed=True,completed=True,releasedAudioBytes=0,phases=[])
+        for phase in self.plan['phases']:
+            pixels=[]; windows=[]
+            for m in phase['markers']:
+                raw=tone(m)
+                for delta in (250000,450000):
+                    pixels.append(dict(value=[[255,0,0],[0,255,0],[0,0,255],[255,255,255]][m],format='rgb8',audioClockUs=m*1000000+delta,hostTimeUs=10000000+m*1000000+delta))
+                windows.append(dict(**self.origin,phase=phase['phase'],marker=m,rate=48000,channels=2,startUs=m*1000000+250000 if phase['phase']=='play' else int(phase['phase'].split('-')[1])*1000+100000,
+                    frames=8192,pcmF32LE=base64.b64encode(raw).decode(),pcmSha256=hashlib.sha256(raw).hexdigest()))
+            self.row['phases'].append(dict(**self.origin,phase=phase['phase'],pixels=pixels,pcmWindows=windows))
+    def result(self,rows=None):return validate(self.plan,[self.row] if rows is None else rows)
+    def test_real_values_can_accept_only_the_frozen_scope(self):
+        result=self.result();self.assertTrue(result['scopeAcceptance']);self.assertFalse(result['fullAcceptance'])
+    def test_missing_duplicate_or_unplanned_row_fails(self):
+        for rows in [[],[self.row,self.row],[dict(self.row,caseId='another')]]:self.assertFalse(self.result(rows)['scopeAcceptance'])
+    def test_run_build_test_and_media_cannot_be_borrowed(self):
+        for key in ['runId','buildSha256','testSha256','mediaHash','platform']:
+            row=copy.deepcopy(self.row);row[key]='wrong';self.assertFalse(self.result([row])['scopeAcceptance'],key)
+    def test_nested_pcm_and_pixel_phase_identity_cannot_be_spliced(self):
+        for key in ['runId','sessionId','buildSha256']:
+            for target in ['phase','pcm']:
+                row=copy.deepcopy(self.row);item=row['phases'][0]
+                if target=='pcm':item=item['pcmWindows'][0]
+                item[key]='other';self.assertFalse(self.result([row])['scopeAcceptance'])
+    def test_lifecycle_and_runtime_identity_are_required(self):
+        for key in ['identityVerified','completed','disposed']:
+            row=dict(self.row);row[key]=False;self.assertFalse(self.result([row])['scopeAcceptance'])
+    def test_hardware_failure_stays_required_and_is_not_support(self):
+        self.row.update(outcome='failed',failureCode='decoder.video_hardware_unavailable',phases=[])
+        r=self.result();self.assertEqual(1,r['requiredRows']);self.assertEqual(0,r['supportedRows']);self.assertFalse(r['scopeAcceptance'])
+    def test_actual_pixels_and_audio_clock_are_required_together(self):
+        for value in [None,-1,True,9000000]:
+            row=copy.deepcopy(self.row)
+            for p in row['phases'][0]['pixels']:p['audioClockUs']=value
+            self.assertFalse(self.result([row])['scopeAcceptance'])
+    def test_missing_seek_or_wrong_pixels_fails(self):
+        row=copy.deepcopy(self.row);row['phases'].pop();self.assertFalse(self.result([row])['scopeAcceptance'])
+        for p in self.row['phases'][0]['pixels']:p['value']=[0,0,0]
+        self.assertFalse(self.result()['scopeAcceptance'])
+    def test_raw_pcm_hash_and_tone_are_checked_not_a_boolean(self):
+        for wrong in [b'broken',bytes(8192*2*4)]:
+            row=copy.deepcopy(self.row);w=row['phases'][0]['pcmWindows'][0]
+            w.update(pcmF32LE=base64.b64encode(wrong).decode(),pcmSha256=hashlib.sha256(wrong).hexdigest())
+            self.assertFalse(self.result([row])['scopeAcceptance'])
+    def test_nan_pcm_cannot_pass(self):
+        raw=struct.pack('<16384f',*([float('nan')]*16384));w=self.row['phases'][0]['pcmWindows'][0]
+        w.update(pcmF32LE=base64.b64encode(raw).decode(),pcmSha256=hashlib.sha256(raw).hexdigest())
+        self.assertFalse(self.result()['scopeAcceptance'])
+    def test_duplicate_window_or_changed_channel_count_fails(self):
+        row=copy.deepcopy(self.row);row['phases'][0]['pcmWindows'].append(row['phases'][0]['pcmWindows'][0]);self.assertFalse(self.result([row])['scopeAcceptance'])
+        self.row['phases'][0]['pcmWindows'][0]['channels']=6;self.assertFalse(self.result()['scopeAcceptance'])
+
+    def test_malformed_documents_fail_closed(self):
+        for plan in [None, [], dict(self.plan,planned=None), dict(self.plan,planned=[None])]:
+            self.assertFalse(validate(plan,[])['scopeAcceptance'])
+        for value in [None,[],1]:
+            row=copy.deepcopy(self.row);row['phases']=[value]
+            self.assertFalse(self.result([row])['scopeAcceptance'])
+    def test_android_requires_actual_output_release_observation(self):
+        self.plan['platform']='android';self.row['platform']='android'
+        self.assertFalse(self.result()['scopeAcceptance'])
+        self.row['audioOutputClosed']=True
+        self.row['audioClockMethod']='audiotrack-playback-head'
+        self.assertTrue(self.result()['scopeAcceptance'])
+
+    def test_android_estimated_clock_cannot_claim_consumption(self):
+        self.plan['platform']='android';self.row.update(platform='android',audioOutputClosed=True)
+        for method in [None,'audiotrack-anchored-estimate']:
+            self.row['audioClockMethod']=method
+            self.assertFalse(self.result()['scopeAcceptance'])
+    def test_stalled_consumption_after_seek_is_rejected(self):
+        for pixel in self.row['phases'][1]['pixels']:pixel['audioClockUs']=1_500_000
+        self.assertFalse(self.result()['scopeAcceptance'])
+
+if __name__=='__main__':unittest.main()

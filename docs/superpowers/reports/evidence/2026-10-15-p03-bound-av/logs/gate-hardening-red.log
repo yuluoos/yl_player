@@ -1,0 +1,26 @@
+.F...E.......
+======================================================================
+ERROR: test_malformed_documents_fail_closed (test_bound_av.BoundAVTest.test_malformed_documents_fail_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_av.py", line 70, in test_malformed_documents_fail_closed
+    self.assertFalse(validate(plan,[])['scopeAcceptance'])
+                     ~~~~~~~~^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/bound_av.py", line 80, in validate
+    require(plan.get('schema')==1 and plan.get('platform') in ('macos','ios','android'),'invalid_plan')
+            ^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'
+
+======================================================================
+FAIL: test_android_requires_actual_output_release_observation (test_bound_av.BoundAVTest.test_android_requires_actual_output_release_observation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_av.py", line 76, in test_android_requires_actual_output_release_observation
+    self.assertFalse(self.result()['scopeAcceptance'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.723s
+
+FAILED (failures=1, errors=1)

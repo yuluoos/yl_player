@@ -1,0 +1,138 @@
+Command line invocation:
+    /Applications/Xcode.app/Contents/Developer/usr/bin/xcodebuild test-without-building -xctestrun /private/tmp/yl-p03-bound-av-20261015/macos-final/bound.xctestrun -destination platform=macOS,arch=arm64 -parallel-testing-enabled NO -resultBundlePath /private/tmp/yl-p03-bound-av-20261015/macos-final/runtime.xcresult
+
+Writing result bundle at path:
+	/private/tmp/yl-p03-bound-av-20261015/macos-final/runtime.xcresult
+
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:macOS, arch:arm64, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Mac Catalyst, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:arm64, variant:DriverKit, id:00008103-000571C03CD9001E, name:My Mac }
+{ platform:macOS, arch:arm64, variant:Designed for [iPad,iPhone], id:00008103-000571C03CD9001E, name:My Mac }
+2026-10-15 22:08:37.228360-0700 yl_player_example[38859:3859296] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.229025-0700 yl_player_example[38859:3859294] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.229038-0700 yl_player_example[38859:3859294] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.228799-0700 yl_player_example[38859:3859296] [Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.229530-0700 yl_player_example[38859:3859305] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.229591-0700 yl_player_example[38859:3859305] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.229897-0700 yl_player_example[38859:3859305] [Connection] Will NOT re-try to establish the connection
+2026-10-15 22:08:37.229923-0700 yl_player_example[38859:3859294] [Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.229935-0700 yl_player_example[38859:3859294] [Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-10-15 22:08:37.262696-0700 yl_player_example[38859:3859261] ApplePersistenceIgnoreState: Existing state will not be touched. New state will be written to /var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/dev.ylplayer.ylPlayerExample.savedState
+2026-10-15 22:08:37.515021-0700 yl_player_example[38859:3859261] Running with merged UI and platform thread. Experimental.
+flutter: The Dart VM service is listening on http://127.0.0.1:52932/sYODnxJaA6s=/
+2026-10-15 22:08:38.243901-0700 yl_player_example[38859:3859295] [plugin] AddInstanceForFactory: No factory registered for id <CFUUID 0x7abf73e8c0> F8BB1C28-BAE8-11D6-9C31-00039315CD46
+Test Suite 'Selected tests' started at 2026-10-15 22:08:38.473.
+Test Suite 'RunnerTests.xctest' started at 2026-10-15 22:08:38.473.
+Test Suite 'YlContainerOutputTests' started at 2026-10-15 22:08:38.473.
+Test Case '-[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek]' started.
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift:231: warning: -[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek] : [Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions
+Test Case '-[RunnerTests.YlContainerOutputTests testAC3SurroundActualPixelsSixChannelPCMAndSeek]' passed (7.889 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek]' started.
+Test Case '-[RunnerTests.YlContainerOutputTests testDTSActualPixelsPCMAndSeek]' passed (7.173 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek]' started.
+Test Case '-[RunnerTests.YlContainerOutputTests testEAC3ActualPixelsPCMAndSeek]' passed (6.921 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek]' started.
+Test Case '-[RunnerTests.YlContainerOutputTests testFLACActualPixelsPCMAndSeek]' passed (6.911 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek]' started.
+[0;36m[vp9 @ 0x7abece9180] [0m[1;31mCodec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+[0m[0;35m[matroska,webm @ 0x7abf79b700] [0m[0;33mFailed to open codec in avformat_find_stream_info
+[0m[0;36m[vp9 @ 0x7abece9180] [0m[1;31mCodec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+[0m[0;36m[vorbis @ 0x7abece8e00] [0m[0;33mCould not update timestamps for discarded samples.
+[0mTest Case '-[RunnerTests.YlContainerOutputTests testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek]' passed (7.010 seconds).
+Test Case '-[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek]' started.
+[0;35m[mpeg @ 0x7abf79b200] [0m[0;33mCould not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0m[1;36m[NULL @ 0x7abece8e00] [0m[1;31mnon-existing PPS 0 referenced
+[0mTest Case '-[RunnerTests.YlContainerOutputTests testProgramStreamActualPixelsPCMAndBidirectionalSeek]' passed (7.148 seconds).
+Test Suite 'YlContainerOutputTests' passed at 2026-10-15 22:09:21.527.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 43.052 (43.054) seconds
+Test Suite 'RunnerTests.xctest' passed at 2026-10-15 22:09:21.527.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 43.052 (43.054) seconds
+Test Suite 'Selected tests' passed at 2026-10-15 22:09:21.528.
+	 Executed 6 tests, with 0 failures (0 unexpected) in 43.052 (43.055) seconds
+2026-10-15 22:09:28.351 xcodebuild[38854:3859170] [MT] IDETestOperationsObserverDebug: 51.709 elapsed -- Testing started completed.
+2026-10-15 22:09:28.351 xcodebuild[38854:3859170] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-10-15 22:09:28.351 xcodebuild[38854:3859170] [MT] IDETestOperationsObserverDebug: 51.709 sec, +51.709 sec -- end
+
+Test session results, code coverage, and logs:
+	/tmp/yl-p03-bound-av-20261015/macos-final/runtime.xcresult
+
+** TEST EXECUTE SUCCEEDED **
+
+Testing started

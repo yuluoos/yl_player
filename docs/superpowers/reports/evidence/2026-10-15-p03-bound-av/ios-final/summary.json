@@ -1,0 +1,96 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6",
+        "deviceName" : "yl-p03-output-20261015",
+        "modelName" : "iPhone 18 Pro",
+        "osBuildNumber" : "24A434",
+        "osVersion" : "27.0",
+        "platform" : "iOS Simulator"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 6,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 6,
+  "finishTime" : 1792127589.319,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1792127470.783,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+      "testName" : "testAC3SurroundActualPixelsSixChannelPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Playback operation failed.\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+      "testName" : "testDTSActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Playback operation failed.\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 3,
+      "testIdentifierString" : "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+      "testName" : "testEAC3ActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed: caught error: \"Playback operation failed.\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 4,
+      "testIdentifierString" : "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+      "testName" : "testFLACActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText" : "failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 5,
+      "testIdentifierString" : "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+      "testName" : "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()"
+    },
+    {
+      "failureText" : "failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 6,
+      "testIdentifierString" : "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+      "testName" : "testProgramStreamActualPixelsPCMAndBidirectionalSeek()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "3 runs of 3 tests failed with failed: caught error: \"Playback operation failed.\""
+    }
+  ],
+  "totalTestCount" : 6
+}

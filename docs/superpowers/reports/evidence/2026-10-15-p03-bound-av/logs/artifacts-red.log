@@ -1,0 +1,59 @@
+FFFFEF
+======================================================================
+ERROR: test_real_bytes_and_deterministic_manifest (test_bound_artifacts.ArtifactsTest.test_real_bytes_and_deterministic_manifest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_artifacts.py", line 15, in test_real_bytes_and_deterministic_manifest
+    self.assertEqual(record['files'][0]['path'],'product')
+                     ~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+FAIL: test_excludes_test_bundle_but_not_product_code (test_bound_artifacts.ArtifactsTest.test_excludes_test_bundle_but_not_product_code)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_artifacts.py", line 30, in test_excludes_test_bundle_but_not_product_code
+    self.assertTrue(verify(self.root,product)); self.assertFalse(verify(tests,harness))
+                                                ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_mutation_addition_and_deletion_rejected (test_bound_artifacts.ArtifactsTest.test_mutation_addition_and_deletion_rejected) (operation='change')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_artifacts.py", line 23, in test_mutation_addition_and_deletion_rejected
+    self.assertFalse(verify(self.root,record))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_mutation_addition_and_deletion_rejected (test_bound_artifacts.ArtifactsTest.test_mutation_addition_and_deletion_rejected) (operation='add')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_artifacts.py", line 23, in test_mutation_addition_and_deletion_rejected
+    self.assertFalse(verify(self.root,record))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_mutation_addition_and_deletion_rejected (test_bound_artifacts.ArtifactsTest.test_mutation_addition_and_deletion_rejected) (operation='delete')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_artifacts.py", line 23, in test_mutation_addition_and_deletion_rejected
+    self.assertFalse(verify(self.root,record))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_symlink_target_code_is_bound (test_bound_artifacts.ArtifactsTest.test_symlink_target_code_is_bound)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_artifacts.py", line 34, in test_symlink_target_code_is_bound
+    self.assertEqual(len(record['files']),1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.004s
+
+FAILED (failures=5, errors=1)
