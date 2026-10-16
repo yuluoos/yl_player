@@ -1,0 +1,106 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "\n🔨 Build\n\nWarnings (19):\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION\n\n  ⚠ capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift:288\n\n  ⚠ capture 'self' was never used [#NoUsage]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:316\n\n  ⚠ capture 'self' was never used [#NoUsage]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:633\n\n  ⚠ conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139\n\n  ⚠ forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:26\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:22\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:25\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:27\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:29\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:32\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:34\n\n  ⚠ 'UTTypeCreatePreferredIdentifierForTag' was deprecated in iOS 15.0: Use the UTType class instead. [#DeprecatedDeclaration]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:639\n\n  ⚠ 'kUTTagClassMIMEType' was deprecated in iOS 15.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:640\n\n  ⚠ switch must be exhaustive\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlManagedHTTPTransport.swift:146\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:42\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:43\n\n  ⚠ expression implicitly coerced from 'Any??' to 'Any?'\n    /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:45\n\n✅ Build succeeded. (⏱️ 45.8s)\n  └ Files:\n     └── ~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/build_sim_2026-10-16T09-02-44-980Z_pid2826_46234c3c.log — Build Logs\n\nNext steps:\n1. Get built app path in simulator derived data: get_sim_app_path({ simulatorId: \"A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6\", scheme: \"Runner\", platform: \"iOS Simulator\", derivedDataPath: \"/private/tmp/yl-p03-apple-public-20261016/build-ios\" })\n"
+    }
+  ],
+  "structuredContent": {
+    "schema": "xcodebuildmcp.output.build-result",
+    "schemaVersion": "3",
+    "didError": false,
+    "error": null,
+    "data": {
+      "summary": {
+        "status": "SUCCEEDED",
+        "durationMs": 45800,
+        "target": "simulator"
+      },
+      "artifacts": {
+        "buildLogPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/build_sim_2026-10-16T09-02-44-980Z_pid2826_46234c3c.log"
+      },
+      "diagnostics": {
+        "warnings": [
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT"
+          },
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION"
+          },
+          {
+            "message": "capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift:288"
+          },
+          {
+            "message": "capture 'self' was never used [#NoUsage]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:316"
+          },
+          {
+            "message": "capture 'self' was never used [#NoUsage]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:633"
+          },
+          {
+            "message": "conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139"
+          },
+          {
+            "message": "forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:26"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:22"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:25"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:27"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:29"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:32"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:34"
+          },
+          {
+            "message": "'UTTypeCreatePreferredIdentifierForTag' was deprecated in iOS 15.0: Use the UTType class instead. [#DeprecatedDeclaration]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:639"
+          },
+          {
+            "message": "'kUTTagClassMIMEType' was deprecated in iOS 15.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:640"
+          },
+          {
+            "message": "switch must be exhaustive",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlManagedHTTPTransport.swift:146"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:42"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:43"
+          },
+          {
+            "message": "expression implicitly coerced from 'Any??' to 'Any?'",
+            "location": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:45"
+          }
+        ],
+        "errors": []
+      }
+    },
+    "nextSteps": [
+      "Get built app path in simulator derived data: get_sim_app_path({ simulatorId: \"A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6\", scheme: \"Runner\", platform: \"iOS Simulator\", derivedDataPath: \"/private/tmp/yl-p03-apple-public-20261016/build-ios\" })"
+    ]
+  }
+}

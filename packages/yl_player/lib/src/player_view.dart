@@ -10,6 +10,11 @@ import 'player_controller.dart';
 import 'subtitles/text_subtitle_overlay.dart';
 
 /// Displays current-session video using the negotiated presentation surface.
+///
+/// Apple native video surfaces are composed by the platform and may not appear
+/// in a Flutter repaint-boundary image. Mounting this widget does not itself
+/// establish that a frame has been presented; observe the session's first frame.
+/// This widget does not start playback or take ownership of the controller.
 final class YlPlayerView extends StatelessWidget {
   /// Binds video and opted-in subtitles to the controller’s current session.
   const YlPlayerView({

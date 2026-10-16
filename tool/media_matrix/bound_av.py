@@ -108,9 +108,14 @@ def validate(plan, rows):
             session=row.get('sessionId');require(isinstance(session,str) and session and session not in sessions,'invalid_session');sessions.add(session)
             require(row.get('identityVerified') is True,'runtime_identity_unverified')
             require(row.get('schema')==1,'invalid_row_schema')
-            if plan.get('artifactKind')=='android-public-flutter-debug-apk':
-                require(plan['platform']=='android','public_platform_mismatch')
-                require(row.get('publicSessionId')==session and row.get('publicApi')=='YlPlayerController/YlPlayerView' and row.get('pixelSource')=='flutter-repaint-boundary','public_session_unverified')
+            if plan.get('artifactKind') in ('android-public-flutter-debug-apk','apple-public-flutter-debug-app'):
+                apple=plan['artifactKind']=='apple-public-flutter-debug-app'
+                require(plan['platform'] in ('ios','macos') if apple else plan['platform']=='android','public_platform_mismatch')
+                pixel_source='flutter-native-view-display-layer' if apple else 'flutter-repaint-boundary'
+                require(row.get('publicSessionId')==session and row.get('publicApi')=='YlPlayerController/YlPlayerView' and row.get('pixelSource')==pixel_source,'public_session_unverified')
+                if apple:
+                    require(row.get('nativeViewAttached') is True,'public_view_unverified')
+                    require(row.get('audioClockMethod')=='renderer-paused-consumption','paused_readback_unverified')
                 lifecycle=row.get('publicLifecycle',{})
                 require(isinstance(lifecycle,dict) and all(lifecycle.get(k) is True for k in ('created','ready','firstFrame','completed','disposed')),'public_lifecycle_unverified')
             if plan['platform']=='android':require(row.get('audioClockMethod')=='audiotrack-playback-head','consumption_clock_unverified')

@@ -1,0 +1,26 @@
+{
+  "python": {
+    "passed": 48,
+    "failed": 0
+  },
+  "flutterPublicUnit": {
+    "passed": 24,
+    "failed": 0
+  },
+  "dartAnalyze": "no issues",
+  "nativeFocused": {
+    "passed": 39,
+    "failed": 1,
+    "skipped": 0
+  },
+  "macosFinalScopeAccepted": false,
+  "iosFinalScopeAccepted": false,
+  "finalFrameworkNegativeWithSixRows": "not completed",
+  "ordinaryDebugObserverAbsent": true,
+  "releaseObserverAbsentEvenWithOptIn": true,
+  "frozenAppsStillMatch": {
+    "macos-paused-settle": true,
+    "ios-final": true
+  },
+  "fullAcceptance": false
+}

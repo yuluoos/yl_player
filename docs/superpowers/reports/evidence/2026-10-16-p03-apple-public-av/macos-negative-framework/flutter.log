@@ -1,0 +1,184 @@
+YL_BOUND_RESULT=/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/p03-public-be7cd964-31df-41f6-9108-9adb4e2cc27f
+2026-10-16 01:12:58.160 yl_player_example[19892:4241200] Running with merged UI and platform thread. Experimental.
+flutter: The Dart VM service is listening on http://127.0.0.1:61242/VI2a9R_X0nc=/
+flutter: 00:00 +0: public Flutter same-build same-session AV
+flutter: P03_PUBLIC begin mkv-avc-eac3
+flutter: P03_PUBLIC ready apple-1-s1
+flutter: P03_PUBLIC completed apple-1-s1
+flutter: P03_PUBLIC seek apple-1-s1 1250
+flutter: P03_PUBLIC seek accepted apple-1-s1 1250
+flutter: P03_PUBLIC seek apple-1-s1 2250
+flutter: P03_PUBLIC seek accepted apple-1-s1 2250
+flutter: P03_PUBLIC seek apple-1-s1 0
+flutter: P03_PUBLIC seek accepted apple-1-s1 0
+flutter: P03_PUBLIC disposing apple-1-s1
+flutter: P03_PUBLIC begin mkv-avc-dts
+flutter: P03_PUBLIC ready apple-2-s1
+flutter: P03_PUBLIC completed apple-2-s1
+flutter: P03_PUBLIC seek apple-2-s1 1250
+flutter: P03_PUBLIC seek accepted apple-2-s1 1250
+flutter: P03_PUBLIC seek apple-2-s1 2250
+flutter: P03_PUBLIC seek accepted apple-2-s1 2250
+flutter: P03_PUBLIC seek apple-2-s1 0
+flutter: P03_PUBLIC seek accepted apple-2-s1 0
+flutter: P03_PUBLIC disposing apple-2-s1
+flutter: P03_PUBLIC begin mkv-avc-flac
+flutter: P03_PUBLIC ready apple-3-s1
+flutter: P03_PUBLIC completed apple-3-s1
+flutter: P03_PUBLIC seek apple-3-s1 1250
+flutter: P03_PUBLIC seek accepted apple-3-s1 1250
+flutter: P03_PUBLIC seek apple-3-s1 2250
+flutter: P03_PUBLIC seek accepted apple-3-s1 2250
+flutter: P03_PUBLIC seek apple-3-s1 0
+flutter: P03_PUBLIC seek accepted apple-3-s1 0
+flutter: P03_PUBLIC disposing apple-3-s1
+flutter: P03_PUBLIC begin webm-vp9-vorbis
+[vp9 @ 0x7499cf0380] Codec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7498136300] Failed to open codec in avformat_find_stream_info
+[vp9 @ 0x7499cf0380] Codec (vp9) not on whitelist 'dca,ac3,eac3,vorbis'
+flutter: P03_PUBLIC ready apple-4-s1
+[vorbis @ 0x7499cf1180] Could not update timestamps for discarded samples.
+flutter: P03_PUBLIC completed apple-4-s1
+flutter: P03_PUBLIC seek apple-4-s1 1250
+flutter: P03_PUBLIC seek accepted apple-4-s1 1250
+flutter: P03_PUBLIC seek apple-4-s1 2250
+flutter: P03_PUBLIC seek accepted apple-4-s1 2250
+flutter: P03_PUBLIC seek apple-4-s1 0
+flutter: P03_PUBLIC seek accepted apple-4-s1 0
+flutter: P03_PUBLIC disposing apple-4-s1
+flutter: P03_PUBLIC begin mkv-avc-ac3-51
+flutter: P03_PUBLIC ready apple-5-s1
+flutter: P03_PUBLIC completed apple-5-s1
+flutter: P03_PUBLIC seek apple-5-s1 1250
+flutter: P03_PUBLIC seek accepted apple-5-s1 1250
+flutter: P03_PUBLIC seek apple-5-s1 2250
+flutter: P03_PUBLIC seek accepted apple-5-s1 2250
+flutter: P03_PUBLIC seek apple-5-s1 0
+flutter: P03_PUBLIC seek accepted apple-5-s1 0
+flutter: P03_PUBLIC disposing apple-5-s1
+flutter: P03_PUBLIC begin ps-avc-mp3
+[mpeg @ 0x7498137200] Could not find codec parameters for stream 1 (Audio: mp3, 48000 Hz, stereo, 128 kb/s): unspecified frame size
+Consider increasing the value for the 'analyzeduration' (0) and 'probesize' (5000000) options
+flutter: P03_PUBLIC ready apple-6-s1
+flutter: P03_PUBLIC completed apple-6-s1
+flutter: P03_PUBLIC seek apple-6-s1 1250
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+flutter: P03_PUBLIC seek accepted apple-6-s1 1250
+flutter: P03_PUBLIC seek apple-6-s1 2250
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+[NULL @ 0x7499cf1880] non-existing PPS 0 referenced
+flutter: P03_PUBLIC seek accepted apple-6-s1 2250
+flutter: P03_PUBLIC seek apple-6-s1 0
+flutter: P03_PUBLIC seek accepted apple-6-s1 0
+flutter: P03_PUBLIC disposing apple-6-s1
+flutter: ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+flutter: The following TestFailure was thrown running a test:
+flutter: Expected: not <true>
+flutter:   Actual: <true>
+flutter: 
+flutter: When the exception was thrown, this was the stack:
+flutter: #4      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart:187:7)
+flutter: <asynchronous suspension>
+flutter: #5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+flutter: <asynchronous suspension>
+flutter: #6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+flutter: <asynchronous suspension>
+flutter: #7      TestWidgetsFlutterBinding._createTestCompletionHandler.<anonymous closure> (package:flutter_test/src/binding.dart:1706:12)
+flutter: <asynchronous suspension>
+flutter: 
+flutter: This was caught by the test expectation on the following line:
+flutter:   file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart line 187
+flutter: The test description was:
+flutter:   public Flutter same-build same-session AV
+flutter: ════════════════════════════════════════════════════════════════════════════════════════════════════
+flutter: 00:45 +0: public Flutter same-build same-session AV [E]
+flutter:   Test failed. See exception logs above.
+  The test description was: public Flutter same-build same-session AV
+flutter:   
+flutter: 00:45 +0 -1: (tearDownAll)
+flutter: Warning: integration_test plugin was not detected.
+flutter: 
+flutter: If you're running the tests with `flutter drive`, please make sure your tests
+flutter: are in the `integration_test/` directory of your package and use
+flutter: `flutter test $path_to_test` to run it instead.
+flutter: 
+flutter: If you're running the tests with Android instrumentation or XCTest, this means
+flutter: that you are not capturing test results properly! See the following link for
+flutter: how to set up the integration_test plugin:
+flutter: 
+flutter: https://docs.flutter.dev/testing/integration-tests
+flutter: 
+flutter: 00:45 +1 -1: Some tests failed.

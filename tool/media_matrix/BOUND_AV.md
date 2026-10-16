@@ -94,3 +94,56 @@ The bridge and shared PCM observer compile only into opted-in debug builds and
 instrumentation tests. Ordinary debug and release omit them, even when the
 opt-in property is supplied to a release build. This remains a debug consumer
 acceptance scope, not release, full-matrix, Apple-public, or physical-output proof.
+
+## Apple public Flutter build-bound collection
+
+The same `integration_test/bound_av_test.dart` drives the actual public controller,
+session and view. Apple native surfaces are not captured by Flutter repaint-boundary
+images: the opt-in observer reads the display layer attached by that session's
+real platform view and pairs it with the real renderer's consumed audio clock.
+The public session pauses before each snapshot, waits for presentation to settle,
+and resumes afterwards. Native readback requires a zero-rate display timebase and
+a paused/ended consumption observation; it never borrows a running estimate.
+This is a sampled pause/resume protocol, not uninterrupted playback measurement.
+It decorates the existing converter for post-trim PCM, preserving platform output,
+product routing, decoder admission, and the fixed six-control denominator.
+
+Compile with both Debug and explicit `-D YL_BOUND_AV`; the observation bridge and
+its hooks are absent from ordinary Debug and Release. For macOS, from the example:
+
+```sh
+flutter build macos --debug --config-only -t integration_test/bound_av_test.dart
+xcodebuild build -workspace macos/Runner.xcworkspace -scheme Runner \
+  -configuration Debug -destination 'platform=macOS,arch=arm64' \
+  -derivedDataPath /tmp/yl-bound-apple CODE_SIGNING_ALLOWED=NO \
+  'OTHER_SWIFT_FLAGS=$(inherited) -D YL_BOUND_AV'
+```
+
+Then, from the repository root, launch the already-built product without rebuilding:
+
+```sh
+python3 -B tool/run_with_display_awake.py \
+  python3 -B tool/media_matrix/run_bound_flutter_apple.py --platform macos \
+  --app /tmp/yl-bound-apple/Build/Products/Debug/yl_player_example.app \
+  --out /tmp/yl-bound-apple-run
+```
+
+For an equivalently built iOS Simulator app use `--platform ios --simulator UUID`.
+The caller owns/boots that dedicated simulator. Every attempt needs a fresh output
+directory. `--negative-identity` rejects the wrong product identity before playback;
+`--negative-framework` fails the real Flutter test after the six raw records.
+
+The product manifest includes Dart code and resources as well as native binaries;
+product/test SHA are explicitly the same bundle identity. Runtime verification
+hashes installed files and loaded product images, then repeats before status.
+The host independently rejects file additions/removals/changes and requires the
+same run's framework-final status. Partial raw rows remain diagnostic after a timeout.
+Seek capture waits for actual audio reset and fresh phase output, even while the
+public position callback still reports the prior phase. This remains a debug,
+local clear-media acceptance scope, not physical screen/speaker or release proof.
+
+Apple readback requires macOS 14.4 / iOS 17.4 or newer, independently of the
+product deployment minimum. Run in a live GUI session. Preserve every attempt,
+including missing display-layer output and framework timeouts; a single passing
+run does not establish repeatability. The wrapper holds a temporary display-awake
+assertion only for its owned run. Do not rebuild the bundle during collection.

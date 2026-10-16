@@ -55,8 +55,17 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
         hasManagedPlayers = true
         audioOwnership.observe(registryIdentity) { [weak self] in self?.interruption($0) }
       }
+      var audioFactory: any YlAudioRendererMaking = YlPlatformAudioRendererFactory()
+      #if DEBUG && YL_BOUND_AV
+      if let observed = YlBoundFlutterProbe.current?.makeAudioFactory(output: services.textureOutput) {
+        audioFactory = observed
+      }
+      #endif
       let host = YlApplePlayerHost(playerId: nextPlayerId, suffix: suffix,
-        options: request.options, services: services, callbacks: makeCallbacks(suffix), audioOwnership: audio)
+        options: request.options, services: services, callbacks: makeCallbacks(suffix), audioRendererFactory: audioFactory, audioOwnership: audio)
+      #if DEBUG && YL_BOUND_AV
+      YlBoundFlutterProbe.current?.observe(host)
+      #endif
       let drm = makeDrmBridge?(nextPlayerId, suffix)
       if let drm { host.bindDrm(drm) }
       var quiesced = [YlApplePlayerHost]()

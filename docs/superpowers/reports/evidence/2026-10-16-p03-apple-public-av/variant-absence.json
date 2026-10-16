@@ -1,0 +1,21 @@
+{
+  "ordinary-debug": {
+    "path": "packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example.debug.dylib",
+    "sha256": "83a4a79d100b26266d5bf3e0266f47a8055b684d0803bdadbd6d2fa335abdfb1",
+    "probeSymbolCount": 0,
+    "productRegistryPresent": true
+  },
+  "opted-in-debug": {
+    "path": "/private/tmp/yl-p03-apple-public-20261016/build-macos/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example.debug.dylib",
+    "sha256": "ab2df56b76458b27e9d3b9c929192be2675eca137d88677a57756f4307f56406",
+    "probeSymbolCount": 156,
+    "productRegistryPresent": true
+  },
+  "release-with-opt-in-define": {
+    "path": "/private/tmp/yl-p03-apple-public-20261016/build-release/Build/Products/Release/yl_player_example.app/Contents/MacOS/yl_player_example",
+    "sha256": "5e820c6a81220994a33d3b505b955951c46ba2cdef75939dd7e76ce2e36e3744",
+    "probeSymbolCount": 0,
+    "productRegistryPresent": true,
+    "explicitOptInDefine": true
+  }
+}

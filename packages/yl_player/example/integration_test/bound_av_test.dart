@@ -10,8 +10,14 @@ import 'package:yl_player/yl_player.dart';
 
 /// Built once and launched with a host-frozen plan. Only public APIs drive playback.
 /// The opt-in native bridge observes this same session and verifies installed bytes.
+/// Apple samples the attached native view; Android samples Flutter composition.
+/// Neither observation certifies physical screen/speaker synchronization.
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isMacOS || Platform.isIOS) {
+    // Native views need ordinary live widget/layout updates between observations.
+    binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
+  }
   const bridge = MethodChannel('yl_player_example/debug/bound_av');
   String? failure;
   binding.allTestsPassed.future.then((passed) async {
@@ -21,9 +27,21 @@ void main() {
     final plan = Map<String, dynamic>.from(
       await bridge.invokeMapMethod('plan') ?? {},
     );
+    Future<void> mount(Widget widget) async {
+      if (Platform.isMacOS || Platform.isIOS) {
+        // Use the application's normal live root/layout path. A test pump waits
+        // for a specific vsync and can remain pending across native-view changes.
+        runApp(widget);
+        await Future<void>.delayed(const Duration(milliseconds: 100));
+      } else {
+        await tester.pumpWidget(widget);
+      }
+    }
+
     try {
       for (final raw in plan['planned'] as List) {
         final item = Map<String, dynamic>.from(raw as Map);
+        debugPrint('P03_PUBLIC begin ${item['caseId']}');
         final data = await rootBundle.load(
           'assets/test_media/format_matrix/${item['file']}',
         );
@@ -60,7 +78,7 @@ void main() {
             ),
           );
           lifecycle['created'] = true;
-          await tester.pumpWidget(
+          await mount(
             MaterialApp(
               home: Center(
                 child: RepaintBoundary(
@@ -80,12 +98,55 @@ void main() {
           sessionId = session.id.value;
           await session.ready.timeout(const Duration(seconds: 12));
           lifecycle['ready'] = true;
+          debugPrint('P03_PUBLIC ready $sessionId');
           await bridge.invokeMethod('bind', {'sessionId': sessionId});
-          Future<void> captureUntil(bool Function() done) async {
+          Future<void> captureUntil(
+            bool Function() done, {
+            int minimumNativeClockUs = 0,
+          }) async {
             final timer = Stopwatch()..start();
-            while (!done()) {
+            int? observedNativeClock;
+            final apple = Platform.isMacOS || Platform.isIOS;
+            while (!done() ||
+                (apple &&
+                    (observedNativeClock == null ||
+                        observedNativeClock < minimumNativeClockUs))) {
+              if (apple && timer.elapsed >= const Duration(seconds: 12)) {
+                final details = await bridge.invokeMethod('diagnostics', {
+                  'sessionId': sessionId,
+                });
+                debugPrint(
+                  'P03_PUBLIC timeout native=$details public=${player!.state.status} '
+                  'position=${player.state.timeline.position} observed=$observedNativeClock',
+                );
+              }
               expect(timer.elapsed, lessThan(const Duration(seconds: 12)));
-              await tester.pump(const Duration(milliseconds: 35));
+              if (apple) {
+                // Apple's displayedPixelBuffer requires a zero render rate.
+                // Advance real playback, then pause through the public API for
+                // a snapshot paired with the renderer's consumed position.
+                await Future<void>.delayed(const Duration(milliseconds: 150));
+              } else {
+                await tester.pump(const Duration(milliseconds: 35));
+              }
+              if (Platform.isMacOS || Platform.isIOS) {
+                final completed =
+                    player!.state.status == YlPlaybackStatus.completed;
+                if (!completed) {
+                  await session.pause().timeout(const Duration(seconds: 12));
+                }
+                // The system renderer applies the stopped timebase asynchronously.
+                // Allow presentation to settle without advancing the audio clock.
+                await Future<void>.delayed(const Duration(milliseconds: 50));
+                observedNativeClock = await bridge.invokeMethod<int>(
+                  'capture',
+                  {'sessionId': sessionId},
+                );
+                if (!completed) {
+                  await session.play().timeout(const Duration(seconds: 12));
+                }
+                continue;
+              }
               final token = await bridge.invokeMethod<int>('clock', {
                 'sessionId': sessionId,
               });
@@ -112,36 +173,43 @@ void main() {
             }
           }
 
-          await session.play();
+          await session.play().timeout(const Duration(seconds: 12));
           await session.firstFrame.timeout(const Duration(seconds: 10));
           lifecycle['firstFrame'] = true;
           await captureUntil(
             () => player!.state.status == YlPlaybackStatus.completed,
           );
           lifecycle['completed'] = true;
+          debugPrint('P03_PUBLIC completed $sessionId');
           await bridge.invokeMethod('retain', {
             'sessionId': sessionId,
             'phase': 'play',
           });
           for (final target in [1250, 2250, 0]) {
-            await session.pause();
+            await session.pause().timeout(const Duration(seconds: 12));
             await bridge.invokeMethod('seekPhase', {
               'sessionId': sessionId,
               'targetMs': target,
             });
-            await session.seekTo(Duration(milliseconds: target));
+            debugPrint('P03_PUBLIC seek $sessionId $target');
+            await session
+                .seekTo(Duration(milliseconds: target))
+                .timeout(const Duration(seconds: 12));
+            debugPrint('P03_PUBLIC seek accepted $sessionId $target');
             await bridge.invokeMethod('awaitPhase', {'sessionId': sessionId});
-            await session.play();
+            await session.play().timeout(const Duration(seconds: 12));
             await captureUntil(
               () =>
                   player!.state.timeline.position.inMilliseconds >=
                   target + 650,
+              minimumNativeClockUs: (target + 650) * 1000,
             );
             await bridge.invokeMethod('retain', {
               'sessionId': sessionId,
               'phase': 'seek-$target',
             });
           }
+          debugPrint('P03_PUBLIC disposing $sessionId');
           await player.dispose().timeout(const Duration(seconds: 10));
           disposed = true;
           lifecycle['disposed'] = true;
@@ -153,7 +221,7 @@ void main() {
           if (!disposed) {
             await player?.dispose().timeout(const Duration(seconds: 10));
           }
-          await tester.pumpWidget(const SizedBox.shrink());
+          await mount(const SizedBox.shrink());
           await directory.delete(recursive: true);
         }
       }

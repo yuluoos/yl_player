@@ -1,0 +1,65 @@
+YL_BOUND_RESULT=/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/p03-public-e507e3ba-81d3-4196-a5e6-ce1d0b041a47
+2026-10-16 01:58:51.085 yl_player_example[57274:4420154] Running with merged UI and platform thread. Experimental.
+flutter: The Dart VM service is listening on http://127.0.0.1:54400/CHLuu9YLZj4=/
+flutter: 00:00 +0: public Flutter same-build same-session AV
+flutter: P03_PUBLIC begin mkv-avc-eac3
+flutter: P03_PUBLIC ready apple-1-s1
+flutter: P03_PUBLIC completed apple-1-s1
+flutter: P03_PUBLIC seek apple-1-s1 1250
+flutter: P03_PUBLIC seek accepted apple-1-s1 1250
+flutter: P03_PUBLIC seek apple-1-s1 2250
+flutter: P03_PUBLIC seek accepted apple-1-s1 2250
+flutter: P03_PUBLIC seek apple-1-s1 0
+flutter: P03_PUBLIC seek accepted apple-1-s1 0
+flutter: P03_PUBLIC disposing apple-1-s1
+flutter: P03_PUBLIC begin mkv-avc-dts
+flutter: P03_PUBLIC ready apple-2-s1
+flutter: P03_PUBLIC completed apple-2-s1
+flutter: P03_PUBLIC seek apple-2-s1 1250
+flutter: P03_PUBLIC seek accepted apple-2-s1 1250
+flutter: P03_PUBLIC seek apple-2-s1 2250
+flutter: P03_PUBLIC seek accepted apple-2-s1 2250
+flutter: P03_PUBLIC seek apple-2-s1 0
+flutter: P03_PUBLIC seek accepted apple-2-s1 0
+flutter: P03_PUBLIC timeout native={buildSha256: e8a2d233173b0e1371ac64bdfc0b5eddd357f3d992696d2e8f261ff7eff17e59, pcmBlocks: 375, state: AppleStateMessage(loadRequestId: Optional("load-1"), sessionId: Optional("apple-2-s1"), revision: 284, sequence: 286, status: completed, timeline: AppleTimelineMessage(positionMs: 4014, durationMs: Optional(4000), bufferedPositionMs: 4014, isSeekable: true, isLive: false, isAtLiveEdge: nil, liveOffsetMs: nil, dvrWindow: nil), geometry: Optional(AppleVideoGeometryMessage(encodedSize: AppleSizeMessage(width: 320.0, height: 180.0), displaySize: AppleSizeMessage(width: 320.0, height: 180.0), pixelAspectRatio: 1.0, rotationDegrees: 0)), audioTracks: [AppleTrackMessage(id: audio-1, kind: audio, label: Optional("DTS 1"), language: nil, codec: Optional("DTS"), bitrate: nil, width: nil, height: nil, isSelected: true)], videoTracks: [AppleTrackMessage(id: video-0, kind: video, label: nil, language: nil, codec: Optional("video/avc"), bitrate: nil, width: Optional(320), height: Optional(180), isSelected: true)], engine: managedFallback, decoderMode: hardware, decoderIdentity: Optional("VideoToolbox"), metrics: AppleMetricsMessage(loadToReadyMs: Optional(8), loadToFirstFrameMs: Optional(25), rebufferCount: Optional(3), rebufferDurationMs: Optional(432), droppedVideoFrames: Optional(9), audioUnderruns: Optional(6), estimatedBitrate: nil, managedBufferedDurationMs: nil, managedBufferedBytes: nil, liveOffsetMs: nil, reconnectCount: Optional(0)), failure: nil, videoSelection: Optional(AppleVideoSelectionMessage(fixedTrackId: nil, reason: initial)), livePlayback: nil), clock: ended(positionUs: 3999666, hostTimeUs: 107590445628), phase: seek-0, readback: ready=true status=1 pixel=false bounds=(0.0, 0.0, 320.0, 180.0) error=nil, stamp: ObjectIdentifier(0x000000789c33cac0)-5, sessionId: apple-2-s1, pixels: [], runId: e507e3ba-81d3-4196-a5e6-ce1d0b041a47} public=YlPlaybackStatus.completed position=0:00:04.014000 observed=null
+flutter: ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+flutter: The following TestFailure was thrown running a test:
+flutter: Expected: a value less than Duration:<0:00:12.000000>
+flutter:   Actual: Duration:<0:00:12.060929>
+flutter:    Which: is not a value less than Duration:<0:00:12.000000>
+flutter: 
+flutter: When the exception was thrown, this was the stack:
+flutter: #4      main.<anonymous closure>.captureUntil (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart:123:15)
+flutter: <asynchronous suspension>
+flutter: #5      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart:198:13)
+flutter: <asynchronous suspension>
+flutter: #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+flutter: <asynchronous suspension>
+flutter: #7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+flutter: <asynchronous suspension>
+flutter: #8      TestWidgetsFlutterBinding._createTestCompletionHandler.<anonymous closure> (package:flutter_test/src/binding.dart:1706:12)
+flutter: <asynchronous suspension>
+flutter: 
+flutter: This was caught by the test expectation on the following line:
+flutter:   file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart line 123
+flutter: The test description was:
+flutter:   public Flutter same-build same-session AV
+flutter: ════════════════════════════════════════════════════════════════════════════════════════════════════
+flutter: 00:29 +0: public Flutter same-build same-session AV [E]
+flutter:   Test failed. See exception logs above.
+  The test description was: public Flutter same-build same-session AV
+flutter:   
+flutter: 00:29 +0 -1: (tearDownAll)
+flutter: Warning: integration_test plugin was not detected.
+flutter: 
+flutter: If you're running the tests with `flutter drive`, please make sure your tests
+flutter: are in the `integration_test/` directory of your package and use
+flutter: `flutter test $path_to_test` to run it instead.
+flutter: 
+flutter: If you're running the tests with Android instrumentation or XCTest, this means
+flutter: that you are not capturing test results properly! See the following link for
+flutter: how to set up the integration_test plugin:
+flutter: 
+flutter: https://docs.flutter.dev/testing/integration-tests
+flutter: 
+flutter: 00:29 +1 -1: Some tests failed.

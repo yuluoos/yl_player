@@ -39,6 +39,9 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
         displayView: registrar.view, activateAudioSession: {}, nativeViews: nativeViews)
     }
     #endif
+    #if DEBUG && YL_BOUND_AV
+    YlBoundFlutterProbe.register(messenger: messenger)
+    #endif
     let protectedViews = YlFairPlayViewRegistry()
     registrar.register(YlFairPlayViewFactory(registry: protectedViews), withId: YlFairPlayViewFactory.viewType)
     let registry = YlApplePlayerRegistry(makeServices: services,

@@ -1,0 +1,25 @@
+{
+  "initialHead": "182861666b2286cb05026954a5e3e4bc946acfce",
+  "parentAfterIndependentP04Commit": "462254bbb78a9d452cbd62c0fe6d7590655fce68",
+  "sources": {
+    "packages/yl_player/example/integration_test/bound_av_test.dart": "f6194e7f84d36763fd08b642e3b52136e1f259afb2a51abbb9326a4c64fa2716",
+    "packages/yl_player/lib/src/player_view.dart": "1eaebaf6d38271aa04deb10f867968636506003aa34692a800d6945bd97cbff6",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "471e0d20d007ada4906c6a5e8b3b692b9b0b6875c2974338590affc9a3899ea2",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "7f76016ea5073c09ebf1c7988f6e30fa3f220b8456ec15440c64c3c07f66faca",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerRegistry.swift": "5dee484fc6095ca3314e83c7ef397a2076263b02ac8f52242add23259d93ee39",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/YlPlayerApplePlugin.swift": "70b33f0cb62fecb66597d6e70310cb8f7ff092fe5b861adaaa85d6efdc4e04a2",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/iOS/YlIosTextureOutput.swift": "cfb46eea53d9f64935ddad6dcaa978318939923a917e387b405d5990305d2879",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosTextureOutput.swift": "ca4bb615134c2591e01f4f0f252a7b839e90b0641071a5460e8fd46d0837ea9b",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundFlutterProbe.swift": "255c5ef60d94cca675370f71de8bf2f5624f8ed1880bdbf0b27bafb10ad74c49"
+  },
+  "finalMacPlan": "macos-paused-settle/plan.json",
+  "scope": "Source hashes supplement actual bundle hashes, never replace them.",
+  "macos-paused-settle": {
+    "runId": "950aa823-c46a-4217-9458-2a68c998acc3",
+    "buildSha256": "ff0d56d2d740151f1317080960b41392dd2c85997ebe6e3f740779261c9ab02e"
+  },
+  "ios-final": {
+    "runId": "ea020691-56e6-4329-bbbf-0bd5853a6f3c",
+    "buildSha256": "9fb6e9ca61cb51de0e3d0748bdefa50ab4952813691509c4c9cce3fe1c2f9a0e"
+  }
+}

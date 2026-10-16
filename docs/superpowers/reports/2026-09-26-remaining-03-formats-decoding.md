@@ -593,3 +593,7 @@ iOS三条截图失败另外执行0.25倍速观测控制，7个播放/seek颜色�
 ### 2026-10-16 公开 Flutter Android 构建身份与音画验收
 
 Android 六控制的公开 controller/session/view 路线已达到同次运行绑定 APK 身份的 6/6：保留实际 Flutter 纹理，使用 composition 像素、同一原生会话的 PCM 与新读 AudioTrack 播放头，验证完成、三次 seek、公开 dispose 与底层释放。FLAC、VP9/Vorbis 由产品 Media3 处理，其余四项由实际 managed fallback 处理，未强制路由。框架最终结果参与门禁，六行原始数据通过后的故意框架失败仍被拒绝；错误身份也被拒绝。新增观察桥只进入显式验收 debug 包，普通 debug/release 均无桥类。当前证据不覆盖 Apple 公开路线、release、完整格式矩阵、物理输出或持续热资格；P03 仍非全部完成。详见[归档](evidence/2026-10-16-p03-public-av/README.md)。
+
+### 2026-10-16 Apple 公开 Flutter 同次构建采集续做
+
+已接入实际公开controller/session/view、运行时bundle/加载镜像核验、同会话PCM/显示层/消费位置及框架最终状态。复审修复观察装饰器bufferScope遗漏，补齐API注释。SDK要求显示层读回时速率为零，因此最终改为公开暂停/读回/恢复协议并强化门禁；旧播放中采样的6/6仅作历史，不转移到新协议。最终macOS仍在seek阶段缺少有效像素，身份与制品稳定性通过而音画门禁失败；正确拒绝错误身份。Python48、Flutter24通过，普通原生40项中39通过1失败，完整失败历史保存。最终协议六控制通过、末尾框架负例实跑与完整P03仍未完成，Task7/8保持开放。详见[本轮记录](evidence/2026-10-16-p03-apple-public-av/README.md)。

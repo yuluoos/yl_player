@@ -9,14 +9,32 @@ final class YlIosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlNat
   private let nativeViews: YlIosVideoViewFactory?
   private let mailbox = YlVideoSurfaceMailbox()
   private let renderer = YlSampleBufferVideoRenderer()
+  #if DEBUG && YL_BOUND_AV
+  private weak var attachedContainer: CALayer?
+  #endif
+  #if DEBUG && YL_BOUND_AV
+  /// Read only the layer attached by this output's real Flutter platform view.
+  func boundDisplayedPixelBuffer() -> CVPixelBuffer? {
+    guard Thread.isMainThread, textureId >= 0 else { return nil }
+    return YlBoundFlutterProbe.displayedPixel(in: attachedContainer)
+  }
+  #endif
   var nativeViewType: String? { nativeViews == nil ? nil : YlIosVideoViewFactory.viewType }
   var onRenderFailure: ((NativePlayerError) -> Void)?
   func attach(_ layer: CALayer) {
     guard textureId >= 0 else { return }
+    #if DEBUG && YL_BOUND_AV
+    attachedContainer = layer
+    #endif
     renderer.attach(layer)
   }
   func layoutVideoSurface() { renderer.layout() }
-  func detach(_ layer: CALayer) { renderer.detach(layer) }
+  func detach(_ layer: CALayer) {
+    #if DEBUG && YL_BOUND_AV
+    if attachedContainer === layer { attachedContainer = nil }
+    #endif
+    renderer.detach(layer)
+  }
   private let textures: FlutterTextureRegistry
   private let lock = NSLock()
   private var pixelBuffer: CVPixelBuffer?

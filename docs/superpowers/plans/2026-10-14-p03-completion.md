@@ -355,3 +355,7 @@ Task 7 的六控制计划现在显式冻结 engine：VP9/Vorbis 使用产品 Med
 ### 2026-10-16 公开 Flutter Android 同次音画续做
 
 固定六控制已通过公开 `YlPlayerController`/`YlPlaybackSession`/`YlPlayerView` 驱动，真实 Flutter 视图像素与同会话 PCM/消费时钟绑定同一已冻结 APK，native/public session ID 一致。原始门禁和 Flutter 框架最终测试结果同时通过（6/6）。错误 APK 身份负例在播放前拒绝；六项原始记录通过后故意让框架失败仍拒绝总体通过。验收桥仅显式 opt-in debug/instrumentation 编译，普通 debug 与 release 制品检查无该类。补齐 session ready/firstFrame/seek 等 API 注释。Apple 公开路径、release/完整矩阵、物理设备和持续热资格仍开放，Task 7/8 不整体打勾。详见[本轮证据](../reports/evidence/2026-10-16-p03-public-av/README.md)。
+
+### 2026-10-16 Apple 公开 Flutter 同次构建采集续做
+
+已接入实际公开controller/session/view、运行时bundle/加载镜像核验、同会话PCM/显示层/消费位置及框架最终状态。复审修复观察装饰器bufferScope遗漏，补齐API注释。SDK要求显示层读回时速率为零，因此最终改为公开暂停/读回/恢复协议并强化门禁；旧播放中采样的6/6仅作历史，不转移到新协议。最终macOS仍在seek阶段缺少有效像素，身份与制品稳定性通过而音画门禁失败；正确拒绝错误身份。Python48、Flutter24通过，普通原生40项中39通过1失败，完整失败历史保存。最终协议六控制通过、末尾框架负例实跑与完整P03仍未完成，Task7/8保持开放。详见[本轮记录](../reports/evidence/2026-10-16-p03-apple-public-av/README.md)。

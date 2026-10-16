@@ -124,6 +124,9 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
         guard !request.loadRequestId.isEmpty else { throw YlAppleFailureMapper.invalid() }
         let recipe = try YlAppleNativeInput.load(source: request.source, options: request.options,
           defaults: self.options, loadRequestId: request.loadRequestId)
+        #if DEBUG && YL_BOUND_AV
+        try YlBoundFlutterProbe.current?.verifySource(request.source, host: self)
+        #endif
         // Validation precedes cancellation, identity allocation and saved intent.
         guard !self.suspended else { throw YlOpenCancellationToken.cancellationError() }
         self.cancelLiveModeCommands()

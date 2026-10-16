@@ -1,0 +1,414 @@
+{
+  "ios-final": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "ea020691-56e6-4329-bbbf-0bd5853a6f3c",
+    "buildSha256": "9fb6e9ca61cb51de0e3d0748bdefa50ab4952813691509c4c9cce3fe1c2f9a0e",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-awake-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "0d3e0dca-0499-4090-9f6f-3ed4d2f1411b",
+    "buildSha256": "4e2afd20ff571717b0fe978475ffa376f905620370161dc679544ffaeea51f34",
+    "errors": [
+      "incomplete_rows",
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-budget-red": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "e8d753a2-32fb-4121-9f30-59e5a37269a2",
+    "buildSha256": "81b69728f6acda5a58f2a23339537ff61e026d511092f65d8aa4cc8bf47fe753",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-diagnostic": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "a3a78c62-d882-43d0-b325-5d606eaa4ccb",
+    "buildSha256": "6d4f0673cfc1c757381be0b1b04f91654808c3c2462843a3a86ade87afc5b292",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-diagnostic-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "1c29322e-09a9-4508-bf8e-40984481e299",
+    "buildSha256": "6d4f0673cfc1c757381be0b1b04f91654808c3c2462843a3a86ade87afc5b292",
+    "errors": [
+      "incomplete_rows",
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-diagnostic-negative-identity": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "b5e48f8c-787b-4375-88a3-c57b6d013e3b",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-final": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "fbb27143-f11f-4dba-86fd-0a76cbc8d0df",
+    "buildSha256": "5614517ca3c516112bc698d61ea3d098d096d5a66a8c36fdbd54715dfe14271b",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-final-2": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "f8e9fc72-3417-4267-a57e-46d990785058",
+    "buildSha256": "af9e4e5a9490ce802912d24fc5a64f91393f1540d465879443ab0175071c6ead",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-final-3": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "fdddc261-4fbd-4ec7-be80-aa167abc8f1e",
+    "buildSha256": "9212fd61d1f9d4ffb1b1a42abacd4528f6ac2efa7e37493d6d19108ee00ee5c6",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-final-live": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "0c263fe4-1522-433b-89d8-33908d4bbd16",
+    "buildSha256": "4e2afd20ff571717b0fe978475ffa376f905620370161dc679544ffaeea51f34",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-final-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "5971ad13-cea9-4a27-9c5c-b643d1d15464",
+    "buildSha256": "af9e4e5a9490ce802912d24fc5a64f91393f1540d465879443ab0175071c6ead",
+    "errors": [
+      "incomplete_rows",
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-final-negative-identity": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "5a882628-5921-4c7b-9ded-8e2f9800da9e",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-final-source": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "7bda2213-65de-4e73-adc3-9cf673b10082",
+    "buildSha256": "273b93d70b9ec51a500ce9841260237c7607f0fefd9d2dfb43a3b625eb2408be",
+    "errors": [
+      "incomplete_rows",
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-final-source-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "f5a2e86a-fd70-495a-a11b-8d8bdfc6e2bf",
+    "buildSha256": "273b93d70b9ec51a500ce9841260237c7607f0fefd9d2dfb43a3b625eb2408be",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-live-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "dd7360b7-e132-4331-829f-cf2306d903d6",
+    "buildSha256": "4e2afd20ff571717b0fe978475ffa376f905620370161dc679544ffaeea51f34",
+    "errors": [
+      "incomplete_rows",
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-live-negative-identity": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "2160eaf0-020a-48cb-8e01-5bcec34045c7",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "be7cd964-31df-41f6-9108-9adb4e2cc27f",
+    "buildSha256": "bc6417f72fa7d375c273457ee1a6ec17e8123299835147efd729bfcebce59f11",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-negative-identity": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "ce50dd50-dd19-4247-b32e-525a35a8fc3b",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-paused": {
+    "rawAccepted": false,
+    "rawSupported": 1,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "e507e3ba-81d3-4196-a5e6-ce1d0b041a47",
+    "buildSha256": "e8a2d233173b0e1371ac64bdfc0b5eddd357f3d992696d2e8f261ff7eff17e59",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-paused-negative-identity": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "aa5b744c-8fd9-416b-b149-0a3fd4d5ed4c",
+    "buildSha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-paused-settle": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "950aa823-c46a-4217-9458-2a68c998acc3",
+    "buildSha256": "ff0d56d2d740151f1317080960b41392dd2c85997ebe6e3f740779261c9ab02e",
+    "errors": [
+      "incomplete_rows",
+      "pixel_audio_pair_missing"
+    ]
+  },
+  "macos-public-1": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "852cd7d6-3e63-4063-8c6e-01f6a537930f",
+    "buildSha256": "19780ada6d97fb5f0e8fa39aaa25bef1fbdd81ad757987129df0ab141182b3c1",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-public-2": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "18def3bf-0de4-4ff8-9024-77ca8309efff",
+    "buildSha256": "0f5db6da20587c67062eb98c21765270219afa0de82a7dac784e7fd90266f842",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-public-3": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": true,
+    "scopeAcceptance": false,
+    "frameworkPassed": true,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "71f01ea9-b60d-4bae-8967-e21969eee309",
+    "buildSha256": "bc6417f72fa7d375c273457ee1a6ec17e8123299835147efd729bfcebce59f11",
+    "errors": [
+      "paused_readback_unverified"
+    ]
+  },
+  "macos-readback": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "e88a4ef5-d693-435a-a51b-8da056cd971b",
+    "buildSha256": "0c0be866e84a9be515f7880a8ead03f8670bda36bcf9dee0d17918e1cb3176a1",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-release-candidate": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": true,
+    "artifactsUnchanged": true,
+    "runId": "3260aeec-58e5-4564-b217-5fb174b70da8",
+    "buildSha256": "727533cc0b9382618927393a5979cfc25691e49a4b9b60945bb4eb82b96cb867",
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "macos-visible-negative-framework": {
+    "rawAccepted": false,
+    "rawSupported": 0,
+    "required": 6,
+    "recordedScopeAcceptance": false,
+    "scopeAcceptance": false,
+    "frameworkPassed": false,
+    "runtimeIdentityVerified": false,
+    "artifactsUnchanged": false,
+    "runId": "6f719663-b6c7-4b86-9049-cfeddec4e756",
+    "buildSha256": "d5cc236073e1e67b773a668d44d203b391a87b48aa5ad99b1270009d54cc2826",
+    "errors": [
+      "incomplete_rows",
+      "paused_readback_unverified"
+    ]
+  }
+}

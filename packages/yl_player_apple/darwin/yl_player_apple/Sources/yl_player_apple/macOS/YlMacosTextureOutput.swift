@@ -26,6 +26,13 @@ final class YlMacosTextureOutput: NSObject, FlutterTexture, YlTextureOutput, YlN
     let endpoint = timedLock.withLock { timedEndpoint }
     return endpoint.map { !$0.isRetired } ?? false
   }
+  #if DEBUG && YL_BOUND_AV
+  /// Read only the layer attached by this output's real Flutter platform view.
+  func boundDisplayedPixelBuffer() -> CVPixelBuffer? {
+    guard Thread.isMainThread, textureId >= 0 else { return nil }
+    return YlBoundFlutterProbe.displayedPixel(in: attachedContainer)
+  }
+  #endif
   var nativeViewType: String? { nativeViews == nil ? nil : YlMacosVideoViewFactory.viewType }
   var onRenderFailure: ((NativePlayerError) -> Void)?
   func attach(_ layer: CALayer) {

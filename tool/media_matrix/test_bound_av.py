@@ -3,13 +3,16 @@ import base64, copy, hashlib, math, struct, unittest
 from bound_av import validate
 from run_bound_flutter_android import planned_controls
 from run_bound_apple import CASES
+from run_bound_flutter_apple import acceptance as apple_acceptance, planned_controls as apple_controls
 
 class PublicControlPlanTest(unittest.TestCase):
     def test_exact_six_controls_required_before_launch(self):
-        catalog=[dict(id=case,file=case,sha256='a'*64) for case in CASES]
+        catalog=[dict(id=case,file=case,sha256='a'*64,audio={'channels':2}) for case in CASES]
         self.assertEqual({c['caseId'] for c in planned_controls(catalog)},set(CASES))
         for bad in [catalog[:-1],catalog+[catalog[0]],[]]:
             with self.assertRaises(ValueError):planned_controls(bad)
+            with self.assertRaises(ValueError):apple_controls(bad)
+        self.assertEqual({c['caseId'] for c in apple_controls(catalog)},set(CASES))
 
 def tone(marker):
     return struct.pack('<16384f', *(v for i in range(8192) for v in
@@ -104,6 +107,26 @@ class BoundAVTest(unittest.TestCase):
         for key in ['engine','decoderMode','decoderIdentity','audioDecoderIdentity']:
             bad=copy.deepcopy(self.row);bad[key]=''
             self.assertFalse(self.result([bad])['scopeAcceptance'],key)
+
+    def test_apple_public_scope_requires_native_view_and_public_session(self):
+        self.plan['artifactKind']='apple-public-flutter-debug-app'
+        self.assertFalse(self.result()['scopeAcceptance'])
+        self.row.update(publicSessionId=self.row['sessionId'],publicApi='YlPlayerController/YlPlayerView',
+            publicLifecycle=dict(created=True,ready=True,firstFrame=True,completed=True,disposed=True),
+            pixelSource='flutter-native-view-display-layer',nativeViewAttached=True,
+            audioClockMethod='renderer-paused-consumption')
+        self.assertTrue(self.result()['scopeAcceptance'])
+        status=dict(passed=True,identityVerified=True,artifactsUnchanged=True,runId=self.plan['runId'])
+        self.assertTrue(apple_acceptance(self.plan,[self.row],status,True)['scopeAcceptance'])
+        for key in status:
+            bad=dict(status);bad[key]=False
+            self.assertFalse(apple_acceptance(self.plan,[self.row],bad,True)['scopeAcceptance'],key)
+        self.assertFalse(apple_acceptance(self.plan,[self.row],status,False)['scopeAcceptance'])
+        for key,value in [('publicSessionId','other'),('pixelSource','native-test-texture'),('nativeViewAttached',False),('audioClockMethod','running-readback')]:
+            bad=copy.deepcopy(self.row);bad[key]=value
+            self.assertFalse(self.result([bad])['scopeAcceptance'])
+        self.row['publicLifecycle']['disposed']=False
+        self.assertFalse(self.result()['scopeAcceptance'])
 
     def test_public_scope_requires_matching_flutter_session_and_lifecycle(self):
         self.plan['artifactKind']='android-public-flutter-debug-apk'

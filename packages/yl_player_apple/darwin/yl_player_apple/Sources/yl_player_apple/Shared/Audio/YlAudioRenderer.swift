@@ -458,6 +458,9 @@ final class YlAudioRenderer: YlAudioRendering {
     onClockControlBegin == nil ? output.renderedAudioTime : output.presentationAudioTime
   }
 
+  /// Observes this renderer's consumed/rendered audio timeline for one generation.
+  /// A reset or disposal invalidates older observations. This is an output-node
+  /// measurement, not a measurement of physical speaker or display latency.
   func clockObservation(expectedGeneration: UInt64) -> YlAudioClockObservation {
     lock.lock()
     guard !disposed, configuredGeneration == expectedGeneration, outputInvalidationFailure == nil else {
