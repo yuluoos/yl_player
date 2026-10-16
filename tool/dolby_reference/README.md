@@ -57,3 +57,9 @@ python3 -B tool/dolby_reference/stream_inventory.py \
 构建器核验固定源码归档SHA-256后重新解包，用提交的Cargo.lock运行`--locked --offline`测试/构建。缺归档、缓存或工具链应先恢复这些已固定依赖；不会转用浮动版本。Rust framing测试随构建执行；Python测试已进入既有`check_foundation.sh`发现入口。默认全量发现33通过、1项既有GPU检查跳过；Rust另3项通过。本次不设置GPU opt-in变量。
 
 CLI退出0只表示完整的**输入元数据盘点**，`mapping_quality`、`native_dv_signal`仍为`external_missing`。独立参考、完整映射容差、原始P7 FEL、移动设备及物理DV链路仍缺，Task1B2整体与CAP-DV-MAP/CAP-DV-OUT未完成。素材沿用原记录的CC BY4.0及Netflix/Dolby署名；本增量为派生元数据清单。
+
+### 现有生产 FEL 准入检查（不占用设备）
+
+默认 Python discovery 现在也执行 `tool/apple_fel/run_tests.sh` 的配对/元数据校验及 `tool/apple_fel/run_failure_tests.py` 的真实错误发布检查。后者编译生产Swift、Pigeon和现有框架，仅调用元数据/错误方法，不创建播放器、Flutter引擎、解码器或GPU。需要macOS、Xcode及已缓存的Flutter macOS框架；可用`FLUTTER_ROOT`指定SDK，缺依赖退出77，在发现入口明确记为跳过。
+
+检查覆盖损坏/不支持区分、schema v1字段、L1/L5/L6、L5空区域、桥接unsupported码、资源类别和安全错误封装；不证明CM显示映射、物理信号或真实样本画质。历史基线快照继续绑定原提交；新生产源码变化不能据此改写历史快照。

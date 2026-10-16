@@ -1,0 +1,93 @@
+{
+  "baselineCommit": "38a1e44f8c462ff9a8dda1ed39fc381988638189",
+  "scope": "existing Apple FEL admission and error classification, not complete Dolby mapping",
+  "noDevices": true,
+  "noGpu": true,
+  "results": {
+    "pairing": "passed",
+    "metadataChecks": 34,
+    "publicEnvelopeChecks": 14,
+    "dolbyDiscovery": {
+      "run": 36,
+      "passed": 35,
+      "skipped": 1,
+      "reason": "existing opt-in GPU test"
+    },
+    "releaseTests": 15,
+    "macos12Typecheck": {
+      "sources": 145,
+      "exit": 0
+    },
+    "ios15Typecheck": {
+      "sources": 145,
+      "exit": 0
+    },
+    "consumerContracts": 9,
+    "sourceParity": {
+      "historicalSharedOrigins": 13,
+      "declarationExtractions": 8
+    }
+  },
+  "commands": [
+    "sh tool/apple_fel/run_tests.sh",
+    "python3 -B tool/apple_fel/run_failure_tests.py",
+    "python3 -B -m unittest discover -s tool/dolby_reference -p 'test_*.py'",
+    "python3 -B -m unittest discover -s tool/playback_benchmark -p 'test_release_readiness.py'",
+    "python3 -B tool/release_readiness/check.py"
+  ],
+  "files": {
+    "docs/superpowers/plans/2026-09-26-remaining-07-dolby.md": "98e3ea23f229c1dd78cadf168183ee4e3776c58c2f4c861c12f49402f932deb6",
+    "docs/superpowers/plans/2026-09-26-remaining-overview.md": "f7e4823e015f6f71a2237b6131b6dfd9597b1e874220230af42d93b701c0e94b",
+    "docs/superpowers/reports/2026-09-26-remaining-07-dolby.md": "1b08c7d65e8d2d1b1dce6d1e90e50df2c3b58f8947f8f61a2c410547b18b03d0",
+    "docs/superpowers/specs/2026-09-26-dolby-mapping-contract.md": "1b4e6f85046dd7c306a8d808c7a1ca579c45faa3ec3f9549faf7db4ed759fa96",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift": "709f719a8129906c13ad18af122c4176d27748e3081ff6ee1051285075fed069",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELConfiguration.swift": "0bcac046e1594ccfe93e99f62e30bc1bdf58608c1deb140b2b0aeaa7e0442106",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELFailure.swift": "5a7116d08ae737ad7c72d55248c444c1bf582bd8abd438b1295ce68917caa137",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELMetadata.swift": "064524e1ae6866f7df3a835476633b7ae7f51746ca829e975db91e651f53e0be",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELVideoDecoder.swift": "28f3a5ece1ff837dcab5486450848a3302dc74cfcddcba82ff7d09809e2520ff",
+    "tool/apple_fel/failure_tests.swift": "7e0c4a4adbd7a532b1c8f0b78435aca24c9c1fb01df214e507c4128bfb6993f9",
+    "tool/apple_fel/metadata_fixture.swift": "eeb36e13d6a481cbd17c8d11b5a823c63ac57737e8b2387ab4c82bf0bbf794e1",
+    "tool/apple_fel/metadata_tests.swift": "8f3f6d4873832cc20cb61ea98279d657b75c2f12861b1384c041a931147c9b37",
+    "tool/apple_fel/run_failure_tests.py": "efb67ddcc9c9f7ddb2d8cb3e726b12086290bd3458750ccdb34a355b04848751",
+    "tool/apple_fel/run_tests.sh": "8b57b8092bff75c86c41ecaa8f291761cc6caec3e15c6f3c9e4bfd5b3c04d313",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFELVideoPipelineTests.swift": "e32ecf7b9d378d8212509b7085cbcf405cb3e0a9ea37e56cd51e6516d5bfa9d7",
+    "tool/dolby_reference/README.md": "1ccad835c003d079610ee57e42a125569466eaeb35b562b3ff5f1779813bfe4f",
+    "tool/dolby_reference/test_fel_admission.py": "73d1528423026fef4e6cdedf82e26ce70ac597980c52ec2885a619a73e53db9c",
+    "tool/release_readiness/inventory.json": "cd0ad2d44f4e04389c3590abca855df0f0f4171abfd60f38d0f07369a0828132"
+  },
+  "logs": {
+    "logs/bridge-geometry-green.log": "6ae3d905f3882af379070df7041cd4295d362a172a28e1a30928d832f9d99ed5",
+    "logs/bridge-geometry-red.log": "6ada586899ca2e82a110a566fb3d5bedc4d74b1d5319353276e1411c8d0342a7",
+    "logs/consumer-contract.log": "2bcea7f164f3d71966e00093389b4911e8a2dacff18086a227eb7494c53b1f50",
+    "logs/dolby-final.log": "520d9644a17ce7c09382d86142886feab44439e7bcf6d8ace8677af7721cd51d",
+    "logs/dolby-suite.log": "189d345824f2f0f1ee3ac9a0fa580fc8eda9b0b87384bc50b06b63aa2ad25f4f",
+    "logs/failure-final.log": "293b9f82d29cc42df9ff1a7b293c468cc3af80d1ba799f4c4b518ee5c754afae",
+    "logs/failure-green.log": "11b4e471eaf98036c04bc80920479c6fbdd87aaa4b839b1927482502235b5620",
+    "logs/failure-red.log": "f6333a0897ba46650632c41dd362968089375cb867ded2ca1c89ca75e5a0569c",
+    "logs/fel-final.log": "95d8d84cc6e828ebcfdaf56ea7d36271c5823634bbf81b26f81cbd2bce5cfdfc",
+    "logs/metadata-green.log": "fcdcf7f05dc44a4dc17360b134553bbb9f7f3d3e447d995c04a387535ac3abf3",
+    "logs/metadata-green2.log": "c8206ba28f063fb69cc84662c4e4486d8d6808ec1863bec71fdc0cc1fe670bc9",
+    "logs/metadata-red.log": "e51a5a1a32bd183ad5d06675635e27d0234f9e49b28abd5ac5bc42730df35e0a",
+    "logs/metadata-red2.log": "81a5ea47f8139b873709650a194d41256e0987ebe6a5e1915a45077063550d2c",
+    "logs/nlq-classification-red.log": "04ac749af051e4c588779eaea04431b73c56d9bd69fa8c0de80f0ae300386285",
+    "logs/release-status.json": "22614ac058eca8b3a2201b76a5cc879d7d80689225864576d31dda1262a89494",
+    "logs/release-tests.log": "43a13824f6a24fc1102e6848c83c815e20be3b19b2c398793de1ceabc8a37d4f",
+    "logs/resource-hint-red.log": "a1e482119829a70a4c6e654d3cbd6daba70e23a3de54d5af6649ae66a3712496",
+    "logs/source-parity.log": "9068bbe077f245dd394b48d9f233f5d918122725d3783572e8640656a73c0c60",
+    "logs/typecheck-ios-final.log": "7695c9f88b4a4b786b6c18ceaee2e82eff78b05aad772e68e1dd2db8ab9effe7",
+    "logs/typecheck-ios.log": "7695c9f88b4a4b786b6c18ceaee2e82eff78b05aad772e68e1dd2db8ab9effe7",
+    "logs/typecheck-macos-final.log": "a4b16cf4ab4f43c08bb18cdf35f1e2f8338b6226b2129887a5c159d89cf24658",
+    "logs/typecheck-macos.log": "3faa20489fa66430e3317037bb3c43453cb1049a3d55476f07271ab1ef2896a6"
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minorDeferred": 1,
+    "record": "review.md"
+  },
+  "supportingEvidence": {
+    "typecheck.py": "1c7d08962f4424bbda2e04c425876e432341b5f63109e31ffdd9907455eaabde",
+    "review.md": "46a3cb8663762cc2bdcdcc9a2ddcf26a7e26d801c275c59e056a545f05c4c5c1",
+    "sample-assessment.md": "6263fcb0e9a45f4a200e9f56cb4ae7a842ac9754664961df0aa12451ccf4266d"
+  }
+}

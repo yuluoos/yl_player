@@ -39,3 +39,18 @@
 `stream_inventory.py` 提供Task1输入依赖，读取单HEVC轨道MP4的原始NAL和容器PTS/DTS，固定libdovi解析全部选中数据包的RPU。数据包不等于已验证解码帧；容器PTS排序不等于物理显示时序。复用mapping、未解析剩余位和未知level必须保留计数，不从出现字段推导处理支持。元数据变化使用完整signalled display metadata规范JSON哈希，不能当成镜头切换、亮度误差或已执行trim的证明。
 
 盘点轨迹只能提供原始RPU字节hash、整数时间戳和元数据hash/level/profile信息，不填独立目标参考hash或最终容差。原调查schema1仍禁止状态提升。实际源文件和解析器hash在盘点前后校验，部分失败和资源超限拒绝整体成功；退出2不等于媒体损坏。取得参考后仍须另行验证有效元数据继承、解码帧对应和同域像素比较。
+
+## 2026-10-16：现有 schema v1 的准入与错误边界
+
+本节固定现有桥接校验，不扩展像素算法或完整 CM 支持。字段来源为生产 `YlFELBridge.inc` 及已固定 FFmpeg9.0.1 的 `dovi_meta.h` / `dovi_rpudec.c`：L1 三项 PQ 是12-bit整数，L5四边偏移是13-bit整数像素，L6四项静态字段是16-bit整数。L6原始字段保留各自单位，不把最小亮度整数与最大亮度整数直接比较。最多32个扩展块；L1/L5/L6各自最多一次。
+
+- 整数先按原始 NSNumber 检查类型和整数性，再转 Float；布尔值不能充当整数/系数。系数必须能以有限Float表示。用于语法/能力判断的NLQ最大值按Double检查，不能四舍五入为1后误当已支持。
+- schema v1中缺字段、非有限系数、整数/位宽越界、重复单例块、非法pivot/MMR、负NLQ offset/slope/maximum及空L5有效区域是损坏；`decoder.dolby_vision_fel_invalid` / decoder / 不可重试。
+- 未知schema、有合法语法但当前未实现的信号/重采样、非单位NLQ最大值、L2/L4/L8等creative blocks、L254 CM信息或其他未知level保持unsupported；`decoder.dolby_vision_fel_metadata_unsupported` / unsupported / 不可重试。未知schema不按v1推断其剩余布局。
+- 已知块和数值先验证，再判断当前能力；未知块只保留其存在并拒绝处理，不宣称验证了未知块内部语义。桥接层本身已经返回的`YLFResultDolbyVisionUnsupported`不得在Swift配置/逐包入口折叠成损坏。
+- L5四边偏移必须留下正面积：left+right < decodedWidth，top+bottom < decodedHeight。配置探测和逐包入口都验证。这里不新增裁剪或显示映射，不把验证通过当作已应用L5显示管理。
+- 错误经既有安全发布边界生成scope和diagnosticId；不把输入字典、原生诊断或地址带到公开message。探测预算超限保留resource分类，不报成解码损坏。
+
+Shader ABI仍为709个Float：residual[0]、counts[1..3]、pivots[4..30]、methods[31..54]、polynomial[55..126]、MMR order[127..150]、constant[151..174]、coefficients[175..678]、nonlinear offset[679..681]、YCC matrix[682..690]、LMS matrix[691..699]、NLQ offset[700..702]、slope[703..705]、threshold[706..708]。显示块不混入该数组；Float布局不改变既有Metal运算。
+
+这些检查不构成完整RPU规范验证，不改变FFmpeg解析器对未知RPU类型的既有判断，也不解决有效元数据继承、trim、独立目标图比较或原生DV输出。

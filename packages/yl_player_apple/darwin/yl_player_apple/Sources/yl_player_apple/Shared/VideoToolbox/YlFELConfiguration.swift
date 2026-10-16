@@ -2,21 +2,6 @@ import CoreMedia
 import Foundation
 import YlFFmpegBridge
 
-enum YlFELFailure {
-  static func make(_ code: String = "decoder.dolby_vision_fel_invalid", _ detail: String) -> NativePlayerError {
-    NativePlayerError(category: "decoderFailure", code: code,
-      message: "The complete Dolby Vision enhancement layer could not be rendered.", diagnostic: detail)
-  }
-  static func metadata(_ dictionary: [String: Any]) throws -> YlFELMetadata {
-    do { return try YlFELMetadata(dictionary: dictionary) }
-    catch {
-      throw NativePlayerError(category: "unsupported", code: "decoder.dolby_vision_fel_metadata_unsupported",
-        message: "Complete rendering of this Dolby Vision enhancement metadata is unsupported.",
-        diagnostic: error.localizedDescription)
-    }
-  }
-}
-
 /// Owns copied stream configuration, never a borrowed demux pointer. Every
 /// decoder epoch clones this template with fresh RPU reference history.
 final class YlFELConfiguration {
@@ -31,7 +16,8 @@ final class YlFELConfiguration {
     guard let metadata = unit["metadata"] as? [String: Any] else {
       throw YlFELFailure.make("decoder.dolby_vision_fel_invalid", "Missing FEL metadata")
     }
-    _ = try YlFELFailure.metadata(metadata)
+    let dimensions = CMVideoFormatDescriptionGetDimensions(baseFormat)
+    _ = try YlFELFailure.metadata(metadata, frameSize: (Int(dimensions.width), Int(dimensions.height)))
     self.template = template
   }
 
@@ -61,7 +47,7 @@ final class YlFELConfiguration {
     var parser: YLFFELContextRef?
     let status = ylf_fel_create(context, streamIndex, &parser)
     guard status == YLFResultOK, let ownedParser = parser else {
-      throw YlFELFailure.make("decoder.dolby_vision_fel_invalid", "FEL configuration result \(status)")
+      throw YlFELFailure.bridge(status, "configuration")
     }
     var transferred = false
     defer { if !transferred { ylf_fel_free(ownedParser) } }
@@ -88,7 +74,7 @@ final class YlFELConfiguration {
         var raw: Unmanaged<CFDictionary>?
         let accessResult = ylf_fel_copy_access_unit(ownedParser, ownedPacket, &raw)
         guard accessResult == YLFResultOK, let raw else {
-          throw YlFELFailure.make("decoder.dolby_vision_fel_invalid", "FEL access-unit result \(accessResult)")
+          throw YlFELFailure.bridge(accessResult, "access unit")
         }
         let value = raw.takeRetainedValue() as NSDictionary
         guard let unit = value as? [String: Any] else {

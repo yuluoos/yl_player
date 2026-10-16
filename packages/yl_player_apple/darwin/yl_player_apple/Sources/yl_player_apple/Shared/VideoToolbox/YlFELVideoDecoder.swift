@@ -99,14 +99,15 @@ final class YlFELVideoDecoder {
           let unit = raw.takeRetainedValue() as NSDictionary as? [String: Any],
           let bl = unit["baseData"] as? Data, let el = unit["enhancementData"] as? Data,
           let values = unit["metadata"] as? [String: Any], let rpu = unit["rpu"] as? Data else {
-      throw YlFELFailure.make("decoder.dolby_vision_fel_invalid", "FEL access-unit result \(result)")
+      throw YlFELFailure.bridge(result, "access unit")
     }
-    let metadata = try YlFELFailure.metadata(values)
+    let dimensions = CMVideoFormatDescriptionGetDimensions(configuration.baseFormat)
+    let metadata = try YlFELFailure.metadata(values, frameSize: (Int(dimensions.width), Int(dimensions.height)))
     let blFormat = try YlFELConfiguration.format(unit, key: "baseFormat")
     let elFormat = try YlFELConfiguration.format(unit, key: "enhancementFormat")
     guard CMFormatDescriptionEqual(blFormat, otherFormatDescription: configuration.baseFormat),
           CMFormatDescriptionEqual(elFormat, otherFormatDescription: configuration.enhancementFormat) else {
-      throw YlFELFailure.make("decoder.dolby_vision_fel_invalid", "Mid-stream FEL configuration changed")
+      throw YlFELFailure.bridge(Int32(YLFResultDolbyVisionUnsupported), "mid-stream configuration change")
     }
     guard let base, let enhancement, !shouldCancel() else { return false }
     guard let blReservation = try base.reserve(byteCount: bl.count, shouldCancel: shouldCancel),

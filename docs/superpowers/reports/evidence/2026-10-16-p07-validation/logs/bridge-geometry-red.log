@@ -1,0 +1,31 @@
+/private/tmp/yl-p07-validation/yl_player/tool/apple_fel/failure_tests.swift:30:71: error: type 'YlFELFailure' has no member 'bridge'
+28 |         ] {
+29 |             count += 1
+30 |             let failure = YlAppleSafeDiagnostics.failure(YlFELFailure.bridge(status, "access unit"), scope: .player)
+   |                                                                       `- error: type 'YlFELFailure' has no member 'bridge'
+31 |             if failure.category != category || failure.code != code { failures.append("bridge status was collapsed") }
+32 |         }
+
+/private/tmp/yl-p07-validation/yl_player/tool/apple_fel/failure_tests.swift:35:59: error: extra argument 'frameSize' in call
+33 |         var cropped = metadataFixture()
+34 |         cropped["displayMetadata"] = [["level": 5, "values": ["left": 2, "right": 2, "top": 1, "bottom": 1]]]
+35 |         _ = try YlFELFailure.metadata(cropped, frameSize: (5, 3))
+   |                                                           `- error: extra argument 'frameSize' in call
+36 |         for size in [(4, 3), (5, 2), (0, 3), (5, -1)] {
+37 |             count += 1
+
+/private/tmp/yl-p07-validation/yl_player/tool/apple_fel/failure_tests.swift:38:68: error: extra argument 'frameSize' in call
+36 |         for size in [(4, 3), (5, 2), (0, 3), (5, -1)] {
+37 |             count += 1
+38 |             do { _ = try YlFELFailure.metadata(cropped, frameSize: size); failures.append("empty active area accepted") }
+   |                                                                    `- error: extra argument 'frameSize' in call
+39 |             catch {
+40 |                 let failure = YlAppleSafeDiagnostics.failure(error, scope: .player)
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-validation/run_failure.py", line 9, in <module>
+    subprocess.run(cmd,check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['xcrun', 'swiftc', '-module-cache-path', '/private/tmp/yl-p07-validation/swift-cache', '-F', '/Users/yy2021_8689/flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.xcframework/macos-arm64_x86_64', '-F', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64', '-Xlinker', '-rpath', '-Xlinker', '/Users/yy2021_8689/flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.xcframework/macos-arm64_x86_64', '-Xlinker', '-rpath', '-Xlinker', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELFailure.swift', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELMetadata.swift', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/NativePlayerError.swift', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleFailureMapper.swift', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayFailure.swift', '/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Generated/YlPlayerApple.g.swift', '/private/tmp/yl-p07-validation/yl_player/tool/apple_fel/metadata_fixture.swift', '/private/tmp/yl-p07-validation/yl_player/tool/apple_fel/failure_tests.swift', '-o', '/private/tmp/yl-p07-validation/failure-tests']' returned non-zero exit status 1.

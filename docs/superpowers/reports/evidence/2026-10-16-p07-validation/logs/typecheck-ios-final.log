@@ -1,0 +1,178 @@
+Full production typecheck arm64-apple-ios15.0 145 Swift sources
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:142:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     pixelBufferAttributes: [
+ 141 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 142 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 143 |     ]
+ 144 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:42:28: warning: expression implicitly coerced from 'Any??' to 'Any?'
+40 |     bufferMode = map["bufferMode"] as? String ?? "automatic"
+41 |     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
+42 |     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+   |                            |  |- note: provide a default value to avoid this warning
+   |                            |  |- note: force-unwrap the value to avoid this warning
+   |                            |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+43 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+44 |     positionEventIntervalMs = min(
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:43:53: warning: expression implicitly coerced from 'Any??' to 'Any?'
+41 |     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
+42 |     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+43 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+   |                                                     |  |- note: provide a default value to avoid this warning
+   |                                                     |  |- note: force-unwrap the value to avoid this warning
+   |                                                     |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                                     `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+44 |     positionEventIntervalMs = min(
+45 |       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:45:17: warning: expression implicitly coerced from 'Any??' to 'Any?'
+43 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+44 |     positionEventIntervalMs = min(
+45 |       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
+   |                 |  |- note: provide a default value to avoid this warning
+   |                 |  |- note: force-unwrap the value to avoid this warning
+   |                 |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                 `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+46 |       2_000
+47 |     )
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:22:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+20 |   init(map: [String: Any?]) {
+21 |     connectTimeoutMs = Self.clampedMilliseconds(
+22 |       int64(map["connectTimeoutMs"]) ?? 10_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+23 |     )
+24 |     readTimeoutMs = Self.clampedMilliseconds(
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:25:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+23 |     )
+24 |     readTimeoutMs = Self.clampedMilliseconds(
+25 |       int64(map["readTimeoutMs"]) ?? 15_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+26 |     )
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:27:42: warning: expression implicitly coerced from 'Any??' to 'Any?'
+25 |       int64(map["readTimeoutMs"]) ?? 15_000
+26 |     )
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+   |                                          |  |- note: provide a default value to avoid this warning
+   |                                          |  |- note: force-unwrap the value to avoid this warning
+   |                                          |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                          `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+28 |     baseRetryDelayMs = Self.clampedMilliseconds(
+29 |       int64(map["baseRetryDelayMs"]) ?? 500
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:29:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+28 |     baseRetryDelayMs = Self.clampedMilliseconds(
+29 |       int64(map["baseRetryDelayMs"]) ?? 500
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     )
+31 |     maxRetryDelayMs = Self.clampedMilliseconds(
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:32:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     )
+31 |     maxRetryDelayMs = Self.clampedMilliseconds(
+32 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+33 |     )
+34 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:34:44: warning: expression implicitly coerced from 'Any??' to 'Any?'
+32 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+33 |     )
+34 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+   |                                            |  |- note: provide a default value to avoid this warning
+   |                                            |  |- note: force-unwrap the value to avoid this warning
+   |                                            |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+35 |   }
+36 | 
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:639:12: warning: 'UTTypeCreatePreferredIdentifierForTag' was deprecated in iOS 15.0: Use the UTType class instead. [#DeprecatedDeclaration]
+ 637 |       return UTType(mimeType: mime)?.identifier ?? mime
+ 638 |     }
+ 639 |     return UTTypeCreatePreferredIdentifierForTag(
+     |            `- warning: 'UTTypeCreatePreferredIdentifierForTag' was deprecated in iOS 15.0: Use the UTType class instead. [#DeprecatedDeclaration]
+ 640 |       kUTTagClassMIMEType,
+ 641 |       mime as CFString,
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:640:7: warning: 'kUTTagClassMIMEType' was deprecated in iOS 15.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]
+ 638 |     }
+ 639 |     return UTTypeCreatePreferredIdentifierForTag(
+ 640 |       kUTTagClassMIMEType,
+     |       `- warning: 'kUTTagClassMIMEType' was deprecated in iOS 15.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]
+ 641 |       mime as CFString,
+ 642 |       nil
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlManagedHTTPTransport.swift:146:5: warning: switch must be exhaustive
+144 | 
+145 |   private static func transportError(_ error: NWError) -> Error {
+146 |     switch error {
+    |     |- warning: switch must be exhaustive
+    |     `- note: add missing case: '.wifiAware(_)'
+147 |     case .tls: return URLError(.serverCertificateUntrusted)
+148 |     case .dns: return URLError(.cannotFindHost)
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift:288:34: warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+  4 | /// Only this boundary projects private Pigeon records to native compatibility
+  5 | /// commands and encodes native measurements back to generated callback records.
+  6 | final class YlApplePlayerHost: ApplePlayerHostApi {
+    |             `- note: class 'YlApplePlayerHost' does not conform to the 'Sendable' protocol
+  7 |   let playerId: Int64
+  8 |   let suffix: String
+    :
+286 |   func dispose() async throws {
+287 |     await withCheckedContinuation { continuation in
+288 |       DispatchQueue.main.async { self.close(); continuation.resume() }
+    |                                  `- warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+289 |     }
+290 |   }
+
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:316:23: warning: capture 'self' was never used [#NoUsage]
+ 314 |     presentation.pause(atHostTimeUs: Self.hostTimeUs())
+ 315 |     YlFallbackTeardownTransaction(
+ 316 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 317 |         tokenToCancel?.cancel()
+ 318 |         mediaToClose?.cancelInput()
+
+/private/tmp/yl-p07-validation/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:633:23: warning: capture 'self' was never used [#NoUsage]
+ 631 |     presentation.retireDisplay()
+ 632 |     YlFallbackTeardownTransaction(
+ 633 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 634 |         tokenToCancel?.cancel()
+ 635 |         mediaToClose?.cancelInput()
+
+[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>
+sandbox-exec: sandbox_apply: Operation not permitted
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk/usr/include/sys/sysctl.h:810:9: warning: could not load macro '_SwiftifyImport'; this may cause errors down the line
+808 | int     sysctl(int *, u_int, void *__sized_by(*oldlenp), size_t *oldlenp,
+809 |     void *__sized_by(newlen), size_t newlen);
+810 | int     sysctlbyname(const char *, void *__sized_by(*oldlenp), size_t *oldlenp,
+    |         `- warning: could not load macro '_SwiftifyImport'; this may cause errors down the line
+811 |     void *__sized_by(newlen), size_t newlen);
+812 | int     sysctlnametomib(const char *, int *__counted_by(*sizep), size_t *sizep);
+TYPECHECK_EXIT 0

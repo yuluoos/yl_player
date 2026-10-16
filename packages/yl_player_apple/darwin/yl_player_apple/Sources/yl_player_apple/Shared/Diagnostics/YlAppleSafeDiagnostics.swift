@@ -180,6 +180,7 @@ enum YlAppleSafeDiagnostics {
     "network.rtmp_stream_unavailable": "The RTMP stream is unavailable. Check the stream address and access permissions.",
     "container.rtmp_track_layout_changed": "The RTMP track configuration changed. Reload the stream to continue playback.",
     "decoder.dolby_vision_unsupported": "This Dolby Vision profile is not supported. Try a compatible version of the media.",
+    "decoder.dolby_vision_fel_invalid": "The Dolby Vision enhancement data is invalid or incomplete. Check the source file.",
     "decoder.dolby_vision_fel_metadata_unsupported": "This Dolby Vision enhancement metadata is not supported. Try a base-layer or compatible version.",
     "network.connect_timeout": "The media request timed out while connecting. Check the network connection and try again.",
     "network.read_timeout": "The media request timed out while reading. Check the network connection and try again.",
