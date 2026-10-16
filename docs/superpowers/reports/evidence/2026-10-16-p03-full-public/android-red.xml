@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<testsuite name="dev.ylplayer.yl_player_android.YlBoundMedia3AudioInstrumentedTest" tests="3" failures="2" errors="0" skipped="0" time="0.542" timestamp="2026-10-16T11:03:21" hostname="localhost">
+  <properties>
+    <property name="device" value="TV_64bit_1_5G_32G(AVD) - 16" />
+    <property name="flavor" value="" />
+    <property name="project" value=":yl_player_android" />
+  </properties>
+  <testcase name="sourceBindingRequiresManagedPolicyAndExactRunLocator" classname="dev.ylplayer.yl_player_android.YlBoundMedia3AudioInstrumentedTest" time="0.012">
+    <failure>java.lang.AssertionError
+at org.junit.Assert.fail(Assert.java:87)
+at org.junit.Assert.assertTrue(Assert.java:42)
+at org.junit.Assert.assertTrue(Assert.java:53)
+at dev.ylplayer.yl_player_android.YlBoundMedia3AudioInstrumentedTest.sourceBindingRequiresManagedPolicyAndExactRunLocator(YlBoundMedia3AudioInstrumentedTest.kt:18)
+</failure>
+  </testcase>
+  <testcase name="monoTapPreservesActualBytesChannelsAndFramePositions" classname="dev.ylplayer.yl_player_android.YlBoundMedia3AudioInstrumentedTest" time="0.001">
+    <failure>java.lang.IllegalStateException: Check failed.
+at dev.ylplayer.yl_player_android.YlBoundMedia3Audio$tap$1.onConfigure(YlBoundMedia3Audio.kt:40)
+at androidx.media3.common.audio.BaseAudioProcessor.configure(BaseAudioProcessor.java:56)
+at dev.ylplayer.yl_player_android.YlBoundMedia3AudioInstrumentedTest.monoTapPreservesActualBytesChannelsAndFramePositions(YlBoundMedia3AudioInstrumentedTest.kt:28)
+</failure>
+  </testcase>
+  <testcase name="emptyDrainDoesNotInventSamplesOrRequireAnOrigin" classname="dev.ylplayer.yl_player_android.YlBoundMedia3AudioInstrumentedTest" time="0.001" />
+</testsuite>

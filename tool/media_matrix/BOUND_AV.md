@@ -147,3 +147,53 @@ product deployment minimum. Run in a live GUI session. Preserve every attempt,
 including missing display-layer output and framework timeouts; a single passing
 run does not establish repeatability. The wrapper holds a temporary display-awake
 assertion only for its owned run. Do not rebuild the bundle during collection.
+
+## Complete catalog through the public Flutter path
+
+Build the public `integration_test/bound_av_test.dart` product once with the
+existing explicit debug opt-in, then keep its bytes unchanged:
+
+```sh
+python3 -B tool/media_matrix/run_bound_flutter_matrix.py --platform macos --app /absolute/frozen.app --out /absolute/new-run
+python3 -B tool/media_matrix/run_bound_flutter_matrix.py --platform ios --app /absolute/frozen.app --simulator OWNED_UUID --out /absolute/new-run
+python3 -B tool/media_matrix/run_bound_flutter_matrix.py --platform android --apk /absolute/frozen.apk --serial OWNED_SERIAL --out /absolute/new-run
+```
+
+The fixed catalog has 22 inputs in each of file and explicit managed HTTP: 40
+required cells, two diagnostic MPEG-2 cells and two corrupt-input cells. Each
+cell gets an independent run/session under one matrix/product identity. Failure
+does not stop later cells or reduce the required denominator; decoder/transport
+selection stays with the product. The local HTTP fixture server serves immutable
+catalog bytes, requires the run header and records actual requests and bytes.
+Native observers verify the actual source kind, exact URL, managed policy and
+header independently of the plan. This is not an impairment or ABR tool.
+
+`matrix-plan.json`, `records.json.gz`, each child's original extraction/status,
+and `matrix-result.json` preserve both successes and failures. `bound_matrix.summarize`
+replays raw evidence and requires final framework success, successful child exit,
+no collector error, matching run/build/transport identities and unchanged product
+bytes. Android additionally replays the original JSONL byte stream (not just its
+valid prefix) and requires a successful extraction. A missing or malformed
+required child cannot pass. The historical six-control runners remain available;
+`--case` selects one diagnostic cell, never the complete denominator.
+
+Mono sources retain actual output channels; Android may emit mono or duplicated
+stereo only for a declared mono source, and the gate measures each actual channel.
+Network seek waits for the actual native reset after public intent acknowledgement.
+Owned fixture cleanup runs even if player disposal or unmount fails, preserving
+an earlier playback failure. Android HTTP cancellation aborts calls on the caller,
+while response-body close remains on the demux worker to avoid network reads on
+Android's UI thread.
+
+`formatScopeAcceptance` certifies only this fixed debug protocol if all 40 required
+cells pass. `fullAcceptance` remains false: this does not certify release,
+physical output, protected content, independent decoder references, all boundary
+cases, minimum OS/Intel support or sustained thermal admission.
+
+`matrix-progress.json` is explicitly provisional and cannot authorize acceptance;
+the final replay is written to `matrix-result.json` only after collection. Every
+seek phase waits for a freshly captured native consumption value at or beyond its
+target, even if the public timeline still contains a larger pre-seek position.
+Android returns that value only when the screenshot token matches its fresh real
+playback-head sample; Apple retains its paused-readback protocol. Missing samples
+remain bounded failures rather than empty phases accepted from stale public state.

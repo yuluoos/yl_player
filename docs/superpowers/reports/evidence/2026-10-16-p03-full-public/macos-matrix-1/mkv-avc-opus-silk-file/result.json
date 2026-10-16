@@ -1,0 +1,98 @@
+{
+  "artifactsUnchanged": true,
+  "errors": [],
+  "fullAcceptance": false,
+  "measurements": [
+    {
+      "caseId": "mkv-avc-opus-silk",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.03978016869993793,
+              "channel": 0,
+              "frequencyHz": 440
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039931534452654155,
+              "channel": 0,
+              "frequencyHz": 660
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039795642123788014,
+              "channel": 0,
+              "frequencyHz": 880
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040058574233302516,
+              "channel": 0,
+              "frequencyHz": 1100
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03997971185835135,
+              "channel": 0,
+              "frequencyHz": 660
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04001952920011877,
+              "channel": 0,
+              "frequencyHz": 880
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03996614761852329,
+              "channel": 0,
+              "frequencyHz": 440
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    }
+  ],
+  "negativeFramework": false,
+  "negativeIdentity": false,
+  "processExit": -15,
+  "publicTestPassed": true,
+  "requiredRows": 1,
+  "runtimeIdentityVerified": true,
+  "scopeAcceptance": true,
+  "statusRunMatches": true,
+  "supportedRows": 1
+}

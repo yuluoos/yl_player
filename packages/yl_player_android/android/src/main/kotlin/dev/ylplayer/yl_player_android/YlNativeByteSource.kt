@@ -24,7 +24,8 @@ import okhttp3.Request
 import okhttp3.Response
 import okio.BufferedSource
 
-/** Synchronous custom-AVIO source. JNI calls it only from the owned demux worker. */
+/** Synchronous custom-AVIO reads/seeks/close belong to the owned demux worker.
+ * Cancellation may arrive from the UI caller and must not drain a response body. */
 internal interface YlNativeByteSource : Closeable {
     fun read(target: ByteBuffer): Int
     fun seek(offset: Long, whence: Int): Long
@@ -161,9 +162,15 @@ private class YlHttpRangeByteSource(
         return response.body?.contentLength()?.takeIf { it >= 0 }?.let { start + it } ?: -1
     }
 
-    private fun closeResponse() { body = null; response?.close(); response = null }
-    override fun cancel() { cancelled.set(true); calls.cancelAll(); closeResponse() }
-    override fun close() { cancel(); calls.close() }
+    private fun closeResponse() {
+        val previous = response
+        body = null; response = null
+        previous?.close()
+    }
+    // Abort the active socket immediately; closing a buffered body can perform
+    // network reads, so only the demux worker may release it in close/seek.
+    override fun cancel() { cancelled.set(true); calls.cancelAll() }
+    override fun close() { cancel(); try { closeResponse() } finally { calls.close() } }
 }
 
 /** Concatenates a media playlist into a demuxable TS/fMP4 byte stream and reloads live windows. */

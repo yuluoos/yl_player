@@ -1,0 +1,49 @@
+{
+  "artifactKind": "android-public-flutter-debug-apk",
+  "buildSha256": "10816201a8dfecf9ea7ed2503d97dce1378cca2e799475d5875e28c64d1bd0b5",
+  "matrixId": "f6b03546-ceba-4a8b-8231-8cf2f4dd06f8",
+  "negativeFramework": false,
+  "phases": [
+    {
+      "markers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "phase": "play"
+    },
+    {
+      "markers": [
+        1
+      ],
+      "phase": "seek-1250"
+    },
+    {
+      "markers": [
+        2
+      ],
+      "phase": "seek-2250"
+    },
+    {
+      "markers": [
+        0
+      ],
+      "phase": "seek-0"
+    }
+  ],
+  "planned": [
+    {
+      "caseId": "mkv-avc-vorbis",
+      "channels": 2,
+      "file": "mkv-avc-vorbis.mkv",
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "sourceChannels": 2,
+      "transport": "http"
+    }
+  ],
+  "platform": "android",
+  "runId": "cf4a9d28-4e88-4930-a12f-e0476dc9e8e5",
+  "schema": 1,
+  "testSha256": "10816201a8dfecf9ea7ed2503d97dce1378cca2e799475d5875e28c64d1bd0b5"
+}

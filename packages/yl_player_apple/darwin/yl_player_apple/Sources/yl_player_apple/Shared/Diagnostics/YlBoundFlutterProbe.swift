@@ -10,6 +10,21 @@ import FlutterMacOS
 import Flutter
 #endif
 
+/// Binds the actual public source to the owned fixture, transport and run.
+enum YlBoundSourceIdentity {
+  static func matches(_ source: AppleSourceMessage, path: String, locator: String,
+                      transport: String, run: String) -> Bool {
+    guard source.drm == nil && source.locator == locator else { return false }
+    if transport == "file" { return source.kind == .file && locator == path }
+    guard transport == "http", source.kind == .network, source.networkPolicy?.kind == .managed,
+      source.request?.headers["x-yl-bound-run"] == run,
+      let url = URLComponents(string: locator) else { return false }
+    return url.scheme == "http" && url.host == "127.0.0.1" && (url.port ?? 0) > 0 &&
+      url.user == nil && url.password == nil && url.query == nil && url.fragment == nil &&
+      url.path == "/" + URL(fileURLWithPath: path).lastPathComponent
+  }
+}
+
 /// Temporarily stops an already-paused clear surface's renderer clock for readback.
 /// The immediate renderer otherwise retains a host-clock rate of one even when
 /// the public player is paused. No frame, surface, or media timestamp is replaced.
@@ -267,8 +282,9 @@ final class YlBoundFlutterProbe {
   func observe(_ host: YlApplePlayerHost) { if capture?.host == nil { capture?.host = host } }
   func verifySource(_ source: AppleSourceMessage, host: YlApplePlayerHost) throws {
     guard let capture else { throw error("unplanned public load") }
-    try require(capture.host === host && source.kind == .file && source.drm == nil && source.locator == capture.path, "actual source/session mismatch")
-    try require(try Self.fileHash(URL(fileURLWithPath: source.locator)) == capture.item["mediaHash"] as? String, "actual media hash mismatch")
+    try require(capture.host === host && YlBoundSourceIdentity.matches(source, path: capture.path, locator: capture.locator, transport: capture.item["transport"] as? String ?? "file", run: plan["runId"] as? String ?? ""), "actual source/session mismatch")
+    try require(try Self.fileHash(URL(fileURLWithPath: capture.path)) == capture.item["mediaHash"] as? String, "actual media hash mismatch")
+    capture.sourceVerified = true
   }
 
   /// Main-thread readback of the display layer attached by the product output.
@@ -339,7 +355,7 @@ final class YlBoundFlutterProbe {
       guard let path = args["path"] as? String else { throw error("missing media path") }
       try require(args["caseId"] as? String == item["caseId"] as? String, "case order changed")
       try require(try Self.fileHash(URL(fileURLWithPath: path)) == item["mediaHash"] as? String, "fixture hash mismatch")
-      capture = Capture(item: item, path: path); reply(nil); return
+      capture = Capture(item: item, path: path, locator: args["locator"] as? String ?? path); reply(nil); return
     }
     guard let c = capture, let host = c.host else { throw error("native host missing") }
     let session = args["sessionId"] as? String
@@ -409,8 +425,9 @@ final class YlBoundFlutterProbe {
       c.phase = "seek-\(target)"; c.pixels.removeAll(); c.readbackTrace.removeAll()
       c.beforeSeek = c.factory?.stamp; c.factory?.pcm.clear(); reply(nil)
     case "awaitPhase":
-      try require(c.beforeSeek != nil && c.factory?.stamp != c.beforeSeek, "actual audio reset not observed")
-      reply(nil)
+      // Public network seek acknowledges intent before its worker commits reset.
+      // The Dart observer polls this actual generation effect with a deadline.
+      reply(c.beforeSeek != nil && c.factory?.stamp != c.beforeSeek)
     case "retain":
       try require(args["phase"] as? String == c.phase, "phase mismatch")
       if c.phase == "play" { c.completed = host.initialState.status == .completed }
@@ -426,6 +443,11 @@ final class YlBoundFlutterProbe {
         "releasedAudioBytes": c.factory!.renderer!.scheduledBytes, "phases": c.phases,
         "publicSessionId": c.session, "publicApi": "YlPlayerController/YlPlayerView", "publicLifecycle": lifecycle,
         "pixelSource": "flutter-native-view-display-layer", "nativeViewAttached": c.viewAttached]) { _, rhs in rhs }
+      row["transport"] = c.item["transport"] ?? "file"
+      row["sourceVerified"] = c.sourceVerified
+      if c.item["transport"] as? String == "http" {
+        row["networkPolicy"] = "managed"; row["networkReceipt"] = args["networkReceipt"]
+      }
       row["audioClockMethod"] = "renderer-paused-consumption"
       row["displayReadbackProtocol"] = "paused-layer-timebase-v1"
       #if os(macOS)
@@ -463,14 +485,15 @@ final class YlBoundFlutterProbe {
       "readbackTrace": c.readbackTrace]) { _, rhs in rhs }; return row
   }
   private final class Capture {
-    let item: [String: Any]; let path: String
+    let item: [String: Any]; let path: String; let locator: String
+    var sourceVerified = false
     var factory: BoundAudioFactory?; var output: YlTextureOutput?; var host: YlApplePlayerHost?
     var session = "", phase = "play", completed = false, viewAttached = false
     var beforeSeek: String?
     var pixels = [[String: Any]](), phases = [[String: Any]]()
     var readbackTrace = [[String: Any]]()
     var readback: YlBoundDisplayReadback?
-    init(item: [String: Any], path: String) { self.item = item; self.path = path }
+    init(item: [String: Any], path: String, locator: String) { self.item = item; self.path = path; self.locator = locator }
   }
 }
 

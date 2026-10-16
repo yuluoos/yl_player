@@ -1,0 +1,575 @@
+{
+  "attemptedRows": 44,
+  "buildSha256": "aedfa5a4fa820864c00b52435ff7c32c2fb8e97f35be82ae7b860a397122732b",
+  "corruptRows": 2,
+  "diagnosticRows": 2,
+  "errors": [],
+  "formatScopeAcceptance": false,
+  "fullAcceptance": false,
+  "matrixId": "69f30f85-19f4-4acd-8359-60a6b06ab115",
+  "missing": [],
+  "platform": "android",
+  "requiredRows": 40,
+  "rows": [
+    {
+      "accepted": true,
+      "caseId": "mp4-avc-aac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "649998f3-4037-4777-8bc0-1bd62b758caa",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mp4-avc-aac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "5aa3b427-7a9f-4ba5-bd82-5393e698cb86",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mov-hevc-aac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "c291c34c-f575-401a-bbaf-af32485020bf",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mov-hevc-aac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "ecd85dd7-a309-4d84-a2c3-2096b5f4c8c8",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-aac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "0843dfa4-6c72-4d40-b83c-726bea52adfc",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-aac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "048064a1-1565-4a20-a8f0-b31e76d597ef",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "webm-vp9-opus",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "65eb958f-3956-4f6c-aae6-a352076cdf3b",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "webm-vp9-opus",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "7a555530-94f2-4e25-aaa8-69f0ac74ee43",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "flv-avc-mp3",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "34aa4e14-72d7-4b50-9017-ccd18b8b86d6",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "flv-avc-mp3",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "a6a49666-83a2-4c45-8241-b8da4a5d235a",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "ts-avc-ac3",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "34ae464d-26d3-41b0-bce9-17f531212eec",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "ts-avc-ac3",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "61eb4107-50c1-459e-bb56-2d2e495e0571",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-mpeg2-mp3",
+      "collectorError": null,
+      "failure": "YlFailure(category: decoder, code: decoder.unsupported, retryable: false, scope: command, diagnosticId: 9aab9efc-74e2-4789-98be-c72085f4c381)",
+      "identityBound": true,
+      "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+      "rawErrors": [
+        "invalid_session"
+      ],
+      "requirement": "diagnostic",
+      "runId": "82b260f3-3c01-4f88-bbfc-14b426e05c48",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-mpeg2-mp3",
+      "collectorError": null,
+      "failure": "YlFailure(category: decoder, code: decoder.unsupported, retryable: false, scope: command, diagnosticId: b9d0d12d-a415-4bea-9a13-d1a3826ca078)",
+      "identityBound": true,
+      "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "diagnostic",
+      "runId": "fca43424-67bc-4288-8fa9-5bffa57d0b60",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "avi-avc-mp3",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "77896486-9445-4a5e-9f51-0832fb0e7615",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "avi-avc-mp3",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "da74853d-c0a5-4b42-8fad-afbb5719a301",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-av1-opus",
+      "collectorError": null,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: fc4cee7b-3480-467e-8701-075a49672be6)",
+      "identityBound": true,
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "rawErrors": [
+        "invalid_session"
+      ],
+      "requirement": "required",
+      "runId": "17fe655b-36b5-409d-9413-eb21480e06a5",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-av1-opus",
+      "collectorError": null,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: eb33f38f-1a8a-4cef-8b2b-05e6cac9bef8)",
+      "identityBound": true,
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "747c122e-75d0-470f-bfcb-078bd4d9c953",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-eac3",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "587ab182-37e1-4058-91cd-4fcb322a8cf4",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-eac3",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "aef65418-e1c7-4d3d-864a-5e2b620bf70b",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-dts",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "8aec0bf0-f5aa-4acb-8da8-e40aeed8a431",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-dts",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "9ae4ebae-0492-4cfe-80a7-5c1f4591f6f8",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-flac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "a6cb5d77-8306-46d2-9bc3-13928b7c38e1",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-flac",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "8e121e7e-68e6-4119-a8fc-0105c9f2cd99",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "webm-vp9-vorbis",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "27a7fd10-145a-4350-a6ac-8cd803aecd9f",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "webm-vp9-vorbis",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "abf7cac7-def2-49f9-b5d4-56103571ed15",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-hevc-main10-aac",
+      "collectorError": null,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: 51ed615f-e460-4ae0-82d3-7fc2271ae009)",
+      "identityBound": true,
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "rawErrors": [
+        "invalid_session"
+      ],
+      "requirement": "required",
+      "runId": "1af59895-5324-47f8-9974-49a64e684461",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-hevc-main10-aac",
+      "collectorError": null,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: ff1b3343-5a51-47d7-a416-650c91f91aef)",
+      "identityBound": true,
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "354a1e39-20dd-4b39-bbce-fce405bd81b3",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-ac3-51",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "e9b43ad7-a1f2-42f7-86f0-bc9e661ea066",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-ac3-51",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "20769515-9d0d-4de9-a5e7-0d5d23e20719",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-aac-no-cues",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "26aa7111-68a7-47f6-acdd-6ad74d4d0deb",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-aac-no-cues",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "b9b3a43a-5aad-4ca8-b414-729ab8aed43c",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mp4-truncated",
+      "collectorError": null,
+      "failure": "YlFailure(category: container, code: container.unsupported, retryable: false, scope: command, diagnosticId: bab7fda4-8fc3-4034-a509-88f0936edda7)",
+      "identityBound": true,
+      "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+      "rawErrors": [
+        "invalid_session"
+      ],
+      "requirement": "corrupt",
+      "runId": "b64ef252-9c4d-4e03-af98-3946ee338fc1",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mp4-truncated",
+      "collectorError": null,
+      "failure": "YlFailure(category: container, code: container.unsupported, retryable: false, scope: command, diagnosticId: da065083-4a28-422e-9ce4-c74096053f0e)",
+      "identityBound": true,
+      "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "corrupt",
+      "runId": "eaa6f379-a8fa-4c7e-8751-c3fbebb13049",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-opus",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "833ebbd3-9fa6-4e6c-b1a3-c0e48182ac73",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-opus",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "599786cc-ccbc-4109-86d0-2270070356d3",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-opus-silk",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "ae3779cb-09cb-41df-8cbc-5208f6709fa1",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-opus-silk",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "53d16e50-7732-4c5e-bcdc-a7b753c21233",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-opus-hybrid",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "14c6ed7c-cb10-43f5-9b31-393248d5adc8",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-opus-hybrid",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "4a7c085e-9333-4478-906d-8be328b51531",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-vorbis",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "b5a76243-c760-4eb6-81d6-635f466fe842",
+      "transport": "file"
+    },
+    {
+      "accepted": true,
+      "caseId": "mkv-avc-vorbis",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "69c596ed-9be1-4cc9-98f3-97e92e86c432",
+      "transport": "http"
+    },
+    {
+      "accepted": true,
+      "caseId": "ps-avc-mp3",
+      "collectorError": null,
+      "failure": null,
+      "identityBound": true,
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "rawErrors": [],
+      "requirement": "required",
+      "runId": "75d182c0-dde2-46f0-9961-9dfade2436b0",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-avc-mp3",
+      "collectorError": null,
+      "failure": "PlatformException(bound.observation, kotlinx.coroutines.TimeoutCancellationException: Timed out waiting for 5000 ms, null, null)",
+      "identityBound": true,
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "rawErrors": [
+        "managed_http_unverified"
+      ],
+      "requirement": "required",
+      "runId": "bf44edde-6650-4d3f-ba0f-2b8d053d6ded",
+      "transport": "http"
+    }
+  ],
+  "schema": 1,
+  "supportedRows": 29
+}

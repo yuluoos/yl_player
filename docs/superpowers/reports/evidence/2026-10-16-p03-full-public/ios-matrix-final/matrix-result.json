@@ -1,0 +1,765 @@
+{
+  "attemptedRows": 44,
+  "buildSha256": "4f1b77d0946d79a33cc0168d1b643ee3789caaf996f162a086cd177b463534a0",
+  "corruptRows": 2,
+  "diagnosticRows": 2,
+  "errors": [],
+  "formatScopeAcceptance": false,
+  "fullAcceptance": false,
+  "matrixId": "eac483ec-a4e0-4d16-a6ae-bbde6733e257",
+  "missing": [],
+  "platform": "ios",
+  "requiredRows": 40,
+  "rows": [
+    {
+      "accepted": false,
+      "caseId": "mp4-avc-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "TimeoutException after 0:00:02.000000: Audio consumption did not become ready for paused capture",
+      "identityBound": true,
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "75d12a8b-e987-4281-aeec-f3e605ab3ea5",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mp4-avc-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-6aa5a9d6-f106-4f51-9130-152fae287f93)",
+      "identityBound": true,
+      "mediaHash": "3be1bec9f93c98fe29bc9d725dc030fac22781acd792a5142ab6772bc8413e96",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "c0b07dc5-f87f-4473-acbe-e41fb85bf760",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mov-hevc-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-caed0394-79fa-4775-9a31-02801d01a42e)",
+      "identityBound": true,
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "223172a2-df45-4b47-9c96-c8515bb4de6e",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mov-hevc-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-d5d54a7f-2b45-473e-a6ff-7f134a3349a2)",
+      "identityBound": true,
+      "mediaHash": "7510780fb779a64ef698f917443b44dcc432968788f8d20b35c13e4aea778956",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "b9f07826-78bc-49ad-9aed-d52ca6b27165",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-5e2f5552-0e68-4e27-8ba8-d433d39fb9a9)",
+      "identityBound": true,
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "a13c9d25-7317-4505-8e0f-097cd462326f",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-6b8d931e-9cba-4c63-9365-aefdc493417c)",
+      "identityBound": true,
+      "mediaHash": "0812b7fcb4c587e51621b8e1f08ab494c062a2c345e47ad0ba9a1bfce80230b3",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "5b74622f-caae-4a1c-b7dc-f8090f957cee",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "webm-vp9-opus",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-d423bea2-dc27-46ef-bb4b-2229babe85b6)",
+      "identityBound": true,
+      "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "baace2cc-bef1-4499-a27e-bdd87fd128e3",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "webm-vp9-opus",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-fa0fe89c-2873-4a5a-90da-83218ef5703b)",
+      "identityBound": true,
+      "mediaHash": "e32bbdbb915c91ad8ec3fc65bb2dfae40c0b42abf416a262a73d7a92b98b5d8d",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "80df3821-51d5-4aaa-8901-2347b6222d16",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "flv-avc-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-cebe6279-0fb5-4b82-950d-63bff2da13a0)",
+      "identityBound": true,
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "d0d51700-34ce-4014-bb51-c5c9d2dc2c82",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "flv-avc-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-a9cf62f7-bf42-4538-a533-6a59e5752b9f)",
+      "identityBound": true,
+      "mediaHash": "c51c72a467f63e0d29344f32dfc01a88782f9e78dec7d89f86e4fd5687d98a1f",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "4a38f061-9adb-44d7-9ccc-eca9e83f7df0",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "ts-avc-ac3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-01665307-4380-4363-9e07-9fd345f21b2a)",
+      "identityBound": true,
+      "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "b41997a5-13bf-4c31-a9e2-1e788c872ca6",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "ts-avc-ac3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-2c428dbc-ffa8-469c-b63a-1a8c3e0c9cf3)",
+      "identityBound": true,
+      "mediaHash": "d0e61a11b46b769bfcc2ea6480991866681f9b89262c0bde1336a229e7bd2b8f",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "c0559b3c-021d-4209-b7f1-2c8cc2869f60",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-mpeg2-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unsupported, retryable: false, scope: command, diagnosticId: apple-35d6bba3-a9f2-4022-b6c4-36c466e54109)",
+      "identityBound": true,
+      "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "diagnostic",
+      "runId": "32adf1bd-d7e6-485b-8a02-b9dd851b3184",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-mpeg2-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-d04c744d-865d-4af5-a5c2-8fa92074d1fe)",
+      "identityBound": true,
+      "mediaHash": "5ba56c8fe34ec805490e1ea0c79c8d689a437b96f1d02d962f545b5119c91775",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "diagnostic",
+      "runId": "05cc8ef7-b523-45d3-88f3-124882d23da6",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "avi-avc-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-01ea6fe0-a6b2-4922-8880-4f0ff6d215ba)",
+      "identityBound": true,
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "a2fd5c4c-4819-48c7-838b-89865852fef8",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "avi-avc-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-03475462-785b-4fc0-b02c-293fd012c790)",
+      "identityBound": true,
+      "mediaHash": "8507c46ff72fe8b923ae2eb510ce3de431caaa708965fe028c0cbf0deaabeccc",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "ade85f0b-07e3-4b38-b7c5-3ba813424df1",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-av1-opus",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-b0488224-1d00-4e53-b8fa-6df1c7839c63)",
+      "identityBound": true,
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "b2e0e5c2-b6fd-4fbb-8db4-c02a51c120e0",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-av1-opus",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-31032989-308e-4f84-bbea-6a97e97b7950)",
+      "identityBound": true,
+      "mediaHash": "60d574496c5da711735f87a5eb1ac998791c4b482b6ff461bbaa9b434f98e920",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "108ddf2c-06b8-4042-b59b-a5739415ea67",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-eac3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-4badaa67-7273-4537-9db1-734c3ae492fa)",
+      "identityBound": true,
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "81130179-c91f-4eed-b036-d8a2f68081a0",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-eac3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-49bf14ad-f080-4af6-ab04-d2e4a427c5be)",
+      "identityBound": true,
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "859dc3ba-7e51-4563-b6b6-d697edf654c1",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-dts",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-4998ecc6-bd52-4362-b0fa-52fb8b49ee2e)",
+      "identityBound": true,
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "24bb9322-cf4a-4c16-9f18-a1581ffbf307",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-dts",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-106051a6-c264-48a6-a7b4-1712069d6852)",
+      "identityBound": true,
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "bceac5fc-3cfe-4190-a4a6-d6225719b978",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-flac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-726988e3-d732-4e06-82e4-0d3fbf6570bc)",
+      "identityBound": true,
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "2e5e6a15-ba73-438d-b3ef-98699ded2aa4",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-flac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-724c75ce-cb6c-4784-ae3b-547bf126ac83)",
+      "identityBound": true,
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "45f83486-cc99-4874-ad23-d4ee7190d5ba",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "webm-vp9-vorbis",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-f2a10bec-a326-4d84-b13f-e8e6cd6c12f3)",
+      "identityBound": true,
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "c4d4ba56-2e37-44cc-abf0-311c2df21c48",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "webm-vp9-vorbis",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-8b8b6fe9-cc4a-4fcd-8ec8-7d8dbfaec0e1)",
+      "identityBound": true,
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "46b94a66-69d8-464e-a8b3-0f1ee5c68aed",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-hevc-main10-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-6bfef2da-e126-45dd-a38f-f5a28a12bfc6)",
+      "identityBound": true,
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "bc6c338c-ec09-454e-ac15-597f833e444c",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-hevc-main10-aac",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-96ec6125-c648-4cbf-af0c-d39bf7e12e8c)",
+      "identityBound": true,
+      "mediaHash": "8971c412c033e6b4fafdc2703bd1f4b9c7cb3d01bcedecff8eed3daf150d2245",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "d81ba95f-d5c7-422e-a77d-cf5b7262e375",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-ac3-51",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-1793752b-9085-446c-9d79-c46d807f992b)",
+      "identityBound": true,
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "89ad3980-671d-486d-876e-d03d252f5de9",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-ac3-51",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-f098fa1b-e0e2-4a3f-a758-d3d7316c21a1)",
+      "identityBound": true,
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "deef8a03-3cfe-4564-b10f-4921d2d0923c",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-aac-no-cues",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-f06760ce-0ac2-45b5-b8ac-7dd3b32d6220)",
+      "identityBound": true,
+      "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "dcc3841c-a1f7-4093-9e0b-8edfd536dadf",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-aac-no-cues",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-42ce01d7-85c4-4b43-846d-2c4696c8a0c0)",
+      "identityBound": true,
+      "mediaHash": "3b385143133b96604f8b108aa9e129eb96b46576a506d21e4abb51f29c4c3987",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "437ea7bd-cd76-4454-9998-3dfcd56e0055",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mp4-truncated",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: source, code: avplayer.-11829, retryable: false, scope: session, diagnosticId: apple-607c7295-e161-4988-a753-405ae7ac090d)",
+      "identityBound": true,
+      "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "corrupt",
+      "runId": "a1a3ca52-bb08-4bf3-9c64-e902c97a1193",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mp4-truncated",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-0645221e-22ca-4150-9d3e-05f88dcec56c)",
+      "identityBound": true,
+      "mediaHash": "b1c35f1e6d75af66f96c70ff2572346caa6812dee411ad1134cffb50e33fba5c",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "corrupt",
+      "runId": "e71218c6-b484-467e-bec5-4f2051a8260e",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-opus",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-11e462b2-3eef-40d3-8337-8fb9855a912e)",
+      "identityBound": true,
+      "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "947e639c-7bdf-4fb5-a348-849fdf409646",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-opus",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-907d02b1-0aa8-44d3-b7f6-e4f606e1e0e7)",
+      "identityBound": true,
+      "mediaHash": "918636a0ec494830433e56ecd30ff51a729f45a24d25edb93df14e22bc7166a9",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "6c1f847c-506f-473f-bb62-236bc93cf4b1",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-opus-silk",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-9f139be8-6f3a-432d-8eed-5d85e696f38e)",
+      "identityBound": true,
+      "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "deb701b0-9abb-4413-b3dc-cdc0e22a7300",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-opus-silk",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-9d491ba8-a043-4451-85d9-7ea7adeebe5b)",
+      "identityBound": true,
+      "mediaHash": "a2a16aaaf4dec4fcbed0bfca14341c0962771e50aec0efe984259ac2f3f2e08f",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "083b8532-675a-47d4-b792-91dd761ccf45",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-opus-hybrid",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-abf5742e-dce3-4066-8c86-8d7c51cf8bd8)",
+      "identityBound": true,
+      "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "e0dcfb94-d1ee-4078-80c1-1769b8badb79",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-opus-hybrid",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-1d0f9e9c-d662-4e64-bf03-d470204a8d2b)",
+      "identityBound": true,
+      "mediaHash": "ada9695f11eed67aa58ce94f6a78af5e018e6e78ff5a01c331c4af84c647e730",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "e37e7029-f79e-43cd-84b5-e95738fc76a7",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-vorbis",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-ed0b9d95-28d1-4874-a771-dacc4eef1895)",
+      "identityBound": true,
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "fe372be1-0196-4201-80ac-705474051a7e",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "mkv-avc-vorbis",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-f32cf176-1fb4-446d-9ec6-9aba38e69688)",
+      "identityBound": true,
+      "mediaHash": "6f22cd9a60abda136bb332e37f70044977892d3cf40b10acdd7629e68054b2e6",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "c354a4b7-fd8e-42b4-af53-79ed4acc71bc",
+      "transport": "http"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-avc-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-d81cf6b9-6cb4-41d9-a7cf-687a75af6238)",
+      "identityBound": true,
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "dd7d7805-0835-41e6-8ba3-b7afcc06dd6f",
+      "transport": "file"
+    },
+    {
+      "accepted": false,
+      "caseId": "ps-avc-mp3",
+      "collectorError": null,
+      "collectorPassed": false,
+      "exitCode": 1,
+      "extractionValid": true,
+      "failure": "YlFailure(category: unsupported, code: policy.unsupported, retryable: false, scope: command, diagnosticId: apple-fc49d010-bb1e-4dca-82ab-53cc1cb99d59)",
+      "identityBound": true,
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26",
+      "rawErrors": [
+        "incomplete_rows"
+      ],
+      "requirement": "required",
+      "runId": "75b69251-8369-4d78-ae7f-3452593cf03b",
+      "transport": "http"
+    }
+  ],
+  "schema": 1,
+  "supportedRows": 0
+}

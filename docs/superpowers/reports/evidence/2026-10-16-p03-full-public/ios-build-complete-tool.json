@@ -1,0 +1,38 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "\n🔨 Build\n\nWarnings (2):\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT\n\n  ⚠ unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION\n\n✅ Build succeeded. (⏱️ 19.7s)\n  └ Files:\n     └── ~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/build_sim_2026-10-16T11-33-20-273Z_pid2826_5f89d289.log — Build Logs\n\nNext steps:\n1. Get built app path in simulator derived data: get_sim_app_path({ simulatorId: \"A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6\", scheme: \"Runner\", platform: \"iOS Simulator\", derivedDataPath: \"/private/tmp/yl-p03-full-public-20261016/build-ios\" })\n"
+    }
+  ],
+  "structuredContent": {
+    "schema": "xcodebuildmcp.output.build-result",
+    "schemaVersion": "3",
+    "didError": false,
+    "error": null,
+    "data": {
+      "summary": {
+        "status": "SUCCEEDED",
+        "durationMs": 19699,
+        "target": "simulator"
+      },
+      "artifacts": {
+        "buildLogPath": "~/Library/Developer/XcodeBuildMCP/workspaces/yl_player-af4e5e911369/logs/build_sim_2026-10-16T11-33-20-273Z_pid2826_5f89d289.log"
+      },
+      "diagnostics": {
+        "warnings": [
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_FORMAT"
+          },
+          {
+            "message": "unknown environment variable SWIFT_DEBUG_INFORMATION_VERSION"
+          }
+        ],
+        "errors": []
+      }
+    },
+    "nextSteps": [
+      "Get built app path in simulator derived data: get_sim_app_path({ simulatorId: \"A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6\", scheme: \"Runner\", platform: \"iOS Simulator\", derivedDataPath: \"/private/tmp/yl-p03-full-public-20261016/build-ios\" })"
+    ]
+  }
+}

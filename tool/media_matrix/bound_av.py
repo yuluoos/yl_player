@@ -37,7 +37,10 @@ def origin(record, row):
 def pcm_window(window, row, case, phase, marker):
     origin(window,row)
     require(window.get('phase')==phase and window.get('marker')==marker,'pcm_phase')
-    channels=case['channels']
+    channels=window.get('channels')
+    mono=case.get('sourceChannels')==1
+    allowed=(1,2) if mono and row.get('platform')=='android' else (case['channels'],)
+    require(type(channels) is int and channels in allowed,'pcm_channels')
     require(window.get('rate')==48000 and type(window.get('rate')) is int and
             window.get('channels')==channels and window.get('frames')==8192,'pcm_format')
     start=marker*1_000_000+250_000 if phase=='play' else int(phase.split('-')[1])*1000+100_000
@@ -52,11 +55,11 @@ def pcm_window(window, row, case, phase, marker):
     measured=[]
     for channel in range(channels):
         samples=values[channel::channels]
-        hz=60+marker*10 if channels==6 and channel==3 else base+channel*55
+        hz=60+marker*10 if channels==6 and channel==3 else base+(0 if mono else channel*55)
         own=amplitude(samples,hz,48000)
         require(own>0.008,'pcm_marker')
         # Stereo native output must preserve left/right identity even for Lo/Ro.
-        if channels==2:
+        if channels==2 and not mono:
             require(amplitude(samples,base+(1-channel)*55,48000)<own*0.1,'pcm_channel_swap')
             if case['caseId']=='mkv-avc-ac3-51':
                 for mixed in (base+110,base+(4+channel)*55):
@@ -87,7 +90,7 @@ def validate(plan, rows):
             require(isinstance(plan.get(key),str) and HASH.fullmatch(plan[key]),'invalid_build')
         require(planned and all(isinstance(c,dict) and isinstance(c.get('caseId'),str) and
             isinstance(c.get('mediaHash'),str) and HASH.fullmatch(c['mediaHash']) and
-            type(c.get('channels')) is int and c['channels'] in (2,6) for c in planned),'invalid_scope')
+            type(c.get('channels')) is int and c['channels'] in (1,2,6) for c in planned),'invalid_scope')
         require(len({c['caseId'] for c in planned})==len(planned),'invalid_scope')
         require(plan.get('phases')==[dict(phase='play',markers=[0,1,2,3]),dict(phase='seek-1250',markers=[1]),dict(phase='seek-2250',markers=[2]),dict(phase='seek-0',markers=[0])],'invalid_phases')
         require(isinstance(rows,list),'invalid_rows')
@@ -101,6 +104,15 @@ def validate(plan, rows):
             case=cases[case_id]
             require(all(row.get(k)==plan.get(k) for k in ('runId','buildSha256','testSha256','platform')),'identity_mismatch')
             require(row.get('mediaHash')==case['mediaHash'],'media_mismatch')
+            if 'transport' in case:
+                require(row.get('transport')==case['transport'] and row.get('sourceVerified') is True,'source_binding_missing')
+                if case['transport']=='http':
+                    receipt=row.get('networkReceipt',{})
+                    require(row.get('networkPolicy')=='managed' and isinstance(receipt,dict) and
+                        receipt.get('runId')==plan['runId'] and receipt.get('mediaHash')==case['mediaHash'] and
+                        type(receipt.get('requests')) is int and receipt['requests']>0 and
+                        type(receipt.get('bytesServed')) is int and receipt['bytesServed']>0 and
+                        receipt.get('rejected')==0,'managed_http_unverified')
             if 'engine' in case:
                 require(row.get('engine')==case['engine'],'engine_mismatch')
                 if case['engine']=='media3':

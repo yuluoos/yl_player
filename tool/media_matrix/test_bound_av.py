@@ -38,6 +38,32 @@ class BoundAVTest(unittest.TestCase):
     def result(self,rows=None):return validate(self.plan,[self.row] if rows is None else rows)
     def test_real_values_can_accept_only_the_frozen_scope(self):
         result=self.result();self.assertTrue(result['scopeAcceptance']);self.assertFalse(result['fullAcceptance'])
+    def test_mono_pcm_is_measured_without_inventing_a_second_channel(self):
+        self.plan['planned'][0].update(channels=1,sourceChannels=1)
+        for phase in self.row['phases']:
+            for w in phase['pcmWindows']:
+                values=struct.unpack('<16384f',base64.b64decode(w['pcmF32LE']))
+                raw=struct.pack('<8192f',*values[::2])
+                w.update(channels=1,pcmF32LE=base64.b64encode(raw).decode(),pcmSha256=hashlib.sha256(raw).hexdigest())
+        self.assertTrue(self.result()['scopeAcceptance'])
+    def test_http_requires_actual_source_binding_and_owned_server_receipt(self):
+        self.plan['planned'][0]['transport']='http'
+        self.assertFalse(self.result()['scopeAcceptance'])
+        self.row.update(transport='http',sourceVerified=True,networkPolicy='managed',
+            networkReceipt=dict(runId='run-one',mediaHash='a'*64,requests=2,bytesServed=100,rejected=0))
+        self.assertTrue(self.result()['scopeAcceptance'])
+        self.row['networkReceipt']['runId']='borrowed'
+        self.assertFalse(self.result()['scopeAcceptance'])
+    def test_android_mono_source_accepts_only_preserved_mono_or_duplicated_output(self):
+        self.plan['platform']='android';self.plan['planned'][0]['sourceChannels']=1
+        self.row.update(platform='android',audioOutputClosed=True,audioClockMethod='audiotrack-playback-head')
+        for channels in (1,2):
+            for phase in self.row['phases']:
+                for w in phase['pcmWindows']:
+                    mono=struct.unpack('<16384f',tone(w['marker']))[::2]
+                    raw=struct.pack('<'+'f'*(8192*channels),*(v for x in mono for v in [x]*channels))
+                    w.update(channels=channels,pcmF32LE=base64.b64encode(raw).decode(),pcmSha256=hashlib.sha256(raw).hexdigest())
+            self.assertTrue(self.result()['scopeAcceptance'],channels)
     def test_missing_duplicate_or_unplanned_row_fails(self):
         for rows in [[],[self.row,self.row],[dict(self.row,caseId='another')]]:self.assertFalse(self.result(rows)['scopeAcceptance'])
     def test_run_build_test_and_media_cannot_be_borrowed(self):

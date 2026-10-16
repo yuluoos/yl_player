@@ -11,9 +11,9 @@ import androidx.media3.exoplayer.audio.*
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import java.nio.ByteBuffer
 
-/** Test-only, clear local PCM observation. The default sink still writes the real AudioTrack.
+/** Test-only, clear file/managed-HTTP PCM observation. The default sink still writes the real AudioTrack.
  * Custom processors run after Media3 trimming. This capture permits only 1x, no silence skip,
- * PCM16 stereo controls; origin is the sink's first input PTS minus its renderer stream offset.
+ * PCM16 mono/stereo controls; origin is the sink's first input PTS minus its renderer stream offset.
  * AudioTrack's fresh playback head, never ExoPlayer's extrapolated position, pairs with pixels.
  */
 internal class YlBoundMedia3Audio(private val pcm: (YlNativePcmChunk) -> Unit, private val flushed: () -> Unit) {
@@ -37,7 +37,7 @@ internal class YlBoundMedia3Audio(private val pcm: (YlNativePcmChunk) -> Unit, p
     /** Pass-through post-trim PCM processor, also exercised by the empty-drain regression. */
     internal val tap=object:BaseAudioProcessor() {
         override fun onConfigure(input: AudioProcessor.AudioFormat): AudioProcessor.AudioFormat {
-            check(input.encoding==C.ENCODING_PCM_16BIT && input.sampleRate==48000 && input.channelCount==2)
+            check(input.encoding==C.ENCODING_PCM_16BIT && input.sampleRate==48000 && input.channelCount in 1..2)
             return input
         }
         override fun queueInput(input: ByteBuffer) {
@@ -45,10 +45,11 @@ internal class YlBoundMedia3Audio(private val pcm: (YlNativePcmChunk) -> Unit, p
             if(!input.hasRemaining())return
             val data=ByteArray(input.remaining());input.duplicate().get(data)
             synchronized(lock) {
-                check(data.size%4==0)
+                val channels=inputAudioFormat.channelCount
+                check(channels in 1..2 && data.size%(2*channels)==0)
                 val start=checkNotNull(origin)
-                pcm(YlNativePcmChunk(data,48000,2,start+frames*1_000_000L/48000))
-                frames+=data.size/4
+                pcm(YlNativePcmChunk(data,48000,channels,start+frames*1_000_000L/48000))
+                frames+=data.size/(2*channels)
             }
             replaceOutputBuffer(data.size).put(input).flip()
         }

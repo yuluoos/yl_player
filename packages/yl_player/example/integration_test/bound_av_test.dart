@@ -8,6 +8,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'support/paused_frame_capture.dart';
+import 'support/bound_source.dart';
+import 'support/bound_cleanup.dart';
 
 /// Built once and launched with a host-frozen plan. Only public APIs drive playback.
 /// The opt-in native bridge observes this same session and verifies installed bytes.
@@ -57,8 +59,27 @@ void main() {
         final file = await File(
           '${directory.path}/${item['file']}',
         ).writeAsBytes(bytes, flush: true);
+        final server = item['transport'] == 'http'
+            ? await BoundSource.serve(
+                bytes,
+                item['file'] as String,
+                plan['runId'] as String,
+                item['mediaHash'] as String,
+              )
+            : null;
+        final source = server == null
+            ? YlFileSource(file.path)
+            : YlNetworkSource(
+                server.uri,
+                intent: YlStreamIntent.onDemand,
+                networkPolicy: const YlNetworkPolicy.managed(),
+                request: YlHttpRequest(
+                  headers: {'x-yl-bound-run': plan['runId'] as String},
+                ),
+              );
         YlPlayerController? player;
         var disposed = false;
+        var caseFailed = false;
         final lifecycle = <String, bool>{
           'created': false,
           'ready': false,
@@ -72,6 +93,7 @@ void main() {
           await bridge.invokeMethod('begin', {
             'caseId': item['caseId'],
             'path': file.path,
+            'locator': server?.uri.toString() ?? file.path,
           });
           player = await YlPlayerController.create(
             options: const YlPlayerOptions(
@@ -94,7 +116,7 @@ void main() {
             ),
           );
           final session = await player
-              .load(YlFileSource(file.path))
+              .load(source)
               .timeout(const Duration(seconds: 15));
           sessionId = session.id.value;
           await session.ready.timeout(const Duration(seconds: 12));
@@ -108,95 +130,101 @@ void main() {
             final timer = Stopwatch()..start();
             int? observedNativeClock;
             final apple = Platform.isMacOS || Platform.isIOS;
-            while (!done() ||
-                (apple &&
-                    (observedNativeClock == null ||
-                        observedNativeClock < minimumNativeClockUs))) {
-              if (apple && timer.elapsed >= const Duration(seconds: 12)) {
-                final details = await bridge.invokeMethod('diagnostics', {
-                  'sessionId': sessionId,
-                });
-                debugPrint(
-                  'P03_PUBLIC timeout native=$details public=${player!.state.status} '
-                  'position=${player.state.timeline.position} observed=$observedNativeClock',
-                );
-              }
-              expect(timer.elapsed, lessThan(const Duration(seconds: 12)));
-              if (apple) {
-                // Apple's displayedPixelBuffer requires a zero render rate.
-                // Advance real playback, then pause through the public API for
-                // a snapshot paired with the renderer's consumed position.
-                await Future<void>.delayed(const Duration(milliseconds: 150));
-              } else {
-                await tester.pump(const Duration(milliseconds: 35));
-              }
-              if (Platform.isMacOS || Platform.isIOS) {
-                final completed =
-                    player!.state.status == YlPlaybackStatus.completed;
-                Future<void> releaseReadback() => bridge.invokeMethod<void>(
-                  'endReadback',
-                  {'sessionId': sessionId},
-                );
-                try {
-                  observedNativeClock = await capturePausedFrame(
-                    readyToPause: () async =>
-                        await bridge.invokeMethod<bool>('consumptionReady', {
-                          'sessionId': sessionId,
-                        }) ==
-                        true,
-                    pause: () async {
-                      if (!completed) {
-                        await session.pause().timeout(
-                          const Duration(seconds: 12),
-                        );
-                      }
-                    },
-                    read: () => bridge.invokeMethod<int>('capture', {
-                      'sessionId': sessionId,
-                    }),
-                    resume: () async {
-                      await releaseReadback();
-                      if (!completed) {
-                        await session.play().timeout(
-                          const Duration(seconds: 12),
-                        );
-                      }
-                    },
-                  );
-                } catch (_) {
-                  await bridge.invokeMethod('diagnostics', {
+            await captureNativePhase(
+              done: done,
+              minimumNativeClockUs: minimumNativeClockUs,
+              capture: () async {
+                if (apple && timer.elapsed >= const Duration(seconds: 12)) {
+                  final details = await bridge.invokeMethod('diagnostics', {
                     'sessionId': sessionId,
                   });
-                  rethrow;
-                } finally {
-                  await releaseReadback();
+                  debugPrint(
+                    'P03_PUBLIC timeout native=$details public=${player!.state.status} '
+                    'position=${player.state.timeline.position} observed=$observedNativeClock',
+                  );
                 }
-                continue;
-              }
-              final token = await bridge.invokeMethod<int>('clock', {
-                'sessionId': sessionId,
-              });
-              final boundary =
-                  key.currentContext!.findRenderObject()!
-                      as RenderRepaintBoundary;
-              final image = await boundary.toImage(pixelRatio: 1);
-              try {
-                final rgba = (await image.toByteData(
-                  format: ui.ImageByteFormat.rawRgba,
-                ))!;
-                final offset =
-                    ((image.height ~/ 2) * image.width + image.width ~/ 2) * 4;
-                await bridge.invokeMethod('pixel', {
+                expect(timer.elapsed, lessThan(const Duration(seconds: 12)));
+                if (apple) {
+                  // Apple's displayedPixelBuffer requires a zero render rate.
+                  // Advance real playback, then pause through the public API for
+                  // a snapshot paired with the renderer's consumed position.
+                  await Future<void>.delayed(const Duration(milliseconds: 150));
+                } else {
+                  await tester.pump(const Duration(milliseconds: 35));
+                }
+                if (Platform.isMacOS || Platform.isIOS) {
+                  final completed =
+                      player!.state.status == YlPlaybackStatus.completed;
+                  Future<void> releaseReadback() => bridge.invokeMethod<void>(
+                    'endReadback',
+                    {'sessionId': sessionId},
+                  );
+                  try {
+                    observedNativeClock = await capturePausedFrame(
+                      readyToPause: () async =>
+                          await bridge.invokeMethod<bool>('consumptionReady', {
+                            'sessionId': sessionId,
+                          }) ==
+                          true,
+                      pause: () async {
+                        if (!completed) {
+                          await session.pause().timeout(
+                            const Duration(seconds: 12),
+                          );
+                        }
+                      },
+                      read: () => bridge.invokeMethod<int>('capture', {
+                        'sessionId': sessionId,
+                      }),
+                      resume: () async {
+                        await releaseReadback();
+                        if (!completed) {
+                          await session.play().timeout(
+                            const Duration(seconds: 12),
+                          );
+                        }
+                      },
+                    );
+                  } catch (_) {
+                    await bridge.invokeMethod('diagnostics', {
+                      'sessionId': sessionId,
+                    });
+                    rethrow;
+                  } finally {
+                    await releaseReadback();
+                  }
+                  return observedNativeClock;
+                }
+                final token = await bridge.invokeMethod<int>('clock', {
                   'sessionId': sessionId,
-                  'token': token,
-                  'rgb': [
-                    for (var c = 0; c < 3; c++) rgba.getUint8(offset + c),
-                  ],
                 });
-              } finally {
-                image.dispose();
-              }
-            }
+                final boundary =
+                    key.currentContext!.findRenderObject()!
+                        as RenderRepaintBoundary;
+                final image = await boundary.toImage(pixelRatio: 1);
+                try {
+                  final rgba = (await image.toByteData(
+                    format: ui.ImageByteFormat.rawRgba,
+                  ))!;
+                  final offset =
+                      ((image.height ~/ 2) * image.width + image.width ~/ 2) *
+                      4;
+                  observedNativeClock = await bridge.invokeMethod<int>(
+                    'pixel',
+                    {
+                      'sessionId': sessionId,
+                      'token': token,
+                      'rgb': [
+                        for (var c = 0; c < 3; c++) rgba.getUint8(offset + c),
+                      ],
+                    },
+                  );
+                } finally {
+                  image.dispose();
+                }
+                return observedNativeClock;
+              },
+            );
           }
 
           await session.play().timeout(const Duration(seconds: 12));
@@ -222,7 +250,17 @@ void main() {
                 .seekTo(Duration(milliseconds: target))
                 .timeout(const Duration(seconds: 12));
             debugPrint('P03_PUBLIC seek accepted $sessionId $target');
-            await bridge.invokeMethod('awaitPhase', {'sessionId': sessionId});
+            if (Platform.isMacOS || Platform.isIOS) {
+              await waitForNativePhase(
+                () async =>
+                    await bridge.invokeMethod<bool>('awaitPhase', {
+                      'sessionId': sessionId,
+                    }) ==
+                    true,
+              );
+            } else {
+              await bridge.invokeMethod('awaitPhase', {'sessionId': sessionId});
+            }
             await session.play().timeout(const Duration(seconds: 12));
             await captureUntil(
               () =>
@@ -242,13 +280,24 @@ void main() {
           await bridge.invokeMethod('finishCase', {
             'sessionId': sessionId,
             'lifecycle': lifecycle,
+            'networkReceipt': server?.receipt,
           });
+        } catch (_) {
+          caseFailed = true;
+          rethrow;
         } finally {
-          if (!disposed) {
-            await player?.dispose().timeout(const Duration(seconds: 10));
-          }
-          await mount(const SizedBox.shrink());
-          await directory.delete(recursive: true);
+          await releaseBoundResources([
+            () async {
+              if (!disposed) {
+                await player?.dispose().timeout(const Duration(seconds: 10));
+              }
+            },
+            () => mount(const SizedBox.shrink()),
+            () async => server?.close(),
+            () async {
+              await directory.delete(recursive: true);
+            },
+          ], preserveFailure: caseFailed);
         }
       }
       // Prove a late framework failure cannot be hidden by already accepted raw rows.

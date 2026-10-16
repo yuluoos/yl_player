@@ -607,3 +607,14 @@ Android 六控制的公开 controller/session/view 路线已达到同次运行�
 该证据仍是 clear 内容、调整同层显示时钟和自有验收窗口的受控暂停快照；完整格式/release、iOS 正向硬件、物理输出、独立参考与持续热资格不由此覆盖，Task 7/8 保持开放。详见[本轮证据](evidence/2026-10-16-p03-apple-seek-fix/README.md)。
 
 普通 Debug/Release 构建及验收桥隔离检查通过，iOS Simulator 共用代码编译通过（既有警告保留）；这些编译结果不代替对应平台音画验收。
+
+
+### 2026-10-16 公开 Flutter 完整格式同次音画续做
+
+固定22输入分别经文件与显式 managed HTTP 执行，形成40必需、2诊断、2损坏单元；三端均完整执行44项。最终同次构建绑定音画通过：Android36/40、macOS32/40、iOS Simulator0/40。每个单元独立run/session但绑定同一冻结产品，重新验证实际PCM、画面、消费时钟、完成/三次seek/释放及框架最终状态；不同构建的通过项不拼接，必需失败不缩小分母。
+
+修复实跑发现的 Android HTTP fallback 取消在 UI caller 关闭响应体所致 NetworkOnMainThreadException；cancel 保持非阻塞中断，响应体由 demux worker 关闭。补齐实际mono采集、managed源身份与HTTP收据；Apple网络seek等待真实reset，各平台采集结束都等待当前截图配对的实际消费位置，避免陈旧公开position跳过新阶段。复核发现的子进程失败/损坏提取误接受与清理遗漏已修复，API线程和策略注释已补齐。
+
+Python58/58、Flutter example96/96（并行P06提交后的当前树，本轮此前83/83）、7文件静态分析、公开API检查、macOS受影响原生44/44通过；Android JVM543项零失败（3项既有跳过）、原生观察3/3通过。三端最终构建成功；macOS/Android普通Debug与Release无验收桥。同包框架末尾负例在Android/macOS均保留6行通过的原始记录但拒绝总体通过，三端错误构建身份均在播放前拒绝。历史失败与原始提取完整保留，最终原始重放不依赖缓存通过字段。
+
+Android当前AV1/Main10设备解码能力、Apple严格progressive managed路由、AVPlayer消费采集，以及iOS正向硬件证据仍有缺口。既有独立参考、release/物理输出、最低OS/Intel和持续热资格仍开放，Task7/8复合项不整体勾选；不宣告完整P03通过。详见[本轮完整归档](evidence/2026-10-16-p03-full-public/README.md)。

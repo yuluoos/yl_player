@@ -75,6 +75,8 @@ final class YlNetworkSource extends YlMediaSource {
   final Uri uri;
   final YlDrmConfig? drm;
   final YlHttpRequest request;
+  /// Controls transport enforcement for this source. It does not relax codec
+  /// admission or guarantee that the media supports seeking or output capture.
   final YlNetworkPolicy networkPolicy;
 
   @override

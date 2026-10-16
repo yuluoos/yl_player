@@ -1,0 +1,12 @@
+{
+  "command": [
+    "xcrun",
+    "simctl",
+    "launch",
+    "--console-pty",
+    "--terminate-running-process",
+    "A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6",
+    "dev.ylplayer.ylPlayerExample"
+  ],
+  "preverified": true
+}

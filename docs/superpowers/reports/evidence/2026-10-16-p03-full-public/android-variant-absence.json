@@ -1,0 +1,35 @@
+{
+  "opted-in-public-debug": {
+    "path": "packages/yl_player/example/build/yl_player_android/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+    "sha256": "e243f7425dd902b29d3b5191bb5538f2b52f541b19e372c3f6cc762e69a0c392",
+    "observationClasses": [
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$4$1$value$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$4$1$value$2.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$4$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$Attempt.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$Capture.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$Companion.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$observe$1$seekTo$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$observe$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$observe$engine$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$factory$1$buildAudioRenderers$listener$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$factory$1$buildAudioSink$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$factory$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$tap$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio.class"
+    ]
+  },
+  "ordinary-debug": {
+    "path": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/yl_player_android/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+    "sha256": "52f3de5d223e8bc63fa58cab27232bc02611d941d65a5b51dea034f3654582c7",
+    "observationClasses": [],
+    "productPluginPresent": true
+  },
+  "release-even-with-opt-in": {
+    "path": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/yl_player_android/outputs/aar/yl_player_android-release.aar",
+    "sha256": "f5c1c003691bbc761922a2bda3bec731e01c4e3c5e4b33d8cc1c92383546c2e8",
+    "observationClasses": [],
+    "productPluginPresent": true
+  }
+}

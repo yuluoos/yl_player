@@ -1,0 +1,29 @@
+{
+  "base": "ef405974f829b97a8fa5a9989034cc45e7820720",
+  "sources": {
+    "packages/yl_player/example/integration_test/bound_av_test.dart": "a2ecd5ee0fad2f1d298f73f8a2c948b0ac54083abb99e3462c848f912cee4d42",
+    "packages/yl_player/example/integration_test/support/bound_cleanup.dart": "e4a6d0cfaf795055e41027ab8686e52cbadff9ffc8e1d84d4682a2f19467e40c",
+    "packages/yl_player/example/integration_test/support/bound_source.dart": "cea4e16bf36a31004dc8fe0b03f31fa389a915a8986e52ab26ca754fb1ed2aab",
+    "packages/yl_player/example/integration_test/support/paused_frame_capture.dart": "79306e51308e9f26e1454bd475cad275539dd6773bf3f2cfeab14b9efe587a02",
+    "packages/yl_player/example/ios/RunnerTests/YlPlatformServicesTests.swift": "34199ac053f5790d6d7859cba837a3604371bee5d4b0e0c19c2fdd42f9208c4f",
+    "packages/yl_player/example/macos/RunnerTests/YlPlatformServicesTests.swift": "34199ac053f5790d6d7859cba837a3604371bee5d4b0e0c19c2fdd42f9208c4f",
+    "packages/yl_player/example/test/bound_cleanup_test.dart": "d1391a05c634a155a47f6322a90451d53a5fb679da1cee4ddc63ab6c26b27ab1",
+    "packages/yl_player/example/test/bound_source_test.dart": "b27234accef2e3a18a0bd07f4b3d33ecb38e2f9566217d033ec493aeecf7fa12",
+    "packages/yl_player/example/test/paused_frame_capture_test.dart": "f4250214e2463e8d43ceec27231af9d32d3007ea2ef88d8f87318e84f31c4768",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3AudioInstrumentedTest.kt": "24d0a80f1b321f396de8e5db35956884630e8ac183e32a7d3aa33addbb84b1b1",
+    "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundFlutterProbe.kt": "7514f52566adaff39969909b5b71db275c7db52df5db9c79d562d53930302a2d",
+    "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3Audio.kt": "3b2732c1990862bc79934d2453d29bf69799d134512a63eb2bef412987d7144f",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeByteSource.kt": "d909bfb99a788a045e84559dff89bff4487edcdc41e51516d7fb05c2926f456f",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlNativeByteSourceCancellationTest.kt": "a182809676c184e0610df09d208ec8cd74f136f24b90952c2115d003fc2b97f1",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundFlutterProbe.swift": "325c67547764bcbc6e350e044ebabfc70681d57e6775794ad4a2a2e80050e750",
+    "packages/yl_player_platform_interface/lib/src/source/media_source.dart": "992ce7624c05aa7d229880f9715ec7480c4236652bcc2c6cbf3c9cc722c4c3fc",
+    "tool/media_matrix/BOUND_AV.md": "fb1de37c35775a1ab247816a8b8830daeac84b6f1c80d732ac00deb3163242ac",
+    "tool/media_matrix/bound_av.py": "c6a74e4d9657a6079ebc80a646ce9223f483815324e299a2512bcd5835cb222f",
+    "tool/media_matrix/bound_matrix.py": "c4fa4c44366089cc17b4ddc047d0c2b4f225f13918e758f43b9da21da8d38c4c",
+    "tool/media_matrix/run_bound_flutter_android.py": "63437f6fa04a3adba1bf08a51a9eb4ff234370254f325d41d14d2253616046e6",
+    "tool/media_matrix/run_bound_flutter_apple.py": "a3390a5aa92822025733d731a837d17de54286a35807be66e23aeccb61e0e6aa",
+    "tool/media_matrix/run_bound_flutter_matrix.py": "0e769f2363c65abd8f981081e1d5d0fb8072f1cd5757388e572b259d06639784",
+    "tool/media_matrix/test_bound_av.py": "e85349ee43fdceb2a99ba6bc5b8685d1436a497efb62a55885849053f44c8ec4",
+    "tool/media_matrix/test_bound_matrix.py": "91964b7f50697b22c26da36e181eec3ecb44af88699ad2a7f16fdec9e86ffe72"
+  }
+}

@@ -35,3 +35,41 @@ Future<int> capturePausedFrame({
   }
   throw TimeoutException('Paused surface did not provide a frame', timeout);
 }
+
+/// Waits for native effects after the public seek command acknowledges intent.
+Future<void> waitForNativePhase(
+  Future<bool> Function() ready, {
+  Duration timeout = const Duration(seconds: 5),
+  Duration pollInterval = const Duration(milliseconds: 20),
+}) async {
+  final timer = Stopwatch()..start();
+  while (!await ready()) {
+    if (timer.elapsed >= timeout) {
+      throw TimeoutException(
+        'Native audio reset did not complete after seek',
+        timeout,
+      );
+    }
+    await Future<void>.delayed(pollInterval);
+  }
+}
+
+/// Collects a phase until public state and the captured native consumption agree.
+Future<void> captureNativePhase({
+  required bool Function() done,
+  required Future<int?> Function() capture,
+  required int minimumNativeClockUs,
+  Duration timeout = const Duration(seconds: 12),
+}) async {
+  final timer = Stopwatch()..start();
+  int? consumed;
+  while (!done() || consumed == null || consumed < minimumNativeClockUs) {
+    if (timer.elapsed >= timeout) {
+      throw TimeoutException(
+        'Native consumption did not reach the phase target',
+        timeout,
+      );
+    }
+    consumed = await capture();
+  }
+}

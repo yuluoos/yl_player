@@ -17,6 +17,7 @@ import uuid
 from pathlib import Path
 from bound_artifacts import canonical, freeze, verify
 from bound_av import validate
+from bound_matrix import planned_case
 from run_bound_apple import CASES, PHASES, write
 
 
@@ -45,15 +46,21 @@ def main():
     parser.add_argument('--platform',choices=['macos','ios'],required=True)
     parser.add_argument('--simulator',help='Dedicated simulator UUID, required for iOS')
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--case',dest='case_id',help='One catalog cell; used by the fixed complete-matrix runner')
+    parser.add_argument('--transport',choices=['file','http'],default='file')
+    parser.add_argument('--matrix-id',default=None)
     parser.add_argument('--negative-identity',action='store_true')
     parser.add_argument('--negative-framework',action='store_true')
-    args=parser.parse_args();app=args.app.resolve();out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
+    args=parser.parse_args()
+    if not args.case_id and (args.transport!='file' or args.matrix_id):parser.error('--case required for transport/matrix selection')
+    app=args.app.resolve();out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     if args.platform=='ios' and not args.simulator:parser.error('--simulator required for iOS')
     product=freeze(app,True)
     catalog=json.loads((Path(__file__).parent/'cases.json').read_text())['cases']
     plan=dict(schema=1,runId=str(uuid.uuid4()),platform=args.platform,artifactKind='apple-public-flutter-debug-app',
         buildSha256=product['sha256'],testSha256=product['sha256'],productManifest=product['manifest'],
-        planned=planned_controls(catalog),phases=PHASES,negativeFramework=args.negative_framework)
+        planned=[planned_case(catalog,args.case_id,args.platform,args.transport)] if args.case_id else planned_controls(catalog),phases=PHASES,negativeFramework=args.negative_framework)
+    if args.matrix_id:plan['matrixId']=args.matrix_id
     if args.negative_identity:plan['buildSha256']='0'*64
     write(out/'plan.json',plan);write(out/'product-files.json',product)
     encoded=base64.b64encode(canonical(plan)).decode()

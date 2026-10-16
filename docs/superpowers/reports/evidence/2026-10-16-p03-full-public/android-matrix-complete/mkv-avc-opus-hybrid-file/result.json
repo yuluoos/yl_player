@@ -1,0 +1,99 @@
+{
+  "artifactsUnchanged": true,
+  "errors": [],
+  "extractionValid": true,
+  "fullAcceptance": false,
+  "launchExit": 0,
+  "measurements": [
+    {
+      "caseId": "mkv-avc-opus-hybrid",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.0397374917643847,
+              "channel": 0,
+              "frequencyHz": 440
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040073477292122066,
+              "channel": 0,
+              "frequencyHz": 660
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04006107661366284,
+              "channel": 0,
+              "frequencyHz": 880
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040393398614503195,
+              "channel": 0,
+              "frequencyHz": 1100
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.04011168265172191,
+              "channel": 0,
+              "frequencyHz": 660
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039968347847511146,
+              "channel": 0,
+              "frequencyHz": 880
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.040029518524635564,
+              "channel": 0,
+              "frequencyHz": 440
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    }
+  ],
+  "negativeFramework": false,
+  "negativeIdentity": false,
+  "publicTestPassed": true,
+  "requiredRows": 1,
+  "runtimeIdentityVerified": true,
+  "scopeAcceptance": true,
+  "statusRunMatches": true,
+  "supportedRows": 1
+}

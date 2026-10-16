@@ -12,6 +12,22 @@ import AppKit
 #endif
 
 final class YlPlatformServicesTests: XCTestCase {
+  #if DEBUG && YL_BOUND_AV
+  func testBoundSourceRequiresManagedOwnedRunAndExactLocator() {
+    let locator = "http://127.0.0.1:1234/case.mkv"
+    var source = AppleSourceMessage(kind: .network, locator: locator, intent: .onDemand, format: .automatic,
+      request: AppleHttpRequestMessage(headers: ["x-yl-bound-run": "run"], credentials: [:]),
+      networkPolicy: AppleNetworkPolicyMessage(kind: .managed))
+    func matches() -> Bool { YlBoundSourceIdentity.matches(source, path: "/tmp/case.mkv", locator: locator, transport: "http", run: "run") }
+    XCTAssertTrue(matches())
+    source.networkPolicy = AppleNetworkPolicyMessage(kind: .platformDefault); XCTAssertFalse(matches())
+    source.networkPolicy = AppleNetworkPolicyMessage(kind: .managed)
+    source.request?.headers = ["x-yl-bound-run": "other"]; XCTAssertFalse(matches())
+    source.request?.headers = ["x-yl-bound-run": "run"]
+    source.locator = "http://127.0.0.1:1235/case.mkv"; XCTAssertFalse(matches())
+    source.kind = .file; source.locator = "/tmp/case.mkv"; XCTAssertFalse(matches())
+  }
+  #endif
   private final class Registry: NSObject, FlutterTextureRegistry {
     var texture: FlutterTexture?
     var published: [Int64] = []

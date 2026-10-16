@@ -1,0 +1,17 @@
+{
+  "command": [
+    "adb",
+    "-s",
+    "emulator-5588",
+    "shell",
+    "am",
+    "start",
+    "-W",
+    "-n",
+    "dev.ylplayer.yl_player_example/dev.ylplayer.yl_player_example.MainActivity",
+    "--es",
+    "p03Plan",
+    "eyJhcnRpZmFjdEtpbmQiOiJhbmRyb2lkLXB1YmxpYy1mbHV0dGVyLWRlYnVnLWFwayIsImJ1aWxkU2hhMjU2IjoiMTA4MTYyMDFhOGRmZWNmOWVhN2VkMjUwM2Q5N2RjZTEzNzhjY2EyZTc5OTQ3NWQ1ODc1ZTI4YzY0ZDFiZDBiNSIsIm1hdHJpeElkIjoiZjZiMDM1NDYtY2ViYS00YThiLTgyMzEtOGNmMmY0ZGQwNmY4IiwibmVnYXRpdmVGcmFtZXdvcmsiOmZhbHNlLCJwaGFzZXMiOlt7Im1hcmtlcnMiOlswLDEsMiwzXSwicGhhc2UiOiJwbGF5In0seyJtYXJrZXJzIjpbMV0sInBoYXNlIjoic2Vlay0xMjUwIn0seyJtYXJrZXJzIjpbMl0sInBoYXNlIjoic2Vlay0yMjUwIn0seyJtYXJrZXJzIjpbMF0sInBoYXNlIjoic2Vlay0wIn1dLCJwbGFubmVkIjpbeyJjYXNlSWQiOiJta3YtYXZjLW9wdXMtc2lsayIsImNoYW5uZWxzIjoyLCJmaWxlIjoibWt2LWF2Yy1vcHVzLXNpbGsubWt2IiwibWVkaWFIYXNoIjoiYTJhMTZhYWFmNGRlYzRmY2JlZDBiZmNhMTQzNDFjMDk2Mjc3MWU1MGFlYzBlZmU5ODQyNTlhYzJmM2YyZTA4ZiIsInNvdXJjZUNoYW5uZWxzIjoxLCJ0cmFuc3BvcnQiOiJodHRwIn1dLCJwbGF0Zm9ybSI6ImFuZHJvaWQiLCJydW5JZCI6IjFkNGM0NmJjLTM2ZjItNGQ5MS05ODU0LTJiNTZhYTEzNDE3YSIsInNjaGVtYSI6MSwidGVzdFNoYTI1NiI6IjEwODE2MjAxYThkZmVjZjllYTdlZDI1MDNkOTdkY2UxMzc4Y2NhMmU3OTk0NzVkNTg3NWUyOGM2NGQxYmQwYjUifQ=="
+  ],
+  "preverified": true
+}

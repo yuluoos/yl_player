@@ -15,6 +15,7 @@ import uuid
 from pathlib import Path
 from bound_artifacts import canonical, sha_file
 from bound_av import validate
+from bound_matrix import planned_case
 from run_bound_android import parse_rows
 from run_bound_apple import CASES, PHASES, write
 
@@ -33,14 +34,20 @@ def main():
     parser.add_argument('--apk',type=Path,required=True)
     parser.add_argument('--serial',required=True)
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--case',dest='case_id',help='One catalog cell; used by the fixed complete-matrix runner')
+    parser.add_argument('--transport',choices=['file','http'],default='file')
+    parser.add_argument('--matrix-id',default=None)
     parser.add_argument('--negative-identity',action='store_true')
     parser.add_argument('--negative-framework',action='store_true',help='Fail the Flutter test after collecting all rows')
-    args=parser.parse_args();out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
+    args=parser.parse_args()
+    if not args.case_id and (args.transport!='file' or args.matrix_id):parser.error('--case required for transport/matrix selection')
+    out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     sha=sha_file(args.apk)
     catalog=json.loads((Path(__file__).parent/'cases.json').read_text())['cases']
     plan=dict(schema=1,runId=str(uuid.uuid4()),platform='android',artifactKind='android-public-flutter-debug-apk',buildSha256=sha,testSha256=sha,
-        planned=planned_controls(catalog),phases=PHASES)
+        planned=[planned_case(catalog,args.case_id,'android',args.transport)] if args.case_id else planned_controls(catalog),phases=PHASES)
     plan['negativeFramework']=args.negative_framework
+    if args.matrix_id:plan['matrixId']=args.matrix_id
     if args.negative_identity:plan['buildSha256']='0'*64
     write(out/'plan.json',plan)
     adb=['adb','-s',args.serial];package='dev.ylplayer.yl_player_example'
@@ -61,6 +68,8 @@ def main():
         if isinstance(status,dict):break
     write(out/'status.json',status)
     extracted=subprocess.run(adb+['exec-out','run-as',package,'cat',remote+'rows.jsonl'],capture_output=True)
+    write(out/'extraction.json',dict(exitCode=extracted.returncode))
+    (out/'extract.log').write_bytes(extracted.stderr)
     with gzip.open(out/'extracted.jsonl.gz','wb') as stream:stream.write(extracted.stdout)
     rows,parsed=parse_rows(extracted.stdout)
     with gzip.open(out/'rows.json.gz','wb') as stream:stream.write(canonical(rows))
@@ -69,8 +78,8 @@ def main():
     result=validate(plan,rows)
     result.update(publicTestPassed=status.get('passed') is True,runtimeIdentityVerified=status.get('identityVerified') is True,
         artifactsUnchanged=sha_file(args.apk)==sha and status.get('artifactsUnchanged') is True,
-        launchExit=started.returncode,extractionValid=parsed,negativeIdentity=args.negative_identity,negativeFramework=args.negative_framework)
-    result['scopeAcceptance'] &= result['publicTestPassed'] and result['runtimeIdentityVerified'] and result['artifactsUnchanged'] and parsed and started.returncode==0
+        statusRunMatches=status.get('runId')==plan['runId'],launchExit=started.returncode,extractionValid=parsed,negativeIdentity=args.negative_identity,negativeFramework=args.negative_framework)
+    result['scopeAcceptance'] &= result['publicTestPassed'] and result['runtimeIdentityVerified'] and result['artifactsUnchanged'] and result['statusRunMatches'] and parsed and extracted.returncode==0 and started.returncode==0
     write(out/'result.json',result)
     print(json.dumps({k:v for k,v in result.items() if k!='measurements'},indent=2))
     return 0 if result['scopeAcceptance'] else 1

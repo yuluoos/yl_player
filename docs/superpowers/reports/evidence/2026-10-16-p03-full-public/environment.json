@@ -1,0 +1,25 @@
+{
+  "collectedAt": "2026-10-16T12:48:40.777428+00:00",
+  "python": "3.14.4",
+  "note": "Toolchain inventory; not sustained thermal qualification.",
+  "host": {
+    "exit": 0,
+    "output": "ProductName:\t\tmacOS\nProductVersion:\t\t27.0.1\nBuildVersion:\t\t26A434\n"
+  },
+  "arch": {
+    "exit": 0,
+    "output": "arm64\n"
+  },
+  "xcode": {
+    "exit": 0,
+    "output": "Xcode 27.1\nBuild version 27A9275\n"
+  },
+  "java": {
+    "exit": 0,
+    "output": "openjdk version \"17.0.19\" 2026-04-21\nOpenJDK Runtime Environment Homebrew (build 17.0.19+0)\nOpenJDK 64-Bit Server VM Homebrew (build 17.0.19+0, mixed mode, sharing)\n"
+  },
+  "flutter": {
+    "exit": 0,
+    "output": "{\n  \"frameworkVersion\": \"3.44.0\",\n  \"channel\": \"stable\",\n  \"repositoryUrl\": \"https://github.com/flutter/flutter.git\",\n  \"frameworkRevision\": \"559ffa3f75e7402d65a8def9c28389a9b2e6fe42\",\n  \"frameworkCommitDate\": \"2026-05-15 14:13:13 -0700\",\n  \"engineRevision\": \"4c525dac5ebe5971c5708ef73558ed8edcf4a362\",\n  \"engineCommitDate\": \"2026-05-15 19:00:04.000Z\",\n  \"engineContentHash\": \"fcf463a2242790d1fdcd9d044f533080f5022e18\",\n  \"engineBuildDate\": \"2026-05-15 12:35:11.586\",\n  \"dartSdkVersion\": \"3.12.0\",\n  \"devToolsVersion\": \"2.57.0\",\n  \"flutterVersion\": \"3.44.0\",\n  \"flutterRoot\": \"/Users/yy2021_8689/flutter\"\n}\n"
+  }
+}
