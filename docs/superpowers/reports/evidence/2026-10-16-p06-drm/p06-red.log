@@ -1,0 +1,98 @@
+00:00 +0: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart
+packages/yl_player/example/test/drm_fault_server_test.dart:6:8: Error: Error when reading 'packages/yl_player/example/integration_test/support/drm_fault_server.dart': No such file or directory
+import '../integration_test/support/drm_fault_server.dart';
+       ^
+packages/yl_player/example/test/drm_fault_server_test.dart:15:20: Error: Undefined name 'DrmFault'.
+      expect(() => DrmFault.parse(value), throwsFormatException);
+                   ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:17:12: Error: Undefined name 'DrmFault'.
+    expect(DrmFault.parse('denied'), DrmFault.denied);
+           ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:17:38: Error: Undefined name 'DrmFault'.
+    expect(DrmFault.parse('denied'), DrmFault.denied);
+                                     ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:18:12: Error: Undefined name 'DrmFault'.
+    expect(DrmFault.parse('timeout'), DrmFault.timeout);
+           ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:18:39: Error: Undefined name 'DrmFault'.
+    expect(DrmFault.parse('timeout'), DrmFault.timeout);
+                                      ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:19:12: Error: Undefined name 'DrmFault'.
+    expect(DrmFault.parse('cancel'), DrmFault.cancel);
+           ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:19:38: Error: Undefined name 'DrmFault'.
+    expect(DrmFault.parse('cancel'), DrmFault.cancel);
+                                     ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:22:23: Error: Undefined name 'DrmFault'.
+  for (final fault in DrmFault.values) {
+                      ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:24:28: Error: Undefined name 'DrmFaultServer'.
+      final server = await DrmFaultServer.start(fault);
+                           ^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:40:20: Error: Undefined name 'DrmFault'.
+      if (fault == DrmFault.cancel) token.cancel();
+                   ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:52:47: Error: Undefined name 'DrmFault'.
+    final server = await DrmFaultServer.start(DrmFault.denied);
+                                              ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:52:26: Error: Undefined name 'DrmFaultServer'.
+    final server = await DrmFaultServer.start(DrmFault.denied);
+                         ^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:70:47: Error: Undefined name 'DrmFault'.
+    final server = await DrmFaultServer.start(DrmFault.denied);
+                                              ^^^^^^^^
+packages/yl_player/example/test/drm_fault_server_test.dart:70:26: Error: Undefined name 'DrmFaultServer'.
+    final server = await DrmFaultServer.start(DrmFault.denied);
+                         ^^^^^^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart [E]
+  Failed to load "/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: packages/yl_player/example/test/drm_fault_server_test.dart:6:8: Error: Error when reading 'packages/yl_player/example/integration_test/support/drm_fault_server.dart': No such file or directory
+  import '../integration_test/support/drm_fault_server.dart';
+         ^
+  packages/yl_player/example/test/drm_fault_server_test.dart:15:20: Error: Undefined name 'DrmFault'.
+        expect(() => DrmFault.parse(value), throwsFormatException);
+                     ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:17:12: Error: Undefined name 'DrmFault'.
+      expect(DrmFault.parse('denied'), DrmFault.denied);
+             ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:17:38: Error: Undefined name 'DrmFault'.
+      expect(DrmFault.parse('denied'), DrmFault.denied);
+                                       ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:18:12: Error: Undefined name 'DrmFault'.
+      expect(DrmFault.parse('timeout'), DrmFault.timeout);
+             ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:18:39: Error: Undefined name 'DrmFault'.
+      expect(DrmFault.parse('timeout'), DrmFault.timeout);
+                                        ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:19:12: Error: Undefined name 'DrmFault'.
+      expect(DrmFault.parse('cancel'), DrmFault.cancel);
+             ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:19:38: Error: Undefined name 'DrmFault'.
+      expect(DrmFault.parse('cancel'), DrmFault.cancel);
+                                       ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:22:23: Error: Undefined name 'DrmFault'.
+    for (final fault in DrmFault.values) {
+                        ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:24:28: Error: Undefined name 'DrmFaultServer'.
+        final server = await DrmFaultServer.start(fault);
+                             ^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:40:20: Error: Undefined name 'DrmFault'.
+        if (fault == DrmFault.cancel) token.cancel();
+                     ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:52:47: Error: Undefined name 'DrmFault'.
+      final server = await DrmFaultServer.start(DrmFault.denied);
+                                                ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:52:26: Error: Undefined name 'DrmFaultServer'.
+      final server = await DrmFaultServer.start(DrmFault.denied);
+                           ^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:70:47: Error: Undefined name 'DrmFault'.
+      final server = await DrmFaultServer.start(DrmFault.denied);
+                                                ^^^^^^^^
+  packages/yl_player/example/test/drm_fault_server_test.dart:70:26: Error: Undefined name 'DrmFaultServer'.
+      final server = await DrmFaultServer.start(DrmFault.denied);
+                           ^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tool/drm_acceptance",
+    "-p",
+    "test_*.py"
+  ],
+  "cwd": "/private/tmp/yl-p06-drm/yl_player",
+  "exitCode": 0,
+  "expectedExitCode": 0,
+  "logSha256": "d3c0ee4b8bfc65664319ca668dda693bd57ef704b58ee468dd8da1b6bdcd2f83"
+}

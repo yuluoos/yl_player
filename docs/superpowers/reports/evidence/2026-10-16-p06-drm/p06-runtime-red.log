@@ -1,0 +1,38 @@
+00:00 +0: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:4:8: Error: Error when reading 'packages/yl_player/example/integration_test/support/drm_acceptance_runtime.dart': No such file or directory
+import '../integration_test/support/drm_acceptance_runtime.dart';
+       ^
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:11:24: Error: Method not found: 'drmAcceptanceSource'.
+      final original = drmAcceptanceSource(resource, now: fixtures.now);
+                       ^^^^^^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:14:21: Error: Method not found: 'drmAcceptanceSource'.
+      final fault = drmAcceptanceSource(resource, now: fixtures.now, license: override);
+                    ^^^^^^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:31:18: Error: Method not found: 'drmAcceptanceSource'.
+    expect(() => drmAcceptanceSource(resource, now: DateTime.utc(2026, 10, 2),
+                 ^^^^^^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:35:12: Error: Method not found: 'drmSafeCode'.
+    expect(drmSafeCode(StateError('PRIVATE_LICENSE')), 'drm.acceptance_failed');
+           ^^^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart [E]
+  Failed to load "/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: packages/yl_player/example/test/drm_acceptance_runtime_test.dart:4:8: Error: Error when reading 'packages/yl_player/example/integration_test/support/drm_acceptance_runtime.dart': No such file or directory
+  import '../integration_test/support/drm_acceptance_runtime.dart';
+         ^
+  packages/yl_player/example/test/drm_acceptance_runtime_test.dart:11:24: Error: Method not found: 'drmAcceptanceSource'.
+        final original = drmAcceptanceSource(resource, now: fixtures.now);
+                         ^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_acceptance_runtime_test.dart:14:21: Error: Method not found: 'drmAcceptanceSource'.
+        final fault = drmAcceptanceSource(resource, now: fixtures.now, license: override);
+                      ^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_acceptance_runtime_test.dart:31:18: Error: Method not found: 'drmAcceptanceSource'.
+      expect(() => drmAcceptanceSource(resource, now: DateTime.utc(2026, 10, 2),
+                   ^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_acceptance_runtime_test.dart:35:12: Error: Method not found: 'drmSafeCode'.
+      expect(drmSafeCode(StateError('PRIVATE_LICENSE')), 'drm.acceptance_failed');
+             ^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart

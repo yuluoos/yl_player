@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "build",
+    "apk",
+    "--debug",
+    "--no-pub",
+    "-t",
+    "integration_test/drm_fault_test.dart"
+  ],
+  "cwd": "/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example",
+  "exitCode": 0,
+  "expectedExitCode": 0,
+  "logSha256": "783ab0786a2111dc7f12639f08fe4bacbb333c7b8acbc361426b57786297fd0e"
+}

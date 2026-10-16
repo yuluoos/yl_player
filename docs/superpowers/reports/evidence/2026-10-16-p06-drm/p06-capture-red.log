@@ -1,0 +1,26 @@
+00:00 +0: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:62:18: Error: Method not found: 'drmCaptureLoadFailure'.
+    expect(await drmCaptureLoadFailure(Future.value(Object())), isNull);
+                 ^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:63:18: Error: Method not found: 'drmCaptureLoadFailure'.
+    expect(await drmCaptureLoadFailure(Future.error(StateError('PRIVATE'))), isNull);
+                 ^^^^^^^^^^^^^^^^^^^^^
+packages/yl_player/example/test/drm_acceptance_runtime_test.dart:74:18: Error: Method not found: 'drmCaptureLoadFailure'.
+    expect(await drmCaptureLoadFailure(Future.error(YlPlayerException(failure))),
+                 ^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart [E]
+  Failed to load "/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: packages/yl_player/example/test/drm_acceptance_runtime_test.dart:62:18: Error: Method not found: 'drmCaptureLoadFailure'.
+      expect(await drmCaptureLoadFailure(Future.value(Object())), isNull);
+                   ^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_acceptance_runtime_test.dart:63:18: Error: Method not found: 'drmCaptureLoadFailure'.
+      expect(await drmCaptureLoadFailure(Future.error(StateError('PRIVATE'))), isNull);
+                   ^^^^^^^^^^^^^^^^^^^^^
+  packages/yl_player/example/test/drm_acceptance_runtime_test.dart:74:18: Error: Method not found: 'drmCaptureLoadFailure'.
+      expect(await drmCaptureLoadFailure(Future.error(YlPlayerException(failure))),
+                   ^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart

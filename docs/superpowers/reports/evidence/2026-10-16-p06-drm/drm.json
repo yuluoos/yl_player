@@ -1,0 +1,21 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "test",
+    "--no-pub",
+    "packages/yl_player/test/drm_admission_test.dart",
+    "packages/yl_player/test/drm_android_bridge_test.dart",
+    "packages/yl_player/test/drm_apple_bridge_test.dart",
+    "packages/yl_player/test/drm_license_client_test.dart",
+    "packages/yl_player_android/test/drm_bridge_test.dart",
+    "packages/yl_player_android/test/drm_codec_test.dart",
+    "packages/yl_player_apple/test/drm_bridge_test.dart",
+    "packages/yl_player_apple/test/drm_codec_test.dart",
+    "packages/yl_player_platform_interface/test/drm_contract_test.dart",
+    "packages/yl_player/test/protected_subtitle_test.dart"
+  ],
+  "cwd": "/private/tmp/yl-p06-drm/yl_player",
+  "exitCode": 0,
+  "expectedExitCode": 0,
+  "logSha256": "5f620e5f9f5239f40575347bb0dd70f3f0351e26752555cedadda8fd507439d3"
+}

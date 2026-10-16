@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-16",
+  "base": "ef405974f829b97a8fa5a9989034cc45e7820720",
+  "scope": "P06 Task4A controlled license faults preparation",
+  "testDevicesUsed": false,
+  "sourceSha256": {
+    "packages/yl_player/example/integration_test/drm_lifecycle_test.dart": "e711b15ff8ab6530b78629e668316b3fafe3134ab7e9508bbf6ddcd6d9b61ab2",
+    "packages/yl_player/example/integration_test/drm_fault_test.dart": "1ab8dfdf7e3161f4f481d9ea5b6a4e91a88b74b2f5558ec6ce71aa4c61cf36e3",
+    "packages/yl_player/example/integration_test/support/drm_acceptance_runtime.dart": "efa735a5a7f437a6edc96edfe469c38f985308f041b683d02c58af0f96760947",
+    "packages/yl_player/example/integration_test/support/drm_fault_server.dart": "16bc29d8a79c52ff6353bf071862fe782d60b750c7dcb1480c7fa60f4d56fa74",
+    "packages/yl_player/example/test/drm_acceptance_runtime_test.dart": "c7c96cb1848071b1926f216fbd817309fd4e6c359ab2736621134073a243ca46",
+    "packages/yl_player/example/test/drm_fault_server_test.dart": "b3c8f50fd106ffe4cdd89bdd09eec4b00b3f5e9cdf5b5436193f099667a7803f"
+  },
+  "tests": {
+    "example": 89,
+    "drmProductionDependencies": 45,
+    "offlineCli": 7,
+    "newTests": 13
+  },
+  "androidApk": {
+    "sha256": "ad2029781cc8bbef00cffdab31643e1a8264b7fd98a17b5a0972adae5637a8e5",
+    "target": "integration_test/drm_fault_test.dart",
+    "nativePluginInDex": true,
+    "deviceRun": false,
+    "privateDefinesUsed": false
+  },
+  "platformPhysicalAcceptance": {
+    "android": "external_missing",
+    "ios": "external_missing",
+    "macos": "external_missing"
+  },
+  "providerNegativeAcceptance": "not_run",
+  "capDrmComplete": false,
+  "receipts": {
+    "analyze.json": "c9c774b72d4035f7f60965021b683690d4276ec359599d0810418e1e2068af43",
+    "analyze.log": "8714888d809f82bfe792c9b9039b532b0c753cdfb21b8e0a40b48f3adf1d5de8",
+    "android.json": "4ce9376edb3f1e2a9659c9ce9e70c4b38e135157e2e4b1b2f599da259c2b3fe0",
+    "android.log": "783ab0786a2111dc7f12639f08fe4bacbb333c7b8acbc361426b57786297fd0e",
+    "cli.json": "5863aa27ddf6188715914bb854f1949d17b277eb2035cde288e459fdd1305e27",
+    "cli.log": "d3c0ee4b8bfc65664319ca668dda693bd57ef704b58ee468dd8da1b6bdcd2f83",
+    "drm.json": "26035423537162b25effe3f4cafc2a4320ee69989f1d46b485eaa458efb6dc88",
+    "drm.log": "5f620e5f9f5239f40575347bb0dd70f3f0351e26752555cedadda8fd507439d3",
+    "empty-preflight.json": "a32c1fc92a9c8c997065f11d5898361642c9399fb20c6b1dfa357331824db843",
+    "empty-preflight.log": "44eb84bab4f68e2cfa9d22435f18c0990d34f1ef864bac94479e7021d73f3e69",
+    "example.json": "1300849830fecf05af7c969be9ddcc6caa591bbe85f84ae34203906297bf33ec",
+    "example.log": "4b5b5533d4a6181d72321b8c8f376f808d5f692aa740fb984c232b4926bb5e14",
+    "p06-capture-red.log": "87669b4b7e6fd1d930228b185c96dbc8ee8e1ae60a7ce71bbb26269c37bbfa11",
+    "p06-red.log": "00c41ecba760ae4e3cc327c41617cd1dc9c94b9108640c82fb609f856f8d5d4f",
+    "p06-runtime-red.log": "263c349dbd9259f0843aa71a4821838b9c567eafa58be0261c95533059fdb4c7",
+    "private-preflight.json": "40aa7d04505fdf2c8f2c4942ea3e607e11d1431a1405481bcf4c940b47bd74f7",
+    "private-preflight.log": "44eb84bab4f68e2cfa9d22435f18c0990d34f1ef864bac94479e7021d73f3e69",
+    "review.txt": "ad23581c64c9964ea369b51f76fb221b66449a4caf7132a240955a19bf5b5ed2",
+    "verify.py": "8cc8df301b3037e4aa083cf93c512cb09b432f863f02565af48bdaf08fa1fefe"
+  }
+}

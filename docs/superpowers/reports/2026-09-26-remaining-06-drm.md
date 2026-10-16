@@ -457,3 +457,34 @@ macOS27/M1、JDK17、compileSdk36、Media3 1.11.0。标准 JUnit 发现 **454** 
 - `packages/yl_player/example/test/drm_acceptance_case_test.dart`：`3b43c0f1daea22b96efef8eebe729fa950b61bac59aa0d45d92c91a4feeb1ea8`
 - `packages/yl_player/example/test/drm_acceptance_owner_test.dart`：`0ef9ecb5aa0a961bbd25c50bf70648f6b9ca0d385e2fc2e687e70de9e56ab232`
 - `tool/drm_acceptance/resource-status.json`：`44eb84bab4f68e2cfa9d22435f18c0990d34f1ef864bac94479e7021d73f3e69`
+
+
+## 2026-10-16：Task4A 受控许可证负向入口补全
+
+基线 `ef405974f829b97a8fa5a9989034cc45e7820720`。从已提交基线建立隔离副本；保留主工作区另一会话的 P03 修改。本次未连接、安装或运行设备/模拟器，没有实际授权媒体或提供方许可证请求。没有更改生产 DRM、Pigeon schema、平台下限或依赖版本。
+
+补齐 `drm_fault_test.dart` 的三个独立用例：受控403拒绝、许可证超时、收到 challenge 后的 stop/cancel。每项必须先通过真实授权源的受保护首帧和进度基线；随后用同一媒体创建独立候选并整体替换许可证端点。回环服务仅监听随机本地端口，不继承凭据、不转发、不保存 challenge、不返回可用许可证。拒绝/超时须精确匹配错误码并保留旧会话/视图及进度；取消须清空会话/视图、拒绝旧会话命令并恢复新授权会话进度。观察进度期间持续核对会话/视图身份，清理失败撤销成功。
+
+共享来源构造、等待及安全错误映射由既有正向入口抽出。新增13项宿主机测试覆盖回环真实POST、拒绝/超时/取消、非法/空/超限请求、三平台凭据隔离、过期授权重验、精确类型化负向错误捕获。缺配置或未知用例失败；无新 challenge（如系统缓存命中）不能通过。完整使用方式见 [DRM 验收工具](../../../tool/drm_acceptance/README.md)。
+
+最终验证（无跳过）：
+
+| 检查 | 结果 |
+| --- | --- |
+| example 规范目录 `flutter test --no-pub test` | 89/89，通过 |
+| DRM 配置、真实回环/TLS POST、双平台桥接、受保护字幕依赖 | 45/45，通过 |
+| 私有配置 CLI 回归 | 7/7，通过 |
+| 本轮6个 Dart 文件静态检查 | 无问题 |
+| `flutter build apk --debug --no-pub -t integration_test/drm_fault_test.dart` | exit0；APK实际dex含 `YlPlayerAndroidPlugin`；无私有define，未安装/运行 |
+| 现有私有资源表离线预检 | exit2，网络请求0；Android/iOS/macOS均external_missing |
+| 唯一一次独立最终复审 | Critical0 / Important0 / Minor0 |
+
+命令、退出码、日志哈希、6个源码 SHA-256、APK哈希、RED→GREEN记录和复审结论在 [验证清单](evidence/2026-10-16-p06-drm/validation.json)。最初合并回归曾发现超限chunked请求被Dart流取消而在413响应前断开；断言按实际拒绝语义允许413或HttpException，同时必须确实收到1次请求且接受challenge为0。最终89项完整示例回归通过。Android第一次缺插件元数据的编译不计原生依赖证据；最终使用离线生成的插件注册信息重编译，并检查APK内实际插件类。
+
+范围裁决与代价：
+
+- 补齐 Task4A 可独立准备的负向入口，Task4B 继续等待授权资源和允许使用的设备；本地故障不代替提供方拒绝、明确过期、轮换、后台恢复、跨段/切轨或真实迟到有效密钥安装证据。代价是仍可能需要提供方/设备适配，不能把本次工具完成写成 CAP-DRM 完成。
+- 既有 Task1/2/3 未修改的生产实现不重新认证；本轮运行其公开依赖回归。物理安全解码、画面/声音、字幕几何、外接保护仍单独验收，描述符/首帧信号不证明这些成立。代价是本次不增加原生物理保证。
+- 复审未自行运行测试和构建，最终结果由执行者的退出码与制品哈希补齐；无延期Minor。
+
+私有表仍缺媒体/许可证服务、有效授权/哈希、设备身份，Apple另缺证书与内容标识。公开摘要中 `physicalAcceptance` 与 `providerNegativeAcceptance` 均保持 `not_run`；预检各平台为 `external_missing`。本次没有执行新的真实正向或负向集成入口，iOS/macOS入口本轮仅作共享Dart静态检查，未声称本轮原生编译或实际播放通过。Task4B、CAP-DRM保持未完成。

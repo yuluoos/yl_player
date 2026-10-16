@@ -1,0 +1,91 @@
+00:00 +0: loading /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart
+00:00 +0: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart: shifts tfdt and sidx v0 without altering source or media
+00:00 +1: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/video_performance_series_test.dart: requires increasing counters and preserves missing samples
+00:00 +2: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart: shifts tfdt and sidx v1 without altering source or media
+00:00 +3: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart: shifts tfdt and sidx v1 without altering source or media
+00:00 +4: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/video_performance_series_test.dart: counter resets and reversed clocks fail without erasing evidence
+00:00 +5: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart: fixture builder shifts actual video and audio bytes with Time/List MPDs
+00:00 +6: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart: fixture builder shifts actual video and audio bytes with Time/List MPDs
+00:00 +7: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/video_performance_series_test.dart: unavailable snapshots are retained but never qualify
+00:00 +8: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_offset_fixture_test.dart: rejects malformed fragments, unsupported versions and overflow
+00:00 +9: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/video_performance_series_test.dart: copies native samples immutably and bounds collection
+00:00 +10: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: fault selector rejects missing and arbitrary values safely
+00:00 +11: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: denied real POST uses bounded loopback and safe receipt
+00:00 +12: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: timeout real POST uses bounded loopback and safe receipt
+00:01 +13: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: cancel real POST uses bounded loopback and safe receipt
+00:01 +14: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: invalid or empty requests cannot satisfy challenge observation
+00:01 +15: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_fault_server_test.dart: oversized challenge rejected without retaining bytes
+00:01 +16: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/first_frame_probe_test.dart: timestamps before Load and retains early event for bound session
+00:01 +17: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/first_frame_probe_test.dart: duplicate and post-close events cannot change first observation
+00:01 +18: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/first_frame_probe_test.dart: missing frame is null and cannot count as passed
+00:01 +19: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/first_frame_probe_test.dart: clock reversal and reusing a probe are rejected
+00:01 +20: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_cleanup_test.dart: confirmed creation and all cleanup steps complete in order
+00:01 +21: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_cleanup_test.dart: step 0 failure never skips independent cleanup
+00:01 +22: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: creation deadline returns ownership before expiry
+00:01 +23: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: creation deadline returns ownership before expiry
+00:01 +24: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: creation deadline returns ownership before expiry
+00:01 +25: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: creation deadline returns ownership before expiry
+00:01 +26: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_cleanup_test.dart: hung disposal is bounded and later cleanup still executes
+00:01 +27: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: hung creation times out while recorded samples remain available
+00:01 +28: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: hung creation times out while recorded samples remain available
+00:01 +29: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: late creation is released once and release error is consumed
+00:01 +30: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: captures phases with native clock and freezes after close
+00:01 +31: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: unavailable counters remain null
+00:01 +32: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: rejects arbitrary native fields without echoing values
+00:01 +33: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: rejects backwards phase or native clock
+00:01 +34: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/resource_series_test.dart: sample limit fails explicitly and preserves earlier rows
+00:01 +35: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_segment_base_fixture_test.dart: owned SegmentBase v0 preserves fragments and exact clock
+00:02 +36: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_segment_base_fixture_test.dart: owned SegmentBase v1 preserves fragments and exact clock
+00:02 +37: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: android valid resource declarations remain not_run
+00:02 +38: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: ios valid resource declarations remain not_run
+00:02 +39: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: macos valid resource declarations remain not_run
+00:02 +40: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: missing resources cannot generate a runtime case or passing evidence
+00:02 +41: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: expired authorization and wrong platform are rejected again at execution
+00:02 +42: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: binary bounds and nonbinary envelopes fail closed
+00:02 +43: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: untrusted URLs credentials and unknown fields never appear in errors
+00:02 +44: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: inventory bounds duplicate owners and malformed data have safe failures
+00:02 +45: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_case_test.dart: missing configuration is an explicit failure rather than a skipped test
+00:03 +46: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: android fault source isolates license credentials and preserves DRM
+00:04 +47: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: ios fault source isolates license credentials and preserves DRM
+00:04 +48: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: macos fault source isolates license credentials and preserves DRM
+00:04 +49: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: fault override cannot bypass expired authorization
+00:04 +50: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: negative observation rejects success and untyped failure
+00:04 +51: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: negative observation preserves typed code for exact matching
+00:04 +52: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_runtime_test.dart: unexpected native or provider text is never reported
+00:04 +53: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/live_flv_server_test.dart: first live connection drops and the next connection still streams
+00:06 +54: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/dash_duration_fixture_test.dart: duration fixture removes only MPD total and final Period duration
+00:06 +55: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/paused_frame_capture_test.dart: missing readback keeps playback paused until the surface is ready
+00:06 +56: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/paused_frame_capture_test.dart: unavailable surface fails without resuming beyond the marker
+00:06 +57: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/paused_frame_capture_test.dart: waits for actual consumption readiness before pausing after seek
+00:06 +58: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/paused_frame_capture_test.dart: readiness timeout leaves the output unpaused and does not read
+00:06 +59: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/drm_acceptance_owner_test.dart: late creation after timeout cleanup is released once
+00:06 +60: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: example handles unavailable native creation
+00:06 +61: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: example handles unavailable native creation
+00:07 +62: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/continuous_start_test.dart: existing decode failure is retained instead of timing out
+00:07 +63: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +64: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +65: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +66: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +67: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +68: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +69: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:07 +70: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: Pause observes errors without displaying raw exception text
+00:08 +71: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: rejected Stop reports safe failure and preserves the session
+00:09 +72: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/abr_network_preflight_test.dart: preflight timeout closes its actual socket before reporting cleanup
+00:09 +73: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/benchmark_reporting_test.dart: rejects extra secret fields and unsafe values before logging
+00:09 +74: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: accepted Stop clears the session handle
+00:09 +75: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: accepted Stop clears the session handle
+00:09 +76: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: accepted Stop clears the session handle
+00:09 +77: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: accepted Stop clears the session handle
+00:09 +78: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: accepted Stop clears the session handle
+00:09 +79: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: obsolete work cannot replace newer UI or command authority
+00:09 +80: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/widget_test.dart: widget disposal safely settles pending load and cleanup
+00:09 +81: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: unknown primaries retain pixels but cannot qualify an sRGB reference
+00:09 +82: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: BT601 matrix with explicit BT709 primaries is a qualified reference
+00:09 +83: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: explicit other primaries and missing metadata cannot silently pass
+00:09 +84: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: normalized primaries require a resolved Core Media 709 space
+00:09 +85: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: requires all four ordered displayed colors and retains polling bounds
+00:09 +86: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: black, stale initial blue, and skipped color cannot pass
+00:09 +87: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: validates all nine patches and exact schema before retaining data
+00:09 +88: /private/tmp/yl-p06-drm/yl_player/packages/yl_player/example/test/display_markers_test.dart: native missing/ambiguous output cannot become a passed observation
+00:09 +89: All tests passed!

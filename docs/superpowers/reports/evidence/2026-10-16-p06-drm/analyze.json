@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "analyze",
+    "--no-pub",
+    "packages/yl_player/example/integration_test/drm_fault_test.dart",
+    "packages/yl_player/example/integration_test/drm_lifecycle_test.dart",
+    "packages/yl_player/example/integration_test/support/drm_acceptance_runtime.dart",
+    "packages/yl_player/example/integration_test/support/drm_fault_server.dart",
+    "packages/yl_player/example/test/drm_acceptance_runtime_test.dart",
+    "packages/yl_player/example/test/drm_fault_server_test.dart"
+  ],
+  "cwd": "/private/tmp/yl-p06-drm/yl_player",
+  "exitCode": 0,
+  "expectedExitCode": 0,
+  "logSha256": "8714888d809f82bfe792c9b9039b532b0c753cdfb21b8e0a40b48f3adf1d5de8"
+}
