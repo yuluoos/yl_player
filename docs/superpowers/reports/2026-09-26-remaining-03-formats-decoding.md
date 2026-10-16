@@ -589,3 +589,7 @@ iOS三条截图失败另外执行0.25倍速观测控制，7个播放/seek颜色�
 ### 2026-10-16 Media3 VP9 同次构建身份绑定验收
 
 已补上上一轮 Media3 VP9 的同次音频采集缺口：Android 固定六控制以同一 instrumentation APK SHA-256 绑定，VP9 使用产品 Media3 的 `c2.goldfish.vp9.decoder` 与 `c2.android.vorbis.decoder`，其余五项保持 native fallback。所有控制的实际像素、PCM 原始窗口、AudioTrack 消费位置、初次完成、三次 seek 和释放通过独立门禁。完整失败历史保留，未移除任何控制样本。构建身份代表包含产品与测试的 library instrumentation APK，不代表 Flutter release；完整矩阵、iOS 正向硬件、物理输出、独立参考及持续热资格仍开放。验证、复审和制品身份见[本轮归档](evidence/2026-10-16-p03-media3-vp9/README.md)。
+
+### 2026-10-16 公开 Flutter Android 构建身份与音画验收
+
+Android 六控制的公开 controller/session/view 路线已达到同次运行绑定 APK 身份的 6/6：保留实际 Flutter 纹理，使用 composition 像素、同一原生会话的 PCM 与新读 AudioTrack 播放头，验证完成、三次 seek、公开 dispose 与底层释放。FLAC、VP9/Vorbis 由产品 Media3 处理，其余四项由实际 managed fallback 处理，未强制路由。框架最终结果参与门禁，六行原始数据通过后的故意框架失败仍被拒绝；错误身份也被拒绝。新增观察桥只进入显式验收 debug 包，普通 debug/release 均无桥类。当前证据不覆盖 Apple 公开路线、release、完整格式矩阵、物理输出或持续热资格；P03 仍非全部完成。详见[归档](evidence/2026-10-16-p03-public-av/README.md)。

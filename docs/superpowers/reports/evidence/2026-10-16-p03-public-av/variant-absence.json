@@ -1,0 +1,33 @@
+{
+  "release-even-with-opt-in": {
+    "path": "packages/yl_player_android/example/build/yl_player_android/outputs/aar/yl_player_android-release.aar",
+    "sha256": "2045c958b23219bf072b104610e0d53831c4875ba8a7b96f8d046a64da14b9a4",
+    "observationClasses": []
+  },
+  "ordinary-debug": {
+    "path": "packages/yl_player_android/example/build/yl_player_android/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+    "sha256": "efa8770acfb3338a091a3504e973452608314de72c5788d913f09fe383cc55fa",
+    "observationClasses": []
+  },
+  "opted-in-public-debug": {
+    "path": "packages/yl_player/example/build/yl_player_android/intermediates/runtime_library_classes_jar/debug/bundleLibRuntimeToJarDebug/classes.jar",
+    "sha256": "11dceae1b6c03277c08a270ac8352f87b2b9db102b0cade20536534c1f9b9f70",
+    "observationClasses": [
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$4$1$value$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$4$1$value$2.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$4$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$Attempt.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$Capture.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$Companion.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$observe$1$seekTo$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$observe$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe$observe$engine$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundFlutterProbe.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$factory$1$buildAudioRenderers$listener$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$factory$1$buildAudioSink$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$factory$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio$tap$1.class",
+      "dev/ylplayer/yl_player_android/YlBoundMedia3Audio.class"
+    ]
+  }
+}

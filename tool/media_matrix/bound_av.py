@@ -69,9 +69,11 @@ def pcm_window(window, row, case, phase, marker):
 def validate(plan, rows):
     """Reject borrowed identities, missing required rows and scalar-only PCM claims.
 
-    Values describe real decoder/output boundaries in an instrumented native
-    consumer. Product/test hashes are distinct. No result upgrades that scope to
-    the complete format matrix, a release Flutter app, or physical A/V timing.
+    Values describe real decoder/output boundaries in the declared consumer.
+    Product/test hashes identify their containers, which may be the same public
+    Flutter debug APK. Public records also require Flutter view/session evidence.
+    No result upgrades that scope to the complete format matrix, a release
+    Flutter app, or physical A/V timing.
     """
     errors=[];supported=0;measurements=[]
     planned=plan.get('planned',[]) if isinstance(plan,dict) else []
@@ -106,6 +108,11 @@ def validate(plan, rows):
             session=row.get('sessionId');require(isinstance(session,str) and session and session not in sessions,'invalid_session');sessions.add(session)
             require(row.get('identityVerified') is True,'runtime_identity_unverified')
             require(row.get('schema')==1,'invalid_row_schema')
+            if plan.get('artifactKind')=='android-public-flutter-debug-apk':
+                require(plan['platform']=='android','public_platform_mismatch')
+                require(row.get('publicSessionId')==session and row.get('publicApi')=='YlPlayerController/YlPlayerView' and row.get('pixelSource')=='flutter-repaint-boundary','public_session_unverified')
+                lifecycle=row.get('publicLifecycle',{})
+                require(isinstance(lifecycle,dict) and all(lifecycle.get(k) is True for k in ('created','ready','firstFrame','completed','disposed')),'public_lifecycle_unverified')
             if plan['platform']=='android':require(row.get('audioClockMethod')=='audiotrack-playback-head','consumption_clock_unverified')
             require(row.get('audioOutputClosed') is True if plan['platform']=='android' else type(row.get('releasedAudioBytes')) is int and row['releasedAudioBytes']==0,'output_release_unverified')
             require(row.get('outcome')=='passed' and row.get('completed') is True and row.get('disposed') is True,'lifecycle_unverified')

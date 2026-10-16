@@ -238,6 +238,8 @@ internal class YlMedia3SessionFactory(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val protectedViews: YlProtectedViewRegistry? = null,
+    // Optional internal observation factory; recovery policy and protected routing are unchanged.
+    private val createFallback: ((YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter)? = null,
     private val createEngine: (YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter =
         { identity, source, load, player -> YlMedia3Engine(context, identity, source, load, player, dispatcher) },
 ) : YlPlayerSessionFactory {
@@ -255,7 +257,8 @@ internal class YlMedia3SessionFactory(
 
                     val primary = createEngine(identity, source, loadOptions, options)
                     return YlManagedAndroidEngine(identity, primary, {
-                        YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
+                        createFallback?.invoke(identity, source, loadOptions, options)
+                            ?: YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher)
                     }, dispatcher, allowFallback = !YlRtmpSourcePolicy.isRtmp(source) && source.format != AndroidMediaFormat.DASH &&
                         runCatching { java.net.URI(source.locator).path?.lowercase()?.endsWith(".mpd") }.getOrNull() != true)
                 } }, dispatcher, audioFocus = { YlSharedAudioFocus.get(context) }, protectedViews = protectedViews)

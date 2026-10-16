@@ -1,6 +1,15 @@
 """Synthetic evidence mutations test the gate; these are not player observations."""
 import base64, copy, hashlib, math, struct, unittest
 from bound_av import validate
+from run_bound_flutter_android import planned_controls
+from run_bound_apple import CASES
+
+class PublicControlPlanTest(unittest.TestCase):
+    def test_exact_six_controls_required_before_launch(self):
+        catalog=[dict(id=case,file=case,sha256='a'*64) for case in CASES]
+        self.assertEqual({c['caseId'] for c in planned_controls(catalog)},set(CASES))
+        for bad in [catalog[:-1],catalog+[catalog[0]],[]]:
+            with self.assertRaises(ValueError):planned_controls(bad)
 
 def tone(marker):
     return struct.pack('<16384f', *(v for i in range(8192) for v in
@@ -94,6 +103,25 @@ class BoundAVTest(unittest.TestCase):
         self.assertTrue(self.result()['scopeAcceptance'])
         for key in ['engine','decoderMode','decoderIdentity','audioDecoderIdentity']:
             bad=copy.deepcopy(self.row);bad[key]=''
+            self.assertFalse(self.result([bad])['scopeAcceptance'],key)
+
+    def test_public_scope_requires_matching_flutter_session_and_lifecycle(self):
+        self.plan['artifactKind']='android-public-flutter-debug-apk'
+        self.plan['platform']=self.row['platform']='android'
+        self.row.update(audioClockMethod='audiotrack-playback-head',audioOutputClosed=True)
+        self.assertFalse(self.result()['scopeAcceptance'])
+        self.row.update(publicSessionId=self.row['sessionId'],publicApi='YlPlayerController/YlPlayerView',
+            publicLifecycle=dict(created=True,ready=True,firstFrame=True,completed=True,disposed=True),
+            pixelSource='flutter-repaint-boundary')
+        self.assertTrue(self.result()['scopeAcceptance'])
+        for key,value in [('publicSessionId','borrowed'),('pixelSource','native-image-reader'),('publicApi','native-only')]:
+            bad=copy.deepcopy(self.row);bad[key]=value
+            self.assertFalse(self.result([bad])['scopeAcceptance'],key)
+        self.plan['platform']=self.row['platform']='macos'
+        self.assertFalse(self.result()['scopeAcceptance'])
+        self.plan['platform']=self.row['platform']='android'
+        for key in self.row['publicLifecycle']:
+            bad=copy.deepcopy(self.row);bad['publicLifecycle'][key]=False
             self.assertFalse(self.result([bad])['scopeAcceptance'],key)
 
 if __name__=='__main__':unittest.main()

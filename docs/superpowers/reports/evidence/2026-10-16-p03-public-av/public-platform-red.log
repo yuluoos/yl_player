@@ -1,0 +1,14 @@
+............F....
+======================================================================
+FAIL: test_public_scope_requires_matching_flutter_session_and_lifecycle (test_bound_av.BoundAVTest.test_public_scope_requires_matching_flutter_session_and_lifecycle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_av.py", line 112, in test_public_scope_requires_matching_flutter_session_and_lifecycle
+    self.assertFalse(self.result()['scopeAcceptance'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.781s
+
+FAILED (failures=1)

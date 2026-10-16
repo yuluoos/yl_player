@@ -14,6 +14,30 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlPlayerRegistryTest {
+    @Test fun `actual recoverable load uses observed fallback without bypassing session identity`() = runTest {
+        val dispatcher=StandardTestDispatcher(testScheduler)
+        Dispatchers.setMain(dispatcher)
+        val app=mock(Application::class.java)
+        `when`(app.applicationContext).thenReturn(app)
+        var recovered:YlSessionIdentity?=null
+        val primary=FakeSessionEngine().apply {prepareError=YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)}
+        val fallback=FakeSessionEngine()
+        val factory=YlMedia3SessionFactory(app,dispatcher,createFallback={identity,_,_,_->
+            recovered=identity;fallback.also {it.identity=identity}
+        },createEngine={identity,_,_,_->primary.also {it.identity=identity}})
+        val fixture=RegistryFixture(dispatcher,factory)
+        val clock=mockStatic(android.os.SystemClock::class.java)
+        try {
+            val player=fixture.registry.create(createRequest())
+            fixture.call(player.channelSuffix,"attach")
+            val load=fixture.load(player.channelSuffix,request("observed"))
+            load.first();runCurrent()
+            assertEquals(primary.identity,recovered)
+            assertEquals(1,fallback.activationCalls)
+            assertIs<AndroidLoadReply>(load.second().single())
+        } finally {fixture.registry.detach();runCurrent();clock.close();Dispatchers.resetMain()}
+    }
+
     @Test fun `committed schema 3 bytes reach schema 4 factory version gate`() = runTest {
         // Encoded with the committed 9f6b490 Pigeon factory codec.
         val oldRequest = java.util.Base64.getDecoder().decode(

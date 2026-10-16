@@ -1,0 +1,26 @@
+{
+  "public-1": {
+    "rawAccepted": false,
+    "supportedRows": 0,
+    "requiredRows": 6,
+    "overallAccepted": false
+  },
+  "public-2": {
+    "rawAccepted": true,
+    "supportedRows": 6,
+    "requiredRows": 6,
+    "overallAccepted": true
+  },
+  "negative-identity": {
+    "rawAccepted": false,
+    "supportedRows": 0,
+    "requiredRows": 6,
+    "overallAccepted": false
+  },
+  "negative-framework": {
+    "rawAccepted": true,
+    "supportedRows": 6,
+    "requiredRows": 6,
+    "overallAccepted": false
+  }
+}

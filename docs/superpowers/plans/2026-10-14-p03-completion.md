@@ -351,3 +351,7 @@ Task 1–6 的勾选表示工程步骤和记录的受控验证已执行，不将
 ### 2026-10-16 Android Media3 VP9 同次音画续做
 
 Task 7 的六控制计划现在显式冻结 engine：VP9/Vorbis 使用产品 Media3，其他五项继续 native fallback。新增仅 instrumentation 使用的 post-trim PCM/真实 AudioTrack 播放头采集，ImageReader、完成、三次 seek、释放与实际双解码器身份来自同一会话。内部注入点不开放受保护内容，生产硬解/软解准入未变。六项受控范围首次达到 6/6；公开 Flutter/release、完整格式矩阵、物理输出和持续热资格仍不由此覆盖，Task 7/8 复合项保持开放。详见[本轮证据](../reports/evidence/2026-10-16-p03-media3-vp9/README.md)。
+
+### 2026-10-16 公开 Flutter Android 同次音画续做
+
+固定六控制已通过公开 `YlPlayerController`/`YlPlaybackSession`/`YlPlayerView` 驱动，真实 Flutter 视图像素与同会话 PCM/消费时钟绑定同一已冻结 APK，native/public session ID 一致。原始门禁和 Flutter 框架最终测试结果同时通过（6/6）。错误 APK 身份负例在播放前拒绝；六项原始记录通过后故意让框架失败仍拒绝总体通过。验收桥仅显式 opt-in debug/instrumentation 编译，普通 debug 与 release 制品检查无该类。补齐 session ready/firstFrame/seek 等 API 注释。Apple 公开路径、release/完整矩阵、物理设备和持续热资格仍开放，Task 7/8 不整体打勾。详见[本轮证据](../reports/evidence/2026-10-16-p03-public-av/README.md)。

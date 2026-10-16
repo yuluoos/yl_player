@@ -4,16 +4,29 @@ part of 'player_controller.dart';
 final class YlPlaybackSession {
   YlPlaybackSession._(this._player, this.id, this.ready, this.firstFrame);
   final YlPlayerController _player;
+
+  /// Opaque identity of this committed source; compare values rather than inferring order.
   final YlPlaybackSessionId id;
+
+  /// Completes when the session is ready to accept playback, without proving audible output.
   final Future<void> ready;
+
+  /// Completes on the native first-frame event for this session.
+  /// This is not a screenshot or a measurement of physical display/audio synchronization.
   final Future<void> firstFrame;
   Future<void> _command(Future<void> Function() action) async {
     _player._checkSession(id);
     await action();
   }
 
+  /// Requests playback for this session; completion acknowledges the command.
   Future<void> play() => _command(() => _player._backend.play(id));
+
+  /// Pauses this session without discarding its source or selected tracks.
   Future<void> pause() => _command(() => _player._backend.pause(id));
+
+  /// Seeks to a nonnegative programme position. Completion acknowledges the seek;
+  /// callers observing output must still wait for the corresponding rendered frame.
   Future<void> seekTo(Duration position) => _command(() {
     validateYlSeekPosition(position);
     return _player._seekWithSubtitles(

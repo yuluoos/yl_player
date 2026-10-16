@@ -1,0 +1,102 @@
+
+> Configure project :gradle
+WARNING: Unsupported Kotlin plugin version.
+The `embedded-kotlin` and `kotlin-dsl` plugins rely on features of Kotlin `2.2.0` that might work differently than in the requested version `2.2.20`.
+
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :integration_test
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Configure project :yl_player_android
+w: ⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage
+The 'org.jetbrains.kotlin.android' plugin in project ':yl_player_android' is no longer required for Kotlin support since AGP 9.0.
+Solution: Remove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.
+See https://kotl.in/gradle/agp-built-in-kotlin for more details.
+
+
+> Task :yl_player_android:preBuild UP-TO-DATE
+> Task :yl_player_android:preReleaseBuild UP-TO-DATE
+> Task :yl_player_android:checkReleaseAarMetadata
+> Task :yl_player_android:mergeReleaseJniLibFolders
+> Task :yl_player_android:extractDeepLinksForAarRelease UP-TO-DATE
+> Task :yl_player_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :yl_player_android:generateReleaseResources
+> Task :yl_player_android:packageReleaseResources
+> Task :yl_player_android:mergeReleaseNativeLibs
+> Task :yl_player_android:processReleaseNavigationResources
+> Task :yl_player_android:generateReleaseAssets UP-TO-DATE
+> Task :yl_player_android:mergeReleaseAssets
+> Task :yl_player_android:prepareLintJarForPublish UP-TO-DATE
+> Task :yl_player_android:prepareReleaseArtProfile UP-TO-DATE
+> Task :yl_player_android:javaPreCompileRelease
+> Task :yl_player_android:writeReleaseAarMetadata
+> Task :yl_player_android:parseReleaseLocalResources
+> Task :yl_player_android:stripReleaseDebugSymbols
+> Task :yl_player_android:generateReleaseRFile
+> Task :yl_player_android:processReleaseManifest
+> Task :yl_player_android:copyReleaseJniLibsProjectAndLocalJars
+
+> Task :yl_player_android:compileReleaseKotlin
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt:102:14 'fun setPreferredBufferSizeOverride(p0: Int): AudioSink.AudioSinkConfig.Builder' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt:102:52 'field preferredBufferSizeOverride: Int' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:41:24 'constructor<T : Any!>(p0: DataSource, p1: Uri, p2: Int, p3: ParsingLoadable.Parser<out T & Any>): ParsingLoadable<T>' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramMediaSource.kt:49:37 'fun loadStarted(p0: LoadEventInfo, p1: Int): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashProgramTiming.kt:9:32 Non-public primary constructor is exposed via the generated 'copy()' method of the 'data' class.
+
+The generated 'copy()' will change its visibility in future releases.
+
+To suppress the warning do one of the following:
+- Annotate the data class with the '@ConsistentCopyVisibility' annotation.
+- Use the '-Xconsistent-data-class-copy-visibility' compiler flag.
+- Annotate the data class with the '@ExposedCopyVisibility' annotation 
+  (Discouraged, but can be used to keep binary compatibility).
+
+To learn more, see the documentation of the '@ConsistentCopyVisibility' and '@ExposedCopyVisibility' annotations.
+
+This will become an error in language version 2.5. See https://youtrack.jetbrains.com/issue/KT-11914.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionManager.kt:171:109 'field forceAllowInsecureDecoderComponents: Boolean' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt:253:107 The corresponding parameter in the supertype 'YlPlaybackEngineFactory' is named 'options'. This may cause problems when calling this function with named arguments.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt:256:98 The corresponding parameter in the supertype 'YlPlaybackEngineFactory' is named 'options'. This may cause problems when calling this function with named arguments.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:162:18 This declaration overrides a deprecated member but is not marked as deprecated itself. Add the '@Deprecated' annotation or suppress the diagnostic.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt:163:15 'fun renderOutputBuffer(p0: MediaCodecAdapter, p1: Int, p2: Long): Unit' is deprecated. Deprecated in Java.
+w: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSourceAssessment.kt:17:167 Unnecessary safe call on a non-null receiver of type 'URI'.
+
+> Task :yl_player_android:extractReleaseAnnotations
+> Task :yl_player_android:compileReleaseJavaWithJavac
+> Task :yl_player_android:mergeReleaseGeneratedProguardFiles UP-TO-DATE
+> Task :yl_player_android:mergeReleaseConsumerProguardFiles UP-TO-DATE
+> Task :yl_player_android:processReleaseJavaRes
+> Task :yl_player_android:mergeReleaseJavaResource
+> Task :yl_player_android:syncReleaseLibJars
+> Task :yl_player_android:bundleReleaseAar
+
+[Incubating] Problems report is available at: file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/example/build/reports/problems/problems-report.html
+
+BUILD SUCCESSFUL in 17s
+30 actionable tasks: 21 executed, 9 up-to-date
+Consider enabling configuration cache to speed up this build: https://docs.gradle.org/9.1.0/userguide/configuration_cache_enabling.html

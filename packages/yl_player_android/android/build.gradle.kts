@@ -35,12 +35,16 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
+    // Explicit acceptance build only; release and ordinary debug carry no capture bridge.
+    val boundAv = providers.gradleProperty("ylBoundAV").orNull == "true"
     sourceSets {
+        if (boundAv) getByName("debug").java.srcDir("src/boundAv/kotlin")
         getByName("main") {
             java.srcDirs("src/main/kotlin")
         }
         getByName("androidTest") {
             java.srcDirs("src/androidTest/kotlin")
+            if (!boundAv) java.srcDir("src/boundAv/kotlin")
             assets.srcDir("../../yl_player/example/assets/test_media/dash_timeline")
             assets.srcDir("../../yl_player/example/assets/test_media")
         }

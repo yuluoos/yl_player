@@ -1,0 +1,17 @@
+{
+  "base": "bd93560d8a952a4c1d0489ba8bcdd2d30d0d8299",
+  "apk": "packages/yl_player/example/build/app/outputs/flutter-apk/app-debug.apk",
+  "apkSha256": "fb1ecee4bb62911726cfd77d25d827e1c4153d423c33ba2dfffd4015e9ee4e9d",
+  "buildLog": "build-public-2.log",
+  "sourceSha256": {
+    "packages/yl_player/example/android/app/src/main/kotlin/dev/ylplayer/yl_player_example/MainActivity.kt": "b54a5ba445e9f20f1d9fe192f5502cfaeef37fba69324d8b815ae8581195d9c2",
+    "packages/yl_player/example/integration_test/bound_av_test.dart": "7c3018cfc30aab5114fe6d8c7a8c152b0f6199e8771698c68ad73110158a98b2",
+    "packages/yl_player/lib/src/playback_session.dart": "dd04e92f200309e9c623fca188368c255f2ff62f0ec3683c4206c38ef0f38e6c",
+    "packages/yl_player_android/android/build.gradle.kts": "98a1ef1b320881113745be87f0306c8c2f0a942d864b3fe2cb256fbad3fa358c",
+    "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundFlutterProbe.kt": "13d39164fdddc7e7e8cd94207134937d7d211d8d1d54fb302bf00f8c3a8e2d68",
+    "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3Audio.kt": "1354c02d2ae0822d6b722cb23459d0a17a5477ad4defa04233551952ca93e4f1",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt": "88991ce08adce611bdcbd7b19ae30275b8f506c1bab46b4600369dbc8025703a",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistryTest.kt": "fd98210d4f67ee2b32b1d742fb0ec558ff845b401f44f1da3d566ace02f491b1"
+  },
+  "note": "Final source snapshot; no APK source changed after build-public-2. Subsequent review fix only changes host control-set validation and docs/tests."
+}

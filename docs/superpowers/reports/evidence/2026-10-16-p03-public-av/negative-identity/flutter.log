@@ -1,0 +1,83 @@
+--------- beginning of main
+10-16 00:35:43.071  2627  2665 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+10-16 00:35:43.182  2627  2671 I flutter : The Dart VM service is listening on http://127.0.0.1:34795/9PcABbBUwQU=/
+--------- beginning of crash
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: FATAL EXCEPTION: main
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: Process: dev.ylplayer.yl_player_example, PID: 2627
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: java.lang.RuntimeException: Unable to start activity ComponentInfo{dev.ylplayer.yl_player_example/dev.ylplayer.yl_player_example.MainActivity}: java.lang.reflect.InvocationTargetException
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:4280)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.ActivityThread.handleLaunchActivity(ActivityThread.java:4467)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.servertransaction.LaunchActivityItem.execute(LaunchActivityItem.java:222)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeNonLifecycleItem(TransactionExecutor.java:133)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.executeTransactionItems(TransactionExecutor.java:103)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.servertransaction.TransactionExecutor.execute(TransactionExecutor.java:80)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.ActivityThread$H.handleMessage(ActivityThread.java:2823)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.os.Handler.dispatchMessage(Handler.java:110)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.os.Looper.loopOnce(Looper.java:248)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.os.Looper.loop(Looper.java:338)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.ActivityThread.main(ActivityThread.java:9067)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:593)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:932)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: Caused by: java.lang.reflect.InvocationTargetException
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at java.lang.reflect.Method.invoke(Native Method)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at dev.ylplayer.yl_player_example.MainActivity.configureFlutterEngine(MainActivity.kt:15)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at io.flutter.embedding.android.FlutterActivityAndFragmentDelegate.onAttach(FlutterActivityAndFragmentDelegate.java:228)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at io.flutter.embedding.android.FlutterActivity.onCreate(FlutterActivity.java:645)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.Activity.performCreate(Activity.java:9155)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.Activity.performCreate(Activity.java:9133)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1521)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at android.app.ActivityThread.performLaunchActivity(ActivityThread.java:4262)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	... 13 more
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: Caused by: java.lang.OutOfMemoryError: Failed to allocate a 201897664 byte allocation with 2120847 free bytes and 189MB until OOM, target footprint 4241695, growth limit 201326592
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at kotlin.io.FilesKt__FileReadWriteKt.readBytes(FileReadWrite.kt:78)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at dev.ylplayer.yl_player_android.YlBoundFlutterProbe.finish(YlBoundFlutterProbe.kt:195)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at dev.ylplayer.yl_player_android.YlBoundFlutterProbe.<init>(YlBoundFlutterProbe.kt:45)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at dev.ylplayer.yl_player_android.YlBoundFlutterProbe.<init>(Unknown Source:0)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at dev.ylplayer.yl_player_android.YlBoundFlutterProbe$Companion.register(YlBoundFlutterProbe.kt:204)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	at dev.ylplayer.yl_player_android.YlBoundFlutterProbe.register(Unknown Source:2)
+10-16 00:35:43.468  2627  2627 E AndroidRuntime: 	... 21 more
+10-16 00:40:17.641  3240  3282 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+10-16 00:40:17.723  3240  3288 I flutter : The Dart VM service is listening on http://127.0.0.1:32887/hfXtyj9LfUs=/
+10-16 00:40:18.741  3240  3240 I flutter : 00:00 +0: public Flutter same-build same-session AV
+10-16 00:41:04.363  3240  3240 I flutter : 00:45 +1: (tearDownAll)
+10-16 00:41:04.366  3240  3240 I flutter : 00:45 +2: All tests passed!
+10-16 00:41:46.109  3712  3752 I flutter : [IMPORTANT:flutter/shell/platform/android/android_context_gl_impeller.cc(104)] Using the Impeller rendering backend (OpenGLES).
+10-16 00:41:46.186  3712  3758 I flutter : The Dart VM service is listening on http://127.0.0.1:40919/PtyJ5n16a04=/
+10-16 00:41:47.489  3712  3712 I flutter : 00:00 +0: public Flutter same-build same-session AV
+10-16 00:41:48.371  3712  3712 I flutter : ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+10-16 00:41:48.371  3712  3712 I flutter : The following PlatformException was thrown running a test:
+10-16 00:41:48.371  3712  3712 I flutter : PlatformException(bound.observation, java.lang.IllegalStateException: Runtime identity was not
+10-16 00:41:48.371  3712  3712 I flutter : verified, null, null)
+10-16 00:41:48.371  3712  3712 I flutter : 
+10-16 00:41:48.371  3712  3712 I flutter : When the exception was thrown, this was the stack:
+10-16 00:41:48.371  3712  3712 I flutter : #0      StandardMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:653:7)
+10-16 00:41:48.371  3712  3712 I flutter : #1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+10-16 00:41:48.371  3712  3712 I flutter : <asynchronous suspension>
+10-16 00:41:48.371  3712  3712 I flutter : #2      MethodChannel.invokeMapMethod (package:flutter/src/services/platform_channel.dart:566:43)
+10-16 00:41:48.371  3712  3712 I flutter : <asynchronous suspension>
+10-16 00:41:48.371  3712  3712 I flutter : #3      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart:22:7)
+10-16 00:41:48.371  3712  3712 I flutter : <asynchronous suspension>
+10-16 00:41:48.371  3712  3712 I flutter : #4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+10-16 00:41:48.371  3712  3712 I flutter : <asynchronous suspension>
+10-16 00:41:48.371  3712  3712 I flutter : #5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)
+10-16 00:41:48.371  3712  3712 I flutter : <asynchronous suspension>
+10-16 00:41:48.371  3712  3712 I flutter : #6      TestWidgetsFlutterBinding._createTestCompletionHandler.<anonymous closure> (package:flutter_test/src/binding.dart:1706:12)
+10-16 00:41:48.371  3712  3712 I flutter : <asynchronous suspension>
+10-16 00:41:48.371  3712  3712 I flutter : 
+10-16 00:41:48.371  3712  3712 I flutter : The test description was:
+10-16 00:41:48.371  3712  3712 I flutter :   public Flutter same-build same-session AV
+10-16 00:41:48.371  3712  3712 I flutter : ════════════════════════════════════════════════════════════════════════════════════════════════════
+10-16 00:41:48.372  3712  3712 I flutter : 00:00 +0: public Flutter same-build same-session AV [E]
+10-16 00:41:48.372  3712  3712 I flutter :   Test failed. See exception logs above.
+10-16 00:41:48.372  3712  3712 I flutter :   The test description was: public Flutter same-build same-session AV
+10-16 00:41:48.372  3712  3712 I flutter :   
+10-16 00:41:48.375  3712  3712 I flutter : 00:00 +0 -1: (tearDownAll)
+10-16 00:41:48.384  3712  3712 I flutter : 00:00 +1 -1: Some tests failed.
+10-16 00:41:48.385  3712  3712 E flutter : [ERROR:flutter/runtime/dart_vm_initializer.cc(40)] Unhandled Exception: PlatformException(bound.observation, java.lang.IllegalStateException: Runtime identity was not verified, null, null)
+10-16 00:41:48.385  3712  3712 E flutter : #0      StandardMethodCodec.decodeEnvelope (package:flutter/src/services/message_codecs.dart:653:7)
+10-16 00:41:48.385  3712  3712 E flutter : #1      MethodChannel._invokeMethod (package:flutter/src/services/platform_channel.dart:366:18)
+10-16 00:41:48.385  3712  3712 E flutter : <asynchronous suspension>
+10-16 00:41:48.385  3712  3712 E flutter : #2      main.<anonymous closure> (file:///Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/integration_test/bound_av_test.dart:18:5)
+10-16 00:41:48.385  3712  3712 E flutter : <asynchronous suspension>
+10-16 00:41:48.385  3712  3712 E flutter : 

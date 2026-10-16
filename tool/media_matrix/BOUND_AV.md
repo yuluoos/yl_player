@@ -59,3 +59,38 @@ flush invalidates that origin and fences seek phases. Empty pipeline drains emit
 no samples. Disposal requires acknowledgement and all created tracks released.
 These internal observation seams are unavailable for protected playback and have
 no public Flutter API. Production factory, surface and codec defaults stay intact.
+
+## Public Flutter Android consumer
+
+Build the existing example once with the explicit acceptance opt-in:
+
+```sh
+# From packages/yl_player/example
+ORG_GRADLE_PROJECT_ylBoundAV=true flutter build apk --debug \
+  -t integration_test/bound_av_test.dart
+# From the repository root, without rebuilding during the run
+python3 -B tool/media_matrix/run_bound_flutter_android.py \
+  --apk packages/yl_player/example/build/app/outputs/flutter-apk/app-debug.apk \
+  --serial <owned-device-serial> --out <new-directory>
+```
+
+The host passes its frozen plan at launch; the bridge hashes the installed APK
+with bounded memory before exposing the plan. Product and Dart test share that
+APK identity. The public controller/session/view drive all commands and keep the
+actual Flutter texture. Native factories only observe the same engines under the
+existing recovery policy. FLAC and VP9/Vorbis use Media3; the other four frozen
+controls use the actual managed fallback. Each public session ID must match its
+native observation, and public ready/first-frame/completion/disposal are required.
+
+Flutter captures its real RepaintBoundary pixels. A single-use native clock token
+pairs each capture with a fresh AudioTrack consumption observation within 200 ms.
+No native ImageReader surface replaces the Flutter view. The raw gate and the
+Flutter framework's final `allTestsPassed` result must both pass; a test-body
+success flag is insufficient. `--negative-framework` fails after collecting all
+six rows to exercise this distinction. `--negative-identity` rejects before any
+playback. Retain both failures alongside the successful run.
+
+The bridge and shared PCM observer compile only into opted-in debug builds and
+instrumentation tests. Ordinary debug and release omit them, even when the
+opt-in property is supplied to a release build. This remains a debug consumer
+acceptance scope, not release, full-matrix, Apple-public, or physical-output proof.
