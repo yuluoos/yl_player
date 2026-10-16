@@ -1,0 +1,20 @@
+....E.........
+======================================================================
+ERROR: test_framework_symlink_identity_and_target_bytes_are_both_bound (test_release_readiness.ReleaseReadinessTests.test_framework_symlink_identity_and_target_bytes_are_both_bound)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p08-release/yl_player/tool/playback_benchmark/test_release_readiness.py", line 128, in test_framework_symlink_identity_and_target_bytes_are_both_bound
+    first=self.api.source_snapshot(self.root)
+  File "/private/tmp/yl-p08-release/yl_player/tool/release_readiness/check.py", line 109, in source_snapshot
+    data = read_file(root, name)
+  File "/private/tmp/yl-p08-release/yl_player/tool/release_readiness/check.py", line 59, in read_file
+    require(not target.is_symlink())
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p08-release/yl_player/tool/release_readiness/check.py", line 26, in require
+    raise ValueError('invalid release inventory')
+ValueError: invalid release inventory
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.979s
+
+FAILED (errors=1)

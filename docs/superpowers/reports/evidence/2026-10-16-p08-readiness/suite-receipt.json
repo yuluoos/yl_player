@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tool/playback_benchmark",
+    "-p",
+    "test_*.py"
+  ],
+  "cwd": "/private/tmp/yl-p08-release/yl_player",
+  "exitCode": 0,
+  "expectedExitCode": 0,
+  "durationSeconds": 16.042,
+  "stdoutSha256": "3a82019f313fb4dd2d4cc206019bafd5c8f2c469ebd3466e773384ef483b3814",
+  "stderrSha256": "8822e426fb9e0cddc2a8566605f25701896e8ddb3aec4d2e0f93dbba9d878cea"
+}

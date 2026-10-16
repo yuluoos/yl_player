@@ -1,0 +1,91 @@
+.............................................................................................................Temporary display assertion 73 bound to owned command 73
+Temporary display assertion released
+..............................................EE..............................{
+  "passed": false,
+  "failures": [
+    "isolated audio clock protocol missing",
+    "audio track requirement unavailable",
+    "row 0: audio clock requirement missing or inconsistent",
+    "missing measurement boundaries",
+    "native window occluded or visibility unobserved",
+    "start: timed endpoint not used",
+    "start: system metrics unavailable or invalid",
+    "end: timed endpoint not used",
+    "end: system metrics unavailable or invalid",
+    "application dropped frames",
+    "worker rejected frames",
+    "worker gap unavailable or exceeds 100ms",
+    "disposed: resources not released",
+    "disposedLater: resources not released",
+    "paused native pixel unavailable",
+    "runner exception preserved",
+    "native process failed",
+    "external activation did not reuse the exact owned PID",
+    "activation request missing or outside observation",
+    "actual didBecomeActive notification missing after request",
+    "drop history cannot be completely classified"
+  ],
+  "systemDelta": {},
+  "dropClassification": {
+    "before": 0,
+    "after": 0,
+    "complete": false
+  },
+  "productionAdmission": false
+}
+.................................................E.......
+======================================================================
+ERROR: test_hard_kill_retains_completed_response_and_inflight_request (test_memory_mapping.RpcRetentionTests.test_hard_kill_retains_completed_response_and_inflight_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p08-release/yl_player/tool/playback_benchmark/test_memory_mapping.py", line 81, in test_hard_kill_retains_completed_response_and_inflight_request
+    server=HTTPServer(('127.0.0.1',0),Handler)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_malformed_and_oversized_responses_keep_bounded_raw_evidence (test_memory_mapping.RpcRetentionTests.test_malformed_and_oversized_responses_keep_bounded_raw_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p08-release/yl_player/tool/playback_benchmark/test_memory_mapping.py", line 110, in test_malformed_and_oversized_responses_keep_bounded_raw_evidence
+    server=HTTPServer(('127.0.0.1',0),Handler)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_http_uses_vm_enum_list_encoding_and_keeps_raw_response (test_timeline_control.TimelineControlTests.test_http_uses_vm_enum_list_encoding_and_keeps_raw_response)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p08-release/yl_player/tool/playback_benchmark/test_timeline_control.py", line 73, in test_http_uses_vm_enum_list_encoding_and_keeps_raw_response
+    server=HTTPServer(('127.0.0.1',0),Handler);thread=threading.Thread(target=server.serve_forever);thread.start()
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+----------------------------------------------------------------------
+Ran 244 tests in 14.604s
+
+FAILED (errors=3)

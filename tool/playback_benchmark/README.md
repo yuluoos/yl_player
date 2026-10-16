@@ -685,3 +685,12 @@ missing clocks, and never treats interpolation or reported latency as physical
 audibility. These fixed-order short runs do not establish CPU/latency improvement,
 route-change behavior, general consumed/rendered equivalence, or a safe direct
 replacement of playedBack in the production renderer.
+
+## Offline joint release inventory (2026-10-16)
+
+P08-D now has a [source-bound coverage checker](../release_readiness/README.md)
+for all CAP/ERR/REG platform groups and performance/consumer/CI gates. Its normal
+exit 0 validates the inventory, not release readiness; `--require-ready` returns
+1 while any requirement remains open. Historical partial reports cannot become
+full acceptance by relabeling their status. This tool does not run devices or
+freeze numerical performance targets.

@@ -1,0 +1,40 @@
+.............................................................................................................Temporary display assertion 73 bound to owned command 73
+Temporary display assertion released
+..........................................................................................{
+  "passed": false,
+  "failures": [
+    "isolated audio clock protocol missing",
+    "audio track requirement unavailable",
+    "row 0: audio clock requirement missing or inconsistent",
+    "missing measurement boundaries",
+    "native window occluded or visibility unobserved",
+    "start: timed endpoint not used",
+    "start: system metrics unavailable or invalid",
+    "end: timed endpoint not used",
+    "end: system metrics unavailable or invalid",
+    "application dropped frames",
+    "worker rejected frames",
+    "worker gap unavailable or exceeds 100ms",
+    "disposed: resources not released",
+    "disposedLater: resources not released",
+    "paused native pixel unavailable",
+    "runner exception preserved",
+    "native process failed",
+    "external activation did not reuse the exact owned PID",
+    "activation request missing or outside observation",
+    "actual didBecomeActive notification missing after request",
+    "drop history cannot be completely classified"
+  ],
+  "systemDelta": {},
+  "dropClassification": {
+    "before": 0,
+    "after": 0,
+    "complete": false
+  },
+  "productionAdmission": false
+}
+.........................................................
+----------------------------------------------------------------------
+Ran 256 tests in 16.242s
+
+OK

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tool/release_readiness/check.py"
+  ],
+  "cwd": "/private/tmp/yl-p08-release/yl_player",
+  "exitCode": 0,
+  "expectedExitCode": 0,
+  "durationSeconds": 0.171,
+  "stdoutSha256": "96cefa02a12d646d071adb3d9a2c0d1a12acd0ff18b4a1a4e98e6dc6b8940643",
+  "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

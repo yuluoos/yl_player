@@ -1,0 +1,57 @@
+{
+  "baselineCommit": "c088b39c32c6c511bce1a12f6d1cdded39a1a913",
+  "scope": "P08-D offline joint acceptance inventory; not complete P08 acceptance",
+  "pythonTests": {
+    "discovered": 259,
+    "passed": 259,
+    "failed": 0,
+    "skipped": 0
+  },
+  "directedTests": 15,
+  "review": {
+    "critical": 0,
+    "importantFound": 1,
+    "importantFixed": 1,
+    "minor": 0,
+    "rounds": 1
+  },
+  "actualInventory": {
+    "requirementGroups": 33,
+    "rows": 102,
+    "currentPasses": 0,
+    "releaseReady": false,
+    "inventoryExit": 0,
+    "gateExit": 1
+  },
+  "deviceUsage": false,
+  "playerOrSimulatorOrGpuRun": false,
+  "sourceAndEvidenceSha256": {
+    "tool/release_readiness/check.py": "abfeb16b5dd5b1ed88cb8036dfe93c86044709d035139e4c019b8695dd64085a",
+    "tool/release_readiness/inventory.json": "ea04dc3115743815884a184a93b0d232c107b06e29539caedcd1a48c0fa7f758",
+    "tool/release_readiness/README.md": "6b7d4d0adef909691f182a1446892b728c0bbd6eb7d1953b19034fb1c28deb1a",
+    "tool/playback_benchmark/test_release_readiness.py": "48147ea1a7ecf2f16d8f047bb6b5794803c46829c156aa3a9da2d91ad2077be4",
+    "tool/playback_benchmark/README.md": "21a838487042a153e764d60c5010ea625912b6afd83492906cc6d5e6e61ef414",
+    "docs/superpowers/plans/2026-09-26-remaining-08-performance-release.md": "3a36b450a98ca160691564e23e61938aed4cbc223727c5840d29eb08d81a6be4",
+    "docs/superpowers/plans/2026-09-26-remaining-overview.md": "0f7ce91e5ff766ba098c2c45271fec04e871936d8e366ec89b00b6a0764ff9d4",
+    "docs/superpowers/reports/2026-09-26-remaining-08-performance-release.md": "2576f260f04bf80637f0c1a1a3604ec966fca39b28844f5b23383290b20e0952",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/baseline-sandbox.log": "520f96d3bb916af6f1b281183e0252b2e6a580495440d3f8c231d69597b67af3",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/framework-red.log": "a329b28e2466d0ef65ed1991aca6612d2b8faea83027d8d62e08d0e3dd0034b3",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/gate-receipt.json": "e2fc36cb742f9940dae707e403191d3656f7aee9b27c1f1643167b33432277cb",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/gate-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/gate.json": "96cefa02a12d646d071adb3d9a2c0d1a12acd0ff18b4a1a4e98e6dc6b8940643",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/intermediate-suite.log": "11af2507ab27b5e6872724b680dec4f5e0edc8a98d73e798d148090dd404f022",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/inventory-receipt.json": "b9ec56c9aabda9554b4d35bcddfcb4cfd357435e518e93d03de86e5c7a6f6e7f",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/inventory-stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/inventory.json": "96cefa02a12d646d071adb3d9a2c0d1a12acd0ff18b4a1a4e98e6dc6b8940643",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/pre-review-suite.log": "c9b3b4a41c7d0b2fef64a40e22d30dd8076fd92e6f7490999c7a70a99478b816",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/readiness-green.log": "336924e6ff4fde1e1869454237a7f0afa6173499f5bce15e639f8e64189bd56d",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/readiness-red.log": "050a56abc40112f262792116ddbef3ef9eb9ac3f005b66a889bd0d4a19ed67a3",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/review-green.log": "a577459fdf652b91002d91e98df7b0ae5be5606b61f4375b5960d2fe02923aae",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/review-red.log": "c13b7da4e3e7ab539401a1d0bccf5ff410776fce7c181cd7ba50873692f077e2",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/review.md": "173a2de15288031adb76c63c196b3b628d5fc35ca5c2771dfeeed18db03cb73d",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/run-verification.py": "e21dde8b347089263ed20b9474d55538b6c3be7e3269fcd444d08fcdb9ba29c4",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/suite-receipt.json": "91bfa35de0e66e3e70705cae858cffda9d1d4cb259359c62a94f4e5d6af2819a",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/suite-stderr.log": "8822e426fb9e0cddc2a8566605f25701896e8ddb3aec4d2e0f93dbba9d878cea",
+    "docs/superpowers/reports/evidence/2026-10-16-p08-readiness/suite.log": "3a82019f313fb4dd2d4cc206019bafd5c8f2c469ebd3466e773384ef483b3814"
+  }
+}

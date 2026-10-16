@@ -1,0 +1,14 @@
+.........F.....
+======================================================================
+FAIL: test_same_requirement_id_with_new_conditions_invalidates_old_acceptance (test_release_readiness.ReleaseReadinessTests.test_same_requirement_id_with_new_conditions_invalidates_old_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p08-release/yl_player/tool/playback_benchmark/test_release_readiness.py", line 119, in test_same_requirement_id_with_new_conditions_invalidates_old_acceptance
+    with self.assertRaises(ValueError):self.check()
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 15 tests in 1.083s
+
+FAILED (failures=1)
