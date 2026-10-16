@@ -4,13 +4,14 @@ import YlFFmpegBridge
 /// Establishes codec incompatibility before AVPlayer commits a silent/frameless
 /// MP4. Failure to inspect does not remove a source's existing native route.
 enum YlMp4CompatibilityInspector {
-  /// Older AVFoundation cannot honor an inspected MP4 MIME override. Use
+  /// Older AVFoundation cannot honor an inspected MP4/MOV MIME override. Use
   /// owned samples for mismatched names, retaining codec validation at prepare.
   static func needsOwnedMIMEFallback(_ source: YlAppleSourceDescriptor,
     supportsMIMEOverride: Bool) -> Bool {
     guard !supportsMIMEOverride, let url = source.url,
-          source.formatHint == .mp4 else { return false }
-    return !["mp4", "m4v", "m4a"].contains(url.pathExtension.lowercased())
+          [YlSourceFormat.mp4, .mov].contains(source.formatHint) else { return false }
+    let names = source.formatHint == .mov ? ["mov", "qt"] : ["mp4", "m4v", "m4a"]
+    return !names.contains(url.pathExtension.lowercased())
   }
 
   static func requiresFallback(_ source: YlAppleSourceDescriptor,

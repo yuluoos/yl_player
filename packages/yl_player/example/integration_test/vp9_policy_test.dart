@@ -10,7 +10,7 @@ import 'support/range_media_server.dart';
 const _asset = 'assets/test_media/format_matrix/webm-vp9-opus.webm';
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('VP9 rejects strict resource policies explicitly', (
+  testWidgets('VP9 enforces strict resource policies during playback', (
     tester,
   ) async {
     final directory = await Directory.systemTemp.createTemp('yl_vp9_policy_');
@@ -22,18 +22,18 @@ void main() {
     final server = await RangeMediaServer.start(asset: _asset);
     final player = await appleController(tester);
     try {
-      await expectLater(
-        player.load(
-          YlFileSource(file.path),
-          options: const YlLoadOptions(bufferStrategy: strictBuffer),
-        ),
-        failureCode('policy.vp9_unsupported'),
+      await exercisePolicyPlayback(
+        player,
+        YlFileSource(file.path),
+        options: const YlLoadOptions(bufferStrategy: strictBuffer),
       );
-      await expectLater(
-        player.load(
-          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
+      await exercisePolicyPlayback(
+        player,
+        YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
+        options: const YlLoadOptions(
+          bufferStrategy: strictBuffer,
+          decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
         ),
-        failureCode('policy.vp9_unsupported'),
       );
     } finally {
       await player.dispose();

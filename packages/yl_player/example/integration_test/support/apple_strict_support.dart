@@ -56,3 +56,33 @@ Future<YlPlayerState> stateWhere(
       .firstWhere(matches)
       .timeout(const Duration(seconds: 15));
 }
+
+/// Exercises public policy admission and seek on the product-selected route.
+/// Native output tests separately verify PCM/pixels; timeline alone is not
+/// evidence of audible samples or physical presentation.
+Future<void> exercisePolicyPlayback(
+  YlPlayerController player,
+  YlMediaSource source, {
+  YlLoadOptions options = const YlLoadOptions(),
+}) async {
+  final session = await player.load(source, options: options);
+  await readyAndPlay(player, session);
+  await stateWhere(
+    player,
+    (s) => s.timeline.position > const Duration(milliseconds: 300),
+  );
+  if (options.decoderPolicyOverride == YlDecoderPolicy.hardwareRequired) {
+    expect(player.state.decoderMode.name, 'hardware');
+  }
+  await session.pause();
+  await session.seekTo(const Duration(milliseconds: 1250));
+  await session.play();
+  await stateWhere(
+    player,
+    (s) => s.timeline.position > const Duration(milliseconds: 1800),
+  );
+  expect(player.state.failure, isNull);
+  // Each policy case owns one hardware lease. A paused session still holds
+  // that lease; release it before the next case prepares hardware evidence.
+  await player.stop();
+}

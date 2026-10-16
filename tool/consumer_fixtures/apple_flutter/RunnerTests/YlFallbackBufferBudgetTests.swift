@@ -3,6 +3,18 @@ import XCTest
 import CoreMedia
 
 final class YlFallbackBufferBudgetTests: XCTestCase {
+  func testUnknownPrerollPacketDurationReservesDecoderOutputCeilingOnly() {
+    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 48000), 120000)
+    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 48000), 85334)
+    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 44100), 92880)
+    for rate in [0.0, -1, .infinity, .nan, 192000] {
+      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: rate))
+      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: rate))
+    }
+    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 44100))
+    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .aac, sampleRate: 48000))
+  }
+
   func testLowLatencyBudgetUsesSpecifiedCeilings() throws {
     let configuration = PlayerConfiguration(map: ["bufferMode": "lowLatency"])
 

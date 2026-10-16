@@ -32,13 +32,13 @@ final class YlProgramStreamTests: XCTestCase {
     var shortStuffing = mpeg2; shortStuffing[13] |= 7
     XCTAssertEqual(YlSourceInspector.format(Data(shortStuffing + [0xff])), .automatic)
   }
-  func testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection() {
+  func testProgramStreamSelectsOwnedFallbackWithManagedPolicy() {
     var source = YlAppleSourceDescriptor(uri: "file:///owned.mpg", kind: .file, formatHint: .mpegPs)
     let ordinary = YlEngineRouter.assess(source)
     XCTAssertEqual(ordinary.outcome, .requiresInspection)
     XCTAssertEqual(ordinary.engine, .managedFallback)
     source.networkPolicy = .managed
-    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
     source.networkPolicy = .platformDefault; source.intent = .live
     XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegps_live_unsupported")
   }
@@ -58,6 +58,11 @@ final class YlProgramStreamTests: XCTestCase {
   func testOlderOSUsesOwnedSamplesWhenMP4MIMEHintCannotBeHonored() {
     for name in ["video.bin", "video.mkv", "video"] {
       let source = YlAppleSourceDescriptor(uri: "file:///" + name, kind: .file, formatHint: .mp4)
+      XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
+      XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
+    }
+    for name in ["movie.bin", "movie.mkv", "movie.mp4", "movie"] {
+      let source = YlAppleSourceDescriptor(uri: "file:///" + name, kind: .file, formatHint: .mov)
       XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
       XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
     }

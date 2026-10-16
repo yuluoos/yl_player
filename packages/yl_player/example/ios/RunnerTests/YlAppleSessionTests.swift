@@ -884,7 +884,7 @@ extension YlAppleSessionTests {
     defer { server.close() }
     let fixture = AppleHostFixture(); defer { fixture.host.close() }
     let committed = try await fixture.host.load(request: AppleHostFixture.request("initial"))
-    for format in [AppleMediaFormat.hls, .mp4, .mov, .avi, .mpegTs, .mpegPs] {
+    for format in [AppleMediaFormat.hls] {
       var request = AppleHostFixture.request("strict", url: server.url.absoluteString, format: format)
       request.source.networkPolicy = .init(kind: .managed, connectTimeoutMs: 1000, readTimeoutMs: 1000,
         maxRetries: 1, baseRetryDelayMs: 1, maxRetryDelayMs: 2, maxRedirects: 2)
@@ -929,6 +929,35 @@ extension YlAppleSessionTests {
 }
 
 final class YlEngineAssessmentTests: XCTestCase {
+  func testProgressiveStrictPoliciesUseOwnedSamplesAndKeepHardwareUnprovenUntilPrepared() {
+    for kind: YlSourceKind in [.file, .network] {
+      for format: YlSourceFormat in [.mp4, .mov, .mpegTs, .mpegPs, .avi] {
+        for policy in 1...3 {
+          var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///owned/media" : "https://example.invalid/media", kind: kind, formatHint: format)
+          var options = YlAppleLoadOptions()
+          if policy == 1 { source.networkPolicy = .managed }
+          if policy == 2 { options.bufferStrategy = .bounded; options.minDurationMs = 100; options.maxDurationMs = 500; options.maxManagedBytes = 16 * 1024 * 1024 }
+          if policy == 3 { options.decoderPolicy = .hardwareRequired }
+          source.loadOptions = options
+          let result = YlEngineRouter.assess(source)
+          XCTAssertNil(result.rejection, "\(kind) \(format) \(policy)")
+          XCTAssertEqual(result.outcome, .requiresInspection)
+          XCTAssertEqual(result.engine, .managedFallback)
+          XCTAssertFalse(result.limitations.contains(.networkSystemStackOpaque))
+          XCTAssertFalse(result.satisfiedRequirements.contains(.decoderHardwareRequired))
+          if policy == 1 { XCTAssertTrue(result.satisfiedRequirements.contains(.networkManaged)) }
+          if policy == 2 { XCTAssertTrue(result.satisfiedRequirements.contains(.bufferBounded)) }
+          let missing = YlEngineRouter.assess(source, availability: .init())
+          XCTAssertEqual(missing.rejection?.code, "policy.unsupported")
+          if policy == 3 {
+            let denied = YlEngineRouter.assess(source, inspection: .init(format: format, demuxerSupported: true, codecsSupported: true, hasVideo: true, hardwareAccelerated: false))
+            XCTAssertEqual(denied.rejection?.code, "decoder.unavailable")
+          }
+        }
+      }
+    }
+  }
+
   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
 
   func testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes() {
@@ -943,7 +972,7 @@ final class YlEngineAssessmentTests: XCTestCase {
           if policy == 3 { options.decoderPolicy = .hardwareRequired }
           source.loadOptions = options
           let production = YlEngineRouter.assess(source)
-          if (policy > 0) && (format == .matroska || format == .webm || format == .flv) {
+          if (policy > 0) && (format != .hls) {
             XCTAssertEqual(production.outcome, .requiresInspection)
             if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
             else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }
@@ -952,7 +981,7 @@ final class YlEngineAssessmentTests: XCTestCase {
             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
           }
           let assessed = YlEngineRouter.assess(source, availability: enforcing)
-          let fallback = format == .matroska || (format == .flv && kind == .network) || ([YlSourceFormat.mpegTs, .avi].contains(format) && policy == 0)
+          let fallback = format == .matroska || (format == .flv && kind == .network) || [YlSourceFormat.mpegTs, .mpegPs, .avi].contains(format) || ([YlSourceFormat.mp4, .mov].contains(format) && policy > 0)
           let av = [.hls, .mp4, .mov].contains(format)
           if fallback {
             XCTAssertEqual(assessed.outcome, .requiresInspection)
@@ -1019,7 +1048,7 @@ final class YlEngineAssessmentTests: XCTestCase {
         else { XCTAssertEqual(result.engine, .managedFallback) }
       }
     }
-    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, intent: .live)
+    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, formatHint: .matroska, intent: .live)
     XCTAssertEqual(YlEngineRouter.assess(live).rejection?.code, "container.network_mkv_live_unsupported")
   }
 
@@ -1107,14 +1136,14 @@ extension YlAppleSessionTests {
 
 extension YlEngineAssessmentTests {
   func testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary() {
-    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network)
+    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network, formatHint: .matroska)
     source.loadOptions = YlAppleLoadOptions(bufferStrategy: .bounded, minDurationMs: 100,
       maxDurationMs: 500, maxManagedBytes: 16 * 1024 * 1024)
     let supported = YlEngineRouter.assess(source)
     XCTAssertEqual(supported.engine, .managedFallback)
     XCTAssertTrue(supported.satisfiedRequirements.contains(.bufferBounded))
     XCTAssertTrue(supported.limitations.contains(.bufferOsMemoryExcluded))
-    for format in [YlSourceFormat.hls, .mp4, .mov] {
+    for format in [YlSourceFormat.hls] {
       var system = source; system.formatHint = format
       XCTAssertEqual(YlEngineRouter.assess(system).rejection?.code, "policy.unsupported")
     }
@@ -1709,7 +1738,7 @@ private final class AppleThreadRecordingMessenger: NSObject, FlutterBinaryMessen
 
 @MainActor
 extension YlAppleSessionTests {
-  func testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
+  func testTransportStreamSignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
     for (stride, prefix) in [(188, 0), (192, 4), (204, 0)] {
       var bytes = Data(repeating: 0, count: stride * 3)
       for packet in 0..<3 {
@@ -1729,17 +1758,17 @@ extension YlAppleSessionTests {
       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegts_live_unsupported")
       source.intent = .onDemand
       source.networkPolicy = .managed
-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
       source.networkPolicy = .platformDefault
       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
     }
   }
 }
 
 @MainActor
 extension YlAppleSessionTests {
-  func testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
+  func testAVISignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
     XCTAssertEqual(YlSourceInspector.format(Data([0x52,0x49,0x46,0x46,0,0,0,0,0x41,0x56,0x49,0x20])), .avi)
     XCTAssertEqual(YlSourceInspector.format(Data("RIFF".utf8)), .automatic)
     for kind: YlSourceKind in [.file, .network] {
@@ -1750,10 +1779,10 @@ extension YlAppleSessionTests {
       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.avi_live_unsupported")
       source.intent = .onDemand
       source.networkPolicy = .managed
-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
       source.networkPolicy = .platformDefault
       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
     }
   }
 }

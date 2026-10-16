@@ -80,9 +80,6 @@ enum YlEngineRouter {
         satisfiedRequirements: [], limitations: [.sourceRequiresInspection], rejection: nil)
     }
     let format = inspection?.format ?? hinted
-    if [YlSourceFormat.mpegPs, .mpegTs, .avi].contains(format) && strict {
-      return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
-    }
     if format == .avi && source.isLive {
       return reject("container", "container.avi_live_unsupported")
     }
@@ -98,7 +95,11 @@ enum YlEngineRouter {
     if format == .dash && (bounded || source.kind != .network || source.isLive) {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
     }
-    let av = [YlSourceFormat.hls, .mp4, .mov].contains(format)
+    // Strict progressive policies require owned bytes, decoder evidence and
+    // output accounting. Never advertise these guarantees for opaque AVPlayer.
+    let ownedMp4 = strict && [YlSourceFormat.mp4, .mov].contains(format)
+    if ownedMp4 && source.isLive { return reject("container", "container.unsupported") }
+    let av = [YlSourceFormat.hls, .mp4, .mov].contains(format) && !ownedMp4
     if strict && (av || (managed && !availability.managedNetwork) ||
         (bounded && !availability.boundedBuffer) || (hardware && !availability.hardwareEvidence)) {
       return reject("unsupported", "policy.unsupported")
@@ -158,7 +159,7 @@ enum YlEngineRouter {
       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
     }
     if inspection == nil { limitations.append(.codecRequiresInspection) }
-    let route: YlAppleSourceRoute = format == .avi ? .avi
+    let route: YlAppleSourceRoute = ownedMp4 ? .progressiveMp4 : format == .avi ? .avi
       : format == .mpegPs ? .programStream
       : format == .mpegTs ? .transportStream
       : format == .flv ? .networkFlv : (source.kind == .file ? .localMatroska : .networkMatroska)

@@ -100,6 +100,7 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
     // Real platform output and consumed audio clock; record the decoded PCM
     // without replacing the device output with a fabricated completion clock.
     pcm = ContainerPCM()
+    pcm.converter.bufferScope = bufferBudget.bufferScope
     let created = YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
     renderer = created; return created
   }
@@ -164,11 +165,29 @@ private struct ContainerReference: Decodable {
 }
 
 @MainActor final class YlContainerOutputTests: XCTestCase {
-  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false) async throws {
-    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
+  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false, strictAsset: String? = nil) async throws {
+    let url: URL
+    if let strictAsset {
+      let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+      let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+      url = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/format_matrix/" + strictAsset)
+    } else { url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext)) }
     let bound = try ContainerBoundAV(name: name, media: url)
     defer { bound?.attach(to: self) }
-    let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: format), requireHardwareProbe: false)
+    let server = strictAsset == nil ? nil : try ReactivationMediaServer(data: Data(contentsOf: url))
+    defer { server?.close() }
+    let ledger = YlManagedBufferLedger(maxBytes: 16 * 1024 * 1024)
+    let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
+    var source = YlAppleSourceDescriptor(uri: server?.url.absoluteString ?? url.absoluteString,
+      kind: server == nil ? .file : .network, formatHint: format)
+    if strictAsset != nil {
+      source.networkPolicy = .managed
+      source.loadOptions = .init(bufferStrategy: .bounded, minDurationMs: 100, maxDurationMs: 2000,
+        maxManagedBytes: 16 * 1024 * 1024, decoderPolicy: .hardwareRequired)
+      source.bufferScope = scope
+      XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
+    }
+    let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)
     if channels == 6 {
       let stream = try XCTUnwrap(prepared.audioStreams.first)
       XCTAssertEqual(stream.channel_count, 6)
@@ -184,7 +203,10 @@ private struct ContainerReference: Decodable {
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
       audioRendererFactory: audio, emit: { callback in
         if case .state(let value) = callback.event { state = value }
-        if case .failure(let error) = callback.event { errors.append(error) }
+        if case .failure(let error) = callback.event {
+          errors.append(error)
+          if let strictAsset { print("P03_STRICT \(strictAsset): \(error.code) \(error.diagnostic ?? "none") \(scope.timingDiagnostic) \(ledger.snapshot.categories)") }
+        }
       })
       try initial?.activate()
     } catch {
@@ -229,7 +251,30 @@ private struct ContainerReference: Decodable {
       bound?.capture(audio.pcm.evidence, markers: [Int(target / 1000)])
     }
     backend.stop(); backend.dispose(); backend.dispose()
+    if strictAsset != nil {
+      XCTAssertGreaterThan(ledger.snapshot.peakBytes, 0)
+      XCTAssertLessThanOrEqual(ledger.snapshot.peakBytes, 16 * 1024 * 1024)
+      // VT callbacks can retire asynchronously after invalidate. Do not erase
+      // their reservations; wait for the actual ownership release with a bound.
+      for _ in 0..<100 where ledger.snapshot.currentBytes != 0 { try await Task.sleep(nanoseconds: 10_000_000) }
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0, "\(strictAsset ?? name): \(ledger.snapshot.categories)")
+    }
     bound?.outcome = "passed"; bound?.failureCode = ""
+  }
+  func testStrictProgressiveManagedBoundedHardwareActualOutputs() async throws {
+    for (file, format): (String, YlSourceFormat) in [
+      ("mp4-avc-aac.mp4", .mp4), ("mov-hevc-aac.mov", .mov),
+      ("ts-avc-ac3.ts", .mpegTs), ("ps-avc-mp3.mpg", .mpegPs), ("avi-avc-mp3.avi", .avi)] {
+      try await checkOutput(name: file, ext: "", format: format, strictAsset: file)
+    }
+  }
+  func testStrictVP9ManagedBoundedHardwareActualOutputs() async throws {
+    try await checkOutput(name: "webm-vp9-vorbis", ext: "webm", format: .webm, strictAsset: "webm-vp9-vorbis.webm")
+  }
+  func testStrictOpusVorbisManagedBoundedHardwareActualOutputs() async throws {
+    for (file, channels) in [("mkv-avc-opus.mkv", 2), ("mkv-avc-opus-silk.mkv", 1), ("mkv-avc-opus-hybrid.mkv", 1), ("mkv-avc-vorbis.mkv", 2), ("mkv-avc-vorbis-codec-delay.mkv", 2)] {
+      try await checkOutput(name: file, ext: "", format: .matroska, channels: channels, strictAsset: file)
+    }
   }
   func testProgramStreamActualPixelsPCMAndBidirectionalSeek() async throws {
     do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs, allowSimulatorHardwareSkip: true) }

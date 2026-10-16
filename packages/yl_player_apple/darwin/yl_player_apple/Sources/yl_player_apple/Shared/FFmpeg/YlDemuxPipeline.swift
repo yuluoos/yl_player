@@ -337,6 +337,14 @@ final class YlDemuxPipeline {
       packetDuration = ylBoundedAACPacketDurationUs(sampleRate: Double(stream.sample_rate),
         cookie: audioCookies[stream.index] ?? Data()) ?? 0
     }
+    // Keep unknown source duration unchanged in the compressed packet. Only
+    // the bounded queue uses a conservative decoder cap until actual PCM exists.
+    var reservationDuration = packetDuration
+    if bufferBudget.boundedPlan != nil, packetDuration <= 0,
+       let stream = selectedAudioStream, stream.index == streamIndex {
+      reservationDuration = ylBoundedPrerollPacketDurationUs(
+        codec: YlAudioCodec(bridgeCodec: stream.codec), sampleRate: Double(stream.sample_rate)) ?? packetDuration
+    }
     let packetReservation = bufferBudget.bufferScope?.reserve(category: .compressedPackets, bytes: ylf_packet_size(ownedPacket))
     guard bufferBudget.bufferScope == nil || packetReservation != nil else {
       ylf_packet_release(&packet); output.setDemuxPumping(false)
@@ -344,11 +352,11 @@ final class YlDemuxPipeline {
     }
     defer { withExtendedLifetime(packetReservation) {} }
     let packetPTS = ylf_packet_pts_us(ownedPacket) == Int64.min ? ylf_packet_dts_us(ownedPacket) : ylf_packet_pts_us(ownedPacket)
-    guard packetReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration) ?? true else {
+    guard packetReservation?.carryTiming(ptsUs: packetPTS, durationUs: reservationDuration) ?? true else {
       let error = YlManagedBufferLedger.unsupported("packet timing pts=\(packetPTS) duration=\(packetDuration) \(bufferBudget.bufferScope?.timingDiagnostic ?? "")")
       ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(error); return
     }
-    bufferBudget.bufferScope?.observePacketDuration(packetDuration, ptsUs: packetPTS)
+    bufferBudget.bufferScope?.observePacketDuration(reservationDuration, ptsUs: packetPTS)
     if mediaPolicy.requiresInitialVideoKeyframe {
       let isVideo = streamIndex == videoStream.index
       let accepted = lock.withLock {
@@ -373,7 +381,7 @@ final class YlDemuxPipeline {
       guard bufferBudget.bufferScope == nil || audioReservation != nil else {
         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
       }
-      guard audioReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration, from: packetReservation) ?? true else {
+      guard audioReservation?.carryTiming(ptsUs: packetPTS, durationUs: reservationDuration, from: packetReservation) ?? true else {
         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
       }
       let isOpus = Int(selectedAudioStream?.codec ?? 0) == YLFCodecOpus

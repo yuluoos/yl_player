@@ -663,7 +663,10 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
   func testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo() async throws {
     try await runTerminalEOF(videoLimitUs: 500000)
   }
-  private func runTerminalEOF(audioLimitUs: Int64? = nil, videoLimitUs: Int64? = nil) async throws {
+  func testTerminalSessionLatePausePlayPreservesCompletedUntilSeek() async throws {
+    try await runTerminalEOF(controlsAfterEOF: true)
+  }
+  private func runTerminalEOF(audioLimitUs: Int64? = nil, videoLimitUs: Int64? = nil, controlsAfterEOF: Bool = false) async throws {
     let (prepared, _) = try terminalPrepared()
     let factory = TerminalFactory(), video = Factory(), display = BoundedDisplay(), output = Output()
     video.automaticFrames = true; video.automaticFrameLimitUs = videoLimitUs
@@ -689,6 +692,17 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     }
     XCTAssertTrue(failures.isEmpty, "\(failures)")
     XCTAssertTrue(completed); XCTAssertGreaterThan(output.published, 0)
+    if controlsAfterEOF {
+      // A control sent before the asynchronous completed snapshot reaches Dart
+      // can arrive after EOF. It must not resurrect a fully drained generation.
+      try instance.pause()
+      XCTAssertTrue(completed, "Late pause replaced completed")
+      try instance.play(); display.advance(); instance.emitState()
+      XCTAssertTrue(completed, "Late play resurrected a drained generation")
+      try await Task.detached { try instance.seek(toMs: 0, cancellationToken: nil) }.value
+      try instance.play(); display.advance(); instance.emitState()
+      XCTAssertFalse(completed, "An explicit seek must permit replay")
+    }
   }
 
   private func prepared(_ token: YlOpenCancellationToken? = nil, policy: YlDecoderPolicy? = nil) throws -> YlPreparedFallback {

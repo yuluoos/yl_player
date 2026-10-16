@@ -685,3 +685,6 @@ JS-07 仅固定受控测试时钟，保留原脚本和历史摘要。TVS 新增�
 2026-10-16 P08 Task D离线汇总入口完成：33组CAP/ERR/REG×三平台及性能/消费者/远程CI共102行，独立实现/验证状态、需求与证据hash、511文件产品身份和完整验收声明校验。当前整组通过0，发布就绪false；历史子项通过、已知失败和外部缺项均保留。未占用设备、未重跑长播、未编造性能目标或提升平台支持；P08整体仍开放，见[P08报告](../reports/2026-09-26-remaining-08-performance-release.md)和[检查器](../../../tool/release_readiness/README.md)。
 
 2026-10-16 P07生产增量：完成现有FEL schema v1准入/数值与L1/L5/L6字段、空L5区域检查，以及损坏/不支持/探测资源错误的正式分类。宿主metadata34、公有封装14及pairing通过，完整Python发现35通过/1既有GPU跳过；Apple145份Swift按macOS12/iOS15类型检查。无设备或GPU调用。完整CM/trim/目标显示映射与原生信号仍未完成；用户补充样本线索待实际文件核验，不能作为独立目标参考。详见P07最新报告。本次源码变动使P08历史source快照不匹配，未提升任何联合验收状态。
+
+
+2026-10-16 P03工程收尾：严格progressive与Opus/Vorbis/VP9策略路径及EOF竞争依赖已实现，macOS原生108/iOS共用39项通过，最终同构建公开完整矩阵37/40。AV1当前硬件、AVPlayer硬件消费观测和物理/最低系统/Intel/持续热资格仍开放，生产软件准入保持关闭；不将完整CAP标完成。见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。

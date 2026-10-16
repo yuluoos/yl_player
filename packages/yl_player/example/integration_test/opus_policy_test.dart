@@ -35,7 +35,7 @@ int _uniqueOffset(Uint8List data, List<int> pattern) {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Opus strict policies and live intent reject explicitly', (
+  testWidgets('Opus strict policies play while live intent remains rejected', (
     tester,
   ) async {
     final directory = await Directory.systemTemp.createTemp('yl_opus_policy_');
@@ -50,16 +50,15 @@ void main() {
           decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
         ),
       ]) {
-        await expectLater(
-          player.load(YlFileSource(file.path), options: options),
-          failureCode('policy.opus_unsupported'),
+        await exercisePolicyPlayback(
+          player,
+          YlFileSource(file.path),
+          options: options,
         );
       }
-      await expectLater(
-        player.load(
-          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
-        ),
-        failureCode('policy.opus_unsupported'),
+      await exercisePolicyPlayback(
+        player,
+        YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
       );
       await expectLater(
         player.load(
@@ -74,6 +73,38 @@ void main() {
       await directory.delete(recursive: true);
     }
   });
+  testWidgets(
+    'Completed Opus session ignores late controls until explicit seek',
+    (tester) async {
+      final directory = await Directory.systemTemp.createTemp('yl_opus_eof_');
+      final file = await File(
+        '${directory.path}/clip.mkv',
+      ).writeAsBytes(await _bytes());
+      final player = await appleController(tester);
+      try {
+        final session = await player.load(YlFileSource(file.path));
+        await readyAndPlay(player, session);
+        await stateWhere(player, (s) => s.status == YlPlaybackStatus.completed);
+        await session.pause();
+        await session.play();
+        await stateWhere(player, (s) => s.status == YlPlaybackStatus.completed);
+        await session.seekTo(Duration.zero);
+        await session.play();
+        await stateWhere(
+          player,
+          (s) =>
+              s.status == YlPlaybackStatus.playing &&
+              s.timeline.position > const Duration(milliseconds: 300) &&
+              s.timeline.position < const Duration(milliseconds: 1500),
+        );
+        expect(player.state.failure, isNull);
+      } finally {
+        await player.dispose();
+        await tester.pumpWidget(const SizedBox.shrink());
+        await directory.delete(recursive: true);
+      }
+    },
+  );
   testWidgets(
     'Invalid Opus header preserves current playback and hides input identity',
     (tester) async {
@@ -115,7 +146,7 @@ void main() {
     },
   );
   testWidgets(
-    'Mixed AAC switches to Opus and back while strict policies retain AAC',
+    'Mixed AAC switches to Opus and back under default and strict policies',
     (tester) async {
       final directory = await Directory.systemTemp.createTemp('yl_opus_mixed_');
       final data = await rootBundle.load(
@@ -168,7 +199,26 @@ void main() {
           options: const YlLoadOptions(bufferStrategy: strictBuffer),
         );
         await readyAndPlay(player, strict);
-        expect(player.state.audioTracks, hasLength(1));
+        expect(player.state.audioTracks, hasLength(2));
+        final strictOther = player.state.audioTracks
+            .singleWhere((t) => !t.isSelected)
+            .id;
+        await strict.pause();
+        await strict.seekTo(const Duration(milliseconds: 1250));
+        await strict.selectAudioTrack(strictOther);
+        await stateWhere(
+          player,
+          (s) => s.audioTracks.any((t) => t.id == strictOther && t.isSelected),
+        );
+        expect(
+          player.state.audioTracks.singleWhere((t) => t.isSelected).id,
+          strictOther,
+        );
+        await strict.play();
+        await stateWhere(
+          player,
+          (s) => s.timeline.position > const Duration(milliseconds: 1800),
+        );
         expect(player.state.failure, isNull);
       } finally {
         await player.dispose();

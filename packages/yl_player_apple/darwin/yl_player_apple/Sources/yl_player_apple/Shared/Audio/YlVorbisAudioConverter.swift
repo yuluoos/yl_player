@@ -17,7 +17,7 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
   var bufferScope: YlManagedBufferScope?
   private var decoder: YLFVorbisDecoderRef?
   private(set) var pcmFormat: AVAudioFormat?
-  private let maximumFrames = 4096
+  static let maximumFrames = 4096
 
   func configure(stream: YlAudioStreamConfiguration) throws {
     guard stream.codec == .vorbis, [44100.0, 48000.0].contains(stream.sampleRate),
@@ -34,8 +34,8 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
     // Fixed maximum before decoding, regardless of untrusted packet duration.
-    .init(durationUs: Int64(ceil(Double(maximumFrames) * 1_000_000 / (pcmFormat?.sampleRate ?? 44100))),
-      byteCount: maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
+    .init(durationUs: Int64(ceil(Double(Self.maximumFrames) * 1_000_000 / (pcmFormat?.sampleRate ?? 44100))),
+      byteCount: Self.maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
@@ -43,14 +43,14 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
           packet.data.count <= 65536, packet.skipSamples == 0, packet.ptsUs != Int64.min else { throw ylVorbisPacketError() }
     let channelCount = Int(format.channelCount)
     let packetCopy = try bufferScope?.require(category: .compressedPackets, bytes: packet.data.count + 64)
-    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: maximumFrames * channelCount * 4)
+    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: Self.maximumFrames * channelCount * 4)
     defer { withExtendedLifetime((packetCopy, scratch)) {} }
-    var samples = [Float](repeating: 0, count: maximumFrames * channelCount)
+    var samples = [Float](repeating: 0, count: Self.maximumFrames * channelCount)
     var frames: Int32 = 0
     let result = samples.withUnsafeMutableBufferPointer { output in
       packet.data.withUnsafeBytes { input in
         ylf_vorbis_decode(decoder, input.bindMemory(to: UInt8.self).baseAddress, input.count,
-          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(maximumFrames), &frames)
+          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(Self.maximumFrames), &frames)
       }
     }
     if result == YLFResultAudioConfigurationUnsupported { throw ylVorbisUnsupportedError() }

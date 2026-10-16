@@ -11,6 +11,8 @@ enum YlAppleSourceRoute: Equatable {
   case networkMatroska
   case networkFlv
   case networkRtmp
+  /// Owned MP4/MOV samples enforce strict policies through the common fallback.
+  case progressiveMp4
   case avi
   case programStream
   case transportStream

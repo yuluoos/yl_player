@@ -1,0 +1,1812 @@
+diff --git a/packages/yl_player/example/integration_test/opus_policy_test.dart b/packages/yl_player/example/integration_test/opus_policy_test.dart
+index 01288bc..e0365ba 100644
+--- a/packages/yl_player/example/integration_test/opus_policy_test.dart
++++ b/packages/yl_player/example/integration_test/opus_policy_test.dart
+@@ -35,7 +35,7 @@ int _uniqueOffset(Uint8List data, List<int> pattern) {
+ 
+ void main() {
+   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+-  testWidgets('Opus strict policies and live intent reject explicitly', (
++  testWidgets('Opus strict policies play while live intent remains rejected', (
+     tester,
+   ) async {
+     final directory = await Directory.systemTemp.createTemp('yl_opus_policy_');
+@@ -50,16 +50,15 @@ void main() {
+           decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+         ),
+       ]) {
+-        await expectLater(
+-          player.load(YlFileSource(file.path), options: options),
+-          failureCode('policy.opus_unsupported'),
++        await exercisePolicyPlayback(
++          player,
++          YlFileSource(file.path),
++          options: options,
+         );
+       }
+-      await expectLater(
+-        player.load(
+-          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
+-        ),
+-        failureCode('policy.opus_unsupported'),
++      await exercisePolicyPlayback(
++        player,
++        YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
+       );
+       await expectLater(
+         player.load(
+diff --git a/packages/yl_player/example/integration_test/support/apple_strict_support.dart b/packages/yl_player/example/integration_test/support/apple_strict_support.dart
+index 0af05aa..eb0a49f 100644
+--- a/packages/yl_player/example/integration_test/support/apple_strict_support.dart
++++ b/packages/yl_player/example/integration_test/support/apple_strict_support.dart
+@@ -56,3 +56,31 @@ Future<YlPlayerState> stateWhere(
+       .firstWhere(matches)
+       .timeout(const Duration(seconds: 15));
+ }
++
++/// Exercises public policy admission and seek on the product-selected route.
++/// Native output tests separately verify PCM/pixels; timeline alone is not
++/// evidence of audible samples or physical presentation.
++Future<void> exercisePolicyPlayback(
++  YlPlayerController player,
++  YlMediaSource source, {
++  YlLoadOptions options = const YlLoadOptions(),
++}) async {
++  final session = await player.load(source, options: options);
++  await readyAndPlay(player, session);
++  await stateWhere(
++    player,
++    (s) => s.timeline.position > const Duration(milliseconds: 300),
++  );
++  if (options.decoderPolicyOverride == YlDecoderPolicy.hardwareRequired) {
++    expect(player.state.decoderMode.name, 'hardware');
++  }
++  await session.pause();
++  await session.seekTo(const Duration(milliseconds: 1250));
++  await session.play();
++  await stateWhere(
++    player,
++    (s) => s.timeline.position > const Duration(milliseconds: 1800),
++  );
++  expect(player.state.failure, isNull);
++  await session.pause();
++}
+diff --git a/packages/yl_player/example/integration_test/vorbis_policy_test.dart b/packages/yl_player/example/integration_test/vorbis_policy_test.dart
+index 7d5a4a0..698e8a4 100644
+--- a/packages/yl_player/example/integration_test/vorbis_policy_test.dart
++++ b/packages/yl_player/example/integration_test/vorbis_policy_test.dart
+@@ -35,61 +35,58 @@ int _uniqueOffset(Uint8List data, List<int> pattern) {
+ 
+ void main() {
+   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+-  testWidgets('Vorbis strict policies and live intent reject explicitly', (
+-    tester,
+-  ) async {
+-    final directory = await Directory.systemTemp.createTemp(
+-      'yl_vorbis_policy_',
+-    );
+-    final file = File('${directory.path}/clip.mkv');
+-    await file.writeAsBytes(await _bytes());
+-    final server = await RangeMediaServer.start(asset: _asset);
+-    final player = await appleController(tester);
+-    try {
+-      final delayed = await rootBundle.load(
+-        'assets/test_media/format_matrix/mkv-avc-vorbis-codec-delay.mkv',
+-      );
+-      final delayedFile = File('${directory.path}/codec-delay.mkv');
+-      await delayedFile.writeAsBytes(
+-        delayed.buffer.asUint8List(
+-          delayed.offsetInBytes,
+-          delayed.lengthInBytes,
+-        ),
+-      );
+-      await expectLater(
+-        player.load(YlFileSource(delayedFile.path)),
+-        failureCode('decoder.audio_vorbis_unsupported'),
++  testWidgets(
++    'Vorbis strict policies play while live intent remains rejected',
++    (tester) async {
++      final directory = await Directory.systemTemp.createTemp(
++        'yl_vorbis_policy_',
+       );
+-      for (final options in [
+-        const YlLoadOptions(bufferStrategy: strictBuffer),
+-        const YlLoadOptions(
+-          decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+-        ),
+-      ]) {
++      final file = File('${directory.path}/clip.mkv');
++      await file.writeAsBytes(await _bytes());
++      final server = await RangeMediaServer.start(asset: _asset);
++      final player = await appleController(tester);
++      try {
++        final delayed = await rootBundle.load(
++          'assets/test_media/format_matrix/mkv-avc-vorbis-codec-delay.mkv',
++        );
++        final delayedFile = File('${directory.path}/codec-delay.mkv');
++        await delayedFile.writeAsBytes(
++          delayed.buffer.asUint8List(
++            delayed.offsetInBytes,
++            delayed.lengthInBytes,
++          ),
++        );
++        await exercisePolicyPlayback(player, YlFileSource(delayedFile.path));
++        for (final options in [
++          const YlLoadOptions(bufferStrategy: strictBuffer),
++          const YlLoadOptions(
++            decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
++          ),
++        ]) {
++          await exercisePolicyPlayback(
++            player,
++            YlFileSource(file.path),
++            options: options,
++          );
++        }
++        await exercisePolicyPlayback(
++          player,
++          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
++        );
+         await expectLater(
+-          player.load(YlFileSource(file.path), options: options),
+-          failureCode('policy.vorbis_unsupported'),
++          player.load(
++            YlNetworkSource(server.mediaUri, intent: YlStreamIntent.live),
++          ),
++          failureCode('container.network_mkv_live_unsupported'),
+         );
++      } finally {
++        await player.dispose();
++        await server.close();
++        await tester.pumpWidget(const SizedBox.shrink());
++        await directory.delete(recursive: true);
+       }
+-      await expectLater(
+-        player.load(
+-          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
+-        ),
+-        failureCode('policy.vorbis_unsupported'),
+-      );
+-      await expectLater(
+-        player.load(
+-          YlNetworkSource(server.mediaUri, intent: YlStreamIntent.live),
+-        ),
+-        failureCode('container.network_mkv_live_unsupported'),
+-      );
+-    } finally {
+-      await player.dispose();
+-      await server.close();
+-      await tester.pumpWidget(const SizedBox.shrink());
+-      await directory.delete(recursive: true);
+-    }
+-  });
++    },
++  );
+   testWidgets(
+     'Invalid Vorbis header preserves current playback and hides input identity',
+     (tester) async {
+diff --git a/packages/yl_player/example/integration_test/vp9_policy_test.dart b/packages/yl_player/example/integration_test/vp9_policy_test.dart
+index 95b04d6..712059b 100644
+--- a/packages/yl_player/example/integration_test/vp9_policy_test.dart
++++ b/packages/yl_player/example/integration_test/vp9_policy_test.dart
+@@ -10,7 +10,7 @@ import 'support/range_media_server.dart';
+ const _asset = 'assets/test_media/format_matrix/webm-vp9-opus.webm';
+ void main() {
+   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+-  testWidgets('VP9 rejects strict resource policies explicitly', (
++  testWidgets('VP9 enforces strict resource policies during playback', (
+     tester,
+   ) async {
+     final directory = await Directory.systemTemp.createTemp('yl_vp9_policy_');
+@@ -22,18 +22,18 @@ void main() {
+     final server = await RangeMediaServer.start(asset: _asset);
+     final player = await appleController(tester);
+     try {
+-      await expectLater(
+-        player.load(
+-          YlFileSource(file.path),
+-          options: const YlLoadOptions(bufferStrategy: strictBuffer),
+-        ),
+-        failureCode('policy.vp9_unsupported'),
++      await exercisePolicyPlayback(
++        player,
++        YlFileSource(file.path),
++        options: const YlLoadOptions(bufferStrategy: strictBuffer),
+       );
+-      await expectLater(
+-        player.load(
+-          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
++      await exercisePolicyPlayback(
++        player,
++        YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
++        options: const YlLoadOptions(
++          bufferStrategy: strictBuffer,
++          decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+         ),
+-        failureCode('policy.vp9_unsupported'),
+       );
+     } finally {
+       await player.dispose();
+diff --git a/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift b/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift
+index 909d981..626cf4b 100644
+--- a/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift
++++ b/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift
+@@ -328,11 +328,11 @@ final class YlAppleRegistryTests: XCTestCase {
+       }
+     }
+     XCTAssertEqual(allocations, 0)
+-    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 6,
++    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 7,
+       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
+         audioPolicy: .appManaged, positionUpdateIntervalMs: 0))))
+     XCTAssertEqual(allocations, 0)
+-    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 6,
++    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 7,
+       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
+         audioPolicy: .appManaged, positionUpdateIntervalMs: 5000)))
+     XCTAssertEqual(allocations, 1)
+@@ -352,7 +352,7 @@ final class YlAppleRegistryTests: XCTestCase {
+     }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
+       lifecycle: lifecycle)
+     defer { registry.detach() }
+-    let created = try registry.create(request: .init(schemaMajor: 6,
++    let created = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged,
+         positionUpdateIntervalMs: 500)))
+     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+@@ -397,6 +397,7 @@ final class AppleRecordingCallbacks: ApplePlayerFlutterApiProtocol {
+   var failures = [ApplePlaybackFailedMessage]()
+   var order = [String]()
+   var acknowledge: (() async throws -> Void)?
++  func onNetworkBytesReceived(loadRequestId: String, bytes: Int64?) async throws {}
+   func onState(state: AppleStateMessage) async throws { states.append(state); order.append("state"); try await acknowledge?() }
+   func onStateDelta(delta: AppleStateDeltaMessage) async throws { deltas.append(delta); order.append("delta"); try await acknowledge?() }
+   func onFirstFrame(event: AppleFirstFrameMessage) async throws { frames.append(event); order.append("frame"); try await acknowledge?() }
+@@ -647,7 +648,7 @@ final class YlAppleHostDeliveryTests: XCTestCase {
+     let registry = YlApplePlayerRegistry(makeServices: { _ in textures.services() },
+       makeCallbacks: { _ in callbacks }, installHost: { suffix, host in if host == nil { removed.append(suffix) } })
+     defer { registry.detach() }
+-    let created = try registry.create(request: .init(schemaMajor: 6,
++    let created = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100)))
+     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+     XCTAssertTrue(callbacks.states.isEmpty, "Create stays silent until attach")
+@@ -863,7 +864,7 @@ extension YlAppleSessionTests {
+     defer { server.close() }
+     let fixture = AppleHostFixture(); defer { fixture.host.close() }
+     let committed = try await fixture.host.load(request: AppleHostFixture.request("initial"))
+-    for format in [AppleMediaFormat.hls, .mp4, .mov, .avi, .mpegTs, .mpegPs] {
++    for format in [AppleMediaFormat.hls] {
+       var request = AppleHostFixture.request("strict", url: server.url.absoluteString, format: format)
+       request.source.networkPolicy = .init(kind: .managed, connectTimeoutMs: 1000, readTimeoutMs: 1000,
+         maxRetries: 1, baseRetryDelayMs: 1, maxRetryDelayMs: 2, maxRedirects: 2)
+@@ -908,6 +909,35 @@ extension YlAppleSessionTests {
+ }
+ 
+ final class YlEngineAssessmentTests: XCTestCase {
++  func testProgressiveStrictPoliciesUseOwnedSamplesAndKeepHardwareUnprovenUntilPrepared() {
++    for kind: YlSourceKind in [.file, .network] {
++      for format: YlSourceFormat in [.mp4, .mov, .mpegTs, .mpegPs, .avi] {
++        for policy in 1...3 {
++          var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///owned/media" : "https://example.invalid/media", kind: kind, formatHint: format)
++          var options = YlAppleLoadOptions()
++          if policy == 1 { source.networkPolicy = .managed }
++          if policy == 2 { options.bufferStrategy = .bounded; options.minDurationMs = 100; options.maxDurationMs = 500; options.maxManagedBytes = 16 * 1024 * 1024 }
++          if policy == 3 { options.decoderPolicy = .hardwareRequired }
++          source.loadOptions = options
++          let result = YlEngineRouter.assess(source)
++          XCTAssertNil(result.rejection, "\(kind) \(format) \(policy)")
++          XCTAssertEqual(result.outcome, .requiresInspection)
++          XCTAssertEqual(result.engine, .managedFallback)
++          XCTAssertFalse(result.limitations.contains(.networkSystemStackOpaque))
++          XCTAssertFalse(result.satisfiedRequirements.contains(.decoderHardwareRequired))
++          if policy == 1 { XCTAssertTrue(result.satisfiedRequirements.contains(.networkManaged)) }
++          if policy == 2 { XCTAssertTrue(result.satisfiedRequirements.contains(.bufferBounded)) }
++          let missing = YlEngineRouter.assess(source, availability: .init())
++          XCTAssertEqual(missing.rejection?.code, "policy.unsupported")
++          if policy == 3 {
++            let denied = YlEngineRouter.assess(source, inspection: .init(format: format, demuxerSupported: true, codecsSupported: true, hasVideo: true, hardwareAccelerated: false))
++            XCTAssertEqual(denied.rejection?.code, "decoder.unavailable")
++          }
++        }
++      }
++    }
++  }
++
+   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
+ 
+   func testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes() {
+@@ -922,7 +952,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+           if policy == 3 { options.decoderPolicy = .hardwareRequired }
+           source.loadOptions = options
+           let production = YlEngineRouter.assess(source)
+-          if (policy > 0) && (format == .matroska || format == .webm || format == .flv) {
++          if (policy > 0) && (format != .hls) {
+             XCTAssertEqual(production.outcome, .requiresInspection)
+             if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
+             else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }
+@@ -931,7 +961,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
+           }
+           let assessed = YlEngineRouter.assess(source, availability: enforcing)
+-          let fallback = format == .matroska || (format == .flv && kind == .network) || ([YlSourceFormat.mpegTs, .avi].contains(format) && policy == 0)
++          let fallback = format == .matroska || (format == .flv && kind == .network) || [YlSourceFormat.mpegTs, .mpegPs, .avi].contains(format) || ([YlSourceFormat.mp4, .mov].contains(format) && policy > 0)
+           let av = [.hls, .mp4, .mov].contains(format)
+           if fallback {
+             XCTAssertEqual(assessed.outcome, .requiresInspection)
+@@ -998,7 +1028,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+         else { XCTAssertEqual(result.engine, .managedFallback) }
+       }
+     }
+-    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, intent: .live)
++    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, formatHint: .matroska, intent: .live)
+     XCTAssertEqual(YlEngineRouter.assess(live).rejection?.code, "container.network_mkv_live_unsupported")
+   }
+ 
+@@ -1086,14 +1116,14 @@ extension YlAppleSessionTests {
+ 
+ extension YlEngineAssessmentTests {
+   func testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary() {
+-    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network)
++    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network, formatHint: .matroska)
+     source.loadOptions = YlAppleLoadOptions(bufferStrategy: .bounded, minDurationMs: 100,
+       maxDurationMs: 500, maxManagedBytes: 16 * 1024 * 1024)
+     let supported = YlEngineRouter.assess(source)
+     XCTAssertEqual(supported.engine, .managedFallback)
+     XCTAssertTrue(supported.satisfiedRequirements.contains(.bufferBounded))
+     XCTAssertTrue(supported.limitations.contains(.bufferOsMemoryExcluded))
+-    for format in [YlSourceFormat.hls, .mp4, .mov] {
++    for format in [YlSourceFormat.hls] {
+       var system = source; system.formatHint = format
+       XCTAssertEqual(YlEngineRouter.assess(system).rejection?.code, "policy.unsupported")
+     }
+@@ -1141,7 +1171,7 @@ final class YlAudioOwnershipTests: XCTestCase {
+       makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in }, audioOwnership: coordinator)
+   }
+   func create(_ registry: YlApplePlayerRegistry, managed: Bool = true) throws -> YlApplePlayerHost {
+-    let reply = try registry.create(request: .init(schemaMajor: 6,
++    let reply = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: managed ? .pluginManagedMediaPlayback : .appManaged, positionUpdateIntervalMs: 100)))
+     return try XCTUnwrap(registry.host(for: reply.channelSuffix))
+   }
+@@ -1436,6 +1466,40 @@ final class YlAvPlayerNonblockingMetadataTests: XCTestCase {
+ }
+ 
+ final class YlGeometryAndMetricTests: XCTestCase {
++  func testNetworkTrafficIsCumulativeAcrossMediaGenerationsAndSeparatePerLoad() throws {
++    let ledger = YlManagedBufferLedger()
++    let scope = try ledger.makeScope(maxBytes: nil)
++    let collector = YlMetricsCollector(scope: scope)
++    XCTAssertNil(collector.snapshot.networkBytesReceived)
++    scope.recordNetworkBytes(0)
++    XCTAssertEqual(collector.snapshot.networkBytesReceived, 0)
++    scope.recordNetworkBytes(512)
++    scope.beginMediaGeneration()
++    scope.recordNetworkBytes(256)
++    XCTAssertEqual(collector.snapshot.networkBytesReceived, 768)
++    XCTAssertEqual(YlApplePlayerHost.metrics(collector.snapshot).networkBytesReceived, 768)
++    let nextLoad = try ledger.makeScope(maxBytes: nil)
++    XCTAssertNil(nextLoad.networkBytesReceived)
++    nextLoad.recordNetworkBytes(0)
++    scope.recordNetworkBytes(100)
++    XCTAssertEqual(nextLoad.networkBytesReceived, 0)
++    scope.recordNetworkBytes(Int.max)
++    XCTAssertEqual(scope.networkBytesReceived, Int64.max)
++  }
++
++  func testAccessLogCountsActualBytesAcrossItemReplacementAndResetsPerLoad() {
++    let collector = YlMetricsCollector()
++    let first = NSObject(), second = NSObject()
++    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: []))
++    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: [-1]))
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [0]), 0)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 50]), 150)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: second, transferred: [25]), 200)
++    XCTAssertEqual(YlMetricsCollector().accessLogNetworkBytes(item: second, transferred: [25]), 25)
++  }
++
+   func testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease() throws {
+     let ledger = YlManagedBufferLedger(maxBytes: 4096)
+     let scope = try ledger.makeScope(maxBytes: 4096)
+@@ -1654,7 +1718,7 @@ private final class AppleThreadRecordingMessenger: NSObject, FlutterBinaryMessen
+ 
+ @MainActor
+ extension YlAppleSessionTests {
+-  func testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
++  func testTransportStreamSignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
+     for (stride, prefix) in [(188, 0), (192, 4), (204, 0)] {
+       var bytes = Data(repeating: 0, count: stride * 3)
+       for packet in 0..<3 {
+@@ -1674,17 +1738,17 @@ extension YlAppleSessionTests {
+       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegts_live_unsupported")
+       source.intent = .onDemand
+       source.networkPolicy = .managed
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+       source.networkPolicy = .platformDefault
+       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     }
+   }
+ }
+ 
+ @MainActor
+ extension YlAppleSessionTests {
+-  func testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
++  func testAVISignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
+     XCTAssertEqual(YlSourceInspector.format(Data([0x52,0x49,0x46,0x46,0,0,0,0,0x41,0x56,0x49,0x20])), .avi)
+     XCTAssertEqual(YlSourceInspector.format(Data("RIFF".utf8)), .automatic)
+     for kind: YlSourceKind in [.file, .network] {
+@@ -1695,10 +1759,10 @@ extension YlAppleSessionTests {
+       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.avi_live_unsupported")
+       source.intent = .onDemand
+       source.networkPolicy = .managed
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+       source.networkPolicy = .platformDefault
+       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     }
+   }
+ }
+diff --git a/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift b/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift
+index 30fce9e..59f44b0 100644
+--- a/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift
++++ b/packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift
+@@ -100,6 +100,7 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
+     // Real platform output and consumed audio clock; record the decoded PCM
+     // without replacing the device output with a fabricated completion clock.
+     pcm = ContainerPCM()
++    pcm.converter.bufferScope = bufferBudget.bufferScope
+     let created = YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+     renderer = created; return created
+   }
+@@ -164,11 +165,29 @@ private struct ContainerReference: Decodable {
+ }
+ 
+ @MainActor final class YlContainerOutputTests: XCTestCase {
+-  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false) async throws {
+-    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
++  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false, strictAsset: String? = nil) async throws {
++    let url: URL
++    if let strictAsset {
++      let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
++      let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
++      url = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/format_matrix/" + strictAsset)
++    } else { url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext)) }
+     let bound = try ContainerBoundAV(name: name, media: url)
+     defer { bound?.attach(to: self) }
+-    let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: format), requireHardwareProbe: false)
++    let server = strictAsset == nil ? nil : try ReactivationMediaServer(data: Data(contentsOf: url))
++    defer { server?.close() }
++    let ledger = YlManagedBufferLedger(maxBytes: 16 * 1024 * 1024)
++    let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
++    var source = YlAppleSourceDescriptor(uri: server?.url.absoluteString ?? url.absoluteString,
++      kind: server == nil ? .file : .network, formatHint: format)
++    if strictAsset != nil {
++      source.networkPolicy = .managed
++      source.loadOptions = .init(bufferStrategy: .bounded, minDurationMs: 100, maxDurationMs: 2000,
++        maxManagedBytes: 16 * 1024 * 1024, decoderPolicy: .hardwareRequired)
++      source.bufferScope = scope
++      XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
++    }
++    let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)
+     if channels == 6 {
+       let stream = try XCTUnwrap(prepared.audioStreams.first)
+       XCTAssertEqual(stream.channel_count, 6)
+@@ -184,7 +203,10 @@ private struct ContainerReference: Decodable {
+       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+       audioRendererFactory: audio, emit: { callback in
+         if case .state(let value) = callback.event { state = value }
+-        if case .failure(let error) = callback.event { errors.append(error) }
++        if case .failure(let error) = callback.event {
++          errors.append(error)
++          if let strictAsset { print("P03_STRICT \(strictAsset): \(error.code) \(error.diagnostic ?? "none") \(scope.timingDiagnostic) \(ledger.snapshot.categories)") }
++        }
+       })
+       try initial?.activate()
+     } catch {
+@@ -229,8 +251,31 @@ private struct ContainerReference: Decodable {
+       bound?.capture(audio.pcm.evidence, markers: [Int(target / 1000)])
+     }
+     backend.stop(); backend.dispose(); backend.dispose()
++    if strictAsset != nil {
++      XCTAssertGreaterThan(ledger.snapshot.peakBytes, 0)
++      XCTAssertLessThanOrEqual(ledger.snapshot.peakBytes, 16 * 1024 * 1024)
++      // VT callbacks can retire asynchronously after invalidate. Do not erase
++      // their reservations; wait for the actual ownership release with a bound.
++      for _ in 0..<100 where ledger.snapshot.currentBytes != 0 { try await Task.sleep(nanoseconds: 10_000_000) }
++      XCTAssertEqual(ledger.snapshot.currentBytes, 0, "\(strictAsset ?? name): \(ledger.snapshot.categories)")
++    }
+     bound?.outcome = "passed"; bound?.failureCode = ""
+   }
++  func testStrictProgressiveManagedBoundedHardwareActualOutputs() async throws {
++    for (file, format): (String, YlSourceFormat) in [
++      ("mp4-avc-aac.mp4", .mp4), ("mov-hevc-aac.mov", .mov),
++      ("ts-avc-ac3.ts", .mpegTs), ("ps-avc-mp3.mpg", .mpegPs), ("avi-avc-mp3.avi", .avi)] {
++      try await checkOutput(name: file, ext: "", format: format, strictAsset: file)
++    }
++  }
++  func testStrictVP9ManagedBoundedHardwareActualOutputs() async throws {
++    try await checkOutput(name: "webm-vp9-vorbis", ext: "webm", format: .webm, strictAsset: "webm-vp9-vorbis.webm")
++  }
++  func testStrictOpusVorbisManagedBoundedHardwareActualOutputs() async throws {
++    for (file, channels) in [("mkv-avc-opus.mkv", 2), ("mkv-avc-opus-silk.mkv", 1), ("mkv-avc-opus-hybrid.mkv", 1), ("mkv-avc-vorbis.mkv", 2), ("mkv-avc-vorbis-codec-delay.mkv", 2)] {
++      try await checkOutput(name: file, ext: "", format: .matroska, channels: channels, strictAsset: file)
++    }
++  }
+   func testProgramStreamActualPixelsPCMAndBidirectionalSeek() async throws {
+     do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs, allowSimulatorHardwareSkip: true) }
+     catch let error as NativePlayerError { XCTFail("PS: \(error.code): \(error.message)") }
+diff --git a/packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift b/packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift
+index 2652b55..2dcda91 100644
+--- a/packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift
++++ b/packages/yl_player/example/ios/RunnerTests/YlFallbackBufferBudgetTests.swift
+@@ -3,6 +3,18 @@ import XCTest
+ import CoreMedia
+ 
+ final class YlFallbackBufferBudgetTests: XCTestCase {
++  func testUnknownPrerollPacketDurationReservesDecoderOutputCeilingOnly() {
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 48000), 120000)
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 48000), 85334)
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 44100), 92880)
++    for rate in [0.0, -1, .infinity, .nan, 192000] {
++      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: rate))
++      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: rate))
++    }
++    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 44100))
++    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .aac, sampleRate: 48000))
++  }
++
+   func testLowLatencyBudgetUsesSpecifiedCeilings() throws {
+     let configuration = PlayerConfiguration(map: ["bufferMode": "lowLatency"])
+ 
+diff --git a/packages/yl_player/example/ios/RunnerTests/YlProgramStreamTests.swift b/packages/yl_player/example/ios/RunnerTests/YlProgramStreamTests.swift
+index b5b1b5e..33e838b 100644
+--- a/packages/yl_player/example/ios/RunnerTests/YlProgramStreamTests.swift
++++ b/packages/yl_player/example/ios/RunnerTests/YlProgramStreamTests.swift
+@@ -32,13 +32,13 @@ final class YlProgramStreamTests: XCTestCase {
+     var shortStuffing = mpeg2; shortStuffing[13] |= 7
+     XCTAssertEqual(YlSourceInspector.format(Data(shortStuffing + [0xff])), .automatic)
+   }
+-  func testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection() {
++  func testProgramStreamSelectsOwnedFallbackWithManagedPolicy() {
+     var source = YlAppleSourceDescriptor(uri: "file:///owned.mpg", kind: .file, formatHint: .mpegPs)
+     let ordinary = YlEngineRouter.assess(source)
+     XCTAssertEqual(ordinary.outcome, .requiresInspection)
+     XCTAssertEqual(ordinary.engine, .managedFallback)
+     source.networkPolicy = .managed
+-    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++    XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     source.networkPolicy = .platformDefault; source.intent = .live
+     XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegps_live_unsupported")
+   }
+@@ -61,6 +61,11 @@ final class YlProgramStreamTests: XCTestCase {
+       XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
+       XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
+     }
++    for name in ["movie.bin", "movie.mkv", "movie.mp4", "movie"] {
++      let source = YlAppleSourceDescriptor(uri: "file:///" + name, kind: .file, formatHint: .mov)
++      XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
++      XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
++    }
+     let named = YlAppleSourceDescriptor(uri: "file:///video.mp4", kind: .file, formatHint: .mp4)
+     XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(named, supportsMIMEOverride: false))
+   }
+diff --git a/packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift b/packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift
+index 909d981..626cf4b 100644
+--- a/packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift
++++ b/packages/yl_player/example/macos/RunnerTests/YlAppleSessionTests.swift
+@@ -328,11 +328,11 @@ final class YlAppleRegistryTests: XCTestCase {
+       }
+     }
+     XCTAssertEqual(allocations, 0)
+-    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 6,
++    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 7,
+       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
+         audioPolicy: .appManaged, positionUpdateIntervalMs: 0))))
+     XCTAssertEqual(allocations, 0)
+-    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 6,
++    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 7,
+       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
+         audioPolicy: .appManaged, positionUpdateIntervalMs: 5000)))
+     XCTAssertEqual(allocations, 1)
+@@ -352,7 +352,7 @@ final class YlAppleRegistryTests: XCTestCase {
+     }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
+       lifecycle: lifecycle)
+     defer { registry.detach() }
+-    let created = try registry.create(request: .init(schemaMajor: 6,
++    let created = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged,
+         positionUpdateIntervalMs: 500)))
+     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+@@ -397,6 +397,7 @@ final class AppleRecordingCallbacks: ApplePlayerFlutterApiProtocol {
+   var failures = [ApplePlaybackFailedMessage]()
+   var order = [String]()
+   var acknowledge: (() async throws -> Void)?
++  func onNetworkBytesReceived(loadRequestId: String, bytes: Int64?) async throws {}
+   func onState(state: AppleStateMessage) async throws { states.append(state); order.append("state"); try await acknowledge?() }
+   func onStateDelta(delta: AppleStateDeltaMessage) async throws { deltas.append(delta); order.append("delta"); try await acknowledge?() }
+   func onFirstFrame(event: AppleFirstFrameMessage) async throws { frames.append(event); order.append("frame"); try await acknowledge?() }
+@@ -647,7 +648,7 @@ final class YlAppleHostDeliveryTests: XCTestCase {
+     let registry = YlApplePlayerRegistry(makeServices: { _ in textures.services() },
+       makeCallbacks: { _ in callbacks }, installHost: { suffix, host in if host == nil { removed.append(suffix) } })
+     defer { registry.detach() }
+-    let created = try registry.create(request: .init(schemaMajor: 6,
++    let created = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100)))
+     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+     XCTAssertTrue(callbacks.states.isEmpty, "Create stays silent until attach")
+@@ -863,7 +864,7 @@ extension YlAppleSessionTests {
+     defer { server.close() }
+     let fixture = AppleHostFixture(); defer { fixture.host.close() }
+     let committed = try await fixture.host.load(request: AppleHostFixture.request("initial"))
+-    for format in [AppleMediaFormat.hls, .mp4, .mov, .avi, .mpegTs, .mpegPs] {
++    for format in [AppleMediaFormat.hls] {
+       var request = AppleHostFixture.request("strict", url: server.url.absoluteString, format: format)
+       request.source.networkPolicy = .init(kind: .managed, connectTimeoutMs: 1000, readTimeoutMs: 1000,
+         maxRetries: 1, baseRetryDelayMs: 1, maxRetryDelayMs: 2, maxRedirects: 2)
+@@ -908,6 +909,35 @@ extension YlAppleSessionTests {
+ }
+ 
+ final class YlEngineAssessmentTests: XCTestCase {
++  func testProgressiveStrictPoliciesUseOwnedSamplesAndKeepHardwareUnprovenUntilPrepared() {
++    for kind: YlSourceKind in [.file, .network] {
++      for format: YlSourceFormat in [.mp4, .mov, .mpegTs, .mpegPs, .avi] {
++        for policy in 1...3 {
++          var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///owned/media" : "https://example.invalid/media", kind: kind, formatHint: format)
++          var options = YlAppleLoadOptions()
++          if policy == 1 { source.networkPolicy = .managed }
++          if policy == 2 { options.bufferStrategy = .bounded; options.minDurationMs = 100; options.maxDurationMs = 500; options.maxManagedBytes = 16 * 1024 * 1024 }
++          if policy == 3 { options.decoderPolicy = .hardwareRequired }
++          source.loadOptions = options
++          let result = YlEngineRouter.assess(source)
++          XCTAssertNil(result.rejection, "\(kind) \(format) \(policy)")
++          XCTAssertEqual(result.outcome, .requiresInspection)
++          XCTAssertEqual(result.engine, .managedFallback)
++          XCTAssertFalse(result.limitations.contains(.networkSystemStackOpaque))
++          XCTAssertFalse(result.satisfiedRequirements.contains(.decoderHardwareRequired))
++          if policy == 1 { XCTAssertTrue(result.satisfiedRequirements.contains(.networkManaged)) }
++          if policy == 2 { XCTAssertTrue(result.satisfiedRequirements.contains(.bufferBounded)) }
++          let missing = YlEngineRouter.assess(source, availability: .init())
++          XCTAssertEqual(missing.rejection?.code, "policy.unsupported")
++          if policy == 3 {
++            let denied = YlEngineRouter.assess(source, inspection: .init(format: format, demuxerSupported: true, codecsSupported: true, hasVideo: true, hardwareAccelerated: false))
++            XCTAssertEqual(denied.rejection?.code, "decoder.unavailable")
++          }
++        }
++      }
++    }
++  }
++
+   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
+ 
+   func testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes() {
+@@ -922,7 +952,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+           if policy == 3 { options.decoderPolicy = .hardwareRequired }
+           source.loadOptions = options
+           let production = YlEngineRouter.assess(source)
+-          if (policy > 0) && (format == .matroska || format == .webm || format == .flv) {
++          if (policy > 0) && (format != .hls) {
+             XCTAssertEqual(production.outcome, .requiresInspection)
+             if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
+             else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }
+@@ -931,7 +961,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
+           }
+           let assessed = YlEngineRouter.assess(source, availability: enforcing)
+-          let fallback = format == .matroska || (format == .flv && kind == .network) || ([YlSourceFormat.mpegTs, .avi].contains(format) && policy == 0)
++          let fallback = format == .matroska || (format == .flv && kind == .network) || [YlSourceFormat.mpegTs, .mpegPs, .avi].contains(format) || ([YlSourceFormat.mp4, .mov].contains(format) && policy > 0)
+           let av = [.hls, .mp4, .mov].contains(format)
+           if fallback {
+             XCTAssertEqual(assessed.outcome, .requiresInspection)
+@@ -998,7 +1028,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+         else { XCTAssertEqual(result.engine, .managedFallback) }
+       }
+     }
+-    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, intent: .live)
++    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, formatHint: .matroska, intent: .live)
+     XCTAssertEqual(YlEngineRouter.assess(live).rejection?.code, "container.network_mkv_live_unsupported")
+   }
+ 
+@@ -1086,14 +1116,14 @@ extension YlAppleSessionTests {
+ 
+ extension YlEngineAssessmentTests {
+   func testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary() {
+-    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network)
++    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network, formatHint: .matroska)
+     source.loadOptions = YlAppleLoadOptions(bufferStrategy: .bounded, minDurationMs: 100,
+       maxDurationMs: 500, maxManagedBytes: 16 * 1024 * 1024)
+     let supported = YlEngineRouter.assess(source)
+     XCTAssertEqual(supported.engine, .managedFallback)
+     XCTAssertTrue(supported.satisfiedRequirements.contains(.bufferBounded))
+     XCTAssertTrue(supported.limitations.contains(.bufferOsMemoryExcluded))
+-    for format in [YlSourceFormat.hls, .mp4, .mov] {
++    for format in [YlSourceFormat.hls] {
+       var system = source; system.formatHint = format
+       XCTAssertEqual(YlEngineRouter.assess(system).rejection?.code, "policy.unsupported")
+     }
+@@ -1141,7 +1171,7 @@ final class YlAudioOwnershipTests: XCTestCase {
+       makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in }, audioOwnership: coordinator)
+   }
+   func create(_ registry: YlApplePlayerRegistry, managed: Bool = true) throws -> YlApplePlayerHost {
+-    let reply = try registry.create(request: .init(schemaMajor: 6,
++    let reply = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: managed ? .pluginManagedMediaPlayback : .appManaged, positionUpdateIntervalMs: 100)))
+     return try XCTUnwrap(registry.host(for: reply.channelSuffix))
+   }
+@@ -1436,6 +1466,40 @@ final class YlAvPlayerNonblockingMetadataTests: XCTestCase {
+ }
+ 
+ final class YlGeometryAndMetricTests: XCTestCase {
++  func testNetworkTrafficIsCumulativeAcrossMediaGenerationsAndSeparatePerLoad() throws {
++    let ledger = YlManagedBufferLedger()
++    let scope = try ledger.makeScope(maxBytes: nil)
++    let collector = YlMetricsCollector(scope: scope)
++    XCTAssertNil(collector.snapshot.networkBytesReceived)
++    scope.recordNetworkBytes(0)
++    XCTAssertEqual(collector.snapshot.networkBytesReceived, 0)
++    scope.recordNetworkBytes(512)
++    scope.beginMediaGeneration()
++    scope.recordNetworkBytes(256)
++    XCTAssertEqual(collector.snapshot.networkBytesReceived, 768)
++    XCTAssertEqual(YlApplePlayerHost.metrics(collector.snapshot).networkBytesReceived, 768)
++    let nextLoad = try ledger.makeScope(maxBytes: nil)
++    XCTAssertNil(nextLoad.networkBytesReceived)
++    nextLoad.recordNetworkBytes(0)
++    scope.recordNetworkBytes(100)
++    XCTAssertEqual(nextLoad.networkBytesReceived, 0)
++    scope.recordNetworkBytes(Int.max)
++    XCTAssertEqual(scope.networkBytesReceived, Int64.max)
++  }
++
++  func testAccessLogCountsActualBytesAcrossItemReplacementAndResetsPerLoad() {
++    let collector = YlMetricsCollector()
++    let first = NSObject(), second = NSObject()
++    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: []))
++    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: [-1]))
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [0]), 0)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 50]), 150)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: second, transferred: [25]), 200)
++    XCTAssertEqual(YlMetricsCollector().accessLogNetworkBytes(item: second, transferred: [25]), 25)
++  }
++
+   func testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease() throws {
+     let ledger = YlManagedBufferLedger(maxBytes: 4096)
+     let scope = try ledger.makeScope(maxBytes: 4096)
+@@ -1654,7 +1718,7 @@ private final class AppleThreadRecordingMessenger: NSObject, FlutterBinaryMessen
+ 
+ @MainActor
+ extension YlAppleSessionTests {
+-  func testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
++  func testTransportStreamSignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
+     for (stride, prefix) in [(188, 0), (192, 4), (204, 0)] {
+       var bytes = Data(repeating: 0, count: stride * 3)
+       for packet in 0..<3 {
+@@ -1674,17 +1738,17 @@ extension YlAppleSessionTests {
+       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegts_live_unsupported")
+       source.intent = .onDemand
+       source.networkPolicy = .managed
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+       source.networkPolicy = .platformDefault
+       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     }
+   }
+ }
+ 
+ @MainActor
+ extension YlAppleSessionTests {
+-  func testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
++  func testAVISignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
+     XCTAssertEqual(YlSourceInspector.format(Data([0x52,0x49,0x46,0x46,0,0,0,0,0x41,0x56,0x49,0x20])), .avi)
+     XCTAssertEqual(YlSourceInspector.format(Data("RIFF".utf8)), .automatic)
+     for kind: YlSourceKind in [.file, .network] {
+@@ -1695,10 +1759,10 @@ extension YlAppleSessionTests {
+       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.avi_live_unsupported")
+       source.intent = .onDemand
+       source.networkPolicy = .managed
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+       source.networkPolicy = .platformDefault
+       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     }
+   }
+ }
+diff --git a/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift b/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift
+index 30fce9e..59f44b0 100644
+--- a/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift
++++ b/packages/yl_player/example/macos/RunnerTests/YlContainerOutputTests.swift
+@@ -100,6 +100,7 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
+     // Real platform output and consumed audio clock; record the decoded PCM
+     // without replacing the device output with a fabricated completion clock.
+     pcm = ContainerPCM()
++    pcm.converter.bufferScope = bufferBudget.bufferScope
+     let created = YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+     renderer = created; return created
+   }
+@@ -164,11 +165,29 @@ private struct ContainerReference: Decodable {
+ }
+ 
+ @MainActor final class YlContainerOutputTests: XCTestCase {
+-  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false) async throws {
+-    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
++  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false, strictAsset: String? = nil) async throws {
++    let url: URL
++    if let strictAsset {
++      let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
++      let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
++      url = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/format_matrix/" + strictAsset)
++    } else { url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext)) }
+     let bound = try ContainerBoundAV(name: name, media: url)
+     defer { bound?.attach(to: self) }
+-    let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: format), requireHardwareProbe: false)
++    let server = strictAsset == nil ? nil : try ReactivationMediaServer(data: Data(contentsOf: url))
++    defer { server?.close() }
++    let ledger = YlManagedBufferLedger(maxBytes: 16 * 1024 * 1024)
++    let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
++    var source = YlAppleSourceDescriptor(uri: server?.url.absoluteString ?? url.absoluteString,
++      kind: server == nil ? .file : .network, formatHint: format)
++    if strictAsset != nil {
++      source.networkPolicy = .managed
++      source.loadOptions = .init(bufferStrategy: .bounded, minDurationMs: 100, maxDurationMs: 2000,
++        maxManagedBytes: 16 * 1024 * 1024, decoderPolicy: .hardwareRequired)
++      source.bufferScope = scope
++      XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
++    }
++    let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)
+     if channels == 6 {
+       let stream = try XCTUnwrap(prepared.audioStreams.first)
+       XCTAssertEqual(stream.channel_count, 6)
+@@ -184,7 +203,10 @@ private struct ContainerReference: Decodable {
+       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+       audioRendererFactory: audio, emit: { callback in
+         if case .state(let value) = callback.event { state = value }
+-        if case .failure(let error) = callback.event { errors.append(error) }
++        if case .failure(let error) = callback.event {
++          errors.append(error)
++          if let strictAsset { print("P03_STRICT \(strictAsset): \(error.code) \(error.diagnostic ?? "none") \(scope.timingDiagnostic) \(ledger.snapshot.categories)") }
++        }
+       })
+       try initial?.activate()
+     } catch {
+@@ -229,8 +251,31 @@ private struct ContainerReference: Decodable {
+       bound?.capture(audio.pcm.evidence, markers: [Int(target / 1000)])
+     }
+     backend.stop(); backend.dispose(); backend.dispose()
++    if strictAsset != nil {
++      XCTAssertGreaterThan(ledger.snapshot.peakBytes, 0)
++      XCTAssertLessThanOrEqual(ledger.snapshot.peakBytes, 16 * 1024 * 1024)
++      // VT callbacks can retire asynchronously after invalidate. Do not erase
++      // their reservations; wait for the actual ownership release with a bound.
++      for _ in 0..<100 where ledger.snapshot.currentBytes != 0 { try await Task.sleep(nanoseconds: 10_000_000) }
++      XCTAssertEqual(ledger.snapshot.currentBytes, 0, "\(strictAsset ?? name): \(ledger.snapshot.categories)")
++    }
+     bound?.outcome = "passed"; bound?.failureCode = ""
+   }
++  func testStrictProgressiveManagedBoundedHardwareActualOutputs() async throws {
++    for (file, format): (String, YlSourceFormat) in [
++      ("mp4-avc-aac.mp4", .mp4), ("mov-hevc-aac.mov", .mov),
++      ("ts-avc-ac3.ts", .mpegTs), ("ps-avc-mp3.mpg", .mpegPs), ("avi-avc-mp3.avi", .avi)] {
++      try await checkOutput(name: file, ext: "", format: format, strictAsset: file)
++    }
++  }
++  func testStrictVP9ManagedBoundedHardwareActualOutputs() async throws {
++    try await checkOutput(name: "webm-vp9-vorbis", ext: "webm", format: .webm, strictAsset: "webm-vp9-vorbis.webm")
++  }
++  func testStrictOpusVorbisManagedBoundedHardwareActualOutputs() async throws {
++    for (file, channels) in [("mkv-avc-opus.mkv", 2), ("mkv-avc-opus-silk.mkv", 1), ("mkv-avc-opus-hybrid.mkv", 1), ("mkv-avc-vorbis.mkv", 2), ("mkv-avc-vorbis-codec-delay.mkv", 2)] {
++      try await checkOutput(name: file, ext: "", format: .matroska, channels: channels, strictAsset: file)
++    }
++  }
+   func testProgramStreamActualPixelsPCMAndBidirectionalSeek() async throws {
+     do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs, allowSimulatorHardwareSkip: true) }
+     catch let error as NativePlayerError { XCTFail("PS: \(error.code): \(error.message)") }
+diff --git a/packages/yl_player/example/macos/RunnerTests/YlFallbackBufferBudgetTests.swift b/packages/yl_player/example/macos/RunnerTests/YlFallbackBufferBudgetTests.swift
+index 2652b55..2dcda91 100644
+--- a/packages/yl_player/example/macos/RunnerTests/YlFallbackBufferBudgetTests.swift
++++ b/packages/yl_player/example/macos/RunnerTests/YlFallbackBufferBudgetTests.swift
+@@ -3,6 +3,18 @@ import XCTest
+ import CoreMedia
+ 
+ final class YlFallbackBufferBudgetTests: XCTestCase {
++  func testUnknownPrerollPacketDurationReservesDecoderOutputCeilingOnly() {
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 48000), 120000)
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 48000), 85334)
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 44100), 92880)
++    for rate in [0.0, -1, .infinity, .nan, 192000] {
++      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: rate))
++      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: rate))
++    }
++    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 44100))
++    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .aac, sampleRate: 48000))
++  }
++
+   func testLowLatencyBudgetUsesSpecifiedCeilings() throws {
+     let configuration = PlayerConfiguration(map: ["bufferMode": "lowLatency"])
+ 
+diff --git a/packages/yl_player/example/macos/RunnerTests/YlProgramStreamTests.swift b/packages/yl_player/example/macos/RunnerTests/YlProgramStreamTests.swift
+index b5b1b5e..33e838b 100644
+--- a/packages/yl_player/example/macos/RunnerTests/YlProgramStreamTests.swift
++++ b/packages/yl_player/example/macos/RunnerTests/YlProgramStreamTests.swift
+@@ -32,13 +32,13 @@ final class YlProgramStreamTests: XCTestCase {
+     var shortStuffing = mpeg2; shortStuffing[13] |= 7
+     XCTAssertEqual(YlSourceInspector.format(Data(shortStuffing + [0xff])), .automatic)
+   }
+-  func testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection() {
++  func testProgramStreamSelectsOwnedFallbackWithManagedPolicy() {
+     var source = YlAppleSourceDescriptor(uri: "file:///owned.mpg", kind: .file, formatHint: .mpegPs)
+     let ordinary = YlEngineRouter.assess(source)
+     XCTAssertEqual(ordinary.outcome, .requiresInspection)
+     XCTAssertEqual(ordinary.engine, .managedFallback)
+     source.networkPolicy = .managed
+-    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++    XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     source.networkPolicy = .platformDefault; source.intent = .live
+     XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegps_live_unsupported")
+   }
+@@ -61,6 +61,11 @@ final class YlProgramStreamTests: XCTestCase {
+       XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
+       XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
+     }
++    for name in ["movie.bin", "movie.mkv", "movie.mp4", "movie"] {
++      let source = YlAppleSourceDescriptor(uri: "file:///" + name, kind: .file, formatHint: .mov)
++      XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
++      XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
++    }
+     let named = YlAppleSourceDescriptor(uri: "file:///video.mp4", kind: .file, formatHint: .mp4)
+     XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(named, supportsMIMEOverride: false))
+   }
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift
+index 23ecce8..108355d 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift
+@@ -178,6 +178,23 @@ enum YlAudioEnqueueResult: Equatable {
+   case staleGeneration
+ }
+ 
++/// Conservative queue reservation when Matroska omits packet duration. These
++/// are the converters' hard output caps, not decoded durations or timestamps.
++/// Actual PCM replaces this timing when conversion succeeds; unknown rates fail.
++func ylBoundedPrerollPacketDurationUs(codec: YlAudioCodec, sampleRate: Double) -> Int64? {
++  let frames: Int
++  switch codec {
++  case .opus:
++    guard sampleRate == 48000 else { return nil }
++    frames = YlOpusAudioConverter.maximumFrames
++  case .vorbis:
++    guard [44100.0, 48000.0].contains(sampleRate) else { return nil }
++    frames = YlVorbisAudioConverter.maximumFrames
++  default: return nil
++  }
++  return Int64(ceil(Double(frames) * 1_000_000 / sampleRate))
++}
++
+ protocol YlAudioPacketConverting: AnyObject {
+   var reservesOutputBuffers: Bool { get }
+   var pcmFormat: AVAudioFormat? { get }
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlOpusAudioConverter.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlOpusAudioConverter.swift
+index 5aa8c2d..01be6ef 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlOpusAudioConverter.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlOpusAudioConverter.swift
+@@ -17,7 +17,7 @@ final class YlOpusAudioConverter: YlAudioPacketConverting {
+   var bufferScope: YlManagedBufferScope?
+   private var decoder: YLFOpusDecoderRef?
+   private(set) var pcmFormat: AVAudioFormat?
+-  private let maximumFrames = 5760
++  static let maximumFrames = 5760
+ 
+   func configure(stream: YlAudioStreamConfiguration) throws {
+     guard stream.codec == .opus, stream.sampleRate == 48000,
+@@ -34,7 +34,7 @@ final class YlOpusAudioConverter: YlAudioPacketConverting {
+ 
+   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+     // Fixed maximum before decoding, regardless of untrusted packet duration.
+-    .init(durationUs: 120000, byteCount: maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
++    .init(durationUs: 120000, byteCount: Self.maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
+   }
+ 
+   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+@@ -42,14 +42,14 @@ final class YlOpusAudioConverter: YlAudioPacketConverting {
+           packet.data.count <= 65536, packet.ptsUs != Int64.min else { throw ylOpusPacketError() }
+     let channelCount = Int(format.channelCount)
+     let packetCopy = try bufferScope?.require(category: .compressedPackets, bytes: packet.data.count + 64)
+-    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: maximumFrames * channelCount * 4)
++    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: Self.maximumFrames * channelCount * 4)
+     defer { withExtendedLifetime((packetCopy, scratch)) {} }
+-    var samples = [Float](repeating: 0, count: maximumFrames * channelCount)
++    var samples = [Float](repeating: 0, count: Self.maximumFrames * channelCount)
+     var frames: Int32 = 0, offset: Int32 = 0
+     let result = samples.withUnsafeMutableBufferPointer { output in
+       packet.data.withUnsafeBytes { input in
+         ylf_opus_decode(decoder, input.bindMemory(to: UInt8.self).baseAddress, input.count,
+-          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(maximumFrames), &frames, &offset)
++          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(Self.maximumFrames), &frames, &offset)
+       }
+     }
+     if result == YLFResultAudioConfigurationUnsupported { throw ylOpusUnsupportedError() }
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlVorbisAudioConverter.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlVorbisAudioConverter.swift
+index 9e1a08a..dfbef07 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlVorbisAudioConverter.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlVorbisAudioConverter.swift
+@@ -17,7 +17,7 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
+   var bufferScope: YlManagedBufferScope?
+   private var decoder: YLFVorbisDecoderRef?
+   private(set) var pcmFormat: AVAudioFormat?
+-  private let maximumFrames = 4096
++  static let maximumFrames = 4096
+ 
+   func configure(stream: YlAudioStreamConfiguration) throws {
+     guard stream.codec == .vorbis, [44100.0, 48000.0].contains(stream.sampleRate),
+@@ -34,8 +34,8 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
+ 
+   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+     // Fixed maximum before decoding, regardless of untrusted packet duration.
+-    .init(durationUs: Int64(ceil(Double(maximumFrames) * 1_000_000 / (pcmFormat?.sampleRate ?? 44100))),
+-      byteCount: maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
++    .init(durationUs: Int64(ceil(Double(Self.maximumFrames) * 1_000_000 / (pcmFormat?.sampleRate ?? 44100))),
++      byteCount: Self.maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
+   }
+ 
+   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+@@ -43,14 +43,14 @@ final class YlVorbisAudioConverter: YlAudioPacketConverting {
+           packet.data.count <= 65536, packet.skipSamples == 0, packet.ptsUs != Int64.min else { throw ylVorbisPacketError() }
+     let channelCount = Int(format.channelCount)
+     let packetCopy = try bufferScope?.require(category: .compressedPackets, bytes: packet.data.count + 64)
+-    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: maximumFrames * channelCount * 4)
++    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: Self.maximumFrames * channelCount * 4)
+     defer { withExtendedLifetime((packetCopy, scratch)) {} }
+-    var samples = [Float](repeating: 0, count: maximumFrames * channelCount)
++    var samples = [Float](repeating: 0, count: Self.maximumFrames * channelCount)
+     var frames: Int32 = 0
+     let result = samples.withUnsafeMutableBufferPointer { output in
+       packet.data.withUnsafeBytes { input in
+         ylf_vorbis_decode(decoder, input.bindMemory(to: UInt8.self).baseAddress, input.count,
+-          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(maximumFrames), &frames)
++          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(Self.maximumFrames), &frames)
+       }
+     }
+     if result == YLFResultAudioConfigurationUnsupported { throw ylVorbisUnsupportedError() }
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift
+index cce9eb7..1b2af56 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift
+@@ -140,14 +140,14 @@ enum YlAppleSafeDiagnostics {
+   ]
+   private static let publicMessages: [String: String] = [
+     "decoder.video_vp9_unsupported": "VP9 currently requires fixed-size Profile 0, 8-bit SDR visible frames without superframes. Try another video track.",
+-    "policy.vp9_unsupported": "VP9 currently supports seekable Matroska or WebM VOD without strict networking or buffer policies.",
++    "policy.vp9_unsupported": "VP9 requires seekable Matroska or WebM VOD.",
+     "decoder.audio_vorbis_unsupported": "Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.",
+     "decoder.audio_vorbis_failed": "The Vorbis audio packet or timing is invalid. Try another audio track or a complete media file.",
+-    "policy.vorbis_unsupported": "Vorbis currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.",
++    "policy.vorbis_unsupported": "Vorbis requires Matroska VOD; managed networking requires random access.",
+     "policy.vorbis_track_switch_unsupported": "Activate or resume playback before switching a Vorbis track.",
+     "decoder.audio_opus_unsupported": "Opus currently requires mapping family 0 and mono or stereo at 48 kHz. Try another audio track.",
+     "decoder.audio_opus_failed": "The Opus audio packet or timing is invalid. Try another audio track or a complete media file.",
+-    "policy.opus_unsupported": "Opus currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.",
++    "policy.opus_unsupported": "Opus requires Matroska VOD; managed networking requires random access.",
+     "policy.opus_track_switch_unsupported": "Activate or resume playback before switching an Opus track.",
+ 
+     "container.avi_timing_unsupported": "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.",
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift
+index e01380b..c1988b9 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift
+@@ -337,6 +337,14 @@ final class YlDemuxPipeline {
+       packetDuration = ylBoundedAACPacketDurationUs(sampleRate: Double(stream.sample_rate),
+         cookie: audioCookies[stream.index] ?? Data()) ?? 0
+     }
++    // Keep unknown source duration unchanged in the compressed packet. Only
++    // the bounded queue uses a conservative decoder cap until actual PCM exists.
++    var reservationDuration = packetDuration
++    if bufferBudget.boundedPlan != nil, packetDuration <= 0,
++       let stream = selectedAudioStream, stream.index == streamIndex {
++      reservationDuration = ylBoundedPrerollPacketDurationUs(
++        codec: YlAudioCodec(bridgeCodec: stream.codec), sampleRate: Double(stream.sample_rate)) ?? packetDuration
++    }
+     let packetReservation = bufferBudget.bufferScope?.reserve(category: .compressedPackets, bytes: ylf_packet_size(ownedPacket))
+     guard bufferBudget.bufferScope == nil || packetReservation != nil else {
+       ylf_packet_release(&packet); output.setDemuxPumping(false)
+@@ -344,11 +352,11 @@ final class YlDemuxPipeline {
+     }
+     defer { withExtendedLifetime(packetReservation) {} }
+     let packetPTS = ylf_packet_pts_us(ownedPacket) == Int64.min ? ylf_packet_dts_us(ownedPacket) : ylf_packet_pts_us(ownedPacket)
+-    guard packetReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration) ?? true else {
++    guard packetReservation?.carryTiming(ptsUs: packetPTS, durationUs: reservationDuration) ?? true else {
+       let error = YlManagedBufferLedger.unsupported("packet timing pts=\(packetPTS) duration=\(packetDuration) \(bufferBudget.bufferScope?.timingDiagnostic ?? "")")
+       ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(error); return
+     }
+-    bufferBudget.bufferScope?.observePacketDuration(packetDuration, ptsUs: packetPTS)
++    bufferBudget.bufferScope?.observePacketDuration(reservationDuration, ptsUs: packetPTS)
+     if mediaPolicy.requiresInitialVideoKeyframe {
+       let isVideo = streamIndex == videoStream.index
+       let accepted = lock.withLock {
+@@ -373,7 +381,7 @@ final class YlDemuxPipeline {
+       guard bufferBudget.bufferScope == nil || audioReservation != nil else {
+         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
+       }
+-      guard audioReservation?.carryTiming(ptsUs: packetPTS, durationUs: packetDuration, from: packetReservation) ?? true else {
++      guard audioReservation?.carryTiming(ptsUs: packetPTS, durationUs: reservationDuration, from: packetReservation) ?? true else {
+         ylf_packet_release(&packet); output.setDemuxPumping(false); output.fail(YlManagedBufferLedger.unsupported()); return
+       }
+       let isOpus = Int(selectedAudioStream?.codec ?? 0) == YLFCodecOpus
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift
+index 791a5d2..d95f0e8 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift
+@@ -181,8 +181,11 @@ final class YlPreparedFallback {
+ 
+     var selectedVideo: YLFStreamInfo?
+     var selectedAudio: [YLFStreamInfo] = []
+-    let opusPolicyAllowed = container == .matroska && source.intent != .live && boundedPlan == nil
+-      && (source.networkPolicy != .managed || policy.isSeekable) && decoderPolicy != .hardwareRequired
++    // Preroll packets, converter scratch and queued PCM share bufferScope.
++    // Hardware-required constrains video; it must not prohibit audio codecs
++    // whose bounded conversion uses the same owned output/accounting chain.
++    let opusPolicyAllowed = container == .matroska && source.intent != .live
++      && (source.networkPolicy != .managed || policy.isSeekable)
+     var sawBlockedOpus = false
+     var sawBlockedVorbis = false
+     var sawUnsupportedAudio = false
+@@ -224,17 +227,17 @@ final class YlPreparedFallback {
+       )
+     }
+     if Int(selectedVideo.codec) == YLFCodecVP9,
+-       container != .matroska || source.intent == .live || !policy.isSeekable || boundedPlan != nil {
++       container != .matroska || source.intent == .live || !policy.isSeekable {
+       throw NativePlayerError(category: "unsupported", code: "policy.vp9_unsupported",
+-        message: "VP9 currently supports seekable Matroska or WebM VOD without a bounded buffer policy.")
++        message: "VP9 requires seekable Matroska or WebM VOD.")
+     }
+     if selectedAudio.isEmpty && sawBlockedOpus {
+       throw NativePlayerError(category: "unsupported", code: "policy.opus_unsupported",
+-        message: "Opus currently supports ordinary Matroska VOD without bounded buffer or hardware-required policies.")
++        message: "Opus requires Matroska VOD; managed networking requires random access.")
+     }
+     if selectedAudio.isEmpty && sawBlockedVorbis {
+       throw NativePlayerError(category: "unsupported", code: "policy.vorbis_unsupported",
+-        message: "Vorbis currently supports ordinary Matroska VOD without bounded buffer or hardware-required policies.")
++        message: "Vorbis requires Matroska VOD; managed networking requires random access.")
+     }
+     if selectedAudio.isEmpty && sawUnsupportedAudio {
+       throw NativePlayerError(
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift
+index 458dff2..6998c41 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift
+@@ -11,6 +11,8 @@ enum YlAppleSourceRoute: Equatable {
+   case networkMatroska
+   case networkFlv
+   case networkRtmp
++  /// Owned MP4/MOV samples enforce strict policies through the common fallback.
++  case progressiveMp4
+   case avi
+   case programStream
+   case transportStream
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlEngineRouter.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlEngineRouter.swift
+index cf666b1..f820f4f 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlEngineRouter.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlEngineRouter.swift
+@@ -80,9 +80,6 @@ enum YlEngineRouter {
+         satisfiedRequirements: [], limitations: [.sourceRequiresInspection], rejection: nil)
+     }
+     let format = inspection?.format ?? hinted
+-    if [YlSourceFormat.mpegPs, .mpegTs, .avi].contains(format) && strict {
+-      return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
+-    }
+     if format == .avi && source.isLive {
+       return reject("container", "container.avi_live_unsupported")
+     }
+@@ -98,7 +95,11 @@ enum YlEngineRouter {
+     if format == .dash && (bounded || source.kind != .network || source.isLive) {
+       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
+     }
+-    let av = [YlSourceFormat.hls, .mp4, .mov].contains(format)
++    // Strict progressive policies require owned bytes, decoder evidence and
++    // output accounting. Never advertise these guarantees for opaque AVPlayer.
++    let ownedMp4 = strict && [YlSourceFormat.mp4, .mov].contains(format)
++    if ownedMp4 && source.isLive { return reject("container", "container.unsupported") }
++    let av = [YlSourceFormat.hls, .mp4, .mov].contains(format) && !ownedMp4
+     if strict && (av || (managed && !availability.managedNetwork) ||
+         (bounded && !availability.boundedBuffer) || (hardware && !availability.hardwareEvidence)) {
+       return reject("unsupported", "policy.unsupported")
+@@ -158,7 +159,7 @@ enum YlEngineRouter {
+       return reject(strict ? "unsupported" : "container", strict ? "policy.unsupported" : "container.unsupported")
+     }
+     if inspection == nil { limitations.append(.codecRequiresInspection) }
+-    let route: YlAppleSourceRoute = format == .avi ? .avi
++    let route: YlAppleSourceRoute = ownedMp4 ? .progressiveMp4 : format == .avi ? .avi
+       : format == .mpegPs ? .programStream
+       : format == .mpegTs ? .transportStream
+       : format == .flv ? .networkFlv : (source.kind == .file ? .localMatroska : .networkMatroska)
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlMp4CompatibilityInspector.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlMp4CompatibilityInspector.swift
+index 840a719..90ba4a3 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlMp4CompatibilityInspector.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlMp4CompatibilityInspector.swift
+@@ -4,13 +4,14 @@ import YlFFmpegBridge
+ /// Establishes codec incompatibility before AVPlayer commits a silent/frameless
+ /// MP4. Failure to inspect does not remove a source's existing native route.
+ enum YlMp4CompatibilityInspector {
+-  /// Older AVFoundation cannot honor an inspected MP4 MIME override. Use
++  /// Older AVFoundation cannot honor an inspected MP4/MOV MIME override. Use
+   /// owned samples for mismatched names, retaining codec validation at prepare.
+   static func needsOwnedMIMEFallback(_ source: YlAppleSourceDescriptor,
+     supportsMIMEOverride: Bool) -> Bool {
+     guard !supportsMIMEOverride, let url = source.url,
+-          source.formatHint == .mp4 else { return false }
+-    return !["mp4", "m4v", "m4a"].contains(url.pathExtension.lowercased())
++          [YlSourceFormat.mp4, .mov].contains(source.formatHint) else { return false }
++    let names = source.formatHint == .mov ? ["mov", "qt"] : ["mp4", "m4v", "m4a"]
++    return !names.contains(url.pathExtension.lowercased())
+   }
+ 
+   static func requiresFallback(_ source: YlAppleSourceDescriptor,
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift
+index a486a65..68f5b57 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlSourceAssessment.swift
+@@ -84,7 +84,7 @@ struct YlSourceAssessment {
+     guard let candidate else { return nil }
+     switch candidate {
+     case .avPlayer, .headeredHls, .dashHls, .fairPlay: return .avPlayer
+-    case .dashProgram, .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .avi: return .managedFallback
++    case .dashProgram, .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .progressiveMp4, .avi: return .managedFallback
+     case .inspect, .reject: return nil
+     }
+   }
+diff --git a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift
+index 909d981..626cf4b 100644
+--- a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift
++++ b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift
+@@ -328,11 +328,11 @@ final class YlAppleRegistryTests: XCTestCase {
+       }
+     }
+     XCTAssertEqual(allocations, 0)
+-    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 6,
++    XCTAssertThrowsError(try registry.create(request: AppleCreateRequest(schemaMajor: 7,
+       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
+         audioPolicy: .appManaged, positionUpdateIntervalMs: 0))))
+     XCTAssertEqual(allocations, 0)
+-    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 6,
++    let reply = try registry.create(request: AppleCreateRequest(schemaMajor: 7,
+       options: ApplePlayerOptionsMessage(decoderPolicy: .systemDefault,
+         audioPolicy: .appManaged, positionUpdateIntervalMs: 5000)))
+     XCTAssertEqual(allocations, 1)
+@@ -352,7 +352,7 @@ final class YlAppleRegistryTests: XCTestCase {
+     }, makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
+       lifecycle: lifecycle)
+     defer { registry.detach() }
+-    let created = try registry.create(request: .init(schemaMajor: 6,
++    let created = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged,
+         positionUpdateIntervalMs: 500)))
+     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+@@ -397,6 +397,7 @@ final class AppleRecordingCallbacks: ApplePlayerFlutterApiProtocol {
+   var failures = [ApplePlaybackFailedMessage]()
+   var order = [String]()
+   var acknowledge: (() async throws -> Void)?
++  func onNetworkBytesReceived(loadRequestId: String, bytes: Int64?) async throws {}
+   func onState(state: AppleStateMessage) async throws { states.append(state); order.append("state"); try await acknowledge?() }
+   func onStateDelta(delta: AppleStateDeltaMessage) async throws { deltas.append(delta); order.append("delta"); try await acknowledge?() }
+   func onFirstFrame(event: AppleFirstFrameMessage) async throws { frames.append(event); order.append("frame"); try await acknowledge?() }
+@@ -647,7 +648,7 @@ final class YlAppleHostDeliveryTests: XCTestCase {
+     let registry = YlApplePlayerRegistry(makeServices: { _ in textures.services() },
+       makeCallbacks: { _ in callbacks }, installHost: { suffix, host in if host == nil { removed.append(suffix) } })
+     defer { registry.detach() }
+-    let created = try registry.create(request: .init(schemaMajor: 6,
++    let created = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100)))
+     let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+     XCTAssertTrue(callbacks.states.isEmpty, "Create stays silent until attach")
+@@ -863,7 +864,7 @@ extension YlAppleSessionTests {
+     defer { server.close() }
+     let fixture = AppleHostFixture(); defer { fixture.host.close() }
+     let committed = try await fixture.host.load(request: AppleHostFixture.request("initial"))
+-    for format in [AppleMediaFormat.hls, .mp4, .mov, .avi, .mpegTs, .mpegPs] {
++    for format in [AppleMediaFormat.hls] {
+       var request = AppleHostFixture.request("strict", url: server.url.absoluteString, format: format)
+       request.source.networkPolicy = .init(kind: .managed, connectTimeoutMs: 1000, readTimeoutMs: 1000,
+         maxRetries: 1, baseRetryDelayMs: 1, maxRetryDelayMs: 2, maxRedirects: 2)
+@@ -908,6 +909,35 @@ extension YlAppleSessionTests {
+ }
+ 
+ final class YlEngineAssessmentTests: XCTestCase {
++  func testProgressiveStrictPoliciesUseOwnedSamplesAndKeepHardwareUnprovenUntilPrepared() {
++    for kind: YlSourceKind in [.file, .network] {
++      for format: YlSourceFormat in [.mp4, .mov, .mpegTs, .mpegPs, .avi] {
++        for policy in 1...3 {
++          var source = YlAppleSourceDescriptor(uri: kind == .file ? "file:///owned/media" : "https://example.invalid/media", kind: kind, formatHint: format)
++          var options = YlAppleLoadOptions()
++          if policy == 1 { source.networkPolicy = .managed }
++          if policy == 2 { options.bufferStrategy = .bounded; options.minDurationMs = 100; options.maxDurationMs = 500; options.maxManagedBytes = 16 * 1024 * 1024 }
++          if policy == 3 { options.decoderPolicy = .hardwareRequired }
++          source.loadOptions = options
++          let result = YlEngineRouter.assess(source)
++          XCTAssertNil(result.rejection, "\(kind) \(format) \(policy)")
++          XCTAssertEqual(result.outcome, .requiresInspection)
++          XCTAssertEqual(result.engine, .managedFallback)
++          XCTAssertFalse(result.limitations.contains(.networkSystemStackOpaque))
++          XCTAssertFalse(result.satisfiedRequirements.contains(.decoderHardwareRequired))
++          if policy == 1 { XCTAssertTrue(result.satisfiedRequirements.contains(.networkManaged)) }
++          if policy == 2 { XCTAssertTrue(result.satisfiedRequirements.contains(.bufferBounded)) }
++          let missing = YlEngineRouter.assess(source, availability: .init())
++          XCTAssertEqual(missing.rejection?.code, "policy.unsupported")
++          if policy == 3 {
++            let denied = YlEngineRouter.assess(source, inspection: .init(format: format, demuxerSupported: true, codecsSupported: true, hasVideo: true, hardwareAccelerated: false))
++            XCTAssertEqual(denied.rejection?.code, "decoder.unavailable")
++          }
++        }
++      }
++    }
++  }
++
+   private let enforcing = YlRoutingAvailability(managedNetwork: true, boundedBuffer: true, hardwareEvidence: true)
+ 
+   func testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes() {
+@@ -922,7 +952,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+           if policy == 3 { options.decoderPolicy = .hardwareRequired }
+           source.loadOptions = options
+           let production = YlEngineRouter.assess(source)
+-          if (policy > 0) && (format == .matroska || format == .webm || format == .flv) {
++          if (policy > 0) && (format != .hls) {
+             XCTAssertEqual(production.outcome, .requiresInspection)
+             if policy != 3 { XCTAssertTrue(production.satisfiedRequirements.contains(policy == 1 ? .networkManaged : .bufferBounded)) }
+             else { XCTAssertFalse(production.satisfiedRequirements.contains(.decoderHardwareRequired)) }
+@@ -931,7 +961,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+             XCTAssertEqual(production.rejection?.code, "policy.unsupported", "\(kind) \(format) \(policy)")
+           }
+           let assessed = YlEngineRouter.assess(source, availability: enforcing)
+-          let fallback = format == .matroska || (format == .flv && kind == .network) || ([YlSourceFormat.mpegTs, .avi].contains(format) && policy == 0)
++          let fallback = format == .matroska || (format == .flv && kind == .network) || [YlSourceFormat.mpegTs, .mpegPs, .avi].contains(format) || ([YlSourceFormat.mp4, .mov].contains(format) && policy > 0)
+           let av = [.hls, .mp4, .mov].contains(format)
+           if fallback {
+             XCTAssertEqual(assessed.outcome, .requiresInspection)
+@@ -998,7 +1028,7 @@ final class YlEngineAssessmentTests: XCTestCase {
+         else { XCTAssertEqual(result.engine, .managedFallback) }
+       }
+     }
+-    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, intent: .live)
++    let live = YlAppleSourceDescriptor(uri: "https://example.test/live.mkv", kind: .network, formatHint: .matroska, intent: .live)
+     XCTAssertEqual(YlEngineRouter.assess(live).rejection?.code, "container.network_mkv_live_unsupported")
+   }
+ 
+@@ -1086,14 +1116,14 @@ extension YlAppleSessionTests {
+ 
+ extension YlEngineAssessmentTests {
+   func testBoundedPlanRequiresCompleteValidDurationsAndSoleByteBoundary() {
+-    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network)
++    var source = YlAppleSourceDescriptor(uri: "https://example.test/movie.mkv", kind: .network, formatHint: .matroska)
+     source.loadOptions = YlAppleLoadOptions(bufferStrategy: .bounded, minDurationMs: 100,
+       maxDurationMs: 500, maxManagedBytes: 16 * 1024 * 1024)
+     let supported = YlEngineRouter.assess(source)
+     XCTAssertEqual(supported.engine, .managedFallback)
+     XCTAssertTrue(supported.satisfiedRequirements.contains(.bufferBounded))
+     XCTAssertTrue(supported.limitations.contains(.bufferOsMemoryExcluded))
+-    for format in [YlSourceFormat.hls, .mp4, .mov] {
++    for format in [YlSourceFormat.hls] {
+       var system = source; system.formatHint = format
+       XCTAssertEqual(YlEngineRouter.assess(system).rejection?.code, "policy.unsupported")
+     }
+@@ -1141,7 +1171,7 @@ final class YlAudioOwnershipTests: XCTestCase {
+       makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in }, audioOwnership: coordinator)
+   }
+   func create(_ registry: YlApplePlayerRegistry, managed: Bool = true) throws -> YlApplePlayerHost {
+-    let reply = try registry.create(request: .init(schemaMajor: 6,
++    let reply = try registry.create(request: .init(schemaMajor: 7,
+       options: .init(decoderPolicy: .systemDefault, audioPolicy: managed ? .pluginManagedMediaPlayback : .appManaged, positionUpdateIntervalMs: 100)))
+     return try XCTUnwrap(registry.host(for: reply.channelSuffix))
+   }
+@@ -1436,6 +1466,40 @@ final class YlAvPlayerNonblockingMetadataTests: XCTestCase {
+ }
+ 
+ final class YlGeometryAndMetricTests: XCTestCase {
++  func testNetworkTrafficIsCumulativeAcrossMediaGenerationsAndSeparatePerLoad() throws {
++    let ledger = YlManagedBufferLedger()
++    let scope = try ledger.makeScope(maxBytes: nil)
++    let collector = YlMetricsCollector(scope: scope)
++    XCTAssertNil(collector.snapshot.networkBytesReceived)
++    scope.recordNetworkBytes(0)
++    XCTAssertEqual(collector.snapshot.networkBytesReceived, 0)
++    scope.recordNetworkBytes(512)
++    scope.beginMediaGeneration()
++    scope.recordNetworkBytes(256)
++    XCTAssertEqual(collector.snapshot.networkBytesReceived, 768)
++    XCTAssertEqual(YlApplePlayerHost.metrics(collector.snapshot).networkBytesReceived, 768)
++    let nextLoad = try ledger.makeScope(maxBytes: nil)
++    XCTAssertNil(nextLoad.networkBytesReceived)
++    nextLoad.recordNetworkBytes(0)
++    scope.recordNetworkBytes(100)
++    XCTAssertEqual(nextLoad.networkBytesReceived, 0)
++    scope.recordNetworkBytes(Int.max)
++    XCTAssertEqual(scope.networkBytesReceived, Int64.max)
++  }
++
++  func testAccessLogCountsActualBytesAcrossItemReplacementAndResetsPerLoad() {
++    let collector = YlMetricsCollector()
++    let first = NSObject(), second = NSObject()
++    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: []))
++    XCTAssertNil(collector.accessLogNetworkBytes(item: first, transferred: [-1]))
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [0]), 0)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 50]), 150)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: first, transferred: [100, 75]), 175)
++    XCTAssertEqual(collector.accessLogNetworkBytes(item: second, transferred: [25]), 200)
++    XCTAssertEqual(YlMetricsCollector().accessLogNetworkBytes(item: second, transferred: [25]), 25)
++  }
++
+   func testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease() throws {
+     let ledger = YlManagedBufferLedger(maxBytes: 4096)
+     let scope = try ledger.makeScope(maxBytes: 4096)
+@@ -1654,7 +1718,7 @@ private final class AppleThreadRecordingMessenger: NSObject, FlutterBinaryMessen
+ 
+ @MainActor
+ extension YlAppleSessionTests {
+-  func testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
++  func testTransportStreamSignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
+     for (stride, prefix) in [(188, 0), (192, 4), (204, 0)] {
+       var bytes = Data(repeating: 0, count: stride * 3)
+       for packet in 0..<3 {
+@@ -1674,17 +1738,17 @@ extension YlAppleSessionTests {
+       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegts_live_unsupported")
+       source.intent = .onDemand
+       source.networkPolicy = .managed
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+       source.networkPolicy = .platformDefault
+       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     }
+   }
+ }
+ 
+ @MainActor
+ extension YlAppleSessionTests {
+-  func testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed() {
++  func testAVISignatureAndVodEligibilityEnforcesStrictAndRejectsLive() {
+     XCTAssertEqual(YlSourceInspector.format(Data([0x52,0x49,0x46,0x46,0,0,0,0,0x41,0x56,0x49,0x20])), .avi)
+     XCTAssertEqual(YlSourceInspector.format(Data("RIFF".utf8)), .automatic)
+     for kind: YlSourceKind in [.file, .network] {
+@@ -1695,10 +1759,10 @@ extension YlAppleSessionTests {
+       XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.avi_live_unsupported")
+       source.intent = .onDemand
+       source.networkPolicy = .managed
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+       source.networkPolicy = .platformDefault
+       source.loadOptions = YlAppleLoadOptions(decoderPolicy: .hardwareRequired)
+-      XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++      XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     }
+   }
+ }
+diff --git a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift
+index 30fce9e..59f44b0 100644
+--- a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift
++++ b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift
+@@ -100,6 +100,7 @@ private final class ContainerAudioFactory: YlAudioRendererMaking {
+     // Real platform output and consumed audio clock; record the decoded PCM
+     // without replacing the device output with a fabricated completion clock.
+     pcm = ContainerPCM()
++    pcm.converter.bufferScope = bufferBudget.bufferScope
+     let created = YlAudioRenderer(bufferBudget: bufferBudget, converter: pcm)
+     renderer = created; return created
+   }
+@@ -164,11 +165,29 @@ private struct ContainerReference: Decodable {
+ }
+ 
+ @MainActor final class YlContainerOutputTests: XCTestCase {
+-  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false) async throws {
+-    let url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
++  private func checkOutput(name: String, ext: String, format: YlSourceFormat, channels: Int = 2, allowSimulatorHardwareSkip: Bool = false, strictAsset: String? = nil) async throws {
++    let url: URL
++    if let strictAsset {
++      let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
++      let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
++      url = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/format_matrix/" + strictAsset)
++    } else { url = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext)) }
+     let bound = try ContainerBoundAV(name: name, media: url)
+     defer { bound?.attach(to: self) }
+-    let prepared = try YlPreparedFallback(source: .init(uri: url.absoluteString, kind: .file, formatHint: format), requireHardwareProbe: false)
++    let server = strictAsset == nil ? nil : try ReactivationMediaServer(data: Data(contentsOf: url))
++    defer { server?.close() }
++    let ledger = YlManagedBufferLedger(maxBytes: 16 * 1024 * 1024)
++    let scope = try ledger.makeScope(maxBytes: 16 * 1024 * 1024)
++    var source = YlAppleSourceDescriptor(uri: server?.url.absoluteString ?? url.absoluteString,
++      kind: server == nil ? .file : .network, formatHint: format)
++    if strictAsset != nil {
++      source.networkPolicy = .managed
++      source.loadOptions = .init(bufferStrategy: .bounded, minDurationMs: 100, maxDurationMs: 2000,
++        maxManagedBytes: 16 * 1024 * 1024, decoderPolicy: .hardwareRequired)
++      source.bufferScope = scope
++      XCTAssertEqual(YlEngineRouter.assess(source).engine, .managedFallback)
++    }
++    let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)
+     if channels == 6 {
+       let stream = try XCTUnwrap(prepared.audioStreams.first)
+       XCTAssertEqual(stream.channel_count, 6)
+@@ -184,7 +203,10 @@ private struct ContainerReference: Decodable {
+       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 1,
+       audioRendererFactory: audio, emit: { callback in
+         if case .state(let value) = callback.event { state = value }
+-        if case .failure(let error) = callback.event { errors.append(error) }
++        if case .failure(let error) = callback.event {
++          errors.append(error)
++          if let strictAsset { print("P03_STRICT \(strictAsset): \(error.code) \(error.diagnostic ?? "none") \(scope.timingDiagnostic) \(ledger.snapshot.categories)") }
++        }
+       })
+       try initial?.activate()
+     } catch {
+@@ -229,8 +251,31 @@ private struct ContainerReference: Decodable {
+       bound?.capture(audio.pcm.evidence, markers: [Int(target / 1000)])
+     }
+     backend.stop(); backend.dispose(); backend.dispose()
++    if strictAsset != nil {
++      XCTAssertGreaterThan(ledger.snapshot.peakBytes, 0)
++      XCTAssertLessThanOrEqual(ledger.snapshot.peakBytes, 16 * 1024 * 1024)
++      // VT callbacks can retire asynchronously after invalidate. Do not erase
++      // their reservations; wait for the actual ownership release with a bound.
++      for _ in 0..<100 where ledger.snapshot.currentBytes != 0 { try await Task.sleep(nanoseconds: 10_000_000) }
++      XCTAssertEqual(ledger.snapshot.currentBytes, 0, "\(strictAsset ?? name): \(ledger.snapshot.categories)")
++    }
+     bound?.outcome = "passed"; bound?.failureCode = ""
+   }
++  func testStrictProgressiveManagedBoundedHardwareActualOutputs() async throws {
++    for (file, format): (String, YlSourceFormat) in [
++      ("mp4-avc-aac.mp4", .mp4), ("mov-hevc-aac.mov", .mov),
++      ("ts-avc-ac3.ts", .mpegTs), ("ps-avc-mp3.mpg", .mpegPs), ("avi-avc-mp3.avi", .avi)] {
++      try await checkOutput(name: file, ext: "", format: format, strictAsset: file)
++    }
++  }
++  func testStrictVP9ManagedBoundedHardwareActualOutputs() async throws {
++    try await checkOutput(name: "webm-vp9-vorbis", ext: "webm", format: .webm, strictAsset: "webm-vp9-vorbis.webm")
++  }
++  func testStrictOpusVorbisManagedBoundedHardwareActualOutputs() async throws {
++    for (file, channels) in [("mkv-avc-opus.mkv", 2), ("mkv-avc-opus-silk.mkv", 1), ("mkv-avc-opus-hybrid.mkv", 1), ("mkv-avc-vorbis.mkv", 2), ("mkv-avc-vorbis-codec-delay.mkv", 2)] {
++      try await checkOutput(name: file, ext: "", format: .matroska, channels: channels, strictAsset: file)
++    }
++  }
+   func testProgramStreamActualPixelsPCMAndBidirectionalSeek() async throws {
+     do { try await checkOutput(name: "p03-ps-avc-mp3", ext: "mpg", format: .mpegPs, allowSimulatorHardwareSkip: true) }
+     catch let error as NativePlayerError { XCTFail("PS: \(error.code): \(error.message)") }
+diff --git a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift
+index 2652b55..2dcda91 100644
+--- a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift
++++ b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift
+@@ -3,6 +3,18 @@ import XCTest
+ import CoreMedia
+ 
+ final class YlFallbackBufferBudgetTests: XCTestCase {
++  func testUnknownPrerollPacketDurationReservesDecoderOutputCeilingOnly() {
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 48000), 120000)
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 48000), 85334)
++    XCTAssertEqual(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: 44100), 92880)
++    for rate in [0.0, -1, .infinity, .nan, 192000] {
++      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: rate))
++      XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .vorbis, sampleRate: rate))
++    }
++    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .opus, sampleRate: 44100))
++    XCTAssertNil(ylBoundedPrerollPacketDurationUs(codec: .aac, sampleRate: 48000))
++  }
++
+   func testLowLatencyBudgetUsesSpecifiedCeilings() throws {
+     let configuration = PlayerConfiguration(map: ["bufferMode": "lowLatency"])
+ 
+diff --git a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift
+index b5b1b5e..33e838b 100644
+--- a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift
++++ b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift
+@@ -32,13 +32,13 @@ final class YlProgramStreamTests: XCTestCase {
+     var shortStuffing = mpeg2; shortStuffing[13] |= 7
+     XCTAssertEqual(YlSourceInspector.format(Data(shortStuffing + [0xff])), .automatic)
+   }
+-  func testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection() {
++  func testProgramStreamSelectsOwnedFallbackWithManagedPolicy() {
+     var source = YlAppleSourceDescriptor(uri: "file:///owned.mpg", kind: .file, formatHint: .mpegPs)
+     let ordinary = YlEngineRouter.assess(source)
+     XCTAssertEqual(ordinary.outcome, .requiresInspection)
+     XCTAssertEqual(ordinary.engine, .managedFallback)
+     source.networkPolicy = .managed
+-    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
++    XCTAssertEqual(YlEngineRouter.assess(source).outcome, .requiresInspection)
+     source.networkPolicy = .platformDefault; source.intent = .live
+     XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "container.mpegps_live_unsupported")
+   }
+@@ -61,6 +61,11 @@ final class YlProgramStreamTests: XCTestCase {
+       XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
+       XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
+     }
++    for name in ["movie.bin", "movie.mkv", "movie.mp4", "movie"] {
++      let source = YlAppleSourceDescriptor(uri: "file:///" + name, kind: .file, formatHint: .mov)
++      XCTAssertTrue(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: false))
++      XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(source, supportsMIMEOverride: true))
++    }
+     let named = YlAppleSourceDescriptor(uri: "file:///video.mp4", kind: .file, formatHint: .mp4)
+     XCTAssertFalse(YlMp4CompatibilityInspector.needsOwnedMIMEFallback(named, supportsMIMEOverride: false))
+   }
+diff --git a/tool/consumer_fixtures/apple_flutter/main_example_tests.py b/tool/consumer_fixtures/apple_flutter/main_example_tests.py
+index 91905db..b578153 100644
+--- a/tool/consumer_fixtures/apple_flutter/main_example_tests.py
++++ b/tool/consumer_fixtures/apple_flutter/main_example_tests.py
+@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
+     "engine-tests-manifest.json": PINNED_REVISION,
+     "resources-manifest.json": PINNED_REVISION,
+ }
+-EXPECTED_CASES = {'ios': 771, 'macos': 816}
++EXPECTED_CASES = {'ios': 781, 'macos': 827}
+ 
+ 
+ def digest(data):
+diff --git a/tool/consumer_fixtures/apple_flutter/new-tests-manifest.json b/tool/consumer_fixtures/apple_flutter/new-tests-manifest.json
+index b70b921..6250cb9 100644
+--- a/tool/consumer_fixtures/apple_flutter/new-tests-manifest.json
++++ b/tool/consumer_fixtures/apple_flutter/new-tests-manifest.json
+@@ -112,7 +112,7 @@
+   },
+   {
+     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
+-    "sha256": "a9dde2f7a67de6cd8e05a6a5543fde18603c77d12da332f4adbd3ace9b524c48",
++    "sha256": "9f83ab3de01fa3375fabca12f9e68ba13914f85333bf573a1448f38dd45d5483",
+     "methods": [
+       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
+       "testStopDuringHlsProbeUnblocksNextLoad",
+@@ -141,6 +141,7 @@
+       "testManagedUnsupportedLoadDoesNotOpenUpstreamOrReplaceSession",
+       "testTypedInputPreservesRequestedNetworkBoundsForEnforcedManagedRoute",
+       "testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit",
++      "testProgressiveStrictPoliciesUseOwnedSamplesAndKeepHardwareUnprovenUntilPrepared",
+       "testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes",
+       "testStaticNetworkDashRequiresPrivateManifestInspection",
+       "testDashInspectsManagedAndHardwareButRejectsBoundedLiveAndLocal",
+@@ -174,8 +175,8 @@
+       "testAbsentMetadataUsesValidFormatButRejectsInvalidMeasurements",
+       "testAVPreferredTransformAndPresentationFallbackDoNotDoubleRotate",
+       "testMonotonicMilestonesNullableCountersAndNonOverlappingRebuffers",
+-      "testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed",
+-      "testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed"
++      "testTransportStreamSignatureAndVodEligibilityEnforcesStrictAndRejectsLive",
++      "testAVISignatureAndVodEligibilityEnforcesStrictAndRejectsLive"
+     ],
+     "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
+     "task7_typed_migration": {
+@@ -220,7 +221,8 @@
+       "from_sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
+       "previous_manifest_sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
+       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
+-    }
++    },
++    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
+   },
+   {
+     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
+@@ -838,15 +840,16 @@
+   },
+   {
+     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift",
+-    "sha256": "efde82b499469a0ce53a825961c9c6bb4e438c37262704c2c8d7ff48c3c15a15",
++    "sha256": "31e1142c74f4e7999229b9801451c1e77e403074b2051da8d8797c84dfcd924d",
+     "methods": [
+       "testCompletePackHeadersAndStuffingAreRecognized",
+       "testTruncatedAndInvalidPackHeadersCannotCommitARoute",
+-      "testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection",
++      "testProgramStreamSelectsOwnedFallbackWithManagedPolicy",
+       "testAutomaticKnownExtensionsRequireContentBeforeContainerCommit",
+       "testOlderOSUsesOwnedSamplesWhenMP4MIMEHintCannotBeHonored",
+       "testLegacyQuickTimeAtomLayoutWithoutFtyp"
+-    ]
++    ],
++    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
+   },
+   {
+     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlVorbisDelayTests.swift",
+@@ -858,8 +861,11 @@
+   },
+   {
+     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift",
+-    "sha256": "09bd8030c91551fc40cc061cbd9cbbe9099dec3a976b21f0f541ad3058dcae1f",
++    "sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
+     "methods": [
++      "testStrictProgressiveManagedBoundedHardwareActualOutputs",
++      "testStrictVP9ManagedBoundedHardwareActualOutputs",
++      "testStrictOpusVorbisManagedBoundedHardwareActualOutputs",
+       "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+       "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+       "testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+@@ -868,11 +874,12 @@
+       "testFLACActualPixelsPCMAndSeek",
+       "testRealConvertersPreserveFirstAndLastSamples",
+       "testCodecTrackSwitchPreservesTargetSamplesAndTail",
++      "testDASHWindowOwnsNegativePCMClipping",
+       "testPCMTrimRoundsForwardAndRejectsTimestampOverflow",
+-      "testDolbyTrimRetainsAllocationAndResetsHistory",
+-      "testDASHWindowOwnsNegativePCMClipping"
++      "testDolbyTrimRetainsAllocationAndResetsHistory"
+     ],
+-    "p03_pcm_followup": "Pinned unshifted PCM boundaries and cold codec track switches; actual converter, output and accounting."
++    "p03_pcm_followup": "Pinned unshifted PCM boundaries and cold codec track switches; actual converter, output and accounting.",
++    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
+   },
+   {
+     "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-ps-avc-mp3.mpg",
+@@ -968,5 +975,34 @@
+     "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-mkv-avc-flac.mkv",
+     "sha256": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
+     "methods": []
++  },
++  {
++    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift",
++    "sha256": "2e463d227ea72b185fd2eb31012da36a41c6fafe919cf34330c52afeeeea598f",
++    "methods": [
++      "testUnknownPrerollPacketDurationReservesDecoderOutputCeilingOnly",
++      "testLowLatencyBudgetUsesSpecifiedCeilings",
++      "testBalancedBudgetUsesSpecifiedCeilings",
++      "testAutomaticBudgetMatchesBalanced",
++      "testStableBudgetUsesSpecifiedCeilings",
++      "testCustomBudgetSumsExactlyToConfiguredLimit",
++      "testCustomBudgetBelowThreeMiBFails",
++      "testParsesAndClampsNetworkConfiguration",
++      "testOverflowCategoriesAndDelayedGenerationRelease",
++      "testConcurrentReservationsNeverExceedSixteenMiB",
++      "testAutomaticActiveAndBoundedCandidateShareStricterLimitUntilLastPayloadRelease",
++      "testRingChargesRewindButNotEmptyCapacityAndReleasesOnActualReset",
++      "testInspectedFrameMinimumAndDurationOverflowReject",
++      "testNetworkCannotStealAudioAndFrameWorkingSet",
++      "testPoppedPacketAndHeldFrameRemainChargedAcrossReset",
++      "testQueueTimestampsEnforceMaximumAndSeekClearsDuration",
++      "testRetainedPacketTimingTransfersAndOldEpochKeepsBytesWithoutBlockingSeek",
++      "testStrictPacketDurationRejectsUnknownOversizeAndReorderingBeyondMaximum",
++      "testFLVAACConfigurationRequiresCompleteInactiveSyncExtension",
++      "testMissingAACPacketDurationUsesInspectedLCFrameLengthWithoutGuessing",
++      "testConsumedHighFrameForecastBackpressuresUntilOlderAudioReleases",
++      "testCopiedSampleAndHeldBackingKeepOneReceiptAfterOriginalRelease"
++    ],
++    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
+   }
+ ]
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift
+@@ -398,7 +398,7 @@
+             identity: identity, bridge: bridge, token: token, emit: self.emit))
+         case .avPlayer:
+           return try self.prepareNativeOrMp4(source: source, token: token, identity: identity)
+-        case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .avi:
++        case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .progressiveMp4, .avi:
+           return .fallback(
+             source: source,
+             prepared: try self.prepareFallback(source: source, token: token, identity: identity)
+@@ -420,7 +420,7 @@
+             return try self.prepareDash(source: inspected, token: token, credentials: hlsCredentials, constraints: loadConstraints)
+           case .headeredHls: return .headeredHls(source: inspected,
+             prepared: try self.prepareHeaderedHls(source: inspected, token: token, credentialContext: hlsCredentials, videoConstraints: loadConstraints))
+-          case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .avi:
++          case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .progressiveMp4, .avi:
+             return .fallback(source: inspected, prepared: try self.prepareFallback(source: inspected, token: token, identity: identity))
+           default: throw NativePlayerError(category: "container", code: "container.unsupported", message: "Inspection could not establish a supported route.")
+           }
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift
+@@ -780,10 +780,10 @@
+       )
+     }
+     let asset: AVURLAsset
+-    if #available(macOS 14.0, iOS 17.0, *), source.formatHint == .mp4 {
++    if #available(macOS 14.0, iOS 17.0, *), [YlSourceFormat.mp4, .mov].contains(source.formatHint) {
+       // Preserve the explicit or inspected format when the URL has no usable
+-      // extension. AVFoundation otherwise rejects even a validated MP4 prefix.
+-      asset = AVURLAsset(url: url, options: [AVURLAssetOverrideMIMETypeKey: "video/mp4"])
++      // extension. AVFoundation otherwise rejects even a validated MP4/MOV prefix.
++      asset = AVURLAsset(url: url, options: [AVURLAssetOverrideMIMETypeKey: source.formatHint == .mov ? "video/quicktime" : "video/mp4"])
+     } else {
+       asset = AVURLAsset(url: url)
+     }

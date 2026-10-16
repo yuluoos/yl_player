@@ -112,8 +112,9 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "a9dde2f7a67de6cd8e05a6a5543fde18603c77d12da332f4adbd3ace9b524c48",
+    "sha256": "2ba5f6460606c50369ad77367bb3f1c0ac7f0073c0d1973615d39b776dbc4660",
     "methods": [
+      "testHeaderedLiveHlsPublishesActualOriginTraffic",
       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
       "testStopDuringHlsProbeUnblocksNextLoad",
       "testLiveHlsKeepsAvPlayerRoute",
@@ -141,6 +142,7 @@
       "testManagedUnsupportedLoadDoesNotOpenUpstreamOrReplaceSession",
       "testTypedInputPreservesRequestedNetworkBoundsForEnforcedManagedRoute",
       "testUnknownLocalSourceLoadRefinesSameAssessmentBeforeCommit",
+      "testProgressiveStrictPoliciesUseOwnedSamplesAndKeepHardwareUnprovenUntilPrepared",
       "testCompletePolicyRouteMatrixEnablesEnforcedManagedBufferAndHardwareRoutes",
       "testStaticNetworkDashRequiresPrivateManifestInspection",
       "testDashInspectsManagedAndHardwareButRejectsBoundedLiveAndLocal",
@@ -167,6 +169,8 @@
       "testRepeatedSafeCommandMappingPreservesClassificationWithoutRawForwarding",
       "testUntrustedPigeonFailureCannotBypassSafeBoundary",
       "testStatePublicationDoesNotSynchronouslyReadPendingAssetTracks",
+      "testNetworkTrafficIsCumulativeAcrossMediaGenerationsAndSeparatePerLoad",
+      "testAccessLogCountsActualBytesAcrossItemReplacementAndResetsPerLoad",
       "testManagedMetricsReadSingleLedgerIncludingRetiredGenerationUntilRelease",
       "testAVAssetTrackPreferredTransformFlowsIntoPublicGeometry",
       "testLoadToReadyIncludesPreparationUsingSessionMonotonicClock",
@@ -174,8 +178,8 @@
       "testAbsentMetadataUsesValidFormatButRejectsInvalidMeasurements",
       "testAVPreferredTransformAndPresentationFallbackDoNotDoubleRotate",
       "testMonotonicMilestonesNullableCountersAndNonOverlappingRebuffers",
-      "testTransportStreamSignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed",
-      "testAVISignatureAndVodEligibilityKeepStrictAndLivePoliciesClosed"
+      "testTransportStreamSignatureAndVodEligibilityEnforcesStrictAndRejectsLive",
+      "testAVISignatureAndVodEligibilityEnforcesStrictAndRejectsLive"
     ],
     "task7_provenance": "Task7 native registry/reducer/identity, READY, private/public texture ownership and acknowledged callback boundary; R23 partial/absent geometry must remain unknown without changing actual internal dimensions.",
     "task7_typed_migration": {
@@ -220,7 +224,8 @@
       "from_sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
       "previous_manifest_sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
-    }
+    },
+    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
@@ -334,7 +339,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
-    "sha256": "36a259de9abe24b20287b29a5d532bc9f86e90b9163442a35591aac7fe6655d9",
+    "sha256": "5d4c3387bfa8b6876c6ae71cf26850ca27e665654f1375743e0d4f4a798bee56",
     "methods": [
       "testOpusTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder",
       "testOpusTrackCandidateFailureKeepsCurrentRendererAndCursor",
@@ -351,6 +356,7 @@
       "testTerminalSessionEOFWaitsForAudioFenceThenCompletes",
       "testTerminalSessionCompletesWhenDecodedVideoOutlastsAudio",
       "testTerminalSessionCompletesWhenDecodedAudioOutlastsVideo",
+      "testTerminalSessionLatePausePlayPreservesCompletedUntilSeek",
       "testVorbisTrackSwitchRewindsAndTrimsRealPCMForEachColdDecoder",
       "testVorbisTrackCandidateFailureKeepsCurrentRendererAndCursor",
       "testInactiveVorbisSwitchPreservesPreparedRendererUntilActivation",
@@ -393,7 +399,8 @@
       "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
       "testBoundedInspectedFrameRejectsTooSmallBudgetBeforeActivation",
       "testBoundedAudioHeldCompletionRemainsChargedAfterResetAndDisposal"
-    ]
+    ],
+    "p03_eof_followup": "Late pause/play preserves completed until explicit seek resets the drained generation."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAudioRendererTests.swift",
@@ -838,15 +845,16 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlProgramStreamTests.swift",
-    "sha256": "efde82b499469a0ce53a825961c9c6bb4e438c37262704c2c8d7ff48c3c15a15",
+    "sha256": "31e1142c74f4e7999229b9801451c1e77e403074b2051da8d8797c84dfcd924d",
     "methods": [
       "testCompletePackHeadersAndStuffingAreRecognized",
       "testTruncatedAndInvalidPackHeadersCannotCommitARoute",
-      "testProgramStreamSelectsOwnedFallbackAndKeepsStrictPolicyRejection",
+      "testProgramStreamSelectsOwnedFallbackWithManagedPolicy",
       "testAutomaticKnownExtensionsRequireContentBeforeContainerCommit",
       "testOlderOSUsesOwnedSamplesWhenMP4MIMEHintCannotBeHonored",
       "testLegacyQuickTimeAtomLayoutWithoutFtyp"
-    ]
+    ],
+    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlVorbisDelayTests.swift",
@@ -858,8 +866,11 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlContainerOutputTests.swift",
-    "sha256": "09bd8030c91551fc40cc061cbd9cbbe9099dec3a976b21f0f541ad3058dcae1f",
+    "sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
     "methods": [
+      "testStrictProgressiveManagedBoundedHardwareActualOutputs",
+      "testStrictVP9ManagedBoundedHardwareActualOutputs",
+      "testStrictOpusVorbisManagedBoundedHardwareActualOutputs",
       "testProgramStreamActualPixelsPCMAndBidirectionalSeek",
       "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
       "testAC3SurroundActualPixelsSixChannelPCMAndSeek",
@@ -868,11 +879,12 @@
       "testFLACActualPixelsPCMAndSeek",
       "testRealConvertersPreserveFirstAndLastSamples",
       "testCodecTrackSwitchPreservesTargetSamplesAndTail",
+      "testDASHWindowOwnsNegativePCMClipping",
       "testPCMTrimRoundsForwardAndRejectsTimestampOverflow",
-      "testDolbyTrimRetainsAllocationAndResetsHistory",
-      "testDASHWindowOwnsNegativePCMClipping"
+      "testDolbyTrimRetainsAllocationAndResetsHistory"
     ],
-    "p03_pcm_followup": "Pinned unshifted PCM boundaries and cold codec track switches; actual converter, output and accounting."
+    "p03_pcm_followup": "Pinned unshifted PCM boundaries and cold codec track switches; actual converter, output and accounting.",
+    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-ps-avc-mp3.mpg",
@@ -968,5 +980,34 @@
     "destination": "tool/consumer_fixtures/apple_flutter/Resources/p03-mkv-avc-flac.mkv",
     "sha256": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217",
     "methods": []
+  },
+  {
+    "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackBufferBudgetTests.swift",
+    "sha256": "2e463d227ea72b185fd2eb31012da36a41c6fafe919cf34330c52afeeeea598f",
+    "methods": [
+      "testUnknownPrerollPacketDurationReservesDecoderOutputCeilingOnly",
+      "testLowLatencyBudgetUsesSpecifiedCeilings",
+      "testBalancedBudgetUsesSpecifiedCeilings",
+      "testAutomaticBudgetMatchesBalanced",
+      "testStableBudgetUsesSpecifiedCeilings",
+      "testCustomBudgetSumsExactlyToConfiguredLimit",
+      "testCustomBudgetBelowThreeMiBFails",
+      "testParsesAndClampsNetworkConfiguration",
+      "testOverflowCategoriesAndDelayedGenerationRelease",
+      "testConcurrentReservationsNeverExceedSixteenMiB",
+      "testAutomaticActiveAndBoundedCandidateShareStricterLimitUntilLastPayloadRelease",
+      "testRingChargesRewindButNotEmptyCapacityAndReleasesOnActualReset",
+      "testInspectedFrameMinimumAndDurationOverflowReject",
+      "testNetworkCannotStealAudioAndFrameWorkingSet",
+      "testPoppedPacketAndHeldFrameRemainChargedAcrossReset",
+      "testQueueTimestampsEnforceMaximumAndSeekClearsDuration",
+      "testRetainedPacketTimingTransfersAndOldEpochKeepsBytesWithoutBlockingSeek",
+      "testStrictPacketDurationRejectsUnknownOversizeAndReorderingBeyondMaximum",
+      "testFLVAACConfigurationRequiresCompleteInactiveSyncExtension",
+      "testMissingAACPacketDurationUsesInspectedLCFrameLengthWithoutGuessing",
+      "testConsumedHighFrameForecastBackpressuresUntilOlderAudioReleases",
+      "testCopiedSampleAndHeldBackingKeepOneReceiptAfterOriginalRelease"
+    ],
+    "p03_strict_followup": "Owned strict progressive routes, bounded Opus/Vorbis reservations and actual pixels/PCM/seek/accounting."
   }
 ]

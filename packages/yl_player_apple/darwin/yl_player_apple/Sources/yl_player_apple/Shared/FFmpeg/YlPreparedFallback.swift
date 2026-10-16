@@ -181,8 +181,11 @@ final class YlPreparedFallback {
 
     var selectedVideo: YLFStreamInfo?
     var selectedAudio: [YLFStreamInfo] = []
-    let opusPolicyAllowed = container == .matroska && source.intent != .live && boundedPlan == nil
-      && (source.networkPolicy != .managed || policy.isSeekable) && decoderPolicy != .hardwareRequired
+    // Preroll packets, converter scratch and queued PCM share bufferScope.
+    // Hardware-required constrains video; it must not prohibit audio codecs
+    // whose bounded conversion uses the same owned output/accounting chain.
+    let opusPolicyAllowed = container == .matroska && source.intent != .live
+      && (source.networkPolicy != .managed || policy.isSeekable)
     var sawBlockedOpus = false
     var sawBlockedVorbis = false
     var sawUnsupportedAudio = false
@@ -224,17 +227,17 @@ final class YlPreparedFallback {
       )
     }
     if Int(selectedVideo.codec) == YLFCodecVP9,
-       container != .matroska || source.intent == .live || !policy.isSeekable || boundedPlan != nil {
+       container != .matroska || source.intent == .live || !policy.isSeekable {
       throw NativePlayerError(category: "unsupported", code: "policy.vp9_unsupported",
-        message: "VP9 currently supports seekable Matroska or WebM VOD without a bounded buffer policy.")
+        message: "VP9 requires seekable Matroska or WebM VOD.")
     }
     if selectedAudio.isEmpty && sawBlockedOpus {
       throw NativePlayerError(category: "unsupported", code: "policy.opus_unsupported",
-        message: "Opus currently supports ordinary Matroska VOD without bounded buffer or hardware-required policies.")
+        message: "Opus requires Matroska VOD; managed networking requires random access.")
     }
     if selectedAudio.isEmpty && sawBlockedVorbis {
       throw NativePlayerError(category: "unsupported", code: "policy.vorbis_unsupported",
-        message: "Vorbis currently supports ordinary Matroska VOD without bounded buffer or hardware-required policies.")
+        message: "Vorbis requires Matroska VOD; managed networking requires random access.")
     }
     if selectedAudio.isEmpty && sawUnsupportedAudio {
       throw NativePlayerError(

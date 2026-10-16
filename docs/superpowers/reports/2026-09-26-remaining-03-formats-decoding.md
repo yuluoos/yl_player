@@ -627,3 +627,16 @@ Android当前AV1/Main10设备解码能力、Apple严格progressive managed路由
 最终 macOS/iOS Simulator 的 MP4 独立取数观测各1/1，macOS既有六控制严格6/6；两端框架末尾失败和错误构建身份四项负例均正确拒绝。原生45/45、Flutter example96/96、Python61/61、静态分析及公开API检查通过；失败历史及同次产品身份绑定的原始数据全部保留。
 
 AVPlayer tap 提供队列取数范围，仍未提供硬件已播放样本计数。因此新增 `renderPullAcceptance` 与严格消费验收分开，MP4的 `scopeAcceptance` 仍为false，报 `played_sample_clock_unverified`。未增加此前完整格式矩阵通过数，Task7/8及完整P03保持开放；managed、生产准入、长播放和弱网ABR未修改。详见[本轮证据](evidence/2026-10-16-p03-avplayer-audio/README.md)。
+
+
+### 2026-10-16 剩余严格策略工程与 EOF 竞争修复
+
+按用户“暂无新增资源，先完成全部工程实现”继续获批方案：Apple MP4/MOV 的 managed/bounded/hardwareRequired 改走自有样本链，TS/PS/AVI 接通相同严格策略；原网络凭据、期限、取消和共享账本继续执行。Opus CELT/SILK/hybrid、Vorbis 严格策略与 VP9 bounded 接通，缺失包时长只按转换器上限预留队列时长，不伪造原始包/PCM 时间。旧系统错误后缀 MOV 使用自有样本，新系统保留正确 MIME；默认 AVPlayer 和严格 HLS 边界不变。
+
+完整矩阵第一次44项执行为36/40：新增五种 managed progressive 全通过，但本地 WebM/Vorbis 首次播放采集超时。同包复现通过，原 unfinished 记录显示音频已结束而公开状态仍 playing、position 超过10秒；确定性原生测试随后复现迟到 pause/play 覆盖 completed 的两个失败。修复保留已耗尽代次的结束状态，显式 seek/rebuild 后才恢复播放；不放宽时限或消费证据。新的独立冻结构建 `cb9c4d6612092459f34f9112d8c3d917302feaa5db45751adc204e2c9fef52f9` 完整44项复验为37/40，三项剩余是 AVPlayer 本地 MP4 无硬件已播放样本计数、AV1 本地/HTTP 当前硬件不可用。前后构建及全部失败记录分开保留，不拼接通过数。
+
+最终 macOS 关联原生108/108、iOS共用代码39/39零失败/跳过；公开策略13/13加修复后的公开EOF专项1/1、example96/96、Python音画61/61及软件准入21/21、5文件静态分析和公开API检查通过。同一最终包的框架末尾失败负例保留原始通过行但拒绝总体通过，错误身份负例在播放前拒绝。
+
+一次独立复核无 Critical/Important；其后实际运行发现的 EOF 修复由父会话以 RED→GREEN 和全格式复验闭环，不冒充二次复核。一项既有 Minor 延后：Vorbis 安全错误文案仍写零 CodecDelay，不影响实际准入/播放。全量历史 fixture 检查仍存在 skip-source 合约和既有 macOS 镜像差异；本次五份改动测试的两平台镜像及 PBX 成员核对通过，实际执行数以 XCTest 为准。
+
+本轮可实施路径和必要依赖已交付；完整 CAP/P03 仍不宣告完成。没有真机/最低OS/Intel、AV1/Main10硬件、物理同步及匹配持续热/独立产品资格，生产软件档位继续为空；AVPlayer 队列取数也不冒充硬件消费。未改动长播放和弱网ABR。原始记录、裁定和可重放校验见[工程收尾证据](evidence/2026-10-16-p03-remaining/README.md)。

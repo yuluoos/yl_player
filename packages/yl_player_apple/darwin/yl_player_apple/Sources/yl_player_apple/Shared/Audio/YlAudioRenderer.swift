@@ -178,6 +178,23 @@ enum YlAudioEnqueueResult: Equatable {
   case staleGeneration
 }
 
+/// Conservative queue reservation when Matroska omits packet duration. These
+/// are the converters' hard output caps, not decoded durations or timestamps.
+/// Actual PCM replaces this timing when conversion succeeds; unknown rates fail.
+func ylBoundedPrerollPacketDurationUs(codec: YlAudioCodec, sampleRate: Double) -> Int64? {
+  let frames: Int
+  switch codec {
+  case .opus:
+    guard sampleRate == 48000 else { return nil }
+    frames = YlOpusAudioConverter.maximumFrames
+  case .vorbis:
+    guard [44100.0, 48000.0].contains(sampleRate) else { return nil }
+    frames = YlVorbisAudioConverter.maximumFrames
+  default: return nil
+  }
+  return Int64(ceil(Double(frames) * 1_000_000 / sampleRate))
+}
+
 protocol YlAudioPacketConverting: AnyObject {
   var reservesOutputBuffers: Bool { get }
   var pcmFormat: AVAudioFormat? { get }

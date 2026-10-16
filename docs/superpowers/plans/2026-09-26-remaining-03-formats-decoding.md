@@ -137,3 +137,8 @@ expect(failure.retryable, isFalse);
 ## 2026-10-15 续做交付状态
 
 已执行获批的 [八阶段续做计划](2026-10-14-p03-completion.md)：PS/AVC、非零 Vorbis delay、受控 AV1/VP9 候选、共享预算、Apple/Android 解码身份和实际输出验证。三端失败/诊断/负例分开保留，生产软件准入为空。原计划复合验收条目中仍缺逐格式完整 PCM 首尾/切轨、匹配真机及最低系统/Intel、持续热和独立产品复验的项目继续不勾选；工程实现不等于 CAP-FORMAT/CAP-DECODE 全通过。详见 [报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+
+## 2026-10-16 工程收尾更新
+
+已补齐严格 progressive managed/有界/硬解路由、Opus/Vorbis/VP9 策略记账、旧系统 MOV 命名依赖和实际矩阵发现的 EOF 控制竞争。已有 PCM 首尾及切轨工程证据按续做计划勾选，原始复合资格项不据此整体完成。最终macOS完整公开矩阵37/40；其余当前硬件、AVPlayer硬件消费观测、物理/最低系统/Intel及持续热资格保持开放。详见[P03最新报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。

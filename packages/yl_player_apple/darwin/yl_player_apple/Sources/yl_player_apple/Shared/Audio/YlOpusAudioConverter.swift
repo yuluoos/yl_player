@@ -17,7 +17,7 @@ final class YlOpusAudioConverter: YlAudioPacketConverting {
   var bufferScope: YlManagedBufferScope?
   private var decoder: YLFOpusDecoderRef?
   private(set) var pcmFormat: AVAudioFormat?
-  private let maximumFrames = 5760
+  static let maximumFrames = 5760
 
   func configure(stream: YlAudioStreamConfiguration) throws {
     guard stream.codec == .opus, stream.sampleRate == 48000,
@@ -34,7 +34,7 @@ final class YlOpusAudioConverter: YlAudioPacketConverting {
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
     // Fixed maximum before decoding, regardless of untrusted packet duration.
-    .init(durationUs: 120000, byteCount: maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
+    .init(durationUs: 120000, byteCount: Self.maximumFrames * Int(pcmFormat?.channelCount ?? 2) * 4)
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
@@ -42,14 +42,14 @@ final class YlOpusAudioConverter: YlAudioPacketConverting {
           packet.data.count <= 65536, packet.ptsUs != Int64.min else { throw ylOpusPacketError() }
     let channelCount = Int(format.channelCount)
     let packetCopy = try bufferScope?.require(category: .compressedPackets, bytes: packet.data.count + 64)
-    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: maximumFrames * channelCount * 4)
+    let scratch = try bufferScope?.require(category: .scheduledAudio, bytes: Self.maximumFrames * channelCount * 4)
     defer { withExtendedLifetime((packetCopy, scratch)) {} }
-    var samples = [Float](repeating: 0, count: maximumFrames * channelCount)
+    var samples = [Float](repeating: 0, count: Self.maximumFrames * channelCount)
     var frames: Int32 = 0, offset: Int32 = 0
     let result = samples.withUnsafeMutableBufferPointer { output in
       packet.data.withUnsafeBytes { input in
         ylf_opus_decode(decoder, input.bindMemory(to: UInt8.self).baseAddress, input.count,
-          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(maximumFrames), &frames, &offset)
+          packet.skipSamples, packet.discardSamples, output.baseAddress, Int32(Self.maximumFrames), &frames, &offset)
       }
     }
     if result == YLFResultAudioConfigurationUnsupported { throw ylOpusUnsupportedError() }

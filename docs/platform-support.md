@@ -11,8 +11,8 @@ actual source and requirements before Load.
 | Source or route | Android route | Apple AVPlayer | Apple managed fallback |
 |---|---|---|---|
 | Android `content:` URI | Supported; Android only | Rejected as invalid | Rejected as invalid |
-| Local MP4/MOV and platform-native progressive media | Supported subject to Media3 extractor/codec | Supported subject to AVFoundation/codec | Not selected |
-| Network MP4/MOV | Supported with Media3 | Supported only without request headers or credentials | Managed request rejected |
+| Local MP4/MOV and platform-native progressive media | Supported subject to Media3 extractor/codec | Default route, subject to AVFoundation/codec | MP4/MOV use owned samples for strict policy requests; other native formats retain their prior route |
+| Network MP4/MOV | Supported with Media3 | Default route without request headers or credentials | Inspected VOD with managed networking, bounded buffering or hardwareRequired uses owned samples |
 | HLS without request metadata | Supported | Supported; VOD HEVC-in-MPEG-TS media playlists use managed demux + VideoToolbox | Managed request rejected |
 | HLS with ordinary headers or credentials | Supported subject to Android origin filtering | Inspection-dependent controlled manifest/key/media-proxy route; same-origin credentials enforced | Managed request rejected |
 | Static clear DASH (`dash` or `.mpd`) | Owned Media3 1.11.0 DASH route; current validation described below | Retained private HLS adapter for its compatible subset | Owned sample programme route for admitted static AVC/HEVC/AAC fMP4 |
@@ -24,9 +24,9 @@ actual source and requirements before Load.
 | RTMPS, enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
 | Local FLV | Owned demux for VOD seek | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
 | Local WebM | Media3 with observed decoder admission | Not selected | Inspected VP9 with Opus/Vorbis; native hardware first, exact software admission when qualified |
-| Standalone MPEG-TS VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; 188-byte AVC/AC-3 file/HTTP/renamed-file scope measured on macOS; strict policies and live intent rejected |
-| AVI VOD | Owned demux with verified Baseline AVC timing | Not selected | Inspection-dependent defaults; Baseline AVC/MP3 scope below; strict policies and live intent rejected |
-| MPEG-PS VOD | Owned demux for AVC/MP3; MPEG-2 video diagnostic remains unsupported | Not selected | Owned AVC/MP3; incompatible strict/live policies rejected explicitly |
+| Standalone MPEG-TS VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; 188-byte AVC/AC-3 file/HTTP/renamed-file scope; strict policies use owned samples, live intent rejected |
+| AVI VOD | Owned demux with verified Baseline AVC timing | Not selected | Inspection-dependent defaults; Baseline AVC/MP3 scope below; strict policies use owned samples, live intent rejected |
+| MPEG-PS VOD | Owned demux for AVC/MP3; MPEG-2 video diagnostic remains unsupported | Not selected | Owned AVC/MP3 including strict policies; live intent rejected explicitly |
 | Unknown network format | Inspection-dependent | Inspection-dependent | Apple inspection reads at most the bounded 4096-byte signature window, then reassesses |
 
 The Apple FFmpeg artifact enables Matroska, FLV, MP4, MPEG-TS, MPEG-PS and AVI
@@ -591,6 +591,8 @@ P06 Task3C2 已接入 Apple schema5 公共 FairPlay HLS、独立 AVPlayerLayer�
 
 ### Scoped Apple CELT Opus playback evidence (2026-09-29)
 
+Historical snapshot: SILK/hybrid decoding and strict-policy exclusions below are superseded by the 2026-10-16 engineering update.
+
 Ordinary Matroska VOD now routes Opus CELT, OpusHead v1/family 0,
 mono/stereo at 48 kHz through the native decoder. Container pre-skip and tail
 padding are applied once; seeks decode at least 80 ms of available preroll and
@@ -611,6 +613,8 @@ history; later session generations remain protected. See the
 
 ### Scoped Apple Vorbis Matroska route (2026-09-30)
 
+Historical snapshot: the zero-delay and strict-policy exclusions below are superseded by the P03 completion and 2026-10-16 engineering updates.
+
 Ordinary Matroska VOD accepts bounded Vorbis headers and packets for mono/stereo
 44.1/48 kHz with zero CodecDelay and no leading trim. Tail trimming is supported.
 The native FFmpeg decoder supplies PCM; seeks and active track changes use
@@ -622,6 +626,8 @@ See the [P03 execution report](superpowers/reports/2026-09-26-remaining-03-forma
 
 
 ### Scoped Apple VP9 hardware route (2026-09-30)
+
+Historical snapshot: the managed/bounded exclusions and absence of a software candidate below are superseded by later P03 work. Production software admission still requires qualified evidence.
 
 Seekable ordinary Matroska/WebM VOD accepts VP9 Profile 0, 8-bit 4:2:0
 SDR with fixed dimensions up to 4096×2160 and visible single-frame packets.
@@ -816,3 +822,12 @@ controls also pass. A queue-fill range is not a hardware played-sample counter:
 AVPlayer strict consumption acceptance remains false. Ordinary Debug and Release
 exclude the observer. Remote/DRM/multiple-track capture and full P03 remain open.
 See the [AVPlayer evidence](superpowers/reports/evidence/2026-10-16-p03-avplayer-audio/README.md).
+
+
+## P03 strict progressive engineering (2026-10-16)
+
+Apple MP4/MOV, MPEG-TS, MPEG-PS and AVI VOD now select owned samples when managed networking, bounded buffering or hardwareRequired is requested. The existing managed byte-source credentials/deadlines/cancellation and shared allocation ledger apply. Hardware-required video still needs actual decoder evidence during preparation and recreation; audio conversion does not claim to be hardware accelerated. HLS strict-policy exclusions and progressive live exclusions are unchanged. Ordinary MP4/MOV retain AVPlayer by default. Inspected wrong-name MOV also uses owned samples below the public MIME-override OS versions.
+
+Seekable Matroska Opus (CELT/SILK/hybrid) and Vorbis can use strict policies, and the admitted VP9 hardware profile can use bounded buffering. Missing Opus/Vorbis packet durations reserve the converter's maximum output duration only in the queue ledger; compressed packet timing is preserved and actual decoded PCM determines output timing. Unsupported codecs, rates, profiles and live inputs remain explicit failures.
+
+The engineering paths do not qualify unmeasured software profiles, hardware-unavailable simulators, minimum OS/Intel systems, or physical output. AVPlayer source-pull evidence still does not establish a hardware played-sample clock. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md) for recorded runtime coverage and remaining acceptance conditions.

@@ -140,14 +140,14 @@ enum YlAppleSafeDiagnostics {
   ]
   private static let publicMessages: [String: String] = [
     "decoder.video_vp9_unsupported": "VP9 currently requires fixed-size Profile 0, 8-bit SDR visible frames without superframes. Try another video track.",
-    "policy.vp9_unsupported": "VP9 currently supports seekable Matroska or WebM VOD without strict networking or buffer policies.",
+    "policy.vp9_unsupported": "VP9 requires seekable Matroska or WebM VOD.",
     "decoder.audio_vorbis_unsupported": "Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.",
     "decoder.audio_vorbis_failed": "The Vorbis audio packet or timing is invalid. Try another audio track or a complete media file.",
-    "policy.vorbis_unsupported": "Vorbis currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.",
+    "policy.vorbis_unsupported": "Vorbis requires Matroska VOD; managed networking requires random access.",
     "policy.vorbis_track_switch_unsupported": "Activate or resume playback before switching a Vorbis track.",
     "decoder.audio_opus_unsupported": "Opus currently requires mapping family 0 and mono or stereo at 48 kHz. Try another audio track.",
     "decoder.audio_opus_failed": "The Opus audio packet or timing is invalid. Try another audio track or a complete media file.",
-    "policy.opus_unsupported": "Opus currently supports ordinary Matroska VOD without strict networking, buffer or hardware policies.",
+    "policy.opus_unsupported": "Opus requires Matroska VOD; managed networking requires random access.",
     "policy.opus_track_switch_unsupported": "Activate or resume playback before switching an Opus track.",
 
     "container.avi_timing_unsupported": "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.",

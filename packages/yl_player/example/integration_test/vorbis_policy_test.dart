@@ -35,61 +35,58 @@ int _uniqueOffset(Uint8List data, List<int> pattern) {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('Vorbis strict policies and live intent reject explicitly', (
-    tester,
-  ) async {
-    final directory = await Directory.systemTemp.createTemp(
-      'yl_vorbis_policy_',
-    );
-    final file = File('${directory.path}/clip.mkv');
-    await file.writeAsBytes(await _bytes());
-    final server = await RangeMediaServer.start(asset: _asset);
-    final player = await appleController(tester);
-    try {
-      final delayed = await rootBundle.load(
-        'assets/test_media/format_matrix/mkv-avc-vorbis-codec-delay.mkv',
+  testWidgets(
+    'Vorbis strict policies play while live intent remains rejected',
+    (tester) async {
+      final directory = await Directory.systemTemp.createTemp(
+        'yl_vorbis_policy_',
       );
-      final delayedFile = File('${directory.path}/codec-delay.mkv');
-      await delayedFile.writeAsBytes(
-        delayed.buffer.asUint8List(
-          delayed.offsetInBytes,
-          delayed.lengthInBytes,
-        ),
-      );
-      await expectLater(
-        player.load(YlFileSource(delayedFile.path)),
-        failureCode('decoder.audio_vorbis_unsupported'),
-      );
-      for (final options in [
-        const YlLoadOptions(bufferStrategy: strictBuffer),
-        const YlLoadOptions(
-          decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
-        ),
-      ]) {
-        await expectLater(
-          player.load(YlFileSource(file.path), options: options),
-          failureCode('policy.vorbis_unsupported'),
+      final file = File('${directory.path}/clip.mkv');
+      await file.writeAsBytes(await _bytes());
+      final server = await RangeMediaServer.start(asset: _asset);
+      final player = await appleController(tester);
+      try {
+        final delayed = await rootBundle.load(
+          'assets/test_media/format_matrix/mkv-avc-vorbis-codec-delay.mkv',
         );
-      }
-      await expectLater(
-        player.load(
+        final delayedFile = File('${directory.path}/codec-delay.mkv');
+        await delayedFile.writeAsBytes(
+          delayed.buffer.asUint8List(
+            delayed.offsetInBytes,
+            delayed.lengthInBytes,
+          ),
+        );
+        await exercisePolicyPlayback(player, YlFileSource(delayedFile.path));
+        for (final options in [
+          const YlLoadOptions(bufferStrategy: strictBuffer),
+          const YlLoadOptions(
+            decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+          ),
+        ]) {
+          await exercisePolicyPlayback(
+            player,
+            YlFileSource(file.path),
+            options: options,
+          );
+        }
+        await exercisePolicyPlayback(
+          player,
           YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
-        ),
-        failureCode('policy.vorbis_unsupported'),
-      );
-      await expectLater(
-        player.load(
-          YlNetworkSource(server.mediaUri, intent: YlStreamIntent.live),
-        ),
-        failureCode('container.network_mkv_live_unsupported'),
-      );
-    } finally {
-      await player.dispose();
-      await server.close();
-      await tester.pumpWidget(const SizedBox.shrink());
-      await directory.delete(recursive: true);
-    }
-  });
+        );
+        await expectLater(
+          player.load(
+            YlNetworkSource(server.mediaUri, intent: YlStreamIntent.live),
+          ),
+          failureCode('container.network_mkv_live_unsupported'),
+        );
+      } finally {
+        await player.dispose();
+        await server.close();
+        await tester.pumpWidget(const SizedBox.shrink());
+        await directory.delete(recursive: true);
+      }
+    },
+  );
   testWidgets(
     'Invalid Vorbis header preserves current playback and hides input identity',
     (tester) async {
@@ -130,7 +127,7 @@ void main() {
     },
   );
   testWidgets(
-    'Mixed AAC switches to Vorbis and back while strict policies retain AAC',
+    'Mixed AAC switches to Vorbis and back under default and strict policies',
     (tester) async {
       final directory = await Directory.systemTemp.createTemp(
         'yl_vorbis_mixed_',
@@ -185,7 +182,26 @@ void main() {
           options: const YlLoadOptions(bufferStrategy: strictBuffer),
         );
         await readyAndPlay(player, strict);
-        expect(player.state.audioTracks, hasLength(1));
+        expect(player.state.audioTracks, hasLength(2));
+        final strictOther = player.state.audioTracks
+            .singleWhere((t) => !t.isSelected)
+            .id;
+        await strict.pause();
+        await strict.seekTo(const Duration(milliseconds: 1250));
+        await strict.selectAudioTrack(strictOther);
+        await stateWhere(
+          player,
+          (s) => s.audioTracks.any((t) => t.id == strictOther && t.isSelected),
+        );
+        expect(
+          player.state.audioTracks.singleWhere((t) => t.isSelected).id,
+          strictOther,
+        );
+        await strict.play();
+        await stateWhere(
+          player,
+          (s) => s.timeline.position > const Duration(milliseconds: 1800),
+        );
         expect(player.state.failure, isNull);
       } finally {
         await player.dispose();

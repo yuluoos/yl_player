@@ -274,7 +274,7 @@ assertEquals(YlNativeVideoPath.UNSUPPORTED, path)
 - [x] Write observation validation RED: missing planned rows, duplicate identities, mismatched media/build hashes, marker failure with lifecycle success, and skipped software rows cannot yield full acceptance. Independent host decode remains `playerOutputVerified=false`.
   Required and diagnostic denominators are emitted separately using Task 2's pinned classification; a diagnostic rejection is never added to the supported count.
 - [x] Extend the matrix test to sample real displayed colors at 0/1/2/3-second markers and after seek; use P02 capture helpers on Apple and actual texture capture on Android. Wait for marker observation, not just seek acknowledgement. Preserve both captures on mismatch; a host scale change is a failed run requiring a fresh run identity.
-- [ ] Use native real-decoder PCM tests for tone, channel order/downmix, leading/trailing samples and seek/track-switch alignment. Reuse P01 PCM tap seams; do not expose a production debug endpoint or infer sound from selected audio track. Add AC-3 5.1, E-AC-3, DTS, FLAC controls.
+- [x] Use native real-decoder PCM tests for tone, channel order/downmix, leading/trailing samples and seek/track-switch alignment. Reuse P01 PCM tap seams; do not expose a production debug endpoint or infer sound from selected audio track. Add AC-3 5.1, E-AC-3, DTS, FLAC controls.
 - [x] Add real public failure assertions:
 
 ```dart
@@ -389,3 +389,11 @@ Android当前AV1/Main10设备解码能力、Apple严格progressive managed路由
 最终 macOS/iOS Simulator 的 MP4 独立取数观测各1/1，macOS既有六控制严格6/6；两端框架末尾失败和错误构建身份四项负例均正确拒绝。原生45/45、Flutter example96/96、Python61/61、静态分析及公开API检查通过；失败历史及同次产品身份绑定的原始数据全部保留。
 
 AVPlayer tap 提供队列取数范围，仍未提供硬件已播放样本计数。因此新增 `renderPullAcceptance` 与严格消费验收分开，MP4的 `scopeAcceptance` 仍为false，报 `played_sample_clock_unverified`。未增加此前完整格式矩阵通过数，Task7/8及完整P03保持开放；managed、生产准入、长播放和弱网ABR未修改。详见[本轮证据](../reports/evidence/2026-10-16-p03-avplayer-audio/README.md)。
+
+### 2026-10-16 remaining engineering continuation
+
+Implemented owned strict MP4/MOV routing and strict TS/PS/AVI activation, strict Matroska Opus/Vorbis and bounded VP9 accounting, and old-OS wrong-name MOV fallback. Queue-only conservative durations for missing Opus/Vorbis packet timing preserve actual PCM timing. Native macOS affected regression:108/108, zero skips, including11 actual strict format/codec combinations and existing PCM/track-switch controls. Public API validation and archived results are recorded in the P03 report.
+
+Task7's native PCM engineering substep is now checked using the2026-10-15 boundary/track-switch evidence and the new regression. This does not close physical/cross-device/public full-format acceptance. Task8 qualified baseline remains unchecked: no new minimum-OS/Intel/physical or sustained thermal evidence was provided, so production software admission stays empty.
+
+Final verification also covers the runtime-discovered EOF/control repair: macOS108/108 and iOS39/39 native, public codec-policy13/13 plus explicit EOF/replay1/1. Final frozen public macOS matrix37/40; full qualification remains open as recorded in the report.

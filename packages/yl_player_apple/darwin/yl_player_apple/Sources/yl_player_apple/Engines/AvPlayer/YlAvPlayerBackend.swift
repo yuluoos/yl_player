@@ -780,10 +780,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       )
     }
     let asset: AVURLAsset
-    if #available(macOS 14.0, iOS 17.0, *), source.formatHint == .mp4 {
+    if #available(macOS 14.0, iOS 17.0, *), [YlSourceFormat.mp4, .mov].contains(source.formatHint) {
       // Preserve the explicit or inspected format when the URL has no usable
-      // extension. AVFoundation otherwise rejects even a validated MP4 prefix.
-      asset = AVURLAsset(url: url, options: [AVURLAssetOverrideMIMETypeKey: "video/mp4"])
+      // extension. AVFoundation otherwise rejects even a validated MP4/MOV prefix.
+      asset = AVURLAsset(url: url, options: [AVURLAssetOverrideMIMETypeKey: source.formatHint == .mov ? "video/quicktime" : "video/mp4"])
     } else {
       asset = AVURLAsset(url: url)
     }

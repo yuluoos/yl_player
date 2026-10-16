@@ -455,6 +455,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func play() throws {
+      // Controls can race the delivered EOF snapshot. A drained generation stays
+      // completed until seek/rebuild creates new media work; do not restart its
+      // wall clock or reacquire audio for a late play command.
+      if stateLock.withLock({ completionSent }) { emitState(); return }
       try audio.prepareForPlayback()
       let wasPlaying = stateLock.withLock { () -> Bool in
         let previous = playing
@@ -481,6 +485,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   }
 
   func pause() throws {
+      if stateLock.withLock({ completionSent }) { emitState(); return }
       stateLock.withLock {
         playing = false
         if demux.sourceRecipe.isRtmp {
