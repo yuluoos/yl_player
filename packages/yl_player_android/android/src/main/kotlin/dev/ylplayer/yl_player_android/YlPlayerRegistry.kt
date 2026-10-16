@@ -35,7 +35,7 @@ internal class YlPlayerRegistry(
         try {
             checkMainThread()
             if (detached) throw YlBoundaryException(YlFailureKind.PLAYER_DISPOSED)
-            if (request.schemaMajor != 5L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
+            if (request.schemaMajor != 6L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
             YlBoundaryValidation.player(request.options)
             val createSession = sessionFactory.prepare(request.options)
             val suffix = "p${nextId++}-${UUID.randomUUID()}"
@@ -60,7 +60,7 @@ internal class YlPlayerRegistry(
                 },
             )
             val reply = AndroidCreateReply(
-                schemaMajor = 5, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
+                schemaMajor = 6, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
                 implementationName = "yl_player_android", implementationVersion = "0.2.0",
                 capabilities = session.capabilities, initialState = session.initialState, drmSupport = drmSupport,
             )

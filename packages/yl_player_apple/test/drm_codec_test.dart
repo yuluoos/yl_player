@@ -33,6 +33,6 @@ void main() {
     expect(wire.drm!.certificate, [1]);
     expect(wire.drm!.contentId, [2]);
     expect(wire.drm!.timeoutMs, 10000);
-    expect(AppleCodec.schemaMajor, 5);
+    expect(AppleCodec.schemaMajor, 6);
   });
 }

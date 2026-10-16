@@ -5,7 +5,7 @@ import 'pigeon/yl_player_android.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AndroidCodec {
-  static const schemaMajor = 5;
+  static const schemaMajor = 6;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -237,6 +237,16 @@ abstract final class AndroidCodec {
 
   static YlPlayerState state(AndroidStateMessage value) {
     integer(value.sequence);
+    final live = value.livePlayback;
+    if (live != null) {
+      if (value.sessionId == null ||
+          !value.timeline.isLive ||
+          live.switchableModes.toSet().length != live.switchableModes.length ||
+          live.committedRequestId != null && live.committedRequestId! <= 0) {
+        throw ArgumentError('Invalid live playback state.');
+      }
+      if (live.committedRequestId != null) integer(live.committedRequestId!);
+    }
     final nativeSelection = value.videoSelection;
     if (nativeSelection == null) {
       throw ArgumentError('Missing schema 4 video selection.');
@@ -282,6 +292,14 @@ abstract final class AndroidCodec {
             ),
       audioTracks: value.audioTracks.map(track).toList(),
       videoTracks: value.videoTracks.map(track).toList(),
+      livePlayback: live == null
+          ? null
+          : YlLivePlaybackState(
+              mode: YlLivePlaybackMode.values.byName(live.mode.name),
+              switchableModes: live.switchableModes
+                  .map((mode) => YlLivePlaybackMode.values.byName(mode.name))
+                  .toList(),
+            ),
       videoSelection: YlVideoSelection(
         fixedTrackId: nativeSelection.fixedTrackId,
         reason: switch (nativeSelection.reason) {
@@ -480,6 +498,8 @@ abstract final class AndroidCodec {
           YlPlayerOperation.videoConstraints,
         AndroidPlayerOperation.volume => YlPlayerOperation.volume,
         AndroidPlayerOperation.stop => YlPlayerOperation.stop,
+        AndroidPlayerOperation.livePlaybackMode =>
+          YlPlayerOperation.livePlaybackMode,
         AndroidPlayerOperation.videoTrackSelection =>
           YlPlayerOperation.videoTrackSelection,
       };

@@ -6,3 +6,4 @@ YL_REPO_ROOT=$(git -C "$YL_SCRIPT_DIR" rev-parse --show-toplevel)
 
 cd "$YL_REPO_ROOT/packages/yl_player_android"
 dart run pigeon --input pigeons/yl_player_android.dart
+python3 "$YL_REPO_ROOT/tool/pigeon_live_codec_tags.py" android

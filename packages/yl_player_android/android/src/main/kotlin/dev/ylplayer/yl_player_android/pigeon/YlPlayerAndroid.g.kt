@@ -352,7 +352,8 @@ enum class AndroidPlayerOperation(val raw: Int) {
   VIDEO_CONSTRAINTS(4),
   VOLUME(5),
   STOP(6),
-  VIDEO_TRACK_SELECTION(7);
+  VIDEO_TRACK_SELECTION(7),
+  LIVE_PLAYBACK_MODE(8);
 
   companion object {
     fun ofRaw(raw: Int): AndroidPlayerOperation? {
@@ -412,6 +413,17 @@ enum class AndroidFailureScope(val raw: Int) {
 
   companion object {
     fun ofRaw(raw: Int): AndroidFailureScope? {
+      return values().firstOrNull { it.raw == raw }
+    }
+  }
+}
+
+enum class AndroidLivePlaybackMode(val raw: Int) {
+  SMOOTH_PLAYBACK(0),
+  LOW_LATENCY(1);
+
+  companion object {
+    fun ofRaw(raw: Int): AndroidLivePlaybackMode? {
       return values().firstOrNull { it.raw == raw }
     }
   }
@@ -1751,7 +1763,8 @@ data class AndroidStateMessage (
   val decoderIdentity: String? = null,
   val metrics: AndroidMetricsMessage,
   val failure: AndroidFailureMessage? = null,
-  val videoSelection: AndroidVideoSelectionMessage? = null
+  val videoSelection: AndroidVideoSelectionMessage? = null,
+  val livePlayback: AndroidLivePlaybackStateMessage? = null
 )
  {
   companion object {
@@ -1771,7 +1784,8 @@ data class AndroidStateMessage (
       val metrics = pigeonVar_list[12] as AndroidMetricsMessage
       val failure = pigeonVar_list[13] as AndroidFailureMessage?
       val videoSelection = pigeonVar_list[14] as AndroidVideoSelectionMessage?
-      return AndroidStateMessage(loadRequestId, sessionId, revision, sequence, status, timeline, geometry, audioTracks, videoTracks, engine, decoderMode, decoderIdentity, metrics, failure, videoSelection)
+      val livePlayback = pigeonVar_list[15] as AndroidLivePlaybackStateMessage?
+      return AndroidStateMessage(loadRequestId, sessionId, revision, sequence, status, timeline, geometry, audioTracks, videoTracks, engine, decoderMode, decoderIdentity, metrics, failure, videoSelection, livePlayback)
     }
   }
   fun toList(): List<Any?> {
@@ -1791,6 +1805,7 @@ data class AndroidStateMessage (
       metrics,
       failure,
       videoSelection,
+      livePlayback,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -1801,7 +1816,7 @@ data class AndroidStateMessage (
       return true
     }
     val other = other as AndroidStateMessage
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.revision, other.revision) && YlPlayerAndroidPigeonUtils.deepEquals(this.sequence, other.sequence) && YlPlayerAndroidPigeonUtils.deepEquals(this.status, other.status) && YlPlayerAndroidPigeonUtils.deepEquals(this.timeline, other.timeline) && YlPlayerAndroidPigeonUtils.deepEquals(this.geometry, other.geometry) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioTracks, other.audioTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.videoTracks, other.videoTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.engine, other.engine) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderMode, other.decoderMode) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderIdentity, other.decoderIdentity) && YlPlayerAndroidPigeonUtils.deepEquals(this.metrics, other.metrics) && YlPlayerAndroidPigeonUtils.deepEquals(this.failure, other.failure) && YlPlayerAndroidPigeonUtils.deepEquals(this.videoSelection, other.videoSelection)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.loadRequestId, other.loadRequestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.revision, other.revision) && YlPlayerAndroidPigeonUtils.deepEquals(this.sequence, other.sequence) && YlPlayerAndroidPigeonUtils.deepEquals(this.status, other.status) && YlPlayerAndroidPigeonUtils.deepEquals(this.timeline, other.timeline) && YlPlayerAndroidPigeonUtils.deepEquals(this.geometry, other.geometry) && YlPlayerAndroidPigeonUtils.deepEquals(this.audioTracks, other.audioTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.videoTracks, other.videoTracks) && YlPlayerAndroidPigeonUtils.deepEquals(this.engine, other.engine) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderMode, other.decoderMode) && YlPlayerAndroidPigeonUtils.deepEquals(this.decoderIdentity, other.decoderIdentity) && YlPlayerAndroidPigeonUtils.deepEquals(this.metrics, other.metrics) && YlPlayerAndroidPigeonUtils.deepEquals(this.failure, other.failure) && YlPlayerAndroidPigeonUtils.deepEquals(this.videoSelection, other.videoSelection) && YlPlayerAndroidPigeonUtils.deepEquals(this.livePlayback, other.livePlayback)
   }
 
   override fun hashCode(): Int {
@@ -1821,10 +1836,11 @@ data class AndroidStateMessage (
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.metrics)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.failure)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.videoSelection)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.livePlayback)
     return result
   }
   override fun toString(): String {
-    return "AndroidStateMessage(loadRequestId=$loadRequestId, sessionId=$sessionId, revision=$revision, sequence=$sequence, status=$status, timeline=$timeline, geometry=$geometry, audioTracks=$audioTracks, videoTracks=$videoTracks, engine=$engine, decoderMode=$decoderMode, decoderIdentity=$decoderIdentity, metrics=$metrics, failure=$failure, videoSelection=$videoSelection)"
+    return "AndroidStateMessage(loadRequestId=$loadRequestId, sessionId=$sessionId, revision=$revision, sequence=$sequence, status=$status, timeline=$timeline, geometry=$geometry, audioTracks=$audioTracks, videoTracks=$videoTracks, engine=$engine, decoderMode=$decoderMode, decoderIdentity=$decoderIdentity, metrics=$metrics, failure=$failure, videoSelection=$videoSelection, livePlayback=$livePlayback)"
   }
 }
 
@@ -2703,6 +2719,141 @@ data class AndroidDrmLicenseReply (
     return "AndroidDrmLicenseReply(id=$id, response=${response?.contentToString()}, failureCode=$failureCode)"
   }
 }
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidLivePlaybackStateMessage (
+  val mode: AndroidLivePlaybackMode,
+  val switchableModes: List<AndroidLivePlaybackMode>,
+  val committedRequestId: Long? = null
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidLivePlaybackStateMessage {
+      val mode = pigeonVar_list[0] as AndroidLivePlaybackMode
+      val switchableModes = pigeonVar_list[1] as List<AndroidLivePlaybackMode>
+      val committedRequestId = pigeonVar_list[2] as Long?
+      return AndroidLivePlaybackStateMessage(mode, switchableModes, committedRequestId)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      mode,
+      switchableModes,
+      committedRequestId,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidLivePlaybackStateMessage
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.mode, other.mode) && YlPlayerAndroidPigeonUtils.deepEquals(this.switchableModes, other.switchableModes) && YlPlayerAndroidPigeonUtils.deepEquals(this.committedRequestId, other.committedRequestId)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.mode)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.switchableModes)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.committedRequestId)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidLivePlaybackStateMessage(mode=$mode, switchableModes=$switchableModes, committedRequestId=$committedRequestId)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidLivePlaybackModeCommand (
+  val sessionId: String,
+  val requestId: Long,
+  val mode: AndroidLivePlaybackMode
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidLivePlaybackModeCommand {
+      val sessionId = pigeonVar_list[0] as String
+      val requestId = pigeonVar_list[1] as Long
+      val mode = pigeonVar_list[2] as AndroidLivePlaybackMode
+      return AndroidLivePlaybackModeCommand(sessionId, requestId, mode)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      sessionId,
+      requestId,
+      mode,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidLivePlaybackModeCommand
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.requestId, other.requestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.mode, other.mode)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sessionId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.requestId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.mode)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidLivePlaybackModeCommand(sessionId=$sessionId, requestId=$requestId, mode=$mode)"
+  }
+}
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class AndroidLivePlaybackModeReply (
+  val sessionId: String,
+  val requestId: Long,
+  val committedRevision: Long
+)
+ {
+  companion object {
+    fun fromList(pigeonVar_list: List<Any?>): AndroidLivePlaybackModeReply {
+      val sessionId = pigeonVar_list[0] as String
+      val requestId = pigeonVar_list[1] as Long
+      val committedRevision = pigeonVar_list[2] as Long
+      return AndroidLivePlaybackModeReply(sessionId, requestId, committedRevision)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf(
+      sessionId,
+      requestId,
+      committedRevision,
+    )
+  }
+  override fun equals(other: Any?): Boolean {
+    if (other == null || other.javaClass != javaClass) {
+      return false
+    }
+    if (this === other) {
+      return true
+    }
+    val other = other as AndroidLivePlaybackModeReply
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.sessionId, other.sessionId) && YlPlayerAndroidPigeonUtils.deepEquals(this.requestId, other.requestId) && YlPlayerAndroidPigeonUtils.deepEquals(this.committedRevision, other.committedRevision)
+  }
+
+  override fun hashCode(): Int {
+    var result = javaClass.hashCode()
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.sessionId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.requestId)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.committedRevision)
+    return result
+  }
+  override fun toString(): String {
+    return "AndroidLivePlaybackModeReply(sessionId=$sessionId, requestId=$requestId, committedRevision=$committedRevision)"
+  }
+}
 private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
   override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
     return when (type) {
@@ -2784,6 +2935,11 @@ private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
       144.toByte() -> {
         return (readValue(buffer) as Long?)?.let {
           AndroidFailureScope.ofRaw(it.toInt())
+        }
+      }
+      188.toByte() -> {
+        return (readValue(buffer) as Long?)?.let {
+          AndroidLivePlaybackMode.ofRaw(it.toInt())
         }
       }
       145.toByte() -> {
@@ -3001,6 +3157,21 @@ private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
           AndroidDrmLicenseReply.fromList(it)
         }
       }
+      189.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidLivePlaybackStateMessage.fromList(it)
+        }
+      }
+      190.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidLivePlaybackModeCommand.fromList(it)
+        }
+      }
+      191.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          AndroidLivePlaybackModeReply.fromList(it)
+        }
+      }
       else -> super.readValueOfType(type, buffer)
     }
   }
@@ -3068,6 +3239,10 @@ private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
       }
       is AndroidFailureScope -> {
         stream.write(144)
+        writeValue(stream, value.raw.toLong())
+      }
+      is AndroidLivePlaybackMode -> {
+        stream.write(188)
         writeValue(stream, value.raw.toLong())
       }
       is AndroidPlayerOptionsMessage -> {
@@ -3242,6 +3417,18 @@ private open class YlPlayerAndroidPigeonCodec : StandardMessageCodec() {
         stream.write(187)
         writeValue(stream, value.toList())
       }
+      is AndroidLivePlaybackStateMessage -> {
+        stream.write(189)
+        writeValue(stream, value.toList())
+      }
+      is AndroidLivePlaybackModeCommand -> {
+        stream.write(190)
+        writeValue(stream, value.toList())
+      }
+      is AndroidLivePlaybackModeReply -> {
+        stream.write(191)
+        writeValue(stream, value.toList())
+      }
       else -> super.writeValue(stream, value)
     }
   }
@@ -3294,6 +3481,7 @@ interface AndroidPlayerHostApi {
   suspend fun selectAudioTrack(command: AndroidTrackCommand)
   suspend fun selectVideoTrack(command: AndroidVideoTrackCommand)
   suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand)
+  suspend fun setLivePlaybackMode(command: AndroidLivePlaybackModeCommand): AndroidLivePlaybackModeReply
   fun setVolume(volume: Double)
   suspend fun stop()
   suspend fun dispose()
@@ -3503,6 +3691,25 @@ interface AndroidPlayerHostApi {
               val wrapped: List<Any?> = try {
                 api.setVideoConstraints(commandArg)
                 listOf(null)
+              } catch (exception: Throwable) {
+                YlPlayerAndroidPigeonUtils.wrapError(exception)
+              }
+              reply.reply(wrapped)
+            }
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.yl_player_android.AndroidPlayerHostApi.setLivePlaybackMode$separatedMessageChannelSuffix", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val commandArg = args[0] as AndroidLivePlaybackModeCommand
+            CoroutineScope(Dispatchers.Main).launch {
+              val wrapped: List<Any?> = try {
+                listOf(api.setLivePlaybackMode(commandArg))
               } catch (exception: Throwable) {
                 YlPlayerAndroidPigeonUtils.wrapError(exception)
               }
@@ -3836,3 +4043,5 @@ class AndroidDrmFlutterApi(private val binaryMessenger: BinaryMessenger, private
     }
   }
 }
+
+// Schema-6 live enum tag relocated; legacy factory tags preserved.

@@ -155,6 +155,8 @@ internal class YlMedia3Engine(
     override suspend fun selectAudioTrack(trackId: String) = onWorker { requireCore().selectAudioTrack(trackId) }
     override suspend fun selectVideoTrack(trackId: String?) = onWorker { requireCore().selectVideoTrack(trackId) }
     override suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage) = onWorker { requireCore().setVideoConstraints(constraints) }
+    override suspend fun setLivePlaybackMode(mode: AndroidLivePlaybackMode, requestId: Long) =
+        onWorker { requireCore().setLivePlaybackMode(mode, requestId) }
     override suspend fun setVolume(volume: Double) = onWorker { requireCore().setVolume(volume) }
     override suspend fun stop() { protectedOutput?.suspendPresentation(); onWorker { requireCore().stop() } }
     override suspend fun onForeground() { onWorker { requireCore().restoreAfterForeground() }; protectedOutput?.resumePresentation() }

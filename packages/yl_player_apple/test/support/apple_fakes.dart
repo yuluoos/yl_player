@@ -47,7 +47,7 @@ AppleFailureMessage wireFailure({
   diagnosticId: 'apple-network-1',
 );
 AppleCreateReply wireCreate({String suffix = 'instance-1'}) => AppleCreateReply(
-  schemaMajor: 5,
+  schemaMajor: 6,
   spiMajor: 2,
   platform: ApplePlatform.ios,
   channelSuffix: suffix,
@@ -102,6 +102,17 @@ final class FakeFactory implements AppleFactoryTransport {
 
 final class FakeTransport implements ApplePlayerTransport {
   ApplePlayerFlutterApi? callbacks;
+  Future<AppleLivePlaybackModeReply> Function(AppleLivePlaybackModeCommand)?
+  liveMode;
+  final liveCommands = <AppleLivePlaybackModeCommand>[];
+  @override
+  Future<AppleLivePlaybackModeReply> setLivePlaybackMode(
+    AppleLivePlaybackModeCommand command,
+  ) {
+    liveCommands.add(command);
+    return liveMode!(command);
+  }
+
   final calls = <String>[];
   final loads = <Completer<AppleLoadReply>>[];
   final requests = <AppleLoadRequest>[];

@@ -73,6 +73,43 @@ internal class YlMedia3Core(
     private val dashAudio = source.format == AndroidMediaFormat.DASH ||
         source.locator.substringBefore('?').substringBefore('#').lowercase().endsWith(".mpd")
     private val dashVideoFamily = if (dashAudio && protectedDrm == null) YlDashVideoFamilyPolicy() else null
+    private val liveCatchUp = YlLiveCatchUpPolicy()
+    private val rtmpLiveMode = YlRtmpLiveModePolicy()
+    private var liveMode: AndroidLivePlaybackMode? = null
+    private var liveModeRequestId: Long? = null
+    private fun livePlaybackState(live: Boolean): AndroidLivePlaybackStateMessage? {
+        if (!live || source.intent == AndroidStreamIntent.ON_DEMAND ||
+            loadOptions.bufferStrategy.kind == AndroidBufferKind.BOUNDED || protectedDrm != null ||
+            sourceClass !in listOf(YlSourceClass.HLS_LIVE, YlSourceClass.HTTP_FLV_LIVE) && !rtmp) return null
+        if (liveMode == null) {
+            liveMode = if (configuration.bufferMode == "lowLatency") AndroidLivePlaybackMode.LOW_LATENCY else AndroidLivePlaybackMode.SMOOTH_PLAYBACK
+            loadControl.updateRuntimeProfile(profileForLiveMode(checkNotNull(liveMode)))
+        }
+        return AndroidLivePlaybackStateMessage(checkNotNull(liveMode), AndroidLivePlaybackMode.entries, liveModeRequestId)
+    }
+    private fun profileForLiveMode(mode: AndroidLivePlaybackMode) = YlPlaybackPolicy.effectiveBufferProfile(
+        deviceProfile.tier, sourceClass, configuration.bufferRequest().copy(
+            mode = if (mode == AndroidLivePlaybackMode.LOW_LATENCY) "lowLatency" else "stable"))
+    fun setLivePlaybackMode(mode: AndroidLivePlaybackMode, requestId: Long): AndroidLivePlaybackStateMessage {
+        val previous = livePlaybackState(timeline().isLive) ?: throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        if (!active || stopped || disposed || status == "error") throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        val target = profileForLiveMode(mode)
+        val flushRtmp = rtmp && mode == AndroidLivePlaybackMode.LOW_LATENCY && previous.mode != mode
+        // A paused mode change commits policy only. Its backlog is flushed on
+        // next demand, never by secretly resuming output during this command.
+        if (flushRtmp && !rtmpPaused()) {
+            if (!rtmpRecovery.reserveLiveRefresh()) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+            recordRetry(rtmpRecovery.attempts, 0, SystemClock.elapsedRealtime())
+            restartRtmpEpoch()
+            ensureHealthy()
+        } else if (flushRtmp) rtmpLiveMode.paused()
+        // Restore explicit user speed before changing policy. No seek/reconnect/play here.
+        exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed)
+        loadControl.updateRuntimeProfile(target)
+        liveMode = mode
+        liveModeRequestId = requestId
+        return previous.copy(mode = mode, committedRequestId = requestId)
+    }
     private var sourceIsLive = false
     private var sourceClass = YlSourceClass.NETWORK_VOD
     private var stopped = false
@@ -170,7 +207,10 @@ internal class YlMedia3Core(
     fun play() {
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
         if (!active) activate()
-        syncRtmpDemand(); exoPlayer.play(); refreshStallWatchdog()
+        syncRtmpDemand()
+        refreshRtmpLiveHeadIfNeeded()
+        ensureHealthy()
+        exoPlayer.play(); refreshStallWatchdog()
     }
     fun pause() {
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
@@ -185,10 +225,12 @@ internal class YlMedia3Core(
     }
     fun seekTo(positionMs: Long) {
         if (rtmp) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        liveCatchUp.absoluteSeek(requestedPlaybackSpeed, exoPlayer::setPlaybackSpeed)
         resumeAtLiveEdge = false
         if (active) exoPlayer.seekTo(positionMs) else { savedPositionMs = positionMs; emitState() }
     }
     fun seekToLiveEdge() {
+        liveCatchUp.automaticEdgeAllowed = true
         if (rtmp) { if (active) restartRtmpEpoch() else resumeAtLiveEdge = true; return }
         if (!sourceIsLive && !exoPlayer.isCurrentMediaItemLive) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         if (active) { resumeAtLiveEdge = false; exoPlayer.seekToDefaultPosition() }
@@ -396,6 +438,10 @@ internal class YlMedia3Core(
             .setTag(if (rtmp) mediaEpoch else null)
             .setUri(Uri.parse(uriString))
             .setMimeType(mediaMimeType(source.format))
+            // Mode policy owns catch-up. Media3's implicit live speed controller
+            // must not independently accelerate smooth mode or explicit seeks.
+            .setLiveConfiguration(MediaItem.LiveConfiguration.Builder()
+                .setMinPlaybackSpeed(1f).setMaxPlaybackSpeed(1f).build())
             .build()
 
         val mediaSource = sourceFactory.create(context, mediaItem)
@@ -779,6 +825,7 @@ internal class YlMedia3Core(
         val paused = rtmpPaused()
         sourceFactory.setPlaybackPaused(paused)
         if (paused) {
+            if (rtmpRecovery.committed && hasBeenReady) rtmpLiveMode.paused()
             if (rtmpBackoffTicket != null) {
                 rtmpBackoffTicket?.let(handler::removeCallbacks)
                 rtmpBackoffRemainingMs = (rtmpBackoffDueMs - SystemClock.elapsedRealtime()).coerceAtLeast(0)
@@ -837,8 +884,25 @@ internal class YlMedia3Core(
         rtmpBackoffTicket = ticket
         handler.postDelayed(ticket, rtmpBackoffRemainingMs)
     }
+    private fun refreshRtmpLiveHeadIfNeeded() {
+        if (!rtmp || !active || disposed || stopped || status == "error" ||
+            rtmpPendingFailure != null || rtmpBackoff != null) return
+        if (!rtmpLiveMode.shouldRefresh(liveMode == AndroidLivePlaybackMode.LOW_LATENCY,
+                !rtmpPaused(), (exoPlayer.bufferedPosition - exoPlayer.currentPosition).coerceAtLeast(0),
+                loadControl.currentProfile.maxBufferMs)) return
+        if (!rtmpRecovery.reserveLiveRefresh()) {
+            status = "error"; currentError = YlFailureKind.RESOURCE_EXHAUSTED; lastFailure = currentError
+            sourceFactory.cancelAll(); exoPlayer.pause()
+            emit(YlEngineEvent.Failed(YlFailureKind.RESOURCE_EXHAUSTED)); emitState()
+            return
+        }
+        recordRetry(rtmpRecovery.attempts, 0, SystemClock.elapsedRealtime())
+        restartRtmpEpoch()
+    }
+
     /** A fresh media source/extractor, never a new FLV header inside an existing extractor. */
     private fun restartRtmpEpoch() {
+        rtmpLiveMode.refreshed()
         outputObserver.invalidate()
         pendingVideoGeometry.clear()
         cancelRtmpWork()
@@ -887,7 +951,8 @@ internal class YlMedia3Core(
     }
 
     private fun maybeEvaluateHealth(memoryPressure: Boolean = false) {
-        if (rtmp || !hasBeenReady || status == "error") return
+        if (rtmp) { refreshRtmpLiveHeadIfNeeded(); return }
+        if (!hasBeenReady || status == "error") return
         val nowMs = SystemClock.elapsedRealtime()
         val startedAtMs = healthWindowStartedAtMs ?: nowMs.also(::resetHealthWindow)
         if (!memoryPressure && nowMs - lastHealthEvaluationMs < 1_000L) return
@@ -917,7 +982,9 @@ internal class YlMedia3Core(
                 maxRetries = configuration.network.maxRetries,
             ),
         )
-        applyRecoveryAction(action)
+        val movesTimeline = action is YlRecoveryAction.SetCatchUpSpeed || action == YlRecoveryAction.SeekLiveEdge || action == YlRecoveryAction.ReconnectLiveHead
+        if (!movesTimeline || liveCatchUp.canCatchUp(liveMode == AndroidLivePlaybackMode.LOW_LATENCY,
+            exoPlayer.playWhenReady, active, requestedPlaybackSpeed)) applyRecoveryAction(action)
         if (elapsedMs >= 30_000L) resetHealthWindow(nowMs)
     }
 
@@ -1096,7 +1163,7 @@ internal class YlMedia3Core(
                 "error" -> AndroidPlaybackStatus.FAILED
                 else -> AndroidPlaybackStatus.LOADING
             }, timeline, geometry, audioTracks.toList(), videoTracks.toList(),
-            decoderEvidence.mode(decoderName), decoderName, metrics(timeline), hasBeenReady, videoSelection.message())))
+            decoderEvidence.mode(decoderName), decoderName, metrics(timeline), hasBeenReady, livePlayback = livePlaybackState(timeline.isLive), videoSelection = videoSelection.message())))
     }
     private fun visibleVideoGeometry(): AndroidVideoGeometryMessage? {
         if (isDashGap(exoPlayer.currentTracks)) return null

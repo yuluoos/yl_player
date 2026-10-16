@@ -112,3 +112,37 @@ The outputs always retain `baselineComparable=false`, `capabilityAccepted=false`
 `physicalOutputVerified=false` and null end-to-end latency. Real RTT, live source
 clocks, physical output, HTTP-FLV/RTMP, runtime live modes and P08 SLO freezing are
 separate remaining work. Do not infer them from this VOD tool.
+
+## P04 live mode capture (schema 1, prepared 2026-10-16)
+
+`packages/yl_player/example/integration_test/live_mode_switch_test.dart` is an
+explicit device-run entry point for **owned, loopback-only** HLS, HTTP-FLV and
+RTMP fixtures. It is not part of offline tests. For each protocol provide
+`YL_LIVE_RUN`, `YL_LIVE_PROTOCOL=hls|flv|rtmp`, `YL_LIVE_URL`,
+`YL_LIVE_MEDIA_SHA256` (64 lowercase hex), and `YL_LIVE_OWNED=true`.
+Use an explicit local port; HLS/FLV paths end in `.m3u8`/`.flv`, RTMP paths contain
+an app and stream. Credentials, queries, fragments and non-loopback origins are
+rejected. Device-local forwarding and the fixture server must be supplied by the
+measurement owner; this test never configures global networking.
+
+The test exercises automatic live default, smooth→paused low→playing low→smooth,
+rapid ordered requests, and stale-command rejection after Stop. It records
+`YL_LIVE_SAMPLE` and `YL_LIVE_RESULT` JSON without URLs or exception text.
+Snapshots require public media-clock progression. This does **not** establish
+physical video output, audio output, source-clock delay, or weak-network SLOs.
+`declaredMediaHash` is a declaration until joined to the same-run server receipt;
+`endToEndLatencyUs` remains null. Failed/time-out runs and cleanup failures stay
+in the result. Archive raw output, exact source/build/media/server identities and
+independent A/V evidence before acceptance. Never count an unrun entry as passed.
+
+Offline checks:
+
+```sh
+flutter test --no-pub packages/yl_player/test/live_mode_capture_test.dart
+python3 tool/playback_network/check_live_mode_native.py --flutter-sdk /path/to/flutter
+```
+
+The Apple command compiles production Swift and checks policy/reducer/budget
+behavior in a standalone process. It does not instantiate a playback session or
+claim native media-path integration coverage. Android native coverage uses the
+existing JVM suite; no device tests are needed for that suite.

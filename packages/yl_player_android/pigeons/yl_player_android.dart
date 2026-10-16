@@ -65,6 +65,7 @@ enum AndroidPlayerOperation {
   volume,
   stop,
   videoTrackSelection,
+  livePlaybackMode,
 }
 
 enum AndroidDecoderMode { unknown, hardware, software }
@@ -296,6 +297,7 @@ class AndroidStateMessage {
   AndroidMetricsMessage metrics;
   AndroidFailureMessage? failure;
   AndroidVideoSelectionMessage? videoSelection;
+  AndroidLivePlaybackStateMessage? livePlayback;
 }
 
 class AndroidStateDeltaMessage {
@@ -409,6 +411,10 @@ abstract class AndroidPlayerHostApi {
   void selectVideoTrack(AndroidVideoTrackCommand command);
   @async
   void setVideoConstraints(AndroidVideoConstraintsCommand command);
+  @async
+  AndroidLivePlaybackModeReply setLivePlaybackMode(
+    AndroidLivePlaybackModeCommand command,
+  );
   void setVolume(double volume);
   @async
   void stop();
@@ -430,28 +436,33 @@ class AndroidDrmConfigMessage {
   bool cbcs;
   int timeoutMs;
 }
+
 class AndroidDrmSupportMessage {
   int contractVersion;
   int playerId;
   int androidApi;
   bool schemeAvailable;
 }
+
 class AndroidProtectedSurfaceMessage {
   int playerId;
   int surfaceId;
   String sessionId;
   int generation;
 }
+
 class AndroidProtectedViewCommand {
   AndroidProtectedSurfaceMessage surface;
   int viewId;
 }
+
 class AndroidProtectedViewAck {
   AndroidProtectedSurfaceMessage surface;
   int viewId;
   int revision;
   bool attached;
 }
+
 class AndroidDrmExchangeId {
   AndroidProtectedSurfaceMessage surface;
   String loadRequestId;
@@ -459,27 +470,56 @@ class AndroidDrmExchangeId {
   int requestId;
   String exchangeId;
 }
+
 class AndroidDrmLicenseRequest {
   AndroidDrmExchangeId id;
   Uint8List challenge;
 }
+
 class AndroidDrmLicenseReply {
   AndroidDrmExchangeId id;
   Uint8List? response;
   String? failureCode;
 }
+
 @HostApi()
 abstract class AndroidDrmHostApi {
   void cancelProtectedLoad(String loadRequestId);
   @async
-  AndroidProtectedViewAck attachProtectedView(AndroidProtectedViewCommand command);
+  AndroidProtectedViewAck attachProtectedView(
+    AndroidProtectedViewCommand command,
+  );
   @async
-  AndroidProtectedViewAck detachProtectedView(AndroidProtectedViewCommand command);
+  AndroidProtectedViewAck detachProtectedView(
+    AndroidProtectedViewCommand command,
+  );
 }
+
 @FlutterApi()
 abstract class AndroidDrmFlutterApi {
   @async
   AndroidDrmLicenseReply exchangeLicense(AndroidDrmLicenseRequest request);
   void cancelLicense(AndroidDrmExchangeId id);
   void onProtectedFrame(AndroidProtectedViewAck frame);
+}
+
+// Schema 6: append wire types so older factory requests remain decodable.
+enum AndroidLivePlaybackMode { smoothPlayback, lowLatency }
+
+class AndroidLivePlaybackStateMessage {
+  AndroidLivePlaybackMode mode;
+  List<AndroidLivePlaybackMode> switchableModes;
+  int? committedRequestId;
+}
+
+class AndroidLivePlaybackModeCommand {
+  String sessionId;
+  int requestId;
+  AndroidLivePlaybackMode mode;
+}
+
+class AndroidLivePlaybackModeReply {
+  String sessionId;
+  int requestId;
+  int committedRevision;
 }

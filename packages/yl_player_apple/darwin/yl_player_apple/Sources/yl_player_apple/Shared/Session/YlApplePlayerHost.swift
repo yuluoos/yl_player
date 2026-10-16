@@ -16,6 +16,13 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   private var textureOwner: YlAppleTextureOwner!
   private var attached = false
   private(set) var disposed = false
+  private var lastLiveModeRequestId: Int64 = 0
+  private var liveModeCommands: [Int64: (Result<AppleLivePlaybackModeReply, Error>) -> Void] = [:]
+  private func cancelLiveModeCommands() {
+    let pending = liveModeCommands
+    liveModeCommands.removeAll()
+    pending.values.forEach { $0(.failure(YlOpenCancellationToken.cancellationError())) }
+  }
   private var suspended = false
   private var playbackIntentVersion: UInt64 = 0
   private var restorationVersion: UInt64 = 0
@@ -119,6 +126,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
           defaults: self.options, loadRequestId: request.loadRequestId)
         // Validation precedes cancellation, identity allocation and saved intent.
         guard !self.suspended else { throw YlOpenCancellationToken.cancellationError() }
+        self.cancelLiveModeCommands()
         self.restorationVersion &+= 1
         self.restoring = false
         self.stagedSnapshot = nil
@@ -209,6 +217,47 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       } catch { completion(.failure(error)) }
     }
   }
+  func setLivePlaybackMode(command: AppleLivePlaybackModeCommand) async throws -> AppleLivePlaybackModeReply {
+    try await onMain { completion in
+      do {
+        try self.session(command.sessionId)
+        guard command.requestId > self.lastLiveModeRequestId, command.requestId > 0 else {
+          throw YlAppleFailureMapper.invalid("protocol.mismatch")
+        }
+        self.lastLiveModeRequestId = command.requestId
+        guard self.liveModeCommands.count < 32, !self.suspended, !self.restoring else {
+          throw NativePlayerError(category: "resource", code: "resource.exhausted", message: "Live playback command is unavailable.")
+        }
+        let mode: YlNativeLiveMode = command.mode == .lowLatency ? .lowLatency : .smoothPlayback
+        guard self.reducer.state.snapshot?.livePlayback?.switchableModes.contains(mode) == true else {
+          throw YlNativeLivePlayback.unsupported
+        }
+        self.liveModeCommands[command.requestId] = completion
+        var revision: Int64?
+        self.coordinator.setLivePlaybackMode(mode, requestId: command.requestId, validate: {
+          try self.session(command.sessionId)
+          guard self.liveModeCommands[command.requestId] != nil, !self.suspended, !self.restoring,
+                self.reducer.revision < Int64.max else { throw YlOpenCancellationToken.cancellationError() }
+        }, willCommit: { self.willCommit?($0) }, didCommit: { self.didCommit?() },
+        didRollback: { self.didRollback?() }, commit: { value, snapshot in
+          try self.session(command.sessionId)
+          guard self.liveModeCommands[command.requestId] != nil, !self.suspended, !self.restoring else {
+            throw YlOpenCancellationToken.cancellationError()
+          }
+          revision = try self.reducer.commitLivePlayback(value, replacing: snapshot)
+        }, completion: { result in
+          guard let finish = self.liveModeCommands.removeValue(forKey: command.requestId) else { return }
+          switch result {
+          case .success:
+            guard let revision else { finish(.failure(YlAppleFailureMapper.invalid("protocol.mismatch"))); return }
+            finish(.success(AppleLivePlaybackModeReply(sessionId: command.sessionId,
+              requestId: command.requestId, committedRevision: revision)))
+          case .failure(let error): finish(.failure(error))
+          }
+        })
+      } catch { completion(.failure(error)) }
+    }
+  }
   func setVolume(volume: Double) throws {
     try alive()
     guard volume.isFinite, (0...1).contains(volume) else {
@@ -220,6 +269,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     try await onMain { completion in
       do {
         try self.alive()
+        self.cancelLiveModeCommands()
         self.restorationVersion &+= 1
         self.restoring = false
         self.stagedSnapshot = nil
@@ -237,6 +287,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   }
   func close() {
     guard !disposed else { return }
+    cancelLiveModeCommands()
     disposed = true
     restorationVersion &+= 1
     stagedSnapshot = nil
@@ -248,6 +299,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   func suspend() {
     guard !disposed, !suspended else { return }
     restoreOnResume = coordinator.isActive
+    cancelLiveModeCommands()
     suspended = true
     restorationVersion &+= 1
     restoring = false
@@ -258,6 +310,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   }
   func handleMemoryWarning() {
     guard !disposed else { return }
+    cancelLiveModeCommands()
     restorationVersion &+= 1
     restoring = false
     stagedSnapshot = nil
@@ -553,7 +606,12 @@ extension YlApplePlayerHost {
       decoderIdentity: value?.decoderName, metrics: Self.metrics(value?.metrics ?? .init()),
       failure: state.failure.map { YlAppleFailureMapper.message($0, scope: .session) },
       videoSelection: AppleVideoSelectionMessage(fixedTrackId: value?.videoSelection.fixedTrackId,
-        reason: value?.videoSelection.reason ?? "initial"))
+        reason: value?.videoSelection.reason ?? "initial"),
+      livePlayback: value?.livePlayback.map { live in
+        AppleLivePlaybackStateMessage(mode: live.mode == .lowLatency ? .lowLatency : .smoothPlayback,
+          switchableModes: live.switchableModes.map { $0 == .lowLatency ? .lowLatency : .smoothPlayback },
+          committedRequestId: live.committedRequestId)
+      })
   }
   static func track(_ value: YlNativeTrack) -> AppleTrackMessage {
     AppleTrackMessage(id: value.id, kind: value.kind == .audio ? .audio : .video,

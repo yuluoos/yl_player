@@ -10,6 +10,7 @@ final class YlLiveReconnectController {
   private let baseRetryDelayMs: Int64
   private let maxRetryDelayMs: Int64
   private var retryAttempt = 0
+  private var retainedAttempts = 0
   private var isCancelled = false
 
   init(configuration: YlNetworkConfiguration) {
@@ -20,6 +21,13 @@ final class YlLiveReconnectController {
 
   var attempt: Int {
     lock.withLock { retryAttempt }
+  }
+
+  func retainAttempts(_ attempts: Int) {
+    lock.withLock {
+      retainedAttempts = max(retainedAttempts, min(maxRetries, attempts))
+      retryAttempt = max(retryAttempt, retainedAttempts)
+    }
   }
 
   var canRetry: Bool {
@@ -46,7 +54,7 @@ final class YlLiveReconnectController {
   func markFirstFrame() {
     lock.withLock {
       guard !isCancelled else { return }
-      retryAttempt = 0
+      retryAttempt = retainedAttempts
     }
   }
 

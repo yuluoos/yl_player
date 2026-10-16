@@ -48,7 +48,7 @@ AndroidFailureMessage wireFailure({
 );
 AndroidCreateReply wireCreate({String suffix = 'instance-1'}) =>
     AndroidCreateReply(
-      schemaMajor: 5,
+      schemaMajor: 6,
       spiMajor: 2,
       channelSuffix: suffix,
       textureId: 42,
@@ -107,6 +107,17 @@ final class FakeFactory implements AndroidFactoryTransport {
 
 final class FakeTransport implements AndroidPlayerTransport {
   AndroidPlayerFlutterApi? callbacks;
+  Future<AndroidLivePlaybackModeReply> Function(AndroidLivePlaybackModeCommand)?
+  liveMode;
+  final liveCommands = <AndroidLivePlaybackModeCommand>[];
+  @override
+  Future<AndroidLivePlaybackModeReply> setLivePlaybackMode(
+    AndroidLivePlaybackModeCommand command,
+  ) {
+    liveCommands.add(command);
+    return liveMode!(command);
+  }
+
   final calls = <String>[];
   final loads = <Completer<AndroidLoadReply>>[];
   final requests = <AndroidLoadRequest>[];

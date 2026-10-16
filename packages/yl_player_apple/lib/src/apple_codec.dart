@@ -5,7 +5,7 @@ import 'pigeon/yl_player_apple.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AppleCodec {
-  static const schemaMajor = 5;
+  static const schemaMajor = 6;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 
@@ -266,6 +266,16 @@ abstract final class AppleCodec {
         value.loadRequestId != null && value.loadRequestId!.isEmpty) {
       throw ArgumentError('Invalid native Load request identity.');
     }
+    final live = value.livePlayback;
+    if (live != null) {
+      if (value.sessionId == null ||
+          !value.timeline.isLive ||
+          live.switchableModes.toSet().length != live.switchableModes.length ||
+          live.committedRequestId != null && live.committedRequestId! <= 0) {
+        throw ArgumentError('Invalid live playback state.');
+      }
+      if (live.committedRequestId != null) integer(live.committedRequestId!);
+    }
     final rawTimeline = value.timeline;
     final geometry = value.geometry;
     final result = YlPlayerState(
@@ -304,6 +314,14 @@ abstract final class AppleCodec {
       audioTracks: value.audioTracks.map(track).toList(),
       videoTracks: value.videoTracks.map(track).toList(),
       videoSelection: _selection(value.videoSelection),
+      livePlayback: live == null
+          ? null
+          : YlLivePlaybackState(
+              mode: YlLivePlaybackMode.values.byName(live.mode.name),
+              switchableModes: live.switchableModes
+                  .map((mode) => YlLivePlaybackMode.values.byName(mode.name))
+                  .toList(),
+            ),
       engine: engine(value.engine),
       decoderMode: value.engine == AppleEngine.avPlayer
           ? YlDecoderMode.unknown
@@ -489,20 +507,21 @@ abstract final class AppleCodec {
     );
   }
 
-  static YlPlayerOperation _operation(ApplePlayerOperation value) =>
-      switch (value) {
-        ApplePlayerOperation.seek => YlPlayerOperation.seek,
-        ApplePlayerOperation.seekToLiveEdge => YlPlayerOperation.seekToLiveEdge,
-        ApplePlayerOperation.playbackSpeed => YlPlayerOperation.playbackSpeed,
-        ApplePlayerOperation.audioTrackSelection =>
-          YlPlayerOperation.audioTrackSelection,
-        ApplePlayerOperation.videoConstraints =>
-          YlPlayerOperation.videoConstraints,
-        ApplePlayerOperation.volume => YlPlayerOperation.volume,
-        ApplePlayerOperation.stop => YlPlayerOperation.stop,
-        ApplePlayerOperation.videoTrackSelection =>
-          YlPlayerOperation.videoTrackSelection,
-      };
+  static YlPlayerOperation _operation(
+    ApplePlayerOperation value,
+  ) => switch (value) {
+    ApplePlayerOperation.seek => YlPlayerOperation.seek,
+    ApplePlayerOperation.seekToLiveEdge => YlPlayerOperation.seekToLiveEdge,
+    ApplePlayerOperation.playbackSpeed => YlPlayerOperation.playbackSpeed,
+    ApplePlayerOperation.audioTrackSelection =>
+      YlPlayerOperation.audioTrackSelection,
+    ApplePlayerOperation.videoConstraints => YlPlayerOperation.videoConstraints,
+    ApplePlayerOperation.volume => YlPlayerOperation.volume,
+    ApplePlayerOperation.stop => YlPlayerOperation.stop,
+    ApplePlayerOperation.livePlaybackMode => YlPlayerOperation.livePlaybackMode,
+    ApplePlayerOperation.videoTrackSelection =>
+      YlPlayerOperation.videoTrackSelection,
+  };
 
   static YlFailureCategory _category(AppleFailureCategory value) =>
       switch (value) {

@@ -175,3 +175,17 @@ List<<Platform>LivePlaybackMode> switchableModes; }`，snapshot末尾增加nulla
 Task3A本轮只交付审计与上述契约。Task3B先做公共值/可选SPI/拒绝与屏障测试，
 Task3C做双端桥接和HLS事务，Task3D做FLV/RTMP恢复与预算，Task3E做三协议实际测量。
 这些切片是现有Task3的实施顺序，不改变其验收范围。当前平台支持表不增加通过行。
+
+## 2026-10-16 实施补充（保留上文固定审计基线）
+
+双端私有协议现为 schema 6。`LivePlaybackStateMessage` 增加私有可空正 signed64
+`committedRequestId`；首次接受的该请求完整快照 revision 必须与 reply 的
+`committedRevision` 完全一致。后续 metrics/模式快照不抹掉已有配对证据。
+每个适配器最多保留 32 条待配对请求及 32 个未返回原生调用；首个半边抵达后
+五秒内缺少另一半则 protocol.mismatch，生命周期取消优先结束等待。此字段不增加
+Dart 公共状态 API。Pigeon 28 的枚举提升由生成脚本后处理修复，旧 factory 标签不变。
+
+HLS 回看恢复用户速率并关闭自动追实时，只有显式 seekToLiveEdge 重新授权。
+Apple 的固定预算流水线通过同会话候选提交切模式；排队控制必须在执行时解析当前
+后端。RTMP 的模式刷新与断线恢复共用会话额度，暂停切换不启动输出，实际恢复只在
+后续播放需求满足时执行。无设备策略验证不等于三协议实播或性能验收。

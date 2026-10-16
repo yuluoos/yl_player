@@ -51,6 +51,19 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     demux.resumeControlOperation()
   }
 
+  var liveRecoveryContinuity: YlRecoveryCoordinator.Continuity { recovery.continuity }
+  func retainLiveRecoveryContinuity(_ value: YlRecoveryCoordinator.Continuity) { recovery.retainContinuity(value) }
+  private var livePlaybackRequestId: Int64?
+  var livePlaybackState: YlNativeLivePlayback? {
+    guard demux.mediaPolicy.isLive, isNetworkSource, bufferBudget.boundedPlan == nil else { return nil }
+    return YlNativeLivePlayback(mode: configuration.bufferMode == "lowLatency" ? .lowLatency : .smoothPlayback,
+      switchableModes: [.smoothPlayback, .lowLatency], committedRequestId: livePlaybackRequestId)
+  }
+  func acknowledgeLivePlaybackMode(_ mode: YlNativeLiveMode, requestId: Int64) throws -> YlNativeLivePlayback {
+    guard let value = livePlaybackState, value.mode == mode, isActive, !isStopped else { throw YlNativeLivePlayback.unsupported }
+    livePlaybackRequestId = requestId
+    return YlNativeLivePlayback(mode: mode, switchableModes: value.switchableModes, committedRequestId: requestId)
+  }
   private let recovery: YlRecoveryCoordinator
   private let presentation: YlPresentationCoordinator
   private let audio: YlAudioPipeline
@@ -563,7 +576,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         metrics: metrics,
         error: currentError,
         decoderEvidence: video.hardwareEvidence,
-        geometry: video.geometry
+        geometry: video.geometry, livePlayback: livePlaybackState
       )))
   }
 

@@ -64,6 +64,14 @@ internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadCont
         applyProfile(profile)
     }
 
+    /** Same-session policy changes cannot revoke an outstanding pressure reduction. */
+    @Synchronized
+    fun updateRuntimeProfile(profile: YlBufferProfile) {
+        normalProfile = profile
+        applyProfile(if (pressureReduced) YlPlaybackPolicy.shrinkForMemoryPressure(profile) else profile)
+        allocator.trim()
+    }
+
     @Synchronized
     fun shrinkForMemoryPressure() {
         if (pressureReduced) return

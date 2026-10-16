@@ -51,6 +51,9 @@ internal interface YlPlaybackEngineAdapter {
         throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
     }
     suspend fun setVideoConstraints(constraints: AndroidVideoConstraintsMessage)
+    suspend fun setLivePlaybackMode(mode: AndroidLivePlaybackMode, requestId: Long): AndroidLivePlaybackStateMessage {
+        throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+    }
     suspend fun setVolume(volume: Double)
     suspend fun stop()
     /** Pending means native resources may still reference the borrowed output. Never cancel it. */
@@ -75,6 +78,7 @@ internal data class YlEngineSnapshot(
     val decoderIdentity: String? = null,
     val metrics: AndroidMetricsMessage = AndroidMetricsMessage(),
     val reachedReady: Boolean = false,
+    val livePlayback: AndroidLivePlaybackStateMessage? = null,
     val videoSelection: AndroidVideoSelectionMessage = AndroidVideoSelectionMessage(
         reason = "initial"),
 )

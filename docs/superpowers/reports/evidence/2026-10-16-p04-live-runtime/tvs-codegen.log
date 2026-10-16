@@ -1,0 +1,17 @@
+W These options have been removed and were ignored: --delete-conflicting-outputs
+  0s riverpod_generator on 305 inputs; lib/app/box.dart
+W SDK language version 3.12.0 is newer than `analyzer` language version 3.11.0. Run `flutter packages upgrade`.
+  26s riverpod_generator on 305 inputs: 6 skipped, 1 same; spent 25s analyzing; lib/main.dart
+  30s riverpod_generator on 305 inputs: 78 skipped, 1 output, 11 same, 3 no-op; spent 28s analyzing, 1s resolving; lib/providers/live_source_provider.dart
+  31s riverpod_generator on 305 inputs: 90 skipped, 1 output, 15 same, 3 no-op; spent 29s analyzing, 1s resolving; lib/services/node_service.dart
+  31s riverpod_generator on 305 inputs: 281 skipped, 1 output, 15 same, 8 no-op; spent 29s analyzing, 1s resolving
+  0s freezed on 305 inputs; lib/app/box.dart
+  1s freezed on 305 inputs: 281 skipped, 24 no-op
+  0s json_serializable on 610 inputs; lib/app/box.dart
+  1s json_serializable on 610 inputs: 5 skipped, 2 no-op; lib/app/root.freezed.dart
+  1s json_serializable on 610 inputs: 477 skipped, 133 no-op; spent 1s analyzing
+  0s isar_community_generator on 610 inputs; lib/app/box.dart
+  0s isar_community_generator on 610 inputs: 586 skipped, 24 no-op
+  0s source_gen:combining_builder on 610 inputs; lib/app/box.dart
+  0s source_gen:combining_builder on 610 inputs: 594 skipped, 1 output, 15 same
+  Built with build_runner/aot in 34s; wrote 32 outputs.

@@ -40,7 +40,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
   func create(request: AppleCreateRequest) throws -> AppleCreateReply {
     do {
       guard !detached else { throw NativePlayerError(category: "resource", code: "player.detached", message: "Plugin detached.") }
-      guard request.schemaMajor == 5 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
+      guard request.schemaMajor == 6 else { throw NativePlayerError(category: "protocol", code: "protocol.mismatch", message: "Protocol mismatch.") }
       guard request.options.positionUpdateIntervalMs > 0,
         request.options.positionUpdateIntervalMs <= Int64(Int32.max) else { throw YlAppleFailureMapper.invalid() }
       guard nextPlayerId < Int64.max else { throw NativePlayerError(category: "resource", code: "resource.exhausted", message: "Player identifiers exhausted.") }
@@ -84,7 +84,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       players[suffix] = host
       installHost(suffix, host)
       if backgrounded || (managed && audioInterrupted) { host.suspend() }
-      return AppleCreateReply(schemaMajor: 5, spiMajor: 2, channelSuffix: suffix,
+      return AppleCreateReply(schemaMajor: 6, spiMajor: 2, channelSuffix: suffix,
         textureId: services.textureOutput.textureId,
         platform: services.platform == .ios ? .ios : .macos,
         implementationName: "yl_player_apple", implementationVersion: "0.2.0-dev.2",
@@ -100,7 +100,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       availableEngines: [.avPlayer, .managedFallback], decoderEvidence: .hardwareOnly,
       maxConcurrentVideoDecoders: Int64(native.maxConcurrentVideoDecoders),
       hardwareVideoCodecs: native.hardwareVideoCodecs,
-      supportedOperations: [.seek, .seekToLiveEdge, .playbackSpeed, .audioTrackSelection, .videoConstraints, .volume, .stop, .videoTrackSelection])
+      supportedOperations: [.livePlaybackMode, .seek, .seekToLiveEdge, .playbackSpeed, .audioTrackSelection, .videoConstraints, .volume, .stop, .videoTrackSelection])
   }
   func host(for suffix: String) -> YlApplePlayerHost? { players[suffix] }
   func detach() {

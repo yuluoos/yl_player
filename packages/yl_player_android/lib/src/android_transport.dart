@@ -17,6 +17,9 @@ abstract interface class AndroidPlayerTransport {
   Future<void> selectAudioTrack(AndroidTrackCommand command);
   Future<void> selectVideoTrack(AndroidVideoTrackCommand command);
   Future<void> setVideoConstraints(AndroidVideoConstraintsCommand command);
+  Future<AndroidLivePlaybackModeReply> setLivePlaybackMode(
+    AndroidLivePlaybackModeCommand command,
+  );
   Future<void> setVolume(double volume);
   Future<void> stop();
   Future<void> dispose();
@@ -82,6 +85,10 @@ final class PigeonAndroidPlayerTransport implements AndroidPlayerTransport {
   @override
   Future<void> setVideoConstraints(AndroidVideoConstraintsCommand command) =>
       _invoke(() => _api.setVideoConstraints(command));
+  @override
+  Future<AndroidLivePlaybackModeReply> setLivePlaybackMode(
+    AndroidLivePlaybackModeCommand command,
+  ) => _invoke(() => _api.setLivePlaybackMode(command));
   @override
   Future<void> setVolume(double volume) =>
       _invoke(() => _api.setVolume(volume));

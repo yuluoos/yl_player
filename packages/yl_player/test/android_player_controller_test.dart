@@ -297,7 +297,7 @@ final class _Factory implements AndroidFactoryTransport {
   @override
   Future<AndroidCreateReply> create(AndroidCreateRequest request) async =>
       AndroidCreateReply(
-        schemaMajor: 5,
+        schemaMajor: 6,
         spiMajor: 2,
         channelSuffix: 'controller-test',
         textureId: 1,
@@ -360,6 +360,10 @@ final class _Native implements AndroidPlayerTransport {
   @override
   Future<void> selectVideoTrack(AndroidVideoTrackCommand command) =>
       throw UnimplementedError();
+  @override
+  Future<AndroidLivePlaybackModeReply> setLivePlaybackMode(
+    AndroidLivePlaybackModeCommand command,
+  ) => throw UnimplementedError();
   @override
   Future<void> setVideoConstraints(AndroidVideoConstraintsCommand command) =>
       throw UnimplementedError();

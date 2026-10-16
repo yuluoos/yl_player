@@ -1,0 +1,24 @@
+{
+  "baseline": "182861666b2286cb05026954a5e3e4bc946acfce",
+  "mismatches": [
+    {
+      "file": "AppleHostCharacterizations.swift",
+      "baselineAlreadyDiffers": true
+    },
+    {
+      "file": "YlDashResourceLoaderTests.swift",
+      "baselineAlreadyDiffers": true
+    },
+    {
+      "file": "YlMacosPresentationTests.swift",
+      "baselineAlreadyDiffers": true
+    }
+  ],
+  "existingFixtureManifestFailure": "YlFallbackTrackCatalogTests.swift",
+  "fixtureManifestBaseline": {
+    "path": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlFallbackTrackCatalogTests.swift",
+    "actual": "b623249a660b75fcb37462d438e6c3e98e8d754b0a3dd6d2a7bd2fd22c9384f1",
+    "recorded": "03258cbcd442649abf21a2b801cf18eb0bdfbd731451bc785acfc639bf5c5f29",
+    "alreadyMismatched": true
+  }
+}

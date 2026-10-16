@@ -5,6 +5,11 @@ internal class YlRtmpRecovery {
     @Volatile var committed = false
     var attempts = 0; private set
     var epoch = 0L; private set
+    fun reserveLiveRefresh(): Boolean {
+        if (!committed || attempts >= 3) return false
+        attempts++
+        return true
+    }
     fun invalidate(): Long = ++epoch
     fun accepts(value: Long) = value == epoch
     fun canRecover(kind: YlFailureKind, transient: Boolean) = committed && transient &&

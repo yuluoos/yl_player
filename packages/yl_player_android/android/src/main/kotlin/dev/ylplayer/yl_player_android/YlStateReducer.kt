@@ -36,6 +36,7 @@ internal class YlStateReducer(
         val next = state.copy(status = status, timeline = snapshot.timeline, geometry = snapshot.geometry,
             audioTracks = snapshot.audioTracks.toList(), videoTracks = snapshot.videoTracks.toList(),
             videoSelection = snapshot.videoSelection,
+            livePlayback = snapshot.livePlayback,
             decoderMode = snapshot.decoderMode, decoderIdentity = snapshot.decoderIdentity, metrics = snapshot.metrics)
         if (next != state) {
             if (next.copy(timeline = state.timeline, metrics = state.metrics) != state ||
@@ -63,6 +64,11 @@ internal class YlStateReducer(
         timeline.copy(positionMs = state.timeline.positionMs,
             bufferedPositionMs = state.timeline.bufferedPositionMs,
             isAtLiveEdge = state.timeline.isAtLiveEdge, liveOffsetMs = state.timeline.liveOffsetMs) != state.timeline
+    fun commitLiveMode(value: AndroidLivePlaybackStateMessage): Long {
+        if (state.sessionId == null || terminal || !state.timeline.isLive) throw YlBoundaryException(YlFailureKind.SESSION_STALE)
+        publish(state.copy(livePlayback = value))
+        return state.revision
+    }
     fun pauseForLifecycle() {
         if (state.sessionId != null && !terminal && state.status !in listOf(AndroidPlaybackStatus.PAUSED, AndroidPlaybackStatus.COMPLETED)) {
             publish(state.copy(status = AndroidPlaybackStatus.PAUSED))

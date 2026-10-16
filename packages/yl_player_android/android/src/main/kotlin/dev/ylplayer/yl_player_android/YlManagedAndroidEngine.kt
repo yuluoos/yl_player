@@ -1,5 +1,7 @@
 package dev.ylplayer.yl_player_android
 
+import dev.ylplayer.yl_player_android.pigeon.AndroidLivePlaybackMode
+
 import android.os.SystemClock
 import dev.ylplayer.yl_player_android.pigeon.AndroidEngine
 import dev.ylplayer.yl_player_android.pigeon.AndroidVideoConstraintsMessage
@@ -162,6 +164,8 @@ internal class YlManagedAndroidEngine(
         current.setVideoConstraints(constraints)
         this.constraints = constraints
     }
+    override suspend fun setLivePlaybackMode(mode: AndroidLivePlaybackMode, requestId: Long) =
+        current.setLivePlaybackMode(mode, requestId)
     override suspend fun setVolume(volume: Double) { this.volume = volume; current.setVolume(volume) }
     override suspend fun stop() {
         playing = false

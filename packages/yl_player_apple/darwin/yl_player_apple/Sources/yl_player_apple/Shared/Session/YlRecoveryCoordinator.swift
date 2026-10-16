@@ -66,6 +66,13 @@ final class YlRecoveryCoordinator {
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration)
   }
 
+  struct Continuity { let attempts: Int; let reconnects: Int }
+  var continuity: Continuity { Continuity(attempts: liveReconnectController.attempt, reconnects: reconnectCount) }
+  func retainContinuity(_ value: Continuity) {
+    liveReconnectController.retainAttempts(value.attempts)
+    reconnectCount = max(reconnectCount, value.reconnects)
+  }
+
   struct ScheduledWork {
     private let item: DispatchWorkItem
     fileprivate init(_ item: DispatchWorkItem) { self.item = item }

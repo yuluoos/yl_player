@@ -13,16 +13,22 @@ protocol YlPlaybackBackend: AnyObject {
   func pause() throws
   func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws
   func seekToLiveEdge() throws
+  func setLivePlaybackMode(_ mode: YlNativeLiveMode, requestId: Int64) throws -> YlNativeLivePlayback
   func setPlaybackSpeed(_ speed: Float) throws
   func setVolume(_ volume: Float) throws
   func selectAudioTrack(_ trackId: String, cancellationToken: YlOpenCancellationToken?) throws
   func setVideoConstraints(_ constraints: YlAppleVideoConstraints) throws
+  func requiresAsyncCommand(_ command: YlApplePlaybackCommand) -> Bool
   func emitState()
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>?
   func dispose()
 }
 
 extension YlPlaybackBackend {
+  func requiresAsyncCommand(_ command: YlApplePlaybackCommand) -> Bool { false }
+  func setLivePlaybackMode(_ mode: YlNativeLiveMode, requestId: Int64) throws -> YlNativeLivePlayback {
+    throw YlNativeLivePlayback.unsupported
+  }
   func finishReplacement() {}
   var requiresExternalRollbackActivation: Bool { false }
   func quiesceForReplacement() { deactivate() }
@@ -139,6 +145,16 @@ final class YlAppleCommitEmitter {
     else if case .state = callback.event { initialState = callback }
   }
 
+  /// Transfer the candidate's current full state to the mode commit barrier;
+  /// committing the emitter must not replay an older candidate snapshot later.
+  func takeInitialSnapshot() -> YlNativeState? {
+    lock.lock(); defer { lock.unlock() }
+    guard !committed, !invalidated, let callback = initialState,
+          case .state(let value) = callback.event else { return nil }
+    initialState = nil
+    return value
+  }
+
   func commit() {
     lock.lock()
     defer { lock.unlock() }
@@ -164,5 +180,33 @@ final class YlAppleCommitEmitter {
     defer { lock.unlock() }
     guard committed, !invalidated else { return }
     emit(identity, callback)
+  }
+}
+
+/// Queue entries retain intent and identity validation, never a backend that a
+/// preceding same-session mode transaction may replace.
+struct YlQueuedPlaybackCommand {
+  let command: YlApplePlaybackCommand
+  let resolve: () throws -> YlPlaybackBackend
+  private func onMain<T>(_ work: () throws -> T) rethrows -> T {
+    if Thread.isMainThread { return try work() }
+    return try DispatchQueue.main.sync(execute: work)
+  }
+  func run(_ token: YlOpenCancellationToken) throws {
+    let backend = try onMain { try token.throwIfCancelled(); return try resolve() }
+    let background = onMain { backend.requiresAsyncCommand(command) }
+    let fallback = backend as? YlFallbackBackend
+    token.onCancel { [weak fallback] in fallback?.interruptControlOperation() }
+    defer { fallback?.resumeControlOperation() }
+    try token.throwIfCancelled()
+    if background {
+      try command.apply(to: backend, cancellationToken: token)
+    } else {
+      try onMain {
+        try token.throwIfCancelled()
+        guard try resolve() === backend else { throw YlOpenCancellationToken.cancellationError() }
+        try command.apply(to: backend, cancellationToken: token)
+      }
+    }
   }
 }

@@ -128,6 +128,97 @@ final class YlAppleSessionCoordinator: NSObject {
     lastQualityConstraint
   }
 
+  func setLivePlaybackMode(_ mode: YlNativeLiveMode, requestId: Int64,
+    validate: @escaping () throws -> Void,
+    willCommit: @escaping (Bool) -> Void, didCommit: @escaping () -> Void,
+    didRollback: @escaping () -> Void,
+    commit publish: @escaping (YlNativeLivePlayback, YlNativeState?) throws -> Void,
+    completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
+    let expectedIdentity = identity
+    commandCoordinator.begin(operation: { [weak self] token in
+      guard let self else { throw YlOpenCancellationToken.cancellationError() }
+      var fallback: YlFallbackBackend?
+      var source: YlAppleSourceDescriptor?
+      var original: YlPlaybackBackend?
+      try DispatchQueue.main.sync {
+        try token.throwIfCancelled(); try validate()
+        guard !self.disposed, self.identity == expectedIdentity, self.slot.current.isActive,
+              self.pendingLoadRequestId == nil, self.activeRestorationGeneration == nil else {
+          throw YlOpenCancellationToken.cancellationError()
+        }
+        original = self.slot.current
+        if let current = self.slot.current as? YlFallbackBackend,
+           current.livePlaybackState?.mode != mode {
+          fallback = current
+          source = self.lastCommittedSource
+          if let intent = source?.managedRequestIntent {
+            guard intent.terminalFailure == nil else { throw YlNativeLivePlayback.unsupported }
+            source?.managedRequestIntent = intent.candidate()
+          }
+          guard source?.boundedPlan == nil else { throw YlNativeLivePlayback.unsupported }
+          source?.loadOptions?.bufferStrategy = mode == .lowLatency ? .lowLatency : .smoothPlayback
+          source?.livePlaybackRequestId = requestId
+        } else {
+          let value = try self.slot.current.setLivePlaybackMode(mode, requestId: requestId)
+          self.lastCommittedSource?.loadOptions?.bufferStrategy = mode == .lowLatency ? .lowLatency : .smoothPlayback
+          self.lastCommittedSource?.livePlaybackRequestId = requestId
+          try publish(value, nil)
+        }
+      }
+      guard let fallback, let source, let expectedIdentity else { return }
+      let prepare = { try self.prepareFallback(source: source, token: token, identity: expectedIdentity, reactivating: true) }
+      let prepared = try source.url?.scheme?.lowercased() == "rtmp"
+        ? source.rtmpRecovery.prepareRestoration(token: token, work: prepare) : prepare()
+      defer { prepared.discard() }
+      // Candidates remain silent until the complete policy/resource transaction commits.
+      var selectedAudio: Int32?
+      try DispatchQueue.main.sync {
+        try token.throwIfCancelled(); try validate()
+        guard self.slot.current === original, self.identity == expectedIdentity else { throw YlOpenCancellationToken.cancellationError() }
+        selectedAudio = fallback.reactivationState(forcePlay: false).selectedAudioStreamIndex
+      }
+      try prepared.prepareForReactivation(.init(positionUs: 0, selectedAudioStreamIndex: selectedAudio, shouldPlay: false))
+      try DispatchQueue.main.sync {
+        try token.throwIfCancelled(); try validate()
+        guard !self.disposed, self.slot.current === original, self.identity == expectedIdentity,
+          fallback.isActive, self.pendingLoadRequestId == nil else { throw YlOpenCancellationToken.cancellationError() }
+        let shouldPlay = self.currentPlaybackIntent
+        let continuity = fallback.liveRecoveryContinuity
+        willCommit(true)
+        do {
+          try self.commit(.fallback(source: source, prepared: prepared), identity: expectedIdentity,
+            reactivating: true, cancelCommands: false)
+        } catch {
+          didRollback()
+          if self.slot.takeRollbackRequiresExternalActivation() {
+            self.slot.current.stop()
+            self.emit(.init(sessionId: expectedIdentity.sessionId, loadRequestId: expectedIdentity.loadRequestId,
+              startedAtMs: expectedIdentity.startedAtMs), .init(generation: 0, event: .failure(Self.commandError(error))))
+          }
+          throw error
+        }
+        didCommit()
+        guard let installed = self.slot.current as? YlFallbackBackend else { throw YlNativeLivePlayback.unsupported }
+        installed.retainLiveRecoveryContinuity(continuity)
+        do {
+          if shouldPlay { try installed.play() }
+          let value = try installed.setLivePlaybackMode(mode, requestId: requestId)
+          installed.emitState()
+          guard let current = self.activeEvents?.takeInitialSnapshot() else {
+            throw YlAppleFailureMapper.invalid("protocol.mismatch")
+          }
+          try publish(value, current)
+          self.activeEvents?.commit()
+          if let texture = self.activeTexture { self.textureOwner.commit(texture) }
+        } catch {
+          installed.stop()
+          self.emit(expectedIdentity, .init(generation: 0, event: .failure(Self.commandError(error))))
+          throw error
+        }
+      }
+    }, completion: completion)
+  }
+
   func validateTimeSeek() throws {
     if lastCommittedSource?.url?.scheme?.lowercased() == "rtmp" {
       throw ylRtmpError("policy.unsupported")
@@ -609,52 +700,18 @@ final class YlAppleSessionCoordinator: NSObject {
         openCoordinator.cancelCurrent()
       }
     }
-    let commandCompletion = completion
     let backend = slot.current
-    if let dash = backend as? YlDashProgramBackend {
-      let background = dash.requiresAsyncCommand(command)
-      if background || commandCoordinator.hasCurrent {
-        commandCoordinator.begin(operation: { token in
-          try token.throwIfCancelled()
-          if background { try command.apply(to: dash, cancellationToken: token) }
-          else { try DispatchQueue.main.sync { try token.throwIfCancelled(); try command.apply(to: dash) } }
-        }, completion: commandCompletion)
-      } else { completeCommandSynchronously(backend: dash, command: command, completion: commandCompletion) }
-      return
+    if backend.requiresAsyncCommand(command) || commandCoordinator.hasCurrent {
+      let expectedIdentity = identity
+      let queued = YlQueuedPlaybackCommand(command: command, resolve: { [weak self] in
+        guard let self, !self.disposed, self.identity == expectedIdentity,
+              self.pendingLoadRequestId == nil else { throw YlOpenCancellationToken.cancellationError() }
+        return self.slot.current
+      })
+      commandCoordinator.begin(operation: queued.run, completion: completion)
+    } else {
+      completeCommandSynchronously(backend: backend, command: command, completion: completion)
     }
-    if let fallback = backend as? YlFallbackBackend {
-      let runsInBackground = fallback.requiresAsyncCommand(command)
-      guard runsInBackground || commandCoordinator.hasCurrent else {
-        completeCommandSynchronously(
-          backend: backend,
-          command: command,
-          completion: commandCompletion
-        )
-        return
-      }
-      commandCoordinator.begin(
-        operation: { token in
-          token.onCancel { [weak fallback] in fallback?.interruptControlOperation() }
-          defer { fallback.resumeControlOperation() }
-          try token.throwIfCancelled()
-          if runsInBackground {
-            try command.apply(to: fallback, cancellationToken: token)
-          } else {
-            try DispatchQueue.main.sync {
-              try token.throwIfCancelled()
-              try command.apply(to: backend)
-            }
-          }
-        },
-        completion: commandCompletion
-      )
-      return
-    }
-    completeCommandSynchronously(
-      backend: backend,
-      command: command,
-      completion: commandCompletion
-    )
   }
 
   private func completeCommandSynchronously(
@@ -676,9 +733,10 @@ final class YlAppleSessionCoordinator: NSObject {
     _ candidate: YlPreparedOpen,
     identity: YlAppleSessionIdentity,
     reactivating: Bool,
-    loadVideoConstraints: YlAppleVideoConstraints? = nil
+    loadVideoConstraints: YlAppleVideoConstraints? = nil,
+    cancelCommands: Bool = true
   ) throws {
-    commandCoordinator.cancelCurrent()
+    if cancelCommands { commandCoordinator.cancelCurrent() }
     let preservedIdentity = reactivating ? (slot.current as? YlFallbackBackend)?.channelGeneration : nil
     let priorEvents = activeEvents
     let priorTexture = activeTexture
@@ -828,6 +886,9 @@ final class YlAppleSessionCoordinator: NSObject {
         )
       }
       if previous !== avBackend { previous.dispose() }
+      if let requestId = source.livePlaybackRequestId, let mode = backend.livePlaybackState?.mode {
+        _ = try backend.setLivePlaybackMode(mode, requestId: requestId)
+      }
       backend.emitState()
       lastCommittedSource = source
       committedHlsCredentials = nil

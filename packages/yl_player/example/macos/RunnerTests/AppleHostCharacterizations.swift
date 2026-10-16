@@ -111,9 +111,9 @@ enum AppleHostCharacterizations {
     let registry = YlApplePlayerRegistry(makeServices: { _ in YlAppleRegistryTests.services() },
       makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in })
     defer { registry.detach() }
-    let created = try registry.create(request: .init(schemaMajor: 5,
+    let created = try registry.create(request: .init(schemaMajor: 6,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 500)))
-    XCTAssertEqual(created.schemaMajor, 5)
+    XCTAssertEqual(created.schemaMajor, 6)
     XCTAssertEqual(created.spiMajor, 2)
     XCTAssertFalse(created.channelSuffix.isEmpty)
     XCTAssertNotNil(registry.host(for: created.channelSuffix))
@@ -179,7 +179,7 @@ enum AppleHostCharacterizations {
       makeCallbacks: { suffix in callbackSuffixes.append(suffix); return AppleRecordingCallbacks() },
       installHost: { suffix, host in if host != nil { installed.append(suffix) } })
     defer { registry.detach() }
-    let request = AppleCreateRequest(schemaMajor: 5,
+    let request = AppleCreateRequest(schemaMajor: 6,
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 500))
     let a = try registry.create(request: request), b = try registry.create(request: request)
     XCTAssertNotEqual(a.channelSuffix, b.channelSuffix)

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'live_mode_barrier.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
@@ -13,6 +14,7 @@ import 'pigeon/yl_player_android.g.dart';
 final class AndroidPlayer
     implements
         YlPlatformPlayer,
+        YlLivePlaybackPlatformPlayer,
         YlVideoTrackSelectionPlatformPlayer,
         YlPlatformDrmSourceSupport,
         YlPlatformDrmLicenseTransport,
@@ -31,6 +33,17 @@ final class AndroidPlayer
       initialState: initial,
       initialSequence: sequence,
       onFullState: _receiveState,
+      onLiveState: (snapshot) {
+        final live = snapshot.livePlayback;
+        if (live != null && snapshot.sessionId != null) {
+          _liveModes.snapshot(
+            snapshot.sessionId!,
+            live.committedRequestId,
+            snapshot.revision,
+            YlLivePlaybackMode.values.byName(live.mode.name),
+          );
+        }
+      },
       onDelta: _receiveDelta,
       onAcceptedState: _states.add,
       onEvent: _receiveEvent,
@@ -199,6 +212,9 @@ final class AndroidPlayer
   @override
   Stream<YlPlayerEvent> get events => _events.stream;
 
+  final _liveModes = LiveModeBarrier();
+  int _liveTransports = 0;
+
   final _commands = <void Function(YlPlayerException)>{};
   final _retired = <YlPlaybackSessionId>{};
   _PendingLoad? _pending;
@@ -229,6 +245,7 @@ final class AndroidPlayer
     Future<T> Function() invoke, {
     _PendingLoad? owner,
     void Function(T)? onLateValue,
+    Future<void>? cancelled,
   }) {
     _checkAlive();
     final completion = Completer<T>();
@@ -238,6 +255,12 @@ final class AndroidPlayer
       if (!completion.isCompleted) completion.completeError(error);
     }
 
+    cancelled?.then<void>(
+      (_) {},
+      onError: (Object error) {
+        cancel(AndroidCodec.exception(error));
+      },
+    );
     _commands.add(cancel);
     owner?.commands.add(cancel);
     Future<T>.sync(invoke).then(
@@ -314,6 +337,7 @@ final class AndroidPlayer
         source: AndroidCodec.source(source),
         options: AndroidCodec.loadOptions(options),
       );
+      _liveModes.cancelAll(_cancelled);
       _cancelLoad(_cancelled);
       _drm?.begin(request.loadRequestId, source);
       final pending = _PendingLoad(request.loadRequestId);
@@ -482,6 +506,7 @@ final class AndroidPlayer
     if (session == null || match == null) return;
     if (_retired.contains(session) ||
         !_callbacks.canAccept(match.$1, match.$2)) {
+      _liveModes.cancelAll(_cancelled);
       _cancelLoad(_cancelled);
       return;
     }
@@ -694,6 +719,71 @@ final class AndroidPlayer
   }
 
   @override
+  Future<void> setLivePlaybackMode(
+    YlPlaybackSessionId sessionId,
+    YlLivePlaybackMode mode,
+  ) async {
+    _checkAlive();
+    validateYlPlaybackSessionId(sessionId);
+    if (state.sessionId != sessionId || _retired.contains(sessionId)) {
+      throw AndroidCodec.problem(
+        YlFailureCodes.sessionStale,
+        category: YlFailureCategory.cancelled,
+        scope: YlFailureScope.command,
+      );
+    }
+    if (!capabilities.supportedOperations.contains(
+          YlPlayerOperation.livePlaybackMode,
+        ) ||
+        state.status == YlPlaybackStatus.failed ||
+        state.livePlayback?.switchableModes.contains(mode) != true) {
+      throw AndroidCodec.problem(
+        YlFailureCodes.policyUnsupported,
+        category: YlFailureCategory.unsupported,
+        scope: YlFailureScope.command,
+      );
+    }
+    if (_liveTransports >= 32) {
+      throw AndroidCodec.problem(
+        YlFailureCodes.resourceExhausted,
+        category: YlFailureCategory.resource,
+        scope: YlFailureScope.command,
+      );
+    }
+    final request = _liveModes.begin(sessionId.value, mode, state.revision);
+    _liveTransports++;
+    unawaited(
+      _run(
+        () => _transport
+            .setLivePlaybackMode(
+              AndroidLivePlaybackModeCommand(
+                sessionId: sessionId.value,
+                requestId: request.id,
+                mode: AndroidLivePlaybackMode.values.byName(mode.name),
+              ),
+            )
+            .whenComplete(() {
+              _liveTransports--;
+            }),
+        cancelled: request.future,
+      ).then(
+        (reply) {
+          _liveModes.reply(
+            request.id,
+            reply.sessionId,
+            reply.requestId,
+            reply.committedRevision,
+          );
+        },
+        onError: (Object error) {
+          _liveModes.fail(request.id, error);
+        },
+      ),
+    );
+    await request.future;
+  }
+
+  @override
   Future<void> setVolume(double volume) async {
     _checkAlive();
     validateYlVolume(volume);
@@ -704,6 +794,7 @@ final class AndroidPlayer
   Future<void> stop() async {
     _checkAlive();
     final captured = state.sessionId;
+    _liveModes.cancelAll(_cancelled);
     _cancelLoad(_cancelled);
     _drm?.stop();
     _protectedFrame = null;
@@ -729,6 +820,7 @@ final class AndroidPlayer
       unawaited(_events.close());
     }
     _cancelLoad(error);
+    _liveModes.cancelAll(error);
     _settleCommands(error);
     unawaited(dispose());
   }
@@ -755,6 +847,7 @@ final class AndroidPlayer
           category: YlFailureCategory.cancelled,
         );
     _cancelLoad(error);
+    _liveModes.cancelAll(error);
     _settleCommands(error);
     return _disposeFuture = _dispose();
   }

@@ -136,6 +136,20 @@ final class YlAppleStateReducer {
     publishState()
     if let metadata = eventMetadata() { onOutput?(.failed(metadata, error)) }
   }
+  func commitLivePlayback(_ value: YlNativeLivePlayback, replacing current: YlNativeState? = nil) throws -> Int64 {
+    guard identity != nil, snapshot?.isLive == true, !failed, revision < Int64.max else {
+      throw YlOpenCancellationToken.cancellationError()
+    }
+    if var current {
+      guard current.isLive, current.error == nil else { throw YlNativeLivePlayback.unsupported }
+      current.metrics.openDurationMs = readyAt
+      current.metrics.firstFrameDurationMs = firstFrameAt
+      snapshot = current
+    }
+    snapshot?.livePlayback = value
+    publishState()
+    return revision
+  }
   func projectPaused() {
     guard var value = snapshot, !failed else { return }
     value.status = "paused"

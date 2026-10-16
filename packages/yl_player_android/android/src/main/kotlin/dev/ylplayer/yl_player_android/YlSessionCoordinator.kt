@@ -58,6 +58,9 @@ internal class YlSessionCoordinator(
     private var candidateFrame: YlEngineEvent.FirstFrame? = null
     private var candidateBackend: YlEngineEvent.BackendChanged? = null
     private val candidateRetries = mutableListOf<YlEngineEvent.Retry>()
+    private var lastLiveModeRequestId = 0L
+    private val liveModeCommands = mutableSetOf<Deferred<AndroidLivePlaybackModeReply>>()
+    private fun cancelLiveModeCommands() { liveModeCommands.toList().forEach { it.cancel() } }
     private var operation = 0L
     private var loadSequence = 0L
     private var closed = false
@@ -199,6 +202,7 @@ internal class YlSessionCoordinator(
         stopping = false
         pendingCommitted = false
         val identity = YlSessionIdentity("a$playerId-s${++loadSequence}", request.loadRequestId)
+        cancelLiveModeCommands()
         val token = ++operation
         pending?.cancel()
         leases.cancel(playerId.toString())
@@ -672,6 +676,36 @@ internal class YlSessionCoordinator(
         intent = { constraintsIntent }, validate = { YlBoundaryValidation.constraints(command.constraints) },
         apply = { setVideoConstraints(command.constraints) },
         remember = { desiredConstraints = command.constraints }, workerRequired = true)
+    override suspend fun setLivePlaybackMode(command: AndroidLivePlaybackModeCommand): AndroidLivePlaybackModeReply {
+        val session = current(command.sessionId)
+        if (command.requestId <= lastLiveModeRequestId || command.requestId <= 0) throw YlBoundaryException(YlFailureKind.PROTOCOL_MISMATCH)
+        lastLiveModeRequestId = command.requestId
+        if (liveModeCommands.size >= 32) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+        val lease = checkNotNull(activeLease)
+        val token = operation
+        val job = scope.async(start = CoroutineStart.LAZY) {
+            transaction.withLock {
+                current(command.sessionId)
+                checkGeneration(token)
+                lease.ensureResourcesUsable()
+                if (backgrounded || activeLease !== lease || lease.quiescing || lease.suspended != null)
+                    throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+                if (reducer.state.livePlayback?.switchableModes?.contains(command.mode) != true)
+                    throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+                var installed: AndroidLivePlaybackStateMessage? = null
+                lease.commandWorker { installed = session.engine.setLivePlaybackMode(command.mode, command.requestId) }
+                checkGeneration(token)
+                current(command.sessionId)
+                val value = checkNotNull(installed)
+                if (value.mode != command.mode || value.committedRequestId != command.requestId) throw YlBoundaryException(YlFailureKind.PROTOCOL_MISMATCH)
+                val revision = reducer.commitLiveMode(value)
+                AndroidLivePlaybackModeReply(command.sessionId, command.requestId, revision)
+            }
+        }
+        liveModeCommands += job
+        job.start()
+        return try { job.await() } finally { liveModeCommands -= job }
+    }
     override fun setVolume(volume: Double) {
         checkOpen()
         YlBoundaryValidation.volume(volume)
@@ -682,6 +716,7 @@ internal class YlSessionCoordinator(
         } }
     }
     override suspend fun stop() {
+        cancelLiveModeCommands()
         checkOpen(); audioIntended = false; audioGeneration++; stopping = true; ++operation; pending?.cancel(); leases.cancel(playerId.toString())
         val previous = active
         val previousLease = activeLease
@@ -765,6 +800,7 @@ internal class YlSessionCoordinator(
     }
     override fun onBackground() {
         if (closed || backgrounded) return
+        cancelLiveModeCommands()
         backgrounded = true
         ++lifecycleGeneration
         foreground = CompletableDeferred()

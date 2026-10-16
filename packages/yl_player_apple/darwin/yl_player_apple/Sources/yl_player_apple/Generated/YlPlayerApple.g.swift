@@ -279,6 +279,7 @@ enum ApplePlayerOperation: Int, CaseIterable {
   case volume = 5
   case stop = 6
   case videoTrackSelection = 7
+  case livePlaybackMode = 8
 }
 
 enum AppleDecoderMode: Int, CaseIterable {
@@ -313,6 +314,11 @@ enum AppleFailureScope: Int, CaseIterable {
   case command = 0
   case session = 1
   case player = 2
+}
+
+enum AppleLivePlaybackMode: Int, CaseIterable {
+  case smoothPlayback = 0
+  case lowLatency = 1
 }
 
 /// Generated class from Pigeon that represents data sent in messages.
@@ -1692,6 +1698,7 @@ struct AppleStateMessage: Hashable, CustomStringConvertible {
   var metrics: AppleMetricsMessage
   var failure: AppleFailureMessage? = nil
   var videoSelection: AppleVideoSelectionMessage? = nil
+  var livePlayback: AppleLivePlaybackStateMessage? = nil
 
 
   // swift-format-ignore: AlwaysUseLowerCamelCase
@@ -1711,6 +1718,7 @@ struct AppleStateMessage: Hashable, CustomStringConvertible {
     let metrics = pigeonVar_list[12] as! AppleMetricsMessage
     let failure: AppleFailureMessage? = nilOrValue(pigeonVar_list[13])
     let videoSelection: AppleVideoSelectionMessage? = nilOrValue(pigeonVar_list[14])
+    let livePlayback: AppleLivePlaybackStateMessage? = nilOrValue(pigeonVar_list[15])
 
     return AppleStateMessage(
       loadRequestId: loadRequestId,
@@ -1727,7 +1735,8 @@ struct AppleStateMessage: Hashable, CustomStringConvertible {
       decoderIdentity: decoderIdentity,
       metrics: metrics,
       failure: failure,
-      videoSelection: videoSelection
+      videoSelection: videoSelection,
+      livePlayback: livePlayback
     )
   }
   func toList() -> [Any?] {
@@ -1747,13 +1756,14 @@ struct AppleStateMessage: Hashable, CustomStringConvertible {
       metrics,
       failure,
       videoSelection,
+      livePlayback,
     ]
   }
   static func == (lhs: AppleStateMessage, rhs: AppleStateMessage) -> Bool {
     if Swift.type(of: lhs) != Swift.type(of: rhs) {
       return false
     }
-    return YlPlayerApplePigeonInternal.deepEquals(lhs.loadRequestId, rhs.loadRequestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId) && YlPlayerApplePigeonInternal.deepEquals(lhs.revision, rhs.revision) && YlPlayerApplePigeonInternal.deepEquals(lhs.sequence, rhs.sequence) && YlPlayerApplePigeonInternal.deepEquals(lhs.status, rhs.status) && YlPlayerApplePigeonInternal.deepEquals(lhs.timeline, rhs.timeline) && YlPlayerApplePigeonInternal.deepEquals(lhs.geometry, rhs.geometry) && YlPlayerApplePigeonInternal.deepEquals(lhs.audioTracks, rhs.audioTracks) && YlPlayerApplePigeonInternal.deepEquals(lhs.videoTracks, rhs.videoTracks) && YlPlayerApplePigeonInternal.deepEquals(lhs.engine, rhs.engine) && YlPlayerApplePigeonInternal.deepEquals(lhs.decoderMode, rhs.decoderMode) && YlPlayerApplePigeonInternal.deepEquals(lhs.decoderIdentity, rhs.decoderIdentity) && YlPlayerApplePigeonInternal.deepEquals(lhs.metrics, rhs.metrics) && YlPlayerApplePigeonInternal.deepEquals(lhs.failure, rhs.failure) && YlPlayerApplePigeonInternal.deepEquals(lhs.videoSelection, rhs.videoSelection)
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.loadRequestId, rhs.loadRequestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId) && YlPlayerApplePigeonInternal.deepEquals(lhs.revision, rhs.revision) && YlPlayerApplePigeonInternal.deepEquals(lhs.sequence, rhs.sequence) && YlPlayerApplePigeonInternal.deepEquals(lhs.status, rhs.status) && YlPlayerApplePigeonInternal.deepEquals(lhs.timeline, rhs.timeline) && YlPlayerApplePigeonInternal.deepEquals(lhs.geometry, rhs.geometry) && YlPlayerApplePigeonInternal.deepEquals(lhs.audioTracks, rhs.audioTracks) && YlPlayerApplePigeonInternal.deepEquals(lhs.videoTracks, rhs.videoTracks) && YlPlayerApplePigeonInternal.deepEquals(lhs.engine, rhs.engine) && YlPlayerApplePigeonInternal.deepEquals(lhs.decoderMode, rhs.decoderMode) && YlPlayerApplePigeonInternal.deepEquals(lhs.decoderIdentity, rhs.decoderIdentity) && YlPlayerApplePigeonInternal.deepEquals(lhs.metrics, rhs.metrics) && YlPlayerApplePigeonInternal.deepEquals(lhs.failure, rhs.failure) && YlPlayerApplePigeonInternal.deepEquals(lhs.videoSelection, rhs.videoSelection) && YlPlayerApplePigeonInternal.deepEquals(lhs.livePlayback, rhs.livePlayback)
   }
 
   func hash(into hasher: inout Hasher) {
@@ -1773,10 +1783,11 @@ struct AppleStateMessage: Hashable, CustomStringConvertible {
     YlPlayerApplePigeonInternal.deepHash(value: metrics, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: failure, hasher: &hasher)
     YlPlayerApplePigeonInternal.deepHash(value: videoSelection, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: livePlayback, hasher: &hasher)
   }
 
   public var description: String {
-    return "AppleStateMessage(loadRequestId: \(String(describing: loadRequestId)), sessionId: \(String(describing: sessionId)), revision: \(String(describing: revision)), sequence: \(String(describing: sequence)), status: \(String(describing: status)), timeline: \(String(describing: timeline)), geometry: \(String(describing: geometry)), audioTracks: \(String(describing: audioTracks)), videoTracks: \(String(describing: videoTracks)), engine: \(String(describing: engine)), decoderMode: \(String(describing: decoderMode)), decoderIdentity: \(String(describing: decoderIdentity)), metrics: \(String(describing: metrics)), failure: \(String(describing: failure)), videoSelection: \(String(describing: videoSelection)))"
+    return "AppleStateMessage(loadRequestId: \(String(describing: loadRequestId)), sessionId: \(String(describing: sessionId)), revision: \(String(describing: revision)), sequence: \(String(describing: sequence)), status: \(String(describing: status)), timeline: \(String(describing: timeline)), geometry: \(String(describing: geometry)), audioTracks: \(String(describing: audioTracks)), videoTracks: \(String(describing: videoTracks)), engine: \(String(describing: engine)), decoderMode: \(String(describing: decoderMode)), decoderIdentity: \(String(describing: decoderIdentity)), metrics: \(String(describing: metrics)), failure: \(String(describing: failure)), videoSelection: \(String(describing: videoSelection)), livePlayback: \(String(describing: livePlayback)))"
   }
 }
 
@@ -2690,6 +2701,141 @@ struct AppleDrmLicenseReply: Hashable, CustomStringConvertible {
   }
 }
 
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleLivePlaybackStateMessage: Hashable, CustomStringConvertible {
+  var mode: AppleLivePlaybackMode
+  var switchableModes: [AppleLivePlaybackMode]
+  var committedRequestId: Int64? = nil
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleLivePlaybackStateMessage? {
+    let mode = pigeonVar_list[0] as! AppleLivePlaybackMode
+    let switchableModes = pigeonVar_list[1] as! [AppleLivePlaybackMode]
+    let committedRequestId: Int64? = nilOrValue(pigeonVar_list[2])
+
+    return AppleLivePlaybackStateMessage(
+      mode: mode,
+      switchableModes: switchableModes,
+      committedRequestId: committedRequestId
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      mode,
+      switchableModes,
+      committedRequestId,
+    ]
+  }
+  static func == (lhs: AppleLivePlaybackStateMessage, rhs: AppleLivePlaybackStateMessage) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.mode, rhs.mode) && YlPlayerApplePigeonInternal.deepEquals(lhs.switchableModes, rhs.switchableModes) && YlPlayerApplePigeonInternal.deepEquals(lhs.committedRequestId, rhs.committedRequestId)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleLivePlaybackStateMessage")
+    YlPlayerApplePigeonInternal.deepHash(value: mode, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: switchableModes, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: committedRequestId, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleLivePlaybackStateMessage(mode: \(String(describing: mode)), switchableModes: \(String(describing: switchableModes)), committedRequestId: \(String(describing: committedRequestId)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleLivePlaybackModeCommand: Hashable, CustomStringConvertible {
+  var sessionId: String
+  var requestId: Int64
+  var mode: AppleLivePlaybackMode
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleLivePlaybackModeCommand? {
+    let sessionId = pigeonVar_list[0] as! String
+    let requestId = pigeonVar_list[1] as! Int64
+    let mode = pigeonVar_list[2] as! AppleLivePlaybackMode
+
+    return AppleLivePlaybackModeCommand(
+      sessionId: sessionId,
+      requestId: requestId,
+      mode: mode
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      sessionId,
+      requestId,
+      mode,
+    ]
+  }
+  static func == (lhs: AppleLivePlaybackModeCommand, rhs: AppleLivePlaybackModeCommand) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId) && YlPlayerApplePigeonInternal.deepEquals(lhs.requestId, rhs.requestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.mode, rhs.mode)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleLivePlaybackModeCommand")
+    YlPlayerApplePigeonInternal.deepHash(value: sessionId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: requestId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: mode, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleLivePlaybackModeCommand(sessionId: \(String(describing: sessionId)), requestId: \(String(describing: requestId)), mode: \(String(describing: mode)))"
+  }
+}
+
+/// Generated class from Pigeon that represents data sent in messages.
+struct AppleLivePlaybackModeReply: Hashable, CustomStringConvertible {
+  var sessionId: String
+  var requestId: Int64
+  var committedRevision: Int64
+
+
+  // swift-format-ignore: AlwaysUseLowerCamelCase
+  static func fromList(_ pigeonVar_list: [Any?]) -> AppleLivePlaybackModeReply? {
+    let sessionId = pigeonVar_list[0] as! String
+    let requestId = pigeonVar_list[1] as! Int64
+    let committedRevision = pigeonVar_list[2] as! Int64
+
+    return AppleLivePlaybackModeReply(
+      sessionId: sessionId,
+      requestId: requestId,
+      committedRevision: committedRevision
+    )
+  }
+  func toList() -> [Any?] {
+    return [
+      sessionId,
+      requestId,
+      committedRevision,
+    ]
+  }
+  static func == (lhs: AppleLivePlaybackModeReply, rhs: AppleLivePlaybackModeReply) -> Bool {
+    if Swift.type(of: lhs) != Swift.type(of: rhs) {
+      return false
+    }
+    return YlPlayerApplePigeonInternal.deepEquals(lhs.sessionId, rhs.sessionId) && YlPlayerApplePigeonInternal.deepEquals(lhs.requestId, rhs.requestId) && YlPlayerApplePigeonInternal.deepEquals(lhs.committedRevision, rhs.committedRevision)
+  }
+
+  func hash(into hasher: inout Hasher) {
+    hasher.combine("AppleLivePlaybackModeReply")
+    YlPlayerApplePigeonInternal.deepHash(value: sessionId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: requestId, hasher: &hasher)
+    YlPlayerApplePigeonInternal.deepHash(value: committedRevision, hasher: &hasher)
+  }
+
+  public var description: String {
+    return "AppleLivePlaybackModeReply(sessionId: \(String(describing: sessionId)), requestId: \(String(describing: requestId)), committedRevision: \(String(describing: committedRevision)))"
+  }
+}
+
 private class YlPlayerApplePigeonCodecReader: FlutterStandardReader {
   override func readValue(ofType type: UInt8) -> Any? {
     switch type {
@@ -2795,6 +2941,12 @@ private class YlPlayerApplePigeonCodecReader: FlutterStandardReader {
         return AppleFailureScope(rawValue: enumResultAsInt)
       }
       return nil
+    case 189:
+      let enumResultAsInt: Int? = nilOrValue(self.readValue() as! Int?)
+      if let enumResultAsInt = enumResultAsInt {
+        return AppleLivePlaybackMode(rawValue: enumResultAsInt)
+      }
+      return nil
     case 146:
       return ApplePlayerOptionsMessage.fromList(self.readValue() as! [Any?])
     case 147:
@@ -2881,6 +3033,12 @@ private class YlPlayerApplePigeonCodecReader: FlutterStandardReader {
       return AppleDrmLicenseRequest.fromList(self.readValue() as! [Any?])
     case 188:
       return AppleDrmLicenseReply.fromList(self.readValue() as! [Any?])
+    case 190:
+      return AppleLivePlaybackStateMessage.fromList(self.readValue() as! [Any?])
+    case 191:
+      return AppleLivePlaybackModeCommand.fromList(self.readValue() as! [Any?])
+    case 192:
+      return AppleLivePlaybackModeReply.fromList(self.readValue() as! [Any?])
     default:
       return super.readValue(ofType: type)
     }
@@ -2939,6 +3097,9 @@ private class YlPlayerApplePigeonCodecWriter: FlutterStandardWriter {
       super.writeValue(value.rawValue)
     } else if let value = value as? AppleFailureScope {
       super.writeByte(145)
+      super.writeValue(value.rawValue)
+    } else if let value = value as? AppleLivePlaybackMode {
+      super.writeByte(189)
       super.writeValue(value.rawValue)
     } else if let value = value as? ApplePlayerOptionsMessage {
       super.writeByte(146)
@@ -3069,6 +3230,15 @@ private class YlPlayerApplePigeonCodecWriter: FlutterStandardWriter {
     } else if let value = value as? AppleDrmLicenseReply {
       super.writeByte(188)
       super.writeValue(value.toList())
+    } else if let value = value as? AppleLivePlaybackStateMessage {
+      super.writeByte(190)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleLivePlaybackModeCommand {
+      super.writeByte(191)
+      super.writeValue(value.toList())
+    } else if let value = value as? AppleLivePlaybackModeReply {
+      super.writeByte(192)
+      super.writeValue(value.toList())
     } else {
       super.writeValue(value)
     }
@@ -3131,6 +3301,7 @@ protocol ApplePlayerHostApi {
   func selectAudioTrack(command: AppleTrackCommand) async throws
   func setVideoConstraints(command: AppleVideoConstraintsCommand) async throws
   func selectVideoTrack(command: AppleVideoTrackCommand) async throws
+  func setLivePlaybackMode(command: AppleLivePlaybackModeCommand) async throws -> AppleLivePlaybackModeReply
   func setVolume(volume: Double) throws
   func stop() async throws
   func dispose() async throws
@@ -3316,6 +3487,23 @@ class ApplePlayerHostApiSetup {
       }
     } else {
       selectVideoTrackChannel.setMessageHandler(nil)
+    }
+    let setLivePlaybackModeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.yl_player_apple.ApplePlayerHostApi.setLivePlaybackMode\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
+    if let api = api {
+      setLivePlaybackModeChannel.setMessageHandler { message, reply in
+        let args = message as! [Any?]
+        let commandArg = args[0] as! AppleLivePlaybackModeCommand
+        Task { @MainActor in
+          do {
+            let result = try await api.setLivePlaybackMode(command: commandArg)
+            reply(wrapResult(result))
+          } catch {
+            reply(wrapError(error))
+          }
+        }
+      }
+    } else {
+      setLivePlaybackModeChannel.setMessageHandler(nil)
     }
     let setVolumeChannel = FlutterBasicMessageChannel(name: "dev.flutter.pigeon.yl_player_apple.ApplePlayerHostApi.setVolume\(channelSuffix)", binaryMessenger: binaryMessenger, codec: codec)
     if let api = api {
@@ -3650,3 +3838,5 @@ class AppleDrmFlutterApi: AppleDrmFlutterApiProtocol {
     }
   }
 }
+
+// Schema-6 live enum tag relocated; legacy factory tags preserved.

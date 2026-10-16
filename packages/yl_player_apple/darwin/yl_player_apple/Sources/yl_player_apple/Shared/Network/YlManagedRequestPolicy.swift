@@ -4,31 +4,46 @@ import Foundation
 /// reopen. Cancellation retires a reader, not this budget. A completed resource
 /// permits a distinct recovery request; terminal failures cannot be reopened.
 final class YlManagedRequestIntent {
-  private let lock = NSLock()
-  private var retries = 0
-  private var redirects = 0
+  private final class Budget {
+    let lock = NSLock()
+    var retries = 0
+    var redirects = 0
+    var hasReplacement = false
+  }
+  private let budget: Budget
   private var failure: NativePlayerError?
+  init() { budget = Budget() }
+  private init(budget: Budget) { self.budget = budget }
 
+  /// A concurrently prepared replacement charges the same budgets, but its
+  /// terminal response cannot poison the still-playing original resource.
+  func candidate() -> YlManagedRequestIntent {
+    budget.lock.lock(); defer { budget.lock.unlock() }
+    budget.hasReplacement = true
+    return YlManagedRequestIntent(budget: budget)
+  }
   var terminalFailure: NativePlayerError? {
-    lock.lock(); defer { lock.unlock() }; return failure
+    budget.lock.lock(); defer { budget.lock.unlock() }; return failure
   }
   func fail(_ error: NativePlayerError) {
-    lock.lock(); defer { lock.unlock() }; if failure == nil { failure = error }
+    budget.lock.lock(); defer { budget.lock.unlock() }; if failure == nil { failure = error }
   }
   func completed() {
-    lock.lock(); defer { lock.unlock() }
-    guard failure == nil else { return }
-    retries = 0; redirects = 0
+    budget.lock.lock(); defer { budget.lock.unlock() }
+    // Once replacement branches exist, EOF from either reader cannot replenish
+    // the session's shared retry/redirect budget during a mode transaction.
+    guard failure == nil, !budget.hasReplacement else { return }
+    budget.retries = 0; budget.redirects = 0
   }
   func followRedirect(maximum: Int) -> Bool {
-    lock.lock(); defer { lock.unlock() }
-    guard failure == nil, redirects < maximum else { return false }
-    redirects += 1; return true
+    budget.lock.lock(); defer { budget.lock.unlock() }
+    guard failure == nil, budget.redirects < maximum else { return false }
+    budget.redirects += 1; return true
   }
   func nextRetry(maximum: Int) -> Int? {
-    lock.lock(); defer { lock.unlock() }
-    guard failure == nil, retries < maximum else { return nil }
-    retries += 1; return retries
+    budget.lock.lock(); defer { budget.lock.unlock() }
+    guard failure == nil, budget.retries < maximum else { return nil }
+    budget.retries += 1; return budget.retries
   }
 }
 

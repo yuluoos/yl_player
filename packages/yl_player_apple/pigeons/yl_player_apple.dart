@@ -64,6 +64,7 @@ enum ApplePlayerOperation {
   volume,
   stop,
   videoTrackSelection,
+  livePlaybackMode,
 }
 
 enum AppleDecoderMode { unknown, hardware, software }
@@ -300,6 +301,7 @@ class AppleStateMessage {
   AppleMetricsMessage metrics;
   AppleFailureMessage? failure;
   AppleVideoSelectionMessage? videoSelection;
+  AppleLivePlaybackStateMessage? livePlayback;
 }
 
 class AppleStateDeltaMessage {
@@ -410,6 +412,10 @@ abstract class ApplePlayerHostApi {
   void setVideoConstraints(AppleVideoConstraintsCommand command);
   @async
   void selectVideoTrack(AppleVideoTrackCommand command);
+  @async
+  AppleLivePlaybackModeReply setLivePlaybackMode(
+    AppleLivePlaybackModeCommand command,
+  );
   void setVolume(double volume);
   @async
   void stop();
@@ -432,28 +438,33 @@ class AppleDrmConfigMessage {
   Uint8List contentId;
   int timeoutMs;
 }
+
 class AppleDrmSupportMessage {
   int contractVersion;
   int playerId;
   ApplePlatform platform;
   bool schemeAvailable;
 }
+
 class AppleProtectedSurfaceMessage {
   int playerId;
   int surfaceId;
   String sessionId;
   int generation;
 }
+
 class AppleProtectedViewCommand {
   AppleProtectedSurfaceMessage surface;
   int viewId;
 }
+
 class AppleProtectedViewAck {
   AppleProtectedSurfaceMessage surface;
   int viewId;
   int revision;
   bool attached;
 }
+
 class AppleDrmExchangeId {
   AppleProtectedSurfaceMessage surface;
   String loadRequestId;
@@ -461,15 +472,18 @@ class AppleDrmExchangeId {
   int requestId;
   String exchangeId;
 }
+
 class AppleDrmLicenseRequest {
   AppleDrmExchangeId id;
   Uint8List challenge;
 }
+
 class AppleDrmLicenseReply {
   AppleDrmExchangeId id;
   Uint8List? response;
   String? failureCode;
 }
+
 @HostApi()
 abstract class AppleDrmHostApi {
   void cancelProtectedLoad(String loadRequestId);
@@ -478,10 +492,32 @@ abstract class AppleDrmHostApi {
   @async
   AppleProtectedViewAck detachProtectedView(AppleProtectedViewCommand command);
 }
+
 @FlutterApi()
 abstract class AppleDrmFlutterApi {
   @async
   AppleDrmLicenseReply exchangeLicense(AppleDrmLicenseRequest request);
   void cancelLicense(AppleDrmExchangeId id);
   void onProtectedFrame(AppleProtectedViewAck frame);
+}
+
+// Schema 6: append wire types so older factory requests remain decodable.
+enum AppleLivePlaybackMode { smoothPlayback, lowLatency }
+
+class AppleLivePlaybackStateMessage {
+  AppleLivePlaybackMode mode;
+  List<AppleLivePlaybackMode> switchableModes;
+  int? committedRequestId;
+}
+
+class AppleLivePlaybackModeCommand {
+  String sessionId;
+  int requestId;
+  AppleLivePlaybackMode mode;
+}
+
+class AppleLivePlaybackModeReply {
+  String sessionId;
+  int requestId;
+  int committedRevision;
 }

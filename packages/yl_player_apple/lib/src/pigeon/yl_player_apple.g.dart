@@ -198,6 +198,7 @@ enum ApplePlayerOperation {
   volume,
   stop,
   videoTrackSelection,
+  livePlaybackMode,
 }
 
 enum AppleDecoderMode {
@@ -232,6 +233,11 @@ enum AppleFailureScope {
   command,
   session,
   player,
+}
+
+enum AppleLivePlaybackMode {
+  smoothPlayback,
+  lowLatency,
 }
 
 class ApplePlayerOptionsMessage {
@@ -1871,6 +1877,7 @@ class AppleStateMessage {
     required this.metrics,
     this.failure,
     this.videoSelection,
+    this.livePlayback,
   });
 
   String? loadRequestId;
@@ -1903,6 +1910,8 @@ class AppleStateMessage {
 
   AppleVideoSelectionMessage? videoSelection;
 
+  AppleLivePlaybackStateMessage? livePlayback;
+
   List<Object?> _toList() {
     return <Object?>[
       loadRequestId,
@@ -1920,6 +1929,7 @@ class AppleStateMessage {
       metrics,
       failure,
       videoSelection,
+      livePlayback,
     ];
   }
 
@@ -1944,6 +1954,7 @@ class AppleStateMessage {
       metrics: result[12]! as AppleMetricsMessage,
       failure: result[13] as AppleFailureMessage?,
       videoSelection: result[14] as AppleVideoSelectionMessage?,
+      livePlayback: result[15] as AppleLivePlaybackStateMessage?,
     );
   }
 
@@ -1956,7 +1967,7 @@ class AppleStateMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure) && _deepEquals(videoSelection, other.videoSelection);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure) && _deepEquals(videoSelection, other.videoSelection) && _deepEquals(livePlayback, other.livePlayback);
   }
 
   @override
@@ -1965,7 +1976,7 @@ class AppleStateMessage {
 
   @override
   String toString() {
-    return 'AppleStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure, videoSelection: $videoSelection)';
+    return 'AppleStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure, videoSelection: $videoSelection, livePlayback: $livePlayback)';
   }
 }
 
@@ -3039,6 +3050,171 @@ class AppleDrmLicenseReply {
   }
 }
 
+class AppleLivePlaybackStateMessage {
+  AppleLivePlaybackStateMessage({
+    required this.mode,
+    required this.switchableModes,
+    this.committedRequestId,
+  });
+
+  AppleLivePlaybackMode mode;
+
+  List<AppleLivePlaybackMode> switchableModes;
+
+  int? committedRequestId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      mode,
+      switchableModes,
+      committedRequestId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleLivePlaybackStateMessage decode(Object result) {
+    result as List<Object?>;
+    return AppleLivePlaybackStateMessage(
+      mode: result[0]! as AppleLivePlaybackMode,
+      switchableModes: (result[1]! as List<Object?>).cast<AppleLivePlaybackMode>(),
+      committedRequestId: result[2] as int?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleLivePlaybackStateMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(mode, other.mode) && _deepEquals(switchableModes, other.switchableModes) && _deepEquals(committedRequestId, other.committedRequestId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleLivePlaybackStateMessage(mode: $mode, switchableModes: $switchableModes, committedRequestId: $committedRequestId)';
+  }
+}
+
+class AppleLivePlaybackModeCommand {
+  AppleLivePlaybackModeCommand({
+    required this.sessionId,
+    required this.requestId,
+    required this.mode,
+  });
+
+  String sessionId;
+
+  int requestId;
+
+  AppleLivePlaybackMode mode;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      sessionId,
+      requestId,
+      mode,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleLivePlaybackModeCommand decode(Object result) {
+    result as List<Object?>;
+    return AppleLivePlaybackModeCommand(
+      sessionId: result[0]! as String,
+      requestId: result[1]! as int,
+      mode: result[2]! as AppleLivePlaybackMode,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleLivePlaybackModeCommand || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(sessionId, other.sessionId) && _deepEquals(requestId, other.requestId) && _deepEquals(mode, other.mode);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleLivePlaybackModeCommand(sessionId: $sessionId, requestId: $requestId, mode: $mode)';
+  }
+}
+
+class AppleLivePlaybackModeReply {
+  AppleLivePlaybackModeReply({
+    required this.sessionId,
+    required this.requestId,
+    required this.committedRevision,
+  });
+
+  String sessionId;
+
+  int requestId;
+
+  int committedRevision;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      sessionId,
+      requestId,
+      committedRevision,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AppleLivePlaybackModeReply decode(Object result) {
+    result as List<Object?>;
+    return AppleLivePlaybackModeReply(
+      sessionId: result[0]! as String,
+      requestId: result[1]! as int,
+      committedRevision: result[2]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AppleLivePlaybackModeReply || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(sessionId, other.sessionId) && _deepEquals(requestId, other.requestId) && _deepEquals(committedRevision, other.committedRevision);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AppleLivePlaybackModeReply(sessionId: $sessionId, requestId: $requestId, committedRevision: $committedRevision)';
+  }
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -3097,6 +3273,9 @@ class _PigeonCodec extends StandardMessageCodec {
       writeValue(buffer, value.index);
     }    else if (value is AppleFailureScope) {
       buffer.putUint8(145);
+      writeValue(buffer, value.index);
+    }    else if (value is AppleLivePlaybackMode) {
+      buffer.putUint8(189);
       writeValue(buffer, value.index);
     }    else if (value is ApplePlayerOptionsMessage) {
       buffer.putUint8(146);
@@ -3227,6 +3406,15 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is AppleDrmLicenseReply) {
       buffer.putUint8(188);
       writeValue(buffer, value.encode());
+    }    else if (value is AppleLivePlaybackStateMessage) {
+      buffer.putUint8(190);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleLivePlaybackModeCommand) {
+      buffer.putUint8(191);
+      writeValue(buffer, value.encode());
+    }    else if (value is AppleLivePlaybackModeReply) {
+      buffer.putUint8(192);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -3286,6 +3474,9 @@ class _PigeonCodec extends StandardMessageCodec {
       case 145:
         final value = readValue(buffer) as int?;
         return value == null ? null : AppleFailureScope.values[value];
+      case 189:
+        final value = readValue(buffer) as int?;
+        return value == null ? null : AppleLivePlaybackMode.values[value];
       case 146:
         return ApplePlayerOptionsMessage.decode(readValue(buffer)!);
       case 147:
@@ -3372,6 +3563,12 @@ class _PigeonCodec extends StandardMessageCodec {
         return AppleDrmLicenseRequest.decode(readValue(buffer)!);
       case 188:
         return AppleDrmLicenseReply.decode(readValue(buffer)!);
+      case 190:
+        return AppleLivePlaybackStateMessage.decode(readValue(buffer)!);
+      case 191:
+        return AppleLivePlaybackModeCommand.decode(readValue(buffer)!);
+      case 192:
+        return AppleLivePlaybackModeReply.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -3622,6 +3819,25 @@ class ApplePlayerHostApi {
         isNullValid: true,
     )
     ;
+  }
+
+  Future<AppleLivePlaybackModeReply> setLivePlaybackMode(AppleLivePlaybackModeCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_apple.ApplePlayerHostApi.setLivePlaybackMode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as AppleLivePlaybackModeReply;
   }
 
   Future<void> setVolume(double volume) async {
@@ -3971,3 +4187,5 @@ abstract class AppleDrmFlutterApi {
     }
   }
 }
+
+// Schema-6 live enum tag relocated; legacy factory tags preserved.

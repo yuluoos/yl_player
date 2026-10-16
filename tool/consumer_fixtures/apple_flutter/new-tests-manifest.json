@@ -52,7 +52,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
+    "sha256": "cc595018b3b4e42f0ff8e98d2be9d8c525b4c8decda94bd5c18cec45700ea930",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -75,6 +75,11 @@
     "fairplay_schema5_migration": {
       "from_sha256": "6fa42cdfbd9d27ce1409a0817de9f450390bfaf5f901409455d080d0ade7ff39",
       "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
+    },
+    "p04_schema6_migration": {
+      "from_sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
+      "previous_manifest_sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
+      "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
     }
   },
   {
@@ -107,7 +112,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
-    "sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
+    "sha256": "a9dde2f7a67de6cd8e05a6a5543fde18603c77d12da332f4adbd3ace9b524c48",
     "methods": [
       "testH264ProbeCleanupCommitsAvPlayerAndReachesReady",
       "testStopDuringHlsProbeUnblocksNextLoad",
@@ -210,11 +215,16 @@
     "p03_container_migration": {
       "from_sha256": "4d219383a98fa05237a9c022412bc506eb1c7a24e0f5558ef02766424dfc132d",
       "reason": "PS live policy remains rejected; AVI/TS policy tests specify format hints now automatic known extensions require byte inspection."
+    },
+    "p04_schema6_migration": {
+      "from_sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
+      "previous_manifest_sha256": "2b984276412df0098964ba0283904e5d4348054bb416ae33c3d1b40cfb43ca07",
+      "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
     }
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
-    "sha256": "df0e2f6e39239a514d4ef65fcb7eb4493dbc0a7314a472fcd9c7dccd61833124",
+    "sha256": "91f8dda4bee73240516b5f7058a6d47bd16190074f5667f92e781790fbf9e151",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
@@ -238,6 +248,11 @@
     "fairplay_schema5_migration": {
       "from_sha256": "880ef707e18a4cc7e83b3be3b1760403275d7e48cbd30da9b6f37c3cbcfa01e2",
       "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
+    },
+    "p04_schema6_migration": {
+      "from_sha256": "df0e2f6e39239a514d4ef65fcb7eb4493dbc0a7314a472fcd9c7dccd61833124",
+      "previous_manifest_sha256": "df0e2f6e39239a514d4ef65fcb7eb4493dbc0a7314a472fcd9c7dccd61833124",
+      "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
     }
   },
   {
@@ -255,7 +270,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
-    "sha256": "06b64b9e27d7fb343aad83d8101ef4b8a426c529bd39015d74daa3d6dbf96055",
+    "sha256": "81208cc7dcf663877b7cfadf42c9a9b0d1bcb15c9792fe462012323dd9124f63",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
@@ -292,6 +307,11 @@
       "fix_base": "3ce11f4c5a8557ed4da7280e4d6945f62ffc46cf",
       "from_sha256": "db52200165bbca9b65c1f4f50b3d472e3b94aa61971eff105d96cdae709c932c",
       "reason": "Two remaining-I2 regressions execute the existing retained-iOS slot transaction using actual macOS media/decoder/audio/network, real positive-but-incompatible width rejection and held command FIFO. Assert no former quiescence/clear, same session, retained Pause/seek, newer seek fencing and real resumed frames. Not iOS hardware runtime proof; all existing cases retained."
+    },
+    "p04_schema6_migration": {
+      "from_sha256": "7b6491a7afa954d8cc66ac80d98d176a3b4df42327b309b711c0439570a68016",
+      "previous_manifest_sha256": "06b64b9e27d7fb343aad83d8101ef4b8a426c529bd39015d74daa3d6dbf96055",
+      "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
     }
   },
   {

@@ -1,0 +1,12 @@
+allprojects {
+    afterEvaluate {
+        dependencies {
+            compileOnly files('/Users/yy2021_8689/flutter/bin/cache/artifacts/engine/android-arm64/flutter.jar')
+            testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5:2.3.20'
+            testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.1'
+            testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.10.1'
+            testImplementation files('/Users/yy2021_8689/flutter/bin/cache/artifacts/engine/android-arm64/flutter.jar')
+            implementation 'androidx.annotation:annotation:1.9.1'
+        }
+    }
+}

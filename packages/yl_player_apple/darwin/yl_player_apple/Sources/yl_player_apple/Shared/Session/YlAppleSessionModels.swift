@@ -48,6 +48,16 @@ struct YlNativeMetrics {
 }
 
 /// Native measurements only. This value contains neither wire keys nor Pigeon data.
+enum YlNativeLiveMode: String { case smoothPlayback, lowLatency }
+struct YlNativeLivePlayback {
+  let mode: YlNativeLiveMode
+  let switchableModes: [YlNativeLiveMode]
+  var committedRequestId: Int64? = nil
+  static var unsupported: NativePlayerError {
+    NativePlayerError(category: "unsupported", code: "policy.unsupported", message: "Live playback mode is unavailable.")
+  }
+}
+
 struct YlNativeState {
   var status: String
   var positionMs: Int64
@@ -71,6 +81,7 @@ struct YlNativeState {
   var decoderEvidence: YlHardwareDecoderEvidence? = nil
   var geometry: YlVideoGeometry? = nil
   var videoSelection: YlNativeVideoSelection = .init()
+  var livePlayback: YlNativeLivePlayback? = nil
 }
 
 struct YlNativeTimelineDelta {

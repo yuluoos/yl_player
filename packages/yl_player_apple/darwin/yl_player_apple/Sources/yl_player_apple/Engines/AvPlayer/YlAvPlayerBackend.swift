@@ -174,6 +174,48 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var videoGeometry: YlVideoGeometry?
   private var audioGroup: AVMediaSelectionGroup?
   private var metadataTask: Task<Void, Never>?
+  private var automaticLiveCatchUpAllowed = true
+  private var lastLiveCatchUpSeek: TimeInterval?
+  private var liveCatchUpRate = false
+  private var liveMode: YlNativeLiveMode?
+  private var liveModeRequestId: Int64?
+  private var effectiveConfiguration: PlayerConfiguration {
+    var result = configuration.forLoad(lastSource)
+    if let liveMode { result = result.forLiveMode(liveMode) }
+    return result
+  }
+  private func livePlaybackState(_ live: Bool) -> YlNativeLivePlayback? {
+    guard live, let source = lastSource, source.intent != .onDemand,
+          source.loadOptions?.bufferStrategy != .bounded,
+          source.drm == nil, let url = source.url,
+          YlEngineRouter.resolvedFormat(source, url: url) == .hls, dashVideoCatalog == nil else { return nil }
+    if liveMode == nil {
+      liveMode = source.loadOptions?.bufferStrategy == .lowLatency ? .lowLatency : .smoothPlayback
+      applyLiveBufferPolicy()
+    }
+    return YlNativeLivePlayback(mode: liveMode!, switchableModes: [.smoothPlayback, .lowLatency],
+      committedRequestId: liveModeRequestId)
+  }
+  private func applyLiveBufferPolicy() {
+    let policy = effectiveConfiguration
+    player.currentItem?.preferredForwardBufferDuration = policy.preferredForwardBufferDuration
+    player.automaticallyWaitsToMinimizeStalling = policy.bufferMode != "lowLatency"
+    if liveCatchUpRate, player.rate != 0 { player.rate = desiredRate }
+    liveCatchUpRate = false
+  }
+  func setLivePlaybackMode(_ mode: YlNativeLiveMode, requestId: Int64) throws -> YlNativeLivePlayback {
+    try checkAlive()
+    guard isActive, !stopped, currentError == nil,
+          livePlaybackState(sourceIsLive || isIndefinite(player.currentItem?.duration)) != nil else {
+      throw YlNativeLivePlayback.unsupported
+    }
+    liveMode = mode
+    lastSource?.loadOptions?.bufferStrategy = mode == .lowLatency ? .lowLatency : .smoothPlayback
+    lastSource?.livePlaybackRequestId = requestId
+    liveModeRequestId = requestId
+    applyLiveBufferPolicy()
+    return YlNativeLivePlayback(mode: mode, switchableModes: [.smoothPlayback, .lowLatency], committedRequestId: requestId)
+  }
   private var sourceIsLive = false
   private var status = "idle"
   private var stopped = false
@@ -294,7 +336,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private func startOutput() throws {
     try beforeAudioOutput()
-    if configuration.forLoad(lastSource).bufferMode == "stable", hlsResourceLoader == nil {
+    if effectiveConfiguration.bufferMode == "stable", hlsResourceLoader == nil {
       // Respect AVPlayer's buffering decision for smooth playback. Immediate
       // playback bypasses that decision even when automatic waiting is enabled.
       player.rate = desiredRate
@@ -325,6 +367,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   func seek(toMs milliseconds: Int64, cancellationToken: YlOpenCancellationToken? = nil) throws {
     try checkAlive(); guard !stopped else { return }
     try cancellationToken?.throwIfCancelled()
+    automaticLiveCatchUpAllowed = YlLiveCatchUpPolicy.endAutomaticCatchUp(
+      requestedRate: desiredRate, playing: active && playRequested && player.rate != 0) { player.rate = $0 }
+    liveCatchUpRate = false
     videoProgressProbe.reset()
     resumeAtLiveEdge = false
     if active {
@@ -554,6 +599,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     stagedHls?.prepared.discard()
     stagedHls = nil
     lastSource = nil
+    liveMode = nil
+    liveModeRequestId = nil
     qualityConstraint = .unconstrained
     channelGeneration = YlBackendGeneration.next()
     savedPositionMs = 0
@@ -660,11 +707,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
     removeCurrentItem(preserveAudioIdentity: resume)
     lastSource = source
+    liveMode = nil
+    liveModeRequestId = source.livePlaybackRequestId
     let loadOptions = source.loadOptions
     if !resume, source.loadOptions != nil {
       qualityConstraint = loadOptions?.videoConstraints ?? .unconstrained
     }
     if !resume {
+      automaticLiveCatchUpAllowed = true
+      lastLiveCatchUpSeek = nil
       videoSelection = .init()
       confirmedDashPositionUs = 0
       savedPositionMs = 0
@@ -746,7 +797,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     }
     let generation = itemGeneration
     let item = makePlayerItem(asset)
-    let effectiveConfiguration = configuration.forLoad(lastSource)
+    let effectiveConfiguration = self.effectiveConfiguration
     item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
@@ -1204,6 +1255,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   func seekToLiveEdge() throws {
+    automaticLiveCatchUpAllowed = true
     try checkAlive(); guard !stopped else { return }
     guard sourceIsLive || isIndefinite(player.currentItem?.duration) else {
       throw NativePlayerError(
@@ -1504,7 +1556,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       engine: .avPlayer, isHardwareDecoding: false, decoderName: nil,
       audioTracks: audioTracks, videoTracks: videoTracks,
       metrics: collectMetrics(liveOffsetMs: liveOffsetMs),
-      error: error ?? currentError, geometry: videoGeometry, videoSelection: videoSelection)))
+      error: error ?? currentError, geometry: videoGeometry, videoSelection: videoSelection, livePlayback: livePlaybackState(live))))
   }
 
   private func emitStateDelta() {
@@ -1525,6 +1577,20 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let live = sourceIsLive || isIndefinite(item?.duration)
     let dvrEndMs = seekableRange.flatMap { milliseconds(CMTimeRangeGetEnd($0)) }
     let liveOffsetMs = live ? dvrEndMs.map { max(0, $0 - positionMs) } : nil
+    let now = CACurrentMediaTime()
+    let action = YlLiveCatchUpPolicy.action(lowLatency: liveMode == .lowLatency,
+      playing: playRequested, active: active && !stopped,
+      automaticEdgeAllowed: automaticLiveCatchUpAllowed, requestedRate: desiredRate,
+      offsetMs: liveOffsetMs, targetMs: 2_000, hasSeekableWindow: seekableRange != nil,
+      maySeek: lastLiveCatchUpSeek.map { now - $0 >= 30 } ?? true)
+    switch action {
+    case .none: break
+    case .rate(let rate):
+      if player.rate != 0 { player.rate = rate; liveCatchUpRate = rate != desiredRate }
+    case .edge:
+      lastLiveCatchUpSeek = now
+      try? seekToLiveEdge()
+    }
     emit(.delta(YlNativeTimelineDelta(positionMs: positionMs,
       bufferedPositionMs: loadedEndMs,
       isAtLiveEdge: liveOffsetMs.map { $0 <= 2_000 } ?? false,
@@ -1551,6 +1617,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     stagedHls?.prepared.discard()
     stagedHls = nil
     lastSource = nil
+    liveMode = nil
+    liveModeRequestId = nil
     // The host owns the shared texture registration across backend replacement.
   }
 

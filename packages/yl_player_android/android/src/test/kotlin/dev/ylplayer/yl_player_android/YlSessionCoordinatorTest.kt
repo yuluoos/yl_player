@@ -964,6 +964,15 @@ internal class SessionFixture(dispatcher: CoroutineDispatcher, playerId: Long = 
 internal class FakeSessionEngine : YlPlaybackEngineAdapter {
     override var presentationIdentity: YlOutputIdentity? = null
     override var needsExclusiveLease = true
+    var liveModeAcknowledgement: CompletableDeferred<Unit>? = null
+    val modeCalls = mutableListOf<Pair<AndroidLivePlaybackMode,Long>>()
+    var rejectedModeRequest: Long? = null
+    override suspend fun setLivePlaybackMode(mode: AndroidLivePlaybackMode, requestId: Long): AndroidLivePlaybackStateMessage {
+        modeCalls += mode to requestId
+        liveModeAcknowledgement?.await()
+        if (requestId == rejectedModeRequest) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        return AndroidLivePlaybackStateMessage(mode, AndroidLivePlaybackMode.entries, requestId)
+    }
     var currentVolume = 1.0
     var currentSpeed = 1.0
     var currentTrack: String? = null

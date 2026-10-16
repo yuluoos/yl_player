@@ -93,6 +93,16 @@ class YlAdaptiveLoadControlTest {
         assertEquals(5_000, control.currentProfile.maxBufferMs)
     }
 
+    @Test
+    fun `runtime profile change preserves memory pressure until explicit restore`() {
+        val control = YlAdaptiveLoadControl(profile)
+        control.shrinkForMemoryPressure()
+        control.updateRuntimeProfile(YlBufferProfile(1000, 5000, 12 * MIB))
+        assertEquals(9 * MIB, control.targetBufferBytes)
+        control.restoreProfile()
+        assertEquals(12 * MIB, control.targetBufferBytes)
+    }
+
     private companion object {
         const val MIB = 1024 * 1024
     }

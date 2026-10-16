@@ -555,7 +555,7 @@ final class _Factory implements AppleFactoryTransport {
   @override
   Future<AppleCreateReply> create(AppleCreateRequest request) async =>
       AppleCreateReply(
-        schemaMajor: 5,
+        schemaMajor: 6,
         spiMajor: 2,
         platform: ApplePlatform.ios,
         channelSuffix: 'controller-test',
@@ -624,6 +624,10 @@ final class _Native implements ApplePlayerTransport {
   @override
   Future<void> selectVideoTrack(AppleVideoTrackCommand command) =>
       throw UnimplementedError();
+  @override
+  Future<AppleLivePlaybackModeReply> setLivePlaybackMode(
+    AppleLivePlaybackModeCommand command,
+  ) => throw UnimplementedError();
   @override
   Future<void> setVideoConstraints(AppleVideoConstraintsCommand command) =>
       throw UnimplementedError();

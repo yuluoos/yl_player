@@ -11,14 +11,13 @@ const _dartOnlyOperations = {
   YlPlayerOperation.embeddedSubtitles,
   YlPlayerOperation.subtitleTrackSelection,
   YlPlayerOperation.subtitleOffset,
-  YlPlayerOperation.livePlaybackMode,
 };
 final _nativeOperations = YlPlayerOperation.values
     .where((operation) => !_dartOnlyOperations.contains(operation))
     .toList();
 
 void main() {
-  test('native capabilities do not advertise Dart-only subtitle and live-mode commands', () {
+  test('native capabilities do not advertise Dart-only subtitle commands', () {
     final capabilities = AppleCodec.capabilities(wireCreate().capabilities);
     expect(
       capabilities.supportedOperations.toSet().intersection(

@@ -14,6 +14,7 @@ final class AndroidCallbacks implements AndroidPlayerFlutterApi {
     required this.onAcceptedState,
     required this.onEvent,
     required this.onInvalid,
+    this.onLiveState,
   }) : state = initialState,
        _sequence = initialSequence;
 
@@ -29,6 +30,7 @@ final class AndroidCallbacks implements AndroidPlayerFlutterApi {
   final void Function(YlPlayerState state) onAcceptedState;
   final void Function(YlPlayerEvent event, int sequence) onEvent;
   final void Function() onInvalid;
+  final void Function(AndroidStateMessage)? onLiveState;
 
   void _decode(void Function() action) {
     if (closed) return;
@@ -85,6 +87,11 @@ final class AndroidCallbacks implements AndroidPlayerFlutterApi {
   @override
   void onState(AndroidStateMessage value) => _decode(() {
     onFullState(AndroidCodec.state(value), value.sequence, value.loadRequestId);
+    if (!closed &&
+        state.sessionId?.value == value.sessionId &&
+        state.revision == value.revision) {
+      onLiveState?.call(value);
+    }
   });
 
   @override

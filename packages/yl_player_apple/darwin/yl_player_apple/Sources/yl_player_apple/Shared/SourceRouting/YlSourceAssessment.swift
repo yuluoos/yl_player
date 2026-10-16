@@ -49,6 +49,7 @@ struct YlAppleSourceDescriptor {
   var loadOptions: YlAppleLoadOptions? = nil
   var drm: YlFairPlayConfiguration? = nil
   var loadRequestId: String? = nil
+  var livePlaybackRequestId: Int64? = nil
   var credentialContext = YlNetworkCredentialContext()
   var managedRequestIntent = YlManagedRequestIntent()
   var rtmpRecovery = YlRtmpRecoveryBudget()

@@ -1,0 +1,71 @@
+00:00 +0: loading /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_playback_mode_control_test.dart
+00:00 +0: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 模式失败释放忙碌状态，保留原模式并只显示安全提示
+00:00 +1: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 未知实际模式不显示猜测标签
+00:00 +2: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 切换中显示原模式并禁用重复提交
+00:00 +3: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 实际低延迟模式与候选菜单一致
+00:00 +4: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 已知但不支持切换的模式保持只读
+00:00 +5: loading /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart
+00:01 +5: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 模式切换保留实际值、限制重复提交，旧频道完成不覆盖新频道
+00:01 +6: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 直播加载时把当前代理速率写入播放状态
+00:02 +7: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 直播从不支持速率读取的源回退到 HTTP 源时恢复实时速率
+00:02 +8: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 普通 Android 直播按 1080p 到 720p 顺序重试 HLS
+00:02 +9: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 切换直播时只保留新的流量会话
+00:02 +10: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 直播运行中断流后 provider 保持同一频道并切换备用源
+00:02 +11: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 旧直播错误等待取消订阅时不会停止新切换的频道
+00:02 +12: loading /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart
+00:03 +12: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播预览显示明确焦点并可确认进入全屏
+00:03 +13: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播加载中进入全屏仍展示上下行流量
+00:04 +14: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播画面比例菜单打开时上下键不触发切台
+00:04 +15: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播控制层左右键只移动焦点而不切换播放源
+00:04 +16: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播进入全屏后控制层会在无操作时自动隐藏
+00:04 +17: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播纯播放时一次确定直接打开列表并保持当前频道焦点
+00:04 +18: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播控制条可见但列表隐藏时确定也直接开列表
+00:04 +19: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 列表隐藏时上下切台并忽略长按重复，控制条可见=true
+00:04 +20: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 列表隐藏时上下切台并忽略长按重复，控制条可见=false
+00:04 +21: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播快捷层切源忽略按键重复并可打开当前频道抽屉
+00:05 +22: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播返回依次关闭抽屉、隐藏控制层、退出全屏
+00:05 +23: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播系统返回同样依次关闭抽屉、控制层和全屏
+00:05 +24: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播抽屉可向下聚焦频道并确认切换
+00:05 +25: loading /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart
+00:06 +25: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 自动恢复到备用线路后从实际播放线路继续左右切换
+00:06 +26: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播 buffering 持续停滞先重连原线路两次再切换备用线路
+00:06 +27: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播 playing 持续停滞先重连原线路两次再切换备用线路
+00:06 +28: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播窗口滚动使采样位置相同，期间持续推进不会误重连
+00:06 +29: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 持续上报状态但位置不推进，仍会触发原线路恢复
+00:06 +30: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播窗口外位置持续为零但媒体时钟推进，不重连
+00:06 +31: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 媒体时钟新周期会中断稳定播放累计，不提前重置重连额度
+00:06 +32: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 单线路直播停滞会结束缓冲并报告错误
+00:06 +33: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 推进 25 秒，短暂缓冲 false 的重连额度判断
+00:06 +34: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 推进 30 秒，短暂缓冲 false 的重连额度判断
+00:06 +35: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 推进 30 秒，短暂缓冲 true 的重连额度判断
+00:06 +36: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播进度推进和暂停会清除停滞累计，停止后不再恢复
+00:06 +37: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 原生长时间缓冲刚恢复播放时不会被应用抢先重开
+00:07 +38: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 切台后旧频道的停滞累计不影响新频道
+00:07 +39: loading /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_view_behavior_test.dart
+00:07 +39: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_view_behavior_test.dart: 直播预览加载态保留频道名与全屏触摸入口
+00:08 +40: /private/tmp/yl-p04-runtime/tvs/test/modules/live/features/live_player_view_behavior_test.dart: 直播手势提示分别展示亮度和音量百分比
+00:08 +41: loading /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart
+00:08 +41: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: 直播模式只读取实际快照，切换等待提交且错误映射为 AppError
+00:08 +42: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 打开点播 HLS 时传递 headers 并在续播后起播
+00:08 +43: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 打开 flv 直播时使用稳定缓冲配置
+00:08 +44: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 打开 m3u8 直播时使用稳定缓冲配置
+00:08 +45: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 把点播 FLV 作为文件容器而非 HTTP-FLV 直播打开
+00:08 +46: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 原生启动错误在 open 完成前转换为视频加载错误
+00:08 +47: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession ready 后视频轨不可选时立即回退且不继续播放纯音频
+00:08 +48: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 直播进入 playing 后仍等待首帧
+00:08 +49: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession v2 load 提交后等待 ready，ready 失败释放播放器且不调用 play
+00:08 +50: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession v2 未提供 managed 指标时由时间线计算缓冲时长并钳制为非负
+00:08 +51: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 快照保留稳定错误码和安全诊断标识
+00:08 +52: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 快照保留直播停滞诊断所需的缓冲和重缓冲指标
+00:08 +53: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession yl_player 订阅者在 open 完成后仍立即收到当前播放快照
+00:08 +54: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 系统播放器直接打开媒体候选
+00:08 +55: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 系统播放器打开失败时抛出通用视频加载错误
+00:08 +56: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 启动超时保留原始 AppError 而不改写为解码失败
+00:08 +57: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 1080p 媒体打开失败后使用 720p 候选重新创建播放器
+00:08 +58: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 1080p 播放器未确认释放时不启动 720p 候选
+00:08 +59: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 相同媒体候选只创建一次播放器尝试
+00:08 +60: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 失败候选释放报错后会话继续保留关闭式释放屏障
+00:08 +61: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 停止卡住时仍以原生资源释放完成作为降级屏障
+00:08 +62: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession dispose 可重复等待且每个底层播放器只释放一次
+00:08 +63: /private/tmp/yl-p04-runtime/tvs/test/modules/player/features/native_video_playback_session_test.dart: NativeVideoPlaybackSession 底层释放卡住时 dispose 在预算内返回且后台只释放一次
+00:08 +64: All tests passed!

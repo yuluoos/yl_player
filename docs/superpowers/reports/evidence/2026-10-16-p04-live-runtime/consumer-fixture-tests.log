@@ -1,0 +1,20 @@
+...........................E...s.........
+======================================================================
+ERROR: test_current_example_matches_accepted_shared_fixtures (test_main_example_migration.MainExampleMigrationTests.test_current_example_matches_accepted_shared_fixtures)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p04-runtime/yl_player/tool/consumer_fixtures/apple_flutter/test_main_example_migration.py", line 22, in test_current_example_matches_accepted_shared_fixtures
+    load_gate().verify_current_targets(ROOT)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/private/tmp/yl-p04-runtime/yl_player/tool/consumer_fixtures/apple_flutter/main_example_tests.py", line 143, in verify_current_targets
+    raise RuntimeError(
+    ...<2 lines>...
+    )
+RuntimeError: macos example tests differ from accepted fixtures: missing=[], extra=[], changed=['AppleHostCharacterizations.swift', 'YlDashResourceLoaderTests.swift', 'YlMacosPresentationTests.swift']
+
+----------------------------------------------------------------------
+Ran 41 tests in 6.071s
+
+FAILED (errors=1, skipped=1)
+Verified 8 exact paired production declaration extractions.
+Verified 13 shared copy origins, exact destinations/scoped migrations, and all recorded baseline hashes.

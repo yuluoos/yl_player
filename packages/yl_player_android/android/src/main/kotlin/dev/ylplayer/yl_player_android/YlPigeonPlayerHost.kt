@@ -34,6 +34,9 @@ internal interface YlPlayerSession {
     suspend fun selectAudioTrack(command: AndroidTrackCommand)
     suspend fun selectVideoTrack(command: AndroidVideoTrackCommand)
     suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand)
+    suspend fun setLivePlaybackMode(command: AndroidLivePlaybackModeCommand): AndroidLivePlaybackModeReply {
+        throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+    }
     fun setVolume(volume: Double)
     suspend fun stop()
     fun close(): Deferred<Unit>
@@ -126,6 +129,7 @@ internal class YlPigeonPlayerHost(
     override suspend fun selectAudioTrack(command: AndroidTrackCommand) = command { session.selectAudioTrack(command) }
     override suspend fun selectVideoTrack(command: AndroidVideoTrackCommand) = command { session.selectVideoTrack(command) }
     override suspend fun setVideoConstraints(command: AndroidVideoConstraintsCommand) = command { session.setVideoConstraints(command) }
+    override suspend fun setLivePlaybackMode(command: AndroidLivePlaybackModeCommand) = command { session.setLivePlaybackMode(command) }
     override fun setVolume(volume: Double) = safe { session.setVolume(volume) }
     override suspend fun stop() = command { session.stop() }
     override suspend fun dispose() {

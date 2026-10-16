@@ -15,6 +15,7 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
     required this.onAcceptedState,
     required this.onEvent,
     required this.onInvalid,
+    this.onLiveState,
   }) : state = initialState,
        _sequence = initialSequence;
 
@@ -35,6 +36,7 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
   final void Function(YlPlayerState state) onAcceptedState;
   final void Function(YlPlayerEvent event, int sequence) onEvent;
   final void Function() onInvalid;
+  final void Function(AppleStateMessage)? onLiveState;
 
   void _decode(void Function() action) {
     if (closed) return;
@@ -104,6 +106,11 @@ final class AppleCallbacks implements ApplePlayerFlutterApi {
   @override
   void onState(AppleStateMessage value) => _decode(() {
     onFullState(AppleCodec.state(value), value.sequence, value.loadRequestId);
+    if (!closed &&
+        state.sessionId?.value == value.sessionId &&
+        state.revision == value.revision) {
+      onLiveState?.call(value);
+    }
   });
 
   @override

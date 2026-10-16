@@ -35,6 +35,12 @@ final class YlFallbackBackend: NSObject, YlPlaybackBackend {
     super.init()
   }
 
+  var livePlaybackState: YlNativeLivePlayback? { session.livePlaybackState }
+  var liveRecoveryContinuity: YlRecoveryCoordinator.Continuity { session.liveRecoveryContinuity }
+  func retainLiveRecoveryContinuity(_ value: YlRecoveryCoordinator.Continuity) { session.retainLiveRecoveryContinuity(value) }
+  func setLivePlaybackMode(_ mode: YlNativeLiveMode, requestId: Int64) throws -> YlNativeLivePlayback {
+    try session.acknowledgeLivePlaybackMode(mode, requestId: requestId)
+  }
   func activate() throws { try session.activate() }
   func deactivate() { session.deactivate() }
   func stop() { session.stop() }

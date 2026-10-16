@@ -13,8 +13,18 @@ struct PlayerConfiguration {
   func forLoad(_ source: YlAppleSourceDescriptor?) -> Self {
     guard let goal = source?.loadOptions?.bufferStrategy else { return self }
     var result = self
-    result.bufferMode = goal == .smoothPlayback ? "stable" : (goal == .lowLatency ? "lowLatency" : "automatic")
+    let confirmedLive = source?.kind == .network && source?.intent != .onDemand && (source?.isLive == true ||
+      source?.url?.scheme?.lowercased() == "rtmp" || source?.formatHint == .flv || source?.url?.pathExtension.lowercased() == "flv")
+    let resolved = goal == .automatic && confirmedLive ? YlBufferGoal.smoothPlayback : goal
+    result.bufferMode = resolved == .smoothPlayback ? "stable" : (resolved == .lowLatency ? "lowLatency" : "automatic")
     result.preferredForwardBufferDuration = result.bufferMode == "stable" ? 30 : (result.bufferMode == "lowLatency" ? 2 : 10)
+    return result
+  }
+
+  func forLiveMode(_ mode: YlNativeLiveMode) -> Self {
+    var result = self
+    result.bufferMode = mode == .lowLatency ? "lowLatency" : "stable"
+    result.preferredForwardBufferDuration = mode == .lowLatency ? 2 : 30
     return result
   }
 

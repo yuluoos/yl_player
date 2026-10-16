@@ -193,6 +193,7 @@ enum AndroidPlayerOperation {
   volume,
   stop,
   videoTrackSelection,
+  livePlaybackMode,
 }
 
 enum AndroidDecoderMode {
@@ -225,6 +226,11 @@ enum AndroidFailureScope {
   command,
   session,
   player,
+}
+
+enum AndroidLivePlaybackMode {
+  smoothPlayback,
+  lowLatency,
 }
 
 class AndroidPlayerOptionsMessage {
@@ -1859,6 +1865,7 @@ class AndroidStateMessage {
     required this.metrics,
     this.failure,
     this.videoSelection,
+    this.livePlayback,
   });
 
   String? loadRequestId;
@@ -1891,6 +1898,8 @@ class AndroidStateMessage {
 
   AndroidVideoSelectionMessage? videoSelection;
 
+  AndroidLivePlaybackStateMessage? livePlayback;
+
   List<Object?> _toList() {
     return <Object?>[
       loadRequestId,
@@ -1908,6 +1917,7 @@ class AndroidStateMessage {
       metrics,
       failure,
       videoSelection,
+      livePlayback,
     ];
   }
 
@@ -1932,6 +1942,7 @@ class AndroidStateMessage {
       metrics: result[12]! as AndroidMetricsMessage,
       failure: result[13] as AndroidFailureMessage?,
       videoSelection: result[14] as AndroidVideoSelectionMessage?,
+      livePlayback: result[15] as AndroidLivePlaybackStateMessage?,
     );
   }
 
@@ -1944,7 +1955,7 @@ class AndroidStateMessage {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure) && _deepEquals(videoSelection, other.videoSelection);
+    return _deepEquals(loadRequestId, other.loadRequestId) && _deepEquals(sessionId, other.sessionId) && _deepEquals(revision, other.revision) && _deepEquals(sequence, other.sequence) && _deepEquals(status, other.status) && _deepEquals(timeline, other.timeline) && _deepEquals(geometry, other.geometry) && _deepEquals(audioTracks, other.audioTracks) && _deepEquals(videoTracks, other.videoTracks) && _deepEquals(engine, other.engine) && _deepEquals(decoderMode, other.decoderMode) && _deepEquals(decoderIdentity, other.decoderIdentity) && _deepEquals(metrics, other.metrics) && _deepEquals(failure, other.failure) && _deepEquals(videoSelection, other.videoSelection) && _deepEquals(livePlayback, other.livePlayback);
   }
 
   @override
@@ -1953,7 +1964,7 @@ class AndroidStateMessage {
 
   @override
   String toString() {
-    return 'AndroidStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure, videoSelection: $videoSelection)';
+    return 'AndroidStateMessage(loadRequestId: $loadRequestId, sessionId: $sessionId, revision: $revision, sequence: $sequence, status: $status, timeline: $timeline, geometry: $geometry, audioTracks: $audioTracks, videoTracks: $videoTracks, engine: $engine, decoderMode: $decoderMode, decoderIdentity: $decoderIdentity, metrics: $metrics, failure: $failure, videoSelection: $videoSelection, livePlayback: $livePlayback)';
   }
 }
 
@@ -3032,6 +3043,171 @@ class AndroidDrmLicenseReply {
   }
 }
 
+class AndroidLivePlaybackStateMessage {
+  AndroidLivePlaybackStateMessage({
+    required this.mode,
+    required this.switchableModes,
+    this.committedRequestId,
+  });
+
+  AndroidLivePlaybackMode mode;
+
+  List<AndroidLivePlaybackMode> switchableModes;
+
+  int? committedRequestId;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      mode,
+      switchableModes,
+      committedRequestId,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidLivePlaybackStateMessage decode(Object result) {
+    result as List<Object?>;
+    return AndroidLivePlaybackStateMessage(
+      mode: result[0]! as AndroidLivePlaybackMode,
+      switchableModes: (result[1]! as List<Object?>).cast<AndroidLivePlaybackMode>(),
+      committedRequestId: result[2] as int?,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidLivePlaybackStateMessage || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(mode, other.mode) && _deepEquals(switchableModes, other.switchableModes) && _deepEquals(committedRequestId, other.committedRequestId);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidLivePlaybackStateMessage(mode: $mode, switchableModes: $switchableModes, committedRequestId: $committedRequestId)';
+  }
+}
+
+class AndroidLivePlaybackModeCommand {
+  AndroidLivePlaybackModeCommand({
+    required this.sessionId,
+    required this.requestId,
+    required this.mode,
+  });
+
+  String sessionId;
+
+  int requestId;
+
+  AndroidLivePlaybackMode mode;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      sessionId,
+      requestId,
+      mode,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidLivePlaybackModeCommand decode(Object result) {
+    result as List<Object?>;
+    return AndroidLivePlaybackModeCommand(
+      sessionId: result[0]! as String,
+      requestId: result[1]! as int,
+      mode: result[2]! as AndroidLivePlaybackMode,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidLivePlaybackModeCommand || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(sessionId, other.sessionId) && _deepEquals(requestId, other.requestId) && _deepEquals(mode, other.mode);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidLivePlaybackModeCommand(sessionId: $sessionId, requestId: $requestId, mode: $mode)';
+  }
+}
+
+class AndroidLivePlaybackModeReply {
+  AndroidLivePlaybackModeReply({
+    required this.sessionId,
+    required this.requestId,
+    required this.committedRevision,
+  });
+
+  String sessionId;
+
+  int requestId;
+
+  int committedRevision;
+
+  List<Object?> _toList() {
+    return <Object?>[
+      sessionId,
+      requestId,
+      committedRevision,
+    ];
+  }
+
+  Object encode() {
+    return _toList();  }
+
+  static AndroidLivePlaybackModeReply decode(Object result) {
+    result as List<Object?>;
+    return AndroidLivePlaybackModeReply(
+      sessionId: result[0]! as String,
+      requestId: result[1]! as int,
+      committedRevision: result[2]! as int,
+    );
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  bool operator ==(Object other) {
+    if (other is! AndroidLivePlaybackModeReply || other.runtimeType != runtimeType) {
+      return false;
+    }
+    if (identical(this, other)) {
+      return true;
+    }
+    return _deepEquals(sessionId, other.sessionId) && _deepEquals(requestId, other.requestId) && _deepEquals(committedRevision, other.committedRevision);
+  }
+
+  @override
+  // ignore: avoid_equals_and_hash_code_on_mutable_classes
+  int get hashCode => _deepHash(<Object?>[runtimeType, ..._toList()]);
+
+  @override
+  String toString() {
+    return 'AndroidLivePlaybackModeReply(sessionId: $sessionId, requestId: $requestId, committedRevision: $committedRevision)';
+  }
+}
+
 
 class _PigeonCodec extends StandardMessageCodec {
   const _PigeonCodec();
@@ -3087,6 +3263,9 @@ class _PigeonCodec extends StandardMessageCodec {
       writeValue(buffer, value.index);
     }    else if (value is AndroidFailureScope) {
       buffer.putUint8(144);
+      writeValue(buffer, value.index);
+    }    else if (value is AndroidLivePlaybackMode) {
+      buffer.putUint8(188);
       writeValue(buffer, value.index);
     }    else if (value is AndroidPlayerOptionsMessage) {
       buffer.putUint8(145);
@@ -3217,6 +3396,15 @@ class _PigeonCodec extends StandardMessageCodec {
     }    else if (value is AndroidDrmLicenseReply) {
       buffer.putUint8(187);
       writeValue(buffer, value.encode());
+    }    else if (value is AndroidLivePlaybackStateMessage) {
+      buffer.putUint8(189);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidLivePlaybackModeCommand) {
+      buffer.putUint8(190);
+      writeValue(buffer, value.encode());
+    }    else if (value is AndroidLivePlaybackModeReply) {
+      buffer.putUint8(191);
+      writeValue(buffer, value.encode());
     } else {
       super.writeValue(buffer, value);
     }
@@ -3273,6 +3461,9 @@ class _PigeonCodec extends StandardMessageCodec {
       case 144:
         final value = readValue(buffer) as int?;
         return value == null ? null : AndroidFailureScope.values[value];
+      case 188:
+        final value = readValue(buffer) as int?;
+        return value == null ? null : AndroidLivePlaybackMode.values[value];
       case 145:
         return AndroidPlayerOptionsMessage.decode(readValue(buffer)!);
       case 146:
@@ -3359,6 +3550,12 @@ class _PigeonCodec extends StandardMessageCodec {
         return AndroidDrmLicenseRequest.decode(readValue(buffer)!);
       case 187:
         return AndroidDrmLicenseReply.decode(readValue(buffer)!);
+      case 189:
+        return AndroidLivePlaybackStateMessage.decode(readValue(buffer)!);
+      case 190:
+        return AndroidLivePlaybackModeCommand.decode(readValue(buffer)!);
+      case 191:
+        return AndroidLivePlaybackModeReply.decode(readValue(buffer)!);
       default:
         return super.readValueOfType(type, buffer);
     }
@@ -3609,6 +3806,25 @@ class AndroidPlayerHostApi {
         isNullValid: true,
     )
     ;
+  }
+
+  Future<AndroidLivePlaybackModeReply> setLivePlaybackMode(AndroidLivePlaybackModeCommand command) async {
+    final pigeonVar_channelName = 'dev.flutter.pigeon.yl_player_android.AndroidPlayerHostApi.setLivePlaybackMode$pigeonVar_messageChannelSuffix';
+    final pigeonVar_channel = BasicMessageChannel<Object?>(
+      pigeonVar_channelName,
+      pigeonChannelCodec,
+      binaryMessenger: pigeonVar_binaryMessenger,
+    );
+    final Future<Object?> pigeonVar_sendFuture = pigeonVar_channel.send(<Object?>[command]);
+    final pigeonVar_replyList = await pigeonVar_sendFuture as List<Object?>?;
+
+    final Object? pigeonVar_replyValue = _extractReplyValueOrThrow(
+        pigeonVar_replyList,
+        pigeonVar_channelName,
+        isNullValid: false,
+    )
+    ;
+    return pigeonVar_replyValue! as AndroidLivePlaybackModeReply;
   }
 
   Future<void> setVolume(double volume) async {
@@ -3958,3 +4174,5 @@ abstract class AndroidDrmFlutterApi {
     }
   }
 }
+
+// Schema-6 live enum tag relocated; legacy factory tags preserved.
