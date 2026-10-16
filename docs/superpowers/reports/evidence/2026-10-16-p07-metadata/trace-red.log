@@ -1,0 +1,14 @@
+.......E.
+======================================================================
+ERROR: test_trace_is_hash_bound_and_uses_integer_presentation_order (test_stream_inventory.StreamInventoryTests.test_trace_is_hash_bound_and_uses_integer_presentation_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 101, in test_trace_is_hash_bound_and_uses_integer_presentation_order
+    result=summarize(rows,[parsed(),parsed()],time_base='1/24',
+                     media_sha256='c'*64,trace_sink=trace)
+TypeError: summarize() got an unexpected keyword argument 'trace_sink'
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.159s
+
+FAILED (errors=1)

@@ -1,0 +1,58 @@
+{
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 6314
+  },
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 5107,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 6314
+  },
+  "first_packet_rpu_sha256": "5d70cf29f0bd6f52f9567b0d101283397bddcf7bd55d39a9e47bf0893c3719b4",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "f012540a8221655c44b6a70373be9420cda5df18c8dfb5817f6e325e91cfdd6d",
+  "level_counts": {
+    "1": 6314,
+    "2": 6314,
+    "4": 6314,
+    "5": 6314,
+    "6": 6314
+  },
+  "mapping_quality": "external_missing",
+  "media_sha256": "87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 6314,
+  "presentation_reordered_packets": 5392,
+  "presentation_trace_sha256": "41aeee01170d815a8df2ca8f78772f21bdf376107a35e950da56b348602b86d9",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 6314
+  },
+  "pts_range": [
+    0,
+    6313000
+  ],
+  "rpu_count": 6314,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 72,
+  "schema_version": 1,
+  "time_base": "1/24000",
+  "unique_rpu_hashes": 4641,
+  "recorded_date": "2026-10-16",
+  "case": "sol-levante-p5-1080p",
+  "libdovi_version": "3.4.0",
+  "libdovi_commit": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+  "license": "CC-BY-4.0",
+  "attribution": "SolLevante by Netflix, Inc.; Dolby, Inc. modification. Original media unmodified; derived RPU metadata inventory.",
+  "trace_file": "stream-trace.jsonl.gz",
+  "trace_archive_sha256": "03289671a9b9783435e586e6db18b2883e07270fd87318485d85d0949fe96dd6",
+  "media_bytes": 141871521,
+  "video_track_scope": "one_HEVC_MP4_video_track",
+  "independent_target_reference": false,
+  "reference_sha256": null,
+  "frozen_tolerance": null,
+  "container_coverage": "finite_box_extents_and_declared_samples",
+  "declared_sample_count": 6314
+}

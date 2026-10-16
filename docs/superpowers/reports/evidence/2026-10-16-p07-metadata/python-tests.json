@@ -1,0 +1,17 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tool/dolby_reference",
+    "-p",
+    "test_*.py"
+  ],
+  "cwd": "/private/tmp/yl-p07-metadata/yl_player",
+  "exit_code": 0,
+  "duration_seconds": 2.337,
+  "log_sha256": "50bd0ddd6614a629ed3770bcb0f4e33eaffd7bbb7582bb4cc6442e4e3a4c79f0"
+}

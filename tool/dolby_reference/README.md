@@ -30,3 +30,30 @@ sh tool/apple_hdr/run_tests.sh
 Task1B1复现、初始失败及最终边界见 [构建探针说明](probes/README.md)。调查/证据测试当前12项；本机上游libplacebo13项通过、1项GPU跳过，libdovi2项单测及5个C API退出预期匹配。iOS/Android仅构建链接，尚无设备运行结论。
 
 2026-09-29 Task1B2补充：[runtime-evidence.json](runtime-evidence.json)记录Apple M1原生CGL上游GPU实验和条件分支缺口。复现见[探针说明](probes/README.md)。现有测试发现新增可选真实GPU检查：默认12通过/1跳过，设置 `YL_DOLBY_CGL_PROBE_ROOT` 后本机13通过。原EGL跳过记录不变；Task1仍缺原始FEL、独立参考/容差及移动端/物理链路。
+
+## 2026-10-16：全片 RPU 盘点
+
+新增 `stream_inventory.py`、固定 libdovi3.4.0 的批量解析器及 [stream-observation.json](stream-observation.json)。历史 `sample-observation.json` 保留首RPU观察；新记录覆盖同一未修改官方 P5 文件的6314个视频数据包。完整哈希/时间戳轨迹保存在 `stream-trace.jsonl.gz`，不包含媒体、RPU原文或文件路径。
+
+该探针只接受一个HEVC视频轨道、具有明确样本总数的有限本地MP4。先检查顶层box尺寸不超出文件、数据包均位于mdat内，再要求容器声明的nb_frames与实际读取包数一致；拒绝分片、开放尺寸或无法证明覆盖范围的输入。读取ffprobe报告的原文件偏移和hvcC长度字段，提取原始NAL（含HEVC头、不含MP4长度前缀）。每个视频数据包必须含VCL和恰好一个RPU，否则拒绝完整盘点，不猜测遗漏或多RPU的关联。PTS/DTS为原始整数，时间基为有理数字符串；轨迹按PTS排序，不把解码顺序当呈现顺序。未解码画面，未验证数据包与实际显示帧对应，也未解析复用元数据的有效状态。
+
+已验证：文件SHA-256与原记录相同；6314个RPU均为解析器报告的P5/CM2.9，均含L1/L2/L4/L5/L6；显示元数据完整序列化结果有5107次变化，72个`scene_refresh_flag=1`；5392个数据包的解码/呈现顺序序号不同。这些计数不等于镜头数或已执行trim，不能推导画质。首RPU哈希与历史167字节记录一致。合法新level保留在盘点中；解析器不能处理的内容导致退出2，不将其自动判为媒体损坏。
+
+资源边界：媒体≤512MiB、单数据包≤8MiB、视频数据包≤32768、单RPU≤64KiB、批量RPU输入≤32MiB；ffprobe输出≤16MiB、解析器输出≤128MiB，各子进程期限60秒。超限或非零退出不发布部分成功结果。源文件和解析器在执行前后重验哈希；可选轨迹文件以600权限独占创建，拒绝已有文件和符号链接。无解码、重封装、位流改写、GPU/设备调用或依赖下载。ffprobe仅为离线研究工具，不改变生产FFmpeg依赖。
+
+复现时先构建一次新的隔离输出目录（需要Task1B1已固定的本地归档、官方Rust工具链和Cargo缓存）：
+
+```sh
+p07_probes="$PWD/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes"
+python3 -B tool/dolby_reference/probes/build_stream_inspector.py \
+  --probes "$p07_probes" --output /tmp/p07-stream-inspector-new
+python3 -B tool/dolby_reference/stream_inventory.py \
+  --media "$p07_probes/sol-levante-p5-1080p.mp4" \
+  --sha256 87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346 \
+  --inspector /tmp/p07-stream-inspector-new/target/release/yl-dovi-stream-inspector \
+  --trace "$p07_probes/stream-trace-new.jsonl"
+```
+
+构建器核验固定源码归档SHA-256后重新解包，用提交的Cargo.lock运行`--locked --offline`测试/构建。缺归档、缓存或工具链应先恢复这些已固定依赖；不会转用浮动版本。Rust framing测试随构建执行；Python测试已进入既有`check_foundation.sh`发现入口。默认全量发现33通过、1项既有GPU检查跳过；Rust另3项通过。本次不设置GPU opt-in变量。
+
+CLI退出0只表示完整的**输入元数据盘点**，`mapping_quality`、`native_dv_signal`仍为`external_missing`。独立参考、完整映射容差、原始P7 FEL、移动设备及物理DV链路仍缺，Task1B2整体与CAP-DV-MAP/CAP-DV-OUT未完成。素材沿用原记录的CC BY4.0及Netflix/Dolby署名；本增量为派生元数据清单。

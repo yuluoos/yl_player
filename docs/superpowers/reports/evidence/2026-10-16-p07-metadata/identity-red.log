@@ -1,0 +1,23 @@
+F.......E.......
+======================================================================
+ERROR: test_hashing_enforces_byte_limit_while_reading (test_stream_inventory.StreamInventoryTests.test_hashing_enforces_byte_limit_while_reading)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 113, in test_hashing_enforces_byte_limit_while_reading
+    with self.assertRaises(InspectionError): file_digest(path,limit=3)
+                                             ~~~~~~~~~~~^^^^^^^^^^^^^^
+TypeError: file_digest() got an unexpected keyword argument 'limit'
+
+======================================================================
+FAIL: test_inspector_mutation_cannot_claim_the_new_binary_produced_results (test_stream_inventory.CollectorCliTests.test_inspector_mutation_cannot_claim_the_new_binary_produced_results)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 190, in test_inspector_mutation_cannot_claim_the_new_binary_produced_results
+    self.assertEqual(result.returncode,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.985s
+
+FAILED (failures=1, errors=1)

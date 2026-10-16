@@ -1,0 +1,25 @@
+{
+  "phase": "green",
+  "cases": [
+    {
+      "case": "original_declared_box_exceeds_eof",
+      "media_bytes": 454604,
+      "sha256": "8f01349924a6f19535ae980353d1ca760183f2bed2aa85816a7ddc6a45b2f5b7",
+      "ffprobe_exit": 0,
+      "ffprobe_stderr_bytes": 0,
+      "declared_samples": "6314",
+      "returned_packets": 1,
+      "accepted": false
+    },
+    {
+      "case": "corrected_box_still_missing_samples",
+      "media_bytes": 454604,
+      "sha256": "5ba1f37f797951f09dad7c4945861b333c3fcfee2e3d7ae6c1072e8a080cfe7d",
+      "ffprobe_exit": 0,
+      "ffprobe_stderr_bytes": 0,
+      "declared_samples": "6314",
+      "returned_packets": 1,
+      "accepted": false
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tool/dolby_reference/stream_inventory.py",
+    "--media",
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/sol-levante-p5-1080p.mp4",
+    "--sha256",
+    "87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346",
+    "--inspector",
+    "/private/tmp/yl-p07-metadata/native-green/target/release/yl-dovi-stream-inspector",
+    "--trace",
+    "/private/tmp/yl-p07-metadata/verified-trace.jsonl"
+  ],
+  "cwd": "/private/tmp/yl-p07-metadata/yl_player",
+  "exit_code": 0,
+  "duration_seconds": 9.828,
+  "log_sha256": "c5921961b2ad92129e446db89282be6b20a08a8f04a4a64feb3d0766a75eeebb"
+}

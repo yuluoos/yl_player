@@ -1,0 +1,21 @@
+E
+======================================================================
+ERROR: test_stream_inventory (unittest.loader._FailedTest.test_stream_inventory)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_stream_inventory
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 10, in <module>
+    from stream_inventory import (InspectionError, extract_rpus, summarize,
+                                  nal_length_size, run_bounded)
+ModuleNotFoundError: No module named 'stream_inventory'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

@@ -1,0 +1,301 @@
+FFFF....F..FFFF..........
+======================================================================
+FAIL: test_incomplete_or_unknown_declared_sample_count_is_refused (test_stream_inventory.CollectorCliTests.test_incomplete_or_unknown_declared_sample_count_is_refused) (count='2')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 178, in test_incomplete_or_unknown_declared_sample_count_is_refused
+    self.assertEqual(result.returncode,2,result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : {
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 1
+  },
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 0,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 1
+  },
+  "first_packet_rpu_sha256": "457fe3bb6462fb508acb382a1cb0e3f7b75f718786019d9f93eb67b0aeff3155",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "4631ee3f19bf7c6105bb42aecc8da93b2603256c4ee0126d4e3d8f4dc64b560b",
+  "level_counts": {
+    "1": 1,
+    "2": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+  },
+  "mapping_quality": "external_missing",
+  "media_sha256": "e03e71baa59bfe252afd86a61db1df352414c9a1659ae71604fadb23caa4fa36",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 1,
+  "presentation_reordered_packets": 0,
+  "presentation_trace_sha256": "cccc423fda479847957d27b122960d722ea7ad35a79d703b145dfedc2e31a961",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 1
+  },
+  "pts_range": [
+    0,
+    0
+  ],
+  "rpu_count": 1,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 1,
+  "schema_version": 1,
+  "time_base": "1/24",
+  "unique_rpu_hashes": 1
+}
+
+
+======================================================================
+FAIL: test_incomplete_or_unknown_declared_sample_count_is_refused (test_stream_inventory.CollectorCliTests.test_incomplete_or_unknown_declared_sample_count_is_refused) (count='0')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 179, in test_incomplete_or_unknown_declared_sample_count_is_refused
+    self.assertFalse(trace.exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_incomplete_or_unknown_declared_sample_count_is_refused (test_stream_inventory.CollectorCliTests.test_incomplete_or_unknown_declared_sample_count_is_refused) (count='N/A')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 179, in test_incomplete_or_unknown_declared_sample_count_is_refused
+    self.assertFalse(trace.exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_incomplete_or_unknown_declared_sample_count_is_refused (test_stream_inventory.CollectorCliTests.test_incomplete_or_unknown_declared_sample_count_is_refused) (count=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 179, in test_incomplete_or_unknown_declared_sample_count_is_refused
+    self.assertFalse(trace.exists())
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_packets_outside_mdat_are_refused (test_stream_inventory.CollectorCliTests.test_packets_outside_mdat_are_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 198, in test_packets_outside_mdat_are_refused
+    self.assertEqual(self.cli().returncode,2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_truncated_box_or_fragmented_container_is_refused (test_stream_inventory.CollectorCliTests.test_truncated_box_or_fragmented_container_is_refused) (data=b'\x00\x00\x00\x0cftypisom\x00\x00\x00\x08moov\x00\x00\x00\x86mdat\x00\x00\x00\t&\x01payload\x00\x00\x00\t|\x01payload')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 190, in test_truncated_box_or_fragmented_container_is_refused
+    self.assertEqual(result.returncode,2,result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : {
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 1
+  },
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 0,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 1
+  },
+  "first_packet_rpu_sha256": "457fe3bb6462fb508acb382a1cb0e3f7b75f718786019d9f93eb67b0aeff3155",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "4631ee3f19bf7c6105bb42aecc8da93b2603256c4ee0126d4e3d8f4dc64b560b",
+  "level_counts": {
+    "1": 1,
+    "2": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+  },
+  "mapping_quality": "external_missing",
+  "media_sha256": "bab5aea123378652ba208ae876df4c216a69118cfe19cb3ebac9494bc11676dd",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 1,
+  "presentation_reordered_packets": 0,
+  "presentation_trace_sha256": "cccc423fda479847957d27b122960d722ea7ad35a79d703b145dfedc2e31a961",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 1
+  },
+  "pts_range": [
+    0,
+    0
+  ],
+  "rpu_count": 1,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 1,
+  "schema_version": 1,
+  "time_base": "1/24",
+  "unique_rpu_hashes": 1
+}
+
+
+======================================================================
+FAIL: test_truncated_box_or_fragmented_container_is_refused (test_stream_inventory.CollectorCliTests.test_truncated_box_or_fragmented_container_is_refused) (data=b'\x00\x00\x00\x0cftypisom\x00\x00\x00\x08moov\x00\x00\x00"mdat\x00\x00\x00\t&\x01payload\x00\x00\x00\t|\x01payloadxx')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 190, in test_truncated_box_or_fragmented_container_is_refused
+    self.assertEqual(result.returncode,2,result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : {
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 1
+  },
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 0,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 1
+  },
+  "first_packet_rpu_sha256": "457fe3bb6462fb508acb382a1cb0e3f7b75f718786019d9f93eb67b0aeff3155",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "4631ee3f19bf7c6105bb42aecc8da93b2603256c4ee0126d4e3d8f4dc64b560b",
+  "level_counts": {
+    "1": 1,
+    "2": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+  },
+  "mapping_quality": "external_missing",
+  "media_sha256": "0204080dd8a750299f32a7bd01e130fc92a6c9aabcaab9df52ca1ea283943d10",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 1,
+  "presentation_reordered_packets": 0,
+  "presentation_trace_sha256": "cccc423fda479847957d27b122960d722ea7ad35a79d703b145dfedc2e31a961",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 1
+  },
+  "pts_range": [
+    0,
+    0
+  ],
+  "rpu_count": 1,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 1,
+  "schema_version": 1,
+  "time_base": "1/24",
+  "unique_rpu_hashes": 1
+}
+
+
+======================================================================
+FAIL: test_truncated_box_or_fragmented_container_is_refused (test_stream_inventory.CollectorCliTests.test_truncated_box_or_fragmented_container_is_refused) (data=b'\x00\x00\x00\x0cftypisom\x00\x00\x00\x08moov\x00\x00\x00"mdat\x00\x00\x00\t&\x01payload\x00\x00\x00\t|\x01payload\x00\x00\x00\x08moof')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 190, in test_truncated_box_or_fragmented_container_is_refused
+    self.assertEqual(result.returncode,2,result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : {
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 1
+  },
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 0,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 1
+  },
+  "first_packet_rpu_sha256": "457fe3bb6462fb508acb382a1cb0e3f7b75f718786019d9f93eb67b0aeff3155",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "4631ee3f19bf7c6105bb42aecc8da93b2603256c4ee0126d4e3d8f4dc64b560b",
+  "level_counts": {
+    "1": 1,
+    "2": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+  },
+  "mapping_quality": "external_missing",
+  "media_sha256": "7a7e179280d9fc75602052b5930f940a4a84dc651b67769f6c1c7772c4bf3d93",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 1,
+  "presentation_reordered_packets": 0,
+  "presentation_trace_sha256": "cccc423fda479847957d27b122960d722ea7ad35a79d703b145dfedc2e31a961",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 1
+  },
+  "pts_range": [
+    0,
+    0
+  ],
+  "rpu_count": 1,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 1,
+  "schema_version": 1,
+  "time_base": "1/24",
+  "unique_rpu_hashes": 1
+}
+
+
+======================================================================
+FAIL: test_truncated_box_or_fragmented_container_is_refused (test_stream_inventory.CollectorCliTests.test_truncated_box_or_fragmented_container_is_refused) (data=b'\x00\x00\x00\x0cftypisom\x00\x00\x00\x08moov\x00\x00\x00\x00mdat\x00\x00\x00\t&\x01payload\x00\x00\x00\t|\x01payload')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 190, in test_truncated_box_or_fragmented_container_is_refused
+    self.assertEqual(result.returncode,2,result.stdout)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2 : {
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 1
+  },
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 0,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 1
+  },
+  "first_packet_rpu_sha256": "457fe3bb6462fb508acb382a1cb0e3f7b75f718786019d9f93eb67b0aeff3155",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "4631ee3f19bf7c6105bb42aecc8da93b2603256c4ee0126d4e3d8f4dc64b560b",
+  "level_counts": {
+    "1": 1,
+    "2": 1,
+    "4": 1,
+    "5": 1,
+    "6": 1
+  },
+  "mapping_quality": "external_missing",
+  "media_sha256": "9591c2a86d2ec02813faed96caef22f6826d265443611997d8b8b22a8bd78207",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 1,
+  "presentation_reordered_packets": 0,
+  "presentation_trace_sha256": "cccc423fda479847957d27b122960d722ea7ad35a79d703b145dfedc2e31a961",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 1
+  },
+  "pts_range": [
+    0,
+    0
+  ],
+  "rpu_count": 1,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 1,
+  "schema_version": 1,
+  "time_base": "1/24",
+  "unique_rpu_hashes": 1
+}
+
+
+----------------------------------------------------------------------
+Ran 19 tests in 1.851s
+
+FAILED (failures=9)

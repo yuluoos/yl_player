@@ -1,0 +1,11 @@
+{
+  "command": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tool/dolby_reference/inventory.py"
+  ],
+  "cwd": "/private/tmp/yl-p07-metadata/yl_player",
+  "exit_code": 0,
+  "duration_seconds": 0.061,
+  "log_sha256": "eb3d4b464becdbe87b25c7a3295aed0e8bff0f7af7c746dee98814f8c95c7217"
+}

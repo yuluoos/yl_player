@@ -1,0 +1,38 @@
+   Compiling proc-macro2 v1.0.106
+   Compiling quote v1.0.46
+   Compiling unicode-ident v1.0.24
+   Compiling serde_core v1.0.228
+   Compiling memchr v2.8.3
+   Compiling zmij v1.0.21
+   Compiling radium v0.7.0
+   Compiling anyhow v1.0.103
+   Compiling tap v1.0.1
+   Compiling serde v1.0.228
+   Compiling hashbrown v0.17.1
+   Compiling equivalent v1.0.2
+   Compiling serde_json v1.0.150
+   Compiling no_std_io2 v0.9.4
+   Compiling bitstream-io v4.10.0
+   Compiling wyz v0.5.1
+   Compiling itoa v1.0.18
+   Compiling funty v2.0.0
+   Compiling crc-catalog v2.5.0
+   Compiling crc v3.4.0
+   Compiling syn v2.0.118
+   Compiling indexmap v2.14.0
+   Compiling bitvec v1.1.1
+   Compiling bitvec_helpers v4.0.2
+   Compiling serde_derive v1.0.228
+   Compiling tinyvec v1.12.0
+   Compiling dolby_vision v3.4.0 (/private/tmp/yl-p07-metadata/native-green/dovi_tool-614c816b6446dcd1dbaf433403d499a6026fbb5a/dolby_vision)
+   Compiling yl-dovi-stream-inspector v0.0.0 (/private/tmp/yl-p07-metadata/native-green/inspector)
+    Finished `release` profile [optimized] target(s) in 6.82s
+     Running unittests src/main.rs (/private/tmp/yl-p07-metadata/native-green/target/release/deps/yl_dovi_stream_inspector-5fb293d62466e1ee)
+
+running 3 tests
+test tests::declared_lengths_are_bounded_before_allocation ... ok
+test tests::empty_eof_is_distinct_from_truncated_frame ... ok
+test tests::original_bytes_are_preserved_and_eof_checked ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

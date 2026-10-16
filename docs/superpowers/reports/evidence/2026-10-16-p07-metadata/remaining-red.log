@@ -1,0 +1,31 @@
+E...E...
+======================================================================
+ERROR: test_dynamic_metadata_is_counted_in_presentation_order_without_acceptance (test_stream_inventory.StreamInventoryTests.test_dynamic_metadata_is_counted_in_presentation_order_without_acceptance)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 75, in test_dynamic_metadata_is_counted_in_presentation_order_without_acceptance
+    result=summarize(rows,[a,b],time_base='1/24000',media_sha256='c'*64)
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/stream_inventory.py", line 144, in summarize
+    require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping'})
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/stream_inventory.py", line 31, in require
+    raise InspectionError()
+stream_inventory.InspectionError: dolby.stream_inspection_failed
+
+======================================================================
+ERROR: test_parser_output_cardinality_unknown_levels_and_reuse_remain_visible (test_stream_inventory.StreamInventoryTests.test_parser_output_cardinality_unknown_levels_and_reuse_remain_visible)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/test_stream_inventory.py", line 91, in test_parser_output_cardinality_unknown_levels_and_reuse_remain_visible
+    result=summarize([row],[value],time_base='1/24',media_sha256='c'*64)
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/stream_inventory.py", line 144, in summarize
+    require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping'})
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p07-metadata/yl_player/tool/dolby_reference/stream_inventory.py", line 31, in require
+    raise InspectionError()
+stream_inventory.InspectionError: dolby.stream_inspection_failed
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.113s
+
+FAILED (errors=2)

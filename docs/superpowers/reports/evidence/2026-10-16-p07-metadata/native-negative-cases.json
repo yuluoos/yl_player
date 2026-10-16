@@ -1,0 +1,44 @@
+[
+  {
+    "case": "valid_original",
+    "exit_code": 0,
+    "expected_exit_code": 0,
+    "stdout_rows": 1,
+    "stdout_sha256": "2c7d9835f45d6bf8e7c4089da3d99aacb15d7708e942c2fdcfaa00c878071926"
+  },
+  {
+    "case": "empty",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "stdout_rows": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "case": "truncated_length",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "stdout_rows": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "case": "truncated_payload",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "stdout_rows": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "case": "oversize",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "stdout_rows": 0,
+    "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "case": "late_corrupt_rpu",
+    "exit_code": 2,
+    "expected_exit_code": 2,
+    "stdout_rows": 1,
+    "stdout_sha256": "2c7d9835f45d6bf8e7c4089da3d99aacb15d7708e942c2fdcfaa00c878071926"
+  }
+]
