@@ -1,0 +1,74 @@
+00:00 +0: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart
+test/modules/live/features/live_acceptance_capture_test.dart:4:8: Error: Error when reading 'integration_test/support/live_acceptance_capture.dart': No such file or directory
+import '../../../../integration_test/support/live_acceptance_capture.dart';
+       ^
+test/modules/live/features/live_acceptance_capture_test.dart:15:20: Error: Undefined name 'LiveAcceptanceConfig'.
+      expect(() => LiveAcceptanceConfig.parse({...config(), 'owned': value}),
+                   ^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:19:20: Error: Undefined name 'LiveAcceptanceConfig'.
+      expect(() => LiveAcceptanceConfig.parse({...config(), 'run': value}),
+                   ^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:22:12: Error: Undefined name 'LiveAcceptanceConfig'.
+    expect(LiveAcceptanceConfig.parse(config()).run, 'p05-owned-01');
+           ^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:32:20: Error: Undefined name 'LiveAcceptanceConfig'.
+      expect(() => LiveAcceptanceConfig.parse({...config(), 'subscription': value}),
+                   ^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:38:20: Error: Undefined name 'LiveAcceptanceConfig'.
+      expect(() => LiveAcceptanceConfig.parse({...config(), 'sha256': value}),
+                   ^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:46:5: Error: Method not found: 'validateOwnedChannels'.
+    validateOwnedChannels([valid, const LiveChannel(name: 'RTMP', urls: [
+    ^^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:57:20: Error: Method not found: 'validateOwnedChannels'.
+      expect(() => validateOwnedChannels(channels), throwsFormatException);
+                   ^^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:61:21: Error: Method not found: 'LiveAcceptanceCapture'.
+    final capture = LiveAcceptanceCapture('p05-owned');
+                    ^^^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:63:22: Error: Undefined name 'LiveAcceptanceStage'.
+      capture.record(LiveAcceptanceStage.play, channel: i % 12,
+                     ^^^^^^^^^^^^^^^^^^^
+test/modules/live/features/live_acceptance_capture_test.dart:72:33: Error: Undefined name 'LiveAcceptanceStage'.
+    expect(() => capture.record(LiveAcceptanceStage.play, channel: 12),
+                                ^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart [E]
+  Failed to load "/private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: test/modules/live/features/live_acceptance_capture_test.dart:4:8: Error: Error when reading 'integration_test/support/live_acceptance_capture.dart': No such file or directory
+  import '../../../../integration_test/support/live_acceptance_capture.dart';
+         ^
+  test/modules/live/features/live_acceptance_capture_test.dart:15:20: Error: Undefined name 'LiveAcceptanceConfig'.
+        expect(() => LiveAcceptanceConfig.parse({...config(), 'owned': value}),
+                     ^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:19:20: Error: Undefined name 'LiveAcceptanceConfig'.
+        expect(() => LiveAcceptanceConfig.parse({...config(), 'run': value}),
+                     ^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:22:12: Error: Undefined name 'LiveAcceptanceConfig'.
+      expect(LiveAcceptanceConfig.parse(config()).run, 'p05-owned-01');
+             ^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:32:20: Error: Undefined name 'LiveAcceptanceConfig'.
+        expect(() => LiveAcceptanceConfig.parse({...config(), 'subscription': value}),
+                     ^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:38:20: Error: Undefined name 'LiveAcceptanceConfig'.
+        expect(() => LiveAcceptanceConfig.parse({...config(), 'sha256': value}),
+                     ^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:46:5: Error: Method not found: 'validateOwnedChannels'.
+      validateOwnedChannels([valid, const LiveChannel(name: 'RTMP', urls: [
+      ^^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:57:20: Error: Method not found: 'validateOwnedChannels'.
+        expect(() => validateOwnedChannels(channels), throwsFormatException);
+                     ^^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:61:21: Error: Method not found: 'LiveAcceptanceCapture'.
+      final capture = LiveAcceptanceCapture('p05-owned');
+                      ^^^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:63:22: Error: Undefined name 'LiveAcceptanceStage'.
+        capture.record(LiveAcceptanceStage.play, channel: i % 12,
+                       ^^^^^^^^^^^^^^^^^^^
+  test/modules/live/features/live_acceptance_capture_test.dart:72:33: Error: Undefined name 'LiveAcceptanceStage'.
+      expect(() => capture.record(LiveAcceptanceStage.play, channel: 12),
+                                  ^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart

@@ -1,0 +1,256 @@
+Running pod install...                                             659ms
+Building macOS application...                                   
+/Users/yy2021_8689/.pub-cache/hosted/pub.dev/audio_session-0.2.4/macos/audio_session/Sources/audio_session/AudioSessionPlugin.m:14:5: warning: expression result unused [-Wunused-value]
+   14 |     [[AudioSessionPlugin alloc] initWithRegistrar:registrar];
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+1 warning generated.
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 (in target 'yl_player_apple' from project 'yl_player_apple')
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+3 | }
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+38 | @end
+39 | 
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+38 | @end
+39 | 
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:26:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 25 |   var copy: Copy = { session, key, value in
+ 26 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 27 |   }
+ 28 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 /private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift (in target 'yl_player_apple' from project 'yl_player_apple')
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:26:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 24 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 25 |   var copy: Copy = { session, key, value in
+ 26 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 27 |   }
+ 28 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+error: the following command failed with exit code 0 but produced no further output
+SwiftCompile normal arm64 /private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift (in target 'yl_player_apple' from project 'yl_player_apple')
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+3 | }
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+38 | @end
+39 | 
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:22:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+20 |   init(map: [String: Any?]) {
+21 |     connectTimeoutMs = Self.clampedMilliseconds(
+22 |       int64(map["connectTimeoutMs"]) ?? 10_000
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+23 |     )
+24 |     readTimeoutMs = Self.clampedMilliseconds(
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:25:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+23 |     )
+24 |     readTimeoutMs = Self.clampedMilliseconds(
+25 |       int64(map["readTimeoutMs"]) ?? 15_000
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+26 |     )
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:27:42: warning: expression implicitly coerced from 'Any??' to 'Any?'
+25 |       int64(map["readTimeoutMs"]) ?? 15_000
+26 |     )
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+   |                                          `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+28 |     baseRetryDelayMs = Self.clampedMilliseconds(
+29 |       int64(map["baseRetryDelayMs"]) ?? 500
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:29:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+27 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+28 |     baseRetryDelayMs = Self.clampedMilliseconds(
+29 |       int64(map["baseRetryDelayMs"]) ?? 500
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     )
+31 |     maxRetryDelayMs = Self.clampedMilliseconds(
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:32:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+30 |     )
+31 |     maxRetryDelayMs = Self.clampedMilliseconds(
+32 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+33 |     )
+34 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlNetworkConfiguration.swift:34:44: warning: expression implicitly coerced from 'Any??' to 'Any?'
+32 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+33 |     )
+34 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+   |                                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+35 |   }
+36 | 
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:639:12: warning: 'UTTypeCreatePreferredIdentifierForTag' was deprecated in macOS 12.0: Use the UTType class instead. [#DeprecatedDeclaration]
+ 637 |       return UTType(mimeType: mime)?.identifier ?? mime
+ 638 |     }
+ 639 |     return UTTypeCreatePreferredIdentifierForTag(
+     |            `- warning: 'UTTypeCreatePreferredIdentifierForTag' was deprecated in macOS 12.0: Use the UTType class instead. [#DeprecatedDeclaration]
+ 640 |       kUTTagClassMIMEType,
+ 641 |       mime as CFString,
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift:640:7: warning: 'kUTTagClassMIMEType' was deprecated in macOS 12.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]
+ 638 |     }
+ 639 |     return UTTypeCreatePreferredIdentifierForTag(
+ 640 |       kUTTagClassMIMEType,
+     |       `- warning: 'kUTTagClassMIMEType' was deprecated in macOS 12.0: Use UTTagClassMIMEType instead. [#DeprecatedDeclaration]
+ 641 |       mime as CFString,
+ 642 |       nil
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlManagedHTTPTransport.swift:146:5: warning: switch must be exhaustive
+144 | 
+145 |   private static func transportError(_ error: NWError) -> Error {
+146 |     switch error {
+    |     |- warning: switch must be exhaustive
+147 |     case .tls: return URLError(.serverCertificateUntrusted)
+148 |     case .dns: return URLError(.cannotFindHost)
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+38 | @end
+39 | 
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:42:28: warning: expression implicitly coerced from 'Any??' to 'Any?'
+40 |     bufferMode = map["bufferMode"] as? String ?? "automatic"
+41 |     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
+42 |     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+   |                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+43 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+44 |     positionEventIntervalMs = min(
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:43:53: warning: expression implicitly coerced from 'Any??' to 'Any?'
+41 |     decoderPolicy = map["decoderPolicy"] as? String ?? "hardwareOnly"
+42 |     maxBufferBytes = int64(map["maxBufferBytes"]).map { Int(clamping: max(0, $0)) }
+43 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+   |                                                     `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+44 |     positionEventIntervalMs = min(
+45 |       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/PlayerConfiguration.swift:45:17: warning: expression implicitly coerced from 'Any??' to 'Any?'
+43 |     network = YlNetworkConfiguration(map: stringMap(map["network"]))
+44 |     positionEventIntervalMs = min(
+45 |       max(int64(map["positionEventIntervalMs"]) ?? 250, 100),
+   |                 `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+46 |       2_000
+47 |     )
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift:288:34: warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+  4 | /// Only this boundary projects private Pigeon records to native compatibility
+  5 | /// commands and encodes native measurements back to generated callback records.
+  6 | final class YlApplePlayerHost: ApplePlayerHostApi {
+  7 |   let playerId: Int64
+  8 |   let suffix: String
+    :
+286 |   func dispose() async throws {
+287 |     await withCheckedContinuation { continuation in
+288 |       DispatchQueue.main.async { self.close(); continuation.resume() }
+    |                                  `- warning: capture of 'self' with non-Sendable type 'YlApplePlayerHost' in a '@Sendable' closure [#SendableClosureCaptures]
+289 |     }
+290 |   }
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:316:23: warning: capture 'self' was never used [#NoUsage]
+ 314 |     presentation.pause(atHostTimeUs: Self.hostTimeUs())
+ 315 |     YlFallbackTeardownTransaction(
+ 316 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 317 |         tokenToCancel?.cancel()
+ 318 |         mediaToClose?.cancelInput()
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:633:23: warning: capture 'self' was never used [#NoUsage]
+ 631 |     presentation.retireDisplay()
+ 632 |     YlFallbackTeardownTransaction(
+ 633 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 634 |         tokenToCancel?.cancel()
+ 635 |         mediaToClose?.cancelInput()
+
+/private/tmp/yl-p05-business/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:139:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 137 |     pixelBufferAttributes: [
+ 138 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 139 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 140 |     ]
+ 141 |   )
+
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+3 | }
+
+[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>
+[#SendableClosureCaptures]: <https://docs.swift.org/compiler/documentation/diagnostics/sendable-closure-captures>
+/Users/yy2021_8689/.pub-cache/hosted/pub.dev/screen_brightness_macos-1.0.1/macos/Classes/ScreenBrightnessMacosPlugin.swift:83:33: warning: 'kIOMasterPortDefault' was deprecated in macOS 12.0: renamed to 'kIOMainPortDefault' [#DeprecatedDeclaration]
+ 81 |     
+ 82 |     @discardableResult private func getIODisplayConnectServices(iterator: inout io_iterator_t) throws -> kern_return_t {
+ 83 |         var port: mach_port_t = kIOMasterPortDefault
+    |                                 |- warning: 'kIOMasterPortDefault' was deprecated in macOS 12.0: renamed to 'kIOMainPortDefault' [#DeprecatedDeclaration]
+ 84 |         if #available(macOS 12.0, *) {
+ 85 |             port = kIOMainPortDefault
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/strip: warning: changes being made to the file will invalidate the code signature in: /private/tmp/yl-p05-business/tvs/build/macos/Build/Products/Debug/tvs.app/Contents/MacOS/tvs-node
+/private/tmp/yl-p05-business/tvs/build/macos/Build/Products/Debug/tvs.app/Contents/MacOS/tvs-node: replacing existing signature
+warning: Run script build phase 'Run Script' will be run during every build because it does not specify any outputs. To address this issue, either add output dependencies to the script phase, or configure it to run in every build by unchecking "Based on dependency analysis" in the script phase. (in target 'Flutter Assemble' from project 'Runner')
+✓ Built build/macos/Build/Products/Debug/tvs.app

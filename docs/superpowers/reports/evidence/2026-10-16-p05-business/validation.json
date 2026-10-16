@@ -1,0 +1,145 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-16",
+  "devicesUsed": false,
+  "mediaPlaybackExecuted": false,
+  "baselines": {
+    "yl_player": "d32ba4f06ab67b855657bcff6212a4e4b116143b",
+    "tvs": "a4d1ca1ea88e1b7730c9de39e66c55b726acd43a"
+  },
+  "environment": {
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "xcode": "27.1 (27A9275)",
+    "hostOS": "macOS 27.0.1",
+    "hostArchitecture": "arm64",
+    "jdk": "17"
+  },
+  "results": {
+    "tvs": {
+      "passed": 305,
+      "failed": 0,
+      "scope": "all live feature tests plus playback_source_subscriptions"
+    },
+    "resolver": {
+      "passed": 74,
+      "failed": 0,
+      "regular": 55,
+      "controlledFrozen": 19
+    },
+    "nativeSanitizers": {
+      "runtimeChecks": 183,
+      "cleanupChecks": 438,
+      "contextsCreatedFreed": 60,
+      "runtimesCreatedFreed": 60
+    },
+    "archiveGenerator": {
+      "passed": 17
+    },
+    "archive": {
+      "matched": 9,
+      "total": 9
+    },
+    "rtmpTool": {
+      "passed": 3,
+      "failedPrerequisite": 6,
+      "total": 9,
+      "reason": "Pinned MediaMTX archive absent; fails before service startup. No full runner pass claimed."
+    },
+    "analysis": "TVS and resolver clean",
+    "builds": {
+      "androidDebugApp": "passed",
+      "macosDebugApp": "passed",
+      "iosDefaultMultiarchSimulator": "failed: lipo invocation rejects multiarch verification",
+      "iosArm64GenericSimulator": "passed: explicit ARCHS=arm64, no launch/signing",
+      "iosUnsignedDeviceArchitecture": "passed: no signing/installation",
+      "androidAcceptanceEntry": "compiled, not executed"
+    }
+  },
+  "commands": [
+    "TVS: flutter pub get --offline",
+    "TVS: flutter build apk --debug --no-pub",
+    "TVS: flutter build macos --debug --no-pub",
+    "TVS: flutter build ios --simulator --debug --no-pub (failed; --verbose diagnostic retained as excerpt)",
+    "TVS/ios: xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' ARCHS=arm64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_ALLOWED=NO FLUTTER_TARGET=lib/main.dart build",
+    "TVS: flutter build ios --debug --no-codesign --no-pub",
+    "TVS: flutter build apk --debug --no-pub --target integration_test/live_subscription_playback_test.dart",
+    "TVS: flutter test --no-pub --concurrency=1 test/modules/live/features test/modules/player/features/playback_source_subscriptions_test.dart",
+    "TVS: flutter analyze --no-pub",
+    "resolver: flutter test --no-pub --concurrency=1 (includes private generated19-contract entry, deleted after run)",
+    "resolver: flutter analyze --no-pub",
+    "main: SANITIZE=1 sh packages/yl_player_source_resolver/tool/test_native.sh",
+    "main: python3 -B -m unittest discover -s packages/yl_player_source_resolver/tool -p 'test_*.py' -v",
+    "main: python3 -B -m unittest discover -s tool/rtmp_acceptance -p 'test_*.py' -v (3 pass, 6 unavailable prerequisite)",
+    "python3 controlled-host.py --player <isolated player> --archive <restricted originals> --flutter <SDK/bin/flutter>"
+  ],
+  "isolation": "Local clones of baseline commits; TVS five existing absolute path dependencies remapped to isolated core for builds/tests, restored for delivery. Copied existing ignored Android libnode/iOS NodeMobile prerequisites; no device access or shared SDK edits. Artifact identities are local build fingerprints, not trusted provenance or signing verification.",
+  "review": {
+    "model": "gpt-6-astra",
+    "critical": 0,
+    "important": 2,
+    "minor": 1,
+    "fixed": [
+      "Playing check now requires same healthy session and forward clock; modes recheck health",
+      "Owned cleanup separated from unobservable provider async cleanup",
+      "Refresh receipt channel index corrected to current last channel"
+    ],
+    "regression": "2 review assertions RED then7 helper tests GREEN; full305 business regressions and entry rebuild after fixes",
+    "secondReview": false,
+    "deferredMinors": []
+  },
+  "remaining": [
+    "Default iOS multiarch toolchain command",
+    "Signing, assigned-device integration execution and physical audio/video",
+    "Three-platform native termination and nine-original media handoff",
+    "Actual subscription availability and RTMP fault/reconnect acceptance",
+    "Provider asynchronous cleanup completion (receipt explicitly unverified)",
+    "P08 longplay/SLO"
+  ],
+  "sources": {
+    "yl_player": {
+      "docs/superpowers/plans/2026-09-26-remaining-05-live-business.md": "6cff7d5b98a5edef6be8dcf1ce636da5a2c96eabe09779fdda08dd36b2ef6114",
+      "docs/superpowers/plans/2026-09-26-remaining-overview.md": "ac586fe0abfe08572825d24de81418a1be41bd3a49e85076e4b129205d77fb66",
+      "docs/superpowers/reports/2026-09-26-remaining-05-live-business.md": "92235a64f1c359ea2690aa8f1b81db230363e9ff96aa8bed8c508bdfe2fe40c7",
+      "packages/yl_player_source_resolver/test/controlled_clock_test.dart": "e3e6807689386260a0e99e3c6299ebdd17ec328ffab9d8601b404ac65248cd5e",
+      "packages/yl_player_source_resolver/test/support/controlled_contract.dart": "d28c61b81fbe9bd10fadc13a67167139573ea171c9cef4ac86d2d15e7f467a76"
+    },
+    "tvs": {
+      "integration_test/README.md": "67307e07a7abd593a8ad6660975c97a570928f43ff8a7b42579c4957e333ce08",
+      "integration_test/live_subscription_playback_test.dart": "c7d5f8c057f8f233a1c9f59942bf3b833d73f4a948fee716172a75c60527e4a2",
+      "integration_test/support/live_acceptance_capture.dart": "71037d2c7f4fde1dcc91fb51f5eeab9db6a0b40c6696f3215a3d92b2c3cb92ed",
+      "pubspec.lock": "f8270a5f8455c8b700aba615b024350a99e3407b317325aa382b7d691599a038",
+      "pubspec.yaml": "65700e3cdf735d85dfca8dbaa7d22f7c64edf6e21f9efcc4198fafe12e873a35",
+      "test/modules/live/features/live_acceptance_capture_test.dart": "0a7d6df9bc465c49a094a78e021db1d27937b0689b4bab0ac63fd9104ab00989"
+    }
+  },
+  "receipts": {
+    "archive.json": "69d26ffd24041464897099da164fddca695f3a63e21124501ec6eb2a61978478",
+    "controlled-reproduce.log": "6c82b464651c7686e92fbd135beb455aa94ee0d86d18eb53a71923ab612738f4",
+    "ios-simulator-build.log": "fd5a37adba2b8979c5739e6c9ee432c0ffb035090d4779940d26bf8ff0b7c900",
+    "resolver-final.log": "4cb26f31bd920111d7ae71463140152bec40d34f3d3f1aa367f0d4004bb502c6",
+    "rtmp-tool.log": "8f53cfe731f6eec3a78fdf848825cfb81ce9ffa9806a34e7e952fac434318e12",
+    "review-green.log": "2c5d6d28ef25939ae604cb98872506d6fbac8619963b25d32cedaf3df9b90ec3",
+    "ios-device-build.log": "d4278070b09d3090c0b1b7b29a2175d8abc0f32dd025e922c02e701167e0bb97",
+    "ios-multiarch-diagnostic.txt": "dd279a0d64a99a29b90c1d13540b7c67970e70e3584decc06613402a8431c057",
+    "controlled-host.py": "8fcd2c9feb9052084deacc9d8a325555d95efb493ea27692be8bafc9576ce282",
+    "probe.log": "fdb37ad1731e896b28a5429987e42d8d1e74758a90604ad32df44c5843dc360d",
+    "android-build.log": "62ed312f886e3f090c42c5292be64c9ffa7ea5335a0cc61b6fdbc67244fc99d6",
+    "native.log": "98c911ec17480806d3b3aeec3c19dce88b7725792ec71667157e53eb26cca80c",
+    "macos-build.log": "957f1fde9fae731050c8c4f3e79cdb94034c36ce3b8a80a398b9dca6e682572a",
+    "android-entry-final2.log": "157adb4d19d155b75c159ce49686ea3ecb72cb8d7747054aef1f091b30317cac",
+    "capture-red.log": "1878eaaf2c00f227c3a2523662c146a71a49ced870f28501da2923256e5abd01",
+    "pub.log": "b528c21ab03d03830148a85a4b3b0266fa7bd1cc94fc0d3eb519d23ba8f249e8",
+    "tvs-final2.log": "e9401c427b433a2982a8a9cb9d79c4a0db3be456eca4ac998ad861c758b719a4",
+    "resolver-analyze.log": "436a8998661c685675219c1a97d9fe3ae00cce3e7e4cccfaa3f4e5c574050f83",
+    "ios-arm64-build.log.gz": "14089fc8b4c11f0e5b99ec6f7f694d7c0ab3b81a834052c51b2c79ffc7527126",
+    "review-red.log": "f3afb0362ddb2db5f8f3a606084a263203c4813732a22bfa7e3585a678566284",
+    "tvs-final-analyze.log": "33a4a863ebe4261eaccd8ba51272a7c4917ed436f406b7d9138a061a0c86f809",
+    "controlled.log": "ad67f6e3a01856c262871cb02893c0963e0cae694cc16e6df4a26775970dd105",
+    "archive-tool.log": "9f3a19691dfdaee0058e7cc37b0ca4734cbafc57083713c612ff5662d8d52675",
+    "controlled-green.log": "ce7a2c033466a973cef825cff1539b5053f9166b71e736cb6ecbeef6d5e7a852",
+    "build-artifacts.json": "e45920df78524b4b771938eab641217b748f0f5c4acc7b5230fe043171c2519e",
+    "clock-red.log": "f639c197e51f50fdda9285d455a272fa22c3bbc776ff7183b78a3ea0bb6daa00"
+  },
+  "tvsDeliveryCommit": "9082ee533a2f718c10545bc6aa71f8074d28d029"
+}

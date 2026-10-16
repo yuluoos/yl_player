@@ -1,0 +1,83 @@
+00:00 +0: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/crypto_runtime_test.dart
+00:00 +0: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/crypto_runtime_test.dart: pinned CryptoJS has MD5 HMAC and AES CBC known answers
+00:00 +1: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart
+00:01 +1: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: host held headers cancel closes peer socket and permits fresh resolution
+00:01 +2: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: host held headers timeout closes peer socket and permits fresh resolution
+00:02 +3: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: host held headers dispose closes peer socket and permits fresh resolution
+00:02 +4: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: host held body cancel closes peer socket and permits fresh resolution
+00:02 +5: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: host held body timeout closes peer socket and permits fresh resolution
+00:03 +6: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: host held body dispose closes peer socket and permits fresh resolution
+00:03 +7: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: download held headers cancel closes peer socket and permits fresh resolution
+00:03 +8: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: download held headers timeout closes peer socket and permits fresh resolution
+00:04 +9: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: download held headers dispose closes peer socket and permits fresh resolution
+00:04 +10: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: download held body cancel closes peer socket and permits fresh resolution
+00:04 +11: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: download held body timeout closes peer socket and permits fresh resolution
+00:05 +12: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/resource_cleanup_test.dart: download held body dispose closes peer socket and permits fresh resolution
+00:05 +13: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart
+00:06 +13: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: header-free RTMP result converts to a validated live source
+00:06 +14: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: RTMP conversion retains opaque encoded app playpath and query bytes
+00:06 +15: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: RTMP conversion explicitly rejects all nonempty HTTP headers
+00:06 +16: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: RTMP conversion uses core URI validation with safe resolver errors
+00:06 +17: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: RTMPS conversion stays explicitly unsupported
+00:06 +18: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: HTTP conversion keeps credentials and RTMP expiry is checked
+00:06 +19: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: RTMP conversion rechecks expiry after resolution
+00:07 +20: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: reference parser preserves raw query spelling and plus
+00:07 +21: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_models_test.dart: reference rejects unsafe transport and parameters
+00:07 +22: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart
+00:07 +22: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart: JS07 fixture pins ambient clock while preserving Date operations
+00:07 +23: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart: other frozen scripts retain their original execution bytes
+00:07 +24: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart
+00:08 +24: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: frees source input when parameter allocation fails
+00:08 +25: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: real runtime returns main result and preserves parameter bytes
+00:08 +26: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: native deadline terminates infinite JavaScript
+00:08 +27: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: cancel awaits destruction and is safe to repeat
+00:08 +28: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: synchronous host request receives a bounded JSON reply
+00:08 +29: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: cancel wakes a held synchronous host request
+00:08 +30: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: JavaScript errors remain fixed status with no secret payload
+00:08 +31: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/native_runtime_test.dart: async main drains Promise work in the same runtime
+00:08 +32: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart
+00:09 +32: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: fixture AES CBC PKCS7 independent known answer
+00:09 +33: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-01 controlled failures malformed input timeout cancellation
+00:09 +34: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-01 frozen bytes native main controlled success and refresh
+00:09 +35: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-02 controlled failures malformed input timeout cancellation
+00:09 +36: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-02 frozen bytes native main controlled success and refresh
+00:09 +37: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-03 controlled failures malformed input timeout cancellation
+00:09 +38: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-03 frozen bytes native main controlled success and refresh
+00:09 +39: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-04 controlled failures malformed input timeout cancellation
+00:10 +40: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-04 frozen bytes native main controlled success and refresh
+00:10 +41: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-05 controlled failures malformed input timeout cancellation
+00:10 +42: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-05 frozen bytes native main controlled success and refresh
+00:10 +43: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-06 controlled failures malformed input timeout cancellation
+00:10 +44: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-06 frozen bytes native main controlled success and refresh
+00:10 +45: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-07 controlled failures malformed input timeout cancellation
+00:10 +46: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-07 frozen bytes native main controlled success and refresh
+00:10 +47: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-08 controlled failures malformed input timeout cancellation
+00:10 +48: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-08 frozen bytes native main controlled success and refresh
+00:10 +49: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-09 controlled failures malformed input timeout cancellation
+00:10 +50: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-09 frozen bytes native main controlled success and refresh
+00:10 +51: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart
+00:11 +51: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: sync HTTP method contracts and exact post bytes
+00:11 +52: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: sticky A B A strip and same-origin retention
+00:11 +53: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: request exposes status but get HTTP failure is fatal
+00:11 +54: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: count and decompressed response bounds
+00:12 +55: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: held headers cancellation waits settlement
+00:12 +56: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: held body times out within overall deadline
+00:12 +57: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: source credentials are not inherited by host calls
+00:12 +58: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: validated Host is discarded before same and cross origin redirects
+00:12 +59: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: aggregate and redirect-body budgets count bytes before following
+00:12 +60: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: download size and shared download deadline are enforced
+00:12 +61: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_http_test.dart: host advertises supported gzip and cancels held response body
+00:12 +62: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart
+00:14 +62: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: real main returns raw parameters and live credential conversion
+00:14 +63: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: error takes precedence over URL and never exposes payload
+00:14 +64: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: headers reject CRLF injection and conflicting duplicates
+00:14 +65: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: expiry is explicit UTC and expired source rejected
+00:14 +66: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: RTMP live conversion succeeds; file output rejected
+00:14 +67: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: unsupported host API and thrown secrets use safe fixed failures
+00:14 +68: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: parseItems contract handles first equals decoding and null prototype
+00:14 +69: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: cancel and dispose await actual cleanup; fresh resolution works
+00:14 +70: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: deadline stops actual native loop and oversized inputs rejected
+00:14 +71: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: four owned native jobs admission disposal and late result isolation
+00:15 +72: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: heap output limits and malformed parseItems fail safely
+00:15 +73: /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: safe errors correlate each resolution with its fixed phase
+00:15 +74: All tests passed!

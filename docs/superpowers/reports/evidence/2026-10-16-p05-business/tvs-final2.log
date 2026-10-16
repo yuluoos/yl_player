@@ -1,0 +1,334 @@
+00:00 +0: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart
+00:00 +0: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: add in flight rejects direct add without download or write
+00:00 +1: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: add in flight rejects direct refresh without download or write
+00:00 +2: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: add in flight rejects direct batch without download or write
+00:00 +3: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: add in flight rejects direct delete without download or write
+00:00 +4: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: refresh in flight rejects direct add without download or write
+00:00 +5: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: refresh in flight rejects direct refresh without download or write
+00:00 +6: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: refresh in flight rejects direct batch without download or write
+00:00 +7: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: refresh in flight rejects direct delete without download or write
+00:00 +8: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: batch in flight rejects direct add without download or write
+00:00 +9: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: batch in flight rejects direct refresh without download or write
+00:00 +10: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: batch in flight rejects direct batch without download or write
+00:00 +11: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: batch in flight rejects direct delete without download or write
+00:00 +12: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: delete reserves mutation before filesystem awaits and releases after commit
+00:00 +13: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: download failure releases direct mutation for retry
+00:00 +14: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: parse failure releases direct mutation for retry
+00:00 +15: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: read failure releases direct mutation for retry
+00:00 +16: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: persist failure releases direct mutation for retry
+00:00 +17: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_mutation_test.dart: preset import observes live busy error instead of false success then retries
+00:00 +18: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart
+00:02 +18: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播预览显示明确焦点并可确认进入全屏
+00:03 +19: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播加载中进入全屏仍展示上下行流量
+00:03 +20: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播画面比例菜单打开时上下键不触发切台
+00:05 +21: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播控制层左右键只移动焦点而不切换播放源
+00:05 +22: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播进入全屏后控制层会在无操作时自动隐藏
+00:05 +23: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播纯播放时一次确定直接打开列表并保持当前频道焦点
+00:05 +24: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播控制条可见但列表隐藏时确定也直接开列表
+00:05 +25: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 列表隐藏时上下切台并忽略长按重复，控制条可见=true
+00:05 +26: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 列表隐藏时上下切台并忽略长按重复，控制条可见=false
+00:05 +27: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播快捷层切源忽略按键重复并可打开当前频道抽屉
+00:06 +28: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播返回依次关闭抽屉、隐藏控制层、退出全屏
+00:06 +29: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播系统返回同样依次关闭抽屉、控制层和全屏
+00:06 +30: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_tv_focus_test.dart: TV 直播抽屉可向下聚焦频道并确认切换
+00:06 +31: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_media_open_test.dart
+00:07 +31: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_media_open_test.dart: Feature: 系统播放器启动预算 open 原始异常转换为 AppError
+00:07 +32: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_media_open_test.dart: Feature: 系统播放器启动预算 总启动超时覆盖未返回的 open
+00:07 +33: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_media_open_test.dart: Feature: 系统播放器启动预算 成功时原样返回播放器初始化结果
+00:07 +34: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart
+00:09 +34: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: 原线路重连 断流后先重新打开当前地址，不立即换源
+00:09 +35: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: 原线路重连 刚恢复又断流最多重连两次，随后才换源
+00:09 +36: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: 原线路重连 稳定播放后重新获得原线路重连额度
+00:09 +37: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: 原线路重连 原线路连续打开失败两次后切换备用源
+00:09 +38: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: 原线路重连 重连未完成时停止会取消旧恢复
+00:09 +39: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: 原线路重连 重连未完成时切台会取消旧恢复
+00:09 +40: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 失败摘要保留实际源序号，数量有界且不暴露地址
+00:09 +41: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 脚本与 RTMP 会尝试播放，非法端口跳过后继续 HTTP
+00:09 +42: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 没有可用线路时明确显示协议原因，不报解码失败
+00:09 +43: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 空频道和空地址不会抛出 first 异常或停留在加载中
+00:09 +44: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 保存过的多线路地址在播放和断流恢复时也会拆分
+00:09 +45: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 非法 URL 和凭据地址被安全跳过，查询参数及普通 fragment 保持原样
+00:09 +46: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 运行中断流后也跳过不支持的备用源并给出原因
+00:09 +47: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S15: 选择频道开始播放
+00:09 +48: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S16: 切换频道 — 停旧播新
+00:09 +49: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S17: 播放失败 — 进入 error 状态
+00:09 +50: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S18: 停止播放 — 回到 idle，释放资源
+00:09 +51: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S19: 切换频道时等待旧播放停止后再打开新源
+00:09 +52: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S20: 较慢的旧频道完成时不会覆盖新频道
+00:09 +53: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S21: 较慢的旧频道播放准备完成时不会打开旧源
+00:09 +54: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S22: dispose 可重复等待且底层播放器只释放一次
+00:09 +55: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S23: 原线路重连耗尽且无备用源时进入 error 状态
+00:09 +56: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S24: 运行中断流后只尝试当前源之后的备用源
+00:09 +57: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_notifier_test.dart: Feature: 直播频道播放 Scenario S25: 指定的外部源中断后从频道首个备用源恢复
+00:09 +58: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart
+00:10 +58: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: user summary includes opening stage safe reference and guidance network.http_forbidden
+00:10 +59: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: user summary includes opening stage safe reference and guidance network.dns_failed
+00:10 +60: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: script user reference unwraps startup and business failures
+00:10 +61: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: only bounded diagnostic tokens become user references
+00:10 +62: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: keeps eight actual failures with source order and diagnostic identity
+00:10 +63: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: validation skips and actual opens have distinct stages
+00:10 +64: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: untrusted diagnostic fields are bounded and redacted
+00:10 +65: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: runtime failures retain interruption and reconnect identities without adding retries
+00:10 +66: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: RTMP exhausted failure does not add business reconnects
+00:10 +67: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: late cancelled opening after replace cannot replace current diagnostics
+00:10 +68: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: late cancelled opening after stop cannot replace current diagnostics
+00:10 +69: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_attempt_diagnostics_test.dart: late cancelled opening after dispose cannot replace current diagnostics
+00:10 +70: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart
+00:12 +70: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: HTML containing TXT-like channels add preserves absent storage and allows retry
+00:12 +71: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: empty body add preserves absent storage and allows retry
+00:12 +72: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: empty M3U add preserves absent storage and allows retry
+00:12 +73: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: malformed JSON add preserves absent storage and allows retry
+00:12 +74: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: blank channel name add preserves absent storage and allows retry
+00:12 +75: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: HTML containing TXT-like channels add preserves existing storage and allows retry
+00:12 +76: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: empty body add preserves existing storage and allows retry
+00:12 +77: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: empty M3U add preserves existing storage and allows retry
+00:12 +78: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: malformed JSON add preserves existing storage and allows retry
+00:12 +79: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: blank channel name add preserves existing storage and allows retry
+00:12 +80: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_add_transaction_test.dart: partially valid JSON add persists valid entries and keeps existing source
+00:12 +81: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart
+00:13 +81: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: requires explicit ownership and a bounded safe run identity
+00:13 +82: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: accepts only credential-free literal loopback subscription URLs
+00:13 +83: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: rejects absent or malformed subscription digest
+00:13 +84: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: validates every candidate before media can start
+00:13 +85: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: capture is bounded and cannot emit source or arbitrary error text
+00:13 +86: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: play observation rejects failure, stale ownership and clock regression
+00:13 +87: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: owned cleanup never claims unobservable provider cleanup
+00:13 +88: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart
+00:14 +88: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: HTML refresh rejects without altering stored bytes
+00:14 +89: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: HTML with BOM and comments refresh rejects without altering stored bytes
+00:14 +90: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: empty body refresh rejects without altering stored bytes
+00:14 +91: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: whitespace refresh rejects without altering stored bytes
+00:14 +92: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: empty JSON list refresh rejects without altering stored bytes
+00:14 +93: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: empty JSON group refresh rejects without altering stored bytes
+00:14 +94: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: empty M3U refresh rejects without altering stored bytes
+00:14 +95: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: empty TXT refresh rejects without altering stored bytes
+00:14 +96: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: malformed JSON refresh rejects without altering stored bytes
+00:14 +97: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: M3U with only a blank channel name cannot replace saved channels
+00:14 +98: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: partially valid JSON refresh commits valid channels only
+00:14 +99: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_refresh_transaction_test.dart: partial write failure preserves prior file and removes staging files
+00:14 +100: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart
+00:15 +100: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 模式切换保留实际值、限制重复提交，旧频道完成不覆盖新频道
+00:15 +101: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 直播加载时把当前代理速率写入播放状态
+00:17 +102: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 直播从不支持速率读取的源回退到 HTTP 源时恢复实时速率
+00:17 +103: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 普通 Android 直播按 1080p 到 720p 顺序重试 HLS
+00:17 +104: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 切换直播时只保留新的流量会话
+00:17 +105: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 直播运行中断流后 provider 保持同一频道并切换备用源
+00:17 +106: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_session_ownership_test.dart: 旧直播错误等待取消订阅时不会停止新切换的频道
+00:17 +107: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_playback_mode_control_test.dart
+00:17 +107: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 模式失败释放忙碌状态，保留原模式并只显示安全提示
+00:18 +108: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 未知实际模式不显示猜测标签
+00:18 +109: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 切换中显示原模式并禁用重复提交
+00:18 +110: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 实际低延迟模式与候选菜单一致
+00:18 +111: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_playback_mode_control_test.dart: 已知但不支持切换的模式保持只读
+00:18 +112: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart
+00:21 +112: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: core RTMP failure retains safe classification and diagnostics, never native text
+00:21 +113: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: valid RTMP and JavaScript reach the playback boundary
+00:21 +114: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: RTMPS rejection identifies protocol without exposing credentials
+00:21 +115: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: rtmp plays independently of failed proxy initialization
+00:21 +116: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: scriptRtmp plays independently of failed proxy initialization
+00:21 +117: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: scriptHttp plays independently of failed proxy initialization
+00:21 +118: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: rtmp plays independently of pending proxy initialization
+00:21 +119: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: scriptRtmp plays independently of pending proxy initialization
+00:21 +120: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: scriptHttp plays independently of pending proxy initialization
+00:21 +121: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: direct RTMP does not initialize an unused proxy
+00:21 +122: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: proxy-dependent HTTP failure preserves route policy, direct backup=false
+00:21 +123: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: proxy-dependent HTTP failure preserves route policy, direct backup=true
+00:21 +124: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: stop during proxy initialization prevents late loading and traffic updates
+00:21 +125: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: replace during proxy initialization prevents late loading and traffic updates
+00:21 +126: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: dispose during proxy initialization prevents late loading and traffic updates
+00:21 +127: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: direct RTMP including m3u8 in path bypasses proxy and HTTP metadata
+00:21 +128: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: script resolves into live RTMP and explicit retry downloads original reference again
+00:21 +129: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: script HTTP preserves custom credential scope and live intent at native load
+00:21 +130: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: rtmpHeaders gives bounded safe reason and never opens native player
+00:21 +131: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: rtmps gives bounded safe reason and never opens native player
+00:21 +132: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: scriptError gives bounded safe reason and never opens native player
+00:21 +133: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: stop cancels script download and late completion cannot load
+00:21 +134: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: replace cancels script download and late completion cannot load
+00:21 +135: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: dispose cancels script download and late completion cannot load
+00:21 +136: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: stop while native controller is being created prevents a late load
+00:21 +137: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: stop awaits cancellation of a running native script host request
+00:21 +138: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: proxy HTTP recovery to direct RTMP reports unavailable traffic
+00:21 +139: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: proxy HTTP recovery receives traffic updates for its new generation
+00:22 +140: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: HTTP runtime recovery reruns original script to refresh signed URL
+00:22 +141: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh stop ignores late failure=false
+00:22 +142: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh stop ignores late failure=true
+00:23 +143: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh replace ignores late failure=false
+00:23 +144: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh replace ignores late failure=true
+00:23 +145: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh dispose ignores late failure=false
+00:23 +146: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh dispose ignores late failure=true
+00:23 +147: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh expired is bounded, backup=false
+00:23 +148: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh expired is bounded, backup=true
+00:23 +149: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh forbidden is bounded, backup=false
+00:23 +150: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh forbidden is bounded, backup=true
+00:23 +151: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh reported is bounded, backup=false
+00:23 +152: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: runtime script refresh reported is bounded, backup=true
+00:23 +153: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: HTTP to RTMP refresh forbids a second automatic reopen, backup=false
+00:23 +154: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: HTTP to RTMP refresh forbids a second automatic reopen, backup=true
+00:23 +155: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: actual startup wrapper preserves network.rtmp_handshake_failed through notifier and diagnostics
+00:23 +156: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: actual startup wrapper preserves network.rtmp_stream_unavailable through notifier and diagnostics
+00:23 +157: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: actual startup wrapper preserves network.rtmp_disconnected through notifier and diagnostics
+00:23 +158: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: startup wrapper retains allowlisted timeout and unsupported guidance
+00:23 +159: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: final review: runtime disconnect does not claim exhausted recovery
+00:23 +160: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: direct RTMP terminal error never reopens same source
+00:23 +161: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_resolution_test.dart: resolved RTMP terminal error never reopens same source
+00:23 +162: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_view_behavior_test.dart
+00:24 +162: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_view_behavior_test.dart: 直播预览加载态保留频道名与全屏触摸入口
+00:25 +163: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_view_behavior_test.dart: 直播手势提示分别展示亮度和音量百分比
+00:25 +164: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart
+00:25 +164: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: corrupt storage load page displays safe actionable guidance
+00:26 +165: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: unreadable storage load page displays safe actionable guidance
+00:26 +166: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: unknown load error load page displays safe actionable guidance
+00:27 +167: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: 403 guidance reaches refresh UI without raw exception text
+00:27 +168: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: DNS guidance reaches refresh UI without raw exception text
+00:27 +169: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: a distinct action during pending refresh gets explicit busy feedback
+00:28 +170: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: add failure shows safe feedback and ends loading
+00:28 +171: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: refresh failure shows safe feedback and ends loading
+00:29 +172: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_feedback_test.dart: batch failure shows safe feedback and ends loading
+00:29 +173: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart
+00:29 +173: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated one malformed JSON channel cannot discard valid neighbors
+00:29 +174: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated malformed optional JSON metadata cannot discard playable entries
+00:29 +175: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated wrong group shape and empty required fields are skipped individually
+00:29 +176: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated JSON strings containing TXT markers do not change the input format
+00:29 +177: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated TXT group [News] is not misidentified as JSON
+00:29 +178: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated TXT group {News} is not misidentified as JSON
+00:29 +179: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated JSON marker text without a TXT group row stays malformed
+00:29 +180: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated HTML leading comments cannot expose embedded TXT examples
+00:29 +181: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated M3U quoted commas stay in metadata and the entire display name is retained
+00:29 +182: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated M3U display names are not scanned for metadata attributes
+00:29 +183: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated unterminated M3U attribute drops only its own entry
+00:29 +184: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated HTML with embedded playlist examples is not a subscription
+00:29 +185: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: malformed subscription entries stay isolated empty and malformed JSON keep the existing empty-result contract
+00:29 +186: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: TXT 同行多线路拆分，保留签名参数及普通 fragment
+00:29 +187: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: M3U 的 BOM 和同条目备用线路可正常解析
+00:29 +188: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: JSON 同行多线路拆分且保留脚本源供播放时说明原因
+00:29 +189: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: M3U 解析 Scenario S1: 基本频道提取
+00:29 +190: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: M3U 解析 Scenario S2: 提取 group-title / tvg-logo，name 取逗号后显示名
+00:29 +191: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: M3U 解析 Scenario S3: 同名频道不同 URL 保持独立条目
+00:29 +192: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: M3U 解析 Scenario S4: 跳过无效条目（#EXTINF 后无 URL）
+00:29 +193: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: M3U 解析 Scenario S4b: 跳过 #EXTINF 后紧跟空行的条目
+00:29 +194: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: TXT 解析 Scenario S5: 分组 + 频道解析，独立条目
+00:29 +195: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: TXT 解析 Scenario S6: 跳过无效行（不含逗号）
+00:29 +196: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: JSON 解析 Scenario S7: 分组数组解析
+00:29 +197: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: 格式检测与边界 Scenario S8: 自动检测 M3U
+00:29 +198: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: 格式检测与边界 Scenario S8b: 自动检测 TXT
+00:29 +199: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: 格式检测与边界 Scenario S8c: 自动检测 JSON
+00:29 +200: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: 格式检测与边界 Scenario S8d: 无法识别的格式返回空列表
+00:29 +201: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_parser_test.dart: Feature: 格式检测与边界 Scenario S9: 空文本返回空列表
+00:29 +202: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/channel_list_view_tv_focus_test.dart
+00:30 +202: /private/tmp/yl-p05-business/tvs/test/modules/live/features/channel_list_view_tv_focus_test.dart: TV 分组栏占四成且长名称不省略
+00:30 +203: /private/tmp/yl-p05-business/tvs/test/modules/live/features/channel_list_view_tv_focus_test.dart: TV 打开频道面板可见当前频道的远端分组
+00:31 +204: /private/tmp/yl-p05-business/tvs/test/modules/live/features/channel_list_view_tv_focus_test.dart: TV 遥控焦点与播放频道独立，确认直接播放多线路频道
+00:31 +205: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart
+00:31 +205: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 多个源共用备用线路时按正在播放的线路识别当前源
+00:31 +206: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 上下按当前源的分组顺序切台并在首尾循环，不跨直播源
+00:31 +207: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 同组同名多线路频道只占一个切台位置并保留全部线路
+00:31 +208: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 切台还在加载时再次按键以最新请求频道为起点
+00:31 +209: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 新频道播放失败后仍可以继续切到下一台
+00:31 +210: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 空列表或单频道不产生重复播放请求 0
+00:31 +211: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_channel_shortcuts_test.dart: 空列表或单频道不产生重复播放请求 1
+00:31 +212: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart
+00:32 +212: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: HTTP403 becomes safe download refusal without guessing expiry
+00:32 +213: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: SDK host lookup SocketException becomes DNS; IDs differ per failure
+00:32 +214: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: connection refused SocketException is not mislabeled DNS
+00:32 +215: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: arbitrary exception text cannot impersonate DNS or leak details
+00:32 +216: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: HTTP503 preserves status without claiming forbidden or DNS
+00:32 +217: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: successful JSON content stays text for subscription parser
+00:32 +218: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: failed refresh preserves persisted channels and can later recover
+00:32 +219: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: batch rejects HTML and empty lists but commits a later valid source
+00:32 +220: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_subscription_errors_test.dart: batch refresh reports partial failure and still refreshes later sources
+00:32 +221: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_page_tv_focus_test.dart
+00:33 +221: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_page_tv_focus_test.dart: TV 频道面板可打开来源菜单并切换频道集合
+00:34 +222: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_page_tv_focus_test.dart: TV 进入直播时首个可播放频道获得初始焦点
+00:34 +223: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_page_tv_focus_test.dart: TV 无直播源时管理入口获得初始焦点
+00:34 +224: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart
+00:36 +224: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 手机长列表切台保持当前位置
+00:37 +225: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 手机点击多线路频道直接播放，线路入口独立选择
+00:37 +226: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 手机分组与频道使用左右双竖栏，切组不切台
+00:37 +227: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 手机滚动频道时预览和当前频道固定
+00:37 +228: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 平板及 Mac Size(1194.0, 834.0) 左侧视频与右侧常驻频道约七三分栏 (variant: TargetPlatform.iOS)
+00:37 +229: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 平板及 Mac Size(960.0, 600.0) 左侧视频与右侧常驻频道约七三分栏 (variant: TargetPlatform.android)
+00:37 +230: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 平板及 Mac Size(1000.0, 550.0) 左侧视频与右侧常驻频道约七三分栏 (variant: TargetPlatform.macOS)
+00:38 +231: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 平板线路触摸切换、全屏返回及旋转保留播放状态
+00:38 +232: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: 手机横屏频道面板加宽且播放中频道不溢出
+00:38 +233: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: TV 沉浸页遥控返回收起面板后退出到首页并停止播放
+00:38 +234: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: TV 沉浸页系统返回收起面板后退出到首页并停止播放
+00:39 +235: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_redesign_test.dart: TV 沉浸页Android返回收起面板后退出到首页并停止播放
+00:39 +236: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart
+00:40 +236: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart: 直播源保留名称和 URL 两项输入 Size(390.0, 844.0)
+00:41 +237: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart: 直播源保留名称和 URL 两项输入 Size(1194.0, 834.0)
+00:41 +238: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart: 直播源保留名称和 URL 两项输入 Size(1920.0, 1080.0)
+00:41 +239: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart: TV 添加直播源先选择手机扫码或遥控器输入
+00:41 +240: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart: TV 选择手机扫码后显示直播源 URL 扫码页面
+00:42 +241: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_management_layout_test.dart: TV 确认手机提交的直播源 URL 后回填添加表单
+00:42 +242: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart
+00:43 +242: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart: Feature: 直播源管理 重命名持久化，重新打开和刷新都保留名称及频道
+00:43 +243: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart: Feature: 直播源管理 Scenario S10: 添加直播源 — 下载、解析、持久化
+00:43 +244: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart: Feature: 直播源管理 Scenario S11: 添加重复 URL — 拒绝
+00:43 +245: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart: Feature: 直播源管理 Scenario S12: 刷新直播源 — 重新下载并更新
+00:43 +246: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart: Feature: 直播源管理 Scenario S13: 删除直播源
+00:44 +247: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_notifier_test.dart: Feature: 直播源管理 Scenario S14: 下载失败 — 不保存，抛出异常
+00:44 +248: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart
+00:45 +248: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 全屏左滑下一线路、右滑上一线路，一次长滑只切换一次
+00:46 +249: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 首尾不循环、不重新播放
+00:46 +250: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 单线路左右滑动不重新播放
+00:46 +251: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 短滑动和取消手势不切线路
+00:46 +252: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 上下滑动保留左右两侧亮度、音量调节且不切线路
+00:47 +253: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 横向轴锁定后上下偏移不调节亮度音量
+00:47 +254: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 连续滑动从最新请求线路开始，已进入加载状态=false
+00:47 +255: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_line_swipe_test.dart: 连续滑动从最新请求线路开始，已进入加载状态=true
+00:47 +256: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart
+00:48 +256: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart: 旧页面未完成的常亮请求不会覆盖重新进入直播的请求
+00:48 +257: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart: 直播预览加载、播放及重新缓冲时保持常亮，停止后释放
+00:50 +258: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart: 退出直播全屏后预览仍保持常亮，离开页面后释放
+00:50 +259: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart: 直播进入后台释放常亮，恢复前台重新开启
+00:50 +260: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart: 直播失败释放常亮，重试播放再次开启
+00:50 +261: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_screen_awake_test.dart: 平台常亮调用失败不会阻塞后续关闭与重试
+00:50 +262: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart
+00:51 +262: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: empty file blocks all CRUD without resetting storage or downloading
+00:51 +263: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: whitespace file blocks all CRUD without resetting storage or downloading
+00:51 +264: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: truncated JSON blocks all CRUD without resetting storage or downloading
+00:51 +265: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: wrong root blocks all CRUD without resetting storage or downloading
+00:51 +266: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: invalid source field blocks all CRUD without resetting storage or downloading
+00:51 +267: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: invalid channel field blocks all CRUD without resetting storage or downloading
+00:51 +268: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: invalid UTF8 blocks all CRUD without resetting storage or downloading
+00:51 +269: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: overflowing channel index blocks all CRUD without resetting storage or downloading
+00:51 +270: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: missing file and valid empty list are empty storage and can add
+00:51 +271: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: valid legacy source without channels remains readable
+00:51 +272: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: duplicate rejection is safe and preserves the original bytes
+00:51 +273: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: missing source refresh gives safe guidance without downloading
+00:51 +274: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: missing source rename gives safe guidance without downloading
+00:51 +275: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: empty name rejection retains safe actionable guidance
+00:51 +276: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: directory at storage file is a read error, not an empty list
+00:51 +277: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_storage_errors_test.dart: permission failure is safe and cannot be interpreted as missing storage
+00:51 +278: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_error_message_test.dart
+00:52 +278: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_error_message_test.dart: long error is readable with touch, fullscreen=false
+00:54 +279: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_error_message_test.dart: long error is readable with touch, fullscreen=true
+00:54 +280: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_error_message_test.dart: TV error details accept arrow scrolling, fullscreen=false
+00:54 +281: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_error_message_test.dart: TV error details accept arrow scrolling, fullscreen=true
+00:54 +282: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart
+00:55 +282: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: pending refresh (200) rejects rename then allows retry
+00:56 +283: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: pending refresh (403) rejects rename then allows retry
+00:57 +284: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: in-flight rename rejects delete and keeps first persisted name
+00:57 +285: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: in-flight rename rejects rename and keeps first persisted name
+00:57 +286: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: direct refresh rejects feedback rename without changing the file
+00:57 +287: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: feedback rename blocks direct deletion and releases after commit
+00:57 +288: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_source_rename_feedback_test.dart: rename read failure gives safe reference and releases busy state
+00:57 +289: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart
+00:59 +289: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 自动恢复到备用线路后从实际播放线路继续左右切换
+01:00 +290: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播 buffering 持续停滞先重连原线路两次再切换备用线路
+01:00 +291: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播 playing 持续停滞先重连原线路两次再切换备用线路
+01:00 +292: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播窗口滚动使采样位置相同，期间持续推进不会误重连
+01:00 +293: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 持续上报状态但位置不推进，仍会触发原线路恢复
+01:00 +294: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播窗口外位置持续为零但媒体时钟推进，不重连
+01:00 +295: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 媒体时钟新周期会中断稳定播放累计，不提前重置重连额度
+01:00 +296: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 单线路直播停滞会结束缓冲并报告错误
+01:00 +297: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 推进 25 秒，短暂缓冲 false 的重连额度判断
+01:00 +298: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 推进 30 秒，短暂缓冲 false 的重连额度判断
+01:00 +299: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 推进 30 秒，短暂缓冲 true 的重连额度判断
+01:00 +300: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 直播进度推进和暂停会清除停滞累计，停止后不再恢复
+01:00 +301: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 原生长时间缓冲刚恢复播放时不会被应用抢先重开
+01:00 +302: /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_player_stall_recovery_test.dart: 切台后旧频道的停滞累计不影响新频道
+01:00 +303: loading /private/tmp/yl-p05-business/tvs/test/modules/player/features/playback_source_subscriptions_test.dart
+01:01 +303: /private/tmp/yl-p05-business/tvs/test/modules/player/features/playback_source_subscriptions_test.dart: Feature: 切集时隔离播放源事件 Scenario S1: 切源期间旧进度事件不会进入新播放源
+01:01 +304: /private/tmp/yl-p05-business/tvs/test/modules/player/features/playback_source_subscriptions_test.dart: Feature: 切集时隔离播放源事件 Scenario S2: 被更新切源请求淘汰的 generation 无法重新绑定
+01:02 +305: All tests passed!

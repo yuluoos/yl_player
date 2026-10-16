@@ -156,6 +156,26 @@ ScriptHttpReply fixtureResponse(String id, Map<String, String> headers) {
   return ScriptHttpReply(200, utf8.encode(jsonEncode(body)));
 }
 
+// JS-07 derives its media path from the ambient date. Keep the original bytes
+// and historical path digest, but make its controlled environment reproducible.
+// This is fixture-only: production resolution continues to use the real clock.
+String controlledScriptSource(String id, String source) => id != 'JS-07'
+    ? source
+    : r'''(() => {
+  const NativeDate = Date;
+  const epoch = NativeDate.UTC(2026, 8, 22, 12);
+  function ControlledDate(...args) {
+    if (!new.target) return new NativeDate(epoch).toString();
+    return Reflect.construct(NativeDate, args.length ? args : [epoch], new.target);
+  }
+  Object.setPrototypeOf(ControlledDate, NativeDate);
+  ControlledDate.prototype = NativeDate.prototype;
+  ControlledDate.now = () => epoch;
+  globalThis.Date = ControlledDate;
+})();
+''' +
+          source;
+
 /// Both host tests and generated device tests use this exact fixture suite.
 /// Sources must contain original UTF-8 bytes; no original script is tracked.
 void registerControlledContracts(Map<String, String> base64Sources) {
@@ -179,7 +199,10 @@ void registerControlledContracts(Map<String, String> base64Sources) {
     test(
       '${entry.key} controlled failures malformed input timeout cancellation',
       () async {
-        final source = utf8.decode(base64Decode(base64Sources[entry.key]!));
+        final source = controlledScriptSource(
+          entry.key,
+          utf8.decode(base64Decode(base64Sources[entry.key]!)),
+        );
         final resolver = YlScriptResolver();
         addTearDown(resolver.dispose);
         await withScriptHttpFixture(
@@ -272,7 +295,7 @@ void registerControlledContracts(Map<String, String> base64Sources) {
         final raw = base64Decode(base64Sources[entry.key]!);
         // Assert only digests; never expose source bytes or returned real hosts.
         expect(sha256.convert(raw).toString(), entry.value.$3);
-        final source = utf8.decode(raw);
+        final source = controlledScriptSource(entry.key, utf8.decode(raw));
         var calls = 0;
         final resolver = YlScriptResolver();
         addTearDown(resolver.dispose);

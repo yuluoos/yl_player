@@ -1,0 +1,22 @@
+test_audit_keeps_missing_and_changed_rows_in_denominator (test_generate_controlled_integration.ArchiveTests.test_audit_keeps_missing_and_changed_rows_in_denominator) ... ok
+test_failure_does_not_replace_existing_entry (test_generate_controlled_integration.ArchiveTests.test_failure_does_not_replace_existing_entry) ... ok
+test_generation_preserves_exact_bytes_and_private_permissions (test_generate_controlled_integration.ArchiveTests.test_generation_preserves_exact_bytes_and_private_permissions) ... ok
+test_invalid_utf8_has_safe_diagnostic (test_generate_controlled_integration.ArchiveTests.test_invalid_utf8_has_safe_diagnostic) ... ok
+test_linked_output_directory_refused_for_generation_and_removal (test_generate_controlled_integration.ArchiveTests.test_linked_output_directory_refused_for_generation_and_removal) ... ok
+test_missing_or_linked_archive_reports_nine_unavailable_rows (test_generate_controlled_integration.ArchiveTests.test_missing_or_linked_archive_reports_nine_unavailable_rows) ... ok
+test_output_symlink_does_not_overwrite_other_file (test_generate_controlled_integration.ArchiveTests.test_output_symlink_does_not_overwrite_other_file) ... ok
+test_refuses_fifo_without_blocking (test_generate_controlled_integration.ArchiveTests.test_refuses_fifo_without_blocking) ... ok
+test_refuses_input_symlink (test_generate_controlled_integration.ArchiveTests.test_refuses_input_symlink) ... ok
+test_refuses_oversized_script_without_reading_all_of_it (test_generate_controlled_integration.ArchiveTests.test_refuses_oversized_script_without_reading_all_of_it) ... ok
+test_refuses_public_archive_and_file_permissions (test_generate_controlled_integration.ArchiveTests.test_refuses_public_archive_and_file_permissions) ... ok
+test_refuses_unignored_and_tracked_output (test_generate_controlled_integration.ArchiveTests.test_refuses_unignored_and_tracked_output) ... ok
+test_rejects_invalid_manifest_ids_and_paths (test_generate_controlled_integration.ArchiveTests.test_rejects_invalid_manifest_ids_and_paths) ... ok
+test_remove_is_idempotent_and_does_not_touch_archive (test_generate_controlled_integration.ArchiveTests.test_remove_is_idempotent_and_does_not_touch_archive) ... ok
+test_replace_failure_preserves_previous_entry_and_cleans_temporary (test_generate_controlled_integration.ArchiveTests.test_replace_failure_preserves_previous_entry_and_cleans_temporary) ... ok
+test_verify_only_reports_all_original_hashes_without_writing (test_generate_controlled_integration.ArchiveTests.test_verify_only_reports_all_original_hashes_without_writing) ... ok
+test_shared_contract_still_matches_historical_frozen_ledger (test_generate_controlled_integration.FrozenManifestTests.test_shared_contract_still_matches_historical_frozen_ledger) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.498s
+
+OK

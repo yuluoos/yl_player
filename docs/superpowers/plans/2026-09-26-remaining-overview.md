@@ -668,3 +668,12 @@ P03 已接入 PS/AVC、非零 Vorbis delay、Apple AV1/VP9 软件候选和两端
 TVS 实际模式入口已完成代码实现和离线验证；三协议真实采集入口已准备。
 未占用测试设备。P04 的真实弱网 ABR/fixed/caps、三协议物理音画/积压证据与 P08
 SLO 验收仍开放，不能标记整个 CAP-LIVE/CAP-ABR 通过。详见[P04报告](../reports/2026-09-26-remaining-04-abr-live.md)。
+
+### 2026-10-16 P05 当前依赖与业务验收入口
+
+完成最新依赖下的 TVS 直播/订阅回归、九脚本本机受控复验、原生清理与 App 编译。
+JS-07 仅固定受控测试时钟，保留原脚本和历史摘要。TVS 新增真实后端业务验收入口
+及必要 SDK 测试依赖，本轮编译入口但未在设备运行。Android/macOS、iOS arm64
+模拟器及无签名设备架构编译通过；默认 iOS 多架构 lipo 失败与缺少 MediaMTX 归档
+导致的工具测试失败单列。三端实际媒体、在线订阅、故障注入、签名与 P08 仍开放。
+详见 [P05 报告](../reports/2026-09-26-remaining-05-live-business.md)。

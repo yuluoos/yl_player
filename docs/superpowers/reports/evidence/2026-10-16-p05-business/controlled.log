@@ -1,0 +1,37 @@
+00:00 +0: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart
+00:00 +0: fixture AES CBC PKCS7 independent known answer
+00:00 +1: JS-01 controlled failures malformed input timeout cancellation
+00:00 +2: JS-01 frozen bytes native main controlled success and refresh
+00:00 +3: JS-02 controlled failures malformed input timeout cancellation
+00:00 +4: JS-02 frozen bytes native main controlled success and refresh
+00:00 +5: JS-03 controlled failures malformed input timeout cancellation
+00:00 +6: JS-03 frozen bytes native main controlled success and refresh
+00:00 +7: JS-04 controlled failures malformed input timeout cancellation
+00:00 +8: JS-04 frozen bytes native main controlled success and refresh
+00:00 +9: JS-05 controlled failures malformed input timeout cancellation
+00:00 +10: JS-05 frozen bytes native main controlled success and refresh
+00:00 +11: JS-06 controlled failures malformed input timeout cancellation
+00:00 +12: JS-06 frozen bytes native main controlled success and refresh
+00:00 +13: JS-07 controlled failures malformed input timeout cancellation
+00:00 +14: JS-07 frozen bytes native main controlled success and refresh
+00:00 +14 -1: JS-07 frozen bytes native main controlled success and refresh [E]
+  Expected: '10502e8ad9a86c4146cad208b0e808bf1b0eeb14f66f40933d5c442882e828fd'
+    Actual: 'bfe2bfba92acd5aaa6bfb4824f8b72284561cc2a3f35dc99f2fadd7539aefc49'
+     Which: is different.
+            Expected: 10502e8ad9 ...
+              Actual: bfe2bfba92 ...
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/support/controlled_contract.dart 296:17        registerControlledContracts.<fn>.<fn>
+  
+00:00 +14 -1: JS-08 controlled failures malformed input timeout cancellation
+00:01 +15 -1: JS-08 frozen bytes native main controlled success and refresh
+00:01 +16 -1: JS-09 controlled failures malformed input timeout cancellation
+00:01 +17 -1: JS-09 frozen bytes native main controlled success and refresh
+00:01 +18 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/p05_controlled_private_test.dart: JS-07 frozen bytes native main controlled success and refresh

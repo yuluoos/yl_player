@@ -1,0 +1,29 @@
+00:00 +0: loading /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart
+00:00 +0: requires explicit ownership and a bounded safe run identity
+00:00 +1: accepts only credential-free literal loopback subscription URLs
+00:00 +2: rejects absent or malformed subscription digest
+00:00 +3: validates every candidate before media can start
+00:00 +4: capture is bounded and cannot emit source or arbitrary error text
+00:00 +5: play observation rejects failure, stale ownership and clock regression
+00:00 +5 -1: play observation rejects failure, stale ownership and clock regression [E]
+  Expected: false
+    Actual: <true>
+  
+  package:matcher                                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18                  expect
+  test/modules/live/features/live_acceptance_capture_test.dart 113:5  main.<fn>
+  
+00:00 +5 -1: owned cleanup never claims unobservable provider cleanup
+00:00 +5 -2: owned cleanup never claims unobservable provider cleanup [E]
+  Expected: not <true>
+    Actual: <true>
+  
+  package:matcher                                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18                  expect
+  test/modules/live/features/live_acceptance_capture_test.dart 126:5  main.<fn>
+  
+00:00 +5 -2: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: owned cleanup never claims unobservable provider cleanup
+  /private/tmp/yl-p05-business/tvs/test/modules/live/features/live_acceptance_capture_test.dart: play observation rejects failure, stale ownership and clock regression

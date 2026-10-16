@@ -1,0 +1,8 @@
+Flutter3.44 / Xcode27.1, default generic simulator command.
+Target debug_unpack_ios failed: Exception: Binary /private/tmp/yl-p05-business/tvs/build/ios/Debug-iphonesimulator/Flutter.framework/Flutter does not contain architectures "arm64 x86_64".
+
+                      lipo -info:
+                      Architectures in the fat file: /private/tmp/yl-p05-business/tvs/build/ios/Debug-iphonesimulator/Flutter.framework/Flutter are: x86_64 arm64 
+
+                      
+Direct reproduction: /usr/bin/lipo <fat Flutter framework> -verify_arch arm64 x86_64 -> requires exactly one input file; single arm64 verification succeeds. No SDK changes.

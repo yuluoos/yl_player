@@ -1,0 +1,20 @@
+00:00 +0: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart
+test/controlled_clock_test.dart:9:49: Error: Method not found: 'controlledScriptSource'.
+    final result = await resolver.resolveSource(controlledScriptSource('JS-07', '''
+                                                ^^^^^^^^^^^^^^^^^^^^^^
+test/controlled_clock_test.dart:22:14: Error: Method not found: 'controlledScriptSource'.
+      expect(controlledScriptSource(id, 'original'), 'original');
+             ^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart [E]
+  Failed to load "/private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart":
+  Compilation failed for testPath=/private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart: test/controlled_clock_test.dart:9:49: Error: Method not found: 'controlledScriptSource'.
+      final result = await resolver.resolveSource(controlledScriptSource('JS-07', '''
+                                                  ^^^^^^^^^^^^^^^^^^^^^^
+  test/controlled_clock_test.dart:22:14: Error: Method not found: 'controlledScriptSource'.
+        expect(controlledScriptSource(id, 'original'), 'original');
+               ^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart: loading /private/tmp/yl-p05-business/yl_player/packages/yl_player_source_resolver/test/controlled_clock_test.dart

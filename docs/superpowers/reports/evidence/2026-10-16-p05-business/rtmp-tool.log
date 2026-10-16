@@ -1,0 +1,242 @@
+test_close_cancels_and_retires_active_reader (test_run.ProxyReaderTest.test_close_cancels_and_retires_active_reader) ... ok
+test_repeated_eof_retires_reader_tasks (test_run.ProxyReaderTest.test_repeated_eof_retires_reader_tasks) ... ok
+test_cancel_receipt_preserves_cancellation (test_run.RunnerTest.test_cancel_receipt_preserves_cancellation) ... FAIL
+test_exited_leader_descendant_cleanup (test_run.RunnerTest.test_exited_leader_descendant_cleanup) ... FAIL
+test_nonzero_receipt_preserves_exit (test_run.RunnerTest.test_nonzero_receipt_preserves_exit) ... FAIL
+test_permission_probe_waits_for_confirmed_group_exit (test_run.RunnerTest.test_permission_probe_waits_for_confirmed_group_exit) ... ok
+test_success_receipt (test_run.RunnerTest.test_success_receipt) ... FAIL
+test_term_resistant_descendant_cleanup (test_run.RunnerTest.test_term_resistant_descendant_cleanup) ... FAIL
+test_timeout_receipt_preserves_failure (test_run.RunnerTest.test_timeout_receipt_preserves_failure) ... FAIL
+
+======================================================================
+FAIL: test_cancel_receipt_preserves_cancellation (test_run.RunnerTest.test_cancel_receipt_preserves_cancellation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 228, in test_cancel_receipt_preserves_cancellation
+    self.run_case('cancel', 1, 'cancelled')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 171, in run_case
+    self.assertTrue(record.exists(), output.read_text())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 239, in <module>
+    raise SystemExit(runner_fixture(sys.argv[2], sys.argv[3]))
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 79, in runner_fixture
+    return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/run.py", line 230, in main
+    assert hashlib.sha256((PEER / 'mediamtx.tar.gz').read_bytes()).hexdigest() == '25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef'
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/yl-rtmp-foundation/mediamtx.tar.gz'
+
+
+======================================================================
+FAIL: test_exited_leader_descendant_cleanup (test_run.RunnerTest.test_exited_leader_descendant_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 231, in test_exited_leader_descendant_cleanup
+    self.run_case('exited', 0, 'success')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 171, in run_case
+    self.assertTrue(record.exists(), output.read_text())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 239, in <module>
+    raise SystemExit(runner_fixture(sys.argv[2], sys.argv[3]))
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 79, in runner_fixture
+    return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/run.py", line 230, in main
+    assert hashlib.sha256((PEER / 'mediamtx.tar.gz').read_bytes()).hexdigest() == '25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef'
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/yl-rtmp-foundation/mediamtx.tar.gz'
+
+
+======================================================================
+FAIL: test_nonzero_receipt_preserves_exit (test_run.RunnerTest.test_nonzero_receipt_preserves_exit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 222, in test_nonzero_receipt_preserves_exit
+    self.run_case('nonzero', 7, 'nonzero_exit')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 171, in run_case
+    self.assertTrue(record.exists(), output.read_text())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 239, in <module>
+    raise SystemExit(runner_fixture(sys.argv[2], sys.argv[3]))
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 79, in runner_fixture
+    return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/run.py", line 230, in main
+    assert hashlib.sha256((PEER / 'mediamtx.tar.gz').read_bytes()).hexdigest() == '25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef'
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/yl-rtmp-foundation/mediamtx.tar.gz'
+
+
+======================================================================
+FAIL: test_success_receipt (test_run.RunnerTest.test_success_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 219, in test_success_receipt
+    self.run_case('success', 0, 'success')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 171, in run_case
+    self.assertTrue(record.exists(), output.read_text())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 239, in <module>
+    raise SystemExit(runner_fixture(sys.argv[2], sys.argv[3]))
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 79, in runner_fixture
+    return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/run.py", line 230, in main
+    assert hashlib.sha256((PEER / 'mediamtx.tar.gz').read_bytes()).hexdigest() == '25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef'
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/yl-rtmp-foundation/mediamtx.tar.gz'
+
+
+======================================================================
+FAIL: test_term_resistant_descendant_cleanup (test_run.RunnerTest.test_term_resistant_descendant_cleanup)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 234, in test_term_resistant_descendant_cleanup
+    self.run_case('resistant', 1, 'timeout')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 171, in run_case
+    self.assertTrue(record.exists(), output.read_text())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 239, in <module>
+    raise SystemExit(runner_fixture(sys.argv[2], sys.argv[3]))
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 79, in runner_fixture
+    return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/run.py", line 230, in main
+    assert hashlib.sha256((PEER / 'mediamtx.tar.gz').read_bytes()).hexdigest() == '25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef'
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/yl-rtmp-foundation/mediamtx.tar.gz'
+
+
+======================================================================
+FAIL: test_timeout_receipt_preserves_failure (test_run.RunnerTest.test_timeout_receipt_preserves_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 225, in test_timeout_receipt_preserves_failure
+    self.run_case('timeout', 1, 'timeout')
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 171, in run_case
+    self.assertTrue(record.exists(), output.read_text())
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true : Traceback (most recent call last):
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 239, in <module>
+    raise SystemExit(runner_fixture(sys.argv[2], sys.argv[3]))
+                     ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/test_run.py", line 79, in runner_fixture
+    return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
+           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/private/tmp/yl-p05-business/yl_player/tool/rtmp_acceptance/run.py", line 230, in main
+    assert hashlib.sha256((PEER / 'mediamtx.tar.gz').read_bytes()).hexdigest() == '25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef'
+                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/private/tmp/yl-rtmp-foundation/mediamtx.tar.gz'
+
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.897s
+
+FAILED (failures=6)
