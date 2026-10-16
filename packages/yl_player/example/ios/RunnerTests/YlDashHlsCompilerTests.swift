@@ -535,7 +535,12 @@ final class YlDashHlsCompilerTests: XCTestCase {
 
   func testSinglePeriodProducesMapDurationsAndRewrittenManifestReference() throws {
     var resources: [String] = []
-    let p = try compile(mpd(period()), seen: { resources.append($0.absoluteString); XCTAssertFalse($1) })
+    let manifest = mpd(period()).replacingOccurrences(of: "<MPD ",
+      with: "<MPD xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd\" ")
+    let p = try compile(manifest, seen: { resources.append($0.absoluteString); XCTAssertFalse($1) })
+    XCTAssertNoThrow(try compile(manifest.replacingOccurrences(of: "xsi:", with: "schema:").replacingOccurrences(of: "xmlns:xsi", with: "xmlns:schema")))
+    XCTAssertThrowsError(try compile(manifest.replacingOccurrences(of: "http://www.w3.org/2001/XMLSchema-instance", with: "urn:untrusted")))
+    XCTAssertThrowsError(try compile(manifest.replacingOccurrences(of: "xsi:schemaLocation", with: "xsi:unexpected")))
     XCTAssertEqual(p.durationUs, 4_000_000)
     XCTAssertEqual(p.manifests.count, 2)
     XCTAssertEqual(resources, ["https://origin.test/dash/init-v.mp4", "https://origin.test/dash/seg-001.m4s", "https://origin.test/dash/seg-002.m4s"])

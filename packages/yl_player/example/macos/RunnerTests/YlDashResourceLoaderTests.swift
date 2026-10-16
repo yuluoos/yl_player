@@ -2578,7 +2578,14 @@ extension YlDashSampleSourceNativeTests {
     let data = try Data(contentsOf: XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-program-fixtures", withExtension: "json")))
     let files = try JSONDecoder().decode([String: String].self, from: data).compactMapValues { Data(base64Encoded: $0) }
     server.handler = { request in
-      guard request.headers["authorization"] == "owned-program", let bytes = files[String(request.path.dropFirst())] else { return (403, [:], Data()) }
+      let path = request.path.replacingOccurrences(of: "/proxy/mpd/", with: "/")
+      let name = path == "/.bin" ? "independent-pto.mpd" : String(path.dropFirst())
+      guard request.headers["authorization"] == "owned-program", let bytes = files[name] else { return (403, [:], Data()) }
+      if name.hasSuffix(".mpd") {
+        let xml = String(decoding: bytes, as: UTF8.self).replacingOccurrences(of: "<MPD ",
+          with: "<MPD xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"urn:mpeg:dash:schema:mpd:2011 DASH-MPD.xsd\" ")
+        return (200, ["Content-Type": "application/dash+xml"], Data(xml.utf8))
+      }
       return (200, [:], bytes)
     }
     for mode in 0..<3 {
@@ -2594,8 +2601,8 @@ extension YlDashSampleSourceNativeTests {
           if case .failure(let error) = event.event { errors.append(error) }
         })
       defer { coordinator.dispose() }
-      let source = YlAppleSourceDescriptor(uri: server.url("/independent-pto.mpd").absoluteString,
-        kind: .network, formatHint: .dash, credentials: ["Authorization": "owned-program"],
+      let source = YlAppleSourceDescriptor(uri: server.url(mode == 0 ? "/proxy/mpd/.bin" : "/independent-pto.mpd").absoluteString,
+        kind: .network, formatHint: mode == 0 ? .automatic : .dash, credentials: ["Authorization": "owned-program"],
         networkPolicy: mode == 1 ? .managed : .platformDefault,
         loadOptions: .init(autoplay: true, startPositionMs: 500, decoderPolicy: mode == 2 ? .hardwareRequired : .systemDefault))
       do { try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in

@@ -1185,6 +1185,25 @@ final class YlEngineAssessmentTests: XCTestCase {
     let cancelled = YlOpenCancellationToken(); cancelled.cancel()
     XCTAssertThrowsError(try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: cancelled))
     XCTAssertEqual(YlSourceInspector.format(Data([0x1a, 0x45, 0xdf, 0xa3])), .automatic)
+    // Proxy manifests can use .bin paths: identify only the actual XML root.
+    for manifest in [
+      "<MPD xmlns=\"urn:mpeg:dash:schema:mpd:2011\" type=\"static\"><Period>",
+      "\u{feff}<?xml version=\"1.0\"?><!-- proxy --><MPD>",
+      "<d:MPD xmlns:d=\"urn:mpeg:dash:schema:mpd:2011\">",
+    ] {
+      try Data(manifest.utf8).write(to: file)
+      let resolved = try YlSourceInspector.inspect(.init(uri: file.absoluteString, kind: .file),
+        configuration: .init(map: [:]), token: .init())
+      XCTAssertEqual(resolved.formatHint, .dash)
+      let proxy = YlAppleSourceDescriptor(uri: "https://example.invalid/proxy/mpd/32/.bin",
+        kind: .network, formatHint: resolved.formatHint, intent: .onDemand)
+      XCTAssertEqual(YlEngineRouter.assess(proxy).candidate, .dashHls)
+    }
+    for invalid in ["<html><MPD/></html>", "<!-- <MPD/> --><html/>", "<MPDExtra/>",
+                    "<MPD", "<MPD xmlns=\"urn:other\"/>",
+                    "<!DOCTYPE MPD SYSTEM \"https://example.invalid/schema\"><MPD/>"] {
+      XCTAssertEqual(YlSourceInspector.format(Data(invalid.utf8)), .automatic)
+    }
   }
 }
 

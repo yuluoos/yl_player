@@ -161,6 +161,13 @@ final class YlDashXMLReader: NSObject, XMLParserDelegate {
     "SegmentTimeline": [],
     "S": ["t", "d", "r"],
   ]
+  private var namespaceBindings: [String: String] = [:]
+  func parser(_ parser: XMLParser, didStartMappingPrefix prefix: String, toURI namespaceURI: String) {
+    namespaceBindings[prefix] = namespaceURI
+  }
+  func parser(_ parser: XMLParser, didEndMappingPrefix prefix: String) {
+    namespaceBindings.removeValue(forKey: prefix)
+  }
   var allowSegmentBase = false
   var root: YlDashNode?
   var stack: [YlDashNode] = []
@@ -184,7 +191,14 @@ final class YlDashXMLReader: NSObject, XMLParserDelegate {
       }
       invalid = true; parser.abortParsing(); return
     }
-    guard !attributes.keys.contains(where: { $0.contains(":") && !$0.hasPrefix("xmlns") }),
+    // XML Schema location is inert root metadata. Never fetch it, and do not
+    // admit arbitrary qualified attributes or a spoofed namespace binding.
+    func isSchemaLocation(_ attribute: String) -> Bool {
+      let pieces = attribute.split(separator: ":", omittingEmptySubsequences: false)
+      return root == nil && name == "MPD" && pieces.count == 2 && pieces[1] == "schemaLocation" &&
+        namespaceBindings[String(pieces[0])] == "http://www.w3.org/2001/XMLSchema-instance"
+    }
+    guard !attributes.keys.contains(where: { $0.contains(":") && !$0.hasPrefix("xmlns") && !isSchemaLocation($0) }),
           !attributes.keys.contains(where: { ["availabilityTimeOffset", "availabilityTimeComplete", "index"].contains($0) || ($0 == "indexRange" && !(name == "SegmentBase" && allowSegmentBase)) }) else {
       invalid = true; parser.abortParsing(); return
     }
@@ -218,6 +232,7 @@ final class YlDashXMLReader: NSObject, XMLParserDelegate {
     reader.allowSegmentBase = allowSegmentBase
     let parser = XMLParser(data: data)
     parser.shouldProcessNamespaces = true
+    parser.shouldReportNamespacePrefixes = true
     parser.shouldResolveExternalEntities = false
     parser.delegate = reader
     let parsed = parser.parse()

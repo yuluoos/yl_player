@@ -62,6 +62,7 @@ enum YlSourceInspector {
     if let movie = movieFormat(bytes) { return movie }
     if let text = String(data: prefix, encoding: .utf8),
        text.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("#EXTM3U") { return .hls }
+    if isDashManifest(prefix) { return .dash }
     if bytes.count >= 12, Array(bytes.prefix(4)) == Array("RIFF".utf8),
        Array(bytes[8..<12]) == Array("AVI ".utf8) { return .avi }
     if isProgramStreamPack(bytes) { return .mpegPs }
@@ -75,6 +76,37 @@ enum YlSourceInspector {
          }) { return .mpegTs }
     }
     return .automatic
+  }
+
+  // Only the first XML element identifies a manifest. Abort at its start so a
+  // bounded prefix need not contain the entire MPD or valid trailing UTF-8.
+  // The DASH parser still validates the full document and supported features.
+  private final class ManifestRoot: NSObject, XMLParserDelegate {
+    var isDash = false
+    func parser(_ parser: XMLParser, didStartElement name: String, namespaceURI: String?,
+                qualifiedName qName: String?, attributes: [String: String]) {
+      isDash = name == "MPD" && (namespaceURI == nil || namespaceURI == "" ||
+        namespaceURI == "urn:mpeg:dash:schema:mpd:2011")
+      parser.abortParsing()
+    }
+  }
+
+  private static func isDashManifest(_ prefix: Data) -> Bool {
+    let bounded = Data(prefix.prefix(maximumBytes))
+    let text = String(decoding: bounded, as: UTF8.self)
+    let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines.union(CharacterSet(charactersIn: "\u{feff}")))
+    guard trimmed.hasPrefix("<"), !text.uppercased().contains("<!DOCTYPE"),
+          !text.uppercased().contains("<!ENTITY") else { return false }
+    let root = ManifestRoot()
+    let parser = XMLParser(data: bounded)
+    parser.shouldProcessNamespaces = true
+    parser.shouldResolveExternalEntities = false
+    parser.delegate = root
+    _ = parser.parse()
+    // XMLParser can synthesize a start callback for a truncated "<MPD" at
+    // EOF without honoring abortParsing. Require the intentional abort too.
+    return root.isDash && (parser.parserError as NSError?)?.code ==
+      XMLParser.ErrorCode.delegateAbortedParseError.rawValue
   }
 
   /// QuickTime predates ftyp. Walk complete padding atoms in the bounded
