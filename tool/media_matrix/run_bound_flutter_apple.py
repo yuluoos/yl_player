@@ -16,7 +16,7 @@ import time
 import uuid
 from pathlib import Path
 from bound_artifacts import canonical, freeze, verify
-from bound_av import validate
+from bound_av import validate, validate_render_pull
 from bound_matrix import planned_case
 from run_bound_apple import CASES, PHASES, write
 
@@ -36,7 +36,12 @@ def acceptance(plan, rows, status, stable):
         runtimeIdentityVerified=status.get('identityVerified') is True,
         artifactsUnchanged=stable and status.get('artifactsUnchanged') is True,
         statusRunMatches=status.get('runId')==plan['runId'])
-    result['scopeAcceptance'] &= all(result[k] for k in ('publicTestPassed','runtimeIdentityVerified','artifactsUnchanged','statusRunMatches'))
+    trusted=all(result[k] for k in ('publicTestPassed','runtimeIdentityVerified','artifactsUnchanged','statusRunMatches'))
+    result['scopeAcceptance'] &= trusted
+    if any(isinstance(row,dict) and row.get('audioClockMethod')=='avplayer-preeffects-source-pull' for row in rows):
+        pull=validate_render_pull(plan,rows)
+        result.update(renderPullAcceptance=pull['renderPullAcceptance'] and trusted,
+            renderPullErrors=pull['errors'], renderPullRows=pull['supportedRows'])
     return result
 
 

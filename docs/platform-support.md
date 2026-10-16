@@ -806,3 +806,13 @@ Production eligibility remains false because sustained thermal and independent
 product verification evidence are absent. Focused native results are macOS74,
 iOS7 (pure audio), Android22, all passing with no skips; this does not replace
 the previously recorded required hardware/combined-output gaps.
+
+
+2026-10-16 AVPlayer public Flutter observation: opted-in Debug builds now retain
+real pre-effects PCM, attached-layer pixels, separate seek epochs and actual tap
+finalization from the same local MP4 player on macOS and iOS Simulator. Both
+platforms pass the separate source-pull gate; macOS's existing six consumption
+controls also pass. A queue-fill range is not a hardware played-sample counter:
+AVPlayer strict consumption acceptance remains false. Ordinary Debug and Release
+exclude the observer. Remote/DRM/multiple-track capture and full P03 remain open.
+See the [AVPlayer evidence](superpowers/reports/evidence/2026-10-16-p03-avplayer-audio/README.md).

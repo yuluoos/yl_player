@@ -13,6 +13,48 @@ import AppKit
 
 final class YlPlatformServicesTests: XCTestCase {
   #if DEBUG && YL_BOUND_AV
+  func testBoundAvPlayerTapObservesPCMRetiresOldEpochAndFinalizes() throws {
+    let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".wav")
+    defer { try? FileManager.default.removeItem(at: url) }
+    let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2))
+    let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: 96_000))
+    pcm.frameLength = 96_000
+    for channel in 0..<2 { for frame in 0..<96_000 {
+      pcm.floatChannelData![channel][frame] = Float(sin(Double(frame) * 2 * .pi * 440 / 48_000)) * 0.1
+    } }
+    do { let file = try AVAudioFile(forWriting: url, settings: format.settings); try file.write(from: pcm) }
+    let observed = try autoreleasepool { () throws -> YlBoundAvPlayerAudio in
+    var item: AVPlayerItem? = AVPlayerItem(url: url)
+    let player = AVPlayer()
+    let tap = YlBoundAvPlayerAudio(player: player, item: try XCTUnwrap(item))
+    defer { player.pause(); tap.detach(); player.replaceCurrentItem(with: nil) }
+    player.replaceCurrentItem(with: item); item = nil; player.play()
+    func waitFor(_ condition: () -> Bool) {
+      let deadline = Date().addingTimeInterval(5)
+      while !condition() && Date() < deadline { RunLoop.current.run(until: Date().addingTimeInterval(0.01)) }
+      XCTAssertTrue(condition(), tap.diagnostic)
+    }
+    waitFor { tap.ready }
+    XCTAssertNil(tap.pausedPull, "A running queue pull cannot satisfy paused readback")
+    player.pause()
+    XCTAssertNotNil(tap.pausedPull)
+    let blocks = tap.evidence
+    XCTAssertFalse(blocks.isEmpty)
+    XCTAssertTrue(blocks.flatMap { $0.samples.flatMap { $0 } }.contains { abs($0) > 0.05 })
+    tap.install(targetUs: 1_000_000)
+    XCTAssertEqual(tap.epoch, 1)
+    XCTAssertTrue(tap.evidence.isEmpty, "Retired PCM must not satisfy the new seek")
+    player.seek(to: CMTime(seconds: 1, preferredTimescale: 48_000), toleranceBefore: .zero, toleranceAfter: .zero)
+    player.play(); waitFor { tap.ready }; player.pause()
+    XCTAssertGreaterThanOrEqual(try XCTUnwrap(tap.pausedPull?["pullStartUs"] as? Int64), 1_000_000)
+    tap.detach(); player.replaceCurrentItem(with: nil)
+    return tap
+    }
+    let deadline = Date().addingTimeInterval(5)
+    while !observed.released && Date() < deadline { RunLoop.current.run(until: Date().addingTimeInterval(0.01)) }
+    XCTAssertTrue(observed.released, observed.diagnostic)
+  }
+
   func testBoundSourceRequiresManagedOwnedRunAndExactLocator() {
     let locator = "http://127.0.0.1:1234/case.mkv"
     var source = AppleSourceMessage(kind: .network, locator: locator, intent: .onDemand, format: .automatic,

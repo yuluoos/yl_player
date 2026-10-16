@@ -1,0 +1,23 @@
+{
+  "base": "af9cc105e2b244200bf1333500eea691aab0dc9d",
+  "sourceSha256": {
+    "packages/yl_player/example/integration_test/bound_av_test.dart": "a33e211db8746f5b49ef13e355f493175929f1503520243e73afd28fc6945969",
+    "packages/yl_player/example/integration_test/support/paused_frame_capture.dart": "7cf53707de7532c195927261371c428115d169c7b7f8ebbb636b6bac05cb764a",
+    "packages/yl_player/example/ios/RunnerTests/YlPlatformServicesTests.swift": "093b104fb6b82fda94e9f264b3e3fe4d01ef0e36879f39587219a700e39a3604",
+    "packages/yl_player/example/macos/RunnerTests/YlPlatformServicesTests.swift": "093b104fb6b82fda94e9f264b3e3fe4d01ef0e36879f39587219a700e39a3604",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "f1ef08ef7573fc5a64eff76ac447b0d77c80b86b57d9e3a4f534c3d11e525da0",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundFlutterProbe.swift": "dcafe86d844a7f8925b9220dae0f99bda06007be06fef6ffff81db8444736aa5",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlPlatformServicesTests.swift": "093b104fb6b82fda94e9f264b3e3fe4d01ef0e36879f39587219a700e39a3604",
+    "tool/media_matrix/bound_av.py": "5d812d2f22588c9ff97c17ace21e7c53d1e8343c14e7e185ac2c85d9aa79c120",
+    "tool/media_matrix/run_bound_flutter_apple.py": "4ec9b28c6e649b08983aa0f1c7860be419337894db4696f123ff934c422fa9a7",
+    "tool/media_matrix/test_bound_av.py": "7379754e0446e8e8b0b24e5cf512faf7ed0768af884e9155e248d330435535a2",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundAvPlayerAudio.swift": "3b2c5560f36f060e7477af4563f317b75eb626c435f0e1682e4dcf30a4d1196c"
+  },
+  "boundary": "pre-effects source-pull; no played-sample counter",
+  "macOS": "M1 arm64 macOS 27.0.1",
+  "iOSSimulator": "A65DC0EE-B634-43E9-BBA5-AC3F35C1F7F6",
+  "defines": "DEBUG && YL_BOUND_AV",
+  "note": "Final native/public source hashes; ordinary Debug and Release exclude this guarded code. No source changes after final build.",
+  "commitParent": "af9cc105e2b244200bf1333500eea691aab0dc9d",
+  "documentationNote": "Documentation updated after execution; sourceSha256 contains code/test sources only."
+}

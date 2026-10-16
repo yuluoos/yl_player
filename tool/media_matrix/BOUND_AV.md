@@ -197,3 +197,36 @@ target, even if the public timeline still contains a larger pre-seek position.
 Android returns that value only when the screenshot token matches its fresh real
 playback-head sample; Apple retains its paused-readback protocol. Missing samples
 remain bounded failures rather than empty phases accepted from stale public state.
+
+### AVPlayer pre-effects observations
+
+The opted-in Apple public observer attaches `MTAudioProcessingTap` to the actual
+local AVPlayer item. It passes through source PCM unchanged, retains bounded raw
+float samples and source ranges, and owns separate storage for each seek tap.
+Tap finalization is observed before a successful row can be written.
+Audio keeps running during pixel sampling; only the actual display layer is
+temporarily frozen and restored. Repeated public pause/resume reprimes AVPlayer
+and leaves holes in the observed PCM, so this route declares
+`continuous-source-pull-v1`. Source-range duration and actual output frame count
+are retained independently. Window selection maps frames within that source
+interval; it does not establish sample-accurate hardware presentation times.
+
+`avplayer-preeffects-source-pull` means **audio queue fill**, not the hardware
+playback head. Apple exposes the source range being processed by the tap, not a
+played-frame counter. The collector does not substitute `AVPlayer.currentTime`,
+item timebase, host extrapolation, or another decoder as consumed audio.
+`validate_render_pull` independently checks the existing raw PCM/pixel, identity,
+lifecycle and source gates plus tap epoch and range/frame validity. The public
+runner reports its result as `renderPullAcceptance`; framework failure, stale
+identity or changed artifacts still reject it. `scopeAcceptance` and the complete
+matrix remain false for these rows with `played_sample_clock_unverified`.
+
+This diagnostic proof is limited to owned clear local assets with one audio
+track and float32 mono/stereo tap output. Remote/DRM/multiple-track capture and
+hardware consumption/physical output need separate evidence. Debug observers
+remain excluded unless both `DEBUG` and `YL_BOUND_AV` are set.
+
+API semantics: [Apple audio processing tap](https://developer.apple.com/documentation/mediatoolbox/mtaudioprocessingtap),
+[audio tap processor](https://developer.apple.com/documentation/avfoundation/avmutableaudiomixinputparameters/audiotapprocessor).
+The local SDK `MTAudioProcessingTap.h` additionally specifies source-range,
+real-time callback, and finalization contracts.

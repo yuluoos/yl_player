@@ -70,6 +70,23 @@ def pcm_window(window, row, case, phase, marker):
 
 
 def validate(plan, rows):
+    """Strict played-sample evidence; render-pull observations never qualify."""
+    return _validate(plan, rows, render_pull=False)
+
+
+def validate_render_pull(plan, rows):
+    """Separate AVPlayer queue-fill proof, never played-sample/full acceptance.
+
+    The same PCM, pixel, identity and lifecycle checks apply, but each pixel is
+    paired with a real pre-effects pull range. Hardware consumption is unknown.
+    """
+    result = _validate(plan, rows, render_pull=True)
+    result['renderPullAcceptance'] = result.pop('scopeAcceptance')
+    result['scopeAcceptance'] = False
+    return result
+
+
+def _validate(plan, rows, *, render_pull):
     """Reject borrowed identities, missing required rows and scalar-only PCM claims.
 
     Values describe real decoder/output boundaries in the declared consumer.
@@ -94,6 +111,8 @@ def validate(plan, rows):
         require(len({c['caseId'] for c in planned})==len(planned),'invalid_scope')
         require(plan.get('phases')==[dict(phase='play',markers=[0,1,2,3]),dict(phase='seek-1250',markers=[1]),dict(phase='seek-2250',markers=[2]),dict(phase='seek-0',markers=[0])],'invalid_phases')
         require(isinstance(rows,list),'invalid_rows')
+        if render_pull:
+            require(plan.get('artifactKind')=='apple-public-flutter-debug-app','render_pull_platform')
     except (ValueError,KeyError,TypeError) as error:
         errors.append(str(error));return result
     cases={c['caseId']:c for c in planned};seen=set();sessions=set()
@@ -128,21 +147,43 @@ def validate(plan, rows):
                 if apple:
                     require(row.get('nativeViewAttached') is True,'public_view_unverified')
                     if plan['platform']=='macos':require(row.get('windowVisibilityMethod')=='owned-all-spaces-window-v1','window_visibility_unverified')
-                    require(row.get('audioClockMethod')=='renderer-paused-consumption' and row.get('displayReadbackProtocol')=='paused-layer-timebase-v1','paused_readback_unverified')
+                    require(row.get('displayReadbackProtocol')=='paused-layer-timebase-v1','paused_readback_unverified')
+                    if render_pull:
+                        require(row.get('audioClockMethod')=='avplayer-preeffects-source-pull' and
+                            row.get('audioEvidenceBoundary')=='audio-queue-source-pull' and
+                            row.get('audioReadbackProtocol')=='continuous-source-pull-v1' and
+                            row.get('avPlayerTapReleased') is True,'render_pull_boundary_unverified')
+                    else:
+                        require(row.get('audioClockMethod')=='renderer-paused-consumption' and
+                            row.get('audioEvidenceBoundary')!='audio-queue-source-pull' and
+                            'avPlayerTapReleased' not in row and
+                            all('tapEpoch' not in p for p in row.get('phases',[]) if isinstance(p,dict)),
+                            'played_sample_clock_unverified')
                 lifecycle=row.get('publicLifecycle',{})
                 require(isinstance(lifecycle,dict) and all(lifecycle.get(k) is True for k in ('created','ready','firstFrame','completed','disposed')),'public_lifecycle_unverified')
             if plan['platform']=='android':require(row.get('audioClockMethod')=='audiotrack-playback-head','consumption_clock_unverified')
-            require(row.get('audioOutputClosed') is True if plan['platform']=='android' else type(row.get('releasedAudioBytes')) is int and row['releasedAudioBytes']==0,'output_release_unverified')
+            if not render_pull: require(row.get('audioOutputClosed') is True if plan['platform']=='android' else type(row.get('releasedAudioBytes')) is int and row['releasedAudioBytes']==0,'output_release_unverified')
             require(row.get('outcome')=='passed' and row.get('completed') is True and row.get('disposed') is True,'lifecycle_unverified')
             phases=row.get('phases',[]);require(isinstance(phases,list) and all(isinstance(p,dict) for p in phases),'invalid_phases');require([p.get('phase') for p in phases]==[p['phase'] for p in plan['phases']],'phase_coverage')
             local=[]
-            for phase,expected in zip(phases,plan['phases']):
+            for phase_index,(phase,expected) in enumerate(zip(phases,plan['phases'])):
                 origin(phase,row)
+                if render_pull:
+                    require(type(phase.get('tapEpoch')) is int and phase['tapEpoch']==phase_index, 'tap_epoch_unverified')
                 pixels=phase.get('pixels',[])
                 require(isinstance(pixels,list) and pixels and all(isinstance(p,dict) for p in pixels),'pixels_missing')
                 if plan.get('artifactKind')=='apple-public-flutter-debug-app':
                     require(all(type(p.get('displayRate')) in (int,float) and p['displayRate']==0 for p in pixels),'display_clock_not_stopped')
                     if plan['platform']=='macos':require(all(p.get('windowVisible') is True for p in pixels),'window_not_visible')
+                if render_pull:
+                    for pixel in pixels:
+                        start=pixel.get('pullStartUs'); end=pixel.get('pullEndUs')
+                        frames=pixel.get('pullFrames'); rate=pixel.get('pullRate')
+                        require(type(pixel.get('tapEpoch')) is int and pixel['tapEpoch']==phase_index,'stale_tap_epoch')
+                        require(type(start) is int and type(end) is int and start>=0 and end>start and
+                            type(pixel.get('audioClockUs')) is int and pixel['audioClockUs']==start and
+                            type(frames) is int and 0<frames<=65536 and type(rate) in (int,float) and
+                            math.isfinite(rate) and 8000<=rate<=192000,'invalid_render_pull_range')
                 times=[p.get('hostTimeUs') for p in pixels]
                 require(all(type(t) is int and t>=0 for t in times) and times==sorted(times),'pixel_host_order')
                 windows=phase.get('pcmWindows',[])

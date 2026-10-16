@@ -380,3 +380,12 @@ Task 7 的六控制计划现在显式冻结 engine：VP9/Vorbis 使用产品 Med
 Python58/58、Flutter example96/96（并行P06提交后的当前树，本轮此前83/83）、7文件静态分析、公开API检查、macOS受影响原生44/44通过；Android JVM543项零失败（3项既有跳过）、原生观察3/3通过。三端最终构建成功；macOS/Android普通Debug与Release无验收桥。同包框架末尾负例在Android/macOS均保留6行通过的原始记录但拒绝总体通过，三端错误构建身份均在播放前拒绝。历史失败与原始提取完整保留，最终原始重放不依赖缓存通过字段。
 
 Android当前AV1/Main10设备解码能力、Apple严格progressive managed路由、AVPlayer消费采集，以及iOS正向硬件证据仍有缺口。既有独立参考、release/物理输出、最低OS/Intel和持续热资格仍开放，Task7/8复合项不整体勾选；不宣告完整P03通过。详见[本轮完整归档](../reports/evidence/2026-10-16-p03-full-public/README.md)。
+
+
+### 2026-10-16 AVPlayer 公开 Flutter 音频观测续做
+
+本地 MP4 已可从同一实际 AVPlayerItem 采集 pre-effects PCM、真实附着显示层画面、三次 seek 的独立 tap epoch 和实际 finalize。修复 probe 持有 disposed host 阻止释放、反复暂停导致 PCM 空洞、采集线程锁竞争丢块，以及共享时间换算误影响原 fallback 的问题。观察器只进入显式 opt-in Debug；补齐取数/释放/实时回调等 API 注释，普通 Debug 与 Release 符号排除检查通过。
+
+最终 macOS/iOS Simulator 的 MP4 独立取数观测各1/1，macOS既有六控制严格6/6；两端框架末尾失败和错误构建身份四项负例均正确拒绝。原生45/45、Flutter example96/96、Python61/61、静态分析及公开API检查通过；失败历史及同次产品身份绑定的原始数据全部保留。
+
+AVPlayer tap 提供队列取数范围，仍未提供硬件已播放样本计数。因此新增 `renderPullAcceptance` 与严格消费验收分开，MP4的 `scopeAcceptance` 仍为false，报 `played_sample_clock_unverified`。未增加此前完整格式矩阵通过数，Task7/8及完整P03保持开放；managed、生产准入、长播放和弱网ABR未修改。详见[本轮证据](../reports/evidence/2026-10-16-p03-avplayer-audio/README.md)。

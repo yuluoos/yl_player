@@ -279,6 +279,13 @@ final class YlBoundFlutterProbe {
     let factory = BoundAudioFactory(); capture.factory = factory; capture.output = output
     return factory
   }
+  /// Observe the already chosen AVPlayer route; never select a different backend.
+  func observeAvPlayer(_ player: AVPlayer, item: AVPlayerItem) -> YlBoundAvPlayerAudio? {
+    guard identityVerified, let capture, capture.sourceVerified else { return nil }
+    let observer = YlBoundAvPlayerAudio(player: player, item: item)
+    capture.avAudio = observer
+    return observer
+  }
   func observe(_ host: YlApplePlayerHost) { if capture?.host == nil { capture?.host = host } }
   func verifySource(_ source: AppleSourceMessage, host: YlApplePlayerHost) throws {
     guard let capture else { throw error("unplanned public load") }
@@ -357,39 +364,48 @@ final class YlBoundFlutterProbe {
       try require(try Self.fileHash(URL(fileURLWithPath: path)) == item["mediaHash"] as? String, "fixture hash mismatch")
       capture = Capture(item: item, path: path, locator: args["locator"] as? String ?? path); reply(nil); return
     }
-    guard let c = capture, let host = c.host else { throw error("native host missing") }
+    guard let c = capture else { throw error("native capture missing") }
+    let host = c.host
     let session = args["sessionId"] as? String
     if call.method == "bind" {
-      try require(session != nil && session == host.sessionId, "public/native identity mismatch")
+      try require(session != nil && session == host?.sessionId, "public/native identity mismatch")
       c.session = session!; reply(nil); return
     }
     try require(session == c.session && !c.session.isEmpty, "stale public session")
     switch call.method {
+    case "observationKind":
+      reply(c.avAudio == nil ? "rendererConsumption" : "avplayerSourcePull")
+    case "releaseReady":
+      // The observer must stop owning the host after actual public disposal.
+      // Otherwise its coordinator keeps AVPlayer alive and prevents tap finalize.
+      if host?.disposed == true { c.nativeDisposed = true; c.host = nil }
+      reply(c.nativeDisposed && (c.avAudio?.released ?? (c.factory?.renderer?.scheduledBytes == 0)))
     case "endReadback":
       try require(c.readback?.restore() != false, "display clock ownership changed during readback")
       reply(nil)
     case "diagnostics":
       var details = origin(c)
-      details.merge(["phase": c.phase, "state": String(describing: host.initialState),
-        "clock": c.factory?.diagnosticClock ?? "no renderer", "pixels": c.pixels,
+      details.merge(["phase": c.phase, "state": String(describing: host?.initialState),
+        "clock": c.avAudio?.diagnostic ?? c.factory?.diagnosticClock ?? "no renderer", "pixels": c.pixels,
         "readback": readbackState,
         "readbackTrace": c.readbackTrace,
-        "pcmBlocks": c.factory?.pcm.evidence.count ?? 0, "stamp": c.factory?.stamp ?? "none"]) { _, rhs in rhs }
+        "pcmBlocks": c.avAudio?.evidence.count ?? c.factory?.pcm.evidence.count ?? 0, "phases": c.phases, "stamp": c.factory?.stamp ?? "none"]) { _, rhs in rhs }
       try write("unfinished.json", details)
       reply(details)
     case "consumptionReady":
-      let ready = c.factory?.consumptionReady(completed: host.initialState.status == .completed) == true
+      let ready = c.avAudio?.ready ?? (c.factory?.consumptionReady(completed: host?.initialState.status == .completed) == true)
       if !ready && c.readbackTrace.count < 100 {
         c.readbackTrace.append(["waitingForConsumption": c.factory?.diagnosticClock ?? "missing",
-          "hostStatus": String(describing: host.initialState.status)])
+          "hostStatus": String(describing: host?.initialState.status)])
       }
       reply(ready)
     case "capture":
-      try require(host.initialState.status == .paused || host.initialState.status == .completed,
+      try require(c.avAudio != nil || host?.initialState.status == .paused || host?.initialState.status == .completed,
         "readback requires public pause/completion")
-      guard let audio = c.factory, let clock = audio.clock() else {
+      let pull = c.avAudio?.currentPull
+      guard let clock = c.avAudio == nil ? c.factory?.clock() : pull?["pullStartUs"] as? Int64 else {
         if c.readbackTrace.count < 100 {
-          c.readbackTrace.append(["clockUnavailable": c.factory?.diagnosticClock ?? "missing", "hostStatus": String(describing: host.initialState.status)])
+          c.readbackTrace.append(["clockUnavailable": c.factory?.diagnosticClock ?? "missing", "hostStatus": String(describing: host?.initialState.status)])
         }
         reply(nil); return
       }
@@ -401,7 +417,7 @@ final class YlBoundFlutterProbe {
       pixel = (c.output as? YlIosTextureOutput)?.boundDisplayedPixelBuffer()
       #endif
       if c.readbackTrace.count < 100 {
-        c.readbackTrace.append(["clock": clock, "hostStatus": String(describing: host.initialState.status), "readback": readbackState])
+        c.readbackTrace.append(["clock": clock, "hostStatus": String(describing: host?.initialState.status), "readback": readbackState])
       }
       if let pixel, c.pixels.count < 1000, ProcessInfo.processInfo.systemUptime - before <= 0.2 {
         let image = CIImage(cvPixelBuffer: pixel)
@@ -413,6 +429,7 @@ final class YlBoundFlutterProbe {
         #if os(macOS)
         observed["windowVisible"] = windowVisibility?.isVisible == true
         #endif
+        if let pull { observed.merge(pull) { _, rhs in rhs } }
         c.pixels.append(observed)
         c.viewAttached = true
         reply(clock); return
@@ -423,24 +440,24 @@ final class YlBoundFlutterProbe {
       let phases = plan["phases"] as? [[String: Any]] ?? []
       try require(c.phases.count < phases.count && phases[c.phases.count]["phase"] as? String == "seek-\(target)", "seek order changed")
       c.phase = "seek-\(target)"; c.pixels.removeAll(); c.readbackTrace.removeAll()
-      c.beforeSeek = c.factory?.stamp; c.factory?.pcm.clear(); reply(nil)
+      c.beforeSeek = c.avAudio.map { String($0.epoch) } ?? c.factory?.stamp; c.factory?.pcm.clear(); reply(nil)
     case "awaitPhase":
       // Public network seek acknowledges intent before its worker commits reset.
       // The Dart observer polls this actual generation effect with a deadline.
-      reply(c.beforeSeek != nil && c.factory?.stamp != c.beforeSeek)
+      reply(c.beforeSeek != nil && (c.avAudio.map { String($0.epoch) } ?? c.factory?.stamp) != c.beforeSeek)
     case "retain":
       try require(args["phase"] as? String == c.phase, "phase mismatch")
-      if c.phase == "play" { c.completed = host.initialState.status == .completed }
+      if c.phase == "play" { c.completed = host?.initialState.status == .completed }
       c.phases.append(capturePhase(c)); reply(nil)
     case "finishCase":
       let lifecycle = args["lifecycle"] as? [String: Bool] ?? [:]
-      try require(host.disposed && c.completed && c.factory?.renderer?.scheduledBytes == 0, "native completion/release missing")
+      try require(c.nativeDisposed && c.completed && (c.avAudio?.released ?? (c.factory?.renderer?.scheduledBytes == 0)), "native completion/release missing")
       try require(["created", "ready", "firstFrame", "completed", "disposed"].allSatisfy { lifecycle[$0] == true }, "public lifecycle missing")
       var row = origin(c)
       row.merge(["schema": 1, "platform": platform, "testSha256": plan["testSha256"]!,
         "caseId": c.item["caseId"]!, "mediaHash": c.item["mediaHash"]!, "identityVerified": identityVerified,
-        "loadedImages": loadedImages, "outcome": "passed", "completed": c.completed, "disposed": host.disposed,
-        "releasedAudioBytes": c.factory!.renderer!.scheduledBytes, "phases": c.phases,
+        "loadedImages": loadedImages, "outcome": "passed", "completed": c.completed, "disposed": c.nativeDisposed,
+        "releasedAudioBytes": c.factory?.renderer?.scheduledBytes ?? 0, "phases": c.phases,
         "publicSessionId": c.session, "publicApi": "YlPlayerController/YlPlayerView", "publicLifecycle": lifecycle,
         "pixelSource": "flutter-native-view-display-layer", "nativeViewAttached": c.viewAttached]) { _, rhs in rhs }
       row["transport"] = c.item["transport"] ?? "file"
@@ -448,7 +465,13 @@ final class YlBoundFlutterProbe {
       if c.item["transport"] as? String == "http" {
         row["networkPolicy"] = "managed"; row["networkReceipt"] = args["networkReceipt"]
       }
-      row["audioClockMethod"] = "renderer-paused-consumption"
+      row["audioClockMethod"] = c.avAudio == nil ? "renderer-paused-consumption" : "avplayer-preeffects-source-pull"
+      if let av = c.avAudio {
+        row["audioEvidenceBoundary"] = "audio-queue-source-pull"
+        row["audioReadbackProtocol"] = "continuous-source-pull-v1"
+        row["avPlayerTapReleased"] = av.released
+        row.removeValue(forKey: "releasedAudioBytes")
+      }
       row["displayReadbackProtocol"] = "paused-layer-timebase-v1"
       #if os(macOS)
       row["windowVisibilityMethod"] = "owned-all-spaces-window-v1"
@@ -462,14 +485,18 @@ final class YlBoundFlutterProbe {
     let phases = plan["phases"] as? [[String: Any]] ?? []
     let markers = phases.first { $0["phase"] as? String == c.phase }?["markers"] as? [Int] ?? []
     var windows = [[String: Any]]()
+    let blocks = c.avAudio?.evidence.map { BoundPCM.Block(pts: $0.pts, rate: $0.rate, samples: $0.samples, sourceStepUs: Double($0.end - $0.pts) / Double($0.samples.first?.count ?? 1)) } ?? c.factory?.pcm.evidence ?? []
     for marker in markers {
       let start = c.phase == "play" ? Int64(marker) * 1_000_000 + 250_000 : (Int64(c.phase.dropFirst(5)) ?? -1) * 1000 + 100_000
       var samples = [Float](), first: Int64?, channels = 0, rate = 0
-      for row in c.factory?.pcm.evidence ?? [] {
+      var lastPTS: Int64 = -1
+      for row in blocks {
         channels = row.samples.count; rate = Int(row.rate)
         for frame in 0..<(row.samples.first?.count ?? 0) {
-          let pts = row.pts + Int64(Double(frame) * 1_000_000 / row.rate)
-          if pts >= start && pts < start + 500_000 && samples.count < 8192 * channels {
+          let pts = row.pts + (row.sourceStepUs.map { Int64(Double(frame) * $0) }
+            ?? Int64(Double(frame) * 1_000_000 / row.rate))
+          if pts >= start && (c.avAudio == nil || pts > lastPTS) && pts < start + 500_000 && samples.count < 8192 * channels {
+            lastPTS = pts
             if first == nil { first = pts }
             for channel in row.samples { samples.append(channel[frame]) }
           }
@@ -482,11 +509,15 @@ final class YlBoundFlutterProbe {
       windows.append(window)
     }
     var row = origin(c); row.merge(["phase": c.phase, "pixels": c.pixels, "pcmWindows": windows,
-      "readbackTrace": c.readbackTrace]) { _, rhs in rhs }; return row
+      "readbackTrace": c.readbackTrace]) { _, rhs in rhs }
+    if let av = c.avAudio { row["tapEpoch"] = av.epoch; row["tapDiagnostic"] = av.diagnostic }
+    return row
   }
   private final class Capture {
     let item: [String: Any]; let path: String; let locator: String
     var sourceVerified = false
+    var nativeDisposed = false
+    var avAudio: YlBoundAvPlayerAudio?
     var factory: BoundAudioFactory?; var output: YlTextureOutput?; var host: YlApplePlayerHost?
     var session = "", phase = "play", completed = false, viewAttached = false
     var beforeSeek: String?
@@ -500,7 +531,7 @@ final class YlBoundFlutterProbe {
 /// Decorates the actual converter, retaining post-trim samples without replacing
 /// AVAudioEngine output or its consumed-sample clock. Each reset drops old PCM.
 private final class BoundPCM: YlAudioPacketConverting {
-  struct Block { let pts: Int64; let rate: Double; let samples: [[Float]] }
+  struct Block { let pts: Int64; let rate: Double; let samples: [[Float]]; var sourceStepUs: Double? = nil }
   private let converter = YlAppleCompressedAudioConverter()
   private let expectedScope: YlManagedBufferScope?
   init(scope: YlManagedBufferScope? = nil) {

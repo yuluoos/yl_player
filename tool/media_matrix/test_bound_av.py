@@ -134,6 +134,44 @@ class BoundAVTest(unittest.TestCase):
             bad=copy.deepcopy(self.row);bad[key]=''
             self.assertFalse(self.result([bad])['scopeAcceptance'],key)
 
+    def avplayer_pull_row(self):
+        self.plan['artifactKind']='apple-public-flutter-debug-app'
+        self.row.update(publicSessionId=self.row['sessionId'],publicApi='YlPlayerController/YlPlayerView',
+            publicLifecycle=dict(created=True,ready=True,firstFrame=True,completed=True,disposed=True),
+            pixelSource='flutter-native-view-display-layer',nativeViewAttached=True,
+            audioClockMethod='avplayer-preeffects-source-pull',displayReadbackProtocol='paused-layer-timebase-v1',
+            audioEvidenceBoundary='audio-queue-source-pull',avPlayerTapReleased=True,
+            audioReadbackProtocol='continuous-source-pull-v1',
+            windowVisibilityMethod='owned-all-spaces-window-v1')
+        for epoch,phase in enumerate(self.row['phases']):
+            phase['tapEpoch']=epoch
+            for pixel in phase['pixels']:
+                pixel.update(displayRate=0,windowVisible=True,tapEpoch=epoch,
+                    pullStartUs=pixel['audioClockUs'],pullEndUs=pixel['audioClockUs']+50000,
+                    pullFrames=2400,pullRate=48000)
+        return dict(passed=True,identityVerified=True,artifactsUnchanged=True,runId=self.plan['runId'])
+
+    def test_avplayer_render_pull_is_separate_from_played_sample_acceptance(self):
+        status=self.avplayer_pull_row()
+        result=apple_acceptance(self.plan,[self.row],status,True)
+        self.assertFalse(result['scopeAcceptance'])
+        self.assertTrue(result.get('renderPullAcceptance'))
+        status['passed']=False
+        self.assertFalse(apple_acceptance(self.plan,[self.row],status,True).get('renderPullAcceptance'))
+
+    def test_render_pull_cannot_be_promoted_by_renaming_its_clock(self):
+        self.avplayer_pull_row()
+        self.row.update(audioClockMethod='renderer-paused-consumption',releasedAudioBytes=0)
+        self.assertFalse(self.result()['scopeAcceptance'])
+
+    def test_avplayer_render_pull_rejects_stale_epoch_invalid_range_and_unreleased_tap(self):
+        status=self.avplayer_pull_row()
+        for key,value in [('tapEpoch',99),('pullStartUs',0),('pullEndUs',-1),('pullFrames',True),('pullRate',0)]:
+            bad=copy.deepcopy(self.row);bad['phases'][1]['pixels'][0][key]=value
+            self.assertFalse(apple_acceptance(self.plan,[bad],status,True).get('renderPullAcceptance'),key)
+        self.row['avPlayerTapReleased']=False
+        self.assertFalse(apple_acceptance(self.plan,[self.row],status,True).get('renderPullAcceptance'))
+
     def test_apple_public_scope_requires_native_view_and_public_session(self):
         self.plan['artifactKind']='apple-public-flutter-debug-app'
         self.assertFalse(self.result()['scopeAcceptance'])

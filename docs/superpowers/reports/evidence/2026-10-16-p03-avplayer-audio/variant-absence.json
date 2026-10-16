@@ -1,0 +1,38 @@
+{
+  "ordinary-debug": {
+    "path": "/private/tmp/yl-p03-avplayer-audio-20261016/build-ordinary/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example.debug.dylib",
+    "sha256": "8596eea52df97f48ec52783aab4a8fe3b4b49bc2323de52481dd53f3eab0259c",
+    "symbolCounts": {
+      "YlBoundAvPlayerAudio": 0,
+      "YlBoundFlutterProbe": 0,
+      "YlBoundDisplayReadback": 0,
+      "YlBoundWindowVisibility": 0,
+      "YlBoundSourceIdentity": 0
+    },
+    "productRegistryPresent": true
+  },
+  "opted-in-debug": {
+    "path": "/private/tmp/yl-p03-avplayer-audio-20261016/build-public/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example.debug.dylib",
+    "sha256": "c3437d0b5e4b7e182e43e3b7982a1c14b32548b84e2b038ad9ed58691aa9ca4f",
+    "symbolCounts": {
+      "YlBoundAvPlayerAudio": 199,
+      "YlBoundFlutterProbe": 185,
+      "YlBoundDisplayReadback": 31,
+      "YlBoundWindowVisibility": 39,
+      "YlBoundSourceIdentity": 7
+    },
+    "productRegistryPresent": true
+  },
+  "release-with-opt-in-define": {
+    "path": "/private/tmp/yl-p03-avplayer-audio-20261016/build-release/Build/Products/Release/yl_player_example.app/Contents/MacOS/yl_player_example",
+    "sha256": "a075bd93661cf4a94e45f84ce20b3894841f2db748f104a53da4126ff9fd0005",
+    "symbolCounts": {
+      "YlBoundAvPlayerAudio": 0,
+      "YlBoundFlutterProbe": 0,
+      "YlBoundDisplayReadback": 0,
+      "YlBoundWindowVisibility": 0,
+      "YlBoundSourceIdentity": 0
+    },
+    "productRegistryPresent": true
+  }
+}

@@ -123,6 +123,12 @@ void main() {
           lifecycle['ready'] = true;
           debugPrint('P03_PUBLIC ready $sessionId');
           await bridge.invokeMethod('bind', {'sessionId': sessionId});
+          final continuousSourcePull =
+              (Platform.isMacOS || Platform.isIOS) &&
+              await bridge.invokeMethod<String>('observationKind', {
+                    'sessionId': sessionId,
+                  }) ==
+                  'avplayerSourcePull';
           Future<void> captureUntil(
             bool Function() done, {
             int minimumNativeClockUs = 0,
@@ -159,6 +165,17 @@ void main() {
                     'endReadback',
                     {'sessionId': sessionId},
                   );
+                  if (continuousSourcePull) {
+                    // Source-pull evidence needs continuous audio. Only the
+                    // actual display layer is frozen for readback and restored.
+                    try {
+                      return await bridge.invokeMethod<int>('capture', {
+                        'sessionId': sessionId,
+                      });
+                    } finally {
+                      await releaseReadback();
+                    }
+                  }
                   try {
                     observedNativeClock = await capturePausedFrame(
                       readyToPause: () async =>
@@ -268,6 +285,10 @@ void main() {
                   target + 650,
               minimumNativeClockUs: (target + 650) * 1000,
             );
+            // End the continuous source-pull phase before retaining its PCM.
+            if (continuousSourcePull) {
+              await session.pause().timeout(const Duration(seconds: 12));
+            }
             await bridge.invokeMethod('retain', {
               'sessionId': sessionId,
               'phase': 'seek-$target',
@@ -277,6 +298,15 @@ void main() {
           await player.dispose().timeout(const Duration(seconds: 10));
           disposed = true;
           lifecycle['disposed'] = true;
+          if (Platform.isMacOS || Platform.isIOS) {
+            await waitForNativePhase(
+              () async =>
+                  await bridge.invokeMethod<bool>('releaseReady', {
+                    'sessionId': sessionId,
+                  }) ==
+                  true,
+            );
+          }
           await bridge.invokeMethod('finishCase', {
             'sessionId': sessionId,
             'lifecycle': lifecycle,
@@ -284,6 +314,15 @@ void main() {
           });
         } catch (_) {
           caseFailed = true;
+          if ((Platform.isMacOS || Platform.isIOS) && sessionId != null) {
+            try {
+              await bridge.invokeMethod('diagnostics', {
+                'sessionId': sessionId,
+              });
+            } catch (_) {
+              /* Keep the original playback/cleanup failure. */
+            }
+          }
           rethrow;
         } finally {
           await releaseBoundResources([

@@ -1,7 +1,8 @@
 import 'dart:async';
 
 /// Samples a paused surface before allowing playback to leave its marker window.
-/// Waits for actual consumption via [readyToPause] before pausing after a seek.
+/// Waits for the caller’s declared audio observation before pausing. AVPlayer
+/// render-pull observations stay distinct from played-sample evidence in the gate.
 /// A null read retries while paused; timeout/read errors never invoke [resume].
 /// The caller owns readback-clock cleanup on every exit. [resume] must release
 /// that clock before requesting public playback. [timeout] bounds polling, so
@@ -36,7 +37,8 @@ Future<int> capturePausedFrame({
   throw TimeoutException('Paused surface did not provide a frame', timeout);
 }
 
-/// Waits for native effects after the public seek command acknowledges intent.
+/// Waits for an observed native effect after public seek or disposal returns.
+/// The readiness callback must observe the effect, not merely command receipt.
 Future<void> waitForNativePhase(
   Future<bool> Function() ready, {
   Duration timeout = const Duration(seconds: 5),
@@ -46,7 +48,7 @@ Future<void> waitForNativePhase(
   while (!await ready()) {
     if (timer.elapsed >= timeout) {
       throw TimeoutException(
-        'Native audio reset did not complete after seek',
+        'Native audio phase did not become ready',
         timeout,
       );
     }
@@ -54,7 +56,8 @@ Future<void> waitForNativePhase(
   }
 }
 
-/// Collects a phase until public state and the captured native consumption agree.
+/// Collects until public state and the declared native audio boundary agree.
+/// A render-pull position does not become played-sample evidence through polling.
 Future<void> captureNativePhase({
   required bool Function() done,
   required Future<int?> Function() capture,

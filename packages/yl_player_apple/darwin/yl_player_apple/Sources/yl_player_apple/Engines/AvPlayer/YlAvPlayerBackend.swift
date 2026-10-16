@@ -111,6 +111,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     init(_ emit: @escaping (YlNativeBackendCallback) -> Void) { self.emit = emit }
   }
   private var callbackBinding: CallbackBinding
+  #if DEBUG && YL_BOUND_AV
+  private var boundAudio: YlBoundAvPlayerAudio?
+  #endif
   private let player: AVPlayer
   private final class FramePolicy {
     let output: AVPlayerItemVideoOutput
@@ -384,6 +387,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       refreshFramePolicy()
       let resumeId = pendingRuntimeResume.map { _ in seekId }
       if let resumeId { pendingRuntimeResume = (resumeId, targetUs) }
+      #if DEBUG && YL_BOUND_AV
+      boundAudio?.install(targetUs: targetUs)
+      #endif
       player.seek(to: CMTime(milliseconds: milliseconds, preferredTimescale: 1_000),
         toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
           DispatchQueue.main.async {
@@ -797,6 +803,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     }
     let generation = itemGeneration
     let item = makePlayerItem(asset)
+    #if DEBUG && YL_BOUND_AV
+    boundAudio = YlBoundFlutterProbe.current?.observeAvPlayer(player, item: item)
+    #endif
     let effectiveConfiguration = self.effectiveConfiguration
     item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
@@ -1657,6 +1666,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     failureGate.reset()
     removeItemObservers()
     displayLink?.isPaused = true
+    #if DEBUG && YL_BOUND_AV
+    boundAudio?.detach(); boundAudio = nil
+    #endif
     player.currentItem?.remove(videoOutput)
     player.replaceCurrentItem(with: nil)
     if clearOutput { services.textureOutput.clear() }

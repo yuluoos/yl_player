@@ -1,0 +1,42 @@
+{
+  "macos-final-positive": {
+    "scopeAcceptance": false,
+    "renderPullAcceptance": true,
+    "publicTestPassed": true,
+    "runtimeIdentityVerified": true
+  },
+  "macos-final-negative-framework": {
+    "scopeAcceptance": false,
+    "renderPullAcceptance": false,
+    "publicTestPassed": false,
+    "runtimeIdentityVerified": true
+  },
+  "macos-final-negative-identity": {
+    "scopeAcceptance": false,
+    "renderPullAcceptance": null,
+    "publicTestPassed": false,
+    "runtimeIdentityVerified": false
+  },
+  "macos-final-controls": {
+    "scopeAcceptance": true,
+    "supportedRows": 6
+  },
+  "ios-final-positive": {
+    "scopeAcceptance": false,
+    "renderPullAcceptance": true,
+    "publicTestPassed": true,
+    "runtimeIdentityVerified": true
+  },
+  "ios-final-negative-framework": {
+    "scopeAcceptance": false,
+    "renderPullAcceptance": false,
+    "publicTestPassed": false,
+    "runtimeIdentityVerified": true
+  },
+  "ios-final-negative-identity": {
+    "scopeAcceptance": false,
+    "renderPullAcceptance": null,
+    "publicTestPassed": false,
+    "runtimeIdentityVerified": false
+  }
+}
