@@ -71,6 +71,8 @@ class RuntimeEvidenceTests(unittest.TestCase):
         self.assertIn(case, macos); self.assertNotIn(case, ios)
         case = 'YlAudioOwnershipTests/testActualIosDriverConfiguresMediaSessionAcrossRegistryOwners()'
         self.assertIn(case, ios); self.assertNotIn(case, macos)
+        bound = '#if os(macOS) && DEBUG && YL_BOUND_AV\nfunc testBound() {}\n#endif'
+        self.assertNotIn('testBound', gate.platform_source(bound, 'macos'))
         with self.assertRaisesRegex(RuntimeError, 'Unresolved'):
             gate.platform_source('#if canImport(Unknown)\nfunc testUnknown() {}\n#endif', 'ios')
 

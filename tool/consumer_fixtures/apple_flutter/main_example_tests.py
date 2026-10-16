@@ -19,7 +19,7 @@ HISTORICAL_MANIFESTS = {
     "engine-tests-manifest.json": PINNED_REVISION,
     "resources-manifest.json": PINNED_REVISION,
 }
-EXPECTED_CASES = {'ios': 791, 'macos': 836}
+EXPECTED_CASES = {'ios': 791, 'macos': 837}
 
 
 def digest(data):
@@ -185,10 +185,17 @@ def platform_source(text, platform):
         token = line.strip()
         if token.startswith('#if '):
             expression = token[4:]
-            values = {'os(iOS)': platform == 'ios', 'os(macOS)': platform == 'macos', 'targetEnvironment(simulator)': platform == 'ios'}
-            if expression not in values:
+            values = {
+                'os(iOS)': platform == 'ios',
+                'os(macOS)': platform == 'macos',
+                'targetEnvironment(simulator)': platform == 'ios',
+                'DEBUG': True,
+                'YL_BOUND_AV': False,
+            }
+            terms = [term.strip() for term in expression.split('&&')]
+            if not terms or any(term not in values for term in terms):
                 raise RuntimeError(f'Unresolved XCTest compilation condition: {expression}')
-            conditions.append(values[expression]); active.append(active[-1] and conditions[-1])
+            conditions.append(all(values[term] for term in terms)); active.append(active[-1] and conditions[-1])
         elif token == '#else':
             active[-1] = active[-2] and not conditions[-1]
         elif token == '#endif':

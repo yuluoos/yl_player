@@ -180,7 +180,7 @@ class DisplayAwakeRunnerTest(unittest.TestCase):
                 ).strip()
                 self.assertEqual(
                     assertion_command,
-                    f"/usr/bin/caffeinate -d -i -u -t 240 -w {command_pid}",
+                    f"/usr/bin/caffeinate -d -i -u -w {command_pid}",
                 )
 
                 started = time.monotonic()

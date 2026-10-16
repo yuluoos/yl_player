@@ -627,9 +627,10 @@
       "Shared module import and neutral source model/AV policy names",
       "Only Ruling10 exact host methods transferred",
       "Optional audio/reservation signature adaptation; immediate iOS conversions still require nonnil PCM",
-      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity"
+      "Native registry constructors moved to test-only factory glue; texture registration supplied by adapter instead of mutable backend identity",
+      "Later macOS diagnostics add an independent native-ready callback/backpressure case without changing transferred engine methods"
     ],
-    "destination_sha256": "2149954c14c77ee75758fa95282d3434f4172adec67120d68f2f4b2e822874be"
+    "destination_sha256": "889ddc5e9d06d6e51488c54d0313a9c1749ab5c7c468d26ec41f81fa60e7e32d"
   },
   {
     "source": "packages/yl_player/example/macos/RunnerTests/YlMacosVideoTests.swift",

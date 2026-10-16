@@ -1936,7 +1936,15 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let fixture = AppleHostFixture(); defer { fixture.host.close() }
     try fixture.host.attach()
     let accepted = try await fixture.host.load(request: AppleHostFixture.request("dash", url: server.url("/good.mpd").absoluteString, format: .dash))
-    await fixture.settle()
+    let expectedRevision0 = fixture.host.initialState.revision
+    let expectedSession0 = fixture.host.initialState.sessionId
+    try await AppleHostCharacterizations.waitFor {
+      let state = fixture.callbacks.states.last
+      let delta = fixture.callbacks.deltas.last
+      let deliveredRevision = max(state?.revision ?? -1,
+        delta?.sessionId == expectedSession0 ? delta?.revision ?? -1 : -1)
+      return state?.sessionId == expectedSession0 && deliveredRevision >= expectedRevision0
+    }
     XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
     let item = try XCTUnwrap(fixture.av.currentItem)
     let originalPrivateURL = try XCTUnwrap((item.asset as? AVURLAsset)?.url)
@@ -1945,7 +1953,15 @@ final class YlDashResourceLoaderTests: XCTestCase {
     catch let error as PigeonError { XCTAssertEqual(error.code, "container.dash_dynamic_unsupported") }
     XCTAssertEqual(fixture.host.sessionId, accepted.sessionId)
     XCTAssertTrue(fixture.av.currentItem === item)
-    await fixture.settle()
+    let expectedRevision1 = fixture.host.initialState.revision
+    let expectedSession1 = fixture.host.initialState.sessionId
+    try await AppleHostCharacterizations.waitFor {
+      let state = fixture.callbacks.states.last
+      let delta = fixture.callbacks.deltas.last
+      let deliveredRevision = max(state?.revision ?? -1,
+        delta?.sessionId == expectedSession1 ? delta?.revision ?? -1 : -1)
+      return state?.sessionId == expectedSession1 && deliveredRevision >= expectedRevision1
+    }
     XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
     fixture.host.suspend(); fixture.host.resume()
     try await AppleHostCharacterizations.waitFor { fixture.av.currentItem != nil && fixture.av.currentItem !== item }
@@ -1954,10 +1970,26 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(try YlHlsURLCodec.resourceKind(restoredURL), .manifest)
     XCTAssertEqual(fixture.host.sessionId, accepted.sessionId)
     XCTAssertEqual(server.requests.filter { $0.path == "/good.mpd" }.count, 1)
-    await fixture.settle()
+    let expectedRevision2 = fixture.host.initialState.revision
+    let expectedSession2 = fixture.host.initialState.sessionId
+    try await AppleHostCharacterizations.waitFor {
+      let state = fixture.callbacks.states.last
+      let delta = fixture.callbacks.deltas.last
+      let deliveredRevision = max(state?.revision ?? -1,
+        delta?.sessionId == expectedSession2 ? delta?.revision ?? -1 : -1)
+      return state?.sessionId == expectedSession2 && deliveredRevision >= expectedRevision2
+    }
     XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.map(\.id), ["dash-video-w320-h180-b1000"])
     try await fixture.host.stop()
-    await fixture.settle()
+    let expectedRevision3 = fixture.host.initialState.revision
+    let expectedSession3 = fixture.host.initialState.sessionId
+    try await AppleHostCharacterizations.waitFor {
+      let state = fixture.callbacks.states.last
+      let delta = fixture.callbacks.deltas.last
+      let deliveredRevision = max(state?.revision ?? -1,
+        delta?.sessionId == expectedSession3 ? delta?.revision ?? -1 : -1)
+      return state?.sessionId == expectedSession3 && deliveredRevision >= expectedRevision3
+    }
     XCTAssertEqual(fixture.callbacks.states.last?.videoTracks.count, 0)
     XCTAssertNil(fixture.av.currentItem); XCTAssertNil(fixture.host.sessionId)
   }

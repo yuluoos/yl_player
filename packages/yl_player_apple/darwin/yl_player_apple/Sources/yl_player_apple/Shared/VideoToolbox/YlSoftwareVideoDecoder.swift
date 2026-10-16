@@ -4,20 +4,7 @@ import Darwin
 import Foundation
 import YlFFmpegBridge
 
-/// Immutable codec metadata survives demux replacement without retaining its I/O.
-final class YlSoftwareVideoConfiguration {
-  let handle: YLFSoftwareVideoConfigurationRef
-  let descriptor: YLFSoftwareVideoDescriptor
-  init(context: YLFMediaContextRef, streamIndex: Int32) throws {
-    var copy: YLFSoftwareVideoConfigurationRef?
-    guard ylf_software_video_copy_configuration(context, streamIndex, &copy) == YLFResultOK,
-          let copy else { throw YlHardwareDecoderEvidence.unavailable() }
-    var value = YLFSoftwareVideoDescriptor()
-    guard ylf_software_video_copy_descriptor(copy, MemoryLayout<YLFSoftwareVideoDescriptor>.size, &value) == YLFResultOK else {
-      ylf_software_video_free_configuration(copy); throw YlHardwareDecoderEvidence.unavailable()
-    }
-    handle = copy; descriptor = value
-  }
+extension YlSoftwareVideoConfiguration {
   func key(model: String, osBuild: String, decoderBuild: String, threads: Int,
            outputPixelFormat: OSType) -> YlSoftwareDecodeKey {
     .init(model: model, osBuild: osBuild, decoderBuild: decoderBuild, codec: descriptor.codec,
@@ -25,7 +12,6 @@ final class YlSoftwareVideoConfiguration {
       width: Int(descriptor.width), height: Int(descriptor.height), fpsNumerator: Int(descriptor.fps_num),
       fpsDenominator: Int(descriptor.fps_den), threads: threads, outputPixelFormat: outputPixelFormat)
   }
-  deinit { ylf_software_video_free_configuration(handle) }
 }
 
 private final class YlSoftwareAllocation {

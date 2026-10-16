@@ -84,11 +84,11 @@ enum AppleHostCharacterizations {
     let f = AppleHostFixture(); defer { f.host.close() }
     try f.host.attach()
     let a = try await f.host.load(request: AppleHostFixture.request("a"))
-    await f.settle()
+    try await waitFor { f.callbacks.states.last?.sessionId == a.sessionId }
     let revision = f.callbacks.states.last?.revision ?? 0
     let sequence = f.callbacks.states.last?.sequence ?? 0
     let b = try await f.host.load(request: AppleHostFixture.request("b"))
-    await f.settle()
+    try await waitFor { f.callbacks.states.last?.sessionId == b.sessionId }
     XCTAssertNotEqual(a.sessionId, b.sessionId)
     XCTAssertEqual(f.callbacks.states.last?.sessionId, b.sessionId)
     XCTAssertGreaterThan(f.callbacks.states.last?.revision ?? 0, revision)
@@ -126,7 +126,10 @@ enum AppleHostCharacterizations {
     f.host.send(.delta(.init(identity: id, revision: 42, sequence: 43, occurredAtMs: 100),
       previousRevision: 41, .init(positionMs: 1000, bufferedPositionMs: 3000,
         isAtLiveEdge: false, liveOffsetMs: 2000, metrics: .init(droppedVideoFrames: 2))))
-    await f.settle()
+    try await waitFor {
+      let delta = f.callbacks.deltas.last
+      return delta?.sessionId == id.sessionId && delta?.revision == 42 && delta?.sequence == 43
+    }
     let value = try XCTUnwrap(f.callbacks.deltas.last)
     XCTAssertEqual(value.sessionId, id.sessionId)
     XCTAssertEqual(value.previousRevision, 41)
@@ -333,7 +336,7 @@ extension AppleHostCharacterizations {
     XCTAssertTrue(f.host.isActive)
     try await Task.sleep(nanoseconds: 200_000_000)
     let b = try await f.load( AppleHostFixture.request("b", url: server.url.absoluteString, format: .matroska, autoplay: true))
-    await f.settle()
+    try await waitFor { f.callbacks.states.last?.sessionId == b.sessionId }
     XCTAssertTrue(f.host.isActive)
     XCTAssertEqual(f.output.textureId, 81)
     XCTAssertEqual(f.output.disposals, 0)

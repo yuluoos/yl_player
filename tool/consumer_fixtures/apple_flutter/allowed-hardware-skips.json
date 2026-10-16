@@ -33,31 +33,35 @@
       "message": "Simulator VideoToolbox unavailable; no hardware playback claim",
       "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
       "source": "RunnerTests/AppleHostCharacterizations.swift",
-      "source_sha256": "cc595018b3b4e42f0ff8e98d2be9d8c525b4c8decda94bd5c18cec45700ea930",
+      "source_sha256": "0279cb85bcff599562cb9d558aafa6857a704d0a5de4a2dcf42fd6d4f95b068a",
       "schema3_reconciliation": {
         "from_sha256": "9a289c120c0b02af8be498a50ffa1e813fe150027b2d380efbca0d99deefead3",
         "reason": "DASH foundation private schema migration changes only two create-request literals and one schema assertion from 2 to 3. Entire source compared with these exact substitutions; conditional hardware skip body and original task7 provenance remain unchanged."
       },
       "schema5_reconciliation": "Only factory schema literals changed from 4 to 5; hardware skip condition, exact message and test assertions unchanged.",
-      "schema6_reconciliation": "Only current factory schema literals changed from 5 to 6; hardware skip condition, exact message and test assertions unchanged."
+      "schema6_reconciliation": "Only current factory schema literals changed from 5 to 6; hardware skip condition, exact message and test assertions unchanged.",
+      "schema7_reconciliation": "Only current factory schema literals and assertions changed from 6 to 7; hardware skip condition, exact message and reactivation assertions remain unchanged.",
+      "callback_delivery_reconciliation": "Replaced fixed callback settling delays with bounded waits for the exact accepted session or delta identity. The iOS-only hardware skip predicate, exact message and reactivation assertions remain unchanged."
     },
     "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()": {
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins and YL_P03_BOUND_PLAN absent; bound evidence jobs never skip. Every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "09bd8030c91551fc40cc061cbd9cbbe9099dec3a976b21f0f541ad3058dcae1f",
+      "source_sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
       "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
       "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition.",
-      "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition."
+      "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition.",
+      "p03_strict_reconciliation": "Added mandatory strict progressive, VP9 and audio output tests plus real buffer-scope accounting. Those tests do not pass allowSimulatorHardwareSkip; the two existing opt-in Simulator skip callsites, predicate and exact message remain unchanged."
     },
     "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": {
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins and YL_P03_BOUND_PLAN absent; bound evidence jobs never skip. Every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "09bd8030c91551fc40cc061cbd9cbbe9099dec3a976b21f0f541ad3058dcae1f",
+      "source_sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
       "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
       "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition.",
-      "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition."
+      "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition.",
+      "p03_strict_reconciliation": "Added mandatory strict progressive, VP9 and audio output tests plus real buffer-scope accounting. Those tests do not pass allowSimulatorHardwareSkip; the two existing opt-in Simulator skip callsites, predicate and exact message remain unchanged."
     }
   },
   "hardening_r19": {

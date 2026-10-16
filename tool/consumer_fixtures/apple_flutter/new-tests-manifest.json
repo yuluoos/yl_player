@@ -52,7 +52,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/AppleHostCharacterizations.swift",
-    "sha256": "cc595018b3b4e42f0ff8e98d2be9d8c525b4c8decda94bd5c18cec45700ea930",
+    "sha256": "0279cb85bcff599562cb9d558aafa6857a704d0a5de4a2dcf42fd6d4f95b068a",
     "methods": [
       "testInputValidationPrecedesReplacementAndRejectsUnrepresentableTimeline",
       "testSemanticCommandRejectionCompletesFutureWithoutFailingHealthySession"
@@ -80,7 +80,8 @@
       "from_sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
       "previous_manifest_sha256": "388dbf2ba3c46a71393d252c63e200a9f9d65d864be57c840a72563edcb5c7a3",
       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
-    }
+    },
+    "schema7_and_delivery_reconciliation": "Factory fixtures request schema 7. Callback-sensitive assertions now wait for the exact accepted session or delta identity instead of a fixed settle delay; assertion and hardware-skip semantics are unchanged."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/NativeCallbackCharacterization.swift",
@@ -606,7 +607,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
-    "sha256": "7eb606c82a44ee65752d8604b754b0b1ab97c8b7b42bb32613ed9e32e6d0e79a",
+    "sha256": "fc73456624bbdb70facc22d96fb7e84396fa6d06c6a34c7ae12cc39773d5634c",
     "methods": [
       "testIndexedPreflightRequestsExactRangeAndSnapshotReprojectsWithoutNetwork",
       "testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies",
@@ -702,7 +703,8 @@
       "from_sha256": "7128c541239f4fe4da1b7d1822d1dba212be21942a830c3e4231ca89b717e826",
       "reason": "Negotiate schema5 with optional protected-media messages; schema4 is rejected before allocation."
     },
-    "p01_joint_baseline": "Owned published pixels and native rendered audio clock, three fresh scopes per fixture; no physical-output claim."
+    "p01_joint_baseline": "Owned published pixels and native rendered audio clock, three fresh scopes per fixture; no physical-output claim.",
+    "callback_delivery_reconciliation": "The retained DASH session lifecycle case waits for the exact current state or delta revision at each publication boundary instead of fixed settle delays."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpFixturePeer.swift",

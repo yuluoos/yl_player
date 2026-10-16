@@ -13,7 +13,7 @@ class SampleSourceTests(unittest.TestCase):
             out=Path(folder); main=out/'main.swift'; main.write_bytes((Path(__file__).parent/'sample_source_tests.swift').read_bytes())
             support=out/'support.swift'; support.write_text((Path(__file__).parent/'program_resource_support.swift').read_text().replace('let message: String','let message: String\n  var diagnostic: String? = nil'))
             sources=[SHARED/'DASH'/name for name in ['YlDashDocument.swift','YlDashSidx.swift','YlDashProgramTime.swift','YlDashProgramTimeline.swift','YlDashProgramDocument.swift','YlDashProgramResources.swift','YlDashSampleSource.swift']]
-            sources += [SHARED/name for name in ['Dependencies/YlOpenCancellationToken.swift','Dependencies/YlNetworkConfiguration.swift','Network/YlManagedRequestPolicy.swift','Network/YlOriginCredentialPolicy.swift','FFmpeg/YlManagedBufferLedger.swift','FFmpeg/YlBoundedBufferPlan.swift']]
+            sources += [SHARED/name for name in ['Dependencies/YlOpenCancellationToken.swift','Dependencies/YlNetworkConfiguration.swift','Network/YlManagedRequestPolicy.swift','Network/YlOriginCredentialPolicy.swift','FFmpeg/YlManagedBufferLedger.swift','FFmpeg/YlBoundedBufferPlan.swift','VideoToolbox/YlSoftwareVideoConfiguration.swift']]
             build=subprocess.run(['xcrun','swiftc','-module-cache-path',str(out/'cache'),'-F',str(framework),'-framework','YlFFmpegBridge','-Xlinker','-rpath','-Xlinker',str(framework),*map(str,sources),str(support),str(main),'-o',str(out/'tests')],capture_output=True,text=True,timeout=120)
             self.assertEqual(build.returncode,0,build.stdout+build.stderr)
             run=subprocess.run([str(out/'tests'),str(MEDIA)],capture_output=True,text=True,timeout=30)

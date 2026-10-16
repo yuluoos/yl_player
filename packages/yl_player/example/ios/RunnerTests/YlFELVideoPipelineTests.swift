@@ -37,7 +37,7 @@ final class YlFELVideoPipelineTests: XCTestCase {
   }
 
   func testUnsupportedMetadataHasSpecificPublicFailure() {
-    XCTAssertThrowsError(try YlFELFailure.metadata([:])) { error in
+    XCTAssertThrowsError(try YlFELFailure.metadata(["schemaVersion": 2])) { error in
       let failure = YlAppleSafeDiagnostics.failure(error, scope: .command)
       XCTAssertEqual(failure.code, "decoder.dolby_vision_fel_metadata_unsupported")
       XCTAssertEqual(failure.category, .unsupported)
