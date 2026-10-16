@@ -1,0 +1,15 @@
+{
+  "base": "08f40e5acc3208a458fe86a73e201d898c84cf21",
+  "apkPath": "packages/yl_player_android/example/build/yl_player_android/outputs/apk/androidTest/debug/yl_player_android-debug-androidTest.apk",
+  "apkSha256": "8285316d8e8f0762141caf944743d778f574e15198432727e181698be4f0666c",
+  "changedCode": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "9be4399183963e56248dc09bc387e5c04ebe1eed7aeb81dc155420a33fd714c2",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt": "f75769f635631edd4ffeca14192ff8c4ff4095a2583eab381a3f4f3585cb038b",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlBoundAVInstrumentedTest.kt": "b437b3b5ca2e780d8afa5346dc7c0611f4bc3001cb2fc1a25c1345c0b75256cf",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3Audio.kt": "1354c02d2ae0822d6b722cb23459d0a17a5477ad4defa04233551952ca93e4f1",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3AudioInstrumentedTest.kt": "b8997068ae0c4f039c16cade6a7236850fab82474131023560c3d2441c4151cb",
+    "tool/media_matrix/bound_av.py": "9e739df211e1ea63b0b9a313fa2dcb70f04a868c5248459a934d2493efd66324",
+    "tool/media_matrix/run_bound_android.py": "291d8faf6549b3b75207a615479c67107d471fed5ab0e5998035eb03a9ddfa8f",
+    "tool/media_matrix/test_bound_av.py": "739608b647c4aea5eb07744fb499d466983f697e8f50b4f582114c01cf9d405d"
+  }
+}

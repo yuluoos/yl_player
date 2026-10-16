@@ -46,3 +46,16 @@ Keep `plan.json`, manifests, `launch.json`, native logs/summary, `rows.json.gz`,
 recheckable via `bound_av.validate(plan, rows)`. Original `.xcresult` and installed
 APKs remain local build artifacts; archives identify their inputs and extracted
 records without checking large executables into source control.
+
+Android freezes an engine per control: `webm-vp9-vorbis` uses the product
+`YlMedia3Engine`/Core and its hardware codec policy; the other five use the
+native fallback. Media3 rows must name the initialized video and audio codecs.
+A test-only factory observes post-trim PCM without replacing the default sink's
+real AudioTrack. Its fresh playback head is paired with ImageReader pixels;
+player position estimates are never consumption evidence. The collector is
+restricted to clear local 48 kHz stereo PCM16 at 1x without silence skipping.
+Renderer stream offset is subtracted once from the first sink buffer timestamp;
+flush invalidates that origin and fences seek phases. Empty pipeline drains emit
+no samples. Disposal requires acknowledgement and all created tracks released.
+These internal observation seams are unavailable for protected playback and have
+no public Flutter API. Production factory, surface and codec defaults stay intact.

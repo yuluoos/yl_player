@@ -1,0 +1,81 @@
+{
+  "artifactKind": "android-instrumented-library-apk",
+  "buildSha256": "cfaaf9dcd96731c498d30c636170abd290c94a53349f74006808d6e78ec7b944",
+  "phases": [
+    {
+      "markers": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "phase": "play"
+    },
+    {
+      "markers": [
+        1
+      ],
+      "phase": "seek-1250"
+    },
+    {
+      "markers": [
+        2
+      ],
+      "phase": "seek-2250"
+    },
+    {
+      "markers": [
+        0
+      ],
+      "phase": "seek-0"
+    }
+  ],
+  "planned": [
+    {
+      "caseId": "mkv-avc-eac3",
+      "channels": 2,
+      "engine": "native-fallback",
+      "file": "mkv-avc-eac3.mkv",
+      "mediaHash": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36"
+    },
+    {
+      "caseId": "mkv-avc-dts",
+      "channels": 2,
+      "engine": "native-fallback",
+      "file": "mkv-avc-dts.mkv",
+      "mediaHash": "8652de28fefeda796833f65618c152f3fdb70fecc51cf6bf7d8d4b5b68a9ed83"
+    },
+    {
+      "caseId": "mkv-avc-flac",
+      "channels": 2,
+      "engine": "native-fallback",
+      "file": "mkv-avc-flac.mkv",
+      "mediaHash": "251da8168c9aa18110cf6bad0324d528114ea9f7d72d1298dbc2fcf9952ab217"
+    },
+    {
+      "caseId": "webm-vp9-vorbis",
+      "channels": 2,
+      "engine": "media3",
+      "file": "webm-vp9-vorbis.webm",
+      "mediaHash": "aa572f75c3f615e5d4f6d2a9f35d501c4b4dc0b1b0f086733a2b7f27025a624e"
+    },
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "channels": 2,
+      "engine": "native-fallback",
+      "file": "mkv-avc-ac3-51.mkv",
+      "mediaHash": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3"
+    },
+    {
+      "caseId": "ps-avc-mp3",
+      "channels": 2,
+      "engine": "native-fallback",
+      "file": "ps-avc-mp3.mpg",
+      "mediaHash": "5e5ed0185f7cf102a89aaaad21f2b110342f6268c2fe067619213a9a76de5f26"
+    }
+  ],
+  "platform": "android",
+  "runId": "4aa8c595-957d-4fd5-ba83-b4289757c356",
+  "schema": 1,
+  "testSha256": "cfaaf9dcd96731c498d30c636170abd290c94a53349f74006808d6e78ec7b944"
+}

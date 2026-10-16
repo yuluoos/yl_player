@@ -34,7 +34,7 @@ def main():
     args=parser.parse_args();out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     sha=sha_file(args.apk);catalog=json.loads((Path(__file__).parent/'cases.json').read_text())['cases']
     plan=dict(schema=1,runId=str(uuid.uuid4()),platform='android',artifactKind='android-instrumented-library-apk',buildSha256=sha,testSha256=sha,
-        planned=[dict(caseId=c['id'],file=c['file'],mediaHash=c['sha256'],channels=2) for c in catalog if c['id'] in CASES],phases=PHASES)
+        planned=[dict(caseId=c['id'],file=c['file'],mediaHash=c['sha256'],channels=2,engine='media3' if c['id']=='webm-vp9-vorbis' else 'native-fallback') for c in catalog if c['id'] in CASES],phases=PHASES)
     if args.negative_identity:plan['buildSha256']='0'*64
     write(out/'plan.json',plan)
     adb=['adb','-s',args.serial];package='dev.ylplayer.yl_player_android.test'

@@ -1,0 +1,36 @@
+{
+  "native-green-1": {
+    "scopeAcceptance": false,
+    "fullAcceptance": false,
+    "requiredRows": 6,
+    "supportedRows": 5,
+    "errors": [
+      "initialized_codec_unverified"
+    ]
+  },
+  "native-green-2": {
+    "scopeAcceptance": true,
+    "fullAcceptance": false,
+    "requiredRows": 6,
+    "supportedRows": 6,
+    "errors": []
+  },
+  "native-red-booted": {
+    "scopeAcceptance": false,
+    "fullAcceptance": false,
+    "requiredRows": 6,
+    "supportedRows": 3,
+    "errors": [
+      "incomplete_rows"
+    ]
+  },
+  "negative-identity": {
+    "scopeAcceptance": false,
+    "fullAcceptance": false,
+    "requiredRows": 6,
+    "supportedRows": 0,
+    "errors": [
+      "incomplete_rows"
+    ]
+  }
+}

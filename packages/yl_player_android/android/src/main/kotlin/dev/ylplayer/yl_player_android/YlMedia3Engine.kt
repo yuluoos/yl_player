@@ -26,7 +26,15 @@ internal class YlMedia3Engine(
     private val playerOptions: AndroidPlayerOptionsMessage,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val protectedPlayback: YlProtectedPlayback? = null,
+    // Internal clear-content observation seams; the factory still receives Core's codec policy.
+    private val renderersFactory: ((Context, YlVideoOutputObserver) -> YlOutputRenderersFactory)? = null,
+    private val surfaceForOutput: ((YlVideoOutput) -> android.view.Surface)? = null,
 ) : YlPlaybackEngineAdapter {
+    init {
+        require(protectedPlayback == null || (renderersFactory == null && surfaceForOutput == null)) {
+            "Clear-output observation is unavailable for protected playback"
+        }
+    }
     private val main = CoroutineScope(SupervisorJob() + dispatcher)
     private val cleanup = CoroutineScope(SupervisorJob() + dispatcher)
     private var callback: ((YlSessionIdentity, YlEngineEvent) -> Unit)? = null
@@ -82,7 +90,7 @@ internal class YlMedia3Engine(
             val candidate = YlCandidateVideoOutput(context, protectedPlayback != null).also { privateOutput = it }
             protectedDrm = protectedPlayback?.let { route -> YlMedia3DrmSessionManager(route.identity, route.cbcs, route.timeoutMs, route.exchange) }
             core = YlMedia3Core(context, identity, source, options, createMedia3Configuration(source, options, playerOptions),
-                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm)
+                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm, renderersFactoryOverride = renderersFactory)
             requireCore().initialize()
             requireCore().prepare()
         }
@@ -116,7 +124,7 @@ internal class YlMedia3Engine(
     private suspend fun attachPublicOutput(output: YlSessionVideoOutput) {
         if (protectedOutput != null) { protectedOutput.resumePresentation(); return }
         val video = output as YlVideoOutput
-        val surface = video.borrowSurface() // Main-owned texture access.
+        val surface = surfaceForOutput?.invoke(video) ?: video.borrowSurface() // Main-owned texture access.
         val outputIdentity = video.identity
         publicOutput = video
         onWorker { requireCore().switchOutput(surface, outputIdentity) }

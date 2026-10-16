@@ -347,3 +347,7 @@ Task 1–6 的勾选表示工程步骤和记录的受控验证已执行，不将
 新增先冻结真实构建产物、原生进程内核验、同一 player/session 采集和结束后复核的验收链路。六个本地控制逐段保存真实像素、消费时钟、PCM 原始窗口及三次 seek；独立校验器拒绝跨运行/构建/播放器拼接。macOS 最终六项均通过；Android 实际消费头版本五项通过、VP9 硬解必需路径失败，固定分母仍为六；iOS 六项身份核验成功后均因缺少硬解正向证据失败，不使用跳过。
 
 复审发现的 Android 外推时钟冒充消费证据问题已由停滞播放头测试 RED→GREEN 修复，只改变内部观察值，不改变生产调度估算。旧 Android 数据保留但不能升级成新消费时钟证据。公开 Flutter/release 全矩阵、物理/最低系统/Intel 和持续热资格仍不由此覆盖；Task 7 复合项继续开放。详见[本轮记录](../reports/evidence/2026-10-15-p03-bound-av/README.md)。
+
+### 2026-10-16 Android Media3 VP9 同次音画续做
+
+Task 7 的六控制计划现在显式冻结 engine：VP9/Vorbis 使用产品 Media3，其他五项继续 native fallback。新增仅 instrumentation 使用的 post-trim PCM/真实 AudioTrack 播放头采集，ImageReader、完成、三次 seek、释放与实际双解码器身份来自同一会话。内部注入点不开放受保护内容，生产硬解/软解准入未变。六项受控范围首次达到 6/6；公开 Flutter/release、完整格式矩阵、物理输出和持续热资格仍不由此覆盖，Task 7/8 复合项保持开放。详见[本轮证据](../reports/evidence/2026-10-16-p03-media3-vp9/README.md)。

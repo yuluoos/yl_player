@@ -1,0 +1,20 @@
+{
+  "tests": 534,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 3,
+  "skips": [
+    {
+      "suite": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+      "test": "independent MediaMTX peer feeds AVC AAC samples to pinned extractor()"
+    },
+    {
+      "suite": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+      "test": "independent video-only peer formats every declared track()"
+    },
+    {
+      "suite": "dev.ylplayer.yl_player_android.YlRtmpExtractorTest",
+      "test": "independent peer transfers more than three negotiated ACK windows()"
+    }
+  ]
+}

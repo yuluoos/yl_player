@@ -585,3 +585,7 @@ iOS三条截图失败另外执行0.25倍速观测控制，7个播放/seek颜色�
 一次独立复审指出外推时钟可能掩盖 seek 后音频停滞，已用停滞播放头/前进系统时间测试 RED→GREEN 修复；生产调度时钟未改变。Python44/44，Android单元531通过、3项既有跳过，原有原生PCM/格式22项回归另行保留。API注释补充观察线程、实际消费、flush/close失效和非物理输出边界。三个无关macOS测试镜像差异保留为既有失败，不修改另一会话长播放/弱网ABR。
 
 证据、最终哈希与逐条复审裁定见[本轮归档](evidence/2026-10-15-p03-bound-av/README.md)。完整公开Flutter/release矩阵、Media3 VP9同次音频采集、iOS硬件正向、物理音画、独立参考与持续热资格仍开放，完整P03不宣告完成。
+
+### 2026-10-16 Media3 VP9 同次构建身份绑定验收
+
+已补上上一轮 Media3 VP9 的同次音频采集缺口：Android 固定六控制以同一 instrumentation APK SHA-256 绑定，VP9 使用产品 Media3 的 `c2.goldfish.vp9.decoder` 与 `c2.android.vorbis.decoder`，其余五项保持 native fallback。所有控制的实际像素、PCM 原始窗口、AudioTrack 消费位置、初次完成、三次 seek 和释放通过独立门禁。完整失败历史保留，未移除任何控制样本。构建身份代表包含产品与测试的 library instrumentation APK，不代表 Flutter release；完整矩阵、iOS 正向硬件、物理输出、独立参考及持续热资格仍开放。验证、复审和制品身份见[本轮归档](evidence/2026-10-16-p03-media3-vp9/README.md)。

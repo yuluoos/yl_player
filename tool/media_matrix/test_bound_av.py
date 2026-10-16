@@ -87,4 +87,13 @@ class BoundAVTest(unittest.TestCase):
         for pixel in self.row['phases'][1]['pixels']:pixel['audioClockUs']=1_500_000
         self.assertFalse(self.result()['scopeAcceptance'])
 
+    def test_frozen_media3_route_requires_initialized_codec_identity(self):
+        self.plan['planned'][0]['engine']='media3'
+        self.assertFalse(self.result()['scopeAcceptance'])
+        self.row.update(engine='media3',decoderMode='HARDWARE',decoderIdentity='c2.test.vp9',audioDecoderIdentity='c2.test.vorbis')
+        self.assertTrue(self.result()['scopeAcceptance'])
+        for key in ['engine','decoderMode','decoderIdentity','audioDecoderIdentity']:
+            bad=copy.deepcopy(self.row);bad[key]=''
+            self.assertFalse(self.result([bad])['scopeAcceptance'],key)
+
 if __name__=='__main__':unittest.main()

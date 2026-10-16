@@ -35,6 +35,8 @@ internal class YlMedia3Core(
     private val rtmpRecovery: YlRtmpRecovery = YlRtmpRecovery(),
     private val resetDecoderGate: () -> Unit = {},
     private val protectedDrm: androidx.media3.exoplayer.drm.DrmSessionManager? = null,
+    // Nullable internal factory seam: codec admission below remains authoritative.
+    private val renderersFactoryOverride: ((Context, YlVideoOutputObserver) -> YlOutputRenderersFactory)? = null,
 ) : Player.Listener, AnalyticsListener {
     // Entire class, including construction, lives on the owned engine application Looper.
     private val acknowledgement = YlMedia3Acknowledgement()
@@ -139,7 +141,9 @@ internal class YlMedia3Core(
         if (protectedDrm != null && (!videoOutput.isProtected || source.format != AndroidMediaFormat.DASH)) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
         trackSelector.dashVideoFamily = dashVideoFamily
         outputObserver.dashVideoFamily = dashVideoFamily
-        val renderersFactory = YlOutputRenderersFactory(context, outputObserver)
+        check(protectedDrm == null || renderersFactoryOverride == null)
+        val renderersFactory = (renderersFactoryOverride?.invoke(context, outputObserver)
+            ?: YlOutputRenderersFactory(context, outputObserver))
             .setEnableDecoderFallback(protectedDrm == null)
             .setMediaCodecSelector(protectedSelector ?: YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)

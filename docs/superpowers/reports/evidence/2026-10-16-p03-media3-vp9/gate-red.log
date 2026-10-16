@@ -1,0 +1,14 @@
+....F...........
+======================================================================
+FAIL: test_frozen_media3_route_requires_initialized_codec_identity (test_bound_av.BoundAVTest.test_frozen_media3_route_requires_initialized_codec_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/media_matrix/test_bound_av.py", line 92, in test_frozen_media3_route_requires_initialized_codec_identity
+    self.assertFalse(self.result()['scopeAcceptance'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.640s
+
+FAILED (failures=1)

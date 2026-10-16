@@ -96,19 +96,29 @@ class YlBoundAVInstrumentedTest {
         val lock=Any(); val pixels=mutableListOf<JSONObject>(); val pcm=mutableListOf<YlNativePcmChunk>()
         val clock=AtomicReference<Pair<Long,Long>>()
         var recording=true
+        val media3=case.getString("engine")=="media3"
+        row.put("engine",case.getString("engine"))
+        val observed=YlBoundMedia3Audio({synchronized(lock){if(recording)pcm.add(it)}},
+            {synchronized(lock){pcm.clear();pixels.clear();clock.set(null);recording=true}})
         reader.setOnImageAvailableListener({ r -> r.acquireLatestImage()?.use { image ->
             val value=JSONArray()
             for(i in 0..2) {val p=image.planes[i]; val x=if(i==0)160 else 80;val y=if(i==0)90 else 45
                 value.put(p.buffer.get(y*p.rowStride+x*p.pixelStride).toInt() and 255)}
             val now=SystemClock.elapsedRealtimeNanos()/1000
             val pixel=JSONObject().put("value",value).put("format","yuv420-center").put("hostTimeUs",now)
+            if(media3)observed.consumedUs()?.let {clock.set(it to now)}
             clock.get()?.let { if(now-it.second in 0..200_000)pixel.put("audioClockUs",it.first) }
             synchronized(lock) {if(recording)pixels.add(pixel)}
         } },Handler(thread.looper))
         val errors=java.util.Collections.synchronizedList(mutableListOf<YlFailureKind>())
         val state=AtomicReference<YlEngineSnapshot>()
         val position=java.util.concurrent.atomic.AtomicLong()
-        val engine=YlNativeFallbackEngine(context,YlSessionIdentity("p03",row.getString("sessionId")),
+        val engine:YlPlaybackEngineAdapter=if(media3) YlMedia3Engine(context,YlSessionIdentity("p03",row.getString("sessionId")),
+            AndroidSourceMessage(AndroidSourceKind.FILE,file.absolutePath,AndroidStreamIntent.ON_DEMAND,AndroidMediaFormat.AUTOMATIC),
+            AndroidLoadOptionsMessage(false,bufferStrategy=AndroidBufferStrategyMessage(AndroidBufferKind.AUTOMATIC),videoConstraints=AndroidVideoConstraintsMessage()),
+            AndroidPlayerOptionsMessage(AndroidDecoderPolicy.HARDWARE_REQUIRED,AndroidAudioPolicy.APP_MANAGED,250),
+            Dispatchers.Unconfined,renderersFactory=observed::factory,surfaceForOutput={reader.surface})
+        else YlNativeFallbackEngine(context,YlSessionIdentity("p03",row.getString("sessionId")),
             AndroidSourceMessage(AndroidSourceKind.FILE,file.absolutePath,AndroidStreamIntent.ON_DEMAND,AndroidMediaFormat.AUTOMATIC),
             AndroidLoadOptionsMessage(false,bufferStrategy=AndroidBufferStrategyMessage(AndroidBufferKind.AUTOMATIC),videoConstraints=AndroidVideoConstraintsMessage()),
             AndroidPlayerOptionsMessage(AndroidDecoderPolicy.HARDWARE_REQUIRED,AndroidAudioPolicy.APP_MANAGED,250),
@@ -154,7 +164,7 @@ class YlBoundAVInstrumentedTest {
             }
         }
         try {
-            engine.prepare();engine.activate(output)
+            withTimeout(15000) {engine.prepare();engine.activate(output)}
             // Actual APK identity covers the mapped JNI library as well as Kotlin code.
             val apk=File(instrumentation.context.applicationInfo.sourceDir)
             val mapped=File("/proc/self/maps").readLines().filter {it.contains("libyl_player_ffmpeg") || it.contains(apk.absolutePath)}
@@ -166,17 +176,24 @@ class YlBoundAVInstrumentedTest {
             advance {state.get()?.status==AndroidPlaybackStatus.COMPLETED}
             row.put("completed",true);retain("play",listOf(0,1,2,3))
             for(target in listOf(1250L,2250L,0L)) {
-                engine.pause();synchronized(lock){recording=false};engine.seekTo(target)
-                synchronized(lock){pcm.clear();pixels.clear();clock.set(null);recording=true}
+                engine.pause();synchronized(lock){recording=false}
+                val generation=observed.generation
+                engine.seekTo(target)
+                if(media3)advance {observed.generation>generation}
+                else synchronized(lock){pcm.clear();pixels.clear();clock.set(null);recording=true}
                 engine.play();advance {position.get()>=target+500}
                 retain("seek-$target",listOf((target/1000).toInt()))
             }
+            row.put("decoderMode",state.get()?.decoderMode?.name).put("decoderIdentity",state.get()?.decoderIdentity)
+                .put("audioDecoderIdentity",observed.decoderIdentity)
             assertTrue(errors.toString(),errors.isEmpty());row.put("outcome","passed")
         } finally {
             row.put("lastState",state.get()?.status?.name).put("lastPositionMs",position.get())
             row.put("lastAudioClockUs",clock.get()?.first)
             synchronized(lock){row.put("capturedPCMBlocks",pcm.size).put("capturedImages",pixels.size)}
-            engine.dispose().await();row.put("disposed",true).put("audioOutputClosed",engine.audioOutputClosed)
+            withTimeout(5000) {engine.dispose().await()}
+            if(media3)withTimeout(5000){while(!observed.closed)delay(10)}
+            row.put("disposed",true).put("audioOutputClosed",if(media3)observed.closed else (engine as YlNativeFallbackEngine).audioOutputClosed)
             output.release();reader.close();thread.quitSafely();thread.join(2000);file.delete()
         }
     }

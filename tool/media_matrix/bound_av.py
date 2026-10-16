@@ -99,6 +99,10 @@ def validate(plan, rows):
             case=cases[case_id]
             require(all(row.get(k)==plan.get(k) for k in ('runId','buildSha256','testSha256','platform')),'identity_mismatch')
             require(row.get('mediaHash')==case['mediaHash'],'media_mismatch')
+            if 'engine' in case:
+                require(row.get('engine')==case['engine'],'engine_mismatch')
+                if case['engine']=='media3':
+                    require(row.get('decoderMode')=='HARDWARE' and all(isinstance(row.get(k),str) and row[k].strip() for k in ('decoderIdentity','audioDecoderIdentity')),'initialized_codec_unverified')
             session=row.get('sessionId');require(isinstance(session,str) and session and session not in sessions,'invalid_session');sessions.add(session)
             require(row.get('identityVerified') is True,'runtime_identity_unverified')
             require(row.get('schema')==1,'invalid_row_schema')
