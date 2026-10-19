@@ -1,3 +1,8 @@
+## 0.3.0-dev.1
+
+- Adopt the synchronized 0.3 platform contract and package dependency set while
+  retaining the existing Android playback implementation.
+
 ## 0.2.0-dev.2
 
 - Report period-adjusted Media3 clock progress even when a live window exposes

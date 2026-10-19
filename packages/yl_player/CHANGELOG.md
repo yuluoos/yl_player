@@ -1,3 +1,9 @@
+## 0.3.0-dev.1
+
+- Add the public AirPlay button, availability stream, and route-picker control
+  for Apple playback.
+- Add RTMPS live source support and external-playback lifecycle handling.
+
 ## 0.2.0-dev.2
 
 - Preserve explicit Android audio content selection across reordered DASH Periods

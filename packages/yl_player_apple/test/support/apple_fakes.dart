@@ -53,7 +53,7 @@ AppleCreateReply wireCreate({String suffix = 'instance-1'}) => AppleCreateReply(
   channelSuffix: suffix,
   textureId: 42,
   implementationName: 'yl_player_apple',
-  implementationVersion: '0.2.0-dev.2',
+  implementationVersion: '0.3.0-dev.1',
   capabilities: AppleCapabilitiesMessage(
     deviceProfile: 'apple',
     availableEngines: [AppleEngine.avPlayer],

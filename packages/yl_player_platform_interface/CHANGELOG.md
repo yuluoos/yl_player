@@ -1,3 +1,8 @@
+## 0.3.0-dev.1
+
+- Add typed AirPlay availability and route-picker contracts, RTMPS source
+  semantics, and safe external-playback diagnostics.
+
 ## 0.2.0-dev.2
 
 - Add an optional subtitle SPI, bounded source/catalog validation, and default-off

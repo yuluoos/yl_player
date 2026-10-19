@@ -14,7 +14,7 @@ case "$mode" in
     ;;
 esac
 
-release_version=0.2.0-dev.2
+release_version=0.3.0-dev.1
 package_names='yl_player_platform_interface yl_player_android yl_player_apple yl_player'
 log_root=${YL_PUBLICATION_LOG_DIR:-}
 cleanup_logs=0
@@ -109,7 +109,7 @@ for package_name in $package_names; do
   if [ "$status" -ne 0 ]; then
     exit "$status"
   fi
-  if ! grep -Fq 'Package has 0 warnings.' "$log"; then
+  if ! grep -Eq '^Package has 0 warnings( and [0-9]+ hints?)?\.$' "$log"; then
     echo "$package_name dry-run did not report zero warnings" >&2
     exit 1
   fi

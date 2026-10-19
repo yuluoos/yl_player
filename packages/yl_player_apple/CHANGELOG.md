@@ -1,3 +1,10 @@
+## 0.3.0-dev.1
+
+- Add AirPlay route selection for supported video and live sources, including
+  bounded local remux/relay paths for managed media.
+- Add RTMPS live playback and preserve external playback while the application
+  moves into the background.
+
 ## 0.2.0-dev.2
 
 - Advance managed-fallback video smoothly between audio completion callbacks

@@ -627,7 +627,7 @@ void main() {
         p.implementation,
         const YlPlatformImplementationInfo(
           name: 'yl_player_android',
-          version: '0.2.0-dev.2',
+          version: '0.3.0-dev.1',
           spiMajor: 2,
         ),
       );
