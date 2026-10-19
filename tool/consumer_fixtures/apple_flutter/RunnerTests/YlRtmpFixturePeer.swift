@@ -1,4 +1,5 @@
 @testable import yl_player_apple
+import CoreMedia
 import Foundation
 import XCTest
 
@@ -47,4 +48,27 @@ final class YlRtmpFixturePeer {
   var acceptCount: Int { peer?.acceptCount ?? 0 }
   func disconnectCurrent() {peer?.disconnectCurrent()}
   func close() {peer?.close()}
+}
+
+/// Seek/retry policy tests need a committed managed session, not a physical
+/// hardware decoder. Keep the real transport/demux/session behavior and replace
+/// only the VideoToolbox boundary, as the managed-pause tests already do.
+/// This fixture emits no images and must not be used as decoded-frame evidence.
+struct RtmpPolicyVideoFactory: YlVTSessionFactory {
+  func makeSession(formatDescription: CMVideoFormatDescription,
+                   output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
+    RtmpPolicyVideoSession()
+  }
+}
+
+private final class RtmpPolicyVideoSession: YlVTSession {
+  let usesHardwareDecoder = true
+  let hardwareEvidence = YlHardwareDecoderEvidence(mode: .hardware)
+  func decode(_ sample: CMSampleBuffer, generation: UInt64,
+              reservation: YlVideoDecodeReservation?) -> OSStatus {
+    reservation?.release()
+    return noErr
+  }
+  func flush() {}
+  func invalidate() {}
 }

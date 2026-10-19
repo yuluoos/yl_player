@@ -8,7 +8,7 @@ final class YlRtmpRouteTests: XCTestCase {
   func testPublicRtmpTimeSeekRejectsZeroAndPositiveWithoutChangingIntent() async throws {
     let peer = try YlRtmpFixturePeer(videoOnly:true); defer { peer.close() }
     let commands = YlAsyncCommandCoordinator()
-    let fixture = AppleHostFixture(commandCoordinator:commands); defer { fixture.host.close() }
+    let fixture = AppleHostFixture(commandCoordinator:commands, videoSessionFactory: RtmpPolicyVideoFactory()); defer { fixture.host.close() }
     var request = AppleHostFixture.request("rtmp-seek",url:"rtmp://127.0.0.1:\(peer.port)/live/owned",format:.flv,autoplay:true)
     request.source.intent = .live
     let loaded = try await loadWithDiagnostics(fixture.host, request: request)
@@ -33,7 +33,7 @@ final class YlRtmpRouteTests: XCTestCase {
     let url = try XCTUnwrap(Bundle(for:Self.self).url(forResource:"h264_aac",withExtension:"flv"))
     let peer = try RtmpRouteHttpPeer(data:Data(contentsOf:url)); defer { peer.close() }
     let commands = YlAsyncCommandCoordinator()
-    let fixture = AppleHostFixture(commandCoordinator:commands); defer { fixture.host.close() }
+    let fixture = AppleHostFixture(commandCoordinator:commands, videoSessionFactory: RtmpPolicyVideoFactory()); defer { fixture.host.close() }
     var request = AppleHostFixture.request("http-seek",url:peer.url.absoluteString,format:.flv)
     request.source.intent = .live
     let loaded = try await loadWithDiagnostics(fixture.host, request: request)

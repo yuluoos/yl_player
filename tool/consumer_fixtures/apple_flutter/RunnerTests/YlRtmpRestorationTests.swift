@@ -38,7 +38,8 @@ final class YlRtmpRestorationTests: XCTestCase {
     let output = AppleTestTexture(), owner = YlAppleTextureOwner(output:AppleTestTexture(),onFrame:{ _ in })
     let coordinator = YlAppleSessionCoordinator(playerId:91,
       services:.init(platform:.current,textureOutput:output,makeDisplayDriver:{ AppleClockDisplay(onTick:$0) }),
-      configuration:.init(map:[:]),textureOwner:owner,emit:{ _,_ in })
+      configuration:.init(map:[:]),textureOwner:owner,
+      videoSessionFactory: RtmpPolicyVideoFactory(),emit:{ _,_ in })
     let source = YlAppleSourceDescriptor(uri:"rtmp://127.0.0.1:\(port)/live/owned",kind:.network,
       loadOptions:.init(autoplay:false,decoderPolicy:.systemDefault))
     return (coordinator,source,owner)

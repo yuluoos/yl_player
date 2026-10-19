@@ -750,14 +750,15 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpFixturePeer.swift",
-    "sha256": "93c2a3e41f03e36a4fbd632acc301ee0791cb5ce41c67bddfa333403135fbc5a",
+    "sha256": "503a00bede65ab7ca193c05f7bd7b748ca05c61f57b4294f7d5619cb41d465c9",
     "methods": [],
     "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup.",
-    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained."
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained.",
+    "rtmp_policy_decoder_isolation": "Seek/restoration tests inject a passive VideoToolbox session through existing factory seams; real socket, demux, retry and public host assertions remain. No decoded-frame or hardware-capability evidence is claimed."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRouteTests.swift",
-    "sha256": "1ea2b7d6a7dd99ef9a8af33c12359bf5117f491f89466977d411c5cfdb5a7cae",
+    "sha256": "7aa82e78224d9350bfd1c4b3cfda3dd21c86a54e7f9ae5a36691ea8caf6dae62",
     "methods": [
       "testPublicRtmpTimeSeekRejectsZeroAndPositiveWithoutChangingIntent",
       "testPublicHttpFlvTimeSeekRetainsRangeRejectionWithoutChangingIntent",
@@ -771,7 +772,8 @@
       "testRtmpsKeepsPolicyRejectionsAndTlsFailuresAreTerminal"
     ],
     "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained.",
-    "rtmps_diagnostics": "Record stable native error codes on fixture load/restoration failure without exposing source data; assertions unchanged."
+    "rtmps_diagnostics": "Record stable native error codes on fixture load/restoration failure without exposing source data; assertions unchanged.",
+    "rtmp_policy_decoder_isolation": "Seek/restoration tests inject a passive VideoToolbox session through existing factory seams; real socket, demux, retry and public host assertions remain. No decoded-frame or hardware-capability evidence is claimed."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpDemandTests.swift",
@@ -850,12 +852,13 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRestorationTests.swift",
-    "sha256": "760b00417cade941d4154af09340be5e443940a72c6fbca0f0c2e40d74468f5d",
+    "sha256": "bee0552b55426fb34571a6020f7eb287f2e52c94b6ed6a1a1fa369c8f045ad93",
     "methods": [
       "testCommittedCoordinatorRestorationRetriesTransientPrepareAndCompletesOriginalWaiter",
       "testExhaustedRestorationMakesOneExplicitAttemptAndInitialCandidateNeverRetries"
     ],
-    "rtmps_diagnostics": "Record stable native error codes on fixture load/restoration failure without exposing source data; assertions unchanged."
+    "rtmps_diagnostics": "Record stable native error codes on fixture load/restoration failure without exposing source data; assertions unchanged.",
+    "rtmp_policy_decoder_isolation": "Seek/restoration tests inject a passive VideoToolbox session through existing factory seams; real socket, demux, retry and public host assertions remain. No decoded-frame or hardware-capability evidence is claimed."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRecoveryTests.swift",
