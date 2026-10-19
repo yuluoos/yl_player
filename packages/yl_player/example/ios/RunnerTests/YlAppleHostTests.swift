@@ -43,6 +43,27 @@ final class YlAppleHostTests: XCTestCase {
 
 @MainActor
 final class YlAppleMemoryWarningTests: XCTestCase {
+  func testExternalPlaybackSurvivesBackgroundAndRevocationSuspends() async throws {
+    let center = NotificationCenter()
+    let registry = YlApplePlayerRegistry(makeServices: { _ in YlAppleRegistryTests.services() },
+      makeCallbacks: { _ in AppleRecordingCallbacks() }, installHost: { _, _ in },
+      lifecycle: YlIosLifecycle(center: center))
+    defer { registry.detach() }
+    registry.setExternalPlaybackActive(true)
+    center.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+    let created = try registry.create(request: .init(schemaMajor: 7,
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 500)))
+    let host = try XCTUnwrap(registry.host(for: created.channelSuffix))
+    _ = try await host.load(request: AppleHostFixture.request("car"))
+    XCTAssertTrue(host.isActive, "Car-only launches can create a player in the background")
+    center.post(name: UIApplication.didEnterBackgroundNotification, object: nil)
+    XCTAssertTrue(host.isActive, "Locking the phone must not suspend external playback")
+    registry.setExternalPlaybackActive(false)
+    XCTAssertFalse(host.isActive, "Disconnect revokes the background exemption")
+    registry.setExternalPlaybackActive(true)
+    try await AppleHostCharacterizations.waitFor({ host.isActive })
+  }
+
   func testForegroundRestoresOnlyPreviouslyActivePlayer() async throws {
     let center = NotificationCenter()
     let registry = YlApplePlayerRegistry(makeServices: { _ in YlAppleRegistryTests.services() },

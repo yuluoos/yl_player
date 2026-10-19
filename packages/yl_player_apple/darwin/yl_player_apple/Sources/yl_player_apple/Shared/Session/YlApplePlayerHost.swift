@@ -369,6 +369,9 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     textureOwner.dispose()
     didDispose?()
   }
+  func setExternalPlaybackActive(_ active: Bool) {
+    coordinator.setExternalPlaybackActive(active)
+  }
   func suspend() {
     guard !disposed, !suspended else { return }
     restoreOnResume = coordinator.isActive

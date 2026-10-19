@@ -230,7 +230,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
-    "sha256": "560ddf1c1db8bbaecf43bebbd47361eede4e1fd8fa519f3b8628ef31251c0b97",
+    "sha256": "0b1fd0f719648513c9e378879e43afb5ce2e933e582922713eb69d6aa6a6ffb7",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
@@ -260,6 +260,7 @@
       "testRtmpAirPlayRetainsTransportAndStrictPolicyRejections",
       "testLiveProducerFailureIsFencedAfterReplacementAndCurrentFailureTerminates",
       "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation",
+      "testExternalPlaybackSurvivesBackgroundAndRevocationSuspends",
       "testAutomaticRtmpsLoadAndAirPlayReachTlsAndRejectUntrustedPeer"
     ],
     "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",

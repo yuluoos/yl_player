@@ -67,6 +67,15 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     ApplePlayerFlutterApi(binaryMessenger: YlApplePlatformMessenger(messenger), messageChannelSuffix: suffix)
   }
 
+  /// Opt in only for an application-owned external playback session (for example
+  /// CarPlay). Call on the platform thread, use an isolated engine, configure the
+  /// app's audio session/background mode, and revoke on disconnect or stop.
+  /// This does not acquire an audio session or ignore audio interruptions.
+  public func setExternalPlaybackActive(_ active: Bool) {
+    precondition(Thread.isMainThread)
+    registry.setExternalPlaybackActive(active)
+  }
+
   public func detachFromEngine(for registrar: FlutterPluginRegistrar) {
     registry.detach()
     ApplePlayerFactoryHostApiSetup.setUp(binaryMessenger: hostMessenger, api: nil)

@@ -30,6 +30,12 @@ final class YlAppleSessionCoordinator: NSObject {
   var airPlayActive: Bool { airPlayEnabled && avBackend.airPlayActive }
   var airPlayPlayer: AVPlayer? { airPlayEnabled ? avBackend.airPlayPlayer : nil }
 
+  func setExternalPlaybackActive(_ active: Bool) {
+    #if os(iOS)
+    avBackend.airPlayPlayer.audiovisualBackgroundPlaybackPolicy = active ? .continuesIfPossible : .automatic
+    #endif
+  }
+
   private let services: YlPlatformServices
   private let audioOwnership: YlPlayerAudioOwnership?
   private var audioToken: UUID?

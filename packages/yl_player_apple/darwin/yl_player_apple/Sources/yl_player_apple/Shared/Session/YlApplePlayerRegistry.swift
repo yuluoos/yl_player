@@ -12,6 +12,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
   private var detached = false
   private var backgrounded = false
   private var audioInterrupted = false
+  private var externalPlaybackActive = false
   private var hasManagedPlayers = false
   private let registryIdentity = UUID()
   private let audioOwnership: YlAudioOwnershipCoordinator
@@ -92,11 +93,12 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       }
       host.onAirPlayLifecycleChanged = { [weak self, weak host] in
         guard let self, let host, self.backgrounded else { return }
-        if !host.keepsAirPlayInBackground && !host.canRestoreAirPlayInBackground { host.suspend() }
+        if !self.externalPlaybackActive && !host.keepsAirPlayInBackground && !host.canRestoreAirPlayInBackground { host.suspend() }
       }
       players[suffix] = host
       installHost(suffix, host)
-      if backgrounded || (managed && audioInterrupted) { host.suspend() }
+      host.setExternalPlaybackActive(externalPlaybackActive)
+      if (backgrounded && !externalPlaybackActive) || (managed && audioInterrupted) { host.suspend() }
       return AppleCreateReply(schemaMajor: 7, spiMajor: 2, channelSuffix: suffix,
         textureId: services.textureOutput.textureId,
         platform: services.platform == .ios ? .ios : .macos,
@@ -114,6 +116,17 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       maxConcurrentVideoDecoders: Int64(native.maxConcurrentVideoDecoders),
       hardwareVideoCodecs: native.hardwareVideoCodecs,
       supportedOperations: [.livePlaybackMode, .seek, .seekToLiveEdge, .playbackSpeed, .audioTrackSelection, .videoConstraints, .volume, .stop, .videoTrackSelection])
+  }
+  func setExternalPlaybackActive(_ active: Bool) {
+    guard !detached else { return }
+    externalPlaybackActive = active
+    for host in players.values {
+      host.setExternalPlaybackActive(active)
+      if backgrounded {
+        if active && (!audioInterrupted || !host.managesAudio) { host.resume() }
+        else if !host.keepsAirPlayInBackground { host.suspend() }
+      }
+    }
   }
   func host(for suffix: String) -> YlApplePlayerHost? { players[suffix] }
   func detach() {
@@ -135,14 +148,14 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       audioInterrupted = false
       let managed = players.values.filter(\.managesAudio)
       if !shouldResume { managed.forEach { $0.cancelAutomaticResume() } }
-      managed.filter { !backgrounded || (shouldResume && $0.canRestoreAirPlayInBackground) }.forEach { $0.resume() }
+      managed.filter { !backgrounded || (shouldResume && (externalPlaybackActive || $0.canRestoreAirPlayInBackground)) }.forEach { $0.resume() }
     }
   }
   private func suspend() {
     // macOS preserves playback when the app resigns active, as before consolidation.
     guard YlApplePlatform.current == .ios else { return }
     backgrounded = true
-    players.values.filter { !$0.keepsAirPlayInBackground }.forEach { $0.suspend() }
+    players.values.filter { !externalPlaybackActive && !$0.keepsAirPlayInBackground }.forEach { $0.suspend() }
   }
   private func resume() {
     if YlApplePlatform.current == .ios {
