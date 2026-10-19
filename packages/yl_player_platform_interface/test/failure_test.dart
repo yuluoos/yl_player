@@ -2,6 +2,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 void main() {
+  test('AirPlay diagnostics give fixed safe preparation requirements', () {
+    const guidance = {
+      'airplay.unsupported_source': 'unprotected file, HTTP source or RTMP',
+      'airplay.unsupported_codec': 'H.264 video and mono or stereo AAC-LC',
+      'airplay.unsupported_timeline': 'source timeline',
+      'airplay.resource_limit': 'resource limit',
+      'airplay.remux_failed': 'HLS output failed',
+      'airplay.lan_unavailable': 'Wi-Fi or Ethernet IPv4',
+    };
+    for (final entry in guidance.entries) {
+      final message = YlSafeDiagnostics.messageForCode(entry.key);
+      expect(message, contains(entry.value));
+      expect(YlSafeDiagnostics.publicMessage(message), message);
+    }
+    expect(
+      YlSafeDiagnostics.messageForCode('airplay.remux_failed.extra'),
+      'Playback operation failed.',
+    );
+  });
   test('VP9 failures distinguish unsupported frames from strict policy', () {
     expect(
       YlSafeDiagnostics.messageForCode('decoder.video_vp9_unsupported'),

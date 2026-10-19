@@ -230,7 +230,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
-    "sha256": "91f8dda4bee73240516b5f7058a6d47bd16190074f5667f92e781790fbf9e151",
+    "sha256": "427e18a153c35dd8f4c0d8b54126f862c153c1a2b10214c2f47a45c119886992",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
@@ -244,7 +244,22 @@
       "testDeltaEnvelopeContainsOnlyDynamicPayload",
       "testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
       "testForegroundRestoresOnlyPreviouslyActivePlayer",
-      "testActualLifecycleMemoryWarningDeactivatesSessionAndPreservesTexture"
+      "testActualLifecycleMemoryWarningDeactivatesSessionAndPreservesTexture",
+      "testDirectAirPlayAssessmentPreservesStrictPolicyRejection",
+      "testAirPlayCustomSourceNeedsInspectionAndHeaderedHlsIsRejected",
+      "testRejectedAirPlayLoadPreservesExistingSession",
+      "testAutomaticHlsLiveLoadsReadyWithAirPlayEnabled",
+      "testAutomaticLiveAirPlayRequiresInspectionInsteadOfRejection",
+      "testAirPlayOptInBelongsToCommittedLoadAndStopClearsIt",
+      "testReplacingAirPlayWithFallbackReleasesRetiredOrigin",
+      "testNetworkCustomSourceLoadsThroughAirPlayRemuxAndReleasesOriginOnStop",
+      "testHttpFlvAirPlayBecomesReadyBeforeEOFAndRollsUntilStop",
+      "testHttpFlvAirPlayReconnectPublishesDiscontinuityAndNewMap",
+      "testAutomaticRtmpAirPlayBecomesReadyWithoutUpstreamEOF",
+      "testStoppingHeldRtmpAirPlayStartupCancelsPromptly",
+      "testRtmpAirPlayRetainsTransportAndStrictPolicyRejections",
+      "testLiveProducerFailureIsFencedAfterReplacementAndCurrentFailureTerminates",
+      "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation"
     ],
     "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
     "task7_typed_migration": {
@@ -259,7 +274,9 @@
       "from_sha256": "df0e2f6e39239a514d4ef65fcb7eb4493dbc0a7314a472fcd9c7dccd61833124",
       "previous_manifest_sha256": "df0e2f6e39239a514d4ef65fcb7eb4493dbc0a7314a472fcd9c7dccd61833124",
       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
-    }
+    },
+    "airplay_video": "Adds eight AirPlay assessment, live HLS, session, production network remux and cleanup cases. macOS checks AirPlay handler cleanup and reconciles existing counts with the 15 schema-7 host methods plus 3 DRM methods.",
+    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleDecoderRestorationTests.swift",
@@ -276,7 +293,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
-    "sha256": "81208cc7dcf663877b7cfadf42c9a9b0d1bcb15c9792fe462012323dd9124f63",
+    "sha256": "84263c5049ecac7c5f9fe1f5e3b2c1833e6257757e608c1ae238a90082bd1552",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
@@ -297,7 +314,25 @@
       "testAcknowledgedSessionSettersSurviveLocalDirectRestoration",
       "testFailedLocalCandidateAfterQuiescenceRestoresAcknowledgedControlsBeforeOldWorkerRelease",
       "testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek",
-      "testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure"
+      "testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure",
+      "testDisposedPlayersRemoveAllPlayerEngineChannelRecords",
+      "testDetachRemovesFactoryAndEveryLivePlayerOnlyOnce",
+      "testDisposingOnePlayerPreservesPeerAndNewerForeignConnection",
+      "testDirectAirPlayAssessmentPreservesStrictPolicyRejection",
+      "testAirPlayCustomSourceNeedsInspectionAndHeaderedHlsIsRejected",
+      "testRejectedAirPlayLoadPreservesExistingSession",
+      "testAutomaticHlsLiveLoadsReadyWithAirPlayEnabled",
+      "testAutomaticLiveAirPlayRequiresInspectionInsteadOfRejection",
+      "testAirPlayOptInBelongsToCommittedLoadAndStopClearsIt",
+      "testReplacingAirPlayWithFallbackReleasesRetiredOrigin",
+      "testNetworkCustomSourceLoadsThroughAirPlayRemuxAndReleasesOriginOnStop",
+      "testHttpFlvAirPlayBecomesReadyBeforeEOFAndRollsUntilStop",
+      "testHttpFlvAirPlayReconnectPublishesDiscontinuityAndNewMap",
+      "testAutomaticRtmpAirPlayBecomesReadyWithoutUpstreamEOF",
+      "testStoppingHeldRtmpAirPlayStartupCancelsPromptly",
+      "testRtmpAirPlayRetainsTransportAndStrictPolicyRejections",
+      "testLiveProducerFailureIsFencedAfterReplacementAndCurrentFailureTerminates",
+      "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation"
     ],
     "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
     "task7_typed_migration": {
@@ -318,7 +353,9 @@
       "from_sha256": "7b6491a7afa954d8cc66ac80d98d176a3b4df42327b309b711c0439570a68016",
       "previous_manifest_sha256": "06b64b9e27d7fb343aad83d8101ef4b8a426c529bd39015d74daa3d6dbf96055",
       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
-    }
+    },
+    "airplay_video": "Adds eight AirPlay assessment, live HLS, session, production network remux and cleanup cases. macOS checks AirPlay handler cleanup and reconciles existing counts with the 15 schema-7 host methods plus 3 DRM methods.",
+    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleReconciliationTests.swift",
@@ -708,8 +745,9 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpFixturePeer.swift",
-    "sha256": "c488fd815e8d5a6f6fe35f5f9058c405515c0658a1c617461050d85f3f8ca279",
-    "methods": []
+    "sha256": "b687dca9ac7b7c20e9c4c2f204f59d2935ecb62ccd04300509890ad78bc153e9",
+    "methods": [],
+    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRouteTests.swift",

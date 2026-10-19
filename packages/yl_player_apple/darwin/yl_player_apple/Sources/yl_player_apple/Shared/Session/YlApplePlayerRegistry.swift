@@ -90,6 +90,10 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
         self.installHost(suffix, nil)
         self.uninstallDrm?(suffix)
       }
+      host.onAirPlayLifecycleChanged = { [weak self, weak host] in
+        guard let self, let host, self.backgrounded else { return }
+        if !host.keepsAirPlayInBackground && !host.canRestoreAirPlayInBackground { host.suspend() }
+      }
       players[suffix] = host
       installHost(suffix, host)
       if backgrounded || (managed && audioInterrupted) { host.suspend() }
@@ -126,19 +130,19 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
     switch event {
     case .began:
       audioInterrupted = true
-      players.values.filter(\.managesAudio).forEach { $0.suspend() }
+      players.values.filter(\.managesAudio).forEach { $0.suspendForAudioInterruption() }
     case let .ended(shouldResume):
       audioInterrupted = false
       let managed = players.values.filter(\.managesAudio)
       if !shouldResume { managed.forEach { $0.cancelAutomaticResume() } }
-      if !backgrounded { managed.forEach { $0.resume() } }
+      managed.filter { !backgrounded || (shouldResume && $0.canRestoreAirPlayInBackground) }.forEach { $0.resume() }
     }
   }
   private func suspend() {
     // macOS preserves playback when the app resigns active, as before consolidation.
     guard YlApplePlatform.current == .ios else { return }
     backgrounded = true
-    players.values.forEach { $0.suspend() }
+    players.values.filter { !$0.keepsAirPlayInBackground }.forEach { $0.suspend() }
   }
   private func resume() {
     if YlApplePlatform.current == .ios {

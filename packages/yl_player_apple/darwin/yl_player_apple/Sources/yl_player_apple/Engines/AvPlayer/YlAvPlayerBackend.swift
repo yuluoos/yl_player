@@ -115,6 +115,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var boundAudio: YlBoundAvPlayerAudio?
   #endif
   private let player: AVPlayer
+  var onAirPlayChanged: (() -> Void)?
+  private var airPlayObservation: NSKeyValueObservation?
+  var airPlayEnabled: Bool { !disposed && !stopped && lastSource?.airPlay == true }
+  var airPlayActive: Bool { airPlayEnabled && active && player.isExternalPlaybackActive }
+  var airPlayPlayer: AVPlayer { player }
   private final class FramePolicy {
     let output: AVPlayerItemVideoOutput
     let generation: UInt64
@@ -283,6 +288,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     self.callbackBinding = CallbackBinding(emit)
     super.init()
 
+    player.allowsExternalPlayback = false
+    airPlayObservation = player.observe(\.isExternalPlaybackActive, options: [.new]) { [weak self] _, _ in
+      DispatchQueue.main.async {
+        guard let self, !self.disposed else { return }
+        self.videoProgressProbe.reset()
+        self.refreshStallWatchdog()
+        self.onAirPlayChanged?()
+      }
+    }
     player.automaticallyWaitsToMinimizeStalling = configuration.bufferMode != "lowLatency"
     installCallbackObservers()
   }
@@ -605,6 +619,8 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     stagedHls?.prepared.discard()
     stagedHls = nil
     lastSource = nil
+    player.allowsExternalPlayback = false
+    onAirPlayChanged?()
     liveMode = nil
     liveModeRequestId = nil
     qualityConstraint = .unconstrained
@@ -713,6 +729,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
     removeCurrentItem(preserveAudioIdentity: resume)
     lastSource = source
+    player.allowsExternalPlayback = source.airPlay
     liveMode = nil
     liveModeRequestId = source.livePlaybackRequestId
     let loadOptions = source.loadOptions
@@ -820,6 +837,17 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     player.replaceCurrentItem(with: item)
     displayLink?.isPaused = false
     observe(item, generation: generation)
+    if let media = lastSource?.airPlayMedia {
+      let binding = callbackBinding
+      media.observeFailure { [weak self, weak media] error in
+        DispatchQueue.main.async {
+          guard let self, let media, !self.disposed, !self.stopped, self.active,
+            self.itemGeneration == generation, self.callbackBinding === binding,
+            self.lastSource?.airPlayMedia === media else { return }
+          self.reportRestorationFailure(error)
+        }
+      }
+    }
     // DASH Period boundaries can fall between milliseconds. Preserve the saved
     // program time through either restoration route; ordinary sources and new
     // Load start positions retain their existing millisecond seek contract.
@@ -1032,7 +1060,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   @objc private func displayLinkTick() {
-    guard !disposed, videoOutputConfigured, textureId >= 0, player.currentItem != nil else { return }
+    guard !disposed, !airPlayActive, videoOutputConfigured, textureId >= 0, player.currentItem != nil else { return }
     let generation = itemGeneration
     var framePublished = false
     defer { observeVideoProgress(framePublished: framePublished) }
@@ -1067,7 +1095,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func observeVideoProgress(framePublished: Bool) {
-    guard active, playRequested, firstFrameSent,
+    guard !airPlayActive, active, playRequested, firstFrameSent,
           player.currentItem?.status == .readyToPlay,
           status != "completed", status != "error" else {
       videoProgressProbe.reset()
@@ -1113,7 +1141,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       hasCurrentItem: player.currentItem != nil,
       timeControlStatus: player.timeControlStatus,
       playbackStatus: status,
-      firstFrameSent: firstFrameSent,
+      firstFrameSent: firstFrameSent || airPlayActive,
       timeoutMs: configuration.network.readTimeoutMs,
       waitingReason: player.reasonForWaitingToPlay?.rawValue
     ) { [weak self] error in
@@ -1622,6 +1650,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   func dispose() {
+    airPlayObservation?.invalidate(); airPlayObservation = nil
     guard !disposed else { return }
     disposed = true
     cancelLiveReconnect()

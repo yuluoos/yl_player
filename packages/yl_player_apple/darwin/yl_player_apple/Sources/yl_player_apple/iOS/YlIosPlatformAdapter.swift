@@ -7,10 +7,16 @@ enum YlIosPlatformAdapter {
   static func makeServices(textures: FlutterTextureRegistry, textureId: Int64? = nil,
     activateAudioSession: (() throws -> Void)? = nil,
     nativeViews: YlIosVideoViewFactory? = nil) -> YlPlatformServices {
-    YlPlatformServices(platform: .ios,
+    var services = YlPlatformServices(platform: .ios,
       textureOutput: YlIosTextureOutput(textures: textures, textureId: textureId, nativeViews: nativeViews),
       makeDisplayDriver: { tick in YlIosDisplayDriver(onTick: tick) },
       activateAudioSession: activateAudioSession ?? {})
+    services.externalAudioRouteIdentity = {
+      let outputs = AVAudioSession.sharedInstance().currentRoute.outputs
+        .filter { $0.portType == .airPlay || $0.portType == .carAudio }
+      return outputs.isEmpty ? nil : outputs.map(\.uid).sorted().joined(separator: "|")
+    }
+    return services
   }
 }
 

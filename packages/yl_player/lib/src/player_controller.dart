@@ -78,6 +78,8 @@ final class YlPlayerController implements Listenable {
         onDone: player._transportLost,
       );
       backend.textureId.addListener(player._updateTexture);
+      player._airPlayBackend?.airPlayState.addListener(player._updateAirPlay);
+      player._updateAirPlay();
       // A synchronous backend may publish while subscriptions attach.
       player._acceptState(backend.state);
       player._record(player.state);
@@ -112,6 +114,36 @@ final class YlPlayerController implements Listenable {
       );
     } finally {
       token.cancel();
+    }
+  }
+
+  YlAirPlayPlatformPlayer? get _airPlayBackend =>
+      _backend is YlAirPlayPlatformPlayer
+      ? _backend as YlAirPlayPlatformPlayer
+      : null;
+  final _airPlay = ValueNotifier(const YlAirPlayState());
+
+  /// Actual route state, independent of first-frame presentation.
+  ValueListenable<YlAirPlayState> get airPlayState => _airPlay;
+  YlAirPlayRoutePickerSurface? get airPlayRoutePickerSurface =>
+      _disposed ? null : _airPlayBackend?.airPlayRoutePickerSurface;
+
+  void _updateAirPlay() {
+    if (_disposed) return;
+    final next = _airPlayBackend?.airPlayState.value ?? const YlAirPlayState();
+    final current =
+        next.sessionId != null &&
+        next.sessionId == state.sessionId &&
+        next.sessionId != _stoppedSession &&
+        state.status != YlPlaybackStatus.failed &&
+        state.status != YlPlaybackStatus.idle;
+    _airPlay.value = current ? next : YlAirPlayState(supported: next.supported);
+  }
+
+  void _checkAirPlayAdmission(YlLoadOptions options) {
+    if (options.airPlay &&
+        _airPlayBackend?.airPlayState.value.supported != true) {
+      throw _exception(YlFailureCodes.policyUnsupported);
     }
   }
 
@@ -344,7 +376,10 @@ final class YlPlayerController implements Listenable {
     validateYlSource(source);
     _checkDrmAdmission(source);
     validateYlLoadOptions(options);
-    final result = await _backend.assess(source, options: options);
+    _checkAirPlayAdmission(options);
+    final result = options.airPlay
+        ? await _airPlayBackend!.assessForAirPlay(source, options: options)
+        : await _backend.assess(source, options: options);
     _check();
     validateYlSourceAssessment(result);
     return result;
@@ -359,6 +394,7 @@ final class YlPlayerController implements Listenable {
       validateYlSource(source);
       _checkDrmAdmission(source);
       validateYlLoadOptions(options);
+      _checkAirPlayAdmission(options);
       _cancelLoad();
       _textSubtitles?.cancel();
       final serial = ++_loadSerial;
@@ -378,7 +414,9 @@ final class YlPlayerController implements Listenable {
     YlLoadOptions options,
   ) async {
     try {
-      final committed = await _backend.load(source, options: options);
+      final committed = options.airPlay
+          ? await _airPlayBackend!.loadForAirPlay(source, options: options)
+          : await _backend.load(source, options: options);
       if (_disposed || serial != _loadSerial || result.isCompleted) return;
       _acceptState(_backend.state);
       if (state.sessionId != committed.sessionId) {
@@ -443,6 +481,7 @@ final class YlPlayerController implements Listenable {
       _state = next;
     }
     _record(state);
+    _updateAirPlay();
     if (_canLoadSubtitleWindow) {
       _textSubtitles?.updatePosition(state.timeline.position);
     }
@@ -545,6 +584,7 @@ final class YlPlayerController implements Listenable {
     if (state.sessionId == sessionId) {
       final presentationChanged = isCurrentFramePresented;
       _stoppedSession = sessionId;
+      _updateAirPlay();
       _milestones?.fail(_exception(YlFailureCodes.sessionStale));
       _milestones = null;
       if (_textSubtitles != null) {
@@ -571,6 +611,8 @@ final class YlPlayerController implements Listenable {
     }
     _licenseClient.close();
     _disposed = true;
+    _airPlayBackend?.airPlayState.removeListener(_updateAirPlay);
+    _airPlay.value = const YlAirPlayState();
     await _networkTraffic.dispose();
     _cancelLoad(YlFailureCodes.playerDisposed);
     final presentationChanged = isCurrentFramePresented;

@@ -210,6 +210,7 @@ final class YlOpenedMedia {
     sessionConfiguration: URLSessionConfiguration = .ephemeral,
     onRetry: YlNetworkByteSource.RetryCallback? = nil,
     onSourceCreated: ((YlByteSource) -> Void)? = nil,
+    byteSourceTransform: ((YlByteSource) -> YlByteSource)? = nil,
     rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)? = nil
   ) throws {
     switch recipe {
@@ -240,12 +241,18 @@ final class YlOpenedMedia {
         onRetry: onRetry
       )
       onSourceCreated?(source)
-      try self.init(byteSource: source, recipe: recipe)
+      try self.init(byteSource: byteSourceTransform?(source) ?? source, recipe: recipe)
 
     case let .rtmp(request):
       let source = rtmpSourceFactory?(request) ?? YlRtmpByteSource(recipe: request)
       onSourceCreated?(source)
-      try self.init(byteSource: source, recipe: recipe, container: .flv)
+      try self.init(byteSource: byteSourceTransform?(source) ?? source, recipe: recipe, container: .flv)
+      // A transparent observer may hide the concrete RTMP source from the
+      // private initializer. Preserve its transition out of the opening budget.
+      if byteSourceTransform != nil {
+        do { try source.finishPreparation() }
+        catch { close(); throw error }
+      }
 
     case let .hls(request):
       let source = try YlHlsSegmentByteSource(

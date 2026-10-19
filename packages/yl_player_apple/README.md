@@ -5,6 +5,10 @@ should depend on `yl_player`; Flutter registers this package on both Apple
 platforms. Deployment floors are iOS 15.0 and macOS 12.0 for CocoaPods and Swift
 Package Manager.
 
+Opt-in [AirPlay video](../../docs/airplay.md) adds a system route picker, native
+external-playback state, direct HLS live/VOD and bounded H.264/AAC remux
+for custom VOD and RTMP/HTTP-FLV live. Physical receiver and CarPlay acceptance remain pending.
+
 The package contains one typed registry/session lifecycle, AVPlayer routes,
 controlled HLS loading, managed Matroska/FLV/MPEG-TS fallback, VideoToolbox and
 AudioToolbox output, and one combined FFmpeg bridge XCFramework. AVPlayer handles

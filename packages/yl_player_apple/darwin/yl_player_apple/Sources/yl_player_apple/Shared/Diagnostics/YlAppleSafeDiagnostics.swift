@@ -23,6 +23,13 @@ enum YlAppleSafeDiagnostics {
   // Package-owned classifications only. A syntactically safe source-derived
   // identifier is still private and must not be published as an error code.
   private static let publicCodes: Set<String> = [
+    "airplay.unsupported_source",
+    "airplay.unsupported_codec",
+    "airplay.unsupported_timeline",
+    "airplay.resource_limit",
+    "airplay.remux_failed",
+    "airplay.lan_unavailable",
+
     "decoder.video_vp9_unsupported",
     "policy.vp9_unsupported",
     "decoder.audio_vorbis_unsupported",
@@ -139,6 +146,13 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "airplay.unsupported_source": "AirPlay requires a supported unprotected file, HTTP source or RTMP live stream.",
+    "airplay.unsupported_codec": "AirPlay remux requires H.264 video and mono or stereo AAC-LC audio.",
+    "airplay.unsupported_timeline": "The source timeline cannot be remuxed for AirPlay.",
+    "airplay.resource_limit": "AirPlay processing exceeded its resource limit.",
+    "airplay.remux_failed": "AirPlay HLS output failed.",
+    "airplay.lan_unavailable": "AirPlay remux requires a Wi-Fi or Ethernet IPv4 address reachable by the receiver.",
+
     "decoder.video_vp9_unsupported": "VP9 currently requires fixed-size Profile 0, 8-bit SDR visible frames without superframes. Try another video track.",
     "policy.vp9_unsupported": "VP9 requires seekable Matroska or WebM VOD.",
     "decoder.audio_vorbis_unsupported": "Vorbis requires valid Vorbis I headers, mono or stereo at 44.1 or 48 kHz, and zero CodecDelay. Try another audio track.",

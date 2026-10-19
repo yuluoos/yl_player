@@ -25,6 +25,10 @@ final class YlAppleSessionCoordinator: NSObject {
   let playerId: Int64
   var textureId: Int64 { services.textureOutput.textureId }
   var isActive: Bool { slot.current.isActive }
+  var onAirPlayChanged: (() -> Void)?
+  var airPlayEnabled: Bool { identity != nil && slot.current === avBackend && avBackend.airPlayEnabled }
+  var airPlayActive: Bool { airPlayEnabled && avBackend.airPlayActive }
+  var airPlayPlayer: AVPlayer? { airPlayEnabled ? avBackend.airPlayPlayer : nil }
 
   private let services: YlPlatformServices
   private let audioOwnership: YlPlayerAudioOwnership?
@@ -120,6 +124,7 @@ final class YlAppleSessionCoordinator: NSObject {
     self.avBackend = avBackend
     self.slot = YlBackendSlot(initial: avBackend, compatibility: slotCompatibility ?? services.compatibility)
     super.init()
+    avBackend.onAirPlayChanged = { [weak self] in self?.onAirPlayChanged?() }
     avBackend.onAutomaticFallback = { [weak self] in self?.capsCoordinator.cancelCurrent() }
   }
 
@@ -420,6 +425,7 @@ final class YlAppleSessionCoordinator: NSObject {
           return .fairPlay(source: source, backend: try YlFairPlayBackend.prepare(source: source,
             identity: identity, bridge: bridge, token: token, emit: self.emit))
         case .avPlayer:
+          if source.airPlay { return try self.prepareAirPlay(source, token: token) }
           return try self.prepareNativeOrMp4(source: source, token: token, identity: identity)
         case .localMatroska, .networkMatroska, .networkFlv, .networkRtmp, .transportStream, .programStream, .progressiveMp4, .avi:
           return .fallback(
@@ -800,6 +806,9 @@ final class YlAppleSessionCoordinator: NSObject {
         priorEvents?.invalidate()
         activeEvents = candidateEvents
         activeTexture = candidateTexture
+        // A successful non-AV commit no longer needs the old AV source for
+        // rollback. Release any retired remux HTTP origin and temporary media.
+        if slot.current !== avBackend { avBackend.clearMediaForStop() }
       } else {
         restoreAudioAuthority()
         candidateEvents.invalidate()
@@ -1256,5 +1265,35 @@ final class YlAppleSessionCoordinator: NSObject {
 
   deinit {
     dispose()
+  }
+}
+
+
+extension YlAppleSessionCoordinator {
+  private func prepareAirPlay(_ source: YlAppleSourceDescriptor, token: YlOpenCancellationToken) throws -> YlPreparedOpen {
+    var candidate = source
+    if candidate.url?.scheme?.lowercased() == "rtmp" {
+      _ = try YlRtmpAddress.validate(candidate)
+      candidate.formatHint = .flv
+      candidate.intent = .live
+    } else if candidate.formatHint == .automatic {
+      candidate = try YlSourceInspector.inspect(candidate, configuration: configuration.network, token: token)
+    }
+    try token.throwIfCancelled()
+    switch YlEngineRouter.airPlayRoute(candidate) {
+    case .unsupported, .inspect: throw YlAppleFailureMapper.unsupported
+    case .native: return .avPlayer(source: candidate)
+    case .remux, .liveRemux:
+      let media = try YlEngineRouter.airPlayRoute(candidate) == .liveRemux
+        ? YlAirPlayLiveRemux.prepare(source: candidate, configuration: configuration, token: token)
+        : YlAirPlayRemux.prepare(source: candidate, configuration: configuration, token: token)
+      try token.throwIfCancelled()
+      candidate.airPlayMedia = media
+      candidate.uri = media.url.absoluteString
+      candidate.kind = .network
+      candidate.formatHint = .hls
+      candidate.headers = [:]; candidate.credentials = [:]
+      return .avPlayer(source: candidate)
+    }
   }
 }

@@ -9,6 +9,7 @@ enum YlEngineRouter {
       .init(outcome: .incompatible, candidate: nil, satisfiedRequirements: [], limitations: [],
         rejection: NativePlayerError(category: category, code: code, message: "The requested source route is unsupported."))
     }
+    if source.airPlay { return assessAirPlay(source) }
     if let drm = source.drm {
       guard !drm.certificate.isEmpty, drm.certificate.count <= 65_536,
             !drm.contentId.isEmpty, drm.contentId.count <= 8192,
@@ -184,5 +185,38 @@ enum YlEngineRouter {
     case "mpg", "mpeg", "ps": return .mpegPs
     default: return .automatic
     }
+  }
+}
+
+
+extension YlEngineRouter {
+  static func airPlayRoute(_ source: YlAppleSourceDescriptor) -> YlAirPlayPolicy.Route {
+    let options = source.loadOptions ?? .init()
+    guard let url = source.url, source.kind != .content else { return .unsupported }
+    let isRtmp = ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "")
+    if isRtmp {
+      guard (try? YlRtmpAddress.validate(source)) != nil else { return .unsupported }
+    } else {
+      guard source.kind == .file ? url.isFileURL : ["http", "https"].contains(url.scheme?.lowercased() ?? "") else { return .unsupported }
+    }
+    let route = YlAirPlayPolicy.route(format: isRtmp ? "flv" : source.formatHint.rawValue,
+      network: source.kind == .network, live: isRtmp || source.isLive, headers: source.hasHeaders,
+      drm: source.drm != nil, strict: source.networkPolicy == .managed ||
+        options.bufferStrategy != .automatic || options.decoderPolicy == .hardwareRequired ||
+        options.videoConstraints != .unconstrained)
+    if route == .liveRemux && (options.startPositionMs ?? 0) != 0 { return .unsupported }
+    return route
+  }
+
+  private static func assessAirPlay(_ source: YlAppleSourceDescriptor) -> YlSourceAssessment {
+    let route = airPlayRoute(source)
+    guard route != .unsupported else {
+      return .init(outcome: .incompatible, candidate: nil, satisfiedRequirements: [], limitations: [],
+        rejection: YlAppleFailureMapper.unsupported)
+    }
+    return .init(outcome: route == .native ? .compatible : .requiresInspection, candidate: .avPlayer,
+      satisfiedRequirements: [.networkPlatformDefault, .bufferAutomatic],
+      limitations: route == .native ? [.decoderModeUnknown, .networkSystemStackOpaque] :
+        [.sourceRequiresInspection, .codecRequiresInspection, .decoderModeUnknown, .networkSystemStackOpaque], rejection: nil)
   }
 }

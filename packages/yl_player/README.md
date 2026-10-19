@@ -4,6 +4,11 @@
 and endorses Android, iOS, and macOS implementations. Version 0.2 is a breaking
 cutover; there is no v0.1 compatibility shim.
 
+Apple platforms provide opt-in AirPlay video with `YlLoadOptions(airPlay: true)`,
+`YlAirPlayButton` and `player.airPlayState`. HLS live/VOD uses AVPlayer directly;
+compatible custom H.264/AAC VOD and RTMP/HTTP-FLV live can be remuxed to HLS. See
+[AirPlay setup, limits and verification](../../docs/airplay.md).
+
 ## Lifecycle
 
 Create one player during asynchronous startup or `initState`, never from

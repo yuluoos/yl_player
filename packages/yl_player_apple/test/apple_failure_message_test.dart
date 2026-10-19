@@ -9,6 +9,18 @@ void main() {
   const hostile =
       'https://user:secret@private.test/media?token=secret Authorization: Bearer secret';
   const messages = {
+    'airplay.unsupported_source':
+        'AirPlay requires a supported unprotected file, HTTP source or RTMP live stream.',
+    'airplay.unsupported_codec':
+        'AirPlay preparation requires H.264 video and mono or stereo AAC-LC audio.',
+    'airplay.unsupported_timeline':
+        'The source timeline is unsupported for AirPlay preparation.',
+    'airplay.resource_limit':
+        'AirPlay processing exceeded its resource limit.',
+    'airplay.remux_failed':
+        'AirPlay HLS output failed. Check the connection, source timeline and codecs.',
+    'airplay.lan_unavailable':
+        'AirPlay requires a reachable Wi-Fi or Ethernet IPv4 address.',
     'render.audio_engine_failed':
         'Audio output is unavailable. Check the selected audio device and reload the media to rebuild playback.',
     'container.dash_manifest_invalid':
@@ -65,6 +77,8 @@ void main() {
         );
         final failure = AppleCodec.failure(wire);
         expect(failure.message, entry.value);
+        expect(failure.toString(), isNot(contains('private.test')));
+        expect(failure.toString(), isNot(contains('secret')));
         expect(failure.code, entry.key);
         if (entry.key == 'render.audio_engine_failed') {
           expect(failure.category, YlFailureCategory.render);
@@ -85,6 +99,7 @@ void main() {
   test('unknown codes never promote native text or infer a known cause', () {
     for (final code in [
       'custom.unknown',
+      'airplay.remux_failed.extra',
       'render.audio_engine_failed.extra',
       'network.http_forbidden.extra',
       'network.rtmp_stream_unavailable.extra',

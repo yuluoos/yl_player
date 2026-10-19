@@ -39,6 +39,8 @@ struct YlFairPlayConfiguration {
 
 struct YlAppleSourceDescriptor {
   var uri: String
+  var airPlay = false
+  var airPlayMedia: YlAirPlayPreparedMedia? = nil
   var kind: YlSourceKind
   var formatHint: YlSourceFormat = .automatic
   var intent: YlSourceIntent = .automatic

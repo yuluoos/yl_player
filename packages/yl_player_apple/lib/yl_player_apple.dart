@@ -1,5 +1,6 @@
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
+import 'src/apple_airplay.dart';
 import 'src/apple_player.dart';
 import 'src/apple_transport.dart';
 
@@ -16,5 +17,6 @@ final class YlPlayerApple extends YlPlayerPlatform {
         factory: PigeonAppleFactoryTransport(),
         transportForSuffix: PigeonApplePlayerTransport.new,
         setupCallbacks: setupAppleCallbacks,
+        airPlayFactory: AppleAirPlayChannel.new,
       );
 }

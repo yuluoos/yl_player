@@ -8,8 +8,8 @@ final class YlRtmpFixturePeer {
   private let peer: RtmpScriptPeer?
   let port: UInt16
   private(set) var expectedFlvBytes=0
-  init(videoOnly: Bool = false) throws {
-    if !videoOnly, let raw = ProcessInfo.processInfo.environment["YL_RTMP_EXTERNAL_PEER_PORT"],
+  init(videoOnly: Bool = false, repetitions: Int = 8) throws {
+    if !videoOnly, repetitions == 8, let raw = ProcessInfo.processInfo.environment["YL_RTMP_EXTERNAL_PEER_PORT"],
        let port = UInt16(raw), port > 0 {
       self.port = port; peer = nil; return
     }
@@ -40,8 +40,8 @@ final class YlRtmpFixturePeer {
       at += n+15
     }
     let span=(tags.map {$0.1}.max() ?? 0)+40
-    for epoch in 0..<8 {for (type,time,payload) in tags {output.append(wire(type,1,time+UInt32(epoch)*span,payload))}}
-    expectedFlvBytes=13+8*tags.reduce(0) {$0+$1.2.count+15}
+    for epoch in 0..<repetitions {for (type,time,payload) in tags {output.append(wire(type,1,time+UInt32(epoch)*span,payload))}}
+    expectedFlvBytes=13+repetitions*tags.reduce(0) {$0+$1.2.count+15}
     let owned=try RtmpScriptPeer(prefix:output); peer=owned; port=owned.port
   }
   var acceptCount: Int { peer?.acceptCount ?? 0 }

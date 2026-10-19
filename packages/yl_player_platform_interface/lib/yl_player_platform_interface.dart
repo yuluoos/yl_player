@@ -31,3 +31,4 @@ export 'src/validation/subtitle_validation.dart';
 export 'src/validation/v2_validation.dart';
 export 'src/drm/drm_config.dart';
 export 'src/drm/drm_transport.dart';
+export 'src/platform/airplay.dart';

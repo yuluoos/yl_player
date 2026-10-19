@@ -85,6 +85,7 @@ struct YlPlatformServices {
   let activateAudioSession: () throws -> Void
   var nativeViewType: String?
   var beforeAudioOutput: () throws -> Void = {}
+  var externalAudioRouteIdentity: () -> String? = { nil }
 
   init(platform: YlApplePlatform, textureOutput: any YlTextureOutput,
        makeDisplayDriver: @escaping (@escaping () -> Void) -> any YlDisplayDriving,
@@ -103,6 +104,7 @@ extension YlPlatformServices {
     var result = Self(platform: platform, textureOutput: output,
       makeDisplayDriver: makeDisplayDriver, activateAudioSession: activateAudioSession)
     result.beforeAudioOutput = beforeAudioOutput
+    result.externalAudioRouteIdentity = externalAudioRouteIdentity
     result.nativeViewType = nativeViewType
     return result
   }

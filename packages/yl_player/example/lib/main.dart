@@ -4,13 +4,16 @@ import 'package:yl_player/yl_player.dart';
 
 void main() => runApp(const PlayerExampleApp());
 
+Future<YlPlayerController> _createPlayer() => YlPlayerController.create(
+  options: const YlPlayerOptions(
+    audioPolicy: YlAudioPolicy.pluginManagedMediaPlayback,
+  ),
+);
+
 typedef PlayerCreator = Future<YlPlayerController> Function();
 
 class PlayerExampleApp extends StatelessWidget {
-  const PlayerExampleApp({
-    this.createPlayer = YlPlayerController.create,
-    super.key,
-  });
+  const PlayerExampleApp({this.createPlayer = _createPlayer, super.key});
 
   final PlayerCreator createPlayer;
 
@@ -33,6 +36,7 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
   late final Future<YlPlayerController> _creation;
   YlPlaybackSession? _session;
   bool _live = false;
+  bool _airPlay = false;
   String? _message;
   int _operationGeneration = 0;
   @override
@@ -76,6 +80,7 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
           Uri.parse(_url.text),
           intent: _live ? YlStreamIntent.live : YlStreamIntent.onDemand,
         ),
+        options: YlLoadOptions(airPlay: _airPlay),
       );
       if (!_isCurrent(generation)) return;
       _session = session;
@@ -172,6 +177,32 @@ class _PlayerExamplePageState extends State<PlayerExamplePage> {
               title: const Text('Live stream'),
               value: _live,
               onChanged: (value) => setState(() => _live = value),
+            ),
+            ValueListenableBuilder<YlAirPlayState>(
+              valueListenable: player.airPlayState,
+              builder: (context, state, child) => Column(
+                children: [
+                  SwitchListTile(
+                    title: const Text('Enable AirPlay for next load'),
+                    subtitle: const Text('Load first, then select a device.'),
+                    value: _airPlay,
+                    onChanged: state.supported
+                        ? (value) => setState(() => _airPlay = value)
+                        : null,
+                  ),
+                  if (state.enabled)
+                    Row(
+                      children: [
+                        YlAirPlayButton(controller: player),
+                        Text(
+                          state.active
+                              ? 'Playing through AirPlay'
+                              : 'Select AirPlay device',
+                        ),
+                      ],
+                    ),
+                ],
+              ),
             ),
             FilledButton(
               onPressed: () => unawaited(_load(player)),

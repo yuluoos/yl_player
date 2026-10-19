@@ -35,6 +35,46 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   var didCommit: (() -> Void)?
   var didRollback: (() -> Void)?
   var didDispose: (() -> Void)?
+  var onAirPlayChanged: (([String: Any]) -> Void)?
+  var onAirPlayLifecycleChanged: (() -> Void)?
+  private var interruptedAirPlayRoute: String?
+  private var backgroundAudioEnabled: Bool {
+    (Bundle.main.object(forInfoDictionaryKey: "UIBackgroundModes") as? [String])?.contains("audio") == true
+  }
+  func suspendForAudioInterruption() {
+    interruptedAirPlayRoute = keepsAirPlayInBackground ? services.externalAudioRouteIdentity() : nil
+    suspend()
+  }
+  var canRestoreAirPlayInBackground: Bool {
+    YlAirPlayPolicy.resumeAfterInterruption(enabled: coordinator.airPlayEnabled,
+      backgroundAudio: backgroundAudioEnabled, previousRoute: interruptedAirPlayRoute,
+      currentRoute: services.externalAudioRouteIdentity())
+  }
+  private var airPlayRevision: Int64 = 0
+  private var publishedAirPlay: (String?, Bool, Bool)?
+  var airPlayPlayer: AVPlayer? { coordinator.airPlayPlayer }
+  var keepsAirPlayInBackground: Bool {
+    YlAirPlayPolicy.keepInBackground(enabled: coordinator.airPlayEnabled,
+      active: coordinator.airPlayActive,
+      backgroundAudio: backgroundAudioEnabled)
+  }
+  var airPlayState: [String: Any] {
+    refreshAirPlayState()
+    let state = publishedAirPlay ?? (nil, false, false)
+    return ["version": 1, "revision": airPlayRevision,
+      "sessionId": state.0.map { $0 as Any } ?? NSNull(), "enabled": state.1, "active": state.2]
+  }
+  private func refreshAirPlayState() {
+    let next = (disposed ? nil : coordinator.identity?.sessionId,
+      !disposed && coordinator.airPlayEnabled, !disposed && coordinator.airPlayActive)
+    if let prior = publishedAirPlay, prior == next { return }
+    publishedAirPlay = next
+    if next.2 { interruptedAirPlayRoute = nil }
+    airPlayRevision += 1
+    onAirPlayChanged?(["version": 1, "revision": airPlayRevision,
+      "sessionId": next.0.map { $0 as Any } ?? NSNull(), "enabled": next.1, "active": next.2])
+    onAirPlayLifecycleChanged?()
+  }
 
   init(playerId: Int64, suffix: String, options: ApplePlayerOptionsMessage,
        services: YlPlatformServices, callbacks: ApplePlayerFlutterApiProtocol,
@@ -73,6 +113,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       audioTerminalCandidateEnabled: audioTerminalCandidateEnabled, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
         self?.receive(callback, identity: identity)
       }
+    coordinator.onAirPlayChanged = { [weak self] in self?.refreshAirPlayState() }
     coordinator.onNetworkBytesReceived = { [weak self] requestId, bytes in
       guard let self, self.attached, !self.disposed else { return }
       self.outbound.enqueue { [callbacks = self.callbacks] in
@@ -102,11 +143,19 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     send(.state(reducer.state))
   }
   func assess(request: AppleAssessRequest) throws -> AppleAssessmentReply {
+    try assess(request: request, airPlay: false)
+  }
+  func assessAirPlay(request: AppleAssessRequest) throws -> AppleAssessmentReply {
+    try assess(request: request, airPlay: true)
+  }
+  private func assess(request: AppleAssessRequest, airPlay: Bool) throws -> AppleAssessmentReply {
     try alive()
     do {
       let recipe = try YlAppleNativeInput.load(source: request.source, options: request.options,
         defaults: options, loadRequestId: nil)
-      let assessment = YlEngineRouter.assess(recipe.source)
+      var source = recipe.source
+      source.airPlay = airPlay
+      let assessment = YlEngineRouter.assess(source)
       let outcome: AppleAssessmentOutcome
       switch assessment.outcome {
       case .compatible: outcome = .compatible
@@ -124,12 +173,22 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     }
   }
   func load(request: AppleLoadRequest) async throws -> AppleLoadReply {
+    try await load(request: request, airPlay: false)
+  }
+  func loadAirPlay(request: AppleLoadRequest) async throws -> AppleLoadReply {
+    try await load(request: request, airPlay: true)
+  }
+  private func load(request: AppleLoadRequest, airPlay: Bool) async throws -> AppleLoadReply {
     try await onMain { completion in
       do {
         try self.alive()
         guard !request.loadRequestId.isEmpty else { throw YlAppleFailureMapper.invalid() }
         let recipe = try YlAppleNativeInput.load(source: request.source, options: request.options,
           defaults: self.options, loadRequestId: request.loadRequestId)
+        var source = recipe.source
+        source.airPlay = airPlay
+        let airPlayRecipe = YlAppleLoadRecipe(source: source)
+        if let rejection = YlEngineRouter.assess(source).rejection { throw rejection }
         #if DEBUG && YL_BOUND_AV
         try YlBoundFlutterProbe.current?.verifySource(request.source, host: self)
         #endif
@@ -140,12 +199,14 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
         self.restoring = false
         self.stagedSnapshot = nil
         let identity = self.reducer.makeIdentity(loadRequestId: request.loadRequestId)
-        self.coordinator.load(recipe, identity: identity,
+        self.coordinator.load(airPlayRecipe, identity: identity,
           willCommit: { self.willCommit?($0) },
           didCommit: {
+            self.interruptedAirPlayRoute = nil
             self.committedStreamIntent = request.source.intent
             self.reducer.commit(identity, deferInitialPublication: recipe.source.loadOptions?.decoderPolicy == .hardwareRequired)
             self.resumePlayback = request.options.autoplay
+            self.refreshAirPlayState()
             self.didCommit?()
           }, didRollback: { self.didRollback?() }, completion: { result in
             completion(result.map { AppleLoadReply(loadRequestId: identity.loadRequestId,
@@ -283,8 +344,10 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
         self.restoring = false
         self.stagedSnapshot = nil
         self.resumePlayback = false
+        self.interruptedAirPlayRoute = nil
         self.reducer.stop()
         self.coordinator.stop()
+        self.refreshAirPlayState()
         completion(.success(()))
       } catch { completion(.failure(error)) }
     }
@@ -302,6 +365,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     stagedSnapshot = nil
     outbound.close()
     coordinator.dispose()
+    refreshAirPlayState()
     textureOwner.dispose()
     didDispose?()
   }
@@ -316,6 +380,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     resumePlayback = coordinator.currentPlaybackIntent
     coordinator.deactivate()
     reducer.projectPaused()
+    refreshAirPlayState()
   }
   func handleMemoryWarning() {
     guard !disposed else { return }
@@ -327,6 +392,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     reducer.projectPaused()
   }
   func cancelAutomaticResume() {
+    interruptedAirPlayRoute = nil
     resumePlayback = false
     try? coordinator.executeSynchronous(.pause)
   }

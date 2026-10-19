@@ -4,6 +4,7 @@ import 'live_mode_barrier.dart';
 import 'package:flutter/foundation.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
+import 'apple_airplay.dart';
 import 'apple_callbacks.dart';
 import 'apple_codec.dart';
 import 'apple_drm.dart';
@@ -14,6 +15,7 @@ import 'pigeon/yl_player_apple.g.dart';
 final class ApplePlayer
     implements
         YlPlatformPlayer,
+        YlAirPlayPlatformPlayer,
         YlNetworkTrafficPlatformPlayer,
         YlLivePlaybackPlatformPlayer,
         YlPlatformDrmSourceSupport,
@@ -79,6 +81,7 @@ final class ApplePlayer
     required AppleTransportFactory transportForSuffix,
     required AppleCallbackSetup setupCallbacks,
     AppleDrmChannel Function(String, AppleDrmSupportMessage)? drmFactory,
+    AppleAirPlayChannel Function(String)? airPlayFactory,
   }) async {
     final encoded = AppleCodec.playerOptions(options);
     final AppleCreateReply reply;
@@ -156,6 +159,32 @@ final class ApplePlayer
             onTimeout: () =>
                 throw AppleCodec.problem(YlFailureCodes.protocolMismatch),
           );
+      if (airPlayFactory != null) {
+        player._airPlayChannel = airPlayFactory(reply.channelSuffix);
+        final negotiated = await player
+            ._run(
+              () => player!._airPlayChannel!.negotiate(
+                onState: player._receiveAirPlay,
+                onError: player._terminate,
+              ),
+            )
+            .timeout(
+              _transportDeadline,
+              onTimeout: () =>
+                  throw AppleCodec.problem(YlFailureCodes.protocolMismatch),
+            );
+        if (negotiated != null) {
+          player._airPlaySupported = true;
+          player._routePicker = YlAirPlayRoutePickerSurface(
+            platform: reply.platform == ApplePlatform.ios
+                ? TargetPlatform.iOS
+                : TargetPlatform.macOS,
+            channelSuffix: reply.channelSuffix,
+          );
+          player._receiveAirPlay(negotiated);
+          player._airPlay.value = const YlAirPlayState(supported: true);
+        }
+      }
       player._checkAlive();
       return player;
     } catch (error) {
@@ -175,6 +204,86 @@ final class ApplePlayer
       throw failure;
     }
   }
+
+  AppleAirPlayChannel? _airPlayChannel;
+  bool _airPlaySupported = false;
+  bool _airPlayCommitted = false;
+  int _airPlayRevision = -1;
+  YlPlaybackSessionId? _airPlayStoppedSession;
+  final _airPlay = ValueNotifier(const YlAirPlayState());
+  YlAirPlayRoutePickerSurface? _routePicker;
+  @override
+  ValueListenable<YlAirPlayState> get airPlayState => _airPlay;
+  @override
+  YlAirPlayRoutePickerSurface? get airPlayRoutePickerSurface => _routePicker;
+
+  void _resetAirPlay() {
+    _airPlay.value = YlAirPlayState(supported: _airPlaySupported);
+  }
+
+  void _receiveAirPlay(AppleAirPlaySnapshot snapshot) {
+    if (_disposed ||
+        _terminal != null ||
+        snapshot.revision <= _airPlayRevision) {
+      return;
+    }
+    _airPlayRevision = snapshot.revision;
+    final next = snapshot.state;
+    final session = next.sessionId;
+    if (session != null && session == _airPlayStoppedSession) return;
+    if (session == null) {
+      _pending?.airPlaySnapshot = null;
+      _resetAirPlay();
+      return;
+    }
+    if (session == state.sessionId &&
+        _airPlayCommitted &&
+        state.status != YlPlaybackStatus.failed &&
+        state.status != YlPlaybackStatus.idle) {
+      _airPlay.value = next;
+      return;
+    }
+    final pending = _pending;
+    if (pending != null &&
+        pending.sent &&
+        pending.airPlay &&
+        session != state.sessionId) {
+      pending.airPlaySnapshot = snapshot;
+    }
+  }
+
+  void _requireAirPlay() {
+    _checkAlive();
+    if (!_airPlaySupported) {
+      throw AppleCodec.problem(
+        YlFailureCodes.policyUnsupported,
+        category: YlFailureCategory.unsupported,
+        scope: YlFailureScope.command,
+      );
+    }
+  }
+
+  @override
+  Future<YlSourceAssessment> assessForAirPlay(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) async {
+    _requireAirPlay();
+    _validateDrm(source);
+    return _assess(
+      AppleAssessRequest(
+        source: AppleCodec.source(source),
+        options: AppleCodec.loadOptions(options),
+      ),
+      airPlay: true,
+    );
+  }
+
+  @override
+  Future<YlPlatformLoadResult> loadForAirPlay(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) => _beginLoad(source, options: options, airPlay: true);
 
   AppleDrmChannel? _drm;
   (YlPlayerEvent, int)? _protectedFrame;
@@ -364,6 +473,7 @@ final class ApplePlayer
     YlLoadOptions options = const YlLoadOptions(),
   }) async {
     _checkAlive();
+    if (options.airPlay) return assessForAirPlay(source, options: options);
     _validateDrm(source);
     final request = AppleAssessRequest(
       source: AppleCodec.source(source),
@@ -375,8 +485,14 @@ final class ApplePlayer
   Future<YlSourceAssessment> _assess(
     AppleAssessRequest request, {
     _PendingLoad? owner,
+    bool airPlay = false,
   }) async {
-    final reply = await _run(() => _transport.assess(request), owner: owner);
+    final reply = await _run(
+      () => airPlay
+          ? _airPlayChannel!.assess(request)
+          : _transport.assess(request),
+      owner: owner,
+    );
     try {
       return AppleCodec.assessment(reply);
     } on ArgumentError {
@@ -390,9 +506,16 @@ final class ApplePlayer
   Future<YlPlatformLoadResult> load(
     YlMediaSource source, {
     YlLoadOptions options = const YlLoadOptions(),
+  }) => _beginLoad(source, options: options, airPlay: options.airPlay);
+
+  Future<YlPlatformLoadResult> _beginLoad(
+    YlMediaSource source, {
+    required YlLoadOptions options,
+    required bool airPlay,
   }) {
     try {
       _checkAlive();
+      if (airPlay) _requireAirPlay();
       _validateDrm(source);
       final request = AppleLoadRequest(
         loadRequestId: 'load-${++_requestCounter}',
@@ -403,7 +526,7 @@ final class ApplePlayer
       _cancelLoad(_cancelled);
       _drm?.begin(request.loadRequestId, source);
       _resetTraffic(request.loadRequestId);
-      final pending = _PendingLoad(request.loadRequestId);
+      final pending = _PendingLoad(request.loadRequestId, airPlay: airPlay);
       _pending = pending;
       // The public barrier is installed before assessment begins.
       unawaited(_load(pending, request));
@@ -418,13 +541,19 @@ final class ApplePlayer
       final assessment = await _assess(
         AppleAssessRequest(source: request.source, options: request.options),
         owner: pending,
+        airPlay: pending.airPlay,
       );
       if (_pending != pending) return;
       if (assessment.rejection case final rejection?) {
         throw YlPlayerException(rejection);
       }
       pending.sent = true;
-      final reply = await _run(() => _transport.load(request), owner: pending);
+      final reply = await _run(
+        () => pending.airPlay
+            ? _airPlayChannel!.load(request)
+            : _transport.load(request),
+        owner: pending,
+      );
       if (reply.loadRequestId != pending.requestId) {
         throw AppleCodec.problem(YlFailureCodes.protocolMismatch);
       }
@@ -495,6 +624,8 @@ final class ApplePlayer
       if (session == null) {
         _stoppedSession = null;
         _currentRequestId = null;
+        _airPlayCommitted = false;
+        _resetAirPlay();
       }
       _callbacks.acceptState(next, sequence);
       // A retained session may fail while an unrelated candidate is assessed
@@ -564,6 +695,12 @@ final class ApplePlayer
       return;
     }
     _stoppedSession = null;
+    _airPlayStoppedSession = null;
+    _airPlayCommitted = pending.airPlay;
+    final route = pending.airPlaySnapshot;
+    _airPlay.value = pending.airPlay && route?.state.sessionId == session
+        ? route!.state
+        : YlAirPlayState(supported: _airPlaySupported);
     _currentRequestId = pending.requestId;
     _drm?.commit(pending.requestId);
     _protectedFrame = null;
@@ -654,6 +791,8 @@ final class ApplePlayer
     pending.publication?.cancel();
     if (pending.paired && pending.reply == state.sessionId) {
       _stoppedSession = pending.reply;
+      _airPlayStoppedSession = pending.reply;
+      _resetAirPlay();
     }
     for (final cancel in pending.commands.toList()) {
       cancel(error);
@@ -666,6 +805,7 @@ final class ApplePlayer
     pending.readyStates.clear();
     pending.readySessions.clear();
     pending.events.clear();
+    pending.airPlaySnapshot = null;
     pending.completion.completeError(error);
   }
 
@@ -860,6 +1000,8 @@ final class ApplePlayer
     // Only the accepted Stop's captured identity is fenced; idle is authoritative.
     if (captured != null && captured == state.sessionId) {
       _stoppedSession = captured;
+      _airPlayStoppedSession = captured;
+      _resetAirPlay();
     }
   }
 
@@ -898,6 +1040,10 @@ final class ApplePlayer
   Future<void> dispose() {
     if (_disposeFuture case final result?) return result;
     _disposed = true;
+    _airPlayChannel?.close();
+    _airPlaySupported = false;
+    _routePicker = null;
+    _resetAirPlay();
     _resetTraffic();
     _drm?.close();
     _protectedFrame = null;
@@ -936,7 +1082,9 @@ final class ApplePlayer
 }
 
 final class _PendingLoad {
-  _PendingLoad(this.requestId);
+  _PendingLoad(this.requestId, {required this.airPlay});
+  final bool airPlay;
+  AppleAirPlaySnapshot? airPlaySnapshot;
   final String requestId;
   final commands = <void Function(YlPlayerException)>{};
   final completion = Completer<YlPlatformLoadResult>();

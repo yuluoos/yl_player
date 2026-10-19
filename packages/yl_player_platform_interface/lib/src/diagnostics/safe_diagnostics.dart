@@ -6,6 +6,19 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    'airplay.unsupported_source' =>
+      'AirPlay requires a supported unprotected file, HTTP source or RTMP live stream.',
+    'airplay.unsupported_codec' =>
+      'AirPlay preparation requires H.264 video and mono or stereo AAC-LC audio.',
+    'airplay.unsupported_timeline' =>
+      'The source timeline is unsupported for AirPlay preparation.',
+    'airplay.resource_limit' =>
+      'AirPlay processing exceeded its resource limit.',
+    'airplay.remux_failed' =>
+      'AirPlay HLS output failed. Check the connection, source timeline and codecs.',
+    'airplay.lan_unavailable' =>
+      'AirPlay requires a reachable Wi-Fi or Ethernet IPv4 address.',
+
     YlFailureCodes.drmSessionFailed =>
       'The system DRM session failed. Reload the source or check device DRM support.',
     YlFailureCodes.drmProtectionInsufficient =>
