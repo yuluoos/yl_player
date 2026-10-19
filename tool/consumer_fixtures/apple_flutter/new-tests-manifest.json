@@ -230,7 +230,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-ios/YlAppleHostTests.swift",
-    "sha256": "427e18a153c35dd8f4c0d8b54126f862c153c1a2b10214c2f47a45c119886992",
+    "sha256": "560ddf1c1db8bbaecf43bebbd47361eede4e1fd8fa519f3b8628ef31251c0b97",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testPlayerVolumeAndCandidateOptionsSurviveFailedReplacementAndStop",
@@ -259,7 +259,8 @@
       "testStoppingHeldRtmpAirPlayStartupCancelsPromptly",
       "testRtmpAirPlayRetainsTransportAndStrictPolicyRejections",
       "testLiveProducerFailureIsFencedAfterReplacementAndCurrentFailureTerminates",
-      "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation"
+      "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation",
+      "testAutomaticRtmpsLoadAndAirPlayReachTlsAndRejectUntrustedPeer"
     ],
     "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
     "task7_typed_migration": {
@@ -276,7 +277,8 @@
       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
     },
     "airplay_video": "Adds eight AirPlay assessment, live HLS, session, production network remux and cleanup cases. macOS checks AirPlay handler cleanup and reconciles existing counts with the 15 schema-7 host methods plus 3 DRM methods.",
-    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup."
+    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup.",
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleDecoderRestorationTests.swift",
@@ -293,7 +295,7 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
-    "sha256": "84263c5049ecac7c5f9fe1f5e3b2c1833e6257757e608c1ae238a90082bd1552",
+    "sha256": "898216cac058910cc8b25fc526bf0da31f510b3f711aa6feee0784243dae3589",
     "methods": [
       "testCancelOpenMatchesOnlyThePreparingCandidate",
       "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
@@ -332,7 +334,8 @@
       "testStoppingHeldRtmpAirPlayStartupCancelsPromptly",
       "testRtmpAirPlayRetainsTransportAndStrictPolicyRejections",
       "testLiveProducerFailureIsFencedAfterReplacementAndCurrentFailureTerminates",
-      "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation"
+      "testSuspendedLiveProducerRetainsOwnershipAndReplaysFailureOnActivation",
+      "testAutomaticRtmpsLoadAndAirPlayReachTlsAndRejectUntrustedPeer"
     ],
     "task7_provenance": "Task7 exact 20 host methods call explicit shared assertion bodies (task7-host-cases.json). Additional platform lifecycle/held-command regressions preserve actual native behavior; R21 only original initial-MKV hardware skip, R22 real decoded restoration.",
     "task7_typed_migration": {
@@ -355,7 +358,8 @@
       "reason": "Current typed factory fixtures request schema 6; test bodies differ from the source baseline only by the schema literal migration. Historical assertions and skip conditions retained."
     },
     "airplay_video": "Adds eight AirPlay assessment, live HLS, session, production network remux and cleanup cases. macOS checks AirPlay handler cleanup and reconciles existing counts with the 15 schema-7 host methods plus 3 DRM methods.",
-    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup."
+    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup.",
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleReconciliationTests.swift",
@@ -745,26 +749,32 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpFixturePeer.swift",
-    "sha256": "b687dca9ac7b7c20e9c4c2f204f59d2935ecb62ccd04300509890ad78bc153e9",
+    "sha256": "93c2a3e41f03e36a4fbd632acc301ee0791cb5ce41c67bddfa333403135fbc5a",
     "methods": [],
-    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup."
+    "airplay_live": "Real open HTTP-FLV and RTMP startup, rolling playlist, discontinuity recovery, cancellation, transport/policy rejection and ownership cleanup.",
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRouteTests.swift",
-    "sha256": "00c6d9e9b49a4d48b30b99e42aefc5408b897a8d64cb0df438f6f5442041b847",
+    "sha256": "1ea2b7d6a7dd99ef9a8af33c12359bf5117f491f89466977d411c5cfdb5a7cae",
     "methods": [
       "testPublicRtmpTimeSeekRejectsZeroAndPositiveWithoutChangingIntent",
       "testPublicHttpFlvTimeSeekRetainsRangeRejectionWithoutChangingIntent",
       "testClassicRtmpAutomaticSelectsOwnedManagedRoute",
-      "testRtmpsIsExplicitlyUnsupported",
       "testRtmpRejectsUnsupportedPoliciesBeforeOpen",
-      "testPublicHostAdmitsRtmpBeforeRoutingAndRejectsRtmpsSafely",
-      "testExplicitIncompatibleFormatRejectsAsContainerBeforeOpen"
-    ]
+      "testExplicitIncompatibleFormatRejectsAsContainerBeforeOpen",
+      "testRtmpsSelectsOwnedManagedRoute",
+      "testPublicHostAdmitsRtmpAndRtmpsBeforeRouting",
+      "testAutomaticRtmpsUsesLiveBufferDefaults",
+      "testSecureAddressUses443AndPreservesExplicitPortAndTcUrl",
+      "testRtmpsKeepsPolicyRejectionsAndTlsFailuresAreTerminal"
+    ],
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained.",
+    "rtmps_diagnostics": "Record stable native error codes on fixture load/restoration failure without exposing source data; assertions unchanged."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpDemandTests.swift",
-    "sha256": "b908cbfcea2bc7a8d2c13d2a93e95e755836c30c30f6fe8b9fe546586f32f4d4",
+    "sha256": "df3c830ad555d9ed92c461456e44971a0556fcac16cb4db55d768e98576bdfee",
     "methods": [
       "testExplicitAmfDenialIsPermanentAndServerTextIsNotExposed",
       "testOpeningDeadlineContinuesThroughRealAvioDiscoveryAfterFirstKeyframe",
@@ -772,17 +782,27 @@
       "testTemporaryInterruptPreservesPartialChunkHeaderAndPayloadOnSameSocket",
       "testConsumerIdleDoesNotSpendInactivityBudget",
       "testRepeatedConfigurationDoesNotResetActiveDemandBudget"
-    ]
+    ],
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpTransportTests.swift",
-    "sha256": "93f6c0fcf5fadf35b4c59d181d88a09ea6b7adb88ab8316f9d474d9343bcd9e8",
+    "sha256": "83dbf89c00ed113b6638f52630d77349f2b2fd6672f000e08f9c59e46f119b04",
     "methods": [
       "testAbsoluteSetupDeadlineWithSilentRealSocket",
       "testCancelWakesBlockedHandshakeAndPreCancelledSourceDoesNotConnect",
       "testInterruptWakesConsumerWithoutClosingHandshakeSocket",
-      "testWorkspaceAdmissionFailsBeforeConnectAndCancellationReleasesReservation"
-    ]
+      "testWorkspaceAdmissionFailsBeforeConnectAndCancellationReleasesReservation",
+      "testRtmpsRejectsUntrustedCertificateTerminally",
+      "testRtmpsAirPlayRejectsUntrustedCertificateWithoutRetry",
+      "testRtmpsEncryptedHandshakeDemuxesAvcAacAndFreshEpoch",
+      "testRtmpsWrongHostnameStopsOrdinaryRestorationWithoutSpendingBudget",
+      "testRtmpsSilentTLSHandshakeHasAbsoluteDeadlineAndCancelsPromptly",
+      "testRtmpsAirPlayWrongHostnameIsTerminalWithoutRetry",
+      "testRtmpsAirPlayProducesDecodedVideoAndReconnectsWithNewPeriod",
+      "testOpeningTrafficArrivesBeforeSessionCommitAndStopsAfterCancellation"
+    ],
+    "rtmps": "Authenticated TLS transport and terminal trust failures; secure live admission and AirPlay integration. Existing RTMP behavior retained."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpPeerTests.swift",
@@ -829,11 +849,12 @@
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRestorationTests.swift",
-    "sha256": "6e814ef300122aab564d49016b1adf923b7f6678c62611eabc8fe098132435e7",
+    "sha256": "760b00417cade941d4154af09340be5e443940a72c6fbca0f0c2e40d74468f5d",
     "methods": [
       "testCommittedCoordinatorRestorationRetriesTransientPrepareAndCompletesOriginalWaiter",
       "testExhaustedRestorationMakesOneExplicitAttemptAndInitialCandidateNeverRetries"
-    ]
+    ],
+    "rtmps_diagnostics": "Record stable native error codes on fixture load/restoration failure without exposing source data; assertions unchanged."
   },
   {
     "destination": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlRtmpRecoveryTests.swift",

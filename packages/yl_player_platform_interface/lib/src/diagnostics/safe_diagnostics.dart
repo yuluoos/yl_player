@@ -107,6 +107,8 @@ abstract final class YlSafeDiagnostics {
       'The requested video quality is unavailable for this source.',
     YlFailureCodes.networkProtocolUnsupported =>
       'The media transport protocol is not supported. Use a supported source protocol.',
+    'network.rtmp_tls_failed' =>
+      'The secure RTMP connection failed TLS verification or negotiation. Check the server certificate, hostname and TLS configuration.',
     YlFailureCodes.networkRtmpHandshakeFailed =>
       'The RTMP connection could not be established. Check the connection and server configuration, then try again.',
     YlFailureCodes.networkRtmpStreamUnavailable =>

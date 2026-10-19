@@ -194,7 +194,7 @@ final class YlAppleSessionCoordinator: NSObject {
       }
       guard let fallback, let source, let expectedIdentity else { return }
       let prepare = { try self.prepareFallback(source: source, token: token, identity: expectedIdentity, reactivating: true) }
-      let prepared = try source.url?.scheme?.lowercased() == "rtmp"
+      let prepared = try ["rtmp", "rtmps"].contains(source.url?.scheme?.lowercased() ?? "")
         ? source.rtmpRecovery.prepareRestoration(token: token, work: prepare) : prepare()
       defer { prepared.discard() }
       // Candidates remain silent until the complete policy/resource transaction commits.
@@ -247,7 +247,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func validateTimeSeek() throws {
-    if lastCommittedSource?.url?.scheme?.lowercased() == "rtmp" {
+    if ["rtmp", "rtmps"].contains(lastCommittedSource?.url?.scheme?.lowercased() ?? "") {
       throw ylRtmpError("policy.unsupported")
     }
   }
@@ -643,7 +643,7 @@ final class YlAppleSessionCoordinator: NSObject {
           try token.throwIfCancelled()
           return YlPreparedOpen.fallback(source: source, prepared: prepared)
         }
-        if source.url?.scheme?.lowercased() == "rtmp" {
+        if ["rtmp", "rtmps"].contains(source.url?.scheme?.lowercased() ?? "") {
           return try source.rtmpRecovery.prepareRestoration(token: token, work: prepare)
         }
         return try prepare()
@@ -1272,7 +1272,7 @@ final class YlAppleSessionCoordinator: NSObject {
 extension YlAppleSessionCoordinator {
   private func prepareAirPlay(_ source: YlAppleSourceDescriptor, token: YlOpenCancellationToken) throws -> YlPreparedOpen {
     var candidate = source
-    if candidate.url?.scheme?.lowercased() == "rtmp" {
+    if ["rtmp", "rtmps"].contains(candidate.url?.scheme?.lowercased() ?? "") {
       _ = try YlRtmpAddress.validate(candidate)
       candidate.formatHint = .flv
       candidate.intent = .live

@@ -8,21 +8,22 @@ enum YlAirPlayLiveRemux {
   static let startupSeconds: TimeInterval = 45
 
   static func prepare(source: YlAppleSourceDescriptor, configuration: PlayerConfiguration,
-                      token: YlOpenCancellationToken) throws -> YlAirPlayPreparedMedia {
+                      token: YlOpenCancellationToken,
+                      rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)? = nil) throws -> YlAirPlayPreparedMedia {
     try token.throwIfCancelled()
     guard source.kind == .network, source.drm == nil, let url = source.url else {
       throw YlAirPlayRemux.failure("unsupported_source", "Live AirPlay requires an unprotected network FLV or RTMP source.")
     }
     let scope = try source.bufferScope ?? YlManagedBufferLedger().makeScope(maxBytes: nil)
     let recipe: YlFallbackSourceRecipe
-    if url.scheme?.lowercased() == "rtmp" {
+    if ["rtmp", "rtmps"].contains(url.scheme?.lowercased() ?? "") {
       recipe = .rtmp(request: YlRtmpRequestRecipe(address: try YlRtmpAddress.validate(source),
         recovery: source.rtmpRecovery, bufferScope: scope))
     } else {
       guard ["http", "https"].contains(url.scheme?.lowercased() ?? ""),
             source.intent != .onDemand,
             source.formatHint == .flv || url.pathExtension.lowercased() == "flv" else {
-        throw YlAirPlayRemux.failure("unsupported_source", "Live AirPlay accepts HTTP-FLV and non-TLS RTMP only.")
+        throw YlAirPlayRemux.failure("unsupported_source", "Live AirPlay accepts HTTP-FLV, RTMP and RTMPS only.")
       }
       let network = source.networkConfiguration.map(YlNetworkConfiguration.init(options:)) ?? configuration.network
       // The producer owns the complete three-attempt recovery budget. A byte
@@ -43,7 +44,8 @@ enum YlAirPlayLiveRemux {
     do {
       let store = try YlAirPlayLiveStore(directory: directory)
       let server = try YlAirPlayHTTPServer(host: YlAirPlayHTTPServer.lanIPv4Address(), resolver: store.resolve)
-      let worker = YlAirPlayLiveWorker(recipe: recipe, store: store, server: server, directory: directory)
+      let worker = YlAirPlayLiveWorker(recipe: recipe, store: store, server: server, directory: directory,
+        rtmpSourceFactory: rtmpSourceFactory)
       token.onCancel { [weak worker] in worker?.cancelPreparation() }
       worker.start(); started = true
       do { try worker.waitUntilReady(token: token) }
@@ -62,6 +64,7 @@ enum YlAirPlayLiveRemux {
 }
 
 private final class YlAirPlayLiveWorker {
+  private let rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)?
   private let recipe: YlFallbackSourceRecipe
   private let store: YlAirPlayLiveStore
   private let server: YlAirPlayHTTPServer
@@ -76,7 +79,9 @@ private final class YlAirPlayLiveWorker {
   private var observer: ((NativePlayerError) -> Void)?
 
   init(recipe: YlFallbackSourceRecipe, store: YlAirPlayLiveStore,
-       server: YlAirPlayHTTPServer, directory: URL) {
+       server: YlAirPlayHTTPServer, directory: URL,
+       rtmpSourceFactory: ((YlRtmpRequestRecipe) -> YlRtmpByteSource)?) {
+    self.rtmpSourceFactory = rtmpSourceFactory
     self.recipe = recipe; self.store = store; self.server = server; self.directory = directory
   }
 
@@ -166,7 +171,7 @@ private final class YlAirPlayLiveWorker {
   private func producePeriod() throws {
     let opened = try YlOpenedMedia(recipe: recipe, networkBufferBytes: 2 * 1024 * 1024,
       onSourceCreated: { [lifetime] input in lifetime.onCancel { [weak input] in input?.cancel() } },
-      byteSourceTransform: { YlAirPlayFLVValidator(source: $0) })
+      byteSourceTransform: { YlAirPlayFLVValidator(source: $0) }, rtmpSourceFactory: rtmpSourceFactory)
     defer { opened.close() }
     opened.beginControlOperation(lifetime)
     guard let context = opened.context else { throw YlAirPlayRemux.failure("remux_failed", "Live input did not open.") }

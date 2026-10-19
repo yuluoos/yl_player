@@ -46,6 +46,7 @@ final class YlRtmpRestorationTests: XCTestCase {
   private func load(_ coordinator:YlAppleSessionCoordinator,_ source:YlAppleSourceDescriptor,_ identity:YlAppleSessionIdentity) async throws {
     try await withCheckedThrowingContinuation { (continuation:CheckedContinuation<Void,Error>) in
       coordinator.load(.init(source:source),identity:identity,willCommit:{ _ in },didCommit:{},didRollback:{}) {
+        if case let .failure(error) = $0 { print("RTMP restoration fixture failed: \(error.code)") }
         continuation.resume(with:$0.mapError { $0 as Error })
       }
     }
@@ -53,6 +54,7 @@ final class YlRtmpRestorationTests: XCTestCase {
   private func activate(_ coordinator:YlAppleSessionCoordinator) async throws {
     try await withCheckedThrowingContinuation { (continuation:CheckedContinuation<Void,Error>) in
       coordinator.beginActivation(forcePlay:false,willCommit:{ _ in },didCommit:{},didRollback:{}) {
+        if case let .failure(error) = $0 { print("RTMP restoration fixture failed: \(error.code)") }
         continuation.resume(with:$0.mapError { $0 as Error })
       }
     }

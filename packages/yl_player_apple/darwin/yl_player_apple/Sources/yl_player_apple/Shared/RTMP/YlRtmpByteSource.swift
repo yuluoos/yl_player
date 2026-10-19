@@ -1,10 +1,12 @@
 import Foundation
 import Network
+import Security
 
 /// One attempt, one socket, one parser/FLV epoch. The worker never retries.
 /// Temporary AVIO interruption only stops consumer demand. The worker retains
 /// its parser stack and any incomplete socket receive until demand resumes.
 final class YlRtmpByteSource: YlByteSource {
+  private let configureTLS: ((NWProtocolTLS.Options) -> Void)?
   private let recipe: YlRtmpRequestRecipe
   private let setupNanos: UInt64, inactivityNanos: UInt64
   private let condition = NSCondition()
@@ -29,8 +31,10 @@ final class YlRtmpByteSource: YlByteSource {
   private var received: UInt64 = 0, acknowledged: UInt64 = 0, ackWindow: UInt64 = 0
   private var videoConfig: Data?, audioConfig: Data?
 
-  init(recipe: YlRtmpRequestRecipe, setupMs: Int = 10000, inactivityMs: Int = 15000) {
+  init(recipe: YlRtmpRequestRecipe, setupMs: Int = 10000, inactivityMs: Int = 15000,
+       configureTLS: ((NWProtocolTLS.Options) -> Void)? = nil) {
     self.recipe = recipe
+    self.configureTLS = configureTLS
     recipe.bufferScope.recordNetworkBytes(0)
     setupNanos = UInt64(max(1,setupMs)) * 1_000_000
     inactivityNanos = UInt64(max(1,inactivityMs)) * 1_000_000
@@ -41,8 +45,9 @@ final class YlRtmpByteSource: YlByteSource {
   var supportsRandomAccess: Bool { false }
   var currentOffset: Int64 { condition.lock(); defer { condition.unlock() }; return offset }
   private func now() -> UInt64 { DispatchTime.now().uptimeNanoseconds }
-  private func transportErrorLocked() -> NativePlayerError {
-    ylRtmpError(prepared ? "network.rtmp_disconnected" : "network.rtmp_handshake_failed")
+  private func transportErrorLocked(_ error: NWError? = nil) -> NativePlayerError {
+    if let error, case .tls = error { return ylRtmpError("network.rtmp_tls_failed") }
+    return ylRtmpError(prepared ? "network.rtmp_disconnected" : "network.rtmp_handshake_failed")
   }
   private func expiredLocked() -> Bool {
     let time = now()
@@ -165,14 +170,30 @@ final class YlRtmpByteSource: YlByteSource {
   }
   private func connect() throws {
     condition.lock(); defer { condition.unlock() }; try checkLocked()
-    let socket = NWConnection(host: NWEndpoint.Host(recipe.address.host), port: NWEndpoint.Port(rawValue: recipe.address.port)!, using: .tcp)
+    let parameters: NWParameters
+    if recipe.address.secure {
+      let tls = NWProtocolTLS.Options()
+      sec_protocol_options_set_tls_server_name(tls.securityProtocolOptions, recipe.address.host)
+      sec_protocol_options_set_min_tls_protocol_version(tls.securityProtocolOptions, .TLSv12)
+      sec_protocol_options_append_tls_ciphersuite_group(tls.securityProtocolOptions, .ats)
+      sec_protocol_options_set_peer_authentication_required(tls.securityProtocolOptions, true)
+      configureTLS?(tls) // Internal fixture seam; production retains system trust and hostname checks.
+      parameters = NWParameters(tls: tls, tcp: NWProtocolTCP.Options())
+    } else { parameters = .tcp }
+    let socket = NWConnection(host: NWEndpoint.Host(recipe.address.host), port: NWEndpoint.Port(rawValue: recipe.address.port)!, using: parameters)
     connection = socket
     socket.stateUpdateHandler = { [weak self] state in
       guard let self else { return }
       self.condition.lock(); defer { self.condition.unlock() }
       switch state {
       case .ready: self.ready = true
-      case .failed: if self.failure == nil && !self.cancelled { self.failure = self.transportErrorLocked() }
+      case let .failed(error):
+        if self.failure == nil && !self.cancelled { self.failure = self.transportErrorLocked(error) }
+      case let .waiting(error):
+        // Certificate failures must terminate rather than becoming a retryable setup timeout.
+        if case .tls = error, self.failure == nil && !self.cancelled {
+          self.failure = self.transportErrorLocked(error); self.connection?.cancel()
+        }
       case .cancelled: if !self.cancelled && self.failure == nil { self.failure = self.transportErrorLocked() }
       default: break
       }
@@ -195,7 +216,7 @@ final class YlRtmpByteSource: YlByteSource {
     ioFinished = false
     connection!.send(content: bytes, completion: .contentProcessed { [weak self] error in
       guard let self else { return }; self.condition.lock()
-      if error != nil && self.failure == nil && !self.cancelled { self.failure = self.transportErrorLocked() }
+      if let error, self.failure == nil && !self.cancelled { self.failure = self.transportErrorLocked(error) }
       self.ioFinished = true; self.condition.broadcast(); self.condition.unlock()
     })
     while !ioFinished { try checkLocked(); condition.wait() }; try checkLocked()
@@ -209,7 +230,7 @@ final class YlRtmpByteSource: YlByteSource {
       if let data { self.recipe.bufferScope.recordNetworkBytes(data.count) }
       self.ioBytes = data
       if (error != nil || (eof && (data?.isEmpty ?? true))) && self.failure == nil && !self.cancelled {
-        self.failure = self.transportErrorLocked()
+        self.failure = self.transportErrorLocked(error)
       }
       self.ioFinished = true; self.condition.broadcast(); self.condition.unlock()
     }

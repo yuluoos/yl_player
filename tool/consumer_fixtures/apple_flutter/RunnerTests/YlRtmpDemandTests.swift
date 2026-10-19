@@ -1,6 +1,7 @@
 @testable import yl_player_apple
 import Foundation
 import Network
+import Security
 import XCTest
 
 final class YlRtmpDemandTests: XCTestCase {
@@ -125,9 +126,27 @@ final class RtmpScriptPeer {
   private(set) var port:UInt16 = 0
   private let prefix:Data, suffix:Data
   var acceptCount:Int { condition.lock(); defer { condition.unlock() }; return count }
-  init(prefix:Data,suffix:Data=Data(),closeOnConnect:Bool=false)throws {
+  init(prefix:Data,suffix:Data=Data(),closeOnConnect:Bool=false,tlsIdentity:Data?=nil)throws {
     self.prefix = prefix; self.suffix = suffix
-    listener = try NWListener(using:.tcp,on:.any)
+    let parameters: NWParameters
+    if let tlsIdentity {
+      var imported: CFArray?
+      var options: [String: Any] = [kSecImportExportPassphrase as String: "local-test-only"]
+      if #available(macOS 15, iOS 18, *) { options[kSecImportToMemoryOnly as String] = true }
+      else {
+        #if os(macOS)
+        throw XCTSkip("Isolated TLS fixture requires macOS15 memory-only PKCS12 import")
+        #endif
+      }
+      guard SecPKCS12Import(tlsIdentity as CFData, options as CFDictionary, &imported) == errSecSuccess,
+            let first = (imported as? [[String: Any]])?.first,
+            let identity = first[kSecImportItemIdentity as String] else { throw YlByteSourceError.closed }
+      let tls = NWProtocolTLS.Options()
+      sec_protocol_options_set_local_identity(tls.securityProtocolOptions, sec_identity_create(identity as! SecIdentity)!)
+      sec_protocol_options_set_min_tls_protocol_version(tls.securityProtocolOptions, .TLSv12)
+      parameters = NWParameters(tls: tls, tcp: NWProtocolTCP.Options())
+    } else { parameters = .tcp }
+    listener = try NWListener(using:parameters,on:.any)
     let ready = DispatchSemaphore(value:0)
     listener.stateUpdateHandler = { state in if case .ready = state { ready.signal() } }
     listener.newConnectionHandler = { [weak self] connection in

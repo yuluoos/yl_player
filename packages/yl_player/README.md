@@ -6,7 +6,7 @@ cutover; there is no v0.1 compatibility shim.
 
 Apple platforms provide opt-in AirPlay video with `YlLoadOptions(airPlay: true)`,
 `YlAirPlayButton` and `player.airPlayState`. HLS live/VOD uses AVPlayer directly;
-compatible custom H.264/AAC VOD and RTMP/HTTP-FLV live can be remuxed to HLS. See
+compatible custom H.264/AAC VOD and RTMP/RTMPS/HTTP-FLV live can be remuxed to HLS. See
 [AirPlay setup, limits and verification](../../docs/airplay.md).
 
 ## Lifecycle

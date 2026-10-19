@@ -21,7 +21,8 @@ actual source and requirements before Load.
 | Network Matroska marked live | Media3 route; runtime-dependent | Not selected | Rejected |
 | Network HTTP-FLV | Owned demux for explicit onDemand; automatic/live retain Media3 | Not selected | Inspection-dependent; automatic/live use sequential input, explicit onDemand supports VOD with seekability determined by HTTP Range |
 | Plain TCP RTMP, classic AVC with optional AAC | Owned bounded transport into Media3 FLV extractor; no fallback/retry nesting | Not selected | Owned bounded transport into custom AVIO/FLV and VideoToolbox |
-| RTMPS, enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
+| RTMPS, classic AVC with optional AAC | Explicitly unsupported | Not selected directly; opt-in AirPlay remux available | Owned RTMP transport over authenticated TLS, system trust/hostname validation |
+| Enhanced RTMP, other RTMP codecs or audio-only RTMP | Explicitly unsupported | Not selected | Explicitly unsupported |
 | Local FLV | Owned demux for VOD seek | Not selected | Inspection-dependent VOD; AVC/MP3 lifecycle measured on macOS |
 | Local WebM | Media3 with observed decoder admission | Not selected | Inspected VP9 with Opus/Vorbis; native hardware first, exact software admission when qualified |
 | Standalone MPEG-TS VOD | Media3 route; runtime-dependent | Not selected | Inspection-dependent defaults; 188-byte AVC/AC-3 file/HTTP/renamed-file scope; strict policies use owned samples, live intent rejected |
@@ -34,6 +35,12 @@ demuxing plus the documented parsers. It has no networking. Its controlled AV1
 (dav1d) and VP9 software candidates require an exact qualified device/build
 profile and a shared resource lease. Production software profiles remain empty;
 linking the decoders does not enable an unmeasured software fallback.
+Apple RTMPS uses port 443 by default and accepts explicit valid ports. TLS 1.2+
+and certificate/hostname validation are required; TLS failures are terminal
+`network.rtmp_tls_failed` with no plaintext downgrade. Ordinary RTMP policy,
+codec, seek and recovery constraints also apply to RTMPS. See
+[AirPlay support](airplay.md) for its separate opt-in path and
+[RTMPS verification](verification/2026-10-19-rtmps.md) for test scope.
 Apple managed fallback requires a supported video stream; audio-only fallback
 media is currently rejected.
 

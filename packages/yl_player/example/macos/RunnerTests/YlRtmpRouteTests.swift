@@ -11,7 +11,7 @@ final class YlRtmpRouteTests: XCTestCase {
     let fixture = AppleHostFixture(commandCoordinator:commands); defer { fixture.host.close() }
     var request = AppleHostFixture.request("rtmp-seek",url:"rtmp://127.0.0.1:\(peer.port)/live/owned",format:.flv,autoplay:true)
     request.source.intent = .live
-    let loaded = try await fixture.host.load(request:request)
+    let loaded = try await loadWithDiagnostics(fixture.host, request: request)
     try await AppleHostCharacterizations.waitFor { fixture.host.initialState.engine == .managedFallback }
     for position:Int64 in [0,900] {
       let before = fixture.host.initialState, intent = fixture.host.playbackIntent
@@ -36,7 +36,7 @@ final class YlRtmpRouteTests: XCTestCase {
     let fixture = AppleHostFixture(commandCoordinator:commands); defer { fixture.host.close() }
     var request = AppleHostFixture.request("http-seek",url:peer.url.absoluteString,format:.flv)
     request.source.intent = .live
-    let loaded = try await fixture.host.load(request:request)
+    let loaded = try await loadWithDiagnostics(fixture.host, request: request)
     try await AppleHostCharacterizations.waitFor { fixture.host.initialState.engine == .managedFallback }
     for position:Int64 in [0,900] {
       let before = fixture.host.initialState, intent = fixture.host.playbackIntent
@@ -51,15 +51,26 @@ final class YlRtmpRouteTests: XCTestCase {
       XCTAssertNil(fixture.host.initialState.failure)
     }
   }
+  @MainActor
+  private func loadWithDiagnostics(_ host: YlApplePlayerHost, request: AppleLoadRequest) async throws -> AppleLoadReply {
+    do { return try await host.load(request: request) }
+    catch {
+      print("RTMP route fixture load failed: \((error as? PigeonError)?.code ?? "unknown")")
+      throw error
+    }
+  }
+
   func testClassicRtmpAutomaticSelectsOwnedManagedRoute() {
     let result = YlEngineRouter.assess(.init(uri: "rtmp://127.0.0.1/live/stream", kind: .network))
     XCTAssertNil(result.rejection)
     XCTAssertEqual(result.engine, .managedFallback)
     XCTAssertEqual(result.candidate.map { String(describing: $0) }, "networkRtmp")
   }
-  func testRtmpsIsExplicitlyUnsupported() {
+  func testRtmpsSelectsOwnedManagedRoute() {
     let result = YlEngineRouter.assess(.init(uri: "rtmps://example.test/live/stream", kind: .network))
-    XCTAssertEqual(result.rejection?.code, "network.protocol_unsupported")
+    XCTAssertNil(result.rejection)
+    XCTAssertEqual(result.engine, .managedFallback)
+    XCTAssertEqual(result.candidate.map { String(describing: $0) }, "networkRtmp")
   }
   func testRtmpRejectsUnsupportedPoliciesBeforeOpen() {
     var source = YlAppleSourceDescriptor(uri: "rtmp://example.test/live/stream", kind: .network)
@@ -73,7 +84,7 @@ final class YlRtmpRouteTests: XCTestCase {
     XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
   }
   @MainActor
-  func testPublicHostAdmitsRtmpBeforeRoutingAndRejectsRtmpsSafely() throws {
+  func testPublicHostAdmitsRtmpAndRtmpsBeforeRouting() throws {
     let fixture = AppleHostFixture(); defer { fixture.host.close() }
     var request = AppleHostFixture.request("rtmp",url:"rtmp://127.0.0.1/live/test",format:.automatic)
     request.source.intent = .live
@@ -85,8 +96,37 @@ final class YlRtmpRouteTests: XCTestCase {
     XCTAssertEqual(wrongFormat.rejection?.code,"container.unsupported")
     request.source.format = .automatic
     request.source.locator = "rtmps://127.0.0.1/live/test"
-    let rejected = try fixture.host.assess(request:.init(source:request.source,options:request.options))
-    XCTAssertEqual(rejected.rejection?.code,"network.protocol_unsupported")
+    let secure = try fixture.host.assess(request:.init(source:request.source,options:request.options))
+    XCTAssertNil(secure.rejection)
+    XCTAssertEqual(secure.candidateEngine, .managedFallback)
+  }
+
+  func testAutomaticRtmpsUsesLiveBufferDefaults() {
+    let source = YlAppleSourceDescriptor(uri: "rtmps://example.test/live/stream", kind: .network,
+      loadOptions: .init(bufferStrategy: .automatic))
+    let configuration = PlayerConfiguration(map: [:]).forLoad(source)
+    XCTAssertEqual(configuration.bufferMode, "stable")
+  }
+
+  func testSecureAddressUses443AndPreservesExplicitPortAndTcUrl() throws {
+    let secure = try YlRtmpAddress("rtmps://media.example/live/stream?token=opaque")
+    XCTAssertTrue(secure.secure)
+    XCTAssertEqual(secure.port, 443)
+    XCTAssertEqual(secure.tcURL, "rtmps://media.example/live")
+    XCTAssertEqual(secure.playpath, "stream?token=opaque")
+    XCTAssertEqual(try YlRtmpAddress("rtmps://media.example:8443/live/stream").port, 8443)
+    XCTAssertEqual(try YlRtmpAddress("rtmp://media.example/live/stream").port, 1935)
+  }
+
+  func testRtmpsKeepsPolicyRejectionsAndTlsFailuresAreTerminal() {
+    var source = YlAppleSourceDescriptor(uri: "rtmps://example.test/live/stream", kind: .network)
+    source.headers = ["Authorization": "private"]
+    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    source.headers = [:]; source.intent = .onDemand
+    XCTAssertEqual(YlEngineRouter.assess(source).rejection?.code, "policy.unsupported")
+    let error = ylRtmpError("network.rtmp_tls_failed")
+    XCTAssertFalse(YlRtmpRecoveryBudget.isTransient(error))
+    XCTAssertNil(YlRtmpRecoveryBudget().nextDelay(after: error))
   }
 
   func testExplicitIncompatibleFormatRejectsAsContainerBeforeOpen() {

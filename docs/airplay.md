@@ -48,15 +48,15 @@ remote playback does not synthesize that event.
 | HTTP(S) MP4/MOV, without custom request metadata | AVPlayer directly consumes the original URL |
 | Compatible local or seekable HTTP VOD, including MKV/FLV | Compressed H.264/AAC passthrough into temporary HLS, then AVPlayer |
 | Automatic format | Inspect the source, then apply the same rules; HLS live is admitted |
-| Non-TLS RTMP and HTTP(S)-FLV live | Continuous H.264/AAC passthrough into sliding HLS, then AVPlayer |
-| RTMPS or other custom live containers/codecs | Not supported by this bridge |
+| RTMP, RTMPS and HTTP(S)-FLV live | Continuous H.264/AAC passthrough into sliding HLS, then AVPlayer |
+| Other custom live containers/codecs | Not supported by this bridge |
 | DRM, headered HLS, managed network guarantees, nonautomatic buffering, hardwareRequired or video constraints | Rejected rather than weakening the requested policy |
 
 Direct playback remains subject to AVFoundation and receiver codec support.
 The receiver must be able to access the URL; local-only addresses, expiring
 tokens and server authentication may prevent remote playback.
 
-**RTMP and HTTP-FLV live are supported through a continuous remux worker.**
+**RTMP, RTMPS and HTTP-FLV live are supported through a continuous remux worker.**
 For HTTP-FLV, specify the live intent explicitly:
 
 ```dart
@@ -71,9 +71,12 @@ final session = await player.load(
 await session.play();
 ```
 
-Use an `rtmp://` URL for RTMP; its automatic intent is also treated as live.
-The existing RTMP transport validation still applies, including rejection of
-RTMPS, HTTP headers and on-demand intent. HTTP-FLV uses the existing HTTP
+Use an `rtmp://` or `rtmps://` URL for RTMP; automatic intent is also treated as
+live. RTMPS uses authenticated TLS (minimum TLS 1.2), system certificate trust
+and hostname validation. The default ports are 1935 for RTMP and 443 for RTMPS;
+explicit ports are honored. TLS verification/negotiation failures report
+`network.rtmp_tls_failed` and terminate without automatic retry or plaintext
+fallback. Other RTMP validation still rejects HTTP headers and on-demand intent. HTTP-FLV uses the existing HTTP
 transport and its credential/redirect rules. Source credentials stay upstream.
 
 The worker commits after publishing at least 18 seconds of media, while the
@@ -121,7 +124,7 @@ published atomically and served without caching; immutable media is cacheable.
 Generated media is served on one active Wi-Fi/Ethernet IPv4 address, with a
 random capability URL, an explicit filename allowlist, GET/HEAD and single
 byte-range support. Connections and transfer buffers are bounded. The source
-credentials are not copied into the playlist. Generated video is clear HTTP
+credentials are not copied into the playlist. RTMPS encrypts the upstream connection. Generated video is clear HTTP
 on the LAN; possession of its temporary URL permits reading it while active.
 IPv6-only networks and network-interface changes require a different serving
 strategy or a fresh load. Phone and receiver must have mutual LAN reachability;
@@ -155,10 +158,11 @@ implementation. Real fixture remux tests verify AVPlayer video frames, decoded
 AAC, seeking, HTTP bounds and cancellation. Native tests additionally use the
 production HTTP input path. See [remux harness](../tool/airplay/README-remux.md)
 and [initial verification record](verification/2026-10-19-airplay.md).
+The [RTMPS verification record](verification/2026-10-19-rtmps.md) covers TLS and secure live input.
 The [live verification record](verification/2026-10-19-airplay-live.md) covers
 continuous HTTP-FLV and RTMP fixtures, rolling/reconnected playlists, live
 video decoding, ownership, cancellation and storage bounds.
 
 Physical receiver and CarPlay playback remain unverified. Device acceptance
-must exercise direct HLS live/VOD, custom VOD and RTMP/HTTP-FLV live, pause/seek, route disconnect and
+must exercise direct HLS live/VOD, custom VOD and RTMP/RTMPS/HTTP-FLV live, pause/seek, route disconnect and
 reconnect, background playback/interruption, permissions and LAN reachability.

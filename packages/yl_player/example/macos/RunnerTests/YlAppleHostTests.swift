@@ -812,6 +812,26 @@ extension YlAirPlayHostTests {
     XCTAssertEqual(f.host.airPlayState["enabled"] as? Bool, false)
   }
 
+  func testAutomaticRtmpsLoadAndAirPlayReachTlsAndRejectUntrustedPeer() async throws {
+    for airPlay in [false, true] {
+      let peer = try YlRtmpFixturePeer(tlsIdentity: ManagedTLSFixture.localhost)
+      defer { peer.close() }
+      let f = AppleHostFixture(); defer { f.host.close() }
+      var request = AppleHostFixture.request("rtmps-auto", url: "rtmps://127.0.0.1:\(peer.port)/live/private-token", format: .automatic)
+      request.source.intent = .automatic
+      do {
+        if airPlay { _ = try await f.host.loadAirPlay(request: request) }
+        else { _ = try await f.host.load(request: request) }
+        XCTFail("Untrusted RTMPS must fail")
+      } catch {
+        XCTAssertEqual((error as? PigeonError)?.code, "network.rtmp_tls_failed")
+      }
+      XCTAssertEqual(peer.acceptCount, 1)
+      XCTAssertNil(f.host.sessionId)
+      XCTAssertEqual(f.host.airPlayState["enabled"] as? Bool, false)
+    }
+  }
+
   func testRtmpAirPlayRetainsTransportAndStrictPolicyRejections() throws {
     let f = AppleHostFixture(); defer { f.host.close() }
     var base = AppleHostFixture.request("rtmp-policy", url: "rtmp://127.0.0.1:1935/live/owned", format: .automatic)
@@ -820,7 +840,10 @@ extension YlAirPlayHostTests {
     var finite = base; finite.source.intent = .onDemand
     var headers = base; headers.source.request = .init(headers: ["Authorization": "private"], credentials: [:])
     var strict = base; strict.options.decoderPolicyOverride = .hardwareRequired
-    for request in [secure, finite, headers, strict] {
+    let secureAssessment = try f.host.assessAirPlay(request: .init(source: secure.source, options: secure.options))
+    XCTAssertEqual(secureAssessment.outcome, .requiresInspection)
+    XCTAssertNil(secureAssessment.rejection)
+    for request in [finite, headers, strict] {
       let assessment = try f.host.assessAirPlay(request: .init(source: request.source, options: request.options))
       XCTAssertEqual(assessment.outcome, .incompatible)
       XCTAssertNotNil(assessment.rejection)

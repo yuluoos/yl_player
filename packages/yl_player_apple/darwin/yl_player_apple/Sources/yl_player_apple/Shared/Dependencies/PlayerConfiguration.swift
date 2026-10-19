@@ -14,7 +14,7 @@ struct PlayerConfiguration {
     guard let goal = source?.loadOptions?.bufferStrategy else { return self }
     var result = self
     let confirmedLive = source?.kind == .network && source?.intent != .onDemand && (source?.isLive == true ||
-      source?.url?.scheme?.lowercased() == "rtmp" || source?.formatHint == .flv || source?.url?.pathExtension.lowercased() == "flv")
+      ["rtmp", "rtmps"].contains(source?.url?.scheme?.lowercased() ?? "") || source?.formatHint == .flv || source?.url?.pathExtension.lowercased() == "flv")
     let resolved = goal == .automatic && confirmedLive ? YlBufferGoal.smoothPlayback : goal
     result.bufferMode = resolved == .smoothPlayback ? "stable" : (resolved == .lowLatency ? "lowLatency" : "automatic")
     result.preferredForwardBufferDuration = result.bufferMode == "stable" ? 30 : (result.bufferMode == "lowLatency" ? 2 : 10)

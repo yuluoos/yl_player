@@ -34,7 +34,7 @@ struct YlRtmpAddress {
     guard let split = rawPath.firstIndex(of: "/"), split != rawPath.startIndex,
       rawPath.index(after: split) != rawPath.endIndex else { throw invalid() }
     self.host = host.hasPrefix("[") ? String(host.dropFirst().dropLast()) : host
-    port = UInt16(c.port ?? 1935)
+    port = UInt16(c.port ?? (scheme == "rtmps" ? 443 : 1935))
     app = String(rawPath[..<split])
     playpath = String(pathAndQuery[pathAndQuery.index(after: split)...])
     tcURL = "\(scheme)://\(authority)/\(app)"
@@ -61,7 +61,6 @@ struct YlRtmpAddress {
 
   static func validate(_ source: YlAppleSourceDescriptor) throws -> YlRtmpAddress {
     let address = try YlRtmpAddress(source.uri)
-    guard !address.secure else { throw ylRtmpInvalid() }
     let options = source.loadOptions ?? .init()
     guard [.automatic, .flv].contains(source.formatHint) else { throw ylRtmpError("container.unsupported") }
     guard source.kind == .network,

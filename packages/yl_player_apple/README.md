@@ -7,7 +7,7 @@ Package Manager.
 
 Opt-in [AirPlay video](../../docs/airplay.md) adds a system route picker, native
 external-playback state, direct HLS live/VOD and bounded H.264/AAC remux
-for custom VOD and RTMP/HTTP-FLV live. Physical receiver and CarPlay acceptance remain pending.
+for custom VOD and RTMP/RTMPS/HTTP-FLV live. Physical receiver and CarPlay acceptance remain pending.
 
 The package contains one typed registry/session lifecycle, AVPlayer routes,
 controlled HLS loading, managed Matroska/FLV/MPEG-TS fallback, VideoToolbox and
@@ -136,3 +136,21 @@ pkg-config in addition to the documented Xcode/FFmpeg/Opus tools. Set
 `YL_DAV1D_ARCHIVE` to the exact pinned local tarball for offline verification.
 `test_software_video.sh` needs host libaom's `aomdec` and FFmpeg with libvpx
 for independent test references; those tools are not product dependencies.
+
+### Application-owned external playback (iOS)
+
+A native host using a dedicated Flutter engine for CarPlay can obtain that
+engine's published `YlPlayerApplePlugin` and call
+`setExternalPlaybackActive(true)` on the main thread before loading media.
+This allows existing players and players created while backgrounded to keep
+playing, and sets the AVPlayer background policy to `continuesIfPossible`.
+The application still owns its audio session, background audio entitlement,
+external-route lifecycle, and interruption handling when using `appManaged`.
+The switch applies to this engine's players, so do not enable it on the phone's
+ordinary playback engine. Call `setExternalPlaybackActive(false)` after stop or
+disconnect; revoking while backgrounded suspends non-AirPlay playback. Default
+behavior remains unchanged. This API does not grant a system background mode or
+prove physical CarPlay/video support.
+
+The iOS `YlAppleMemoryWarningTests` covers background creation, continued
+external playback, revocation, and default foreground restoration.

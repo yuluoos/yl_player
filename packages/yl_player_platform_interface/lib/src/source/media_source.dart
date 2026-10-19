@@ -49,8 +49,8 @@ final class YlFileSource extends YlMediaSource {
 }
 
 /// HTTP(S) media or a syntactically valid RTMP(S) endpoint. Admission does not
-/// imply native playback support: RTMPS is currently unsupported. Native RTMP
-/// assessment supports automatic/FLV with automatic/live intent and rejects
+/// imply native playback support: Apple supports RTMP/RTMPS; Android supports
+/// plain RTMP. Native assessment supports automatic/FLV with automatic/live intent and rejects
 /// HTTP request metadata, managed HTTP policy, bounded buffering, on-demand
 /// intent, nonzero initial positions, and all runtime time seeks (including
 /// zero) instead of ignoring them. `seekToLiveEdge` supports a fresh live open.

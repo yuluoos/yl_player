@@ -41,6 +41,8 @@ void main() {
 
     'network.protocol_unsupported':
         'The media transport protocol is not supported. Use a supported source protocol.',
+    'network.rtmp_tls_failed':
+        'The secure RTMP connection failed TLS verification or negotiation. Check the server certificate, hostname and TLS configuration.',
     'network.rtmp_handshake_failed':
         'The RTMP connection could not be established. Check the connection and server configuration, then try again.',
     'network.rtmp_stream_unavailable':
