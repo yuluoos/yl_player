@@ -97,6 +97,7 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(stat.S_IMODE(self.target.stat().st_mode), 0o600)
         self.assertEqual(stat.S_IMODE(self.target.parent.stat().st_mode), 0o700)
         self.assertIn('runtime.registerRuntimeContracts();', source)
+        self.assertIn('handoff.registerControlledMediaHandoffs(sources);', source)
 
     def test_failure_does_not_replace_existing_entry(self):
         self.target.parent.mkdir(parents=True)

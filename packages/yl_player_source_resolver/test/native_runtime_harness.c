@@ -25,7 +25,9 @@ static int finish(yl_js_job *j) {
 static void expected(const char *s, int status) {
   yl_js_job *j = start(s, 100);
   CHECK(j);
-  CHECK(finish(j) == status);
+  const int actual = finish(j);
+  if (actual != status) fprintf(stderr, "expected status=%d actual=%d at check=%d\n", status, actual, checks);
+  CHECK(actual == status);
   CHECK(yl_js_destroy(j));
 }
 int main(void) {

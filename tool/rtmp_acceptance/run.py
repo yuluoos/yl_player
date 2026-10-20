@@ -234,7 +234,7 @@ async def main(command):
         assert hashlib.sha256(member.read()).digest() == hashlib.sha256((PEER / 'mediamtx').read_bytes()).digest(), 'extracted binary differs from verified release'
     logs = Path(tempfile.mkdtemp(prefix='app-', dir=PEER))
     print('RTMP acceptance logs:', logs, flush=True)
-    children, handles = [], []
+    children, handles, listeners = [], [], []
     loop = asyncio.get_running_loop()
     owner = asyncio.current_task()
     previous_sigterm = signal.getsignal(signal.SIGTERM)
@@ -251,11 +251,17 @@ async def main(command):
             cleanup['proxy'] = dict(complete=False, errorType=type(error).__name__,
                                     pendingTasks=len(proxy.tasks), activeReaders=len(proxy.clients),
                                     activeControls=proxy.control_clients)
+        cleanup['listenersClosed'] = True
+        for listener in listeners:
+            try:
+                await asyncio.wait_for(listener.wait_closed(), PROXY_CLOSE_SECONDS)
+            except asyncio.TimeoutError:
+                cleanup['listenersClosed'] = False
         for child in reversed(children):
             cleanup['processGroups'].append(await close_owned_group(child))
         for handle in handles:
             handle.close()
-        cleanup['complete'] = cleanup['proxy']['complete'] and all(
+        cleanup['complete'] = cleanup['proxy']['complete'] and cleanup['listenersClosed'] and all(
             group['complete'] for group in cleanup['processGroups'])
         return cleanup
 
@@ -275,12 +281,16 @@ async def main(command):
             pub = await spawn(['/opt/homebrew/bin/ffmpeg', '-nostdin', '-hide_banner', '-loglevel', 'warning', '-re', '-stream_loop', '-1', '-i', str(fixture), '-c', 'copy', *extra, '-f', 'flv', 'rtmp://127.0.0.1:19350/live/' + path], path + '.log')
             await asyncio.sleep(1)
             assert pub.returncode is None, 'publisher start failed'
-        async with await asyncio.start_server(proxy.reader, '127.0.0.1', 19351, limit=65536), await asyncio.start_server(proxy.control, '127.0.0.1', 19352, limit=8192):
-            command_child = await asyncio.create_subprocess_exec(*command, start_new_session=True)
-            children.append(command_child)
-            result = await asyncio.wait_for(command_child.wait(), 1200)
-            outcome.update(kind='success' if result == 0 else 'nonzero_exit', commandExitCode=result)
-            return result
+        # Keep listener shutdown outside async-context exit: modern asyncio
+        # waits for accepted connections in Server.wait_closed(). Those readers
+        # must be aborted by the bounded cleanup before waiting on the listener.
+        listeners.append(await asyncio.start_server(proxy.reader, '127.0.0.1', 19351, limit=65536))
+        listeners.append(await asyncio.start_server(proxy.control, '127.0.0.1', 19352, limit=8192))
+        command_child = await asyncio.create_subprocess_exec(*command, start_new_session=True)
+        children.append(command_child)
+        result = await asyncio.wait_for(command_child.wait(), 1200)
+        outcome.update(kind='success' if result == 0 else 'nonzero_exit', commandExitCode=result)
+        return result
     except asyncio.CancelledError:
         outcome.update(kind='cancelled')
         raise
@@ -291,6 +301,8 @@ async def main(command):
         outcome.update(kind='error', errorType=type(error).__name__)
         raise
     finally:
+        for listener in listeners:
+            listener.close()
         # Shield only bounded cleanup, never playback or the command deadline.
         # Repeated cancellation still propagates after the final receipt.
         cleanup_task = asyncio.create_task(finish())

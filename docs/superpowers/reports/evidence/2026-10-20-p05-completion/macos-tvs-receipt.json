@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 1,
+  "run": "p05-business-2u49o07c",
+  "completed": true,
+  "ownedCleanupCompleted": true,
+  "providerAsyncCleanupVerified": true,
+  "samples": [
+    {
+      "stage": "play",
+      "channelIndex": 0,
+      "sessionSha256": "3390520c7ef9d714ecb36fa7643798f6da02bf20a6afa30e39a37bb8303990d9",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "mode",
+      "channelIndex": 0,
+      "sessionSha256": "3390520c7ef9d714ecb36fa7643798f6da02bf20a6afa30e39a37bb8303990d9",
+      "revision": 44,
+      "playing": true,
+      "mode": "lowLatency"
+    },
+    {
+      "stage": "mode",
+      "channelIndex": 0,
+      "sessionSha256": "3390520c7ef9d714ecb36fa7643798f6da02bf20a6afa30e39a37bb8303990d9",
+      "revision": 61,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "play",
+      "channelIndex": 1,
+      "sessionSha256": "a3c4ed430c160d596fdaee32bfc61639069ba7c788ba1437d56fc8f8bb33c79c",
+      "revision": 27,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "mode",
+      "channelIndex": 1,
+      "sessionSha256": "a3c4ed430c160d596fdaee32bfc61639069ba7c788ba1437d56fc8f8bb33c79c",
+      "revision": 140,
+      "playing": true,
+      "mode": "lowLatency"
+    },
+    {
+      "stage": "mode",
+      "channelIndex": 1,
+      "sessionSha256": "a3c4ed430c160d596fdaee32bfc61639069ba7c788ba1437d56fc8f8bb33c79c",
+      "revision": 562,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "play",
+      "channelIndex": 0,
+      "sessionSha256": "c63ffce0b4a49b0211575e5447b49c37ff2945a3346bf86940cb14ba678d825d",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "reconnect",
+      "channelIndex": 0,
+      "sessionSha256": "c63ffce0b4a49b0211575e5447b49c37ff2945a3346bf86940cb14ba678d825d",
+      "revision": 58,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "reconnect",
+      "channelIndex": 0,
+      "sessionSha256": "c63ffce0b4a49b0211575e5447b49c37ff2945a3346bf86940cb14ba678d825d",
+      "revision": 91,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "reconnect",
+      "channelIndex": 0,
+      "sessionSha256": "c63ffce0b4a49b0211575e5447b49c37ff2945a3346bf86940cb14ba678d825d",
+      "revision": 129,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "reconnectExhausted",
+      "channelIndex": 0,
+      "sessionSha256": null,
+      "revision": null,
+      "playing": false,
+      "mode": null
+    },
+    {
+      "stage": "play",
+      "channelIndex": 0,
+      "sessionSha256": "a865747e7ca628669ecc571d87f6e6442b67635426a512045cc8a29828235dcd",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "manualRecovery",
+      "channelIndex": 0,
+      "sessionSha256": "a865747e7ca628669ecc571d87f6e6442b67635426a512045cc8a29828235dcd",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "play",
+      "channelIndex": 1,
+      "sessionSha256": "49c0319237db0763028a317d5001441714cf1330a936329260ff98672ac306e2",
+      "revision": 27,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "refreshRejected",
+      "channelIndex": 1,
+      "sessionSha256": "49c0319237db0763028a317d5001441714cf1330a936329260ff98672ac306e2",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "refresh",
+      "channelIndex": 1,
+      "sessionSha256": "49c0319237db0763028a317d5001441714cf1330a936329260ff98672ac306e2",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "play",
+      "channelIndex": 0,
+      "sessionSha256": "2b40e363d472abb250c0d16d1c1b5036535ec4fe685d1dcb00903d5350f22dfc",
+      "revision": 27,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "switchChannel",
+      "channelIndex": 0,
+      "sessionSha256": "2b40e363d472abb250c0d16d1c1b5036535ec4fe685d1dcb00903d5350f22dfc",
+      "revision": 28,
+      "playing": true,
+      "mode": "smoothPlayback"
+    },
+    {
+      "stage": "stop",
+      "channelIndex": 0,
+      "sessionSha256": null,
+      "revision": null,
+      "playing": false,
+      "mode": null
+    }
+  ],
+  "omitted": 0,
+  "physicalAudioVideoVerified": false,
+  "endToEndLatencyMs": null,
+  "subscriptionSha256": "1ceebe3bca0498934d9b3bb5bc66f8a75ab000e136d95cf9ed12775567ef3acf"
+}

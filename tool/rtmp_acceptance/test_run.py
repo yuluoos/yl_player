@@ -50,8 +50,9 @@ def command_fixture(mode, record):
     ready = record.with_suffix('.descendant')
     child = subprocess.Popen([
         sys.executable, '-c',
-        'import os,signal,time,pathlib; '
+        'import os,signal,time,pathlib,socket,urllib.request; '
         + ('signal.signal(signal.SIGTERM,signal.SIG_IGN); ' if mode == 'resistant' else '')
+        + ('urllib.request.urlopen("http://127.0.0.1:19352/silent").close(); client=socket.create_connection(("127.0.0.1",19351)); ' if mode == 'reader' else '')
         + 'pathlib.Path(' + repr(str(ready)) + ').write_text(str(os.getpid())); time.sleep(60)',
     ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     end = time.monotonic() + 3
@@ -74,7 +75,22 @@ def runner_fixture(mode, record):
     # Only the command deadline is shortened in this isolated test process.
     original = asyncio.wait_for
     async def short_deadline(awaitable, timeout):
-        return await original(awaitable, .2 if timeout == 1200 and mode in ('timeout', 'resistant') else timeout)
+        if timeout != 1200 or mode not in ('timeout', 'resistant'):
+            return await original(awaitable, timeout)
+        # The short deadline measures termination of an established fixture,
+        # not Python startup/import latency under concurrent native builds.
+        task = asyncio.ensure_future(awaitable)
+        try:
+            ready_deadline = asyncio.get_running_loop().time() + 5
+            while not Path(record).exists() and not task.done():
+                if asyncio.get_running_loop().time() >= ready_deadline:
+                    raise RuntimeError('owned command readiness deadline')
+                await asyncio.sleep(.01)
+            return await original(task, .2)
+        finally:
+            if not task.done():
+                task.cancel()
+                await asyncio.gather(task, return_exceptions=True)
     asyncio.wait_for = short_deadline
     return asyncio.run(module.main([sys.executable, str(Path(__file__).resolve()), 'command', mode, record]))
 
@@ -174,7 +190,7 @@ class RunnerTest(unittest.TestCase):
                         proc.send_signal(signal.SIGTERM)
                     actual = proc.wait(timeout=20)
                     self.assertEqual(actual, expected_exit, output.read_text())
-                    if mode in ('exited', 'resistant'):
+                    if mode in ('exited', 'resistant', 'reader'):
                         self.assertFalse(group_exists(owned['group']), f'owned command group leaked: {owned}')
                     paths = [line.split(': ', 1)[1] for line in output.read_text().splitlines() if line.startswith('RTMP acceptance logs: ')]
                     self.assertEqual(len(paths), 1, output.read_text())
@@ -182,7 +198,7 @@ class RunnerTest(unittest.TestCase):
                     self.assertTrue(receipt_path.exists(), f'{mode} missing final receipt: {output.read_text()}')
                     receipt = json.loads(receipt_path.read_text())
                     self.assertEqual(receipt['outcome']['kind'], outcome)
-                    self.assertEqual(receipt['outcome']['commandExitCode'], expected_exit if mode in ('success', 'nonzero', 'exited') else None)
+                    self.assertEqual(receipt['outcome']['commandExitCode'], expected_exit if mode in ('success', 'nonzero', 'exited', 'reader') else None)
                     self.assertTrue(receipt['cleanup']['complete'], receipt)
                     self.assertEqual(receipt['cleanup']['proxy']['pendingTasks'], 0)
                     self.assertEqual(receipt['active'], 0)
@@ -214,6 +230,9 @@ class RunnerTest(unittest.TestCase):
             self.assertTrue(asyncio.run(module.wait_group_exit(os.getpid(), .1)))
             self.assertEqual(probe.call_count, 2)
             self.assertTrue(all(call.args[1] == 0 for call in probe.call_args_list))
+
+    def test_exited_leader_with_live_reader_cleanup(self):
+        self.run_case('reader', 0, 'success')
 
     def test_success_receipt(self):
         self.run_case('success', 0, 'success')

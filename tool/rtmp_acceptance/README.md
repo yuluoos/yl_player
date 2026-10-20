@@ -124,3 +124,40 @@ exited launcher descendants and a descendant that ignores TERM after its launche
 exits, plus a mocked read-only permission/retirement probe. The production
 acceptance deadline remains 20 minutes. They do not boot any device or rerun
 Flutter/native playback suites.
+
+## P05 business subscription fixture
+
+`business.py` wraps the same pinned peer with a bounded loopback HTTP server
+(port 19353), a deterministic two-channel M3U, and a JS resolver script. From
+TVS, run:
+
+```sh
+python3 /path/to/yl_player/tool/rtmp_acceptance/business.py -- \
+  flutter test integration_test/live_subscription_playback_test.dart -d macos --no-pub
+```
+
+It supplies the run identity, exact subscription SHA-256 and RTMP fault-control
+origin as `P05_*` defines. Conflicting P05 defines (including split and short forms) and define files are rejected. The
+channels exercise direct RTMP and JS-to-RTMP; they do not replace the nine frozen
+private-script contracts. The TVS entry verifies three native recoveries, a
+fourth terminal drop without extra business retries, explicit recovery, refresh
+preservation, late-result isolation and awaited provider disposal. The tool
+emits separate fixture and process cleanup receipts; TVS emits safe
+`P05_RECEIPT` JSON. No claim of physical audio/video or latency follows from them.
+
+For Android, arrange and later remove owned reverse forwards for 19351, 19352
+and 19353 on the explicitly assigned emulator. This runner does not configure
+devices. Busy ports fail without terminating existing listeners.
+
+Run all runner and fixture tests from the player root:
+
+```sh
+python3 -B -m unittest discover -s tool/rtmp_acceptance -p 'test_*.py' -v
+```
+ The fixture-only
+`test_business.py` tests need no MediaMTX/FFmpeg. `test_run.py` uses the pinned
+peer and now covers an exited command whose descendant keeps a silent reader
+open: listeners close before bounded reader cancellation, and listener draining
+happens afterward. The cleanup receipt includes `listenersClosed`. Test-only
+short command deadlines start after fixture readiness (bounded to five seconds),
+so interpreter startup is not confused with termination behavior.

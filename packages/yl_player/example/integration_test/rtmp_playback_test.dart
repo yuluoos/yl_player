@@ -112,11 +112,12 @@ void main() {
       final old = await render(player);
       final before = await control('stats');
       final cases = <(YlNetworkSource, YlLoadOptions, String)>[
-        (
-          YlNetworkSource(endpoint().replace(scheme: 'rtmps')),
-          const YlLoadOptions(),
-          YlFailureCodes.networkProtocolUnsupported,
-        ),
+        if (Platform.isAndroid)
+          (
+            YlNetworkSource(endpoint().replace(scheme: 'rtmps')),
+            const YlLoadOptions(),
+            YlFailureCodes.networkProtocolUnsupported,
+          ),
         (
           YlNetworkSource(
             endpoint(),

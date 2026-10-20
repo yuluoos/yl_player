@@ -145,9 +145,9 @@ def output_directory(create):
 
 
 def generate(encoded):
-    source = "import 'package:integration_test/integration_test.dart';\nimport '../../../test/support/controlled_contract.dart';\nimport '../script_runtime_test.dart' as runtime;\n\nvoid main() {\n  IntegrationTestWidgetsFlutterBinding.ensureInitialized();\n  runtime.registerRuntimeContracts();\n  registerControlledContracts({\n"
+    source = "import 'package:integration_test/integration_test.dart';\nimport '../../../test/support/controlled_contract.dart';\nimport '../script_runtime_test.dart' as runtime;\nimport '../controlled_media_handoff.dart' as handoff;\n\nvoid main() {\n  IntegrationTestWidgetsFlutterBinding.ensureInitialized();\n  runtime.registerRuntimeContracts();\n  final sources = <String, String>{\n"
     source += ''.join(f"    '{key}': '{value}',\n" for key, value in encoded.items())
-    source += '  });\n}\n'
+    source += '  };\n  registerControlledContracts(sources);\n  handoff.registerControlledMediaHandoffs(sources);\n}\n'
     with output_directory(create=True) as directory:
         temporary = '.controlled-' + secrets.token_hex(16)
         fd = os.open(temporary, os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW,

@@ -839,3 +839,19 @@ Apple MP4/MOV, MPEG-TS, MPEG-PS and AVI VOD now select owned samples when manage
 Seekable Matroska Opus (CELT/SILK/hybrid) and Vorbis can use strict policies, and the admitted VP9 hardware profile can use bounded buffering. Missing Opus/Vorbis packet durations reserve the converter's maximum output duration only in the queue ledger; compressed packet timing is preserved and actual decoded PCM determines output timing. Unsupported codecs, rates, profiles and live inputs remain explicit failures.
 
 The engineering paths do not qualify unmeasured software profiles, hardware-unavailable simulators, minimum OS/Intel systems, or physical output. AVPlayer source-pull evidence still does not establish a hardware played-sample clock. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md) for recorded runtime coverage and remaining acceptance conditions.
+
+
+## P05 controlled business evidence (2026-10-20)
+
+TVS now admits RTMPS syntax and keeps native RTMP/RTMPS recovery independent of
+business proxy initialization and additional same-source retries. Awaitable
+provider disposal joins initiated asynchronous cleanup and reports errors.
+Owned macOS TVS acceptance covers two-channel M3U/JS playback, live mode changes,
+three native reconnects, terminal exhaustion, explicit recovery, failed refresh
+preservation, cancellation and stop. The nine frozen scripts separately execute
+and hand off to owned media on Android, iOS Simulator and macOS.
+
+These are controlled session/first-frame/transport observations. They do not
+establish original online-source availability, physical audio/video, complete
+heap leak freedom, all device/OS coverage or sustained P08 SLOs. See the
+[P05 evidence report](superpowers/reports/2026-09-26-remaining-05-live-business.md).

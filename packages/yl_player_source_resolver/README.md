@@ -158,6 +158,16 @@ The generated entry reuses `test/support/controlled_contract.dart`; every host
 exchange is intercepted by controlled fixtures, and real returned downstream URLs
 are inspected only through safe predicates/digests, never fetched or logged.
 JS-09 has no host request, so failed-host/malformed-host cases do not apply.
+The generated entry also registers nine real-player handoffs. Each rechecks the
+original hash, resolves under that controlled host, converts the result using
+`toNetworkSource`, and explicitly replaces only the final URI with an owned
+loopback HLS. It preserves the request object and source options, matches the
+native session/first-frame event and video geometry, observes a media request,
+then stops without a late frame. This does not fetch the original online media
+or attest physical audio/video. The demo server rejects mismatched expected credentials on manifest and media
+requests, and the handoff checks application credentials for the header-bearing
+scripts. Accept-Encoding remains native transport negotiation, so the fixture
+does not require unsupported compression offers to be forwarded verbatim.
 Platform evidence and remaining limitations are recorded in the repository's
 `docs/superpowers/reports/2026-09-22-script-resolver.md`.
 

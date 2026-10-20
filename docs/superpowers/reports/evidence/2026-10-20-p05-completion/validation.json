@@ -1,0 +1,334 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-20",
+  "engineeringScope": "P05 implementation; external acceptance remains open",
+  "playerIsolatedBaseline": "3433d03f",
+  "playerIntegrationBaseline": "c7de30c8aaf20ed483e84848ce56fdebc232dc0b",
+  "tvsIntegratedPlayerVersion": "25aac3ad",
+  "concurrentOriginalChanges": "Media-core/delivery refactor is in progress; P05 evidence is scoped to the isolated source snapshot",
+  "tvsBaseline": "c9012eb09b3d4247800283fd9b6340a4ac488826",
+  "tvsCommit": "4b97bbe2bb97f50170f8f4c2ca0d460d76109dd8",
+  "environment": {
+    "macOS": "27.0.1 arm64",
+    "xcode": "27.1 (27A9275)",
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "android": "dedicated read-only AVD, Android 16 API 36 arm64",
+    "ios": "dedicated iOS 27.0 arm64 Simulator; deleted after acceptance"
+  },
+  "checks": [
+    {
+      "name": "tvs-business",
+      "passed": 330,
+      "failed": 0,
+      "logSha256": "783f1a56f10a4d5a02904f4e11df8215e88c46f5715bb8b2b50d4ddb1ebeafb5",
+      "result": "02:29 +330: All tests passed!"
+    },
+    {
+      "name": "tvs-integrated-routing-ownership",
+      "passed": 73,
+      "failed": 0,
+      "logSha256": "def5ea8a78fd31b9417233de877715976c407e79aeebd0f7d0d69d74a68e8b29",
+      "result": "00:06 +73: All tests passed!"
+    },
+    {
+      "name": "resolver",
+      "passed": 61,
+      "failed": 0,
+      "logSha256": "641f98c2c27ffea3aae1ed5c489312d3f958414f9a40088c5e5542451bfb9d78",
+      "result": "00:11 +61: All tests passed!"
+    },
+    {
+      "name": "controlled-host",
+      "passed": 19,
+      "failed": 0,
+      "logSha256": "ff5462e2bba95d34e0d926a47e7af41a9088d34c59cd9ed3540354c834ddbee6",
+      "result": "00:02 +19: All tests passed!"
+    },
+    {
+      "name": "archive-generator",
+      "passed": 17,
+      "failed": 0,
+      "logSha256": "0d0a6b374616eedd644b83c09ac44dfb76ac22337d85655b62eb4e0ea5ec79c3",
+      "result": "OK"
+    },
+    {
+      "name": "rtmp-runner-fixture",
+      "passed": 18,
+      "failed": 0,
+      "logSha256": "869698ee2616ef7129a8cf08d42b6b685199a12026852515c2122d8f337baf25",
+      "result": "OK"
+    },
+    {
+      "name": "native-sanitizers",
+      "passed": 621,
+      "failed": 0,
+      "logSha256": "98c911ec17480806d3b3aeec3c19dce88b7725792ec71667157e53eb26cca80c",
+      "result": "438 checks, 60 contexts and runtimes created/freed, 0 failures"
+    },
+    {
+      "name": "ios-simulator-controlled",
+      "passed": 35,
+      "failed": 0,
+      "logSha256": "1c2a708dd8975a4d75678cb9bd821effe4fed6b2167d9420937d8f7b02856e35",
+      "result": "00:10 +35: All tests passed!"
+    },
+    {
+      "name": "macos-controlled",
+      "passed": 35,
+      "failed": 0,
+      "logSha256": "bd3107f752b1857f667aaf2bc8552cf8db79cae32d91d808a68e023ba5b5c726",
+      "result": "00:06 +35: All tests passed!"
+    },
+    {
+      "name": "android-controlled-final",
+      "passed": 35,
+      "failed": 0,
+      "logSha256": "212b16dd544a6b8134108da42113fe07a480a4bf6e4ee2381873e11a85497538",
+      "result": "00:09 +35: All tests passed!"
+    },
+    {
+      "name": "tvs-analysis",
+      "passed": null,
+      "failed": 0,
+      "logSha256": "1d3cd4e6bd92e123a4217e2c31860512fd8fc840461f40075ce0b2ff81ac3710",
+      "result": "No issues found! (ran in 6.1s)"
+    },
+    {
+      "name": "player-analysis",
+      "passed": null,
+      "failed": 0,
+      "logSha256": "e165880150d5353bd212a87e4a174668fc11e7c9b5848fb867d862a32d3d992d",
+      "result": "No issues found! (ran in 42.0s)"
+    }
+  ],
+  "inputs": [
+    {
+      "repository": "player",
+      "path": "packages/yl_player/example/integration_test/rtmp_playback_test.dart",
+      "sha256": "59a2b907faa70a4f4c84759d995444d9b889b3e858ad03095ae2032521c92463"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/README.md",
+      "sha256": "9cf5b83d8b012d44c6f42bfa2a9d5866ce2b86abdf94150198964d72f3ab9722"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/example/assets/PROVENANCE.md",
+      "sha256": "0b66b17dcf85d560df02812488169ffdc2686209d033b93200669084140253fe"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/example/lib/demo_server.dart",
+      "sha256": "e2267f20b93711744266dea5552a59a59d26558a6cf0ae0739ea6a431489701c"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/test/native_runtime_harness.c",
+      "sha256": "06956734c2ca0daa4fc6512cb539530714e2a5dcdca18154350ebb06c792bfe1"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/tool/generate_controlled_integration.py",
+      "sha256": "b76bc6a1402091b47065f9cd015d14b013ef7de65e31f47fdcc659d18aa157ce"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/tool/test_generate_controlled_integration.py",
+      "sha256": "e927823c626ea4f69cf744d6d3acc6251da1d5e128a809184f9dde16cce54242"
+    },
+    {
+      "repository": "player",
+      "path": "tool/rtmp_acceptance/README.md",
+      "sha256": "5eb4ed385740c54dadcacc210ccae5700b8cab13833c4fb5a59e330b636f75e0"
+    },
+    {
+      "repository": "player",
+      "path": "tool/rtmp_acceptance/run.py",
+      "sha256": "15dd50883ec94d9f07a4a4ff3cc0c3c6bb742f54fbd82a162fbb5c45fb83141c"
+    },
+    {
+      "repository": "player",
+      "path": "tool/rtmp_acceptance/test_run.py",
+      "sha256": "13a4a321c279f90355d1c2cde3d1671b73310f51b807e776d99c955ccbaf3b8a"
+    },
+    {
+      "repository": "player",
+      "path": "packages/yl_player_source_resolver/example/integration_test/controlled_media_handoff.dart",
+      "sha256": "1150a8d607ff7a455ba6c1b18edab0a4ec04b3125035317e7e720b19d29217ee"
+    },
+    {
+      "repository": "player",
+      "path": "tool/rtmp_acceptance/business.py",
+      "sha256": "9fe78b76877873a4ea3093a5dd8319f3555ffaa4f10dd1ed1766b50055cf4589"
+    },
+    {
+      "repository": "player",
+      "path": "tool/rtmp_acceptance/test_business.py",
+      "sha256": "b206e250a73028d36d04cc10f949634bf743433da9017796bbefcc93659c4c48"
+    },
+    {
+      "repository": "tvs",
+      "path": "integration_test/README.md",
+      "sha256": "4e84bf71d8caec155d75c03efe6a1cb821a64add68f47c8695af29d7b8a4f595"
+    },
+    {
+      "repository": "tvs",
+      "path": "integration_test/live_subscription_playback_test.dart",
+      "sha256": "7fb0644f2323484548247c9d72283cb01c7388ea6656e33ebbf5d7ea622207e0"
+    },
+    {
+      "repository": "tvs",
+      "path": "integration_test/support/live_acceptance_capture.dart",
+      "sha256": "0c1a8ea6779347de4fb84d68afd370bc1cb276ace1ffb994a718e91d132e8c30"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/providers/live_player_provider.dart",
+      "sha256": "dd305e85aaa43e0d664743b761f2baab139070789e9cafcd34c18261e8cab8fb"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/providers/live_player_provider.g.dart",
+      "sha256": "bb8b4c35f8760f43e51fa211000ae11921a9b4ec872c9980d4c322cc4f17d0f4"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/utils/live_player_controller.dart",
+      "sha256": "5ba0653589c870edf0ab804d8043f2e6aa0253691d3d19c9333e399509b49eb5"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/utils/live_source_url.dart",
+      "sha256": "0cbd2288b49822f62520d02bf1035e6ec6d6b3495f0de495bd471c4c59e426d9"
+    },
+    {
+      "repository": "tvs",
+      "path": "lib/utils/video_playback_error.dart",
+      "sha256": "2df1490f0ca23c051d1ac73e88a430734ab5f46653528c2c34c38c6cbc09d2fa"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_acceptance_capture_test.dart",
+      "sha256": "a6af02456f9a9503650359b2a3a376477c44840dc20bc00e27983029a59d425c"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_attempt_diagnostics_test.dart",
+      "sha256": "b86dc49affaea174b3dfca04db607ed7ca9718d0e0ae4b4cd948fe3cebc96845"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_player_notifier_test.dart",
+      "sha256": "124a8146cedd436c793576ff777453cc37c658abd0e5e0704e7631313f418754"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_player_session_ownership_test.dart",
+      "sha256": "a123193a03072c34b605fc135111f21a658e6e7118533a8070db22090b442c52"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/modules/live/features/live_source_resolution_test.dart",
+      "sha256": "25d753482ae43f67885536b179ad60276fb06a018e6f8a59c3a8117fb5ef6678"
+    },
+    {
+      "repository": "tvs",
+      "path": "test/support/fake_yl_player.dart",
+      "sha256": "d51f10cbe4669daad0e8025d91987c6c68b00b590a965445f612118cf130e6b6"
+    }
+  ],
+  "media": {
+    "bytes": 103282,
+    "sha256": "a9746f24e997dac3bf466501c71935155f887aa160131b7ecd581f519933613c",
+    "provenance": "owned synthetic four-second video; same bytes exposed as fMP4 HLS"
+  },
+  "artifacts": [
+    {
+      "path": "build/app/outputs/flutter-apk/app-debug.apk",
+      "bytes": 115950742,
+      "sha256": "480b07c19f1506609067c254950f4246d077d5f5d4e694ff25c0713fbd82237c"
+    },
+    {
+      "path": "build/ios/iphonesimulator/Runner.app/Frameworks/App.framework/flutter_assets/kernel_blob.bin",
+      "bytes": 52669760,
+      "sha256": "9b20150c8eb0780a7cdf0ba009b6948eb8472472eede15e59d836894c50caef9"
+    },
+    {
+      "path": "build/macos/Build/Products/Debug/yl_script_resolver_example.app/Contents/Frameworks/App.framework/Resources/flutter_assets/kernel_blob.bin",
+      "bytes": 52669744,
+      "sha256": "d325426102be0b823d2168657591d642d995a419a9b1bc49f200cb6a9237cba9"
+    }
+  ],
+  "macosTvs": {
+    "checkpoints": 19,
+    "physicalAudioVideoVerified": false,
+    "providerAsyncCleanupVerified": true,
+    "note": "Before final runner/listener and failed-switch cleanup fixes; fixes verified by reproducing unit regressions"
+  },
+  "review": {
+    "rounds": 1,
+    "importantFixed": 1,
+    "minorFixed": 1,
+    "note": "Later HLS fixture correction and bounded error teardown were runtime-driven; no second review"
+  },
+  "openAcceptance": [
+    "authorized online subscription availability",
+    "signed physical devices and perceived audio/video",
+    "default iOS generic dual-architecture toolchain",
+    "all-device/minimum-OS and full-heap evidence",
+    "P08 sustained playback and SLO"
+  ],
+  "commands": {
+    "tvs": "flutter test test/modules/live/features test/modules/player/features/playback_source_subscriptions_test.dart --no-pub --concurrency=2",
+    "tvsIntegrated": "flutter test test/modules/live/features/live_source_resolution_test.dart test/modules/live/features/live_player_session_ownership_test.dart --no-pub",
+    "resolver": "flutter test packages/yl_player_source_resolver/test --no-pub",
+    "native": "SANITIZE=1 sh packages/yl_player_source_resolver/tool/test_native.sh",
+    "archive": "python3 -B packages/yl_player_source_resolver/tool/generate_controlled_integration.py --archive PRIVATE_ARCHIVE --verify-only",
+    "host": "python3 -B docs/superpowers/reports/evidence/2026-10-16-p05-business/controlled-host.py --player PLAYER_ROOT --archive PRIVATE_ARCHIVE --flutter FLUTTER",
+    "deviceFromResolverExample": "flutter test integration_test/generated/controlled_runtime_test.dart -d OWNED_DEVICE --no-pub",
+    "runner": "python3 -B -m unittest discover -s tool/rtmp_acceptance -p 'test_*.py'",
+    "businessFromTvs": "python3 PLAYER_ROOT/tool/rtmp_acceptance/business.py -- flutter test integration_test/live_subscription_playback_test.dart -d macos --no-pub",
+    "analysis": "flutter analyze --no-pub (whole TVS; changed player Dart files)"
+  },
+  "initialFailures": [
+    {
+      "case": "TVS RTMPS routing",
+      "resolution": "direct and resolved source native retry parity; red then green"
+    },
+    {
+      "case": "provider disposal on failed switch",
+      "resolution": "register subscription cancellation before awaiting decoder; success and error propagation pass"
+    },
+    {
+      "case": "runner exited command retains silent reader",
+      "resolution": "listener close then abort connections then bounded wait; reproduced timeout fixed"
+    },
+    {
+      "case": "fixture cleanup error loses receipt",
+      "resolution": "receipt finally preserves child error and cleanup failure"
+    },
+    {
+      "case": "native short-deadline scheduling under load",
+      "resolution": "unchanged deadlines pass after load settles; diagnostics retained"
+    },
+    {
+      "case": "initial iOS headered live MP4 fixture",
+      "resolution": "use owned HLS, preserve production admission"
+    },
+    {
+      "case": "Android HLS header assertion",
+      "resolution": "respect reserved Accept-Encoding native negotiation; application credentials still checked"
+    },
+    {
+      "case": "isolated Android HLS test failure cleanup stalled",
+      "resolution": "run terminated, not counted; bounded play/stop/dispose and finally view/subscription cleanup added"
+    },
+    {
+      "case": "TVS rate sample observed next zero-byte interval",
+      "resolution": "wait for actual nonzero sample after proxy request, retain rate assertion"
+    }
+  ],
+  "privateArtifacts": "Generated entry and all example build/.dart_tool caches removed after recording hashes; archive left unchanged."
+}
