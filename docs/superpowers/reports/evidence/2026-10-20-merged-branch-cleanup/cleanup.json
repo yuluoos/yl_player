@@ -1,0 +1,41 @@
+{
+  "cleanedAt": "2026-10-20T11:04:10.616169+00:00",
+  "mainBeforeCleanup": "0b00db46f11709565f689b01bf6912f8e9532752",
+  "branches": [
+    {
+      "branch": "codex/p03-engineering-completion",
+      "tip": "3c7d87553a1b9ba9da526b6a58dd0577482107c1",
+      "mergedInto": "0b00db46f11709565f689b01bf6912f8e9532752",
+      "branchDeleted": true,
+      "worktreeRemoved": true,
+      "worktree": "/Users/yy2021_8689/.codex/worktrees/p03-engineering-completion/yl_player",
+      "archive": "/Users/yy2021_8689/Desktop/Flutter/yl_player/.git/codex-archives/p03-engineering-completion-20261020",
+      "bundlePrerequisite": "68aa8c14ebb10d0ce8c78dba47c11aa7aa2733d9",
+      "archiveManifestSha256": "e5217d9875c98fa7ff99bbff9e8eba12b8f294df414d3311b7e86043d4b77a02",
+      "bundleSha256": "a2ebe1d7f67c8090890b46041341ef253fce5d4e9f471b8b796ed6b3c0a6e319",
+      "appArchiveRetained": false
+    },
+    {
+      "branch": "codex/p04-engineering",
+      "tip": "98153c3701ac7c7483103fc355f1d930ce900914",
+      "mergedInto": "0b00db46f11709565f689b01bf6912f8e9532752",
+      "branchDeleted": true,
+      "worktreeRemoved": true,
+      "worktree": "/Users/yy2021_8689/.codex/worktrees/p04-engineering/yl_player",
+      "archive": "/Users/yy2021_8689/Desktop/Flutter/yl_player/.git/codex-archives/p04-engineering-20261020",
+      "bundlePrerequisite": "3433d03fe04a1efebdcb1e77a5ef184d18948922",
+      "archiveManifestSha256": "88f00c12fd0c1a7e868b10bb30529a65dfd6cf23871764874447c3e6df68689e",
+      "bundleSha256": "4b9eeafebbeb94bdcf26595e634d22fcfb93575f11d0f2e3cd2b9bd9f4feab8b",
+      "appArchiveRetained": true
+    }
+  ],
+  "verificationRecordsPreserved": {
+    "2026-10-20-p03-main-merge": {
+      "manifestSha256": "3eb65551c21d88720e6fd5b789ac3d5df5a9deff0e1c38343e9f897d7cd7099a",
+      "entriesVerified": 52
+    }
+  },
+  "sourceChanges": false,
+  "remoteChanges": false,
+  "untouchedBranch": "codex/p02-tracks-subtitles"
+}
