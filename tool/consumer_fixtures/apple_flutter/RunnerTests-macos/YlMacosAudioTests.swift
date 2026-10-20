@@ -1894,7 +1894,7 @@ final class YlMacosAudioTests: XCTestCase {
         if checkpoint {
           XCTAssertFalse(entry.nativePlaying)
           if phase != "configured" {
-            XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
+            XCTAssertEqual(completionTransitions(callbacks.states), 1)
             XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
           }
         }
@@ -1930,7 +1930,7 @@ final class YlMacosAudioTests: XCTestCase {
           "nativePlaying": entry.nativePlaying, "engineRunning": entry.engine.isRunning,
           "ownedBytes": renderer.scheduledBytes, "ledgerBytes": ledger.snapshot.currentBytes,
           "ledgerPeak": ledger.snapshot.peakBytes, "modes": observedModes,
-          "completed": callbacks.states.filter { $0.status == .completed }.count,
+          "completed": completionTransitions(callbacks.states),
           "firstFrames": callbacks.frames.filter { $0.sessionId == session.sessionId }.count,
           "failures": callbacks.failures.map { $0.failure.code }, "audioDiagnostics": entry.failureProbe.snapshot,
           "rssBytes": status == KERN_SUCCESS ? info.resident_size as Any : NSNull(),
@@ -1957,7 +1957,7 @@ final class YlMacosAudioTests: XCTestCase {
         host.initialState.status == .completed && callbacks.states.contains { $0.status == .completed }
       }, timeout: expectedSeconds + 10)
       playbackElapsed = ProcessInfo.processInfo.systemUptime - (playbackStarted ?? 0)
-      XCTAssertEqual(callbacks.states.filter { $0.status == .completed }.count, 1)
+      XCTAssertEqual(completionTransitions(callbacks.states), 1)
       XCTAssertTrue(callbacks.failures.isEmpty)
       XCTAssertFalse(renderer.hasPendingPlayback); XCTAssertEqual(renderer.scheduledBytes, 0)
       let modes = entry.output.snapshot
@@ -2009,18 +2009,59 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+  // onState is a complete snapshot, not a one-shot completion event. Count entry
+  // into completed, preserving replay/new-session edges and every publication.
+  private struct CompletionTransitions {
+    var count = 0
+    private var previous: (String?, ApplePlaybackStatus)?
+    mutating func observe(_ state: AppleStateMessage) {
+      if state.status == .completed && (previous == nil || previous!.0 != state.sessionId || previous!.1 != .completed) {
+        count += 1
+      }
+      previous = (state.sessionId, state.status)
+    }
+  }
+  private func completionTransitions(_ states: [AppleStateMessage]) -> Int {
+    var result = CompletionTransitions()
+    for state in states { result.observe(state) }
+    return result.count
+  }
+
   private final class LifecycleCounters: ApplePlayerFlutterApiProtocol {
     private let lock = NSLock()
     private var counts: [String: Int] = [:]
+    private var completions = CompletionTransitions()
     func record(_ key: String) { lock.withLock { counts[key, default: 0] += 1 } }
     var snapshot: [String: Int] { lock.withLock { counts } }
     func onNetworkBytesReceived(loadRequestId: String, bytes: Int64?) async throws {}
-  func onState(state: AppleStateMessage) async throws { record("publications"); if state.status == .completed { record("completed") } }
+    func onState(state: AppleStateMessage) async throws {
+      lock.withLock {
+        counts["publications", default: 0] += 1
+        completions.observe(state)
+        counts["completed"] = completions.count
+      }
+    }
     func onStateDelta(delta: AppleStateDeltaMessage) async throws { record("publications") }
     func onFirstFrame(event: AppleFirstFrameMessage) async throws { record("publications"); record("firstFrames") }
     func onRetryScheduled(event: AppleRetryScheduledMessage) async throws { record("publications"); record("retries") }
     func onEngineChanged(event: AppleEngineChangedMessage) async throws { record("publications") }
     func onPlaybackFailed(event: ApplePlaybackFailedMessage) async throws { record("publications"); record("failures") }
+  }
+
+  @MainActor
+  func testLifecycleCountsCompletionTransitionsAcrossRepeatedSnapshotsReplayAndSessions() async throws {
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    let counters = LifecycleCounters()
+    var state = fixture.host.initialState
+    state.sessionId = "first"; state.status = .completed
+    for _ in 0..<3 { try await counters.onState(state: state) }
+    XCTAssertEqual(counters.snapshot["completed"], 1)
+    state.status = .playing; try await counters.onState(state: state)
+    state.status = .completed; try await counters.onState(state: state)
+    XCTAssertEqual(counters.snapshot["completed"], 2)
+    state.sessionId = "second"; try await counters.onState(state: state)
+    XCTAssertEqual(counters.snapshot["completed"], 3)
+    XCTAssertEqual(counters.snapshot["publications"], 6)
   }
 
   @MainActor

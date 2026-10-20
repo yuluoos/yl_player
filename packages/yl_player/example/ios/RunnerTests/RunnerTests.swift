@@ -112,6 +112,8 @@ class RunnerTests: XCTestCase {
   }
 
   private final class StopBarrierSession: YlVTSession {
+    // This test controls allocation; it does not establish physical hardware support.
+    let hardwareEvidence = YlHardwareDecoderEvidence(mode: .hardware)
     let usesHardwareDecoder = true
     private let lock = NSLock()
     private var invalidated = false
@@ -210,7 +212,7 @@ class RunnerTests: XCTestCase {
     XCTAssertEqual((events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64, 0)
     XCTAssertNoThrow(try backend.setVolume(0.25))
     XCTAssertNoThrow(try backend.setPlaybackSpeed(1.5))
-    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/fresh.mp4", kind: .network))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/fresh.mp4", kind: .network, formatHint: .mp4))
     XCTAssertTrue(backend.isActive)
   }
 

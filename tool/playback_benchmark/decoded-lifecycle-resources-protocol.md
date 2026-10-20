@@ -44,3 +44,15 @@ release owned process; result fails. Preserve every failure. At most one unchang
 complete four-cell repeat if an external heap fails; no retries for function
 failure, no deadline relaxation. Candidate stays off. Archive commands, raw rows,
 raw heaps, results, XCTest attachments and identity; verify same build across cells.
+
+## Completion observation semantics (2026-10-20)
+
+The native `onState` callback publishes complete state snapshots. Several
+snapshots may retain `completed` while other fields or public revisions change.
+Resource probes count **transitions into completed**, keyed by session and the
+preceding status, rather than treating each snapshot as a new EOF. A replay
+through a non-completed state and completion in a new session each count again.
+All publications continue to be counted; first-frame/failure/retry/submission,
+ledger, graph and late-event checks retain their existing assertions. A synthetic
+regression covers repeated snapshots, replay and new sessions. This correction
+neither proves a system memory bound nor rewrites historical capture values.

@@ -2183,6 +2183,8 @@ private final class DashPassiveVTFactory: YlVTSessionFactory {
     output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession { DashPassiveVTSession() }
 }
 private final class DashPassiveVTSession: YlVTSession {
+  // Explicit simulated evidence keeps this allocation-boundary test independent of hardware.
+  let hardwareEvidence = YlHardwareDecoderEvidence(mode: .hardware)
   let usesHardwareDecoder = true
   func decode(_ sample: CMSampleBuffer, generation: UInt64, reservation: YlVideoDecodeReservation?) -> OSStatus {
     reservation?.release(); return noErr
