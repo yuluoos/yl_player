@@ -34,3 +34,6 @@
 
 
 `tvs-source-bound-result.json.gz`：最终实际业务回归通过，6次切台，第一帧 future 观察的业务耗时分别为 3,714,662 / 2,705,655 / 2,728,010 / 2,057,343 / 2,698,892 / 2,349,808µs；真实 RTMP、JavaScript、切模式、重连耗尽/恢复、刷新及停止均执行，源身份结束重算匹配、宿主二进制哈希已取证。为避开并行 P07 合并，运行时用临时 dependency override 指向 P08 工作树；结束后已恢复 TVS 原依赖配置，TVS 提交 b961497 已快进至其 main。
+
+
+整合并行 P07 主分支 aa54d872 后，已测 P08 package/benchmark 输入清单逐项不变；291项测量工具测试通过，Dolby 合并验证68项中67通过、1项原条件跳过（不计通过）。发布台账 sourceMatches=true：102行，30 external_missing、3 failed、69 not_run、整组 passed=0；四档合格性能基线仍缺，require-ready按预期退出1。源码整合、发布文件与其他计划既有失败分开记录。
