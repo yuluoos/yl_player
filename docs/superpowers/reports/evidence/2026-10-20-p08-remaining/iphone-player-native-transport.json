@@ -1,0 +1,25 @@
+{
+  "complete": true,
+  "transport": "owned-arm64-iproxy",
+  "sharedSdkModified": false,
+  "connected": true,
+  "exitCode": 0,
+  "sourceUnchanged": true,
+  "proxyReaped": true,
+  "device": "iPhone16",
+  "model": "iPhone17-3",
+  "os": "27.0",
+  "buildMode": "profile",
+  "integrationTestsPassed": 1,
+  "plannedAttempts": 3,
+  "perAttemptMetrics": null,
+  "metricsUnavailableReason": "existing-app-driver-did-not-capture-device-stdout",
+  "formalBaseline": false,
+  "logs": {
+    "playback.log": "abd59c52d33404bf41fae0540840c46e8322614fd0377692d81e516b2de2fcc4",
+    "native-driver.log": "c8f9153c2cbfcf68f0cc2b04280328cd45b92887fa64604754808e124f1577dd",
+    "native-iproxy.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-console.log": "2305b755223691576b292e73f952a3bef2664d8b3729b252b95a542ae9fca611",
+    "native-profile-console.log": "4fc3d007b6a71c3a2ea1457bb51bc160ab1a57114116eeef6fea8cfd82412068"
+  }
+}

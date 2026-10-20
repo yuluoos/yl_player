@@ -923,3 +923,13 @@ Production software admission remains empty. See the
 profile三轮双实例所有权/seek/换源/释放实测通过，且保留完整源码身份及失败历史。
 不表示同时多路播放、物理呈现/同步、长期资源或最低系统资格通过；正式阈值仍待
 合格基线，不能上调本表完整CAP通过状态。详见P08报告。
+
+P08 续作已增加仅本进程窗口的 macOS 14+ compositor 采集、公开 seek
+进度稳定窗口、压力资源采样，以及 resolver/TVS/DRM HTTP 分段计时。
+采集器的 OS 限制不提高产品 macOS 12 下限；compositor 不代表物理
+scanout 或 A/V 同步。五种消费者实际构建已通过；本机 macOS 两格显式使用
+`YL_MACOS_LIPO_COMPAT=1`，默认 Flutter/Xcode lipo 组合仍需上游修复或明确
+接受该局部适配方式。当前 iPhone 的新增 resolver 应用被免费签名安装配额阻塞；已有 player
+示例使用本机 arm64 USB 转发通过 profile 公开播放集成用例，不作为物理
+输出或正式性能基线。
+完整性能/发布准入和缺设备、授权资源清单见 P08 报告续作章节。

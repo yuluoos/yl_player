@@ -1,0 +1,24 @@
+{
+  "platform": "macos",
+  "buildMode": "debug",
+  "passed": 7,
+  "observations": [
+    {
+      "boundary": "public-first-frame-future-observed",
+      "businessFirstFrameUs": 581837,
+      "kernelFirstFrameUs": 230911,
+      "scriptPhasesUs": {
+        "input": 73,
+        "download": 18364,
+        "evaluation": 15718,
+        "host": null,
+        "result": 174,
+        "cleanup": 146,
+        "total": 34475
+      },
+      "physicalOutputVerified": false
+    }
+  ],
+  "formalBaseline": false,
+  "rawLogSha256": "f78dc60b88f09902b4c165238f372cc9196fccd3e2ba2f019026e7e9cd9d8826"
+}

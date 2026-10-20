@@ -15,10 +15,11 @@
       "packages/yl_player/README.md": "85850b05ef5e97440e93d2a634e318a6ed2b9c739801df79f9315e93466867a8",
       "packages/yl_player/analysis_options.yaml": "df692318073ecc5f3b8a759a1f9338eb21995900d3c2bc1fbcd2c7780a1c7c6e",
       "packages/yl_player/lib/src/airplay_button.dart": "754498737ca73e0872526c8dff23376589bf793c0ebb1da1492f6d155b642c61",
-      "packages/yl_player/lib/src/drm/license_client.dart": "5e4792d421defbf8b827279a9e2a8ebbdd9d61b30bcda71a3ca53fd0e4f5c761",
-      "packages/yl_player/lib/src/drm/license_io.dart": "697377d74b85428ecf06d9aa4ec9050c4cb50d0167e35d63639b09929c513e52",
+      "packages/yl_player/lib/src/drm/license_client.dart": "126f4ab7ebd73e4c7dea2e29fd121fa961ea9f69ff942bc4f3edc6de47ba3c50",
+      "packages/yl_player/lib/src/drm/license_io.dart": "a274da2fce508ad6a93eb526a22c9152c8fa68cc876bc3fc867591eb9a9c79cc",
       "packages/yl_player/lib/src/drm/license_secure_socket.dart": "e840dd82f87e6dd1e31bb82d84a9bdc7ec78f662610d7219ddd562344bd9cc6d",
       "packages/yl_player/lib/src/drm/license_stub.dart": "ea85799c71e1d7b8b51ac024b8c16d8fa60cd03ffa20ff20ce444405b65bf7ea",
+      "packages/yl_player/lib/src/drm/license_timing.dart": "dae73579c3a799375f8c73d27c823f65baa358af2b7707aa97b09316406a211a",
       "packages/yl_player/lib/src/network_traffic.dart": "e9b1e1897e5eb084a6bc1476ba53a9d23b20827d5c80521dfb9a961df5c92fa7",
       "packages/yl_player/lib/src/playback_session.dart": "3de288306cd43a4a93aed508811c8ef760d183d9e682f5252b328c352abc6f7b",
       "packages/yl_player/lib/src/player_controller.dart": "5dcf4eabaddb60865fc0a40c2d6b0f23d6caffcc82426644125149c03a62239e",
@@ -556,12 +557,12 @@
       "packages/yl_player_source_resolver/.gitignore": "b3e3b41b680a71121c285a1cf7fead55d33cc3297a411821c22f7a4d49483c87",
       "packages/yl_player_source_resolver/CHANGELOG.md": "b0af500e919467386eb53fd33d6e4009f3c826131885056f03eab1606d23d200",
       "packages/yl_player_source_resolver/LICENSE": "54bac49375e118f24f71b6f59ba659775667440695a137ae1c9a399a668c2aa0",
-      "packages/yl_player_source_resolver/README.md": "9cf5b83d8b012d44c6f42bfa2a9d5866ce2b86abdf94150198964d72f3ab9722",
+      "packages/yl_player_source_resolver/README.md": "e543e88c3aedc2e7417f2bdf9157e5712065313faa15ab4e4e62e6de03458582",
       "packages/yl_player_source_resolver/hook/build.dart": "26f4ced63b2f398c08a69d8ff6890ecee5c4470ba5be2c6bce1d9a7f3adc2c4b",
       "packages/yl_player_source_resolver/lib/src/native_runtime.dart": "e9074108d45a2eabcf0b79375bc763117397db05d7c8863481b1a7190f215404",
       "packages/yl_player_source_resolver/lib/src/script_http.dart": "f90be3908e77ea969224bce2fde2b0228c720379e62ef494d596190678e91826",
       "packages/yl_player_source_resolver/lib/src/script_models.dart": "377c67b81049f1af1dde0538179ae059571e13d47871619559c597dfa8a10719",
-      "packages/yl_player_source_resolver/lib/src/script_resolver.dart": "ec7f8cde35d75eeb30145824db200a7d2d91cd36b28afbec266a2691d0e39b49",
+      "packages/yl_player_source_resolver/lib/src/script_resolver.dart": "6f39aeab8a39031ce0b8cfea42761da8bcb1caa1102957f2905aedeb933512a0",
       "packages/yl_player_source_resolver/lib/yl_player_source_resolver.dart": "32da8c3bbdf83c90d058eba0d1f5827b866bcdd9c620839bbb4ba1b0ba932231",
       "packages/yl_player_source_resolver/pubspec.yaml": "d0d788626bacd5448b2c05b5a2c294bbc92eedb2c2abb3810feb8eb4f9667380",
       "packages/yl_player_source_resolver/src/cryptojs/LICENSE": "f729d14b7e1bf8adca0dcc38b93b929d14d53fcd5db56c3d1c9b2daa7aa69396",
@@ -595,7 +596,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "4800cd8c8991eb32b3bec9b5a9d7f9aca248b38ba870ff02c6de716c81ae2278"
     },
-    "sha256": "44ac765064858ebb3bfd87db5a87729cb20b6c80792cd04db015fb5f54589a64"
+    "sha256": "9f19de495e72ba8fb7ec3a2f352b04f3db16a14f91e07828db05b1b44a920134"
   },
   "evidence": {
     "p01": {
@@ -635,12 +636,12 @@
     },
     "p08": {
       "path": "docs/superpowers/reports/2026-09-26-remaining-08-performance-release.md",
-      "sha256": "9fc2755012a06241b30e7cbd28e3a527141475037c35df4b8742fce202097ad5",
+      "sha256": "10775090451e47d5b302042f35feaf0dc43dcba41368abab6a18eab7c05f226f",
       "kind": "report"
     },
     "platform": {
       "path": "docs/platform-support.md",
-      "sha256": "7c1c31369abbe81dd80a1df62d12a5d6df71087335454e6bdd0f57a6f6977e1a",
+      "sha256": "2696c2a3e49a9c0000ab065c569356cbe095bed37c9d7ea800b5ddcac0dea84b",
       "kind": "report"
     }
   },
@@ -1811,15 +1812,16 @@
     {
       "requirement": "RELEASE-CONSUMERS",
       "platform": "all",
-      "implementation": "partial",
-      "verification": "failed",
+      "implementation": "implemented",
+      "verification": "not_run",
       "evidence": [
         "p01",
         "p04",
-        "p05"
+        "p05",
+        "p08"
       ],
       "acceptance": null,
-      "nextAction": "close-parity-default-multiarch-and-current-consumer-gates"
+      "nextAction": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy"
     },
     {
       "requirement": "RELEASE-CI",

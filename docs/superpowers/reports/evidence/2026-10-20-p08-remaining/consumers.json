@@ -1,0 +1,13 @@
+{
+  "cases": [
+    "android",
+    "ios-cocoapods",
+    "macos-cocoapods",
+    "ios-swiftpm",
+    "macos-swiftpm"
+  ],
+  "outcome": "passed",
+  "macosCompatibility": "explicit-owned-host-adapter",
+  "defaultSdkFixed": false,
+  "logSha256": "b5b8a7670357ca501ee4b28489317e0b15ecccb24951123327012ca9cc4ca1eb"
+}

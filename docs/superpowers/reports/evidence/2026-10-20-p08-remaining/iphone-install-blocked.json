@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "deviceClass": "physical-iPhone",
+  "os": "27.0",
+  "architecture": "arm64",
+  "build": "passed",
+  "runtime": "external_missing",
+  "reason": "free-developer-profile-installed-app-limit",
+  "installerDomain": "MIInstallerErrorDomain",
+  "installerCode": 13,
+  "flutterExitCode": 1,
+  "intervention": "terminated-owned-test-group-after-confirmed-install-rejection",
+  "existingAppsRemoved": false,
+  "rawFiles": {
+    "p08-script-iphone.log": {
+      "bytes": 776,
+      "sha256": "04781a4bcf796cd22aebbaf660a7076043799195bd9ec3322f5ca872bbf6ee7b"
+    },
+    "p08-iphone-install.json": {
+      "bytes": 2946,
+      "sha256": "4b39b64aef5876b86e9609519a9fc5f86dd8b13bff80bd2589d749ae7ea93523"
+    },
+    "p08-iphone-lock.json": {
+      "bytes": 596,
+      "sha256": "13a3f03dd98cd4b03d5de2c73156973fd4a37f451ee040fc445a8eae491de86b"
+    }
+  }
+}

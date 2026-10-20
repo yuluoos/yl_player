@@ -1825,3 +1825,32 @@ iOS的MCP等待在300s超时，但原始xcodebuild继续完成同一轮并输出
 边界与未完成项：本轮是可执行测量/门禁及公共所有权工作负载交付，**不将原计划A–D或完整P08标记完成**。通用phase/calibration字段不等于已经实现并采集所有真实呈现、seek稳定窗口、TVS全链路分段、JS/许可证分段、物理音画/字幕同步数据；这些具体采集与资格仍需继续。已有历史长播/优化证据保留，本轮没有重跑长播、后台、低内存或热资格。最低系统、Android低内存32-bit、Intel、授权DRM/Dolby参考及当前远程CI也仍需对应证据。发布门禁须保持未通过，不能仅凭本地工程测试宣告升级全部完成。
 
 本轮消费/发布检查：九包dry-run全部零warning通过（初次因本轮文件尚未提交的warning保留，提交后复验）。Android消费APK、iOS CocoaPods及SwiftPM完整link通过；macOS两种管理器均在Flutter `release_unpack_macos` 的 `lipo -verify_arch arm64 x86_64` 失败。对同一实际FlutterMacOS二进制逐架构检查均退出0、合并调用报“requires exactly one input file”，真实fat信息含两架构；未修改共享SDK、未排除架构。该消费者门槛继续failed。联合P08工程入口通过，`--require-ready`实际退出1，四个物理性能档位仍待合格数据，远程CI未运行。
+
+## 2026-10-20：剩余可执行工程、实际呈现及业务分段
+
+本轮基线 `86143754`。已补齐当前条件下可执行的采集链路，完整原始数值、失败尝试、源身份和验证记录见[续作证据](evidence/2026-10-20-p08-remaining/README.md)。**这些交付不等于 A–D 的物理资格与正式发布封板全部通过。**
+
+- macOS 独立宿主提供显式 `--lipo-compat` / 联合入口 `YL_MACOS_LIPO_COMPAT=1`。仅给生成的 Flutter 构建阶段设置专属适配器，底层仍调用系统 lipo；不修改共享 SDK，不移除架构。Android APK、iOS CocoaPods/SPM、macOS CocoaPods/SPM 五格真实构建通过；macOS 仍校验 universal、部署下限和符号。默认工具链原始多架构命令的问题保留，不能把 opt-in 通过写成默认 SDK 已修复。
+- 压力协议 v3 将 seek 命令完成、目标附近公开状态、连续进度窗口分别计量，并接入实际进程 CPU/RSS/physical footprint、电源/热状态及释放后采样。三轮双实例所有权、seek、替换、恢复和释放已实际执行。采样绑定同一试次，初始化异常立即拥有 timer 清理；失败、缺失与 skipped 保留。Apple 租约下显式恢复另一实例，不声称同步多路播放。
+- 新增 macOS 14+ 测试专用 ScreenCaptureKit 采集器，只采集本进程指定窗口。独立生成带编号像素的静音视频，用同一 mach 时钟观察 Load 前空画面、首次编号帧、seek 目标附近帧及连续窗口；三轮均验证自身窗口隐藏一秒后恢复出图。产品 macOS 12 下限未变。它证明 compositor 输出，不证明面板 scanout、音频或 A/V/字幕同步。既有授权不足时直接记录不可用，不请求屏幕录制权限。
+- Resolver 提供结算后只读 `timings`：input/download/evaluation/host/result/cleanup/total；未进入阶段为 null，重复阶段累计。真实本地 HTTP、JS VM 与播放器交接在 macOS 完成 7 项集成检查。TVS 在实际切台流程分别记录脚本、准备、kernel firstFrame future 观察与业务总耗时；嵌套墙钟区间不相加作 CPU 时间。
+- DRM 实际 HTTP transport/connect/responseHeaders/body 使用有界、隔离的内部计时观察器；收据在作用域关闭后输出，取消后的迟到 span 不污染其他运行。真实回环 HTTP 成功/拒绝、TLS、桥接与未完成收据测试覆盖工程链路；没有授权 DRM 内容，因此不计受保护播放或续证性能通过。
+- 当前源码、依赖、制品、媒体和协议均作为采集输入；结束重算并保留失败。TVS collector 必须取得最终宿主二进制哈希才可能成功。未设置事后性能阈值，不将短样本或当前缓存条件升级为合格基线。
+
+初始 compositor 尝试的黑帧和崩溃全部保留：非 MainActor 的 async 方法将 AppKit 操作移到工作线程导致崩溃，明确 MainActor 后消除；黑帧另由 integration binding 缺少 fullyLive frame policy 导致，设置后实际编号像素连续出现。未把两个原因混为一谈。一次独立复审发现 DRM 提前输出和 TVS 取证失败误报成功两项 Important；采样器初始化异常清理从 Minor 重定级为需要修复，三个失败路径均加回归。另按本轮“能完成的都做完”要求修正 TVS 脚本计时覆盖启动，全部集中修正后验证；没有二次复审。
+
+### 缺设备或外部资源（不能用软件事件补充为通过）
+
+| 条件 | 当前事实 | 下一步 |
+| --- | --- | --- |
+| 当前 iPhone（resolver 新应用） | iPhone16/iOS27：resolver 签名构建成功，新增安装返回 MIInstallerErrorDomain 13，免费签名应用数量已满；已存在的 player 示例成功原位更新并通过公开播放用例 | resolver 需可用签名配额或另一台可安装设备；本轮未卸载现有应用，resolver 运行 external_missing |
+| 最低系统与其他硬件 | 缺 Android API24 低内存/32-bit、iOS15、macOS12/Intel 实际运行设备 | 对应实物档位运行并记录 CPU、内存、热和输出条件；编译与模拟器不能替代 |
+| 物理音画、字幕与路由 | 缺可校准的屏幕/音频输出采集和独立参考，第二物理音频路由不足 | 建立共同时间基准、误差与输出标定后采集；本机 compositor/公开事件不填 physical 指标 |
+| 直播端到端 | 缺可信源时钟及可验证链路时间基准 | 接入带可验证采集时刻的源，验证时钟误差后才统计端到端延迟 |
+| DRM / Dolby | 缺授权内容及许可证、独立 Dolby/FEL 参考与对应输出链 | 沿已有授权验收入口输入合法资源；回环 POST/合成素材不替代 |
+| 远程 CI | 本轮未推送或触发远程执行 | 对最终提交运行对应远程 CI 并记录链接、源码和制品身份；本地通过不代替 |
+
+此外，正式四档性能目标仍等待合格基线与产品预算，不编造数值。默认关闭的音频候选、整体资源有界准入及其他计划 CAP 组的未完成/既有失败保留在发布台账；这些不是“缺设备”一概掩盖的项目。既有同 native 生产实现的完整原生与 1201 秒长播历史证据保留，本轮不宣称重新执行长播、修复历史所有格式问题或完成全部发布资格。
+
+
+当前 iPhone16/iOS27 的既有 player 示例已完成 profile 真机公开播放集成用例（计划三试次）。首次 Flutter 启动因 SDK 内置 iproxy 仅 x86_64 失败，保留该失败；使用机器已有 arm64 iproxy，仅转发本次应用发布的 VM 服务，再以 Flutter 官方 existing-app 模式连接后通过，专属代理已回收。没有安装 Rosetta或修改共享SDK。existing-app driver 未保存设备 stdout 的逐次指标行，因此不公布该轮 iPhone p50/p95、不补造 JSON 样本；只计实际运行用例通过。新增 resolver 应用的签名配额阻塞仍独立保留。

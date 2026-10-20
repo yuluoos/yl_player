@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "playerCommit": "5ab7375a",
+  "tvsCommit": "b961497",
+  "foundation": {
+    "exitCode": 0,
+    "dartSuiteCounts": [
+      137,
+      1705,
+      109,
+      97,
+      1,
+      156,
+      11,
+      48,
+      19,
+      48
+    ],
+    "dartTotal": 2331,
+    "pythonSuiteDiscoveredCounts": [
+      71,
+      291,
+      2,
+      20,
+      7,
+      80,
+      21,
+      36,
+      6,
+      7,
+      5,
+      9,
+      5,
+      3,
+      3,
+      4,
+      9
+    ],
+    "explicitSkipNotPass": true,
+    "analyze": "passed",
+    "format": "451-files-unchanged",
+    "appleArtifact": "3-slices-5-architectures-57-symbols-9-negative-checks"
+  },
+  "p08": {
+    "exitCode": 0,
+    "python": 291,
+    "consumerAdapter": 8,
+    "resolver": 65,
+    "drm": 21,
+    "example": 109,
+    "swiftMarker": 11
+  },
+  "tvs": {
+    "tests": 362,
+    "analyze": "passed",
+    "codegen": "passed",
+    "runtime": "passed",
+    "switches": 6,
+    "sourceUnchanged": true,
+    "temporaryOverridesRestored": true
+  },
+  "consumers": {
+    "exitCode": 0,
+    "cases": 5,
+    "macosLipoCompatibility": "explicit-owned-host"
+  },
+  "publication": {
+    "exitCode": 0,
+    "packages": 9,
+    "warnings": 0,
+    "published": false
+  },
+  "nativeRuntime": {
+    "stressAttempts": 3,
+    "stressPasses": 3,
+    "compositorAttempts": 3,
+    "compositorPasses": 3,
+    "sourceUnchanged": true,
+    "resolverMacosTests": 7,
+    "iphonePlayerIntegrationTests": 1,
+    "iphonePlayerPlannedAttempts": 3,
+    "iphonePlayerPerAttemptMetrics": null,
+    "iphoneResolver": "external_missing-signing-quota"
+  },
+  "review": {
+    "freshReviews": 1,
+    "importantFixed": 2,
+    "minorRegradedAndFixed": 1,
+    "minorAlsoFixed": 1,
+    "deferred": 0
+  },
+  "releaseReady": false,
+  "formalPerformanceBaseline": false,
+  "logs": {
+    "p08-foundation-final.log": {
+      "sha256": "7cbcc03894faf7371e1d736f4e9f287b232cbf81da04106bb3396d5b54444f12",
+      "bytes": 492471
+    },
+    "p08-gate-postreview.log": {
+      "sha256": "1799481d575b704af815c2267572fe2be45da936ab3507fd42f5e6c85b22dc80",
+      "bytes": 82767
+    },
+    "p08-final-consumers-console.log": {
+      "sha256": "b5b8a7670357ca501ee4b28489317e0b15ecccb24951123327012ca9cc4ca1eb",
+      "bytes": 912
+    },
+    "p08-publication-final-console.log": {
+      "sha256": "7107e0048ed7c21ff6ebde64f513370c3d44235fe26f21918a94b7f68dd1994c",
+      "bytes": 109435
+    },
+    "p08-tvs-postreview.log": {
+      "sha256": "347f0492d08217403832e45a829e00f478b8f21f51903c018050f6f2a9694264",
+      "bytes": 63239
+    },
+    "p08-tvs-postreview-analyze.log": {
+      "sha256": "032dafe4d9f034054c3b24d26befdbe4e60d1f41ca0acdf984facd110338c954",
+      "bytes": 96
+    },
+    "p08-tvs-codegen-final.log": {
+      "sha256": "11a4c5ecb34f7bcdbfb51535f7f3c8d45b5069cb4f4c557ba3d65f7095d3028a",
+      "bytes": 1445
+    },
+    "p08-review-tvs-red.log": {
+      "sha256": "c825defccaff63d6edaa0368c2e055b88a54ef75f51335151901547fcb6e238f",
+      "bytes": 828
+    },
+    "p08-review-tvs-green.log": {
+      "sha256": "2c37d50a88147ca2ebd5197d74ee37d462dab650d793512e849814c28d5a38f0",
+      "bytes": 101
+    },
+    "p08-review-dart-red.log": {
+      "sha256": "4c9a1dbb3afc09b186aa7d2ff76477a5d0f24e7d061d773175801512ea2726d4",
+      "bytes": 4586
+    },
+    "p08-review-dart-green.log": {
+      "sha256": "81ef153a513ca6af354d14fdccc8b79a8d789928a26db422a3a1ef7ae72960c6",
+      "bytes": 2752
+    },
+    "p08-player-all.log": {
+      "sha256": "985f3a90cdc52422bb9a3fa9ad4ebcec3e99902a8d182e1b8c935cd204f352ff",
+      "bytes": 341737
+    },
+    "p08-player-root-final.log": {
+      "sha256": "d1e9bb6e3e1aab41eb94b03b4d837ef37cf3ee4c5d4da06796686b0ab793066c",
+      "bytes": 330371
+    },
+    "p08-script-macos.log": {
+      "sha256": "f78dc60b88f09902b4c165238f372cc9196fccd3e2ba2f019026e7e9cd9d8826",
+      "bytes": 19621
+    }
+  }
+}
