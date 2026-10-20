@@ -84,9 +84,9 @@ timeout classification from absent/corrupted logs; preserve its runner evidence
 separately. Valid captures retain their own outcome even when excluded.
 
 A valid run is eligible only if the single-run validator confirms process success,
-cleanup and natural completion, no sampled policy violation, and media bytes on
-a request ending at/after recovery. This final check does not prove coverage of
-every weak-network phase or successful adaptation. Partial logs, nonzero exits,
+cleanup and natural completion, no sampled policy violation, and successful media writes in each of the three network phases.
+Legacy traces without phase counters remain parseable but are ineligible. Phase
+coverage alone does not prove successful adaptation. Partial logs, nonzero exits,
 timeouts, policy findings and early preloads remain counted. Distributions use
 eligible runs only and always display planned/eligible/excluded counts and status
 counts so that the denominator cannot silently shrink.

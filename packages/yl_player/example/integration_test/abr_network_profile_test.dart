@@ -150,6 +150,8 @@ void main() {
           })}',
           wrapWidth: 100000,
         );
+        // Preserve every sample and the result before the test process exits.
+        await debugPrintDone.timeout(const Duration(seconds: 30));
       }
       expect(
         outcome,

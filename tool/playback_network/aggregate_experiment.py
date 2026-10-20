@@ -150,7 +150,7 @@ def summarize_trial(trial, conditions, root, budget):
             status = 'incomplete'
         elif summary['violations']:
             status = 'policy_violation'
-        elif not summary['mediaRequestReachedRecovery']:
+        elif not summary['networkPhasesCovered']:
             status = 'network_not_exercised'
         else:
             status = 'eligible'

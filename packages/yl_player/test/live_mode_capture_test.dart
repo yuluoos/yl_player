@@ -35,6 +35,47 @@ void main() {
       );
     });
   }
+  test('profile identity cannot be partial or invalid', () {
+    for (final change in [
+      {'profileId': 'down-and-recover-v1'},
+      {'profileId': 'down-and-recover-v1', 'profileHash': 'bad'},
+    ]) {
+      expect(
+        () => parseLiveModeConfig({
+          ...config('hls', 'http://127.0.0.1:8001/live.m3u8'),
+          ...change,
+        }),
+        throwsFormatException,
+      );
+    }
+  });
+  test(
+    'baseline capture rejects invalid mode and accepts both explicit modes',
+    () {
+      expect(
+        () => parseLiveModeConfig({
+          ...config('hls', 'http://127.0.0.1:8001/live.m3u8'),
+          'baselineMode': 'auto',
+        }),
+        throwsFormatException,
+      );
+      for (final mode in ['smoothPlayback', 'lowLatency']) {
+        expect(
+          parseLiveModeConfig({
+            ...config('hls', 'http://127.0.0.1:8001/live.m3u8'),
+            'baselineMode': mode,
+          })['baselineMode'],
+          mode,
+        );
+      }
+    },
+  );
+  test('samples carry session and experiment stage', () {
+    const id = YlPlaybackSessionId('live-1');
+    final series = LiveModeSeries(id);
+    series.add(YlPlayerState(sessionId: id), 1);
+    expect(series.samples.single['sessionId'], 'live-1');
+  });
   test('observations bounded and missing metrics remain unknown', () {
     const id = YlPlaybackSessionId('live-1');
     final series = LiveModeSeries(id, limit: 2);

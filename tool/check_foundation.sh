@@ -14,6 +14,7 @@ case "$mode" in
     ;;
 esac
 
+python3 -B -m unittest discover -s tool/playback_network -p 'test_*.py'
 python3 -B -m unittest discover -s tool/playback_benchmark -p 'test_*.py'
 python3 -B -m unittest discover -s tool/dash_sidx -p 'test_*.py'
 python3 -B -m unittest discover -s tool/dash_timeline -p 'test_*.py'

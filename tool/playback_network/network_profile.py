@@ -291,7 +291,9 @@ class Handler(BaseHTTPRequestHandler):
                    profileSha256=s.profile.sha256, asset=None,
                    startMs=round(started * 1000, 6) if active else None,
                    method='HEAD' if head else 'GET',
-                   status=None, bodyBytesWritten=0, outcome='complete')
+                   status=None, bodyBytesWritten=0, outcome='complete',
+                   phaseBoundariesMs=[step['atMs'] for step in s.profile.steps],
+                   phaseBytesWritten=[0]*len(s.profile.steps))
         with self.server.records_lock:
             self.server.next_record_id += 1
             row['requestId'] = self.server.next_record_id
@@ -341,6 +343,9 @@ class Handler(BaseHTTPRequestHandler):
                     s.consume(len(chunk), deadline)
                     self.wfile.write(chunk)
                     row['bodyBytesWritten'] += len(chunk)
+                    phase = max(i for i, step in enumerate(s.profile.steps)
+                                if step['atMs'] <= s.elapsed()*1000)
+                    row['phaseBytesWritten'][phase] += len(chunk)
         except Disconnected:
             row['outcome'] = 'disconnected'
         except TimeoutError:

@@ -113,6 +113,23 @@ class SummaryTests(unittest.TestCase):
         report=summarize(result,samples,requests,exit_code=0)
         self.assertIn('fixed_returned_to_auto',report['violations'])
 
+    def test_phase_coverage_uses_writes_not_a_request_ending_after_recovery(self):
+        result, samples, requests = data()
+        report = summarize(result, samples, requests, exit_code=0)
+        self.assertIsNone(report.get('networkPhaseBytes'))
+        self.assertFalse(report.get('networkPhasesCovered', True))
+        for row in requests:
+            row['phaseBoundariesMs'] = [0, 10000, 25000]
+            row['phaseBytesWritten'] = [0, 0, row['bodyBytesWritten']]
+        report = summarize(result, samples, requests, exit_code=0)
+        self.assertEqual(report['networkPhaseBytes'], [0, 0, 100])
+        self.assertFalse(report['networkPhasesCovered'])
+        requests[-1]['phaseBytesWritten'] = [20, 30, 50]
+        self.assertTrue(summarize(result, samples, requests, exit_code=0)['networkPhasesCovered'])
+        requests[-1]['phaseBytesWritten'] = [20, 30, 51]
+        with self.assertRaises(ValueError):
+            summarize(result, samples, requests, exit_code=0)
+
     def test_cli_roundtrip_and_truncated_capture_exit(self):
         result,samples,requests=data()
         with tempfile.TemporaryDirectory() as work:

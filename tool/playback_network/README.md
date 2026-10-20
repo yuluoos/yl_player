@@ -91,13 +91,49 @@ Virtual-clock tests assert exact rate-boundary/stall/drop/recovery behavior;
 loopback tests assert received bytes, range replies, partial-body disconnects,
 shared bandwidth, bounded admission and safe logging. No player is involved.
 
-The generated 40-second MPD has structural/hash validation only; continuous
-player playback and cross-Period ABR are still unverified. Do not interpret
-repeated HTTP downloads as continuous media playback. HTTP-FLV live timing and RTMP
-shaping are not implemented here. Real TCP RTT and end-to-end live latency remain
+The generated 40-second MPD has structural/hash validation. The missing-high
+variant also has a macOS public-player run covering fixed selection across an
+existing Period, missing-track fallback and caps/seek. Full-trajectory ABR and
+three-platform acceptance remain open. Do not interpret repeated HTTP downloads
+as continuous media playback. The original static HTTP server does not generate live sources;
+protocol-transparent shaping is now provided by `live_relay.py` (see below). Real TCP RTT and end-to-end live latency remain
 unavailable, as do P08-derived device SLOs until measured and frozen. This tool
 does not establish CAP-ABR, CAP-LIVE, mode switching or three-platform acceptance.
 
 Repeated measurements can be predeclared and summarized without a test environment
 using [the offline experiment protocol](experiment-protocol.md). It groups results
 by mode/cache state and preserves every planned, failed and timed-out attempt.
+
+## P04 engineering completion (2026-10-20)
+
+The HTTP trace now includes `phaseBoundariesMs` and `phaseBytesWritten`. A chunk
+is counted in the phase in which its complete write returned. This is an
+application write observation, not TCP receipt or a division of bytes by the
+phases in which their rate reservations occurred. The sum equals
+`bodyBytesWritten`; only known media assets enter the ABR phase totals.
+`aggregate_experiment.py` now requires actual media writes in all three
+`down-and-recover-v1` phases. Legacy captures still parse, but are ineligible for
+weak-network aggregation when their phase evidence is unavailable. A transfer
+ending after recovery alone is insufficient.
+
+Generate a separate PD-01 programme with `prepare_fixture.py --missing-high-after 2`.
+Its high AVC rendition exists for two full Periods (including different IDs),
+and disappears at 8 seconds. Removed high media are not served. The independent
+manifest/inventory hashes identify this scenario. Run
+`integration_test/abr_fixed_period_test.dart` with the same `YL_ABR_*` identity
+parameters as the ordinary capture. It checks fixed output in Period 2,
+preparation failure rollback, missing-track fallback, return seek, and concurrent
+caps/seek. It emits `YL_ABR_PERIOD_*` records; do not feed this intentional
+fallback scenario to the ordinary fixed-weak-network validator.
+
+For owned live upstreams, see [live protocol engineering](live-protocol.md).
+The relay accepts HLS, HTTP-FLV and RTMP traffic on loopback without changing
+protocol messages. Both single-run and repeated live validation are available.
+`evaluate_targets.py` works with either ABR or live experiment manifests.
+It recomputes hash-verified raw evidence before freezing explicitly supplied
+p95 limits or comparing a candidate; it never supplies a device target itself.
+
+All Python regressions are discovered by `tool/check_foundation.sh`, hence by
+the quick/full foundation CI shards. Public Flutter integration entries require
+an explicit owned source, identity and selected target. Offline unit tests and
+independent FFmpeg decoding do not count as those device entries running.

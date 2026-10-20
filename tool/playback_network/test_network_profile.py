@@ -158,6 +158,14 @@ class ServerTests(unittest.TestCase):
         self.assertEqual([r['bodyBytesWritten'] for r in records], [300, 10, 0])
         self.assertTrue(all(r['outcome'] == 'complete' for r in records))
 
+    def test_trace_accounts_successful_writes_in_each_profile_phase(self):
+        self.start([step(rate=1000), step(100, 1000)], clock=Clock())
+        self.assertEqual(self.request()[2], self.payload)
+        row = self.records()[0]
+        self.assertEqual(row.get('phaseBytesWritten'), [0, 300])
+        self.assertEqual(sum(row['phaseBytesWritten']), row['bodyBytesWritten'])
+        self.assertEqual(row.get('phaseBoundariesMs'), [0, 100])
+
     def test_suffix_open_range_and_invalid_range(self):
         self.start()
         for value, status, expected in [('bytes=-3', 206, b'789'),

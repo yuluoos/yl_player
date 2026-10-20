@@ -5,6 +5,18 @@ import 'package:yl_player/yl_player.dart';
 Map<String, String> parseLiveModeConfig(Map<String, String> values) {
   const invalid = FormatException('Invalid owned live capture configuration');
   try {
+    if (values.containsKey('profileId') || values.containsKey('profileHash')) {
+      if (!RegExp(
+            r'^[a-z0-9-]{1,80}-v[1-9][0-9]*$',
+          ).hasMatch(values['profileId'] ?? '') ||
+          !RegExp(r'^[0-9a-f]{64}$').hasMatch(values['profileHash'] ?? '')) {
+        throw invalid;
+      }
+    }
+    if (values.containsKey('baselineMode') &&
+        !{'smoothPlayback', 'lowLatency'}.contains(values['baselineMode'])) {
+      throw invalid;
+    }
     final protocol = values['protocol'];
     final uri = Uri.parse(values['url'] ?? '');
     if (!{'hls', 'flv', 'rtmp'}.contains(protocol) ||
@@ -39,7 +51,7 @@ final class LiveModeSeries {
   final int limit;
   final _samples = <Map<String, Object?>>[];
   List<Map<String, Object?>> get samples => List.unmodifiable(_samples);
-  void add(YlPlayerState state, int elapsedUs) {
+  void add(YlPlayerState state, int elapsedUs, {String stage = 'observe'}) {
     if (state.sessionId != session) return;
     if (elapsedUs < 0 ||
         _samples.length >= limit ||
@@ -49,6 +61,8 @@ final class LiveModeSeries {
     }
     _samples.add(
       Map.unmodifiable({
+        'sessionId': session.value,
+        'stage': stage,
         'elapsedUs': elapsedUs,
         'revision': state.revision,
         'status': state.status.name,

@@ -1,0 +1,31 @@
+{
+  "result": {
+    "schemaVersion": 1,
+    "runId": "fixed-period-public",
+    "mediaHash": "36a7eb35dd512e19141c6dbda51dcc85bf66a908d1728b880aef588aa55ebc50",
+    "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+    "failureCode": null,
+    "failureType": null,
+    "beforeRollbackAutomatic": false,
+    "afterRollbackAutomatic": false,
+    "outcome": "completed",
+    "stage": "caps-seek",
+    "cleaned": true,
+    "sampleCount": 96,
+    "physicalOutputVerified": false,
+    "capabilityAccepted": false
+  },
+  "sampleCountVerified": true,
+  "requestCount": 89,
+  "phaseBytesWritten": [
+    1068782,
+    23522,
+    0
+  ],
+  "existingPeriodFixed640": true,
+  "missingPeriodAuto320": true,
+  "returnedCappedAuto320": true,
+  "fullWeakNetworkTrajectory": false,
+  "physicalOutputVerified": false,
+  "capabilityAccepted": false
+}
