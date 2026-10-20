@@ -915,3 +915,11 @@ false. Both real negative controls were rejected. This is not a full 40-cell,
 release, minimum-OS, Intel, physical synchronization or sustained thermal qualification.
 Production software admission remains empty. See the
 [P03 evidence and scope](superpowers/reports/evidence/2026-10-20-p03-engineering-completion/README.md).
+
+### P08 工程测量入口（2026-10-20）
+
+`tool/check_p08.sh --validate` 验证本地测量工具、example测试与台账结构；
+`--require-ready` 同时要求设备档位性能登记和完整发布台账通过。新增macOS
+profile三轮双实例所有权/seek/换源/释放实测通过，且保留完整源码身份及失败历史。
+不表示同时多路播放、物理呈现/同步、长期资源或最低系统资格通过；正式阈值仍待
+合格基线，不能上调本表完整CAP通过状态。详见P08报告。

@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "baselineCommit": "ab734051",
+  "implementationCommit": "808c86c4a3ac6c8678198da379703203f80aed25",
+  "checks": {
+    "pythonBenchmark": {
+      "passed": 280,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exampleDart": {
+      "passed": 101,
+      "failed": 0
+    },
+    "foundationDartSubruns": [
+      137,
+      1700,
+      101,
+      97,
+      1,
+      156,
+      11,
+      48,
+      19,
+      48
+    ],
+    "foundationRepairs": [
+      "protected-probe-template-attached",
+      "four-existing-format-differences",
+      "example-test-working-directory"
+    ],
+    "foundationExistingSkips": {
+      "dolbyTool": 1
+    },
+    "analysis": "passed",
+    "realMacosStress": {
+      "attempts": 3,
+      "passed": 3,
+      "sourceUnchanged": true,
+      "formalBaseline": false
+    },
+    "packageDryRuns": {
+      "packages": 9,
+      "passed": 9,
+      "warnings": 0
+    },
+    "consumerBuilds": {
+      "android": "passed",
+      "ios-cocoapods": "passed",
+      "ios-swiftpm": "passed",
+      "macos-cocoapods": "failed-flutter-lipo-multiarch",
+      "macos-swiftpm": "failed-flutter-lipo-multiarch"
+    },
+    "engineeringEntry": "passed",
+    "requiredReadinessExit": 1,
+    "remoteCI": "not-run"
+  },
+  "formalPerformanceAccepted": false,
+  "fullP08Complete": false,
+  "releaseReady": false,
+  "logs": {
+    "p08-baseline.log": {
+      "sha256": "b4d0a09bfd0d0fac89409d0297ad98d609d824db3c7925ad7fe624a150b3208b",
+      "bytes": 8886
+    },
+    "p08-gate-red.log": {
+      "sha256": "9931c88ff318aadf7819d1ebe2eab2b0dbdf4ed58d005595a4a62020b68911e9",
+      "bytes": 8308
+    },
+    "p08-model-red.log": {
+      "sha256": "782fffbdecfc5a95e2978058c9d947a33ed5e396c31de57004d05d5c192353e0",
+      "bytes": 741
+    },
+    "p08-review-source-red.log": {
+      "sha256": "4bc26105dea5478d4340f015eef799b86ace8eab6447be838af6715e82f9228f",
+      "bytes": 3547
+    },
+    "p08-review-presentation-red.log": {
+      "sha256": "cdf86a2c2dc0bd7fa0f42c94040e0020f4a7c5a1f18b931d376cf8923d0a1062",
+      "bytes": 1624
+    },
+    "p08-review-profile-red.log": {
+      "sha256": "c2ddfe34f83ed7bd0c19328d27c64a046d56fabd6a0f8c6434e081522bc427bc",
+      "bytes": 764
+    },
+    "p08-foundation.log": {
+      "sha256": "4ee240316b24272154c364260b72d8100aacd8e7d5490608069e257e3a011442",
+      "bytes": 26955
+    },
+    "p08-foundation-remaining.log": {
+      "sha256": "7d2d8bee94336d2a99399131e27125662edb1a717378f894e43d0d5e30494f58",
+      "bytes": 6580
+    },
+    "p08-foundation-tail.log": {
+      "sha256": "00628c7a1ad8ebe9dda35e4b3ce4f6cb319f05ce509283cf0db1e8aa3221c1d3",
+      "bytes": 463377
+    },
+    "p08-tools-verified.log": {
+      "sha256": "16d09139b3f9c5b1fa72c9d2185895cd40c04145fcf874656893e560ba2dbc82",
+      "bytes": 8907
+    },
+    "p08-example-final.log": {
+      "sha256": "f56bd867abd9900f16f1c5eecc00c448c04a1f3d1345b5c70f7c332765a7a535",
+      "bytes": 23689
+    },
+    "p08-example-verified.log": {
+      "sha256": "e7fb5e5cb965cb75bed4d2c417871878e2d3ca6b6b009f5a1c6eb0ee99cd9885",
+      "bytes": 20978
+    },
+    "p08-combined.log": {
+      "sha256": "8b054557f12a4ea00aaa4a92b46ba39d5d568fd0469e294679f807093bc1751a",
+      "bytes": 62099
+    },
+    "p08-ready-gate.log": {
+      "sha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+      "bytes": 704
+    },
+    "p08-consumers.log": {
+      "sha256": "35b7f4a3bc628f64ba460331185e3e4227fc804d2b5262209d82609df297b8ed",
+      "bytes": 18101
+    },
+    "p08-ios-swiftpm.log": {
+      "sha256": "969bcb6c9d25b817f6b5126e0d8703859605c6a2d6828a1c4a7356aa677825cc",
+      "bytes": 2912
+    },
+    "p08-macos-swiftpm.log": {
+      "sha256": "c5bf47576c475edcbb3999ce16cdcaf86cae27686c7ba34a177016e862dac420",
+      "bytes": 17252
+    },
+    "p08-publication.log": {
+      "sha256": "f0903349b03583d4e29fc21141ce8721a0511344db7eea68c18f7b68d92cbdce",
+      "bytes": 95508
+    },
+    "p08-publication-final.log": {
+      "sha256": "63180a75bec9c5debe1587ca4f82436ababce971ed9f5c1d1ef527a4db292bac",
+      "bytes": 107951
+    }
+  }
+}

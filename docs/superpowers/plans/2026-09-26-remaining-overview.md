@@ -734,3 +734,7 @@ P02/CAP-SUB 全场景验收不标完成。P04 独立分支未改动。
 [证据包](../reports/evidence/2026-10-20-p02-device-completion/README.md)。
 
 2026-10-20 P03 批准工程范围已完成：最终 iPhone 选择范围严格8/8、AVPlayer source-pull1/1、两项真实负例拒绝；采集超时及 seek/恢复竞态已修复。完整40格、硬件消费时钟、最低系统/Intel/物理同步和生产软解资格仍开放，见[P03收尾证据](../reports/evidence/2026-10-20-p03-engineering-completion/README.md)。
+
+### 2026-10-20 P08 测量和门禁工程
+
+补齐多指标采集契约、基线冻结/同条件比较、设备档位与完整源码身份校验、试次失败及清理保留，新增公共双实例所有权压力入口和联合检查脚本。Python280、example101、本机profile3/3通过；复审缺陷已修复。真实呈现/稳定窗口/业务分段及跨设备长播资格、数值SLO和远程CI仍开放，完整P08不标完成，见[P08报告](../reports/2026-09-26-remaining-08-performance-release.md#2026-10-20测量阈值和发布门禁工程补齐)。

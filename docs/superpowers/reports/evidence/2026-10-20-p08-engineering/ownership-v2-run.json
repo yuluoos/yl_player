@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "runId": "p08-stress-20261020T122901Z",
+  "commit": "ab73405190a1996f8d081236d7bb48865c47dbdc",
+  "sourceHash": "9b85dc4578bb2176eb8a2983f91fd8c9f672ac32298ff163ad0f0c91f5a17e15",
+  "dependencyHash": "ba0ab27aaa3930d53afcdf5c5f7f8c22c453a9088dc30613d6c1d88b990c2891",
+  "artifactHash": "5879f0f549ee059c41fed92c88d2dccbb26d2b2698f8c992e19df07c966e6491",
+  "baselineComparable": true,
+  "plannedAttempts": 3,
+  "warmupAttempts": 0,
+  "conditions": {
+    "platform": "macos",
+    "device": "MacBookPro17-1",
+    "os": "27.0.1",
+    "architecture": "arm64",
+    "deviceKind": "physical",
+    "buildMode": "profile",
+    "power": "unknown",
+    "thermal": "unknown",
+    "output": "unverified",
+    "mediaHash": "fec8a915e965408012ed5148d36b69a64ec38300d707abf0c728148812c5e12b",
+    "networkProfile": "local-file",
+    "cacheState": "os-cache-uncontrolled",
+    "caseId": "two-player-seek-resume",
+    "protocolHash": "4678c1439cbee4db47eddae24a7656057f27ce55ce7f3215e737d4b92f80ccca"
+  },
+  "qualification": {
+    "contentVerified": false,
+    "evidenceHash": null
+  },
+  "metrics": {
+    "loadUs": {
+      "unit": "us",
+      "boundary": "public-event"
+    },
+    "seekCommandUs": {
+      "unit": "us",
+      "boundary": "command-completed"
+    },
+    "resumeCommandUs": {
+      "unit": "us",
+      "boundary": "command-completed"
+    },
+    "replacementUs": {
+      "unit": "us",
+      "boundary": "public-event"
+    },
+    "rebufferUs": {
+      "unit": "us",
+      "boundary": "buffering-state"
+    },
+    "rebufferCount": {
+      "unit": "count",
+      "boundary": "buffering-state"
+    },
+    "mediaPeakBytes": {
+      "unit": "bytes",
+      "boundary": "media-ledger"
+    }
+  },
+  "trials": [
+    {
+      "attempt": 1,
+      "outcome": "passed",
+      "cleanup": "passed",
+      "startedUs": 2,
+      "endedUs": 2720771,
+      "values": {
+        "loadUs": 175613,
+        "seekCommandUs": 282,
+        "resumeCommandUs": 306292,
+        "replacementUs": 286107,
+        "rebufferUs": 0,
+        "rebufferCount": 0,
+        "mediaPeakBytes": null
+      }
+    },
+    {
+      "attempt": 2,
+      "outcome": "passed",
+      "cleanup": "passed",
+      "startedUs": 2720874,
+      "endedUs": 5070625,
+      "values": {
+        "loadUs": 32189,
+        "seekCommandUs": 224,
+        "resumeCommandUs": 299674,
+        "replacementUs": 268446,
+        "rebufferUs": 0,
+        "rebufferCount": 0,
+        "mediaPeakBytes": null
+      }
+    },
+    {
+      "attempt": 3,
+      "outcome": "passed",
+      "cleanup": "passed",
+      "startedUs": 5070690,
+      "endedUs": 7470779,
+      "values": {
+        "loadUs": 32534,
+        "seekCommandUs": 383,
+        "resumeCommandUs": 309994,
+        "replacementUs": 306199,
+        "rebufferUs": 0,
+        "rebufferCount": 0,
+        "mediaPeakBytes": null
+      }
+    }
+  ]
+}
