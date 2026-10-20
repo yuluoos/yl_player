@@ -1,3 +1,10 @@
+## 0.3.0-dev.3
+
+- Synchronize all player packages and internal dependencies at 0.3.0-dev.3.
+- Include the merged playback, subtitle, networking, and lifecycle fixes.
+- Keep custom-source AirPlay delivery available through the optional
+  yl_player_media_delivery package.
+
 ## 0.3.0-dev.1
 
 - Add the public AirPlay button, availability stream, and route-picker control

@@ -1,5 +1,6 @@
-## Unreleased
+## 0.3.0-dev.3
 
+- Synchronize package versions and internal dependencies at 0.3.0-dev.3.
 - macOS 提供显式 `shutdown()`，供宿主在关闭 FlutterEngine 前释放独立交付资源。
 - 原生请求头与播放器使用同一校验规则，修复合法水平 Tab 被拒绝的问题。
 

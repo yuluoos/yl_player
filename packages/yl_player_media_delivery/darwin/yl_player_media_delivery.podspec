@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'yl_player_media_delivery'
-  s.version = '0.3.0-dev.1'
+  s.version = '0.3.0-dev.3'
   s.summary = 'Independent Apple HLS media delivery for Flutter.'
   s.description = 'Optional compressed media remux, HLS origin and delivery leases without a player.'
   s.homepage = 'https://pub.dev/packages/yl_player_media_delivery'

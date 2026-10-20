@@ -8,10 +8,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  yl_player: ^0.3.0-dev.1
-  yl_player_media_delivery: ^0.3.0-dev.1
-  yl_player_cast: ^0.3.0-dev.1
-  yl_player_cast_player_adapter: ^0.3.0-dev.1
+  yl_player: ^0.3.0-dev.3
+  yl_player_media_delivery: ^0.3.0-dev.3
+  yl_player_cast: ^0.3.0-dev.3
+  yl_player_cast_player_adapter: ^0.3.0-dev.3
 dev_dependencies:
   flutter_test:
     sdk: flutter

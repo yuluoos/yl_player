@@ -1,5 +1,6 @@
-## Unreleased
+## 0.3.0-dev.3
 
+- Synchronize package versions and internal dependencies at 0.3.0-dev.3.
 - 将 FFmpeg 和共享输入迁入 `yl_player_media_core`，HLS 转封装/交付迁入可选 `yl_player_media_delivery`。
 - 保留旧 AirPlay 与交付 API；自定义源转换需显式添加交付插件，缺失时返回 `airplay.delivery_unavailable`。
 

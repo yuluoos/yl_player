@@ -1,5 +1,6 @@
-## Unreleased
+## 0.3.0-dev.3
 
+- Synchronize package versions and internal dependencies at 0.3.0-dev.3.
 - 新增独立 `YlMediaDeliveryProvider` 契约，复用准备任务、租约与状态模型。
 - 添加缺少可选 AirPlay 交付插件的脱敏接入提示。
 

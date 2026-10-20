@@ -11,14 +11,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  yl_player: ^0.3.0-dev.1
-  yl_player_media_delivery: ^0.3.0-dev.1
+  yl_player: ^0.3.0-dev.3
+  yl_player_media_delivery: ^0.3.0-dev.3
 
 dev_dependencies:
   crypto: ^3.0.7
-  yl_player_platform_interface: ^0.3.0-dev.1
-  yl_player_android: ^0.3.0-dev.1
-  yl_player_apple: ^0.3.0-dev.1
+  yl_player_platform_interface: ^0.3.0-dev.3
+  yl_player_android: ^0.3.0-dev.3
+  yl_player_apple: ^0.3.0-dev.3
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter

@@ -31,8 +31,8 @@ with tempfile.TemporaryDirectory(prefix='yl-cast-consumer-') as temporary:
         'name: standalone_dlna_consumer\npublish_to: none\n'
         'environment:\n  sdk: ^3.12.0\n'
         'dependencies:\n  flutter:\n    sdk: flutter\n'
-        '  yl_player_cast: ^0.3.0-dev.1\n'
-        '  yl_player_platform_interface: ^0.3.0-dev.1\n'
+        '  yl_player_cast: ^0.3.0-dev.3\n'
+        '  yl_player_platform_interface: ^0.3.0-dev.3\n'
         'dev_dependencies:\n  flutter_test:\n    sdk: flutter\n'
         'dependency_overrides:\n' + ''.join(overrides)
     )

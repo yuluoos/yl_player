@@ -1,3 +1,8 @@
+## 0.3.0-dev.3
+
+- Synchronize the platform contract dependency at 0.3.0-dev.3.
+- Include the current bounded source-resolution implementation and validation.
+
 ## 0.3.0-dev.2
 
 - Publish the optional bounded QuickJS source resolver for Android, iOS, and macOS.

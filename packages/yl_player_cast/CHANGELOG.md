@@ -1,5 +1,6 @@
-## Unreleased
+## 0.3.0-dev.3
 
+- Synchronize package versions and internal dependencies at 0.3.0-dev.3.
 - 移除播放器直接依赖；纯 DLNA 不再传递引入 Apple 播放器或 FFmpeg。
 - 本地交接和 AirPlay 改用最小播放器／会话接口，`yl_player` 应用通过可选 `yl_player_cast_player_adapter` 迁移。
 

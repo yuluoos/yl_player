@@ -1,3 +1,8 @@
+## 0.3.0-dev.3
+
+- Synchronize the platform contract dependency at 0.3.0-dev.3.
+- Include the merged playback, decoder, networking, and lifecycle fixes.
+
 ## 0.3.0-dev.1
 
 - Adopt the synchronized 0.3 platform contract and package dependency set while
