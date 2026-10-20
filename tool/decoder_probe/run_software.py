@@ -15,7 +15,7 @@ from software_evidence import summarize
 
 HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
-FRAMEWORK=ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64'
+FRAMEWORK=ROOT/'packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64'
 BRIDGE=FRAMEWORK/'YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
 
 

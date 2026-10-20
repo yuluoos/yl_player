@@ -116,7 +116,7 @@ run_universal_build() {
     echo "Release.entitlements must allow the authenticated-HLS loopback server" >&2
     exit 1
   fi
-  sh "$repo_root/packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh"
+  sh "$repo_root/packages/yl_player_media_core/tool/apple_ffmpeg/test_build_contract.sh"
   flutter build macos --release
 
   products="$example_root/build/macos/Build/Products/Release"

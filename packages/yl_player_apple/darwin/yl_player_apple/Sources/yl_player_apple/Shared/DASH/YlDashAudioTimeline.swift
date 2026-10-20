@@ -1,3 +1,4 @@
+import yl_player_media_core
 import AVFoundation
 
 /// Serial DASH worker adapter. Decode with the existing codec converter, then

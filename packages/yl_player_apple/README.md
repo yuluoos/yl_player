@@ -7,11 +7,14 @@ Package Manager.
 
 Opt-in [AirPlay video](../../docs/airplay.md) adds a system route picker, native
 external-playback state, direct HLS live/VOD and bounded H.264/AAC remux
-for custom VOD and RTMP/RTMPS/HTTP-FLV live. Physical receiver and CarPlay acceptance remain pending.
+for custom VOD and RTMP/RTMPS/HTTP-FLV live. Custom-source conversion requires an explicit
+`yl_player_media_delivery` dependency; direct HTTP/HLS AirPlay does not. See the
+[Chinese migration guide](../../docs/media-delivery.md). Physical receiver and CarPlay acceptance remain pending.
 
 The package contains one typed registry/session lifecycle, AVPlayer routes,
 controlled HLS loading, managed Matroska/FLV/MPEG-TS fallback, VideoToolbox and
-AudioToolbox output, and one combined FFmpeg bridge XCFramework. AVPlayer handles
+AudioToolbox output. The shared `yl_player_media_core` dependency owns the single
+FFmpeg bridge XCFramework. AVPlayer handles
 HLS and native progressive media where policy permits. Package-owned fallback
 also handles VOD HEVC-in-MPEG-TS media playlists, inspected Matroska, and
 network FLV with the codec and timing limits in
@@ -27,13 +30,13 @@ session/category management and macOS no-global-session behavior. See
 [policy semantics](../../docs/policies.md) for enforcement and transition
 restrictions.
 
-The combined XCFramework contains iOS device, iOS Simulator, and universal
+The combined XCFramework in `yl_player_media_core` contains iOS device, iOS Simulator, and universal
 macOS slices. It uses FFmpeg 9.0.1 for Matroska/FLV/MP4/MPEG-TS/MPEG-PS/AVI demuxing,
 packet parsing and DCA/Vorbis audio decoding. Pinned open-source libopus 1.6.1 supplies
 SILK/hybrid/CELT Opus decoding with Matroska trim and seek preroll integration
 (ordinary VOD, family 0, mono/stereo 48 kHz; active track switches rewind and trim decoder preroll); networking and video decode remain
 package/system owned. Binary
-redistributors must keep `THIRD_PARTY_NOTICES.md`,
+redistributors must retain the core package’s `THIRD_PARTY_NOTICES.md`,
 `LICENSES/FFmpeg-LGPL-2.1-or-later.txt`, `LICENSES/Opus-BSD.txt`, the artifact lock, and replacement
 scripts. The notice documents verification and exact-toolchain rebuild flows.
 

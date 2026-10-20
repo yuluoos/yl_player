@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 
 /// Signature inspection consumes at most 4 KiB through package-owned I/O.

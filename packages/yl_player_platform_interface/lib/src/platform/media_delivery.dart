@@ -36,3 +36,14 @@ abstract interface class YlMediaDeliveryPlatformPlayer {
     YlLoadOptions options = const YlLoadOptions(),
   });
 }
+
+/// 独立媒体交付所有者；无需播放器。调用方必须释放自己创建的 provider。
+/// 每个 provider 的准入、准备和租约都与其他所有者隔离。
+abstract interface class YlMediaDeliveryProvider {
+  YlMediaDeliveryPreparation prepareMediaDelivery(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  });
+
+  Future<void> dispose();
+}

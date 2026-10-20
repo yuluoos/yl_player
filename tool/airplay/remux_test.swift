@@ -1,3 +1,5 @@
+import yl_player_media_core
+@testable import yl_player_media_delivery
 import Foundation
 import AVFoundation
 import YlFFmpegBridge
@@ -23,11 +25,20 @@ func get(_ url: URL, method: String = "GET", range: String? = nil) throws -> (Da
 }
 
 @main struct RemuxTests {
+  static func localInput(_ url: URL, isLive: Bool = false) -> YlMediaDeliveryInput {
+    let container: YlFallbackContainer
+    switch url.pathExtension {
+    case "flv": container = .flv
+    case "mp4": container = .mp4
+    default: container = .matroska
+    }
+    return YlMediaDeliveryInput(recipe: .local(path: url.path, container: container), isLive: isLive)
+  }
   static func main() throws {
     let fixtures = URL(fileURLWithPath: CommandLine.arguments[1])
     for name in ["h264_aac.mkv", "h264_aac.flv", "h264_aac.mp4", "network_seek_h264_aac.mkv"] {
-      let source = YlAppleSourceDescriptor(uri: fixtures.appendingPathComponent(name).absoluteString, kind: .file)
-      var prepared: YlAirPlayPreparedMedia? = try YlAirPlayRemux.prepare(source: source, configuration: PlayerConfiguration(), token: YlOpenCancellationToken())
+      let input = localInput(fixtures.appendingPathComponent(name))
+      var prepared: YlDeliveredMedia? = try YlAirPlayRemux.prepare(input: input, token: YlOpenCancellationToken())
       let url = prepared!.url
       try require(url.host != "127.0.0.1" && url.host != "localhost", "Receiver URL must use LAN interface")
       let (playlistData, response) = try get(url)
@@ -100,7 +111,7 @@ func get(_ url: URL, method: String = "GET", range: String? = nil) throws -> (Da
     }
     for name in ["hevc_aac.mkv", "h264_mp3.flv"] {
       do {
-        _ = try YlAirPlayRemux.prepare(source: .init(uri: fixtures.appendingPathComponent(name).absoluteString, kind: .file), configuration: .init(), token: .init())
+        _ = try YlAirPlayRemux.prepare(input: localInput(fixtures.appendingPathComponent(name)), token: .init())
         throw NSError(domain: "Unsupported codecs accepted", code: 1)
       } catch let error as NativePlayerError { try require(error.code == "airplay.unsupported_codec", "Explicit codec rejection") }
     }
@@ -111,25 +122,24 @@ func get(_ url: URL, method: String = "GET", range: String? = nil) throws -> (Da
     try sparse.close()
     defer { try? FileManager.default.removeItem(at: oversized) }
     do {
-      _ = try YlAirPlayRemux.prepare(source: .init(uri: oversized.absoluteString, kind: .file), configuration: .init(), token: .init())
+      _ = try YlAirPlayRemux.prepare(input: localInput(oversized), token: .init())
       throw NSError(domain: "Oversized input accepted", code: 1)
     } catch let error as NativePlayerError { try require(error.code == "airplay.resource_limit", "Disk/input admission limit") }
-    var live = YlAppleSourceDescriptor(uri: fixtures.appendingPathComponent("h264_aac.mkv").absoluteString, kind: .file)
-    live.intent = .live
+    let live = localInput(fixtures.appendingPathComponent("h264_aac.mkv"), isLive: true)
     do {
-      _ = try YlAirPlayRemux.prepare(source: live, configuration: .init(), token: .init())
+      _ = try YlAirPlayRemux.prepare(input: live, token: .init())
       throw NSError(domain: "Live source accepted", code: 1)
     } catch let error as NativePlayerError { try require(error.code == "airplay.unsupported_source", "Live source rejection") }
     let inFlight = YlOpenCancellationToken()
     DispatchQueue.global().asyncAfter(deadline: .now() + 0.002) { inFlight.cancel() }
     do {
-      _ = try YlAirPlayRemux.prepare(source: .init(uri: fixtures.appendingPathComponent("network_seek_h264_aac.mkv").absoluteString, kind: .file), configuration: .init(), token: inFlight)
+      _ = try YlAirPlayRemux.prepare(input: localInput(fixtures.appendingPathComponent("network_seek_h264_aac.mkv")), token: inFlight)
       throw NSError(domain: "In-flight cancellation ignored", code: 1)
     } catch let error as NativePlayerError { try require(error.code == "network.cancelled", "In-flight cancellation preserved") }
     let token = YlOpenCancellationToken()
     token.cancel()
     do {
-      _ = try YlAirPlayRemux.prepare(source: .init(uri: fixtures.appendingPathComponent("h264_aac.mkv").absoluteString, kind: .file), configuration: .init(), token: token)
+      _ = try YlAirPlayRemux.prepare(input: localInput(fixtures.appendingPathComponent("h264_aac.mkv")), token: token)
       throw NSError(domain: "Cancellation ignored", code: 1)
     } catch let error as NativePlayerError { try require(error.code == "network.cancelled", "Cancellation preserved") }
     try require(ylf_debug_outstanding_packet_count() == 0, "No leaked FFmpeg packets")

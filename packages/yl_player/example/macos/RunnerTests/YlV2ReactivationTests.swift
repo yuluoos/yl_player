@@ -1,3 +1,4 @@
+@testable import yl_player_media_core
 import Foundation
 import Network
 import XCTest

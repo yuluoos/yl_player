@@ -48,9 +48,9 @@ jobs:
             else
               paths=$(git diff --name-only "$base"...HEAD)
               if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_android/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'; then android=true; fi
-              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_apple/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'; then apple=true; fi
+              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_apple/|packages/yl_player_media_core/|packages/yl_player_media_delivery/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'; then apple=true; fi
               if printf '%s\n' "$paths" | grep -Eq '^(packages/|tool/check_(apple_)?consumer|tool/consumer_fixtures/|\.github/workflows/)'; then consumers=true; fi
-              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_apple/(darwin/yl_player_apple/Frameworks/|darwin/native/|tool/apple_ffmpeg/)|\.github/workflows/ci\.yml$)'; then artifact=true; fi
+              if printf '%s\n' "$paths" | grep -Eq '^(packages/yl_player_media_core/(darwin/yl_player_media_core/Frameworks/|darwin/native/|tool/apple_ffmpeg/)|\.github/workflows/ci\.yml$)'; then artifact=true; fi
             fi
           fi
           {
@@ -304,7 +304,7 @@ jobs:
             ~/.cocoapods/repos
             ${{ runner.temp }}/yl-consumers/apple/pub-cache
             ${{ runner.temp }}/apple-package-cache
-          key: apple-consumers-${{ runner.os }}-${{ hashFiles('packages/yl_player_apple/pubspec.yaml', 'packages/yl_player_apple/darwin/yl_player_apple.podspec', 'packages/yl_player_apple/darwin/yl_player_apple/Package.swift') }}
+          key: apple-consumers-${{ runner.os }}-${{ hashFiles('packages/yl_player_apple/pubspec.yaml', 'packages/yl_player_apple/darwin/yl_player_apple.podspec', 'packages/yl_player_apple/darwin/yl_player_apple/Package.swift', 'packages/yl_player_media_core/pubspec.yaml', 'packages/yl_player_media_core/darwin/yl_player_media_core.podspec', 'packages/yl_player_media_core/darwin/yl_player_media_core/Package.swift', 'packages/yl_player_media_delivery/pubspec.yaml', 'packages/yl_player_media_delivery/darwin/yl_player_media_delivery.podspec', 'packages/yl_player_media_delivery/darwin/yl_player_media_delivery/Package.swift') }}
           restore-keys: apple-consumers-${{ runner.os }}-
       - name: Select iOS Simulator
         run: echo "YL_IOS_SIMULATOR=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
@@ -336,7 +336,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
       - name: Exact clean FFmpeg reproduction
-        run: sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-check
+        run: sh packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh --rebuild-check
 
   release-gates:
     needs: [changes, foundation, android-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]

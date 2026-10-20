@@ -12,6 +12,8 @@ from pathlib import Path
 import re
 import subprocess
 
+from media_delivery_fixture_adapter import native_test_source
+
 
 PINNED_REVISION = "ce368c55ad291b163b02157b487dbbf798a69892"
 HISTORICAL_MANIFESTS = {
@@ -111,7 +113,7 @@ def accepted_tests(fixtures, platform):
     for path in paths:
         if path.name in accepted:
             raise RuntimeError(f"duplicate accepted fixture filename: {path.name}")
-        accepted[path.name] = path.read_bytes()
+        accepted[path.name] = native_test_source(path)
     return accepted
 
 

@@ -7,6 +7,8 @@ import sys
 import tempfile
 import unittest
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+from tool.media_delivery.native_build import build_modules
 SHARED = ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared'
 
 class ProgramResourceTests(unittest.TestCase):
@@ -17,9 +19,8 @@ class ProgramResourceTests(unittest.TestCase):
             main = out/'main.swift'
             main.write_bytes((Path(__file__).parent/'program_resource_tests.swift').read_bytes())
             sources = [SHARED/'DASH'/name for name in ['YlDashDocument.swift', 'YlDashSidx.swift', 'YlDashProgramTime.swift', 'YlDashProgramTimeline.swift', 'YlDashProgramDocument.swift', 'YlDashProgramResources.swift']]
-            sources += [SHARED/'Dependencies/YlOpenCancellationToken.swift', SHARED/'Dependencies/YlNetworkConfiguration.swift', SHARED/'Network/YlManagedRequestPolicy.swift', SHARED/'Network/YlOriginCredentialPolicy.swift', Path(__file__).parent/'program_resource_support.swift']
-            build = subprocess.run(['xcrun', 'swiftc', '-module-cache-path', str(out/'cache'), *map(str, sources), str(main), '-o', str(out/'tests')], capture_output=True, text=True, timeout=120)
-            self.assertEqual(build.returncode, 0, build.stdout+build.stderr)
+            native = build_modules(out/'native', include_delivery=False)
+            native.compile_test([*sources, main], out/'tests', imports=['yl_player_media_core'])
             run = subprocess.run([str(out/'tests'), str(ROOT/'packages/yl_player/example/assets/test_media/dash_timeline')], capture_output=True, text=True, timeout=30)
             self.assertEqual(run.returncode, 0, run.stdout+run.stderr)
             rows = json.loads(run.stdout)

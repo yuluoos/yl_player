@@ -1,3 +1,4 @@
+@testable import yl_player_media_core
 @testable import yl_player_apple
 import AVFoundation
 import Darwin

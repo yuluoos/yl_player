@@ -1,3 +1,5 @@
+@testable import yl_player_media_core
+@testable import yl_player_media_delivery
 import XCTest
 import AVFoundation
 import Network
@@ -607,9 +609,9 @@ extension YlAirPlayHostTests {
     #if targetEnvironment(simulator)
     // This test asserts ownership/cleanup, not hardware decode. AVPlayer still
     // consumes the real remux; only the replacement decoder is substituted.
-    let f = AppleHostFixture(videoSessionFactory: AirPlayPassiveVTFactory())
+    let f = AppleHostFixture(videoSessionFactory: AirPlayPassiveVTFactory(), deliveryEnabled: true)
     #else
-    let f = AppleHostFixture()
+    let f = AppleHostFixture(deliveryEnabled: true)
     #endif
     defer { f.host.close() }
     try f.host.attach()
@@ -627,9 +629,15 @@ extension YlAirPlayHostTests {
   }
 
   func testNetworkCustomSourceLoadsThroughAirPlayRemuxAndReleasesOriginOnStop() async throws {
-    let f = AppleHostFixture(); defer { f.host.close() }
+    let f = AppleHostFixture(deliveryEnabled: true); defer { f.host.close() }
     try f.host.attach()
     let server = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia()); defer { server.close() }
+    let absent = AppleHostFixture(); defer { absent.host.close() }
+    do {
+      _ = try await absent.host.loadAirPlay(request: AppleHostFixture.request("absent-delivery", url: server.url.absoluteString, format: .matroska))
+      XCTFail("Custom AirPlay requires the optional delivery service")
+    } catch { XCTAssertEqual((error as? PigeonError)?.code, "airplay.delivery_unavailable") }
+    XCTAssertNil(absent.host.sessionId)
     let reply = try await f.host.loadAirPlay(request: AppleHostFixture.request("remux", url: server.url.absoluteString, format: .matroska))
     XCTAssertEqual(f.host.initialState.sessionId, reply.sessionId)
     XCTAssertTrue(f.av.allowsExternalPlayback)
@@ -707,7 +715,7 @@ private final class AirPlayPassiveVTSession: YlVTSession {
 extension YlAirPlayHostTests {
   func testHttpFlvAirPlayBecomesReadyBeforeEOFAndRollsUntilStop() async throws {
     let upstream = try AirPlayFlvFixtureServer(); defer { upstream.close() }
-    let f = AppleHostFixture(); defer { f.host.close() }
+    let f = AppleHostFixture(deliveryEnabled: true); defer { f.host.close() }
     try f.host.attach()
     var request = AppleHostFixture.request("flv-live", url: upstream.url.absoluteString, format: .flv)
     request.source.intent = .live
@@ -742,7 +750,7 @@ extension YlAirPlayHostTests {
 
   func testHttpFlvAirPlayReconnectPublishesDiscontinuityAndNewMap() async throws {
     let upstream = try AirPlayFlvFixtureServer(); defer { upstream.close() }
-    let f = AppleHostFixture(); defer { f.host.close() }
+    let f = AppleHostFixture(deliveryEnabled: true); defer { f.host.close() }
     try f.host.attach()
     var request = AppleHostFixture.request("flv-recovery", url: upstream.url.absoluteString, format: .flv)
     request.source.intent = .live
@@ -774,7 +782,7 @@ extension YlAirPlayHostTests {
 
   func testAutomaticRtmpAirPlayBecomesReadyWithoutUpstreamEOF() async throws {
     let upstream = try YlRtmpFixturePeer(repetitions: 32); defer { upstream.close() }
-    let f = AppleHostFixture(); defer { f.host.close() }
+    let f = AppleHostFixture(deliveryEnabled: true); defer { f.host.close() }
     try f.host.attach()
     var request = AppleHostFixture.request("rtmp-live", url: "rtmp://127.0.0.1:\(upstream.port)/live/owned", format: .automatic)
     request.source.intent = .automatic
@@ -792,7 +800,7 @@ extension YlAirPlayHostTests {
 
   func testStoppingHeldRtmpAirPlayStartupCancelsPromptly() async throws {
     let upstream = try RtmpScriptPeer(prefix: Data()); defer { upstream.close() }
-    let f = AppleHostFixture(); defer { f.host.close() }
+    let f = AppleHostFixture(deliveryEnabled: true); defer { f.host.close() }
     try f.host.attach()
     var request = AppleHostFixture.request("rtmp-held", url: "rtmp://127.0.0.1:\(upstream.port)/live/held", format: .automatic)
     request.source.intent = .live
@@ -816,7 +824,7 @@ extension YlAirPlayHostTests {
     for airPlay in [false, true] {
       let peer = try YlRtmpFixturePeer(tlsIdentity: ManagedTLSFixture.localhost)
       defer { peer.close() }
-      let f = AppleHostFixture(); defer { f.host.close() }
+      let f = AppleHostFixture(deliveryEnabled: true); defer { f.host.close() }
       var request = AppleHostFixture.request("rtmps-auto", url: "rtmps://127.0.0.1:\(peer.port)/live/private-token", format: .automatic)
       request.source.intent = .automatic
       do {

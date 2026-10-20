@@ -10,6 +10,9 @@ from run_audio_callback_roots import digest
 
 ROOT=Path(__file__).resolve().parents[2]
 BENCH=Path(__file__).parent
+sys.path.insert(0, str(ROOT))
+from tool.media_delivery.native_build import build_modules
+CORE_SHARED = ROOT/'packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core'
 SHARED=ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared'
 SCENARIOS=('single','pausedEOF','refill')
 
@@ -66,15 +69,18 @@ def validate_rows(rows,scenario,pid):
 def collect(output):
     output=output.resolve();output.mkdir(parents=True,exist_ok=False)
     source_dir=output/'sources';source_dir.mkdir()
-    production=[SHARED/'Audio/YlAudioCompletionGroup.swift',SHARED/'FFmpeg/YlManagedBufferLedger.swift',SHARED/'FFmpeg/YlBoundedBufferPlan.swift']
+    production=[SHARED/'Audio/YlAudioCompletionGroup.swift',CORE_SHARED/'FFmpeg/YlManagedBufferLedger.swift',CORE_SHARED/'FFmpeg/YlBoundedBufferPlan.swift']
     local=[BENCH/name for name in ('run_audio_terminal_probe.py','audio_terminal_probe.swift','AudioTerminalBudgetPrototype.swift',
         'audio_terminal_support.swift','test_audio_terminal_probe.py','run_audio_callback_roots.py')]
     sources=production+local
     for source in sources:(source_dir/source.name).write_bytes(source.read_bytes())
     main=source_dir/'main.swift';main.write_bytes((source_dir/'audio_terminal_probe.swift').read_bytes())
     binary=output/'audio_terminal_probe'
-    compile_sources=[main]+[source_dir/p.name for p in production]+[source_dir/n for n in ('AudioTerminalBudgetPrototype.swift','audio_terminal_support.swift')]
-    command=['xcrun','swiftc','-g','-module-cache-path',str(output/'cache')]+[str(p) for p in compile_sources]+['-o',str(binary)]
+    native = build_modules(output/'native', include_delivery=False)
+    compile_sources = [main, source_dir/'YlAudioCompletionGroup.swift', source_dir/'AudioTerminalBudgetPrototype.swift']
+    for source_file in compile_sources:
+        source_file.write_text('@testable import yl_player_media_core\n' + source_file.read_text())
+    command=['xcrun','swiftc','-g',*native.flags,*map(str,compile_sources),'-o',str(binary)]
     with (output/'build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=120)
     protocol=dict(version=1,scenarios=SCENARIOS,phases={s:phases(s) for s in SCENARIOS},
         sources={s.name:digest(s) for s in sources},binarySha256=digest(binary),buildCommand=command,
@@ -86,7 +92,7 @@ def collect(output):
         productionAdmission=False,downstreamBoundProven=False,
         limitations=['One held PCM waits indefinitely during starvation until next PCM or EOF',
             'Ledger bounds owned PCM/upstream timeline, not undocumented engine/device allocations',
-            'Standalone error type shim, no diagnostic mapping or renderer clock integration',
+            'Real core ledger module, no renderer clock integration',
             'MSL and heap-at-starvation disturb playback; not continuity/physical AV/longplay acceptance',
             'No mid-playback pause, real route/rate/seek or device/minimum-OS/iOS matrix'])
     (output/'protocol.json').write_text(json.dumps(protocol,indent=2)+'\n')

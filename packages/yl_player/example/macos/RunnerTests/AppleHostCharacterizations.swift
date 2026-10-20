@@ -1,3 +1,5 @@
+@testable import yl_player_media_core
+@testable import yl_player_media_delivery
 import XCTest
 import AVFoundation
 import Network
@@ -15,11 +17,13 @@ final class AppleHostFixture {
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
        videoSessionFactory: YlVTSessionFactory? = nil,
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
-       audioOwnership: YlPlayerAudioOwnership? = nil) {
+       audioOwnership: YlPlayerAudioOwnership? = nil, deliveryEnabled: Bool = false) {
+    var services = YlPlatformServices(platform: .current, textureOutput: output,
+      makeDisplayDriver: { AppleClockDisplay(onTick: $0) })
+    if deliveryEnabled { services.mediaDeliveryService = { YlMediaDeliveryEngine() } }
     host = YlApplePlayerHost(playerId: 91, suffix: "fixture-91",
       options: .init(decoderPolicy: .systemDefault, audioPolicy: audioOwnership == nil ? .appManaged : .pluginManagedMediaPlayback, positionUpdateIntervalMs: 100),
-      services: .init(platform: .current, textureOutput: output,
-        makeDisplayDriver: { AppleClockDisplay(onTick: $0) }), callbacks: callbacks, avPlayer: av, commandCoordinator: commandCoordinator,
+      services: services, callbacks: callbacks, avPlayer: av, commandCoordinator: commandCoordinator,
       beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
       videoSessionFactory: videoSessionFactory, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audioOwnership)
   }

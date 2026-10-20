@@ -213,6 +213,43 @@ void main() {
     },
   );
 
+  test('missing delivery plugin exposes actionable safe guidance', () async {
+    messenger.setMockDecodedMessageHandler(channel, (message) async {
+      if ((message! as Map)['method'] == 'state') {
+        return {'value': snapshot(0)};
+      }
+      return {
+        'error': AppleFailureMessage(
+          category: AppleFailureCategory.unsupported,
+          code: 'airplay.delivery_unavailable',
+          message: 'https://private.example/live?token=secret',
+          retryable: false,
+          scope: AppleFailureScope.command,
+          diagnosticId: 'apple-delivery-1',
+        ),
+      };
+    });
+    final player = await create(FakeTransport());
+    await expectLater(
+      player.loadForAirPlay(source),
+      throwsA(
+        isA<YlPlayerException>()
+            .having(
+              (e) => e.failure.code,
+              'code',
+              'airplay.delivery_unavailable',
+            )
+            .having(
+              (e) => e.failure.message,
+              'dependency guidance',
+              contains('yl_player_media_delivery'),
+            )
+            .having((e) => e.toString(), 'safe', isNot(contains('secret'))),
+      ),
+    );
+    await player.dispose();
+  });
+
   test(
     'malformed state event terminates the player without leaking the event',
     () async {

@@ -117,8 +117,8 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
             '.podspec','.plist','.entitlements','.yaml','.lock') or Path(n).name=='Podfile'}
         dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock',
             'packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']}
-        artifact='packages/yl_player_apple/tool/apple_ffmpeg/bridge-artifact.lock'
-        native='packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
+        artifact='packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock'
+        native='packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
         result['artifactFingerprints']={native:digest(ROOT/native),artifact:digest(ROOT/artifact)}
         result.update(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             sourceFingerprints=source,sourceHash=hashlib.sha256(json.dumps(source,sort_keys=True,separators=(',',':')).encode()).hexdigest(),

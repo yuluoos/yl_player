@@ -1,3 +1,4 @@
+import yl_player_media_core
 #if DEBUG && YL_BOUND_AV
 import AVFoundation
 import CoreImage

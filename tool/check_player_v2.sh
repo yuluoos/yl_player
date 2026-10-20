@@ -96,7 +96,7 @@ affects_android() {
 
 affects_apple() {
   [ "$changed_paths" = '*' ] || printf '%s\n' "$changed_paths" | grep -Eq \
-    '^(packages/yl_player_apple/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'
+    '^(packages/yl_player_apple/|packages/yl_player_media_core/|packages/yl_player_media_delivery/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'
 }
 
 android_unit() {
@@ -134,7 +134,7 @@ quick_common() {
   run sh packages/yl_player_android/tool/check_pigeon.sh
   run sh packages/yl_player_apple/tool/check_pigeon.sh
   step 'quick-recorded-artifact-contract'
-  run python3 packages/yl_player_apple/tool/apple_ffmpeg/verify_artifact.py
+  run python3 packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py
 }
 
 run_quick() {
@@ -174,10 +174,10 @@ full_drift() {
 
 full_artifact() {
   step '02-combined-ffmpeg-artifact-contract'
-  run sh packages/yl_player_apple/tool/apple_ffmpeg/test_build_contract.sh
+  run sh packages/yl_player_media_core/tool/apple_ffmpeg/test_build_contract.sh
   if [ "${YL_REPRODUCIBILITY:-0}" = 1 ]; then
     step '02b-clean-ffmpeg-reproducibility'
-    run sh packages/yl_player_apple/tool/apple_ffmpeg/build_xcframework.sh --rebuild-check
+    run sh packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh --rebuild-check
   fi
 }
 

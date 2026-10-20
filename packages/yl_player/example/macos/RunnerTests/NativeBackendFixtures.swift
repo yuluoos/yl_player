@@ -1,3 +1,4 @@
+@testable import yl_player_media_core
 @testable import yl_player_apple
 #if os(macOS)
 import AppKit

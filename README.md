@@ -19,8 +19,16 @@ package; the player does not depend on it. See its
 for current evidence and limits.
 
 可选 [`yl_player_cast`](packages/yl_player_cast/README.md) 提供 DLNA 设备发现、
-远端控制、AirPlay 统一入口，以及 Apple 自定义直播 HLS/fMP4 交付。
-播放器不反向依赖该包；接入限制和宿主权限见其中文文档。
+远端控制和 AirPlay 统一入口。
+纯 DLNA 使用不依赖完整播放器；本地播放交接与 AirPlay 通过可选
+[`yl_player_cast_player_adapter`](packages/yl_player_cast_player_adapter/README.md)
+接入。播放器不反向依赖投屏包；接入限制和宿主权限见其中文文档。
+
+可选 [`yl_player_media_delivery`](packages/yl_player_media_delivery/README.md)
+独立提供 Apple 自定义直播转 HLS/fMP4、局域网 HTTP 服务和交付租约，无需创建播放器。
+自定义源 AirPlay 转换也需显式添加该插件；原调用形式保留。
+播放器和交付插件共享底层 [`yl_player_media_core`](packages/yl_player_media_core/README.md)，
+其独占 FFmpeg 与输入协议代码；普通播放器不依赖 HLS 交付插件。
 
 Start with the [application API and lifecycle](packages/yl_player/README.md).
 Before adopting v0.2, read the [migration guide](docs/migration-to-0.2.md),
@@ -41,9 +49,9 @@ The optional resolver embeds MIT-licensed QuickJS and CryptoJS with pinned
 source provenance and license files in its `src` directory.
 
 Third-party components retain their own licenses; the repository license does
-not relicense them. The Android and Apple packages redistribute minimized
+not relicense them. The Android and Apple media core packages redistribute minimized
 LGPL-2.1-or-later FFmpeg components. See the
-[Apple third-party notices](packages/yl_player_apple/THIRD_PARTY_NOTICES.md),
+[Apple media core third-party notices](packages/yl_player_media_core/THIRD_PARTY_NOTICES.md),
 [Android FFmpeg notice](packages/yl_player_android/LICENSES/FFmpeg-NOTICE.txt),
 and the LGPL license texts in each platform package's `LICENSES` directory.
 Keep each package's license text, notices, replacement scripts, and artifact

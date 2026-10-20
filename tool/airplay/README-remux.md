@@ -3,16 +3,18 @@
 Run on macOS with Xcode command-line tools and a running Wi-Fi/Ethernet IPv4 interface:
 
 ```sh
-tool/airplay/run_remux_tests.sh
+python3 tool/airplay/run_module_tests.py --live-fixture
 ```
 
 The test requires permission to bind a temporary LAN HTTP listener. A sandbox that denies `bind` returns `airplay.lan_unavailable` with an EPERM diagnostic. It does not contact an AirPlay receiver.
 
-The standalone harness substitutes app configuration and network-input boundaries. It uses the shipped FFmpeg framework for real local demux, production remux/server code, AVFoundation's compressed HLS writer, AVPlayer video output, and AVAssetReader AAC-to-PCM decoding. Fixtures are existing repository assets; no FFmpeg executable is required.
+The harness builds `yl_player_media_core` and `yl_player_media_delivery` as separate modules with `tool/media_delivery/native_build.py`. It does not compile or link the Apple player, substitute production types, or extract source fragments. It uses the shipped FFmpeg framework for real input and demux, the delivery remux/server implementation, AVFoundation’s compressed HLS writer, AVPlayer video output, and AVAssetReader AAC-to-PCM decoding. Fixtures are existing repository assets; no FFmpeg executable is required.
+
+The default checks cover VOD remux, live store, streaming FLV validation, and a 1,000-request replacement burst. The queue check uses weak references to real input scopes to verify that only one running and one pending input remain retained. `--live-fixture` starts and stops a local HTTP-FLV fixture and verifies actual live HLS decoding. Select individual checks with `vod`, `store`, `validator`, or `queue`; `--build-dir` chooses the shared module output. Existing shell entry points remain available.
 
 Checks cover H.264/AAC MKV, FLV, MP4, a longer multi-segment MKV, generated playlist and segment retrieval, byte ranges, HEAD, method/path/capability rejection, AVPlayer readiness and decoded frames, finite duration, preserved AAC with successful PCM decode, seeking, listener shutdown on release, unsupported HEVC/MP3 and live inputs, pre-cancellation and in-flight cancellation, sparse oversized-input rejection, and FFmpeg packet ownership. The MP3 rejection fixture emits an expected demux codec-parameter warning.
 
-`YlAirPlayRemux.prepare(source:configuration:token:)` returns `YlAirPlayPreparedMedia`; retain it while consuming `url`. Releasing it closes all HTTP connections and removes its private temporary directory.
+`YlAirPlayRemux.prepare(input:token:)` consumes a core `YlMediaDeliveryInput` recipe and returns `YlDeliveredMedia`; retain it while consuming `url`. Releasing it closes all HTTP connections and removes its private temporary directory.
 
 The mechanism is complete-VOD preparation, not real-time transcoding. A bounded timestamp scan followed by seek-to-zero and compressed remux preserves presentation timestamps and builds a monotonic decode clock for B-frames, including Matroska sources with missing or unreliable DTS. Only the first H.264 video and optional first mono/stereo AAC-LC audio track are exported. Live, DRM, playlists, other codecs, ADTS AAC, invalid timelines, and non-seekable HTTP inputs are rejected.
 
@@ -20,7 +22,7 @@ Limits: 120 seconds of preparation, six hours of source duration, 500,000 video 
 
 ## Continuous live FLV and RTMP
 
-`YlAirPlayLiveRemux.prepare(source:configuration:token:)` opens the production
+`YlAirPlayLiveRemux.prepare(input:token:)` opens the production
 sequential HTTP-FLV or RTMP input and returns once at least 18 seconds of independent
 H.264/AAC-LC fMP4 segments are published. It never scans to EOF or seeks. Valid
 FLV DTS/PTS are preserved, including B-frame composition offsets; each connection
@@ -54,7 +56,7 @@ Start the local fixture in one terminal (bind permission is required):
 python3 tool/airplay/live_remux_fixture.py --port 18095
 ```
 
-In another terminal, compile **all production Apple Swift sources**, open the real
+In another terminal, compile the **independent core and delivery modules**, open the real
 network/demux/mux path, and verify AVPlayer readiness and decoded video while the
 FLV socket stays open:
 
@@ -66,7 +68,7 @@ python3 tool/airplay/live_remux_check.py --output /tmp/yl-airplay-live-check \
 python3 tool/airplay/live_remux_validator_check.py
 ```
 
-The compiler harness defaults to `$HOME/flutter`; pass `--flutter-sdk` when needed.
+The compiler harness resolves Flutter from `FLUTTER_ROOT`, the `flutter` executable, or `$HOME/flutter`; pass `--flutter-sdk` when needed. Built executables retain their module directory through runtime rpaths, so keep that directory while invoking an `--output` executable later.
 The fixture repeats the repository's real H.264/AAC FLV with advancing timestamps,
 initially bursts enough media for readiness, then paces subsequent epochs. The
 existing fixture contains B-frames. Its `/disconnect` endpoint atomically closes

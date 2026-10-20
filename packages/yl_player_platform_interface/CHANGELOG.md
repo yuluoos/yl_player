@@ -1,3 +1,8 @@
+## Unreleased
+
+- 新增独立 `YlMediaDeliveryProvider` 契约，复用准备任务、租约与状态模型。
+- 添加缺少可选 AirPlay 交付插件的脱敏接入提示。
+
 ## 0.3.0-dev.1
 
 - Add typed AirPlay availability and route-picker contracts, RTMPS source

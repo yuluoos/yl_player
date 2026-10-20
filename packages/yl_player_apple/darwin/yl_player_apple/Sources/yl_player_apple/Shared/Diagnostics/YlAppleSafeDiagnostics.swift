@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 import QuartzCore
 
@@ -23,6 +24,7 @@ enum YlAppleSafeDiagnostics {
   // Package-owned classifications only. A syntactically safe source-derived
   // identifier is still private and must not be published as an error code.
   private static let publicCodes: Set<String> = [
+    "airplay.delivery_unavailable",
     "airplay.unsupported_source",
     "airplay.unsupported_codec",
     "airplay.unsupported_timeline",
@@ -146,6 +148,7 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "airplay.delivery_unavailable": "Custom AirPlay requires the yl_player_media_delivery plugin.",
     "airplay.unsupported_source": "AirPlay requires a supported unprotected file, HTTP source or RTMP live stream.",
     "airplay.unsupported_codec": "AirPlay remux requires H.264 video and mono or stereo AAC-LC audio.",
     "airplay.unsupported_timeline": "The source timeline cannot be remuxed for AirPlay.",

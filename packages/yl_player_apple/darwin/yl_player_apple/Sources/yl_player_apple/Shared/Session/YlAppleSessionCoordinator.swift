@@ -1,3 +1,4 @@
+import yl_player_media_core
 import AVFoundation
 import CoreVideo
 import Foundation
@@ -1290,9 +1291,9 @@ extension YlAppleSessionCoordinator {
     case .unsupported, .inspect: throw YlAppleFailureMapper.unsupported
     case .native: return .avPlayer(source: candidate)
     case .remux, .liveRemux:
-      let media = try YlEngineRouter.airPlayRoute(candidate) == .liveRemux
-        ? YlAirPlayLiveRemux.prepare(source: candidate, configuration: configuration, token: token)
-        : YlAirPlayRemux.prepare(source: candidate, configuration: configuration, token: token)
+      let input = try YlAppleDeliveryInput.make(source: candidate, configuration: configuration,
+        live: YlEngineRouter.airPlayRoute(candidate) == .liveRemux)
+      let media = try services.mediaDeliveryService().prepare(input: input, token: token)
       try token.throwIfCancelled()
       candidate.airPlayMedia = media
       candidate.uri = media.url.absoluteString

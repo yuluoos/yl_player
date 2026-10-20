@@ -1,3 +1,4 @@
+import yl_player_media_core
 import CoreMedia
 
 /// Ordinary decoder ownership; FEL keeps its paired decoder/compositor resource.

@@ -17,8 +17,16 @@ xcrun swiftc -module-cache-path "$scratch/cache" \
   "$native/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift" \
   "$root/tool/apple_hdr/sample_tests.swift" -o "$scratch/sample"
 "$scratch/sample"
-xcrun swiftc -module-cache-path "$scratch/cache" \
-  "$native/Shared/VideoToolbox/YlTimedVideoEndpoint.swift" \
-  "$native/Shared/Session/YlPlatformServices.swift" \
-  "$root/tool/apple_hdr/lease_tests.swift" -o "$scratch/lease"
+python3 - "$root" "$scratch" <<'PY_NATIVE'
+from pathlib import Path
+import sys
+root, scratch = map(Path, sys.argv[1:])
+sys.path.insert(0, str(root))
+from tool.media_delivery.native_build import build_modules
+native = build_modules(scratch / 'native', include_delivery=False)
+shared = root / 'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared'
+native.compile_test([shared / 'VideoToolbox/YlTimedVideoEndpoint.swift',
+    shared / 'Session/YlPlatformServices.swift', root / 'tool/apple_hdr/lease_tests.swift'],
+    scratch / 'lease', imports=['yl_player_media_core'])
+PY_NATIVE
 "$scratch/lease"

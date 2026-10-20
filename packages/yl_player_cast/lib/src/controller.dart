@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:yl_player/yl_player.dart';
+import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
+import 'local_player.dart';
 import 'models.dart';
 import 'provider.dart';
 
@@ -14,7 +15,7 @@ class YlCastHandoff {
     required this.source,
     this.options = const YlLoadOptions(),
   });
-  final YlPlaybackSession session;
+  final YlCastLocalSession session;
   final YlMediaSource source;
   final YlLoadOptions options;
 }
@@ -43,11 +44,14 @@ class YlCastSnapshot {
   final YlCastCapabilities? capabilities;
 }
 
-/// Owns providers and remote resources, but never owns [player].
+/// Owns providers and remote resources, but never owns [player] or [mediaDelivery].
 /// A new remote load requires stopping/detaching the previous remote session.
 class YlCastController {
-  YlCastController({required List<YlCastProvider> providers, this.player})
-    : _providers = List.unmodifiable(providers) {
+  YlCastController({
+    required List<YlCastProvider> providers,
+    this.player,
+    this.mediaDelivery,
+  }) : _providers = List.unmodifiable(providers) {
     if (providers.map((p) => p.id).toSet().length != providers.length) {
       throw ArgumentError('Provider IDs must be unique');
     }
@@ -61,7 +65,10 @@ class YlCastController {
     _updateRoute();
   }
 
-  final YlPlayerController? player;
+  final YlCastLocalPlayer? player;
+
+  /// Caller-owned optional delivery service; preferred over player compatibility.
+  final YlMediaDeliveryProvider? mediaDelivery;
   final List<YlCastProvider> _providers;
   final _state = ValueNotifier(const YlCastSnapshot());
   final _devices = ValueNotifier<List<YlCastDevice>>(const []);
@@ -78,7 +85,7 @@ class YlCastController {
   VoidCallback? _remoteListener;
   VoidCallback? _leaseListener;
   YlCastHandoff? _handoff;
-  YlPlaybackSession? _ownedAirPlay;
+  YlCastLocalSession? _ownedAirPlay;
   Duration? _localPosition;
   bool _localWasPlaying = false;
   bool _localWasLive = false;
@@ -206,7 +213,7 @@ class YlCastController {
               source.format != YlMediaFormat.flv)) {
         throw const YlCastException('cast.source_unsupported');
       }
-      if (!(player?.supportsMediaDelivery ?? false)) {
+      if (mediaDelivery == null && !(player?.supportsMediaDelivery ?? false)) {
         throw const YlCastException('cast.delivery_unavailable');
       }
       if (startPosition != Duration.zero) {
@@ -330,7 +337,9 @@ class YlCastController {
           throw YlCastException(assessment.reason ?? 'cast.format_unverified');
         }
         if (_needsDelivery(source)) {
-          final preparation = player!.prepareMediaDelivery(source);
+          final preparation =
+              mediaDelivery?.prepareMediaDelivery(source) ??
+              player!.prepareMediaDelivery(source);
           _preparation = preparation;
           try {
             lease = await preparation.result;
@@ -522,7 +531,7 @@ class YlCastController {
     }
   }
 
-  Future<YlPlaybackSession> returnToLocal() {
+  Future<YlCastLocalSession> returnToLocal() {
     final generation = _generation;
     return _serial(() async {
       _check(generation);
@@ -569,7 +578,7 @@ class YlCastController {
   }
 
   /// Selection remains in Apple's system route picker (YlAirPlayButton).
-  Future<YlPlaybackSession> loadAirPlay(
+  Future<YlCastLocalSession> loadAirPlay(
     YlMediaSource source, {
     YlLoadOptions options = const YlLoadOptions(),
   }) {

@@ -10,7 +10,7 @@ Shared Apple implementation for the yl_player Flutter playback kernel.
   s.author           = 'yl_player contributors'
   s.source           = { :path => '.' }
   s.source_files     = 'yl_player_apple/Sources/yl_player_apple/**/*.swift'
-  s.vendored_frameworks = 'yl_player_apple/Frameworks/YlFFmpegBridge.xcframework'
+  s.dependency 'yl_player_media_core'
 
   s.frameworks = 'AVFoundation', 'AudioToolbox', 'CoreMedia', 'VideoToolbox', 'AVFAudio', 'Network', 'QuartzCore'
   s.ios.frameworks = 'UIKit'

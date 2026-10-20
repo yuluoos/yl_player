@@ -1,3 +1,5 @@
+import yl_player_media_core
+@testable import yl_player_media_delivery
 import Foundation
 
 @main struct LiveStoreTests {
@@ -100,14 +102,14 @@ import Foundation
     let invalid = try YlAirPlayLiveStore(directory: root.appendingPathComponent("invalid"))
     let invalidPeriod = try invalid.beginPeriod(initialization: Data([1]))
     do { try invalid.append(data: Data([1]), duration: 6.5, period: invalidPeriod); fatalError("accepted segment beyond target") }
-    catch let error as NativePlayerError { expect(error.code == "unsupported_timeline", "duration bound error") }
+    catch let error as NativePlayerError { expect(error.code == "airplay.unsupported_timeline", "duration bound error") }
     do { try invalid.checkError(); fatalError("error not latched") } catch {}
 
     let bounded = try YlAirPlayLiveStore(directory: root.appendingPathComponent("bounded"))
     let boundedPeriod = try bounded.beginPeriod(initialization: Data([1]))
     for _ in 0..<12 { try bounded.append(data: Data(repeating: 1, count: 10 * 1024 * 1024), duration: 6, period: boundedPeriod) }
     do { try bounded.append(data: Data(repeating: 1, count: 10 * 1024 * 1024), duration: 6, period: boundedPeriod); fatalError("exceeded disk bound") }
-    catch let error as NativePlayerError { expect(error.code == "resource_limit", "disk exhaustion is explicit") }
+    catch let error as NativePlayerError { expect(error.code == "airplay.resource_limit", "disk exhaustion is explicit") }
     expect(try contents(bounded, "segment-0.m4s") != nil, "resource exhaustion cannot evict unexpired segment")
     var leasedNow = 100.0
     let leasedDirectory = root.appendingPathComponent("leased")
@@ -119,7 +121,7 @@ import Foundation
     leasedNow = 137
     for _ in 0..<6 { try leased.append(data: tenMiB, duration: 6, period: leasedPeriod) }
     do { try leased.append(data: tenMiB, duration: 6, period: leasedPeriod); fatalError("held expired file escaped disk accounting") }
-    catch let error as NativePlayerError { expect(error.code == "resource_limit", "held expired media stays in disk accounting") }
+    catch let error as NativePlayerError { expect(error.code == "airplay.resource_limit", "held expired media stays in disk accounting") }
     expect(FileManager.default.fileExists(atPath: leasedDirectory.appendingPathComponent("segment-0.m4s").path), "leased media remains named until close")
     try reader.close()
     try reader.close()
@@ -146,7 +148,7 @@ import Foundation
     let oldSnapshot = try snapshotStore.resolve("index.m3u8")!
     for _ in 0..<121 { try snapshotStore.append(data: Data([1]), duration: 6, period: snapshotPeriod) }
     do { try snapshotStore.append(data: Data([1]), duration: 6, period: snapshotPeriod); fatalError("unlinked playlist snapshot escaped file accounting") }
-    catch let error as NativePlayerError { expect(error.code == "resource_limit", "held old playlist counts toward file limit") }
+    catch let error as NativePlayerError { expect(error.code == "airplay.resource_limit", "held old playlist counts toward file limit") }
     expect(try oldSnapshot.file.readToEnd()?.isEmpty == false, "old playlist snapshot remains readable at limit")
     try oldSnapshot.close()
 
@@ -154,14 +156,14 @@ import Foundation
     let countedPeriod = try counted.beginPeriod(initialization: Data([1]))
     for _ in 0..<125 { try counted.append(data: Data([1]), duration: 6, period: countedPeriod) }
     do { try counted.append(data: Data([1]), duration: 6, period: countedPeriod); fatalError("exceeded file bound") }
-    catch let error as NativePlayerError { expect(error.code == "resource_limit", "file count bound") }
+    catch let error as NativePlayerError { expect(error.code == "airplay.resource_limit", "file count bound") }
     expect(try FileManager.default.contentsOfDirectory(atPath: root.appendingPathComponent("counted").path).count <= 128, "physical file count bounded")
 
     let short = try YlAirPlayLiveStore(directory: root.appendingPathComponent("short"))
     let shortPeriod = try short.beginPeriod(initialization: Data([1]))
     for _ in 0..<32 { try short.append(data: Data([1]), duration: 0.5, period: shortPeriod) }
     do { try short.append(data: Data([1]), duration: 0.5, period: shortPeriod); fatalError("exceeded active window count") }
-    catch let error as NativePlayerError { expect(error.code == "resource_limit", "active count limit preserves minimum duration") }
+    catch let error as NativePlayerError { expect(error.code == "airplay.resource_limit", "active count limit preserves minimum duration") }
     print("PASS: \(checks) live store checks")
   }
 }

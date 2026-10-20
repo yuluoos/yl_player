@@ -1,3 +1,4 @@
+import yl_player_media_core
 import AVFoundation
 
 /// Clips decoded PCM in sample units while keeping the original allocation's

@@ -1,3 +1,5 @@
+@testable import yl_player_media_core
+@testable import yl_player_media_delivery
 @testable import yl_player_apple
 import Foundation
 import Network
@@ -28,8 +30,7 @@ final class YlRtmpTransportTests: XCTestCase {
     let peer = try YlRtmpFixturePeer(tlsIdentity: ManagedTLSFixture.localhost)
     defer { peer.close() }
     let source = YlAppleSourceDescriptor(uri: "rtmps://127.0.0.1:\(peer.port)/live/private-token", kind: .network)
-    XCTAssertThrowsError(try YlAirPlayLiveRemux.prepare(source: source,
-      configuration: PlayerConfiguration(map: [:]), token: YlOpenCancellationToken())) {
+    XCTAssertThrowsError(try YlAirPlayLiveRemux.prepare(input: try YlAppleDeliveryInput.make(source: source, configuration: PlayerConfiguration(map: [:]), live: true), token: YlOpenCancellationToken())) {
       XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.rtmp_tls_failed")
     }
     XCTAssertEqual(peer.acceptCount, 1)
@@ -108,8 +109,7 @@ final class YlRtmpTransportTests: XCTestCase {
     let peer = try YlRtmpFixturePeer(tlsIdentity: ManagedTLSFixture.mismatch)
     defer { peer.close() }
     let source = YlAppleSourceDescriptor(uri: "rtmps://127.0.0.1:\(peer.port)/live/test", kind: .network)
-    XCTAssertThrowsError(try YlAirPlayLiveRemux.prepare(source: source,
-      configuration: PlayerConfiguration(map: [:]), token: YlOpenCancellationToken(),
+    XCTAssertThrowsError(try YlAirPlayLiveRemux.prepare(input: try YlAppleDeliveryInput.make(source: source, configuration: PlayerConfiguration(map: [:]), live: true), token: YlOpenCancellationToken(),
       rtmpSourceFactory: Self.anchoredSource)) {
       XCTAssertEqual(($0 as? NativePlayerError)?.code, "network.rtmp_tls_failed")
     }
@@ -122,7 +122,7 @@ final class YlRtmpTransportTests: XCTestCase {
     defer { peer.close() }
     let source = YlAppleSourceDescriptor(uri: "rtmps://127.0.0.1:\(peer.port)/live/test", kind: .network)
     let media = try await Task.detached {
-      try YlAirPlayLiveRemux.prepare(source: source, configuration: PlayerConfiguration(map: [:]),
+      try YlAirPlayLiveRemux.prepare(input: try YlAppleDeliveryInput.make(source: source, configuration: PlayerConfiguration(map: [:]), live: true),
         token: YlOpenCancellationToken(), rtmpSourceFactory: Self.anchoredSource)
     }.value
     let item = AVPlayerItem(url: media.url)

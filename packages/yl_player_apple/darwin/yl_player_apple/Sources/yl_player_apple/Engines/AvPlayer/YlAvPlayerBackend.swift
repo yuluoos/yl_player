@@ -1,3 +1,4 @@
+import yl_player_media_core
 import AVFoundation
 import CoreVideo
 import QuartzCore

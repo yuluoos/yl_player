@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 #if os(iOS)
 import Flutter

@@ -11,7 +11,10 @@ workspace:
   - packages/yl_player_android
   - packages/yl_player_android/example
   - packages/yl_player_apple
+  - packages/yl_player_media_core
+  - packages/yl_player_media_delivery
   - packages/yl_player_cast
+  - packages/yl_player_cast_player_adapter
   - packages/yl_player_cast/example
 
 dependencies:

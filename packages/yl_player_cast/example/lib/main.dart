@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:yl_player/yl_player.dart';
 import 'package:yl_player_cast/yl_player_cast.dart';
+import 'package:yl_player_cast_player_adapter/yl_player_cast_player_adapter.dart';
+import 'package:yl_player_media_delivery/yl_player_media_delivery.dart';
 
 import 'cast_status.dart';
 
@@ -18,7 +21,8 @@ class _CastExampleState extends State<CastExample> {
   final _url = TextEditingController();
   YlPlayerController? _player;
   YlCastController? _cast;
-  YlPlaybackSession? _localSession;
+  YlMediaDelivery? _mediaDelivery;
+  YlCastLocalSession? _localSession;
   YlMediaSource? _localSource;
   String _message = '正在初始化播放器';
   bool _busy = false;
@@ -31,20 +35,32 @@ class _CastExampleState extends State<CastExample> {
   }
 
   Future<void> _initialize() async {
+    YlPlayerController? player;
+    YlMediaDelivery? delivery;
     try {
-      final player = await YlPlayerController.create();
+      player = await YlPlayerController.create();
+      if (!kIsWeb &&
+          (defaultTargetPlatform == TargetPlatform.iOS ||
+              defaultTargetPlatform == TargetPlatform.macOS)) {
+        delivery = await YlMediaDelivery.create();
+      }
       if (!mounted) {
+        await delivery?.dispose();
         await player.dispose();
         return;
       }
       _player = player;
+      _mediaDelivery = delivery;
       // 仅填入通过真机验收、支持 HLS/fMP4 的设备 UUID。
       _cast = YlCastController(
         providers: [YlDlnaProvider(verifiedHlsFmp4DeviceIds: const {})],
-        player: player,
+        player: YlPlayerCastAdapter(player),
+        mediaDelivery: delivery,
       );
       setState(() => _message = '输入媒体地址，然后搜索局域网设备');
     } on Object {
+      await delivery?.dispose();
+      await player?.dispose();
       if (mounted) setState(() => _message = '播放器初始化失败');
     }
   }
@@ -75,11 +91,16 @@ class _CastExampleState extends State<CastExample> {
   void dispose() {
     final cast = _cast;
     final player = _player;
+    final delivery = _mediaDelivery;
     unawaited(() async {
       try {
         await cast?.dispose();
       } finally {
-        await player?.dispose();
+        try {
+          await delivery?.dispose();
+        } finally {
+          await player?.dispose();
+        }
       }
     }());
     _url.dispose();
@@ -132,10 +153,11 @@ class _CastExampleState extends State<CastExample> {
                       ? null
                       : () => _run(() async {
                           final source = _source();
-                          _localSession = await player.load(
-                            source,
-                            options: const YlLoadOptions(autoplay: true),
-                          );
+                          _localSession = await YlPlayerCastAdapter(player)
+                              .load(
+                                source,
+                                options: const YlLoadOptions(autoplay: true),
+                              );
                           _localSource = source;
                         }),
                   child: const Text('本地播放'),

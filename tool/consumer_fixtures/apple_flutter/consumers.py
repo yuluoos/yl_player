@@ -12,7 +12,8 @@ import sys
 import tempfile
 import time
 
-from main_example_tests import source_bytes, expected_identities, verify_result_bundle
+from main_example_tests import expected_identities, verify_result_bundle, verify_historical_sources, verify_current_targets
+from media_delivery_fixture_adapter import native_test_source
 
 
 def require(condition, message):
@@ -81,7 +82,8 @@ def run(command, cwd, name, capture=False, input_text=None):
     return path.read_text().split("\n", 1)[1] if capture else path
 
 
-def pubspec(manager):
+def pubspec(manager, include_delivery=True):
+    delivery = f"  yl_player_media_delivery:\n    path: {json.dumps(str(ROOT / 'packages/yl_player_media_delivery'))}\n" if include_delivery else ""
     return f"""name: apple_consumer
 publish_to: none
 version: 1.0.0+1
@@ -92,12 +94,16 @@ dependencies:
     sdk: flutter
   yl_player_apple:
     path: {json.dumps(str(ROOT / 'packages/yl_player_apple'))}
-  yl_player_platform_interface:
+  yl_player_media_core:
+    path: {json.dumps(str(ROOT / 'packages/yl_player_media_core'))}
+{delivery}  yl_player_platform_interface:
     path: {json.dumps(str(ROOT / 'packages/yl_player_platform_interface'))}
 dependency_overrides:
   yl_player_apple:
     path: {json.dumps(str(ROOT / 'packages/yl_player_apple'))}
-  yl_player_platform_interface:
+  yl_player_media_core:
+    path: {json.dumps(str(ROOT / 'packages/yl_player_media_core'))}
+{delivery}  yl_player_platform_interface:
     path: {json.dumps(str(ROOT / 'packages/yl_player_platform_interface'))}
 dev_dependencies:
   flutter_test:
@@ -109,20 +115,10 @@ flutter:
 
 
 def verify_fixtures():
-    for name in ["tests-manifest.json", "resources-manifest.json", "engine-tests-manifest.json"]:
-        rows = json.loads((FIXTURES / name).read_text())
-        for row in rows:
-            destination = ROOT / row["destination"]
-            expected_source = row.get("source_sha256", row.get("original_sha256", row.get("sha256")))
-            expected_destination = row.get("destination_sha256", row.get("sha256"))
-            require(hashlib.sha256(source_bytes(ROOT, name, row)).hexdigest() == expected_source,
-                    f"Original fixture changed: {row['source']}")
-            if expected_destination is not None:
-                require(hashlib.sha256(destination.read_bytes()).hexdigest() == expected_destination,
-                        f"Migrated fixture changed: {destination}")
-    for row in json.loads((FIXTURES / "new-tests-manifest.json").read_text()):
-        require(hashlib.sha256((ROOT / row["destination"]).read_bytes()).hexdigest() == row["sha256"],
-                "New characterization fixture changed without an updated manifest")
+    # The migration manifests preserve historical source hashes, while current
+    # suites have intentionally evolved since that migration checkpoint.
+    verify_historical_sources(ROOT)
+    verify_current_targets(ROOT)
 
 
 def fixture_tests(platform):
@@ -141,7 +137,7 @@ def sync_fixtures(host, platform, manager, link=False):
         if existing.name not in {p.name for p in fixture_tests(platform)}:
             existing.unlink()
     for source in fixture_tests(platform):
-        shutil.copyfile(source, tests / source.name)
+        (tests / source.name).write_bytes(native_test_source(source))
     # Existing tests use both bundle resources and paths relative to #filePath.
     shutil.copytree(FIXTURES / "Resources", host / "assets/test_media", dirs_exist_ok=True)
     for resource in (FIXTURES / "Resources").iterdir():
@@ -155,6 +151,10 @@ def bootstrap(platform, manager, link=False):
     marker = host / "consumer.json"
     pending = host / "bootstrap-owner.json"
     if marker.is_file():
+        expected_pubspec = pubspec(manager, include_delivery=not link)
+        if (host / "pubspec.yaml").read_text() != expected_pubspec:
+            (host / "pubspec.yaml").write_text(expected_pubspec)
+            run([FLUTTER, "pub", "get"], host, f"{platform}-{manager}-refresh-pub")
         saved = json.loads(marker.read_text())
         require(saved["repo_root"] == str(ROOT), "Consumer belongs to another checkout")
         require(saved.get("link", False) == link, "Consumer mode differs from its owner marker")
@@ -166,9 +166,9 @@ def bootstrap(platform, manager, link=False):
     require(not host.exists() or (pending.is_file() and json.loads(pending.read_text())["repo_root"] == str(ROOT)), f"Unowned host exists at {host}; choose a fresh YL_APPLE_CONSUMERS directory")
     host.mkdir(exist_ok=True)
     pending.write_text(json.dumps({"repo_root": str(ROOT)}) + "\n")
-    (host / "pubspec.yaml").write_text(pubspec(manager))
+    (host / "pubspec.yaml").write_text(pubspec(manager, include_delivery=not link))
     run([FLUTTER, "create", "--no-pub", "--platforms", platform, "--project-name", "apple_consumer", str(host)], ROOT, f"{platform}-{manager}-create")
-    (host / "pubspec.yaml").write_text(pubspec(manager))
+    (host / "pubspec.yaml").write_text(pubspec(manager, include_delivery=not link))
     shutil.copyfile(FIXTURES / "main.dart", host / "lib/main.dart")
     if link:
         shutil.copyfile(FIXTURES / "ConsumerLinkProbe.swift", host / platform / "Runner/ConsumerLinkProbe.swift")
@@ -177,7 +177,7 @@ def bootstrap(platform, manager, link=False):
         for generated in tests.glob("*.swift"):
             generated.unlink()
         for source in fixture_tests(platform):
-            shutil.copyfile(source, tests / source.name)
+            (tests / source.name).write_bytes(native_test_source(source))
         shutil.copyfile(FIXTURES / "Resources/h264_aac.mkv", tests / "h264_aac.mkv")
     if manager == "cocoapods":
         shutil.copyfile(FIXTURES / f"Podfile-{platform}", host / platform / "Podfile")
@@ -216,7 +216,7 @@ def verify_graph(host, platform, manager, link=False):
     if link:
         require((native / "Runner/ConsumerLinkProbe.swift").read_bytes() == (FIXTURES / "ConsumerLinkProbe.swift").read_bytes(), "Consumer link probe differs from its fixture")
     else:
-        expected_tests = {path.name: path.read_bytes() for path in fixture_tests(platform)}
+        expected_tests = {path.name: native_test_source(path) for path in fixture_tests(platform)}
         host_tests = {path.name: path.read_bytes() for path in (native / "RunnerTests").glob("*.swift")}
         require(expected_tests == host_tests, "Consumer characterization suites differ from current fixtures; choose a fresh consumer root")
         for resource in (FIXTURES / "Resources").iterdir():
@@ -226,21 +226,24 @@ def verify_graph(host, platform, manager, link=False):
     plugins = json.loads((host / ".flutter-plugins-dependencies").read_text())
     names = {item["name"] for item in plugins["plugins"][platform]}
     require(plugins["swift_package_manager_enabled"][platform] == (manager == "swiftpm"), "Flutter selected an unexpected package manager")
-    require(names == {"yl_player_apple"}, f"Unexpected native plugin registrations: {names}")
-    plugin = plugins["plugins"][platform][0]
-    require(Path(plugin["path"]).resolve() == ROOT / "packages/yl_player_apple", "Plugin path does not target active checkout")
+    expected_plugins = {"yl_player_apple", "yl_player_media_core"}
+    if not link:
+        expected_plugins.add("yl_player_media_delivery")
+    require(names == expected_plugins, f"Unexpected native plugin registrations: {names}")
+    for plugin in plugins["plugins"][platform]:
+        require(Path(plugin["path"]).resolve() == ROOT / "packages" / plugin["name"], "Plugin path does not target active checkout")
     generated = native / "Flutter/ephemeral/Packages/FlutterGeneratedPluginSwiftPackage/Package.swift"
     if manager == "swiftpm":
         require("FlutterGeneratedPluginSwiftPackage" in project and generated.is_file(), "SwiftPM graph is missing")
         require(not (native / "Podfile.lock").exists(), "SwiftPM consumer silently used CocoaPods")
         text = generated.read_text()
-        require("yl_player_apple" in text, "Generated SwiftPM graph omits plugin")
+        require(all(name in text for name in expected_plugins), "Generated SwiftPM graph omits a native plugin")
         floor = '.iOS("15.0")' if platform == "ios" else '.macOS("12.0")'
         require(floor in text, "Generated SwiftPM aggregator has incorrect deployment floor")
     else:
         require("FlutterGeneratedPluginSwiftPackage" not in project, "CocoaPods consumer retains SwiftPM linkage")
         lock = native / "Podfile.lock"
-        require(lock.is_file() and "yl_player_apple" in lock.read_text(), "CocoaPods graph is missing")
+        require(lock.is_file() and all(name in lock.read_text() for name in expected_plugins), "CocoaPods graph is missing")
     floor = "15.0" if platform == "ios" else "12.0"
     key = "IPHONEOS_DEPLOYMENT_TARGET" if platform == "ios" else "MACOSX_DEPLOYMENT_TARGET"
     found = re.findall(key + r" = ([^;]+);", project)
@@ -322,7 +325,7 @@ def verify_product(host, platform, manager, derived=None, expect_tests=True, con
     for name in [engine, "YlFFmpegBridge"]:
         require((frameworks / f"{name}.framework" / name).is_file(), f"Built host does not embed {name}")
     slice_id = "macos-arm64_x86_64" if platform == "macos" else "ios-arm64_x86_64-simulator"
-    original_bridge = ROOT / "packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework" / slice_id / "YlFFmpegBridge.framework/YlFFmpegBridge"
+    original_bridge = ROOT / "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework" / slice_id / "YlFFmpegBridge.framework/YlFFmpegBridge"
     embedded_bridge = frameworks / "YlFFmpegBridge.framework/YlFFmpegBridge"
     architecture = host_architecture or subprocess.check_output(["uname", "-m"], text=True).strip()
     with tempfile.TemporaryDirectory(prefix="yl-bridge-identity-") as temporary:

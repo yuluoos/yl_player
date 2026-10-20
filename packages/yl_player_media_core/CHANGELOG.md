@@ -1,0 +1,8 @@
+## Unreleased
+
+- 收窄 RTMP、HTTP 解析和环形缓冲内部实现的可见性，保留跨模块输入契约。
+- 为播放器与独立交付提供共享请求头准入，保留水平 Tab 和凭据来源隔离。
+
+## 0.3.0-dev.1
+
+- Extract the shared Apple native media input core and FFmpeg bridge ownership.

@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 
 /// Cumulative process CPU includes decoder workers; nil thermal means unavailable.

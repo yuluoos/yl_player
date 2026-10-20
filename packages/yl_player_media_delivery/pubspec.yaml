@@ -1,0 +1,26 @@
+name: yl_player_media_delivery
+description: Independent Apple media delivery sessions and local HLS leases.
+version: 0.3.0-dev.1
+resolution: workspace
+repository: https://github.com/yuluoos/yl_player
+environment:
+  sdk: ^3.12.0
+  flutter: '>=3.44.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  yl_player_platform_interface: ^0.3.0-dev.1
+  yl_player_media_core: ^0.3.0-dev.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: YlPlayerMediaDeliveryPlugin
+        sharedDarwinSource: true
+      macos:
+        pluginClass: YlPlayerMediaDeliveryPlugin
+        sharedDarwinSource: true

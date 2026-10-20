@@ -7,7 +7,8 @@ import tempfile
 import unittest
 
 ROOT = Path(__file__).resolve().parents[2]
-FFMPEG = ROOT/'packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg'
+sys.path.insert(0, str(ROOT))
+from tool.media_delivery.native_build import build_modules
 
 
 class TerminalBudgetTests(unittest.TestCase):
@@ -16,11 +17,9 @@ class TerminalBudgetTests(unittest.TestCase):
         source=Path(__file__).parent
         with tempfile.TemporaryDirectory(prefix='yl-terminal-tests-') as directory:
             out=Path(directory);main=out/'main.swift';main.write_bytes((source/'audio_terminal_tests.swift').read_bytes())
-            command=['xcrun','swiftc','-module-cache-path',str(out/'cache'),str(main),
-                str(source/'AudioTerminalBudgetPrototype.swift'),str(source/'audio_terminal_support.swift'),
-                str(FFMPEG/'YlManagedBufferLedger.swift'),str(FFMPEG/'YlBoundedBufferPlan.swift'),'-o',str(out/'tests')]
-            build=subprocess.run(command,capture_output=True,text=True,timeout=120)
-            self.assertEqual(build.returncode,0,build.stdout+build.stderr)
+            native = build_modules(out/'native', include_delivery=False)
+            native.compile_test([main, source/'AudioTerminalBudgetPrototype.swift'], out/'tests',
+                                imports=['yl_player_media_core'])
             run=subprocess.run([str(out/'tests')],capture_output=True,text=True,timeout=15)
             self.assertEqual(run.returncode,0,run.stdout+run.stderr)
             rows=json.loads(run.stdout)

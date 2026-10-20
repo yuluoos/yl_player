@@ -1,3 +1,4 @@
+@testable import yl_player_media_core
 import XCTest
 import CoreVideo
 @testable import yl_player_apple

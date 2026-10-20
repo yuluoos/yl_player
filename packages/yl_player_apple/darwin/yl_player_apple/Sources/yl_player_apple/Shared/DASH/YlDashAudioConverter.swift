@@ -1,3 +1,4 @@
+import yl_player_media_core
 import AVFoundation
 
 /// Adapts the existing codec converter to an exact DASH presentation window.

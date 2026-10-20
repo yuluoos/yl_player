@@ -1,11 +1,7 @@
+import yl_player_media_core
+@testable import yl_player_media_delivery
 import Foundation
 
-struct NativePlayerError: Error { let category: String; let code: String; let message: String }
-enum YlAirPlayRemux {
-  static func failure(_ code: String, _ message: String) -> NativePlayerError {
-    NativePlayerError(category: "unsupported", code: "airplay.\(code)", message: message)
-  }
-}
 final class FixtureBytes: YlByteSource {
   let data: Data
   let chunk: Int

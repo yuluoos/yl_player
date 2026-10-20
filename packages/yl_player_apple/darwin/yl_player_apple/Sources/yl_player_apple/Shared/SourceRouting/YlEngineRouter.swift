@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 
 /// Pure capability assessment. It performs no I/O and never claims reachability.

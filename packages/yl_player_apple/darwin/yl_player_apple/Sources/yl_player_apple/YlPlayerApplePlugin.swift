@@ -1,3 +1,4 @@
+import yl_player_media_core
 #if os(iOS)
 import Flutter
 import UIKit
@@ -56,7 +57,12 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     registrar.register(airPlay.picker, withId: YlAirPlayRoutePickerFactory.viewType)
     let protectedViews = YlFairPlayViewRegistry()
     registrar.register(YlFairPlayViewFactory(registry: protectedViews), withId: YlFairPlayViewFactory.viewType)
-    let registry = YlApplePlayerRegistry(makeServices: services,
+    let engineIdentity = ObjectIdentifier(messenger as AnyObject)
+    let registry = YlApplePlayerRegistry(makeServices: { options in
+      var result = try services(options)
+      result.mediaDeliveryService = { try YlMediaDeliveryRegistry.service(for: engineIdentity) }
+      return result
+    },
       makeCallbacks: { makeCallbacks(messenger: messenger, suffix: $0) },
       installHost: { suffix, host in
         ApplePlayerHostApiSetup.setUp(binaryMessenger: hostMessenger, api: host, messageChannelSuffix: suffix)

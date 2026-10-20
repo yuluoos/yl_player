@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 import AVFoundation
 
@@ -14,7 +15,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   private let outbound = YlAppleOutboundQueue()
   private var coordinator: YlAppleSessionCoordinator!
   private var textureOwner: YlAppleTextureOwner!
-  lazy var mediaDelivery = YlMediaDeliveryManager(configuration: PlayerConfiguration(positionEventIntervalMs: positionUpdateIntervalMs))
+  lazy var mediaDelivery = YlMediaDeliveryManager(configuration: PlayerConfiguration(positionEventIntervalMs: positionUpdateIntervalMs), service: services.mediaDeliveryService)
   private var attached = false
   private(set) var disposed = false
   private var lastLiveModeRequestId: Int64 = 0
@@ -597,19 +598,7 @@ enum YlAppleNativeInput {
     let request = source.request
     let headers = request?.headers ?? [:]
     let credentials = request?.credentials ?? [:]
-    var seen = Set<String>()
-    for (values, isCredential) in [(headers, false), (credentials, true)] {
-      for (name, value) in values {
-        let lower = name.lowercased()
-        guard name.range(of: "^[!#$%&'*+.^_`|~0-9A-Za-z-]+$", options: .regularExpression) != nil,
-          value.range(of: "[\\x00-\\x08\\x0a-\\x1f\\x7f]", options: .regularExpression) == nil,
-          !["host", "content-length", "connection", "transfer-encoding", "range", "if-range"].contains(lower),
-          seen.insert(lower).inserted,
-          isCredential || lower.range(of: "auth|cookie|token|key|secret|credential", options: .regularExpression) == nil else {
-          throw YlAppleFailureMapper.invalid()
-        }
-      }
-    }
+    try YlHttpHeaderAdmission.validate(headers: headers, credentials: credentials)
     let format: YlSourceFormat
     switch source.format {
     case .automatic: format = .automatic

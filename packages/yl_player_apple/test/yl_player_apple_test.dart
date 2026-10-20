@@ -437,7 +437,7 @@ void main() {
     }
   });
 
-  test('podspec exposes the shared artifact with platform-scoped metadata', () {
+  test('podspec uses the unique core artifact with platform-scoped metadata', () {
     final spec = File(
       '${package.path}/darwin/yl_player_apple.podspec',
     ).readAsStringSync();
@@ -445,9 +445,15 @@ void main() {
       _rubyStringAssignment(spec, 's.source_files'),
       'yl_player_apple/Sources/yl_player_apple/**/*.swift',
     );
+    expect(spec, isNot(contains('s.vendored_frameworks')));
+    expect(spec, contains("s.dependency 'yl_player_media_core'"));
+    expect(spec, isNot(contains('yl_player_media_delivery')));
+    final coreSpec = File(
+      '${repository.path}/packages/yl_player_media_core/darwin/yl_player_media_core.podspec',
+    ).readAsStringSync();
     expect(
-      _rubyStringAssignment(spec, 's.vendored_frameworks'),
-      'yl_player_apple/Frameworks/YlFFmpegBridge.xcframework',
+      _rubyStringAssignment(coreSpec, 's.vendored_frameworks'),
+      'yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework',
     );
     expect(_rubyStringAssignment(spec, 's.ios.deployment_target'), '15.0');
     expect(_rubyStringAssignment(spec, 's.osx.deployment_target'), '12.0');
@@ -470,7 +476,7 @@ void main() {
     expect(_rubyDependencies(spec, 'osx'), <String>{'FlutterMacOS'});
   });
 
-  test('SwiftPM manifest declares the shared product and binary bridge', () {
+  test('SwiftPM consumes core without depending on optional delivery', () {
     final manifest = File(
       '${package.path}/darwin/yl_player_apple/Package.swift',
     ).readAsStringSync();
@@ -497,13 +503,19 @@ void main() {
         ),
       ),
     );
+    expect(manifest, isNot(contains('.binaryTarget')));
+    expect(manifest, isNot(contains('yl_player_media_delivery')));
+    final coreManifest = File(
+      '${repository.path}/packages/yl_player_media_core/darwin/yl_player_media_core/Package.swift',
+    ).readAsStringSync();
     expect(
-      _swiftNamedCall(manifest, 'binaryTarget', 'YlFFmpegBridge'),
+      _swiftNamedCall(coreManifest, 'binaryTarget', 'YlFFmpegBridge'),
       contains('path: "Frameworks/YlFFmpegBridge.xcframework"'),
     );
     final pluginTarget = _swiftNamedCall(manifest, 'target', 'yl_player_apple');
     expect(pluginTarget, contains('FlutterFramework'));
     expect(pluginTarget, contains('YlFFmpegBridge'));
+    expect(pluginTarget, contains('yl-player-media-core'));
   });
 }
 

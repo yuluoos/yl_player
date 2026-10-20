@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 import CoreVideo
 
@@ -86,6 +87,7 @@ struct YlPlatformServices {
   var nativeViewType: String?
   var beforeAudioOutput: () throws -> Void = {}
   var externalAudioRouteIdentity: () -> String? = { nil }
+  var mediaDeliveryService: () throws -> any YlMediaDeliveryService = { throw YlMediaDeliveryRegistry.unavailable() }
 
   init(platform: YlApplePlatform, textureOutput: any YlTextureOutput,
        makeDisplayDriver: @escaping (@escaping () -> Void) -> any YlDisplayDriving,
@@ -105,6 +107,7 @@ extension YlPlatformServices {
       makeDisplayDriver: makeDisplayDriver, activateAudioSession: activateAudioSession)
     result.beforeAudioOutput = beforeAudioOutput
     result.externalAudioRouteIdentity = externalAudioRouteIdentity
+    result.mediaDeliveryService = mediaDeliveryService
     result.nativeViewType = nativeViewType
     return result
   }

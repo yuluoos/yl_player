@@ -6,6 +6,8 @@ abstract final class YlSafeDiagnostics {
 
   /// Fixed public guidance for recognized codes, never native error prose.
   static String messageForCode(String code) => switch (code) {
+    'airplay.delivery_unavailable' =>
+      'Custom AirPlay requires the yl_player_media_delivery plugin.',
     'airplay.unsupported_source' =>
       'AirPlay requires a supported unprotected file, HTTP source or RTMP live stream.',
     'airplay.unsupported_codec' =>

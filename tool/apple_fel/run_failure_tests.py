@@ -27,22 +27,21 @@ def main():
         print('FEL envelope checks require the cached Flutter macOS framework')
         return 77
     package = root / 'packages/yl_player_apple/darwin/yl_player_apple'
-    bridge = package / 'Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64'
+    sys.path.insert(0, str(root))
+    from tool.media_delivery.native_build import build_modules
+    os.environ['FLUTTER_ROOT'] = str(sdk)
     sources = package / 'Sources/yl_player_apple'
     files = ['Shared/VideoToolbox/YlFELFailure.swift', 'Shared/VideoToolbox/YlFELMetadata.swift',
-             'Shared/Dependencies/NativePlayerError.swift', 'Shared/Diagnostics/YlAppleSafeDiagnostics.swift',
+             'Shared/Diagnostics/YlAppleSafeDiagnostics.swift',
              'Shared/Diagnostics/YlAppleFailureMapper.swift', 'Shared/DRM/YlFairPlayFailure.swift',
              'Generated/YlPlayerApple.g.swift']
     with tempfile.TemporaryDirectory(prefix='yl-fel-failure-') as temp:
         scratch = Path(temp)
-        cmd = ['xcrun', 'swiftc', '-module-cache-path', str(scratch / 'modules'),
-               '-F', str(framework), '-F', str(bridge),
-               '-Xlinker', '-rpath', '-Xlinker', str(framework),
-               '-Xlinker', '-rpath', '-Xlinker', str(bridge),
-               *(str(sources / name) for name in files),
-               str(root / 'tool/apple_fel/metadata_fixture.swift'),
-               str(root / 'tool/apple_fel/failure_tests.swift'), '-o', str(scratch / 'tests')]
-        subprocess.run(cmd, check=True, timeout=180)
+        native = build_modules(scratch / 'native', include_delivery=False)
+        native.compile_test([*(sources / name for name in files),
+            root / 'tool/apple_fel/metadata_fixture.swift',
+            root / 'tool/apple_fel/failure_tests.swift'], scratch / 'tests',
+            imports=['yl_player_media_core'])
         return subprocess.run([str(scratch / 'tests')], timeout=30).returncode
 
 

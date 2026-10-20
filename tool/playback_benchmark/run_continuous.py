@@ -29,7 +29,7 @@ def collect(output,flutter,*,memory_diagnostics=False):
         result.update(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             sourceFingerprints=source,sourceHash=hashlib.sha256(json.dumps(source,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
             dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock','packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']},
-            artifactFingerprints={n:digest(ROOT/n) for n in ['packages/yl_player_apple/tool/apple_ffmpeg/bridge-artifact.lock','packages/yl_player_apple/darwin/yl_player_apple/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge']})
+            artifactFingerprints={n:digest(ROOT/n) for n in ['packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock','packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge']})
         media=EXAMPLE/'assets/test_media/format_matrix/continuous-avc-aac.mkv'
         result['mediaSha256']=digest(media)
         probe=json.loads(subprocess.check_output(['ffprobe','-v','error','-show_format','-show_streams','-of','json',str(media)],text=True,timeout=20))

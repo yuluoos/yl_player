@@ -1,3 +1,4 @@
+@testable import yl_player_media_core
 @testable import yl_player_apple
 
 // Fixture-only projection preserves the old engine assertions during the typed

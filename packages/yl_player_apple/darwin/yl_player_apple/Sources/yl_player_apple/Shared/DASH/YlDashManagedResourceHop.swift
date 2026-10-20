@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 
 /// Adapter to the existing managed transport: no URLSession, hidden redirects,

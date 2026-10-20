@@ -1,3 +1,4 @@
+import yl_player_media_core
 import Foundation
 
 /// Load-owned preparation; the decoder/output transaction is created at commit.

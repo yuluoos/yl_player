@@ -7,7 +7,7 @@ import selectors
 import subprocess
 import sys
 from run_audio_callback_roots import digest
-from run_audio_terminal_probe import SHARED
+from run_audio_terminal_probe import SHARED, CORE_SHARED, build_modules
 
 
 def validate(row,scenario,pid):
@@ -43,14 +43,17 @@ def validate(row,scenario,pid):
 def collect(output):
     source=Path(__file__).parent;output=output.resolve();output.mkdir(parents=True,exist_ok=False)
     directory=output/'sources';directory.mkdir()
-    production=[SHARED/'Audio/YlAudioCompletionGroup.swift',SHARED/'FFmpeg/YlManagedBufferLedger.swift',SHARED/'FFmpeg/YlBoundedBufferPlan.swift']
+    production=[SHARED/'Audio/YlAudioCompletionGroup.swift',CORE_SHARED/'FFmpeg/YlManagedBufferLedger.swift',CORE_SHARED/'FFmpeg/YlBoundedBufferPlan.swift']
     local=[source/name for name in ('audio_tail_continuity.swift','AudioTerminalBudgetPrototype.swift','audio_terminal_support.swift',
         'run_audio_tail_continuity.py','test_audio_tail_continuity.py','run_audio_terminal_probe.py','run_audio_callback_roots.py')]
     for p in production+local:(directory/p.name).write_bytes(p.read_bytes())
     main=directory/'main.swift';main.write_bytes((directory/'audio_tail_continuity.swift').read_bytes())
     binary=output/'audio_tail_continuity'
-    command=['xcrun','swiftc','-O','-g','-module-cache-path',str(output/'cache'),str(main)]+[str(directory/p.name) for p in production]+[
-        str(directory/'AudioTerminalBudgetPrototype.swift'),str(directory/'audio_terminal_support.swift'),'-o',str(binary)]
+    native = build_modules(output/'native', include_delivery=False)
+    compile_sources = [main, directory/'YlAudioCompletionGroup.swift', directory/'AudioTerminalBudgetPrototype.swift']
+    for source_file in compile_sources:
+        source_file.write_text('@testable import yl_player_media_core\n' + source_file.read_text())
+    command=['xcrun','swiftc','-O','-g',*native.flags,*map(str,compile_sources),'-o',str(binary)]
     with (output/'build.log').open('w') as log:subprocess.run(command,stdout=log,stderr=log,check=True,timeout=120)
     env={k:v for k,v in os.environ.items() if not k.startswith('MallocStackLogging')}
     protocol=dict(version=1,scenarios=['steady','starve'],framesPerBuffer=1024,sampleRate=48000,

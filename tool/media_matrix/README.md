@@ -38,7 +38,7 @@ Opus SILK/hybrid扩展新增两份原创mono素材，当前目录20份/64条公�
 
 Vorbis切片新增零CodecDelay的原创AVC/Vorbis素材，目录现有21行/67条公开路径。
 `generate.py`现在要求`YL_TEST_VORBIS_REFERENCE`指向通过
-`packages/yl_player_apple/tool/apple_ffmpeg/build_vorbis_reference.sh`生成的install目录；
+`packages/yl_player_media_core/tool/apple_ffmpeg/build_vorbis_reference.sh`生成的install目录；
 自有Xiph encoder按真实采样率/声道输出，避免native FFmpeg encoder写入本轮未支持的CodecDelay。
 原有20份素材保持不变；初始native编码夹具另保留为`mkv-avc-vorbis-codec-delay.mkv`，
 用于明确拒绝1024采样CodecDelay，不计支持行。混合AAC/Vorbis仅用于切轨/策略。

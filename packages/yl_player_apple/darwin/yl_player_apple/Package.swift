@@ -12,18 +12,16 @@ let package = Package(
         .library(name: "yl-player-apple", targets: ["yl_player_apple"])
     ],
     dependencies: [
-        .package(name: "FlutterFramework", path: "../FlutterFramework")
+        .package(name: "FlutterFramework", path: "../FlutterFramework"),
+        .package(name: "yl_player_media_core", path: "../yl_player_media_core")
     ],
     targets: [
-        .binaryTarget(
-            name: "YlFFmpegBridge",
-            path: "Frameworks/YlFFmpegBridge.xcframework"
-        ),
         .target(
             name: "yl_player_apple",
             dependencies: [
                 .product(name: "FlutterFramework", package: "FlutterFramework"),
-                "YlFFmpegBridge"
+                .product(name: "yl-player-media-core", package: "yl_player_media_core"),
+                .product(name: "YlFFmpegBridge", package: "yl_player_media_core")
             ]
         )
     ]

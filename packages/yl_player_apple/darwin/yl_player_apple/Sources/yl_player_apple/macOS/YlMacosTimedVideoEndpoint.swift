@@ -1,3 +1,4 @@
+import yl_player_media_core
 #if os(macOS)
 import AVFoundation
 import AppKit

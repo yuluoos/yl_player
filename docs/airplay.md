@@ -4,6 +4,10 @@ AirPlay is opt-in per load. It uses AVPlayer external playback and Apple's
 visible device picker. Android and older native adapters reject the opt-in.
 Deployment floors remain iOS 15 and macOS 12.
 
+Custom VOD and RTMP/RTMPS/HTTP-FLV conversion requires the optional
+`yl_player_media_delivery` plugin in the host dependencies. Direct HTTP/HLS
+AirPlay remains available without it. See the [Chinese migration guide](media-delivery.md).
+
 ```dart
 final player = await YlPlayerController.create(
   options: const YlPlayerOptions(

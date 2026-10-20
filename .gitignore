@@ -13,6 +13,8 @@ coverage/
 **/ios/Flutter/ephemeral/
 **/DerivedData/
 **/.swiftpm/
+**/.build/
+__pycache__/
 **/*.xcresult/
 
 # Local authorized DRM endpoints, credentials and generated Dart defines.

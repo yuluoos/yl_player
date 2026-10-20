@@ -1,3 +1,5 @@
+import yl_player_media_core
+@testable import yl_player_media_delivery
 import AVFoundation
 import Foundation
 import YlFFmpegBridge
@@ -5,14 +7,21 @@ import YlFFmpegBridge
 @main struct LiveRemuxTests {
   static func main() throws {
     setbuf(stdout, nil)
-    let source = YlAppleSourceDescriptor(uri: CommandLine.arguments[1], kind: .network,
-      formatHint: .flv, intent: .live)
+    let sourceURL = URL(string: CommandLine.arguments[1])!
+    let recipe: YlFallbackSourceRecipe
+    if ["rtmp", "rtmps"].contains(sourceURL.scheme?.lowercased() ?? "") {
+      recipe = .rtmp(request: YlRtmpRequestRecipe(address: try YlRtmpAddress(sourceURL.absoluteString),
+        recovery: YlRtmpRecoveryBudget(), bufferScope: try YlManagedBufferLedger().makeScope(maxBytes: nil)))
+    } else {
+      recipe = .network(request: YlNetworkRequestRecipe(url: sourceURL, headers: [:],
+        configuration: YlNetworkConfiguration(map: [:]), mode: .sequentialLive), container: .flv)
+    }
+    let input = YlMediaDeliveryInput(recipe: recipe, isLive: true)
     let token = YlOpenCancellationToken()
     let expectsError = CommandLine.arguments.contains("--expect-config-error")
-    var media: YlAirPlayPreparedMedia?
+    var media: YlDeliveredMedia?
     do {
-      media = try YlAirPlayLiveRemux.prepare(source: source,
-        configuration: PlayerConfiguration(map: [:]), token: token)
+      media = try YlAirPlayLiveRemux.prepare(input: input, token: token)
       if expectsError { fatalError("Changed live configuration was accepted") }
     } catch let error as NativePlayerError {
       guard expectsError, error.code == "airplay.unsupported_codec" else { throw error }
@@ -44,7 +53,7 @@ import YlFFmpegBridge
       // The fixture atomically disconnects the stream and reports an upper
       // bound for every original-period video PTS emitted, including packets
       // still buffered in the network/demux/writer. Playlist sums cannot prove it.
-      let control = try Data(contentsOf: source.url!.deletingLastPathComponent().appendingPathComponent("disconnect"))
+      let control = try Data(contentsOf: sourceURL.deletingLastPathComponent().appendingPathComponent("disconnect"))
       guard let bound = String(data: control, encoding: .utf8), let oldEnd = Double(bound) else {
         fatalError("Fixture did not return its original-period PTS upper bound")
       }
