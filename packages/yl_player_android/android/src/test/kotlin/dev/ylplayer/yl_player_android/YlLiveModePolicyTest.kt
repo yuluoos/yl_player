@@ -3,6 +3,22 @@ package dev.ylplayer.yl_player_android
 import kotlin.test.*
 
 class YlLiveModePolicyTest {
+    @Test fun `HTTP FLV long pause refreshes only low live demand`() {
+        val policy = YlHttpFlvResumePolicy()
+        assertFalse(policy.requiresRefresh(low = true, live = true, nowMs = 5000))
+        policy.paused(1000)
+        assertFalse(policy.requiresRefresh(low = true, live = true, nowMs = 1200))
+        policy.paused(2000)
+        assertTrue(policy.requiresRefresh(low = true, live = true, nowMs = 5000))
+        assertTrue(policy.requiresRefresh(low = true, live = true, nowMs = 5001)) // failed admission must not erase intent
+        policy.clear()
+        assertFalse(policy.requiresRefresh(low = true, live = true, nowMs = 5002))
+        policy.paused(6000)
+        assertFalse(policy.requiresRefresh(low = false, live = true, nowMs = 9000))
+        policy.paused(10000)
+        assertFalse(policy.requiresRefresh(low = true, live = false, nowMs = 13000))
+    }
+
     @Test fun `absolute seek ends installed catch-up and respects explicit rate`() {
         val policy = YlLiveCatchUpPolicy()
         var installed = 1.03f

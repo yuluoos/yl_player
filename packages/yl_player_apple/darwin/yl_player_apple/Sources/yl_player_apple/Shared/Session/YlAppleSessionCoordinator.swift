@@ -223,7 +223,9 @@ final class YlAppleSessionCoordinator: NSObject {
         guard let installed = self.slot.current as? YlFallbackBackend else { throw YlNativeLivePlayback.unsupported }
         installed.retainLiveRecoveryContinuity(continuity)
         do {
-          if shouldPlay { try installed.play() }
+          // A silent candidate starts ready. Commit the retained pause intent
+          // as well as play intent before publishing this mode transaction.
+          if shouldPlay { try installed.play() } else { try installed.pause() }
           let value = try installed.setLivePlaybackMode(mode, requestId: requestId)
           installed.emitState()
           guard let current = self.activeEvents?.takeInitialSnapshot() else {

@@ -1611,8 +1611,12 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     case .rate(let rate):
       if player.rate != 0 { player.rate = rate; liveCatchUpRate = rate != desiredRate }
     case .edge:
-      lastLiveCatchUpSeek = now
-      try? seekToLiveEdge()
+      if let start = seekableRange.flatMap({ milliseconds($0.start) }), let end = dvrEndMs,
+         let target = YlLiveCatchUpPolicy.catchUpPosition(startMs: start, endMs: end, targetMs: 2_000) {
+        lastLiveCatchUpSeek = now
+        videoProgressProbe.reset()
+        player.seek(to: CMTime(value: target, timescale: 1_000), toleranceBefore: .zero, toleranceAfter: .zero)
+      }
     }
     emit(.delta(YlNativeTimelineDelta(positionMs: positionMs,
       bufferedPositionMs: loadedEndMs,
