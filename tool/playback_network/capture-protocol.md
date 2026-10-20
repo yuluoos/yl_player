@@ -167,3 +167,17 @@ The Apple command compiles production Swift and checks policy/reducer/budget
 behavior in a standalone process. It does not instantiate a playback session or
 claim native media-path integration coverage. Android native coverage uses the
 existing JVM suite; no device tests are needed for that suite.
+
+### Connected iPhone sources
+
+The live harness defaults to loopback. For a physical device, an operator may
+explicitly declare `YL_LIVE_OWNED_HOST` equal to the literal private IPv4 address
+in `YL_LIVE_URL`. Only RFC1918 IPv4 addresses are accepted for this opt-in;
+public IPs, hostnames, credentials and query strings remain rejected. Bind an
+owned forwarding listener only to that interface and the fixture's port, retain
+the original loopback server receipts, and stop the forwarder after the run.
+The flag is a source-ownership declaration, not independent proof. Record the
+command, source hashes and server receipt together. The phone needs access to
+that LAN and must allow local networking. This does not alter production URLs.
+HLS capture performs 16 pairs of rapid low/smooth requests to expose native
+command-admission ordering; FLV/RTMP use one pair to respect recovery budgets.

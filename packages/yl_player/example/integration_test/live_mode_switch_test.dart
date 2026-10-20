@@ -19,6 +19,10 @@ void main() {
       'protocol': const String.fromEnvironment('YL_LIVE_PROTOCOL'),
       'url': const String.fromEnvironment('YL_LIVE_URL'),
       'owned': const String.fromEnvironment('YL_LIVE_OWNED'),
+      'ownedHost': const String.fromEnvironment(
+        'YL_LIVE_OWNED_HOST',
+        defaultValue: '127.0.0.1',
+      ),
       'mediaHash': const String.fromEnvironment('YL_LIVE_MEDIA_SHA256'),
     });
     YlPlayerController? player;
@@ -144,11 +148,20 @@ void main() {
       await mode(YlLivePlaybackMode.smoothPlayback);
       await observe();
       stage = 'rapid';
-      await Future.wait([
-        session.setLivePlaybackMode(YlLivePlaybackMode.lowLatency),
-        session.setLivePlaybackMode(YlLivePlaybackMode.smoothPlayback),
-      ]).timeout(const Duration(seconds: 20));
-      expect(owner.state.livePlayback?.mode, YlLivePlaybackMode.smoothPlayback);
+      for (
+        var attempt = 0;
+        attempt < (config['protocol'] == 'hls' ? 16 : 1);
+        attempt++
+      ) {
+        await Future.wait([
+          session.setLivePlaybackMode(YlLivePlaybackMode.lowLatency),
+          session.setLivePlaybackMode(YlLivePlaybackMode.smoothPlayback),
+        ]).timeout(const Duration(seconds: 20));
+        expect(
+          owner.state.livePlayback?.mode,
+          YlLivePlaybackMode.smoothPlayback,
+        );
+      }
       stage = 'replacement';
       final replacement = await owner
           .load(

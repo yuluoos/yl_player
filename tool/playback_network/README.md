@@ -91,10 +91,10 @@ Virtual-clock tests assert exact rate-boundary/stall/drop/recovery behavior;
 loopback tests assert received bytes, range replies, partial-body disconnects,
 shared bandwidth, bounded admission and safe logging. No player is involved.
 
-The generated 40-second MPD has structural/hash validation only; continuous
-player playback and cross-Period ABR are still unverified. Do not interpret
-repeated HTTP downloads as continuous media playback. HTTP-FLV live timing and RTMP
-shaping are not implemented here. Real TCP RTT and end-to-end live latency remain
+The generated 40-second MPD has structural/hash validation and limited native
+captures recorded in the P04 stage report. Repeated HTTP downloads alone do not
+prove continuous output. Owned HLS/HTTP-FLV are served by live_fixture.py below;
+RTMP fault injection uses the independent tool/rtmp_acceptance peer. Real TCP RTT and end-to-end live latency remain
 unavailable, as do P08-derived device SLOs until measured and frozen. This tool
 does not establish CAP-ABR, CAP-LIVE, mode switching or three-platform acceptance.
 

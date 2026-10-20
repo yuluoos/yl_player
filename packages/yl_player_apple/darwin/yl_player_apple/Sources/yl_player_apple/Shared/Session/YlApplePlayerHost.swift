@@ -226,6 +226,9 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       } catch { completion(.failure(error)) }
     }
   }
+  // Preserve Pigeon main-actor arrival order through command admission.
+  // A nonisolated async hop can let the next request overtake this one.
+  @MainActor
   func setLivePlaybackMode(command: AppleLivePlaybackModeCommand) async throws -> AppleLivePlaybackModeReply {
     try await onMain { completion in
       do {
@@ -440,6 +443,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       } catch { completion(.failure(error)) }
     }
   }
+  @MainActor
   private func onMain<T>(_ operation: @escaping (@escaping (Result<T, Error>) -> Void) -> Void) async throws -> T {
     do {
       return try await withCheckedThrowingContinuation { continuation in
