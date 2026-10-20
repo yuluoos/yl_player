@@ -15,6 +15,16 @@ python3 -B tool/dolby_reference/decoded_alignment.py \
   --trace /absolute/path/new-decoded-trace.jsonl
 ```
 
+Actual decoder integration tests are opt-in because the research probe requires
+FFmpeg development headers/pkg-config modules with `AV_CODEC_FLAG_COPY_OPAQUE`
+and a host FFmpeg with the `libx265` encoder (locally verified with FFmpeg 8.0.1).
+Default foundation records these two tests as skipped. Enable explicitly on a
+configured research host; missing/incompatible dependencies then fail visibly:
+
+```sh
+YL_RUN_DECODE_PROBE=1 python3 -B -m unittest discover -s tool/dolby_reference -p 'test_decode_probe.py'
+```
+
 The inspector is the pinned libdovi collector described in `probes/README.md`.
 Media stays local; no network protocols, URLs, device state or rendering windows
 are used. Existing trace paths are refused. A failed child, parse, coverage or
@@ -50,7 +60,9 @@ Limits: original/framed files 512 MiB, access unit 8 MiB, 32,768 pictures,
 4096x2160 output, 64 MiB contiguous hash workspace, one software decoder thread,
 32 MiB child output, 600 seconds per layer. Codec reference pictures still use
 the decoder's DPB; these research limits are not a player memory admission
-contract. The temporary packet files are deleted on success and failure.
+contract. The temporary packet files are deleted on success and failure. Executable hashes
+and the build receipt identify the probe and declared FFmpeg module versions;
+they do not freeze every dynamically loaded dependency or the entire host environment.
 
 Evidence records `standalone_poc_verified=true` only after every decoded frame
 has a separately parsed POC and the layer association checks pass. This is the
@@ -61,6 +73,8 @@ https://github.com/FFmpeg/FFmpeg/blob/n8.0/libavcodec/hevc/parser.c
 
 `effective_metadata_resolved=false` remains explicit. `use_previous_mapping` is
 preserved and never replaced by the preceding display frame's RPU. Effective
-mapping/DM inheritance and independent target generation remain separate work.
+mapping/DM state and independent target generation remain separate work. The
+optional `stream_inventory.py --mapping` mode resolves signalled mapping IDs to
+coefficient records in decode order; it does not establish complete DM/trim state.
 Full CM/trim/NLQ, physical DV signalling and mapping quality remain unverified
 even when both layer decodes, POC and their association pass.

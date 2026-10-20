@@ -1,6 +1,7 @@
 """Host probe integration: actual HEVC reorder, strict framing and decoder errors."""
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 import struct
@@ -11,8 +12,8 @@ from decoded_alignment import parameter_sets, split_unit
 from stream_inventory import nal_length_size
 
 
-@unittest.skipUnless(all(shutil.which(x) for x in ('ffmpeg','ffprobe','pkg-config','cc')),
-                     'host FFmpeg development tools required')
+@unittest.skipUnless(os.environ.get('YL_RUN_DECODE_PROBE') == '1' and all(shutil.which(x) for x in ('ffmpeg','ffprobe','pkg-config','cc')),
+                     'opt-in YL_RUN_DECODE_PROBE=1 and host FFmpeg development tools required')
 class DecodeProbeTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
