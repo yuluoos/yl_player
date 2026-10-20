@@ -145,3 +145,5 @@ CoreDevice 将最多 1 MiB 的一次性计划写入应用临时目录；只有�
 `renderPullAcceptance` 仅表示 AVPlayer source-pull 观测成立，不代表硬件已消费样本；
 缺少该时钟的格仍会返回严格验收失败。设备实跑也不自动关闭 release、最低系统、Intel、
 物理音画同步或软件解码长期热稳定性资格。
+
+iOS 独立验收入口使用公开 `pluginManagedMediaPlayback` 管理音频会话；它没有额外的应用音频配置器。AVPlayer 空且无媒体区间的 tap 请求仅保留数字诊断，不推进观察范围；有帧/有效区间的错误仍拒绝。最新物理设备工程证据见[收尾清单](../../docs/superpowers/reports/evidence/2026-10-20-p03-engineering-completion/README.md)。

@@ -36,3 +36,12 @@ Physical-device vs simulator identity; prebuilt bundle unchanged by launch;
 copy failures and stale status cannot pass; exact owned process cleanup;
 AVPlayer source-pull is never reported as hardware consumption; no synthetic
 software measurements enable production; source credentials remain redacted.
+
+## 执行结果
+
+- [x] Task 1：实现核对与安全消息修正。
+- [x] Task 2：真机冻结采集与失败门禁，RED→GREEN。
+- [x] Task 3：受影响原生/Dart/工具与最终同构建 iPhone 集中验证。
+- [x] Task 4：唯一独立复审、Important 修复、原始证据和本地分支交付。
+
+运行中新定位的 seek 重建竞争、队列同步 seek 意图、iPhone 音频会话和空 tap 回调已修复并保留对照。完整资格边界和裁定见[证据](../reports/evidence/2026-10-20-p03-engineering-completion/README.md)。
