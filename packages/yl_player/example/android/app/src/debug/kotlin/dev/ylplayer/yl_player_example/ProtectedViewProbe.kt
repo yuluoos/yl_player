@@ -109,7 +109,7 @@ class ProtectedViewProbe private constructor(private val context: Context) : Pla
             "positionMs" to (player?.currentPosition ?: 0L),
             "width" to ((view?.width ?: 0) / context.resources.displayMetrics.density),
             "height" to ((view?.height ?: 0) / context.resources.displayMetrics.density),
-            "pixelReadback" to false, "protectionVerified" to false, "secureRequested" to true,
+            "attached" to (view != null), "pixelReadback" to false, "protectionVerified" to false, "secureRequested" to true,
         )
         fun dispose() {
             epoch++; readyEpoch = 0

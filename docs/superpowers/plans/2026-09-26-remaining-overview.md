@@ -688,3 +688,15 @@ JS-07 仅固定受控测试时钟，保留原脚本和历史摘要。TVS 新增�
 
 
 2026-10-16 P03工程收尾：严格progressive与Opus/Vorbis/VP9策略路径及EOF竞争依赖已实现，macOS原生108/iOS共用39项通过，最终同构建公开完整矩阵37/40。AV1当前硬件、AVPlayer硬件消费观测和物理/最低系统/Intel/持续热资格仍开放，生产软件准入保持关闭；不将完整CAP标完成。见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+
+### 2026-10-20 P02 真机续做
+
+同一播放器视图拆装联合证据已补齐，修复 AVPlayer 片尾暂停 seek 回内部位置后
+仍为 completed、隐藏字幕的问题。最终 iPhone 11/11、macOS 8/8、Android 8/8，
+四包 Dart 2072/2072；复审 0/0/1，测试清理 Minor 已修正并复验。Device Hub 观察
+请求通过指定 iPhone 的 Xcode 真机截图完成；无实际声音确认。工程及本轮受控
+验证完成，授权 DRM/HDR 亮度/HDCP/外屏/物理声音与同步/最低系统仍缺条件，
+P02/CAP-SUB 全场景验收不标完成。P04 独立分支未改动。
+详见 [P02 最新报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及
+[证据包](../reports/evidence/2026-10-20-p02-device-completion/README.md)。

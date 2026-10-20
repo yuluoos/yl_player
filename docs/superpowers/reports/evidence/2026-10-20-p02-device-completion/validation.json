@@ -1,0 +1,68 @@
+{
+  "baseline": "68aa8c14",
+  "branch": "codex/p02-tracks-subtitles",
+  "fullP02Accepted": false,
+  "implementedContinuation": true,
+  "remainingAcceptance": [
+    "physical audible track differentiation and synchronization",
+    "authorized DRM and protected output",
+    "HDR luminance/color measurement",
+    "external display/HDCP reconnect",
+    "minimum OS/device matrix"
+  ],
+  "dart": {
+    "passed": 2072,
+    "failed": 0
+  },
+  "analysis": "four packages clean; final two changed tests clean",
+  "iphone": {
+    "device": "iPhone 16 / iOS 27.0 (24A437)",
+    "run": "iphone-20261020-005512",
+    "passed": 11,
+    "failed": 0,
+    "screenshots": 68,
+    "clockMs": {
+      "n": 14,
+      "p50": 0,
+      "p95": 0,
+      "max": 0
+    }
+  },
+  "macos": {
+    "device": "M1 / macOS 27.0.1 (26A434)",
+    "run": "macos-composition-20261020-004750",
+    "passed": 8,
+    "failed": 0,
+    "clockMs": {
+      "n": 14,
+      "p50": 0,
+      "p95": 32,
+      "max": 32
+    }
+  },
+  "android": {
+    "device": "API 36 arm64 TV emulator",
+    "run": "android-composition-20261020-005238",
+    "passed": 8,
+    "failed": 0,
+    "clockMs": {
+      "n": 14,
+      "p50": 167,
+      "p95": 472,
+      "max": 472
+    }
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 1,
+    "minorCorrection": "independent immediate addTearDown callbacks; final affected tests verified"
+  },
+  "clockMeaning": "native timeline read after engine-frame cue publication; nearest-rank n=14; NOT physical display/audio synchronization",
+  "dashPhysicalRuns": [
+    {
+      "run": "iphone-20261020-005959",
+      "passed": true
+    }
+  ]
+}

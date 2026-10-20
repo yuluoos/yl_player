@@ -838,3 +838,22 @@ Apple MP4/MOV, MPEG-TS, MPEG-PS and AVI VOD now select owned samples when manage
 Seekable Matroska Opus (CELT/SILK/hybrid) and Vorbis can use strict policies, and the admitted VP9 hardware profile can use bounded buffering. Missing Opus/Vorbis packet durations reserve the converter's maximum output duration only in the queue ledger; compressed packet timing is preserved and actual decoded PCM determines output timing. Unsupported codecs, rates, profiles and live inputs remain explicit failures.
 
 The engineering paths do not qualify unmeasured software profiles, hardware-unavailable simulators, minimum OS/Intel systems, or physical output. AVPlayer source-pull evidence still does not establish a hardware played-sample clock. See the [P03 report](superpowers/reports/2026-09-26-remaining-03-formats-decoding.md) for recorded runtime coverage and remaining acceptance conditions.
+
+
+## P02 physical iPhone continuation (2026-10-20)
+
+Seven bounded subtitle formats and same-player view remount now have physical
+iPhone 16 / iOS 27 actual-composition evidence. A paused AVPlayer seek from EOF
+now publishes paused after a successful interior landing, restoring current
+subtitles without restarting playback; seek-to-EOF remains completed.
+Final iPhone run: 11/11; macOS and Android API36 composition: 8/8 each. Four Dart
+packages: 2072/2072; analysis clean. Earlier volume-HUD screenshot failures and
+unchanged-assertion reruns are retained. Same-owner native probes remain clear
+prototypes, separate from the production public-view composition cases.
+
+Physical audible track distinction/synchronization, authorized DRM, HDR
+luminance/color, external-display/HDCP and minimum-OS device acceptance remain
+open. Device screenshots and native-clock samples do not qualify those rows.
+Approved bounded subtitle subsets and minimum deployment versions are unchanged.
+See the [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md)
+and [device evidence](superpowers/reports/evidence/2026-10-20-p02-device-completion/README.md).

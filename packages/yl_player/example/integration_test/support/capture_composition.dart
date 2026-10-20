@@ -20,8 +20,16 @@ Future<(ui.Image, double, double)> captureComposition(
     );
   }
   final uri = Uri.parse(url);
-  if (uri.host != '127.0.0.1' || uri.scheme != 'http') {
-    throw StateError('Capture endpoint must be the owned loopback helper.');
+  const captureHost = String.fromEnvironment(
+    'P01_CAPTURE_HOST',
+    defaultValue: '127.0.0.1',
+  );
+  if (uri.host != captureHost ||
+      uri.scheme != 'http' ||
+      uri.userInfo.isNotEmpty) {
+    throw StateError(
+      'Capture endpoint must be the explicitly configured owned helper.',
+    );
   }
   final client = HttpClient()..connectionTimeout = const Duration(seconds: 3);
   try {

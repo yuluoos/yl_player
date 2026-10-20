@@ -137,7 +137,7 @@ private final class YlProbePlayer {
     return ["id": id, "epoch": epoch, "readyEpoch": display.isReadyForDisplay ? epoch : 0,
       "positionMs": seconds.isFinite ? seconds * 1000 : 0,
       "width": display.bounds.width, "height": display.bounds.height,
-      "pixelReadback": false, "protectionVerified": false,
+      "attached": container != nil, "pixelReadback": false, "protectionVerified": false,
       "status": player?.currentItem?.status.rawValue ?? 0]
   }
   func dispose() {

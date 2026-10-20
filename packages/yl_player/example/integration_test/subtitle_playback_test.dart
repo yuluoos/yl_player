@@ -200,6 +200,31 @@ void main() {
         expect(delta.$2.width, greaterThan(20));
         expect(delta.$2.height, greaterThan(4));
       }
+      // Exercise the production public view with the same controller/session.
+      // The clear protected-view probe above is separate evidence.
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(TextSubtitleOverlay), findsNothing);
+      expect(player.state.sessionId, session.id);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: RepaintBoundary(
+            key: key,
+            child: YlPlayerView(controller: player),
+          ),
+        ),
+      );
+      await settle(true);
+      await tester.pump(const Duration(milliseconds: 200));
+      final remountedPixels = await _capture(key);
+      final remountedDelta = _difference(shown, remountedPixels, aperture);
+      expect(
+        remountedDelta.$1,
+        lessThan(8),
+        reason:
+            'Remount must restore the same paused video and subtitle pixels.',
+      );
+      expect(player.state.sessionId, session.id);
       final paused = player.state.timeline.position;
       await tester.pump(const Duration(milliseconds: 350));
       expect(
@@ -261,7 +286,7 @@ void main() {
           'bounds': [delta.$2.left, delta.$2.top, delta.$2.right, delta.$2.bottom],
           'clockObservations': sync,
           'clockEvidence': 'post-engine-frame cue publication against authoritative native timeline; not physical display/audio sync',
-          'pixelEvidence': Platform.isAndroid ? 'Flutter texture composition' : 'owned host window / simulator capture',
+          'pixelEvidence': Platform.isAndroid ? 'Flutter texture composition' : 'owned window / simulator / physical-device capture; target recorded by runner',
         })}',
       );
       await player.stop();
