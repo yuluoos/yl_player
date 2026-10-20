@@ -1,0 +1,66 @@
+[
+  {
+    "name": "macos-config",
+    "cmd": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "build",
+      "macos",
+      "--debug",
+      "--config-only",
+      "--no-pub"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example",
+    "exitCode": 0,
+    "seconds": 22.86
+  },
+  {
+    "name": "macos-native",
+    "cmd": [
+      "xcodebuild",
+      "test",
+      "-quiet",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "-sdk",
+      "macosx",
+      "-workspace",
+      "macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-parallel-testing-enabled",
+      "NO",
+      "-derivedDataPath",
+      "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "-resultBundlePath",
+      "/private/tmp/p03-main-merge-20261020/native.xcresult",
+      "-only-testing:RunnerTests/YlAppleDecoderRestorationTests",
+      "-only-testing:RunnerTests/YlAppleRestorationTests",
+      "-only-testing:RunnerTests/YlAppleCommandOrderingTests",
+      "-only-testing:RunnerTests/YlAppleAcceptedIntentTests",
+      "-only-testing:RunnerTests/YlAppleHostTests",
+      "-only-testing:RunnerTests/YlApplePublicationTests",
+      "-only-testing:RunnerTests/YlVorbisDelayTests",
+      "-only-testing:RunnerTests/YlSoftwareDecodeBudgetTests",
+      "-only-testing:RunnerTests/YlSoftwareVideoLifecycleTests",
+      "-only-testing:RunnerTests/YlContainerOutputTests"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example",
+    "exitCode": 65,
+    "seconds": 284.0
+  },
+  {
+    "name": "p04-native",
+    "cmd": [
+      "python3",
+      "-B",
+      "tool/playback_network/check_live_mode_native.py",
+      "--flutter-sdk",
+      "/Users/yy2021_8689/flutter"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+    "exitCode": 0,
+    "seconds": 78.67
+  }
+]

@@ -1,7 +1,6 @@
 import XCTest
 import AVFoundation
 import Network
-import Network
 @testable import yl_player_apple
 
 @MainActor
@@ -308,8 +307,8 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     XCTAssertEqual(f.av.rate, 1.5, accuracy: 0.001)
   }
 
-  /// R27: only the real slot runs the retained-iOS transaction branch. Native
-  /// services, decoder, audio and actual network media remain macOS objects.
+  /// Exercise the iOS retention policy with real macOS media services. Managed
+  /// candidates still require the exclusive decoder lease introduced by P04.
   func testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek() async throws {
     try await retainedTransactionEarlyFailure(newerSeek: false)
   }
@@ -325,7 +324,7 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     var former: YlPlaybackBackend?
     let f = AppleHostFixture(commandCoordinator: commands, beforeFallbackConstruction: { backend in
       if observingFailure {
-        XCTAssertTrue(backend.isActive, "The valid candidate reaches its factory before old-backend quiescence")
+        XCTAssertFalse(backend.isActive, "Managed candidates release the former decoder lease before construction, including under the iOS retention policy")
         XCTAssertTrue(backend is YlFallbackBackend)
         former = backend
       }
@@ -344,16 +343,16 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
       _ = try await f.load(AppleHostFixture.request("valid-unplayable-width", url: server.url.absoluteString, format: .matroska, width: 1))
       XCTFail("Media cannot satisfy the valid positive width constraint")
     } catch { XCTAssertEqual((error as NSError).domain, "decoder.quality_constraint_unsupported") }
-    XCTAssertTrue(try XCTUnwrap(former).isActive)
-    XCTAssertEqual(f.output.clears, clears, "Former output was never quiesced or cleared")
+    XCTAssertFalse(try XCTUnwrap(former).isActive, "Network rollback reconstructs asynchronously; the former decoder must remain retired")
+    XCTAssertEqual(f.output.clears, clears + 1, "Exclusive managed replacement clears former output exactly once before rollback")
     XCTAssertEqual(f.host.sessionId, loaded.sessionId)
-    XCTAssertFalse(f.host.playbackIntent, "Acknowledged Pause survives even though rollback activation was never entered")
+    XCTAssertFalse(f.host.playbackIntent, "Acknowledged Pause survives exclusive candidate failure and rollback activation")
     XCTAssertNil(f.host.initialState.failure)
     XCTAssertTrue(commands.hasCurrent)
     if newerSeek { try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 4_500)) }
     let minimumPosition: Int64 = newerSeek ? 4_450 : 2_950
     release.signal()
-    try await AppleHostCharacterizations.waitFor({ !commands.hasCurrent })
+    try await AppleHostCharacterizations.waitFor({ f.host.isActive && !commands.hasCurrent })
     XCTAssertEqual(f.host.sessionId, loaded.sessionId)
     XCTAssertFalse(f.host.playbackIntent)
     XCTAssertTrue([.paused, .ready].contains(f.host.initialState.status))
@@ -382,7 +381,11 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     XCTAssertThrowsError(try f.host.setPlaybackSpeed(command: .init(sessionId: loaded.sessionId, speed: .infinity)))
     XCTAssertTrue(commands.hasCurrent, "Both synchronous setters acknowledged while effects remain queued")
     if stopFirst { try await f.host.stop() }
-    let fresh = try await f.load(AppleHostFixture.request("fresh-av"))
+    let mp4 = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().appendingPathComponent("assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var freshRequest = AppleHostFixture.request("fresh-av")
+    freshRequest.source.kind = .file; freshRequest.source.locator = mp4.path
+    let fresh = try await f.load(freshRequest)
     XCTAssertNotEqual(fresh.sessionId, loaded.sessionId)
     try await f.host.play(command: .init(sessionId: fresh.sessionId))
     XCTAssertEqual(f.av.volume, 0.2, accuracy: 0.001, "Acknowledged volume is player intent, even if the retired backend's queued effect is cancelled")

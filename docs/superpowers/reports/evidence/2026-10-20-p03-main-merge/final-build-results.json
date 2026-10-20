@@ -1,0 +1,60 @@
+[
+  {
+    "name": "subtitle-completed-seek",
+    "cmd": [
+      "python3",
+      "-B",
+      "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/run_with_display_awake.py",
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--reporter",
+      "expanded",
+      "integration_test/subtitle_completed_seek_test.dart",
+      "-d",
+      "macos"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example",
+    "exitCode": 0,
+    "seconds": 34.09
+  },
+  {
+    "name": "ios-config",
+    "cmd": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "build",
+      "ios",
+      "--simulator",
+      "--debug",
+      "--no-pub",
+      "--config-only"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example",
+    "exitCode": 0,
+    "seconds": 13.95
+  },
+  {
+    "name": "ios-arm64-build",
+    "cmd": [
+      "xcodebuild",
+      "-quiet",
+      "-workspace",
+      "ios/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-configuration",
+      "Debug",
+      "-sdk",
+      "iphonesimulator",
+      "-destination",
+      "generic/platform=iOS Simulator",
+      "ARCHS=arm64",
+      "ONLY_ACTIVE_ARCH=YES",
+      "CODE_SIGNING_ALLOWED=NO",
+      "build"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example",
+    "exitCode": 0,
+    "seconds": 15.67
+  }
+]

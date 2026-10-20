@@ -1,0 +1,108 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "duration" : "Ran for 0.6 seconds",
+  "durationInSeconds" : 0.5960139036178589,
+  "hasMediaAttachments" : false,
+  "hasPerformanceMetrics" : false,
+  "testDescription" : "Test case with 1 run",
+  "testIdentifier" : "YlAppleAcceptedIntentTests/testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure",
+  "testName" : "testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure()",
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ],
+  "testResult" : "Failed",
+  "testRuns" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "name" : "",
+                  "nodeType" : "Source Code Reference",
+                  "sourceLocation" : {
+                    "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                    "lineNumber" : 348
+                  }
+                }
+              ],
+              "name" : "XCTAssertTrue failed",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed",
+              "sourceLocation" : {
+                "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                "lineNumber" : 348
+              }
+            },
+            {
+              "children" : [
+                {
+                  "name" : "",
+                  "nodeType" : "Source Code Reference",
+                  "sourceLocation" : {
+                    "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                    "lineNumber" : 333
+                  }
+                }
+              ],
+              "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+              "nodeType" : "Runtime Warning",
+              "sourceLocation" : {
+                "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                "lineNumber" : 333
+              }
+            },
+            {
+              "children" : [
+                {
+                  "name" : "",
+                  "nodeType" : "Source Code Reference",
+                  "sourceLocation" : {
+                    "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                    "lineNumber" : 361
+                  }
+                }
+              ],
+              "name" : "XCTAssertGreaterThanOrEqual failed: (\"127\") is less than (\"4450\")",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed",
+              "sourceLocation" : {
+                "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                "lineNumber" : 361
+              }
+            }
+          ],
+          "duration" : "0.6s",
+          "durationInSeconds" : 0.5960139036178589,
+          "name" : "Test Scheme Action",
+          "nodeIdentifier" : "1",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure",
+          "nodeType" : "Test Plan Configuration",
+          "result" : "Failed"
+        }
+      ],
+      "details" : "macOS 27.0.1",
+      "duration" : "0.6s",
+      "durationInSeconds" : 0.5960139036178589,
+      "name" : "MacBook Pro",
+      "nodeIdentifier" : "00008103-000571C03CD9001E",
+      "nodeType" : "Device",
+      "result" : "Failed"
+    }
+  ]
+}

@@ -68,7 +68,18 @@ final class YlBoundAvPlayerAudio {
   func detach() { item?.audioMix = nil }
   var released: Bool { ([state].compactMap { $0 } + retired).allSatisfy { storage in storage.finalized } }
   var evidence: [Block] { state?.blocks ?? [] }
-  var diagnostic: String { "epoch=\(epoch) error=\(failure ?? "none") blocks=\(state?.count ?? 0) dropped=\(state?.drops ?? 0) released=\(released) detail=\(state?.detail ?? "none")" }
+  private var retainedErrorCodes = [Int]()
+  func recordFailure(_ error: NSError?) { retainedErrorCodes = Self.errorCodes(error) }
+  private static func errorCodes(_ initial: NSError?) -> [Int] {
+    var error = initial
+    var codes = [Int]()
+    while let current = error, codes.count < 5 {
+      codes.append(current.code)
+      error = current.userInfo[NSUnderlyingErrorKey] as? NSError
+    }
+    return codes
+  }
+  var diagnostic: String { "itemCodes=\(retainedErrorCodes.isEmpty ? Self.errorCodes(item?.error as NSError?) : retainedErrorCodes) epoch=\(epoch) error=\(failure ?? "none") blocks=\(state?.count ?? 0) dropped=\(state?.drops ?? 0) released=\(released) detail=\(state?.detail ?? "none")" }
   var ready: Bool {
     guard let player, let item, player.currentItem === item, let range = state?.lastRange else { return false }
     return range.0 >= targetUs && failure == nil
@@ -93,8 +104,14 @@ final class YlBoundAvPlayerAudio {
   /// waiting for the reporting thread. The serial tap producer publishes immutable
   /// slots with a memory barrier; reporting never blocks or drops a callback.
   /// Overflow/invalid timed PCM invalidates evidence.
-  private final class Storage {
+  // Internal only in explicit acceptance builds so the PCM gate can be tested directly.
+  final class Storage {
     struct Entry { var pts: Int64 = 0; var end: Int64 = 0; var offset = 0; var frames = 0; var channels = 0; var rate: Double = 0 }
+    struct Rejection {
+      var status: Int32 = 0; var frames = 0; var start: Int64 = 0; var duration: Int64 = 0
+      var rate: Double = 0; var channels: UInt32 = 0; var bits: UInt32 = 0; var flags: UInt32 = 0
+    }
+    private let rejections = UnsafeMutablePointer<Rejection>.allocate(capacity: 8)
     var format = AudioStreamBasicDescription()
     let finalizedFlag = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
     var finalized: Bool { OSAtomicAdd32Barrier(0, finalizedFlag) != 0 }
@@ -105,13 +122,38 @@ final class YlBoundAvPlayerAudio {
     private var used = 0, entryCount = 0
     private let published = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
     private let untimed = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
-    var detail: String { "unmapped=\(OSAtomicAdd32Barrier(0, untimed))" }
-    init() { published.initialize(to: 0); untimed.initialize(to: 0); finalizedFlag.initialize(to: 0); dropped.initialize(to: 0); entries.initialize(repeating: Entry(), count: 4096) }
-    deinit { published.deinitialize(count: 1); published.deallocate(); untimed.deinitialize(count: 1); untimed.deallocate(); finalizedFlag.deinitialize(count: 1); finalizedFlag.deallocate(); samples.deallocate(); entries.deinitialize(count: 4096); entries.deallocate(); dropped.deinitialize(count: 1); dropped.deallocate() }
+    private let firstSourceError = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+    var detail: String {
+      let rejected = (0..<min(8, Int(drops))).map { index in
+        let r = rejections[index]
+        return "status=\(r.status),frames=\(r.frames),start=\(r.start),duration=\(r.duration),rate=\(r.rate),channels=\(r.channels),bits=\(r.bits),flags=\(r.flags)"
+      }
+      return "sourceStatus=\(OSAtomicAdd32Barrier(0, firstSourceError)) unmapped=\(OSAtomicAdd32Barrier(0, untimed)) rejected=\(rejected)"
+    }
+    init() { rejections.initialize(repeating: Rejection(), count: 8); firstSourceError.initialize(to: 0); published.initialize(to: 0); untimed.initialize(to: 0); finalizedFlag.initialize(to: 0); dropped.initialize(to: 0); entries.initialize(repeating: Entry(), count: 4096) }
+    deinit { rejections.deinitialize(count: 8); rejections.deallocate(); firstSourceError.deinitialize(count: 1); firstSourceError.deallocate(); published.deinitialize(count: 1); published.deallocate(); untimed.deinitialize(count: 1); untimed.deallocate(); finalizedFlag.deinitialize(count: 1); finalizedFlag.deallocate(); samples.deallocate(); entries.deinitialize(count: 4096); entries.deallocate(); dropped.deinitialize(count: 1); dropped.deallocate() }
     var drops: Int32 { OSAtomicAdd32Barrier(0, dropped) }
     var count: Int { Int(OSAtomicAdd32Barrier(0, published)) }
+    private func reject(status: OSStatus, frames: Int, range: CMTimeRange) {
+      let index = Int(drops)
+      if index < 8 {
+        rejections[index] = Rejection(status: status, frames: frames,
+          start: range.start.isNumeric ? CMTimeConvertScale(range.start, timescale: 1_000_000, method: .roundTowardZero).value : Int64.min,
+          duration: range.duration.isNumeric ? CMTimeConvertScale(range.duration, timescale: 1_000_000, method: .roundTowardZero).value : Int64.min,
+          rate: format.mSampleRate, channels: format.mChannelsPerFrame,
+          bits: format.mBitsPerChannel, flags: format.mFormatFlags)
+      }
+      OSAtomicIncrement32Barrier(dropped)
+    }
     func record(status: OSStatus, buffers: UnsafeMutablePointer<AudioBufferList>, frames: Int, range: CMTimeRange) {
+      if status != noErr { _ = OSAtomicCompareAndSwap32Barrier(0, status, firstSourceError) }
       if frames == 0 && status == noErr { return }
+      // A source request can return an error without any frames or media range
+      // while the queue primes/drains. Retain its status, but it contains no timed
+      // PCM to lose and must not advance the observed range or erase valid blocks.
+      if frames == 0 && !range.start.isNumeric && !range.duration.isNumeric {
+        OSAtomicIncrement32Barrier(untimed); return
+      }
       // AVPlayer can pull zero-duration silence while priming/draining. It has
       // no media time and cannot advance the observed queue-fill range.
       if status == noErr && (!range.start.isNumeric || !range.duration.isNumeric || range.duration.value == 0) {
@@ -124,16 +166,16 @@ final class YlBoundAvPlayerAudio {
         format.mFormatFlags & kAudioFormatFlagIsBigEndian == 0,
         range.start.isNumeric, range.duration.isNumeric,
         entryCount < 4096, frames * channels <= capacity - used else {
-        OSAtomicIncrement32Barrier(dropped); return
+        reject(status: status, frames: frames, range: range); return
       }
       let start = CMTimeConvertScale(range.start, timescale: 1_000_000, method: .roundTowardZero).value
       let end = CMTimeConvertScale(CMTimeRangeGetEnd(range), timescale: 1_000_000, method: .roundTowardZero).value
-      guard end > start else { OSAtomicIncrement32Barrier(dropped); return }
+      guard end > start else { reject(status: status, frames: frames, range: range); return }
       let list = UnsafeMutableAudioBufferListPointer(buffers)
       let planar = format.mFormatFlags & kAudioFormatFlagIsNonInterleaved != 0
       guard list.count == (planar ? channels : 1), list.allSatisfy({
         $0.mData != nil && Int($0.mDataByteSize) >= frames * (planar ? 1 : channels) * 4
-      }) else { OSAtomicIncrement32Barrier(dropped); return }
+      }) else { reject(status: status, frames: frames, range: range); return }
       // Preserve the API source range and actual PCM count independently.
       // Neither field is a played-sample head.
       for channel in 0..<channels {

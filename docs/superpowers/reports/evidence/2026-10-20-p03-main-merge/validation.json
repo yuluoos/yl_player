@@ -1,0 +1,32 @@
+{
+  "mainBefore": "ec311e1f303832babd51fd40027948be962fcf6a",
+  "sourceBranch": "codex/p03-engineering-completion",
+  "sourceCommit": "3c7d87553a1b9ba9da526b6a58dd0577482107c1",
+  "analyze": "0 issues",
+  "dart": {
+    "distinctCases": 2329,
+    "initialPassed": 2328,
+    "initialTimeout": 1,
+    "unchangedIsolatedRetest": "passed in 5 seconds; http-cap-retest.log.gz"
+  },
+  "pythonPassed": 130,
+  "appleNative": {
+    "distinctCases": 71,
+    "initialPassed": 69,
+    "oldTestAssumptionFailures": 2,
+    "finalAcceptedIntentPassed": 8,
+    "finalAcceptedIntentFailed": 0,
+    "coverage": "combined runs, not a single all-green 71-test invocation"
+  },
+  "p04NativeProductionChecks": "passed",
+  "macosSubtitleIntegrationPassed": 1,
+  "iosArm64SimulatorBuild": "passed",
+  "fixtureCounts": {
+    "ios": 818,
+    "macos": 864
+  },
+  "sourceHashCount": 1516,
+  "changedSinceFinalVerification": [],
+  "physicalDeviceRerun": false,
+  "remotePush": false
+}

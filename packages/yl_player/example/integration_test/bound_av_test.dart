@@ -96,8 +96,12 @@ void main() {
             'locator': server?.uri.toString() ?? file.path,
           });
           player = await YlPlayerController.create(
-            options: const YlPlayerOptions(
-              audioPolicy: YlAudioPolicy.appManaged,
+            // The standalone iPhone harness has no app-owned audio session.
+            // Use the public owner so AVPlayer's tap queue can start and release.
+            options: YlPlayerOptions(
+              audioPolicy: Platform.isIOS
+                  ? YlAudioPolicy.pluginManagedMediaPlayback
+                  : YlAudioPolicy.appManaged,
             ),
           );
           lifecycle['created'] = true;

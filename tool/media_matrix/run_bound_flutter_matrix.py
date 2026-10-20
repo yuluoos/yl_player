@@ -23,13 +23,17 @@ def main():
     parser.add_argument('--app',type=Path)
     parser.add_argument('--apk',type=Path)
     parser.add_argument('--serial')
-    parser.add_argument('--simulator')
+    target=parser.add_mutually_exclusive_group()
+    target.add_argument('--simulator')
+    target.add_argument('--device')
+    parser.add_argument('--flutter',default='flutter')
     parser.add_argument('--out',type=Path,required=True)
     args=parser.parse_args()
     android=args.platform=='android'
     if android and (not args.apk or not args.serial):parser.error('--apk and --serial required')
     if not android and not args.app:parser.error('--app required')
-    if args.platform=='ios' and not args.simulator:parser.error('--simulator required')
+    if args.platform=='ios' and not (args.simulator or args.device):parser.error('--simulator or --device required')
+    if args.platform!='ios' and (args.simulator or args.device):parser.error('iOS target required')
     out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     product={'sha256':sha_file(args.apk)} if android else freeze(args.app.resolve(),True)
     def stable():return sha_file(args.apk)==product['sha256'] if android else verify(args.app.resolve(),product)
@@ -41,11 +45,12 @@ def main():
         command=[sys.executable,'-B',str(Path(__file__).with_name('run_bound_flutter_android.py' if android else 'run_bound_flutter_apple.py')),
             '--out',str(folder),'--case',cell['caseId'],'--transport',cell['transport'],'--matrix-id',matrix['matrixId']]
         command+=['--apk',str(args.apk.resolve()),'--serial',args.serial] if android else ['--app',str(args.app.resolve()),'--platform',args.platform]
-        if args.platform=='ios':command+=['--simulator',args.simulator]
+        if args.simulator:command+=['--simulator',args.simulator]
+        if args.device:command+=['--device',args.device,'--flutter',args.flutter]
         record=dict(cell=cell,plan={},rows=[],status={},artifactsUnchanged=False)
         try:
             with (out/(folder.name+'.log')).open('w') as log:
-                completed=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=240)
+                completed=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=600 if args.device else 240)
             record['exitCode']=completed.returncode
             for key in ('plan','status'):record[key]=json.loads((folder/(key+'.json')).read_text())
             record['rows']=json.loads(gzip.decompress((folder/'rows.json.gz').read_bytes()))

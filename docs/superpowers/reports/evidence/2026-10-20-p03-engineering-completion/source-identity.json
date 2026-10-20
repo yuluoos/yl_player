@@ -1,0 +1,88 @@
+{
+  "base": "db769ffd",
+  "uncommittedFixes": false,
+  "files": [
+    {
+      "path": "packages/yl_player/example/integration_test/bound_av_test.dart",
+      "sha256": "cc1968fd2aff7072e34dfcab465ce9bb42f5367ee678eb67803d23bb05834057"
+    },
+    {
+      "path": "packages/yl_player/example/macos/RunnerTests/YlAppleDecoderRestorationTests.swift",
+      "sha256": "3db171e1484dc79faac81e813126b7d5b9c85f47b0d8b9ee3c7e77b40edb8948"
+    },
+    {
+      "path": "packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+      "sha256": "4accbfe8a0880b107a1736b32385c62071929718b8f5d335f6fd3c58e4a90df0"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+      "sha256": "7f7a18449b0d3794bf039d64ee4f9afd99f41d3fe5dc8e65488fb8991ea45e25"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift",
+      "sha256": "76b51cd0457bc7f7ad443b8bb3a57d773022ad236fe33c6e711176607ffc58d8"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundAvPlayerAudio.swift",
+      "sha256": "aefc77026c67358d389c9769e8cb46256bbb08810a46409f10d8c3724d3a369d"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundFlutterProbe.swift",
+      "sha256": "7df22705c6ef62c1c672ef7f21e5d2ceb42318b4b5302f1d4805c11a2ae2b639"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundLaunchPlan.swift",
+      "sha256": "5116be98d23c1f3e0e4ddb4ea0d2ff2f7f9da7835927077354cecc282d63219c"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift",
+      "sha256": "8c7183f62301957ece2439162467850ee8d64cfcb7c33eee2c684e50551dee33"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlaybackBackend.swift",
+      "sha256": "7b4a10cbfdb6692d6bd012592b554a39378f1ea92a67ae81b9c74c6189ae839d"
+    },
+    {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleDecoderRestorationTests.swift",
+      "sha256": "3db171e1484dc79faac81e813126b7d5b9c85f47b0d8b9ee3c7e77b40edb8948"
+    },
+    {
+      "path": "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlAppleHostTests.swift",
+      "sha256": "4accbfe8a0880b107a1736b32385c62071929718b8f5d335f6fd3c58e4a90df0"
+    },
+    {
+      "path": "tool/media_matrix/bound_device.py",
+      "sha256": "030f60b19f280efd347a7c1c87368032331973eaa624d5a43b0e77b5cba2a12b"
+    },
+    {
+      "path": "tool/media_matrix/cases.json",
+      "sha256": "bc475e596088934cc6f8c367abf1ee730473446d0106fc5c671f00096209a368"
+    },
+    {
+      "path": "tool/media_matrix/run_bound_flutter_apple.py",
+      "sha256": "3296e0196a88a7fcb3de39ef50196187f7e6fa1db08f85a327ebce774ae9f998"
+    },
+    {
+      "path": "tool/media_matrix/run_bound_flutter_matrix.py",
+      "sha256": "21e080b8cb35afb53be1cec22bd5dd51f9182d33b9518be95e16fe2669eb7d7a"
+    },
+    {
+      "path": "tool/media_matrix/test_bound_audio_pull.py",
+      "sha256": "31661ae4098c1b6bad0d41f16d7f163dee7c600a4a8454b9cbca1174cc543ea3"
+    },
+    {
+      "path": "tool/media_matrix/test_bound_collectors.py",
+      "sha256": "3204d7b57fcbff9b691bf58095e624eb02cbcca47c30f2f8fbbd71a0920f5591"
+    },
+    {
+      "path": "tool/media_matrix/test_bound_device.py",
+      "sha256": "b7ba8a86461c48d4af0d322e4a4cce3cd53325ff57f2c7b53fade19103f537cc"
+    },
+    {
+      "path": "tool/media_matrix/test_bound_launch_plan.py",
+      "sha256": "149abf5718c155b398033638cebb52cbffc84ced782dd38b31164a7b71637de5"
+    }
+  ],
+  "sourceCommit": "190d05a36acf92ceea0dec844aea41b5a7299313",
+  "committedHeadAtFreeze": "30359762e471e327819dc5f2e8b933f96861128b"
+}

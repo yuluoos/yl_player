@@ -73,7 +73,7 @@ Future<Map<Object?, Object?>> waitFor(
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets(
-    'clear native prototype isolates players, resize, replacement and release',
+    'clear native prototype isolates players, resize, remount, replacement and release',
     (tester) async {
       debugPrint('P02 probe: fixture');
       final directory = await Directory.systemTemp.createTemp('yl-clear-view-');
@@ -110,6 +110,7 @@ void main() {
       final cue = document.cues.single;
       final overlayKeys = [GlobalKey(), GlobalKey()];
       var showSubtitles = true;
+      var mountFirst = true;
       Widget composed(int id, int index) => Stack(
         fit: StackFit.expand,
         children: [
@@ -183,7 +184,7 @@ void main() {
                 key: const ValueKey('one'),
                 width: width,
                 height: height,
-                child: composed(71, 0),
+                child: mountFirst ? composed(71, 0) : const SizedBox.shrink(),
               ),
               SizedBox(
                 key: const ValueKey('two'),
@@ -233,6 +234,34 @@ void main() {
       showSubtitles = true;
       await tester.pumpWidget(layout(180, 220));
       await checkSubtitlePaint(0, 180, 220);
+      // Retain both native owners and remove only the first surface. A reset
+      // or replacement here would hide bugs in same-player reattachment.
+      final beforeDetach = await snapshot(71);
+      mountFirst = false;
+      await tester.pumpWidget(layout(180, 220));
+      await waitFor(tester, 71, (s) => s['attached'] == false);
+      expect(overlayKeys[0].currentContext, isNull);
+      expect((await snapshot(71))['epoch'], beforeDetach['epoch']);
+      expect((await snapshot(72))['attached'], true);
+      await checkSubtitlePaint(1, 160, 90);
+      mountFirst = true;
+      await tester.pumpWidget(layout(180, 220));
+      final remounted = await waitFor(
+        tester,
+        71,
+        (s) =>
+            s['attached'] == true &&
+            s['readyEpoch'] == 1 &&
+            (s['positionMs'] as num) > (beforeDetach['positionMs'] as num),
+      );
+      expect(remounted['epoch'], 1);
+      expect(remounted['width'], closeTo(180, 1));
+      expect(remounted['height'], closeTo(220, 1));
+      await checkSubtitlePaint(0, 180, 220);
+      expect((await snapshot(72))['epoch'], 1);
+      debugPrint(
+        'YL_P02_REMOUNT ${jsonEncode({'platform': Platform.operatingSystem, 'before': beforeDetach, 'after': remounted, 'evidence': 'clear native probe and separate subtitle pixels; not DRM'})}',
+      );
       await channel.invokeMethod<void>('replace', {
         'id': 71,
         'path': file.path,

@@ -18,7 +18,7 @@
 |---|---|---|
 | [P01 DASH 寻址与节目时间轴](2026-09-26-remaining-01-dash.md) | SegmentBase/sidx、节目时间轴、已支持编码跨段重配及必要依赖已完成 | 2026-10-14 最终复核闭环；设备/物理输出边界见报告 |
 | [P02 多音轨与字幕](2026-09-26-remaining-02-tracks-subtitles.md) | 轨道契约、SRT/WebVTT/TTML、ASS/SSA、PGS/VobSub、实际合成与同步 | 契约/普通媒体先行；故障恢复依赖 PD-03；保护输出依赖 P06 |
-| [P03 格式覆盖与受控解码](2026-09-26-remaining-03-formats-decoding.md) | 容器/编码组合、路由/制品缺口、硬解证据、分档软解预算 | 基线可立即盘点；优化及预算开放先消费 P08-A/B |
+| [P03 格式覆盖与受控解码](2026-09-26-remaining-03-formats-decoding.md) | 批准的格式/解码工程与 iPhone 采集已完成；资格验收开放 | 2026-10-20 收尾；生产软件准入等待持续热/设备证据 |
 | [P04 弱网 ABR 与直播模式](2026-09-26-remaining-04-abr-live.md) | 网络轨迹、auto/caps/fixed 定量、HLS/FLV/RTMP 两模式运行时切换 | P08 基线先行；先用现有 AVC/AAC；动态范围转换依赖 PD-02 |
 | [P05 JS / RTMP 业务闭环](2026-09-26-remaining-05-live-business.md) | TVS 真实构建/设备/订阅、归档复现、刷新取消、错误汇总 | 核心验收可直接做；新增直播模式接 P04；协议扩展先核查范围 |
 | [P06 DRM 与受保护输出](2026-09-26-remaining-06-drm.md) | Widevine/FairPlay、许可证 POST 策略、密钥生命周期、真实安全输出 | 架构/受控测试尽早；真实播放需授权流/证书/许可证与设备 |
@@ -720,3 +720,17 @@ iOS 模拟器 HLS 连续切换、iPhone 三协议生命周期通过；修复真�
 两次恢复音画正常，连同此前 FLV/RTMP 确认，关闭本夹具的基础人工观察缺口。
 iOS ABR 升档、定量同步、长运行及 P08 等完整验收仍开放。详见
 [P04 续验报告](../reports/2026-09-26-remaining-04-abr-live.md#hls-长暂停恢复修复与-iphone-续验)。
+
+
+### 2026-10-20 P02 真机续做
+
+同一播放器视图拆装联合证据已补齐，修复 AVPlayer 片尾暂停 seek 回内部位置后
+仍为 completed、隐藏字幕的问题。最终 iPhone 11/11、macOS 8/8、Android 8/8，
+四包 Dart 2072/2072；复审 0/0/1，测试清理 Minor 已修正并复验。Device Hub 观察
+请求通过指定 iPhone 的 Xcode 真机截图完成；无实际声音确认。工程及本轮受控
+验证完成，授权 DRM/HDR 亮度/HDCP/外屏/物理声音与同步/最低系统仍缺条件，
+P02/CAP-SUB 全场景验收不标完成。P04 独立分支未改动。
+详见 [P02 最新报告](../reports/2026-09-26-remaining-02-tracks-subtitles.md)及
+[证据包](../reports/evidence/2026-10-20-p02-device-completion/README.md)。
+
+2026-10-20 P03 批准工程范围已完成：最终 iPhone 选择范围严格8/8、AVPlayer source-pull1/1、两项真实负例拒绝；采集超时及 seek/恢复竞态已修复。完整40格、硬件消费时钟、最低系统/Intel/物理同步和生产软解资格仍开放，见[P03收尾证据](../reports/evidence/2026-10-20-p03-engineering-completion/README.md)。

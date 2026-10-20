@@ -1,0 +1,33 @@
+[
+  {
+    "name": "macos-intent-final",
+    "cmd": [
+      "python3",
+      "-B",
+      "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/run_with_display_awake.py",
+      "xcodebuild",
+      "test",
+      "-quiet",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "-sdk",
+      "macosx",
+      "-workspace",
+      "macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-parallel-testing-enabled",
+      "NO",
+      "-derivedDataPath",
+      "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "-resultBundlePath",
+      "/private/tmp/p03-main-merge-20261020/native-intent-final.xcresult",
+      "-only-testing:RunnerTests/YlAppleAcceptedIntentTests"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example",
+    "exitCode": 65,
+    "seconds": 8.7
+  }
+]

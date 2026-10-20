@@ -196,7 +196,12 @@ final class YlBoundFlutterProbe {
   #endif
 
   static func register(messenger: FlutterBinaryMessenger) {
-    guard let encoded = ProcessInfo.processInfo.environment["YL_P03_BOUND_PLAN"] else { return }
+    let encoded: String
+    do {
+      guard let input = try YlBoundLaunchPlan.consume(environment: ProcessInfo.processInfo.environment,
+        directory: FileManager.default.temporaryDirectory) else { return }
+      encoded = input
+    } catch { print("YL_BOUND_PLAN_INVALID"); return }
     let probe = YlBoundFlutterProbe(messenger: messenger, encoded: encoded)
     current = probe
 

@@ -1,0 +1,375 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.2838950157165527,
+                  "name" : "testAcknowledgedPauseSeekAndConstraintsSurviveQueuedEffectCancellationOnPeerRestore()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testAcknowledgedPauseSeekAndConstraintsSurviveQueuedEffectCancellationOnPeerRestore()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testAcknowledgedPauseSeekAndConstraintsSurviveQueuedEffectCancellationOnPeerRestore",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/p03-engineering-completion/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                        "lineNumber" : 230
+                      }
+                    }
+                  ],
+                  "duration" : "0.86s",
+                  "durationInSeconds" : 0.8638890981674194,
+                  "name" : "testAcknowledgedSessionSettersSurviveLocalDirectRestoration()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testAcknowledgedSessionSettersSurviveLocalDirectRestoration()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testAcknowledgedSessionSettersSurviveLocalDirectRestoration",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "10秒",
+                  "durationInSeconds" : 10.061287999153137,
+                  "name" : "testAcknowledgedVolumeAndSpeedSurviveReplacementBeforeQueuedEffectsRun()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testAcknowledgedVolumeAndSpeedSurviveReplacementBeforeQueuedEffectsRun()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testAcknowledgedVolumeAndSpeedSurviveReplacementBeforeQueuedEffectsRun",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "10秒",
+                  "durationInSeconds" : 10.062031984329224,
+                  "name" : "testAcknowledgedVolumeAndSpeedSurviveStopBeforeQueuedEffectsRun()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testAcknowledgedVolumeAndSpeedSurviveStopBeforeQueuedEffectsRun()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testAcknowledgedVolumeAndSpeedSurviveStopBeforeQueuedEffectsRun",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "0.83s",
+                  "durationInSeconds" : 0.8338629007339478,
+                  "name" : "testFailedLocalCandidateAfterQuiescenceRestoresAcknowledgedControlsBeforeOldWorkerRelease()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testFailedLocalCandidateAfterQuiescenceRestoresAcknowledgedControlsBeforeOldWorkerRelease()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testFailedLocalCandidateAfterQuiescenceRestoresAcknowledgedControlsBeforeOldWorkerRelease",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "0.9s",
+                  "durationInSeconds" : 0.9037939310073853,
+                  "name" : "testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testNewerSeekWinsReplayedIntentAfterRetainedTransactionFailure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "0.87s",
+                  "durationInSeconds" : 0.8660279512405396,
+                  "name" : "testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/p03-engineering-completion/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                        "lineNumber" : 165
+                      }
+                    }
+                  ],
+                  "duration" : "0.86s",
+                  "durationInSeconds" : 0.8554519414901733,
+                  "name" : "testTrackAndSeekAcceptedAfterForegroundReaderStartsSurviveReprepare()",
+                  "nodeIdentifier" : "YlAppleAcceptedIntentTests/testTrackAndSeekAcceptedAfterForegroundReaderStartsSurviveReprepare()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests/testTrackAndSeekAcceptedAfterForegroundReaderStartsSurviveReprepare",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlAppleAcceptedIntentTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleAcceptedIntentTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "duration" : "0.16s",
+                  "durationInSeconds" : 0.16033804416656494,
+                  "name" : "testActualQueuedTrackAndTimelineCommandsSettleInOrderAcrossQuiescence()",
+                  "nodeIdentifier" : "YlAppleCommandOrderingTests/testActualQueuedTrackAndTimelineCommandsSettleInOrderAcrossQuiescence()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleCommandOrderingTests/testActualQueuedTrackAndTimelineCommandsSettleInOrderAcrossQuiescence",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlAppleCommandOrderingTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleCommandOrderingTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "0.44s",
+                  "durationInSeconds" : 0.43810999393463135,
+                  "name" : "testActiveNetworkSeekDoesNotRequestCompetingReactivationWhileDecoderIsRecreated()",
+                  "nodeIdentifier" : "YlAppleDecoderRestorationTests/testActiveNetworkSeekDoesNotRequestCompetingReactivationWhileDecoderIsRecreated()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleDecoderRestorationTests/testActiveNetworkSeekDoesNotRequestCompetingReactivationWhileDecoderIsRecreated",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/p03-engineering-completion/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleDecoderRestorationTests.swift",
+                        "lineNumber" : 71
+                      }
+                    }
+                  ],
+                  "duration" : "0.39s",
+                  "durationInSeconds" : 0.3927149772644043,
+                  "name" : "testLocalQuiescenceRebuildSeeksBeforePublishingDecodedOutput()",
+                  "nodeIdentifier" : "YlAppleDecoderRestorationTests/testLocalQuiescenceRebuildSeeksBeforePublishingDecodedOutput()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleDecoderRestorationTests/testLocalQuiescenceRebuildSeeksBeforePublishingDecodedOutput",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/p03-engineering-completion/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleDecoderRestorationTests.swift",
+                        "lineNumber" : 84
+                      }
+                    }
+                  ],
+                  "duration" : "0.72s",
+                  "durationInSeconds" : 0.7220299243927002,
+                  "name" : "testNetworkQuiescenceUsesReprepareBeforePublishingDecodedOutput()",
+                  "nodeIdentifier" : "YlAppleDecoderRestorationTests/testNetworkQuiescenceUsesReprepareBeforePublishingDecodedOutput()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleDecoderRestorationTests/testNetworkQuiescenceUsesReprepareBeforePublishingDecodedOutput",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlAppleDecoderRestorationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleDecoderRestorationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.1965569257736206,
+                  "name" : "testActiveFallbackReplacementUsesDefaultAudioBackedClock()",
+                  "nodeIdentifier" : "YlAppleHostTests/testActiveFallbackReplacementUsesDefaultAudioBackedClock()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testActiveFallbackReplacementUsesDefaultAudioBackedClock",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.083s",
+                  "durationInSeconds" : 0.08303296566009521,
+                  "name" : "testCancelOpenMatchesOnlyThePreparingCandidate()",
+                  "nodeIdentifier" : "YlAppleHostTests/testCancelOpenMatchesOnlyThePreparingCandidate()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testCancelOpenMatchesOnlyThePreparingCandidate",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0022s",
+                  "durationInSeconds" : 0.0021671056747436523,
+                  "name" : "testCapabilitiesUseCanonicalCodecIdentifiers()",
+                  "nodeIdentifier" : "YlAppleHostTests/testCapabilitiesUseCanonicalCodecIdentifiers()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testCapabilitiesUseCanonicalCodecIdentifiers",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.058s",
+                  "durationInSeconds" : 0.05774390697479248,
+                  "name" : "testChannelGenerationsAreStrictlyIncreasing()",
+                  "nodeIdentifier" : "YlAppleHostTests/testChannelGenerationsAreStrictlyIncreasing()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testChannelGenerationsAreStrictlyIncreasing",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Multiple Runtime Warnings",
+                      "nodeType" : "Runtime Warning"
+                    }
+                  ],
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.723689079284668,
+                  "name" : "testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+                  "nodeIdentifier" : "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.013s",
+                  "durationInSeconds" : 0.012609004974365234,
+                  "name" : "testFallbackStateDeltaRetainsGenerationEnvelope()",
+                  "nodeIdentifier" : "YlAppleHostTests/testFallbackStateDeltaRetainsGenerationEnvelope()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testFallbackStateDeltaRetainsGenerationEnvelope",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0018s",
+                  "durationInSeconds" : 0.0018389225006103516,
+                  "name" : "testPluginChannelNamesMatchTheDartAdapter()",
+                  "nodeIdentifier" : "YlAppleHostTests/testPluginChannelNamesMatchTheDartAdapter()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testPluginChannelNamesMatchTheDartAdapter",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0013s",
+                  "durationInSeconds" : 0.0013020038604736328,
+                  "name" : "testStateEnvelopeUsesVersionedGeneration()",
+                  "nodeIdentifier" : "YlAppleHostTests/testStateEnvelopeUsesVersionedGeneration()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testStateEnvelopeUsesVersionedGeneration",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.037s",
+                  "durationInSeconds" : 0.03719496726989746,
+                  "name" : "testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen()",
+                  "nodeIdentifier" : "YlAppleHostTests/testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testStopCancelsPendingOpenRetainsTextureAndAllowsFreshOpen",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlAppleHostTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            },
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/p03-engineering-completion/yl_player/packages/yl_player/example/macos/RunnerTests/YlAppleHostTests.swift",
+                        "lineNumber" : 64
+                      }
+                    }
+                  ],
+                  "duration" : "0.9s",
+                  "durationInSeconds" : 0.8999329805374146,
+                  "name" : "testAcceptedPauseWinsHeldForegroundReprepareAndCredentialsReachEveryReader()",
+                  "nodeIdentifier" : "YlAppleRestorationTests/testAcceptedPauseWinsHeldForegroundReprepareAndCredentialsReachEveryReader()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleRestorationTests/testAcceptedPauseWinsHeldForegroundReprepareAndCredentialsReachEveryReader",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.21s",
+                  "durationInSeconds" : 0.2070150375366211,
+                  "name" : "testRequestObserverDoesNotTreatCancelledEmptyConnectionAsHttpRequest()",
+                  "nodeIdentifier" : "YlAppleRestorationTests/testRequestObserverDoesNotTreatCancelledEmptyConnectionAsHttpRequest()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleRestorationTests/testRequestObserverDoesNotTreatCancelledEmptyConnectionAsHttpRequest",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlAppleRestorationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlAppleRestorationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

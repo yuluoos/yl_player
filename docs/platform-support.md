@@ -879,3 +879,39 @@ These are controlled session/first-frame/transport observations. They do not
 establish original online-source availability, physical audio/video, complete
 heap leak freedom, all device/OS coverage or sustained P08 SLOs. See the
 [P05 evidence report](superpowers/reports/2026-09-26-remaining-05-live-business.md).
+
+## P02 physical iPhone continuation (2026-10-20)
+
+Seven bounded subtitle formats and same-player view remount now have physical
+iPhone 16 / iOS 27 actual-composition evidence. A paused AVPlayer seek from EOF
+now publishes paused after a successful interior landing, restoring current
+subtitles without restarting playback; seek-to-EOF remains completed.
+Final iPhone run: 11/11; macOS and Android API36 composition: 8/8 each. Four Dart
+packages: 2072/2072; analysis clean. Earlier volume-HUD screenshot failures and
+unchanged-assertion reruns are retained. Same-owner native probes remain clear
+prototypes, separate from the production public-view composition cases.
+
+Physical audible track distinction/synchronization, authorized DRM, HDR
+luminance/color, external-display/HDCP and minimum-OS device acceptance remain
+open. Device screenshots and native-clock samples do not qualify those rows.
+Approved bounded subtitle subsets and minimum deployment versions are unchanged.
+See the [P02 report](superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md)
+and [device evidence](superpowers/reports/evidence/2026-10-20-p02-device-completion/README.md).
+
+## P03 physical iPhone engineering completion (2026-10-20)
+
+The approved engineering scope is implemented. Active network seeks now retain
+exclusive ownership of decoder recreation when play follows; inactive queued
+seeks preserve their timeline intent while track activity/cancellation checks remain.
+The physical collector freezes one signed app, validates the actual device and
+loaded bytes, rejects incomplete collection, and requires its owned stop receipt.
+The standalone iOS harness uses plugin-managed audio; empty tap requests with no
+frames or media interval retain diagnostics without erasing real PCM evidence.
+
+One final iPhone 16 / iOS 27 build passed six strict AV controls plus AV1 and
+HEVC Main10 managed-HTTP cells (8 selected required cells). AVPlayer local MP4
+passed the separate source-pull gate; strict played-sample-clock acceptance stays
+false. Both real negative controls were rejected. This is not a full 40-cell,
+release, minimum-OS, Intel, physical synchronization or sustained thermal qualification.
+Production software admission remains empty. See the
+[P03 evidence and scope](superpowers/reports/evidence/2026-10-20-p03-engineering-completion/README.md).

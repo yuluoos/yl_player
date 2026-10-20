@@ -440,6 +440,16 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
             if finished {
               self.unconfirmedFixedLanding = false
               self.confirmedDashPositionUs = microseconds(self.player.currentTime()) ?? self.confirmedDashPositionUs
+              // Completion belongs to the old end position. AVPlayer remains
+              // paused after a paused seek and may emit no time-control change,
+              // so publish the successful interior landing explicitly. Preserve
+              // EOF for a seek to the end and never restart paused output.
+              if self.status == "completed", !self.playRequested,
+                 let landed = microseconds(self.player.currentTime()),
+                 let duration = microseconds(self.player.currentItem?.duration),
+                 landed < duration {
+                self.status = "paused"
+              }
             } else if self.videoSelection.fixedTrackId != nil { self.unconfirmedFixedLanding = true }
             if let resumeId, self.pendingRuntimeResume?.id == resumeId {
               self.pendingRuntimeResume = nil
@@ -1055,6 +1065,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     ), !disposed, active else {
       return
     }
+    #if DEBUG && YL_BOUND_AV
+    boundAudio?.recordFailure(error)
+    #endif
     recordPlaybackDiagnostic(event: "playbackFailure", error: error, errorLogCode: log?.statusCode)
     if services.compatibility.reconnectsAvPlayer, let source = lastSource,
        YlAvPlayerRecoveryPolicy.shouldReconnect(

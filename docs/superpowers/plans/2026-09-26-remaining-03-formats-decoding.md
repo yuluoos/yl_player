@@ -142,3 +142,7 @@ expect(failure.retryable, isFalse);
 ## 2026-10-16 工程收尾更新
 
 已补齐严格 progressive managed/有界/硬解路由、Opus/Vorbis/VP9 策略记账、旧系统 MOV 命名依赖和实际矩阵发现的 EOF 控制竞争。已有 PCM 首尾及切轨工程证据按续做计划勾选，原始复合资格项不据此整体完成。最终macOS完整公开矩阵37/40；其余当前硬件、AVPlayer硬件消费观测、物理/最低系统/Intel及持续热资格保持开放。详见[P03最新报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+### 2026-10-20 工程收尾状态
+
+批准的工程实现与本轮定向验证已完成，详见[工程/证据清单](../reports/evidence/2026-10-20-p03-engineering-completion/README.md)。原计划把工程和跨设备/发布/持续热资格合在同一复选项中；这些复合验收项仍保持开放，不能因工程收尾整体勾选。生产软件准入继续关闭，未改动P08长播或弱网工作。

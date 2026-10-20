@@ -397,3 +397,7 @@ Implemented owned strict MP4/MOV routing and strict TS/PS/AVI activation, strict
 Task7's native PCM engineering substep is now checked using the2026-10-15 boundary/track-switch evidence and the new regression. This does not close physical/cross-device/public full-format acceptance. Task8 qualified baseline remains unchecked: no new minimum-OS/Intel/physical or sustained thermal evidence was provided, so production software admission stays empty.
 
 Final verification also covers the runtime-discovered EOF/control repair: macOS108/108 and iOS39/39 native, public codec-policy13/13 plus explicit EOF/replay1/1. Final frozen public macOS matrix37/40; full qualification remains open as recorded in the report.
+
+### 2026-10-20 工程收尾状态
+
+批准的工程实现与本轮定向验证已完成，详见[工程/证据清单](../reports/evidence/2026-10-20-p03-engineering-completion/README.md)。原计划把工程和跨设备/发布/持续热资格合在同一复选项中；这些复合验收项仍保持开放，不能因工程收尾整体勾选。生产软件准入继续关闭，未改动P08长播或弱网工作。

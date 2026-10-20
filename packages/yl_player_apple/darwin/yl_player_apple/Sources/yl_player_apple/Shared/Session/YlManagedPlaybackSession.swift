@@ -17,6 +17,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   var isActive: Bool { stateLock.withLock { active } }
   var playbackIntent: Bool { stateLock.withLock { playing } }
   var requiresAsyncActivation: Bool {
+    // An active seek temporarily detaches its decoder while rebuilding it. The
+    // command FIFO owns that replacement; play must not open a competing pipeline.
+    guard !isActive else { return false }
     // A demux cursor alone cannot restore a retired VT session: its next packet
     // may depend on a keyframe consumed by the old video.decoder (R22).
     let needsPipeline = demux.context == nil || (services.compatibility.limitsVideoReservations && !video.hasDecoder)
