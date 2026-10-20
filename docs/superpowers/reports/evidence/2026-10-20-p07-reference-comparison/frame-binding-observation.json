@@ -1,0 +1,333 @@
+{
+  "source_identity": {
+    "publisher_checksum_matches": true,
+    "publisher_filename": "sparks_vdm_hdr_p3d65_pq_20161026_01_4096x2160_dovi_4000nit_0001000.exr",
+    "publisher_md5": "400dbd685d0a3cf1c4cc05b06596c520",
+    "media_sha256": "f34e1c18693c3bb6d218936b1957bf392a0f2888beda81c7dbf8a631aec75285",
+    "checksum_sha256": "b5cdc1d6274fe5ae2696e04c00942f7024d6c2c9e36d7cdf19854acd6ccab493",
+    "bytes": 53119100,
+    "cross_sequence_alignment_verified": false
+  },
+  "sparks": {
+    "xml_sha256": "a18f5960f61f868932416000c35f08bb39d9966b1dc35a8b6778e9718bb16c0f",
+    "rate": [
+      60000,
+      1001
+    ],
+    "frame_count": 13777,
+    "shot_count": 39,
+    "frame_1000": {
+      "frame_index": 1000,
+      "shot_index": 2,
+      "shot_frame_offset": 83,
+      "time": [
+        1001,
+        60
+      ],
+      "signalled_trim_targets": [
+        "1",
+        "27",
+        "48"
+      ],
+      "cross_sequence_alignment_verified": false
+    },
+    "targets": [
+      {
+        "id": "1",
+        "name": "100-nit, Rec. 709, BT.1886, Full",
+        "peak_brightness": "100",
+        "minimum_brightness": "0.005",
+        "encoding": "gamma_bt1886",
+        "primaries": {
+          "Red": "0.64,0.33",
+          "Green": "0.3,0.6",
+          "Blue": "0.15,0.06"
+        }
+      },
+      {
+        "id": "27",
+        "name": "600-nit, P3/D65, ST.2084, Full",
+        "peak_brightness": "600",
+        "minimum_brightness": "0",
+        "encoding": "pq",
+        "primaries": {
+          "Red": "0.68,0.32",
+          "Green": "0.265,0.69",
+          "Blue": "0.15,0.06"
+        }
+      },
+      {
+        "id": "37",
+        "name": "2000-nit, P3/D65, ST.2084, Full",
+        "peak_brightness": "2000",
+        "minimum_brightness": "0",
+        "encoding": "pq",
+        "primaries": {
+          "Red": "0.68,0.32",
+          "Green": "0.265,0.69",
+          "Blue": "0.15,0.06"
+        }
+      },
+      {
+        "id": "38",
+        "name": "2000-nit, Rec. 2020, ST.2084, Full",
+        "peak_brightness": "2000",
+        "minimum_brightness": "0",
+        "encoding": "pq",
+        "primaries": {
+          "Red": "0.708,0.292",
+          "Green": "0.17,0.797",
+          "Blue": "0.131,0.046"
+        }
+      },
+      {
+        "id": "48",
+        "name": "1000-nit, P3/D65, ST.2084, Full",
+        "peak_brightness": "1000",
+        "minimum_brightness": "0",
+        "encoding": "pq",
+        "primaries": {
+          "Red": "0.68,0.32",
+          "Green": "0.265,0.69",
+          "Blue": "0.15,0.06"
+        }
+      },
+      {
+        "id": "49",
+        "name": "1000-nit, Rec. 2020, ST.2084, Full",
+        "peak_brightness": "1000",
+        "minimum_brightness": "0",
+        "encoding": "pq",
+        "primaries": {
+          "Red": "0.708,0.292",
+          "Green": "0.17,0.797",
+          "Blue": "0.131,0.046"
+        }
+      }
+    ]
+  },
+  "sollevante": {
+    "xml_sha256": "ed782c213d158dad8204d3a4bde8d72e5956649696bb39ae6d9a0162d58c4ceb",
+    "rate": [
+      24,
+      1
+    ],
+    "frame_count": 6314,
+    "shot_count": 72,
+    "frame_1000": {
+      "frame_index": 1000,
+      "shot_index": 12,
+      "shot_frame_offset": 33,
+      "time": [
+        125,
+        3
+      ],
+      "signalled_trim_targets": [
+        "1"
+      ],
+      "cross_sequence_alignment_verified": false
+    },
+    "targets": [
+      {
+        "id": "1",
+        "name": "100-nit, BT.709, BT.1886, Full",
+        "peak_brightness": "100",
+        "minimum_brightness": "0.005",
+        "encoding": "BT1886",
+        "primaries": {
+          "Red": "0.64,0.33",
+          "Green": "0.3,0.6",
+          "Blue": "0.15,0.06"
+        }
+      }
+    ]
+  },
+  "exr_headers": {
+    "0": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "0000000000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    },
+    "1": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "0100000000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    },
+    "960": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "0016000000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    },
+    "999": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "3916000000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    },
+    "1000": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "0016000000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    },
+    "1001": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "0116000000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    },
+    "13776": {
+      "frame_index": null,
+      "rate": [
+        60000,
+        1001
+      ],
+      "data_window": [
+        0,
+        0,
+        4095,
+        2159
+      ],
+      "timecode_raw": "3649030000000000",
+      "attribute_names": [
+        "channels",
+        "compression",
+        "dataWindow",
+        "displayWindow",
+        "framesPerSecond",
+        "lineOrder",
+        "pixelAspectRatio",
+        "screenWindowCenter",
+        "screenWindowWidth",
+        "timeCode"
+      ]
+    }
+  },
+  "timecode_alias_960_1000": true,
+  "recorded_date": "2026-10-20",
+  "checksum_source": "https://s3.amazonaws.com/download.opencontent.netflix.com/TechblogAssets/Sparks/sparks_vdm_hdr_p3d65_pq_20161026_01_4096x2160/vdm/hdr/p3d65_pq/20161026_01/4096x2160/checksum.txt",
+  "scope": "Publisher byte identity and arithmetic XML frame lookup; source-to-HDR10-target correspondence is not verified."
+}

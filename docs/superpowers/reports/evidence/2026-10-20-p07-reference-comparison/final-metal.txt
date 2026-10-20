@@ -1,0 +1,35 @@
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlFELCompositor.swift:26:17: warning: 'fastMathEnabled' was deprecated in macOS 15.0: Use mathMode instead [#DeprecatedDeclaration]
+ 24 |         // remove isfinite checks. Malformed finite coefficients can overflow
+ 25 |         // during reconstruction, so these checks are part of the contract.
+ 26 |         options.fastMathEnabled = false
+    |                 `- warning: 'fastMathEnabled' was deprecated in macOS 15.0: Use mathMode instead [#DeprecatedDeclaration]
+ 27 |         let library = try device.makeLibrary(source: Self.shader, options: options)
+ 28 |         guard let function = library.makeFunction(name: "composeFEL") else { throw Failure.metal("Missing kernel") }
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/apple_hdr/fel_compositor_tests.swift:104:55: warning: 'enqueue' was deprecated in macOS 15.0: Use sampleBufferRenderer's enqueueSampleBuffer: instead [#DeprecatedDeclaration]
+102 |         var sample: CMSampleBuffer?
+103 |         assert(CMSampleBufferCreateReadyWithImageBuffer(allocator:nil,imageBuffer:out,formatDescription:format!,sampleTiming:&timing,sampleBufferOut:&sample)==noErr)
+104 |         let layer=AVSampleBufferDisplayLayer(); layer.enqueue(sample!)
+    |                                                       `- warning: 'enqueue' was deprecated in macOS 15.0: Use sampleBufferRenderer's enqueueSampleBuffer: instead [#DeprecatedDeclaration]
+105 |         RunLoop.current.run(until:Date(timeIntervalSinceNow:0.2))
+106 |         assert(layer.status != .failed, "Native layer rejected RGBAHalf: \(String(describing:layer.error))")
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/apple_hdr/fel_compositor_tests.swift:106:22: warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+104 |         let layer=AVSampleBufferDisplayLayer(); layer.enqueue(sample!)
+105 |         RunLoop.current.run(until:Date(timeIntervalSinceNow:0.2))
+106 |         assert(layer.status != .failed, "Native layer rejected RGBAHalf: \(String(describing:layer.error))")
+    |                      `- warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+107 |         print("FEL metadata, signed/zero residual, MMR, HDR half-float GPU/CPU comparison and native layer enqueue passed")
+108 |     }
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/apple_hdr/fel_compositor_tests.swift:106:100: warning: 'error' was deprecated in macOS 15.0: Use sampleBufferRenderer's error instead [#DeprecatedDeclaration]
+104 |         let layer=AVSampleBufferDisplayLayer(); layer.enqueue(sample!)
+105 |         RunLoop.current.run(until:Date(timeIntervalSinceNow:0.2))
+106 |         assert(layer.status != .failed, "Native layer rejected RGBAHalf: \(String(describing:layer.error))")
+    |                                                                                                    `- warning: 'error' was deprecated in macOS 15.0: Use sampleBufferRenderer's error instead [#DeprecatedDeclaration]
+107 |         print("FEL metadata, signed/zero residual, MMR, HDR half-float GPU/CPU comparison and native layer enqueue passed")
+108 |     }
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+FEL metadata, signed/zero residual, MMR, HDR half-float GPU/CPU comparison and native layer enqueue passed

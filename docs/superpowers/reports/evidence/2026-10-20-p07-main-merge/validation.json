@@ -1,0 +1,215 @@
+{
+  "main_before": "8614375448fce17b5f6872903218c99e90f5b03b",
+  "p07_head": "a057886188cca41fc83b4ca496c266c827cf8d33",
+  "tested_merge_tree": "7cb03bd36e2fafc11173df0cd18f9552ac04e91e",
+  "policy": "consolidated acceptance; one integrated matrix and one independent merge review; no source changes after tests",
+  "foundation": {
+    "python_suite_counts": [
+      71,
+      280,
+      2,
+      20,
+      7,
+      80,
+      21,
+      68,
+      6,
+      7,
+      5,
+      9,
+      5,
+      3,
+      3,
+      4,
+      9,
+      1
+    ],
+    "python_executed": 601,
+    "python_skipped": 1,
+    "python_passed": 600,
+    "dart_suite_counts": [
+      137,
+      1700,
+      101,
+      97,
+      1,
+      156,
+      11,
+      48,
+      19,
+      48
+    ],
+    "dart_passed": 2318,
+    "analysis": true,
+    "formatting": true,
+    "ffmpeg_contract": true
+  },
+  "foundation_command": "PATH=/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin:/Users/yy2021_8689/flutter/bin:$PATH FLUTTER_ROOT=/Users/yy2021_8689/flutter sh tool/check_foundation.sh",
+  "foundation_exit": 0,
+  "additional_checks": [
+    {
+      "name": "hdr",
+      "command": [
+        "sh",
+        "tool/apple_hdr/run_tests.sh"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 31.559232375002466,
+      "log": "hdr.txt"
+    },
+    {
+      "name": "metal",
+      "command": [
+        "bash",
+        "tool/apple_hdr/run_fel_compositor_tests.sh"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 11.429099458000564,
+      "log": "metal.txt"
+    },
+    {
+      "name": "airplay",
+      "command": [
+        "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "tool/airplay/run_module_tests.py",
+        "--build-dir",
+        "/private/tmp/p07-main-merge-20261020/airplay-build",
+        "--live-fixture"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 31.04663054199773,
+      "log": "airplay.txt"
+    },
+    {
+      "name": "delivery",
+      "command": [
+        "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "tool/media_delivery/run_native_tests.py",
+        "--build-dir",
+        "/private/tmp/p07-main-merge-20261020/delivery-build"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 26.553592000003846,
+      "log": "delivery.txt"
+    },
+    {
+      "name": "header-parity",
+      "command": [
+        "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "tool/media_delivery/run_header_parity_tests.py",
+        "--build-dir",
+        "/private/tmp/p07-main-merge-20261020/header-build"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 98.88144062500214,
+      "log": "header-parity.txt"
+    },
+    {
+      "name": "rust",
+      "command": [
+        "env",
+        "CARGO_HOME=/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/cargo-home",
+        "RUSTC=/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/rust-sysroot/bin/rustc",
+        "CARGO_TARGET_DIR=/private/tmp/p07-engineering-20261020/inspector-build/target",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--release",
+        "--manifest-path",
+        "/private/tmp/p07-engineering-20261020/inspector-build/inspector/Cargo.toml"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 0.17757137500302633,
+      "log": "rust.txt"
+    },
+    {
+      "name": "real-regressions",
+      "command": [
+        "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "/private/tmp/p07-main-merge-20261020/real_regressions.py"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 13.688264666001487,
+      "log": "real-regressions.txt"
+    },
+    {
+      "name": "threshold-registry",
+      "command": [
+        "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py"
+      ],
+      "exit": 0,
+      "expected_exit": 0,
+      "seconds": 0.051130125000781845,
+      "log": "threshold-registry.txt"
+    },
+    {
+      "name": "p08-readiness",
+      "command": [
+        "sh",
+        "tool/check_p08.sh",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "seconds": 0.04800699999759672,
+      "log": "p08-readiness.txt"
+    },
+    {
+      "name": "release-readiness-required",
+      "command": [
+        "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected_exit": 1,
+      "seconds": 0.2785743749991525,
+      "log": "release-readiness-required.txt"
+    }
+  ],
+  "release": {
+    "currentSourceHash": "44ac765064858ebb3bfd87db5a87729cb20b6c80792cd04db015fb5f54589a64",
+    "sourceMatches": true,
+    "currentPasses": 0,
+    "releaseReady": false,
+    "verificationCounts": {
+      "external_missing": 30,
+      "failed": 4,
+      "not_run": 68,
+      "passed": 0,
+      "skipped": 0
+    }
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "record": "independent-review.md"
+  },
+  "full_p07_complete": false,
+  "mapping_quality_pass": null,
+  "native_dv_signal_pass": null,
+  "final_commit_delta_from_tested_tree": "Only this merge report and its evidence; source/fixtures/dependencies/configuration unchanged.",
+  "not_run": [
+    "physical Dolby Vision chain",
+    "physical TV casting qualification",
+    "new mobile-device/long-duration performance qualification",
+    "remote CI",
+    "repeat consumer packaging of unchanged production files"
+  ]
+}

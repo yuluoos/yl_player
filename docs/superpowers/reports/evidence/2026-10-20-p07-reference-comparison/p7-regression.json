@@ -1,0 +1,59 @@
+{
+  "schema_version": 2,
+  "inspection": "signalled_rpu_inventory",
+  "media_sha256": "419fc183988cb57b0cac2907a01d9f43b1a5ec34012b4c0655574d77678ee4fa",
+  "rpu_count": 2908,
+  "profile_counts": {
+    "7": 2908
+  },
+  "el_type_counts": {
+    "FEL": 2908
+  },
+  "cm_counts": {
+    "2.9": 2908,
+    "4.0": 2908
+  },
+  "level_counts": {
+    "1": 2908,
+    "2": 2908,
+    "3": 2908,
+    "4": 2908,
+    "5": 2908,
+    "6": 2908,
+    "8": 2908,
+    "9": 2908,
+    "254": 2908
+  },
+  "previous_mapping_rpus": 0,
+  "rpus_with_unparsed_bits": 0,
+  "absent_display_metadata_rpus": 0,
+  "scene_refresh_flag_count": 34,
+  "display_metadata_transitions": 2727,
+  "unique_rpu_hashes": 1283,
+  "time_base": "1/24000",
+  "pts_range": [
+    0,
+    2909907
+  ],
+  "presentation_reordered_packets": 2114,
+  "presentation_trace_sha256": "01d7c66761ad2592d947bb21933d4d345086b3a8cdd5c774ee3203c272bf9bf7",
+  "first_packet_rpu_sha256": "51575d38871a9d41b9c38993408c168834c0461a5d65cb5a9596ca1602bbf534",
+  "effective_metadata_resolved": false,
+  "decoded_frame_alignment_verified": false,
+  "mapping_quality": "external_missing",
+  "native_dv_signal": "external_missing",
+  "layer_inventory": {
+    "encoding": "single_track_unspec63_wrapped_el",
+    "base_vcl_nals": 2908,
+    "enhancement_vcl_nals": 2908,
+    "enhancement_nals": 9578,
+    "packets_with_enhancement_vcl": 2908,
+    "p7_packets_without_enhancement_vcl": 0,
+    "decoded_layer_pairing_verified": false
+  },
+  "inspector_sha256": "517bb1aadec333226ca3e80375fbba5f0ab745a681160731a02c16ddab23e560",
+  "packet_count": 2908,
+  "declared_sample_count": 2908,
+  "container_coverage": "finite_box_extents_and_declared_samples",
+  "nal_length_size": 4
+}

@@ -1,0 +1,133 @@
+{
+  "acceptance": "separate_review_required",
+  "capture_manifest_sha256": "6d8e50431809bd283161c83d09c8f57dea6ccfc289ab3fbdb13dee6956dc7e88",
+  "comparison_status": "diagnostic",
+  "contract_sha256": "e9d6b81c630f4962e081e0265ce3eb6c81319c6fa0e2af9db68de099679f8ffe",
+  "display_generation": 7,
+  "frames": [
+    {
+      "actual_sha256": "df7ad235b2e5e679ac0797da4beeee20d8346cebd7afd1e20d47656f03dca81f",
+      "id": 0,
+      "pts": [
+        0,
+        24
+      ],
+      "reference_sha256": "6fc7e945e6303b15e4624d4d22193d7e6f42f6bec101cbeb12cdeba5efcf758d",
+      "regions": {
+        "active": {
+          "channel_samples": 6,
+          "max_abs_nits": 2.0,
+          "max_error_at": [
+            0,
+            0,
+            0
+          ],
+          "p99_abs_nits": 2.0,
+          "rmse_nits": 0.816496580927726,
+          "thresholds_met": false
+        },
+        "bottom": {
+          "channel_samples": 6,
+          "max_abs_nits": 0.0,
+          "max_error_at": [
+            0,
+            1,
+            0
+          ],
+          "p99_abs_nits": 0.0,
+          "rmse_nits": 0.0,
+          "thresholds_met": true
+        },
+        "full": {
+          "channel_samples": 12,
+          "max_abs_nits": 2.0,
+          "max_error_at": [
+            0,
+            0,
+            0
+          ],
+          "p99_abs_nits": 2.0,
+          "rmse_nits": 0.5773502691896257,
+          "thresholds_met": false
+        },
+        "left": {
+          "channel_samples": 6,
+          "max_abs_nits": 2.0,
+          "max_error_at": [
+            0,
+            0,
+            0
+          ],
+          "p99_abs_nits": 2.0,
+          "rmse_nits": 0.816496580927726,
+          "thresholds_met": false
+        }
+      }
+    },
+    {
+      "actual_sha256": "6fc7e945e6303b15e4624d4d22193d7e6f42f6bec101cbeb12cdeba5efcf758d",
+      "id": 1,
+      "pts": [
+        1,
+        24
+      ],
+      "reference_sha256": "6fc7e945e6303b15e4624d4d22193d7e6f42f6bec101cbeb12cdeba5efcf758d",
+      "regions": {
+        "active": {
+          "channel_samples": 6,
+          "max_abs_nits": 0.0,
+          "max_error_at": [
+            0,
+            0,
+            0
+          ],
+          "p99_abs_nits": 0.0,
+          "rmse_nits": 0.0,
+          "thresholds_met": true
+        },
+        "bottom": {
+          "channel_samples": 6,
+          "max_abs_nits": 0.0,
+          "max_error_at": [
+            0,
+            1,
+            0
+          ],
+          "p99_abs_nits": 0.0,
+          "rmse_nits": 0.0,
+          "thresholds_met": true
+        },
+        "full": {
+          "channel_samples": 12,
+          "max_abs_nits": 0.0,
+          "max_error_at": [
+            0,
+            0,
+            0
+          ],
+          "p99_abs_nits": 0.0,
+          "rmse_nits": 0.0,
+          "thresholds_met": true
+        },
+        "left": {
+          "channel_samples": 6,
+          "max_abs_nits": 0.0,
+          "max_error_at": [
+            0,
+            0,
+            0
+          ],
+          "p99_abs_nits": 0.0,
+          "rmse_nits": 0.0,
+          "thresholds_met": true
+        }
+      }
+    }
+  ],
+  "mapping_quality_pass": null,
+  "native_dv_signal_pass": null,
+  "numeric_thresholds_met": false,
+  "numpy_version": "2.3.5",
+  "reference_mode": "candidate",
+  "schema_version": 1
+}

@@ -1,0 +1,197 @@
+PASS: Dolby Vision retains 10-bit full-range output
+PASS: HDR transfer retains 10-bit output
+PASS: HDR transfer retains 10-bit output
+PASS: SDR retains existing output
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/apple_hdr/mailbox_tests.swift:14:14: warning: weak variable 'retired' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+12 |       kCVPixelFormatType_32BGRA, nil, &buffer) == kCVReturnSuccess)
+13 |     var first: Lifetime? = Lifetime()
+14 |     weak var retired = first
+   |              `- warning: weak variable 'retired' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+15 |     mailbox.publish(.init(pixelBuffer: buffer!, reservation: first))
+16 |     first = nil
+
+[#VariableNeverMutated]: <https://docs.swift.org/compiler/documentation/diagnostics/variable-never-mutated>
+[#WeakMutability]: <https://docs.swift.org/compiler/documentation/diagnostics/weak-mutability>
+PASS: coalescing, retention release, clear+new-frame ordering, old-error epoch fence, disposal
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:51:41: warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+ 49 |     container.addSublayer(layer)
+ 50 |     self.layer = layer
+ 51 |     statusObservation = layer.observe(\.status, options: [.new]) { [weak self] layer, _ in
+    |                                         `- warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+ 52 |       DispatchQueue.main.async { [weak self, weak layer] in
+ 53 |         guard let self, let layer, self.layer === layer, layer.status == .failed else { return }
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:53:64: warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+ 51 |     statusObservation = layer.observe(\.status, options: [.new]) { [weak self] layer, _ in
+ 52 |       DispatchQueue.main.async { [weak self, weak layer] in
+ 53 |         guard let self, let layer, self.layer === layer, layer.status == .failed else { return }
+    |                                                                `- warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+ 54 |         self.fail(layer.error ?? NSError(domain: "YLVideoSurface", code: -1))
+ 55 |       }
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:54:25: warning: 'error' was deprecated in macOS 15.0: Use sampleBufferRenderer's error instead [#DeprecatedDeclaration]
+ 52 |       DispatchQueue.main.async { [weak self, weak layer] in
+ 53 |         guard let self, let layer, self.layer === layer, layer.status == .failed else { return }
+ 54 |         self.fail(layer.error ?? NSError(domain: "YLVideoSurface", code: -1))
+    |                         `- warning: 'error' was deprecated in macOS 15.0: Use sampleBufferRenderer's error instead [#DeprecatedDeclaration]
+ 55 |       }
+ 56 |     }
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:61:12: warning: 'stopRequestingMediaData()' was deprecated in macOS 15.0: Use sampleBufferRenderer's stopRequestingMediaData instead [#DeprecatedDeclaration]
+ 59 |   private func retireLayer() {
+ 60 |     statusObservation = nil
+ 61 |     layer?.stopRequestingMediaData()
+    |            `- warning: 'stopRequestingMediaData()' was deprecated in macOS 15.0: Use sampleBufferRenderer's stopRequestingMediaData instead [#DeprecatedDeclaration]
+ 62 |     layer?.flushAndRemoveImage()
+ 63 |     layer?.removeFromSuperlayer()
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:62:12: warning: 'flushAndRemoveImage()' was deprecated in macOS 15.0: Use sampleBufferRenderer's flushWithRemovalOfDisplayedImage:completionHandler: instead [#DeprecatedDeclaration]
+ 60 |     statusObservation = nil
+ 61 |     layer?.stopRequestingMediaData()
+ 62 |     layer?.flushAndRemoveImage()
+    |            `- warning: 'flushAndRemoveImage()' was deprecated in macOS 15.0: Use sampleBufferRenderer's flushWithRemovalOfDisplayedImage:completionHandler: instead [#DeprecatedDeclaration]
+ 63 |     layer?.removeFromSuperlayer()
+ 64 |     layer = nil
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:77:17: warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+ 75 |   private func display(_ frame: YlVideoSurfaceMailbox.Frame) {
+ 76 |     guard let layer, !failed else { return }
+ 77 |     guard layer.status != .failed else {
+    |                 `- warning: 'status' was deprecated in macOS 15.0: Use sampleBufferRenderer's status instead [#DeprecatedDeclaration]
+ 78 |       fail(layer.error ?? NSError(domain: "YLVideoSurface", code: -1)); return
+ 79 |     }
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:78:18: warning: 'error' was deprecated in macOS 15.0: Use sampleBufferRenderer's error instead [#DeprecatedDeclaration]
+ 76 |     guard let layer, !failed else { return }
+ 77 |     guard layer.status != .failed else {
+ 78 |       fail(layer.error ?? NSError(domain: "YLVideoSurface", code: -1)); return
+    |                  `- warning: 'error' was deprecated in macOS 15.0: Use sampleBufferRenderer's error instead [#DeprecatedDeclaration]
+ 79 |     }
+ 80 |     guard layer.isReadyForMoreMediaData else {
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:80:17: warning: 'isReadyForMoreMediaData' was deprecated in macOS 15.0: Use sampleBufferRenderer's readyForMoreMediaData instead [#DeprecatedDeclaration]
+ 78 |       fail(layer.error ?? NSError(domain: "YLVideoSurface", code: -1)); return
+ 79 |     }
+ 80 |     guard layer.isReadyForMoreMediaData else {
+    |                 `- warning: 'isReadyForMoreMediaData' was deprecated in macOS 15.0: Use sampleBufferRenderer's readyForMoreMediaData instead [#DeprecatedDeclaration]
+ 81 |       if !requesting {
+ 82 |         requesting = true
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:83:15: warning: 'requestMediaDataWhenReady(on:using:)' was deprecated in macOS 15.0: Use sampleBufferRenderer's requestMediaDataWhenReadyOnQueue:usingBlock: instead [#DeprecatedDeclaration]
+ 81 |       if !requesting {
+ 82 |         requesting = true
+ 83 |         layer.requestMediaDataWhenReady(on: .main) { [weak self, weak layer] in
+    |               `- warning: 'requestMediaDataWhenReady(on:using:)' was deprecated in macOS 15.0: Use sampleBufferRenderer's requestMediaDataWhenReadyOnQueue:usingBlock: instead [#DeprecatedDeclaration]
+ 84 |           guard let self, let layer, self.layer === layer else { return }
+ 85 |           layer.stopRequestingMediaData()
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:85:17: warning: 'stopRequestingMediaData()' was deprecated in macOS 15.0: Use sampleBufferRenderer's stopRequestingMediaData instead [#DeprecatedDeclaration]
+ 83 |         layer.requestMediaDataWhenReady(on: .main) { [weak self, weak layer] in
+ 84 |           guard let self, let layer, self.layer === layer else { return }
+ 85 |           layer.stopRequestingMediaData()
+    |                 `- warning: 'stopRequestingMediaData()' was deprecated in macOS 15.0: Use sampleBufferRenderer's stopRequestingMediaData instead [#DeprecatedDeclaration]
+ 86 |           self.requesting = false
+ 87 |           if let frame = self.latestFrame { self.display(frame) }
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlSampleBufferVideoRenderer.swift:92:16: warning: 'enqueue' was deprecated in macOS 15.0: Use sampleBufferRenderer's enqueueSampleBuffer: instead [#DeprecatedDeclaration]
+ 90 |       return
+ 91 |     }
+ 92 |     do { layer.enqueue(try Self.makeSample(frame.pixelBuffer, retaining: frame.reservation)) }
+    |                `- warning: 'enqueue' was deprecated in macOS 15.0: Use sampleBufferRenderer's enqueueSampleBuffer: instead [#DeprecatedDeclaration]
+ 93 |     catch { fail(error) }
+ 94 |   }
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/apple_hdr/sample_tests.swift:29:14: warning: weak variable 'retained' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+27 |     var pending: CVPixelBuffer?
+28 |     CVPixelBufferCreate(kCFAllocatorDefault, 16, 16, kCVPixelFormatType_32BGRA, nil, &pending)
+29 |     weak var retained = pending
+   |              `- warning: weak variable 'retained' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+30 |     renderer.publish(pending!)
+31 |     pending = nil
+
+/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/apple_hdr/sample_tests.swift:37:14: warning: weak variable 'heldToken' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+35 |     final class Lifetime {}
+36 |     var token: Lifetime? = Lifetime()
+37 |     weak var heldToken = token
+   |              `- warning: weak variable 'heldToken' was never mutated; consider changing to 'let' constant [#VariableNeverMutated::WeakMutability]
+38 |     var retainedSample: CMSampleBuffer? = try YlSampleBufferVideoRenderer.makeSample(pixel!, retaining: token)
+39 |     token = nil
+
+[#VariableNeverMutated]: <https://docs.swift.org/compiler/documentation/diagnostics/variable-never-mutated>
+[#WeakMutability]: <https://docs.swift.org/compiler/documentation/diagnostics/weak-mutability>
+PASS: pixel identity, 10-bit buffer, PQ and RPU retained; immediate display; pending-frame lifetime
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Dependencies/YlNetworkConfiguration.swift:23:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+21 |   public init(map: [String: Any?]) {
+22 |     connectTimeoutMs = Self.clampedMilliseconds(
+23 |       int64(map["connectTimeoutMs"]) ?? 10_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+24 |     )
+25 |     readTimeoutMs = Self.clampedMilliseconds(
+
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Dependencies/YlNetworkConfiguration.swift:26:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+24 |     )
+25 |     readTimeoutMs = Self.clampedMilliseconds(
+26 |       int64(map["readTimeoutMs"]) ?? 15_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+27 |     )
+28 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Dependencies/YlNetworkConfiguration.swift:28:42: warning: expression implicitly coerced from 'Any??' to 'Any?'
+26 |       int64(map["readTimeoutMs"]) ?? 15_000
+27 |     )
+28 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+   |                                          |  |- note: provide a default value to avoid this warning
+   |                                          |  |- note: force-unwrap the value to avoid this warning
+   |                                          |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                          `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+29 |     baseRetryDelayMs = Self.clampedMilliseconds(
+30 |       int64(map["baseRetryDelayMs"]) ?? 500
+
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Dependencies/YlNetworkConfiguration.swift:30:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+28 |     maxRetries = Self.clampedCount(int64(map["maxRetries"]) ?? 3)
+29 |     baseRetryDelayMs = Self.clampedMilliseconds(
+30 |       int64(map["baseRetryDelayMs"]) ?? 500
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+31 |     )
+32 |     maxRetryDelayMs = Self.clampedMilliseconds(
+
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Dependencies/YlNetworkConfiguration.swift:33:13: warning: expression implicitly coerced from 'Any??' to 'Any?'
+31 |     )
+32 |     maxRetryDelayMs = Self.clampedMilliseconds(
+33 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+   |             |  |- note: provide a default value to avoid this warning
+   |             |  |- note: force-unwrap the value to avoid this warning
+   |             |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |             `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+34 |     )
+35 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Dependencies/YlNetworkConfiguration.swift:35:44: warning: expression implicitly coerced from 'Any??' to 'Any?'
+33 |       int64(map["maxRetryDelayMs"]) ?? 8_000
+34 |     )
+35 |     maxRedirects = Self.clampedCount(int64(map["maxRedirects"]) ?? 5)
+   |                                            |  |- note: provide a default value to avoid this warning
+   |                                            |  |- note: force-unwrap the value to avoid this warning
+   |                                            |  `- note: explicitly cast to 'Any?' with 'as Any?' to silence this warning
+   |                                            `- warning: expression implicitly coerced from 'Any??' to 'Any?'
+36 |   }
+37 |
+/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/yl-hdr-tests.SqVL54/native/module-sources-2rx3pwvf/yl_player_media_core/Network/YlManagedHTTPTransport.swift:146:5: warning: switch must be exhaustive
+144 |
+145 |   private static func transportError(_ error: NWError) -> Error {
+146 |     switch error {
+    |     |- warning: switch must be exhaustive
+    |     `- note: add missing case: '.wifiAware(_)'
+147 |     case .tls: return URLError(.serverCertificateUntrusted)
+148 |     case .dns: return URLError(.cannotFindHost)
+PASS: lease pending/committed budget lifetime, binding propagation, FirstFrame authority, clear/stop/dispose, retired callback rejection

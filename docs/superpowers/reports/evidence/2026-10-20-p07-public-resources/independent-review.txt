@@ -1,0 +1,8 @@
+Independent reviewer: /root/p07_resource_review, gpt-6-astra, fresh context, read-only.
+Scope: ab734051 plus P07 public resource and layer inventory increment.
+Verdict: With fixes. Critical 0; Important 1; Minor 1.
+Important: header-only inner VCL was counted as EL coverage. Require nonempty payload for BL/EL VCL in --layers mode; add safe CLI no-trace regression.
+Minor: *.log files are ignored. Ensure evidence is actually tracked before committing.
+Reviewer independently re-extracted 2908 packets from real media; timestamps, RPU hashes and layer counts matched candidate trace.
+Declined to judge: full slice syntax/POC pairing/effective metadata inheritance; original authoring/independent target qualification/full CM mapping; physical DV and target-display changes. These remain explicitly unverified in the report.
+Executor disposition: fix header-only count with RED-to-GREEN tests; collect logs as tracked .txt as required by the original evidence delivery plan. No additional reviewer pass.

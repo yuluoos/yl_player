@@ -1,0 +1,68 @@
+{
+  "foundation.txt": {
+    "archive": "foundation.txt.gz",
+    "raw_bytes": 458543,
+    "raw_sha256": "9c75c553687721dc38534eace7292aec44feaf27eab2bc57b81f208f887f0ceb",
+    "archive_sha256": "1edcd560143807fc8a61bcf04a211e0866918da3506ce0e057ca4c2190565b67"
+  },
+  "hdr.txt": {
+    "archive": "hdr.txt.gz",
+    "raw_bytes": 16408,
+    "raw_sha256": "03f6565fdddf81c1033112f7ad0fee26f53fa39b56388c9032ef51c98709d542",
+    "archive_sha256": "b3246ce78d73c96d9ebd4f4cad2c8f21caa5c50a191d076af791b04d33d667fa"
+  },
+  "metal.txt": {
+    "archive": "metal.txt.gz",
+    "raw_bytes": 3644,
+    "raw_sha256": "a305056baadf30e1b6e609e76bdd59c90fdf919d21af59865d2ab77f75d9d196",
+    "archive_sha256": "4c5ffd4ff36e71f0dc805af02703eb4aca84299da0e014546918a921c67ff7c7"
+  },
+  "airplay.txt": {
+    "archive": "airplay.txt.gz",
+    "raw_bytes": 6320,
+    "raw_sha256": "300dc901f979bf527617b1e2b3df75a774aedac29639da0fef6d5035e8bcddee",
+    "archive_sha256": "16e1a50c1fa2e1f21f65a7bca72bd3ea8fe921b1843b6f9e3c1fca5be38508b2"
+  },
+  "delivery.txt": {
+    "archive": "delivery.txt.gz",
+    "raw_bytes": 5589,
+    "raw_sha256": "ff5c1004f1cdf7184475706325f53a039e9652d501cc1c81e1174d1a35d92192",
+    "archive_sha256": "a5333d680a6b0b925ba6bbcf9fe40c37d204667e9598892babefc6c45b2d35d5"
+  },
+  "header-parity.txt": {
+    "archive": "header-parity.txt.gz",
+    "raw_bytes": 20969,
+    "raw_sha256": "e034270aa883ed422ac499a1622a7168e9a2d2e5a5617394557574c1d64839e2",
+    "archive_sha256": "022efe698e4a148e418dc7984a28e9125666a01886236680a084f0a21968d8ad"
+  },
+  "rust.txt": {
+    "archive": "rust.txt.gz",
+    "raw_bytes": 520,
+    "raw_sha256": "29c951b1c232f5020f56b8ae8fb11dd7ea4ac02bc9a0e739e6d5efab2e1252a1",
+    "archive_sha256": "b0f8dd85ce148fa300b3576e790f924040068d5f691f4fb57af193ea5eb59b70"
+  },
+  "real-regressions.txt": {
+    "archive": "real-regressions.txt.gz",
+    "raw_bytes": 177,
+    "raw_sha256": "621f91f805482f980a09c47337b78ac279cd8387ec8fc12cea9418a6a303a4c3",
+    "archive_sha256": "61676811e59f73d858730ce520b1ce784643a3900fe1755ac98a6ade7e80910b"
+  },
+  "threshold-registry.txt": {
+    "archive": "threshold-registry.txt.gz",
+    "raw_bytes": 704,
+    "raw_sha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archive_sha256": "205476ab1bd2e4de8b1f8553f07e45da2baa0efc2d655acadc22b90c3445775a"
+  },
+  "p08-readiness.txt": {
+    "archive": "p08-readiness.txt.gz",
+    "raw_bytes": 704,
+    "raw_sha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archive_sha256": "205476ab1bd2e4de8b1f8553f07e45da2baa0efc2d655acadc22b90c3445775a"
+  },
+  "release-readiness-required.txt": {
+    "archive": "release-readiness-required.txt.gz",
+    "raw_bytes": 31026,
+    "raw_sha256": "fcaf71ef01a4044a90b33c7e975b6218377e571268926e54dd767af6d80c08e1",
+    "archive_sha256": "c1699a60668a8f5c0b8e6963f4a92fc17398301e9e752dab80f36f189bfb6a7b"
+  }
+}
