@@ -1,0 +1,209 @@
+[
+  {
+    "package": "packages/yl_player",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 1,
+    "log": "packages_yl_player.log",
+    "lastLines": [
+      "  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/embedded_pgs_test.dart: independent FFmpeg remux uses actual container zero-based PTS",
+      "  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/embedded_subtitle_test.dart: independently muxed owned MKV exposes two real subtitle streams",
+      "  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/embedded_vobsub_test.dart: independent FFmpeg remux keeps raw SPU timing and header without IDX rows",
+      "  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/test/fmp4_tx3g_test.dart: independent FFmpeg fragmented tx3g sample timeline and style",
+      "  ... and 11 more"
+    ]
+  },
+  {
+    "package": "packages/yl_player/example",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_example.log",
+    "lastLines": [
+      "00:11 +93: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/test/display_markers_test.dart: native missing/ambiguous output cannot become a passed observation",
+      "00:11 +94: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/test/bound_cleanup_test.dart",
+      "00:11 +94: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/test/bound_cleanup_test.dart: cleanup releases later resources and reports first cleanup failure",
+      "00:11 +95: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/test/bound_cleanup_test.dart: cleanup cannot replace an existing playback failure",
+      "00:11 +96: All tests passed!"
+    ]
+  },
+  {
+    "package": "packages/yl_player_source_resolver",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_source_resolver.log",
+    "lastLines": [
+      "00:08 +57: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: deadline stops actual native loop and oversized inputs rejected",
+      "00:09 +58: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: four owned native jobs admission disposal and late result isolation",
+      "00:09 +59: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: heap output limits and malformed parseItems fail safely",
+      "00:09 +60: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_source_resolver/test/script_resolver_test.dart: safe errors correlate each resolution with its fixed phase",
+      "00:09 +61: All tests passed!"
+    ]
+  },
+  {
+    "package": "packages/yl_player_platform_interface",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_platform_interface.log",
+    "lastLines": [
+      "00:05 +133: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: generic URI schemes without authority are fully replaced",
+      "00:05 +134: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redaction removes file paths and standalone query fragments",
+      "00:05 +135: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: public messages replace unsafe diagnostic shapes",
+      "00:05 +136: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_platform_interface/test/failure_test.dart: redacted diagnostics are capped after sensitive data is removed",
+      "00:05 +137: All tests passed!"
+    ]
+  },
+  {
+    "package": "packages/yl_player_android",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 1,
+    "log": "packages_yl_player_android.log",
+    "lastLines": [
+      "00:05 +95 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/drm_codec_test.dart: Widevine configuration survives encoding without license endpoint secrets",
+      "00:06 +96 -1: Some tests failed.",
+      "",
+      "Failing tests:",
+      "  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/test/transport_invariants_test.dart: Android periodic schema cannot carry static or media payload data"
+    ]
+  },
+  {
+    "package": "packages/yl_player_android/example",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_android_example.log",
+    "lastLines": [
+      "00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/example/test/widget_test.dart",
+      "00:00 +0: shows the Android Media3 backend",
+      "00:00 +1: All tests passed!"
+    ]
+  },
+  {
+    "package": "packages/yl_player_apple",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 1,
+    "log": "packages_yl_player_apple.log",
+    "lastLines": [
+      "00:08 +154 -1: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/drm_codec_test.dart: schema5 keeps FairPlay binary configuration and rejects Widevine",
+      "00:08 +155 -1: Some tests failed.",
+      "",
+      "Failing tests:",
+      "  /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/test/transport_invariants_test.dart: Apple periodic schema cannot carry static or media payload data"
+    ]
+  },
+  {
+    "package": "packages/yl_player_media_delivery",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_media_delivery.log",
+    "lastLines": [
+      "00:00 +7: owners isolate terminal events and disposal; late events are ignored",
+      "00:00 +8: cancel during production releases late success",
+      "00:00 +9: dispose during production releases late success",
+      "00:00 +10: failed preparation preserves lease; completed cancellation does not close it",
+      "00:00 +11: All tests passed!"
+    ]
+  },
+  {
+    "package": "packages/yl_player_cast",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_cast.log",
+    "lastLines": [
+      "00:07 +63: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_cast/test/controller_test.dart: return local cancels late local commit (dispose=false)",
+      "00:07 +64: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_cast/test/controller_test.dart: return local cancels late local commit (dispose=true)",
+      "00:07 +65: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_cast/test/controller_test.dart: AirPlay disposal respects owned identity (replace=false)",
+      "00:07 +66: /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_cast/test/controller_test.dart: AirPlay disposal respects owned identity (replace=true)",
+      "00:07 +67: All tests passed!"
+    ]
+  },
+  {
+    "package": "packages/yl_player_cast/example",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "--concurrency=1",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "exitCode": 0,
+    "log": "packages_yl_player_cast_example.log",
+    "lastLines": [
+      "00:00 +0: loading /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_cast/example/test/cast_status_test.dart",
+      "00:00 +0: discovery distinguishes scanning, failure and stopped",
+      "00:00 +1: remote buttons respect capabilities and route conflicts",
+      "00:00 +2: All tests passed!"
+    ]
+  }
+]

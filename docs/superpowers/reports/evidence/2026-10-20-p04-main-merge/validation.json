@@ -1,0 +1,378 @@
+{
+  "schemaVersion": 1,
+  "status": "merge-and-post-review-verification-complete",
+  "mergeCommit": "c7de30c8aaf20ed483e84848ce56fdebc232dc0b",
+  "verifiedHead": "526ec879155ac0e39bc76aabcc4ddc1a81ee0830",
+  "workingDirectory": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "uncommittedMediaWorkPreserved": true,
+  "baselineManifest": "baseline/validation.json",
+  "sourceFiles": 1691,
+  "sourceHashesStableDuringPostReviewVerification": true,
+  "results": {
+    "baselineDartCovered": 2327,
+    "postReviewTargetedDartPassed": 151,
+    "standaloneCastPassed": 48,
+    "analysisIssues": 0,
+    "pythonPassed": 65,
+    "androidPassed": 544,
+    "androidSkipped": 3,
+    "applePolicyPassed": 36,
+    "macosPublic": {
+      "result": {
+        "schemaVersion": 1,
+        "runId": "fixed-period-public",
+        "mediaHash": "36a7eb35dd512e19141c6dbda51dcc85bf66a908d1728b880aef588aa55ebc50",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "failureCode": null,
+        "failureType": null,
+        "beforeRollbackAutomatic": false,
+        "afterRollbackAutomatic": false,
+        "outcome": "completed",
+        "stage": "caps-seek",
+        "cleaned": true,
+        "sampleCount": 99,
+        "physicalOutputVerified": false,
+        "capabilityAccepted": false
+      },
+      "verifiedSamples": 99,
+      "requests": 84
+    }
+  },
+  "report": {
+    "path": "docs/superpowers/reports/2026-10-20-p04-main-merge.md",
+    "sha256": "97fa72fee33d97c7ad934969de2e47a13b2fbaec88e2f72c09766670c72d2e2f"
+  },
+  "limitations": [
+    "Dart coverage comes from full package runs plus fixture-directory reruns and post-review targeted tests; not one full green invocation",
+    "Media splitting and review implementation remains uncommitted",
+    "No physical receiver, long-play, minimum-device or P08 SLO certification"
+  ],
+  "capabilityAccepted": false,
+  "artifacts": [
+    {
+      "path": "baseline/android-final-result.json",
+      "sha256": "87d4e6947a51ef00d2da7122293263baf1989fe712b0c6f80f19462df3664d52",
+      "bytes": 281
+    },
+    {
+      "path": "baseline/apple-final-result.json",
+      "sha256": "96ce7a85b2ff94240f9b5eb227381a35f969629b82d8c53967f49e99e6bb834e",
+      "bytes": 231
+    },
+    {
+      "path": "baseline/committed-tree-preservation.json",
+      "sha256": "e022a6b69f687d62c383e9250c65ef552b7bbdb3784fbd9d098bc55dcd3bbee9",
+      "bytes": 183
+    },
+    {
+      "path": "baseline/dart-final-command.json",
+      "sha256": "e843e4589bd12c742d46e28d06e4837d838ee4f26dcdae0be2007aabe691c4b1",
+      "bytes": 518
+    },
+    {
+      "path": "baseline/dart-package-results.json",
+      "sha256": "c5bee299a63aef43a0eaf8a6ecd7bb8ec54feb092a2c7bc7fb42ec3855603a30",
+      "bytes": 8814
+    },
+    {
+      "path": "baseline/dart-root-fixtures-command.json",
+      "sha256": "3827f35e650465496ce3a9db9616df96a12d89a9ae9d398041411e2b0c977a58",
+      "bytes": 964
+    },
+    {
+      "path": "baseline/delivery-native-final-result.json",
+      "sha256": "c70ef79e44be6d0f03aca12d284b88754affed21e6b620a0b8b26f9c292dc5de",
+      "bytes": 248
+    },
+    {
+      "path": "baseline/logs/analyze-final.log.gz",
+      "sha256": "160f3b94a1e5ad312c8b2a9ae9a64aeaa5ad103140b524366b8dc08937eeb533",
+      "bytes": 78
+    },
+    {
+      "path": "baseline/logs/android-final.log.gz",
+      "sha256": "13a00026b5ae6c4067e89c1601aba5c3b8ef8fd887af4f5abee50ba1099eec06",
+      "bytes": 16693
+    },
+    {
+      "path": "baseline/logs/apple-final.log.gz",
+      "sha256": "5a12941be69268685c9c05e04346d155d32d74215c7c0e64721341fb36bb05f6",
+      "bytes": 3190
+    },
+    {
+      "path": "baseline/logs/apple-main.log.gz",
+      "sha256": "86e43cc312fb01d9aad76786c919b024d044e394bf9ce5b95d4728dafdce3d3c",
+      "bytes": 220
+    },
+    {
+      "path": "baseline/logs/dart-final.log.gz",
+      "sha256": "5eb1df33afaba781be92f3ea490be7541c869abfd17f62860d3788bc63aa67f6",
+      "bytes": 39481
+    },
+    {
+      "path": "baseline/logs/dart-main.log.gz",
+      "sha256": "a2ae8a47c56821628551a00cda77ea98becbf1840847c19adcead31f99eff240",
+      "bytes": 4619
+    },
+    {
+      "path": "baseline/logs/dart-root-fixtures.log.gz",
+      "sha256": "394a21552190db501814a62d05a7bf3ab307874c54940f9e982e3fdafbe0dade",
+      "bytes": 6378
+    },
+    {
+      "path": "baseline/logs/delivery-native-final.log.gz",
+      "sha256": "d2b7b2ec77a63fe2ff62c3ff6ad355d250e29aa82a9713822eacc611ad9aa7bf",
+      "bytes": 1034
+    },
+    {
+      "path": "baseline/logs/macos-public-refreshed.log.gz",
+      "sha256": "3b2813873d90c75e89a78717aee50925d9b4b63740a4ef250e06cb84f5d62cb7",
+      "bytes": 59
+    },
+    {
+      "path": "baseline/logs/macos-public.log.gz",
+      "sha256": "a0c9effe5c70d0a2a5aaf4158f972d6f0f711567c6942af0fe86b212ce5446ca",
+      "bytes": 59
+    },
+    {
+      "path": "baseline/logs/main-example-refresh.log.gz",
+      "sha256": "169a52f5b47d4febef7a8522505f70d841efec1b0124707a735446821f35ca59",
+      "bytes": 757
+    },
+    {
+      "path": "baseline/logs/merge.log.gz",
+      "sha256": "4dff0ff3af5af95f96024eb0954ed889e6c4b0977ba2ad26c02a9387ba5c8df9",
+      "bytes": 1748
+    },
+    {
+      "path": "baseline/logs/packages_yl_player.log.gz",
+      "sha256": "526299d03ee9786c603dce19aa81fef04ecce0dd594d7c15a7adaa2e87b1d06c",
+      "bytes": 33934
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_android.log.gz",
+      "sha256": "f4f8f226f29fa7544a7fa4bd7761bd9b1ff6cc8570b93ca567ee76c9d1019479",
+      "bytes": 3354
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_android_example.log.gz",
+      "sha256": "1e1b430674b997dd53cf44a605f139890adb77c5726efac6e644fa1d2a89ce8b",
+      "bytes": 163
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_apple.log.gz",
+      "sha256": "566e2991becfb04434225d75e9b454d76ce8f0687002b6d404616cd7c9ee7a22",
+      "bytes": 4717
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_cast.log.gz",
+      "sha256": "56287cdaf30ba9094216df2e8e65ae48ccc1237fc40cc0037ae0e1e266e3dde1",
+      "bytes": 2187
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_cast_example.log.gz",
+      "sha256": "5b5f8cba5ee3ddda40bce9b93b4c9c43e93b8e6f253355bd21060f44f3919562",
+      "bytes": 212
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_example.log.gz",
+      "sha256": "743db2ec15155c8d034e842380539de0a9cda8f47f6a68feb9b877a34635025b",
+      "bytes": 3249
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_media_delivery.log.gz",
+      "sha256": "ed914277226d9ae403b4b9dba86800ca5d42b9942c656f2760571343f96d7d66",
+      "bytes": 450
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_platform_interface.log.gz",
+      "sha256": "f77f26f5c738c337aecd855eb4fba2e5b740736db4a05c1b04e48f5e322c7e2d",
+      "bytes": 4176
+    },
+    {
+      "path": "baseline/logs/packages_yl_player_source_resolver.log.gz",
+      "sha256": "913d3f40daaad2e744455c68dc773d98f85029d6da30e4b2e33506a664cb0f4d",
+      "bytes": 1795
+    },
+    {
+      "path": "baseline/logs/python-final.log.gz",
+      "sha256": "a026b45d44eea45f244f4293b0110e6504b1fa81faa78b51f9e0531f453be30f",
+      "bytes": 56
+    },
+    {
+      "path": "baseline/logs/python-main.log.gz",
+      "sha256": "37fd2db2978a2d54e8417d8cee4d3050d152f041154fa127bd66d4ef7d3feab2",
+      "bytes": 56
+    },
+    {
+      "path": "baseline/macos-public/final/capture.log.gz",
+      "sha256": "d5962c955414f6e14cca7d31218b41e19ad2d2ac7c6eddaf077ba9e10ec0c189",
+      "bytes": 3729
+    },
+    {
+      "path": "baseline/macos-public/final/requests.jsonl.gz",
+      "sha256": "18d858bdc91453859636f5dc55f364ece6760d6c820b5981b65992193001df72",
+      "bytes": 3867
+    },
+    {
+      "path": "baseline/macos-public/final/runner.json",
+      "sha256": "ea2ce06c0f1dbcdb5ab5b98d20e574cd0a01c3c1a38127591f1c5e941afd7920",
+      "bytes": 585
+    },
+    {
+      "path": "baseline/macos-public/initial-stale-spm/capture.log.gz",
+      "sha256": "978ca0d0dffc9a929308f685a4be415561acd4ee159721c43154a64cffb3cf01",
+      "bytes": 5050
+    },
+    {
+      "path": "baseline/macos-public/initial-stale-spm/requests.jsonl.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 20
+    },
+    {
+      "path": "baseline/macos-public/initial-stale-spm/runner.json",
+      "sha256": "acba746fa186ed9b73953f631ccbd2f96ab3990e7fb851c9ad6e5dec271e9fa0",
+      "bytes": 580
+    },
+    {
+      "path": "baseline/macos-public-refreshed-result.json",
+      "sha256": "3a6296aa16962b2628b3a4088eb7660665ffd8da883d14977c0b56f351e97983",
+      "bytes": 165
+    },
+    {
+      "path": "baseline/macos-public-result.json",
+      "sha256": "52c1c17396d12af839c1bcac196faf096aa76ab09a02458d422d7028ab788df0",
+      "bytes": 165
+    },
+    {
+      "path": "baseline/preservation-after-merge.json",
+      "sha256": "8039a9b5085c013041b6ffb6dab522ea013b4ae82fb217a9d926be26b817b071",
+      "bytes": 1114
+    },
+    {
+      "path": "baseline/reproduce_public_period.py",
+      "sha256": "7ddd72cfdde91678a2198ab319ef619822034a507bb28d631e23789ec03a2502",
+      "bytes": 2071
+    },
+    {
+      "path": "baseline/source-sha256.json.gz",
+      "sha256": "c3f2ea71bd9b2f48c83877567c3e16a7f9e71bc02d65b472c28260ad727d094e",
+      "bytes": 77573
+    },
+    {
+      "path": "baseline/validation.json",
+      "sha256": "656c558bb3f39f223d637ecfaa45a5888f4aea3447fdc9aaffb8ce528c7b3038",
+      "bytes": 11827
+    },
+    {
+      "path": "postreview/changed-paths.json",
+      "sha256": "62ed58a394ed526099f4e889ae9da3235c6d2c6363aebfa4281061ac563b8402",
+      "bytes": 2215
+    },
+    {
+      "path": "postreview/macos-public/capture.log.gz",
+      "sha256": "1e710e2b5a47035fc26bbc7f2d3fb8edfa8162601a8f6473aaaf2967ab7d4212",
+      "bytes": 4418
+    },
+    {
+      "path": "postreview/macos-public/requests.jsonl.gz",
+      "sha256": "71bb844507e3e3245c11e2d72fb4f7dc325e784bdf83ee2f9113a74a30d0a527",
+      "bytes": 3764
+    },
+    {
+      "path": "postreview/macos-public/runner.json",
+      "sha256": "c9d84af645e0ac8d26db73353af5e97513d69efbc5e38943576d3c1abf37577a",
+      "bytes": 585
+    },
+    {
+      "path": "postreview/postreview-analyze-result.json",
+      "sha256": "5345d89aba8363c65c9f3169a904862f0c78e179b6ec85e244e5c838371c8008",
+      "bytes": 173
+    },
+    {
+      "path": "postreview/postreview-analyze.log.gz",
+      "sha256": "6cc11fadb954a695bc413bfe649830e6cbe4142e9aeef59347a4ef81ab89c580",
+      "bytes": 78
+    },
+    {
+      "path": "postreview/postreview-apple-result.json",
+      "sha256": "96ce7a85b2ff94240f9b5eb227381a35f969629b82d8c53967f49e99e6bb834e",
+      "bytes": 231
+    },
+    {
+      "path": "postreview/postreview-apple.log.gz",
+      "sha256": "633db2363cde08b7232cf836aa69fc8b4fce7cf030300df6b97653b7614bc8c2",
+      "bytes": 3190
+    },
+    {
+      "path": "postreview/postreview-cast-dependencies-result.json",
+      "sha256": "696dacaeac0cf89958d8fffe642aebb3fee7873e45f932186b47d6f1c8c1e647",
+      "bytes": 190
+    },
+    {
+      "path": "postreview/postreview-cast-dependencies.log.gz",
+      "sha256": "d949f11a741bd41d3f2a5dc442a86fa1e281170b252539fd28cc90395c1ae33f",
+      "bytes": 1991
+    },
+    {
+      "path": "postreview/postreview-dart-result.json",
+      "sha256": "63772bbddb538da46e64a1bccc37938da9bc3512c3389fbc22a04c8226728158",
+      "bytes": 999
+    },
+    {
+      "path": "postreview/postreview-dart.log.gz",
+      "sha256": "3c5666ef750e0ac6f4bcb92f9ccf4ac9d4a354f230556d1134c99e1a31f4e37f",
+      "bytes": 4060
+    },
+    {
+      "path": "postreview/postreview-macos-public-result.json",
+      "sha256": "3a6296aa16962b2628b3a4088eb7660665ffd8da883d14977c0b56f351e97983",
+      "bytes": 165
+    },
+    {
+      "path": "postreview/postreview-macos-public.log.gz",
+      "sha256": "133519f99e624185e1ae5c01669630468fee49b089d57bc36e8fd30e44e1b08e",
+      "bytes": 59
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-core-api-green.log.gz",
+      "sha256": "2e09f73d124e77cea1c18e8feb6e4ea517042fc4c236673c235ea9c559d97268",
+      "bytes": 4126
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-four-fixes-dart-tests.log.gz",
+      "sha256": "bedc2071a88aa2edcceeec01c431559a39312ad3ea29d57f133b54bd4f99c580",
+      "bytes": 14771
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-four-fixes-http-cap-retest.log.gz",
+      "sha256": "69f825adfba6714e4c61abc313c626814daa6f79a12e98e21a9902b6d85a7042",
+      "bytes": 675
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-four-fixes-ios-build.log.gz",
+      "sha256": "c2e3efd29a9aad8eca076850ca2fcbad2580ab357c4438c0c6ea64e51c2d9dcf",
+      "bytes": 51681
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-four-fixes-macos-build.log.gz",
+      "sha256": "598efee1ccba5ba654e4b2a7c598d760015422610dedddd9d416e85147b3eebc",
+      "bytes": 3120
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-header-review-green.log.gz",
+      "sha256": "bfbed2574626a25ab6de8672cc9504a4dea74ee5593c714fec55810070dfe9cc",
+      "bytes": 3459
+    },
+    {
+      "path": "postreview/review-task-evidence/yl-shutdown-green.log.gz",
+      "sha256": "782392b7aa911ceb09f7d2be2c470d43af39c0aa73108a7645fbed1c83a9908a",
+      "bytes": 1278
+    },
+    {
+      "path": "postreview/source-sha256.json.gz",
+      "sha256": "bde2c432b9490179f566f3e5937cabb46a05511ae8cc2b03586139afaf704853",
+      "bytes": 78262
+    }
+  ]
+}

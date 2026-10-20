@@ -1,0 +1,25 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "test",
+    "--no-pub",
+    "--concurrency=1",
+    "packages/yl_player/test/live_mode_capture_test.dart",
+    "packages/yl_player/test/live_playback_session_test.dart",
+    "packages/yl_player/test/media_delivery_test.dart",
+    "packages/yl_player_platform_interface/test/live_playback_contract_test.dart",
+    "packages/yl_player_android/test/live_mode_barrier_test.dart",
+    "packages/yl_player_android/test/live_playback_adapter_test.dart",
+    "packages/yl_player_apple/test/live_mode_barrier_test.dart",
+    "packages/yl_player_apple/test/live_playback_adapter_test.dart",
+    "packages/yl_player_apple/test/media_delivery_test.dart",
+    "packages/yl_player_cast/test",
+    "packages/yl_player_cast_player_adapter/test",
+    "packages/yl_player_media_delivery/test",
+    "packages/yl_player_cast/example/test",
+    "--reporter",
+    "expanded"
+  ],
+  "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "exitCode": 0
+}

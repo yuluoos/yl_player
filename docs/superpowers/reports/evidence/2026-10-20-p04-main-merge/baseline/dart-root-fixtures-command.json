@@ -1,0 +1,23 @@
+[
+  "/Users/yy2021_8689/flutter/bin/flutter",
+  "test",
+  "--no-pub",
+  "--concurrency=1",
+  "packages/yl_player/test/embedded_pgs_test.dart",
+  "packages/yl_player/test/embedded_subtitle_test.dart",
+  "packages/yl_player/test/embedded_vobsub_test.dart",
+  "packages/yl_player/test/fmp4_tx3g_test.dart",
+  "packages/yl_player/test/hybrid_mp4_test.dart",
+  "packages/yl_player/test/matroska_webvtt_test.dart",
+  "packages/yl_player/test/mp4_parser_test.dart",
+  "packages/yl_player/test/network_matroska_tls_test.dart",
+  "packages/yl_player/test/private_subtitle_test.dart",
+  "packages/yl_player/test/stpp_parser_test.dart",
+  "packages/yl_player/test/subtitle_inflate_test.dart",
+  "packages/yl_player/test/subtitle_managed_network_test.dart",
+  "packages/yl_player/test/webm_subtitle_test.dart",
+  "packages/yl_player_android/test/transport_invariants_test.dart",
+  "packages/yl_player_apple/test/transport_invariants_test.dart",
+  "--reporter",
+  "expanded"
+]

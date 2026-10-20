@@ -1,0 +1,18 @@
+[
+  "/Users/yy2021_8689/flutter/bin/flutter",
+  "test",
+  "--no-pub",
+  "--concurrency=1",
+  "packages/yl_player/test",
+  "packages/yl_player/example/test",
+  "packages/yl_player_source_resolver/test",
+  "packages/yl_player_platform_interface/test",
+  "packages/yl_player_android/test",
+  "packages/yl_player_android/example/test",
+  "packages/yl_player_apple/test",
+  "packages/yl_player_media_delivery/test",
+  "packages/yl_player_cast/test",
+  "packages/yl_player_cast/example/test",
+  "--reporter",
+  "expanded"
+]

@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "tool/media_delivery/run_native_tests.py",
+    "--build-dir",
+    "/private/tmp/p04-merge-0hbiay_9/delivery-native-build"
+  ],
+  "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "exitCode": 0
+}
