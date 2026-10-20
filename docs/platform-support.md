@@ -89,6 +89,12 @@ iPhone RTMP also passed the bounded recovery sequence. iOS Simulator DASH caps
 and fixed captures preserved their constraints. Auto downshift was observed, but
 recovery upshift was absent in both 40s and extended 80s captures and remains an
 open acceptance item.
+A subsequent iPhone regression reproduced an expired HLS seekable window after
+pausing. Low-latency direct HLS now refreshes that window using the existing
+bounded retry budget; successful frames retain spent refresh attempts. Two
+resumes passed, and a fourth refresh was rejected while playback stayed paused.
+The user confirmed basic moving picture/audio, pause and resume for all three
+protocols. This subjective check does not measure A/V synchronization.
 These are specific controlled observations, not complete CAP-ABR/CAP-LIVE,
 physical A/V, minimum-OS, long-play or P08 SLO qualification. See the
 [P04 stage report](superpowers/reports/2026-09-26-remaining-04-abr-live.md).

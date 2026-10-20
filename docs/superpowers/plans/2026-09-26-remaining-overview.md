@@ -696,3 +696,11 @@ Android/macOS auto/caps/fixed 的受控弱网采集及三协议模式生命周�
 iOS 模拟器 HLS 连续切换、iPhone 三协议生命周期通过；修复真机候选独占解码器交接及取消错误覆盖。iOS caps/fixed 通过，auto 在 40/80 秒采集中只观察到降档。恢复升档、完整物理输出、
 重复测量与 P08 SLO 仍开放，不能标记整个 CAP-ABR/CAP-LIVE 完成。见
 [P04 最新报告](../reports/2026-09-26-remaining-04-abr-live.md#2026-10-19真实弱网与三协议生命周期续做)。
+
+### P04 HLS 长暂停恢复续验
+
+已修复普通直接 HLS 低延迟长暂停后的失效窗口，复用并保留重连预算；iPhone
+同用例 RED/GREEN、两次恢复和额度耗尽保持暂停均验证通过。用户确认 HLS
+两次恢复音画正常，连同此前 FLV/RTMP 确认，关闭本夹具的基础人工观察缺口。
+iOS ABR 升档、定量同步、长运行及 P08 等完整验收仍开放。详见
+[P04 续验报告](../reports/2026-09-26-remaining-04-abr-live.md#hls-长暂停恢复修复与-iphone-续验)。

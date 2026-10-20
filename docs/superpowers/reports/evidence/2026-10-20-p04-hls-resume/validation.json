@@ -1,0 +1,791 @@
+{
+  "schemaVersion": 1,
+  "codeBase": "24f937daa02189fd97aad70bf9bdeb8471c28a7f",
+  "finalSourceSha256": {
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "4ad2abaabe7a5d4f272fc944036b08f4a4dc34be06412115315c719494d17e4b",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift": "b206ecc951c295fecc1a82b25ebd8fe4c3e0e366182229b6e0c98811fcde0e36",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlLiveCatchUpPolicy.swift": "6469f46c1943558147def9a066ca2afe2bd1255e6663f37d9e83062f0067ae1b",
+    "packages/yl_player/example/integration_test/hls_long_pause_resume_test.dart": "8b8e2ed2c9aa594d089f00633f91145ed34e91d6eb337b4c2463a19a65a4f213",
+    "tool/playback_network/live_mode_native_test.swift": "6e49330ef1ee46f5b19391e9befb2ce81e91bfabb79ae8432faf631d8385a550"
+  },
+  "sourceSha256": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+  "device": "iPhone 16 physical",
+  "network": "owned unshaped LAN HLS",
+  "red": "p04-iphone-hls-resume-red-20261019-235807",
+  "green": "p04-iphone-hls-resume-green-20261020-000107",
+  "budget": "p04-iphone-hls-resume-budget2-20261020-000806",
+  "runs": [
+    {
+      "runId": "p04-iphone-hls-diag-20261019-234958",
+      "diagnosticOnly": true,
+      "exitCode": 0,
+      "results": [
+        {
+          "protocol": "hls",
+          "completed": true,
+          "physicalObservation": "pending-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "passed": true,
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      },
+      "resumeSamples": {
+        "resume-1": [],
+        "resume-2": []
+      }
+    },
+    {
+      "runId": "p04-iphone-hls-diag-20261019-235328",
+      "diagnosticOnly": true,
+      "exitCode": 1,
+      "results": [
+        {
+          "protocol": "hls",
+          "completed": false,
+          "physicalObservation": "pending-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "passed": false,
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      },
+      "resumeSamples": {
+        "resume-1": [],
+        "resume-2": []
+      }
+    },
+    {
+      "runId": "p04-iphone-hls-resume-budget-20261020-000447",
+      "diagnosticOnly": false,
+      "exitCode": 1,
+      "results": [],
+      "passed": false,
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "regressionTestRetained": true
+      },
+      "resumeSamples": {
+        "resume-1": [],
+        "resume-2": []
+      }
+    },
+    {
+      "runId": "p04-iphone-hls-resume-budget2-20261020-000806",
+      "diagnosticOnly": false,
+      "exitCode": 0,
+      "results": [
+        {
+          "runId": "p04-iphone-hls-resume-budget2-20261020-000806",
+          "completed": true,
+          "stage": "额度耗尽：保持暂停",
+          "physicalObservation": "requires-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "passed": true,
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "regressionTestRetained": true
+      },
+      "resumeSamples": {
+        "resume-1": [
+          {
+            "elapsedUs": 43172306,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 43427547,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 43680346,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 43933288,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 44223794,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 3026000,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 44478825,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3035000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 44731750,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3344000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 44984339,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3523000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 45236141,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3756000,
+            "reconnects": 2
+          }
+        ],
+        "resume-2": [
+          {
+            "elapsedUs": 61998822,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62252312,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62505275,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62757208,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63008902,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63261654,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63514476,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63768501,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 64020837,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 64274186,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 3026000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 64526130,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3032000,
+            "reconnects": 3
+          },
+          {
+            "elapsedUs": 64780831,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3253000,
+            "reconnects": 3
+          },
+          {
+            "elapsedUs": 65034128,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3523000,
+            "reconnects": 3
+          },
+          {
+            "elapsedUs": 65286935,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3756000,
+            "reconnects": 3
+          }
+        ]
+      }
+    },
+    {
+      "runId": "p04-iphone-hls-resume-green-20261020-000107",
+      "diagnosticOnly": false,
+      "exitCode": 0,
+      "results": [
+        {
+          "runId": "p04-iphone-hls-resume-green-20261020-000107",
+          "completed": true,
+          "stage": "恢复成功 2：请观察音画",
+          "physicalObservation": "requires-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "passed": true,
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "regressionTestRetained": true
+      },
+      "resumeSamples": {
+        "resume-1": [
+          {
+            "elapsedUs": 43641775,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 43897017,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 44148878,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 44400758,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 44673800,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 44926827,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3026000,
+            "reconnects": 1
+          },
+          {
+            "elapsedUs": 45179460,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3052000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 45431414,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3258000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 45684046,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3514000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 45936830,
+            "stage": "resume-1",
+            "status": "playing",
+            "positionUs": 3757000,
+            "reconnects": 2
+          }
+        ],
+        "resume-2": [
+          {
+            "elapsedUs": 61543718,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 61797091,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62049522,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62302506,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62557712,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 62809958,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63061911,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63317913,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63570484,
+            "stage": "resume-2",
+            "status": "buffering",
+            "positionUs": 0,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 63823493,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3051000,
+            "reconnects": 2
+          },
+          {
+            "elapsedUs": 64076740,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3107000,
+            "reconnects": 3
+          },
+          {
+            "elapsedUs": 64329044,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3255000,
+            "reconnects": 3
+          },
+          {
+            "elapsedUs": 64580945,
+            "stage": "resume-2",
+            "status": "playing",
+            "positionUs": 3601000,
+            "reconnects": 3
+          }
+        ]
+      }
+    },
+    {
+      "runId": "p04-iphone-hls-resume-red-20261019-235807",
+      "diagnosticOnly": false,
+      "exitCode": 1,
+      "results": [
+        {
+          "runId": "p04-iphone-hls-resume-red-20261019-235807",
+          "completed": false,
+          "stage": "resume-1",
+          "physicalObservation": "requires-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "passed": false,
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "regressionTestRetained": true
+      },
+      "resumeSamples": {
+        "resume-1": [
+          {
+            "elapsedUs": 44137123,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 44394146,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 44646419,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 44898553,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 45150760,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 45403639,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 45656185,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 45909316,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 46162243,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 46415261,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 46668263,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 46920560,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 47173172,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 47425336,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 47676902,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 47930086,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 48183056,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 48436190,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 48688603,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 48941609,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 49194611,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 49447654,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 49700644,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 49953858,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 50207329,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 50459336,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 50711305,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 50964257,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 51217270,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 51470265,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 51723292,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 51974554,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 52227474,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 52479325,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 52731299,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 52984310,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 53236867,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 53489470,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 53741907,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          },
+          {
+            "elapsedUs": 53994516,
+            "stage": "resume-1",
+            "status": "buffering",
+            "positionUs": 37525000,
+            "reconnects": 0
+          }
+        ],
+        "resume-2": []
+      }
+    }
+  ],
+  "nativePolicyChecks": 69,
+  "appleDartTests": 129,
+  "userObservation": {
+    "runId": "p04-iphone-hls-resume-green-20261020-000107",
+    "question": "修复后的 HLS 两次低延迟暂停恢复已跑完，自动检测均看到媒体时钟重新推进。你看到两次恢复后都有动态画面和声音，暂停时两者都停止了吗？",
+    "answer": "两次都正常",
+    "physicalBasicAvConfirmed": true
+  },
+  "nativeDiagnosticRun": "p04-iphone-hls-diag-20261019-235328",
+  "diagnosticLimits": [
+    "Diagnostic run 1 lacked a progress assertion and is not acceptance.",
+    "Diagnostic run 2 used an invalid across-epoch subtraction; its assertion is not the behavioral RED. The dedicated red run uses consecutive progression and correctly fails with zero progress.",
+    "Temporary native file tracing was removed before the dedicated red and green captures.",
+    "The first budget attempt failed while awaiting WidgetTester.pump, before reaching budget assertions. Final harness uses fullyLive rendering and real-time waits without per-tick pump guards."
+  ],
+  "fullP04Accepted": false,
+  "endToEndLatencyUs": null,
+  "quantitativeAvSyncMeasured": false,
+  "remaining": [
+    "iOS ABR recovery upshift",
+    "P08 numerical acceptance",
+    "Long-duration and wider device/OS qualification"
+  ],
+  "archiveSha256": "d3b9bb4700e707e59aa093c2c7b76880a01ebbf3c26fb5742a807f70fedb0cb9",
+  "fileCount": 54
+}

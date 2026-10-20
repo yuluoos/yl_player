@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "codeHead": "24f937daa02189fd97aad70bf9bdeb8471c28a7f",
+  "sourceSha256": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+  "device": "iPhone 16 physical",
+  "network": "owned LAN unshaped",
+  "runs": [
+    {
+      "runId": "p04-iphone-manual-av-20261019-233310",
+      "exitCode": 1,
+      "completed": false,
+      "results": [],
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      }
+    },
+    {
+      "runId": "p04-iphone-manual-av-20261019-233408",
+      "exitCode": 1,
+      "completed": false,
+      "results": [],
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      }
+    },
+    {
+      "runId": "p04-iphone-manual-av-20261019-233607",
+      "exitCode": 1,
+      "completed": false,
+      "results": [
+        {
+          "protocol": "hls",
+          "completed": false,
+          "physicalObservation": "pending-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      }
+    },
+    {
+      "runId": "p04-iphone-manual-av-20261019-233827",
+      "exitCode": 0,
+      "completed": false,
+      "results": [],
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      }
+    },
+    {
+      "runId": "p04-iphone-manual-av-20261019-234306",
+      "exitCode": 0,
+      "completed": true,
+      "results": [
+        {
+          "protocol": "flv",
+          "completed": true,
+          "physicalObservation": "pending-user",
+          "endToEndLatencyUs": null
+        },
+        {
+          "protocol": "rtmp",
+          "completed": true,
+          "physicalObservation": "pending-user",
+          "endToEndLatencyUs": null
+        }
+      ],
+      "cleanup": {
+        "relayTasks": 0,
+        "relayWriters": 0,
+        "iproxyRestored": true,
+        "temporaryTestRemoved": true
+      }
+    }
+  ],
+  "userObservation": {
+    "status": "partial",
+    "protocols": {
+      "hls": {
+        "quote": "有声音画面也在动   当前已停止   顶部  展示 剩余1秒",
+        "playbackMovingAndAudible": true,
+        "resumeAfterSecondPause": "not-verified"
+      },
+      "flv": {
+        "status": "confirmed",
+        "playbackMovingAndAudible": true,
+        "pauseStopsAudioAndPicture": true,
+        "resumeMovingAndAudible": true
+      },
+      "rtmp": {
+        "status": "confirmed",
+        "playbackMovingAndAudible": true,
+        "pauseStopsAudioAndPicture": true,
+        "resumeMovingAndAudible": true
+      }
+    },
+    "flvRtmpQuestion": "FLV 和 RTMP 两轮已结束。你观察到两者都满足这些现象吗：播放/恢复时画面持续变化且有声音，暂停时画面和声音都停止？若有异常，请写明协议和阶段。",
+    "flvRtmpAnswer": "两者都正常"
+  },
+  "fullP04Accepted": false,
+  "endToEndLatencyUs": null,
+  "archiveSha256": "2c1b11aa7f8ff405b75d8928309d7977a44a60fc6084d4cdb434a70aa958b82e",
+  "fileCount": 72,
+  "limits": [
+    "Manual observation is separate from command completion.",
+    "No quantitative A/V sync or end-to-end latency measurement.",
+    "This run does not validate weak-network adaptation or long-duration stability."
+  ],
+  "unresolved": [
+    "HLS manual sequence stopped after the second 5-second pause at a displayed 1 second remaining; no resume stage/result arrived. Runner was interrupted, underlying cause remains undetermined. Exit code 0 after interrupt is not a pass."
+  ]
+}

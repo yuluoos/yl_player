@@ -28,6 +28,18 @@ enum YlLiveCatchUpPolicy {
 /// A pause longer than the low-mode target can leave old data in TCP/demux
 /// queues. Refresh once on resumed demand; smooth mode preserves that media.
 enum YlLiveResumePolicy {
+  /// AVPlayer can retain buffered bytes while its paused HLS seekable window
+  /// expires. Restarting rate alone can immediately pause internally again.
+  static func requiresHlsRefresh(lowLatency: Bool, live: Bool, pausedAt: TimeInterval?,
+    now: TimeInterval, automaticEdgeAllowed: Bool, requestedRate: Float,
+    positionMs: Int64?, startMs: Int64?, endMs: Int64?) -> Bool {
+    guard automaticEdgeAllowed, requestedRate == 1,
+      requiresRefresh(lowLatency: lowLatency, live: live, pausedAt: pausedAt, now: now) else { return false }
+    guard let positionMs, let startMs, let endMs,
+      startMs >= 0, endMs > startMs else { return true }
+    return positionMs < startMs || positionMs >= endMs
+  }
+
   static func requiresRefresh(lowLatency: Bool, live: Bool, pausedAt: TimeInterval?, now: TimeInterval) -> Bool {
     guard lowLatency, live, let pausedAt else { return false }
     return now - pausedAt >= 2

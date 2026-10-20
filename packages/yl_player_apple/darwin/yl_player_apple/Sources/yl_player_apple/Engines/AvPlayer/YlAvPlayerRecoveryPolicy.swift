@@ -89,7 +89,7 @@ enum YlAvPlayerRecoveryPolicy {
     YlAppleSafeDiagnostics.diagnostic(error ?? NSError(domain: "AVFoundationErrorDomain", code: 0))
   }
 
-  private static func isDirectLiveHls(
+  static func isDirectLiveHls(
     _ source: YlAppleSourceDescriptor,
     usesResourceLoader: Bool
   ) -> Bool {

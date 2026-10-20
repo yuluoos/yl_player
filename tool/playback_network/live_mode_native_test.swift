@@ -40,6 +40,24 @@ struct LiveModeNativeTest {
     check(!YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: false, pausedAt: 1, now: 4), "VOD cannot refresh live edge")
     check(!YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: true, pausedAt: nil, now: 4), "initial play does not reopen")
     check(!YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: true, pausedAt: 3.9, now: 4), "short pause avoids reconnect churn")
+    func expiredResume(low: Bool = true, live: Bool = true, paused: TimeInterval? = 0,
+      now: TimeInterval = 5, edge: Bool = true, rate: Float = 1,
+      position: Int64? = 37_000, start: Int64? = nil, end: Int64? = nil) -> Bool {
+      YlLiveResumePolicy.requiresHlsRefresh(lowLatency: low, live: live,
+        pausedAt: paused, now: now, automaticEdgeAllowed: edge, requestedRate: rate,
+        positionMs: position, startMs: start, endMs: end)
+    }
+    check(expiredResume(), "expired AVPlayer window refreshes on low resume")
+    check(expiredResume(start: 40_000, end: 43_000), "paused position outside sliding window refreshes")
+    check(!expiredResume(start: 36_000, end: 40_000), "available paused media needs no reopen")
+    check(!expiredResume(low: false), "smooth resume retains its media")
+    check(!expiredResume(live: false), "finite media cannot refresh as live")
+    check(!expiredResume(paused: nil), "initial play cannot spend resume budget")
+    check(!expiredResume(now: 1), "short pause cannot spend resume budget")
+    check(!expiredResume(edge: false), "explicit seek survives long pause")
+    check(!expiredResume(rate: 1.5), "explicit rate survives long pause")
+    check(expiredResume(start: 40_000, end: 40_000), "empty live window is expired")
+    check(expiredResume(position: 43_000, start: 40_000, end: 43_000), "exclusive end is not playable")
     let rtmpBudget = YlRtmpRecoveryBudget()
     let resumeRecovery = YlRecoveryCoordinator(configuration: .init(map: ["maxRetries": 3]), scheduler: YlDispatchRecoveryScheduler(queue: .main), rtmpBudget: rtmpBudget)
     check(resumeRecovery.reserveLiveRefresh(), "low resume consumes shared RTMP retry budget")
