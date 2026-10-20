@@ -196,15 +196,21 @@ def extract_rpus(source, packets, *, length_size, stream_index, media_size,
     return rows, bytes(framed)
 
 
-def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False):
+def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False, include_mapping=False):
     require(0 < len(rows) == len(parsed) <= MAX_PACKETS)
     require(isinstance(time_base, str) and re.fullmatch('[1-9][0-9]*/[1-9][0-9]*', time_base))
     require(re.fullmatch('[0-9a-f]{64}', media_sha256))
     levels, cms, profiles, el_types = Counter(), Counter(), Counter(), Counter()
     previous, absent, cuts, unparsed = 0, 0, 0, 0
     records = []
+    mapping_references = None
+    if include_mapping:
+        require(all(type(row.get('packet_index')) is int and row['packet_index'] == index
+                    for index, row in enumerate(rows)))
+        from mapping_references import resolve
+        mapping_references = resolve(parsed)
     for row, value in zip(rows, parsed):
-        require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping','unparsed_rpu_bits'})
+        require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping','unparsed_rpu_bits'} | ({'mapping','previous_mapping_id'} if include_mapping else set()))
         profile = integer(value['profile']); require(0 <= profile <= 255)
         require(value['el_type'] in (None, 'MEL', 'FEL'))
         require(type(value['use_previous_mapping']) is bool)
@@ -231,6 +237,8 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
                         'profile':profile, 'levels':sorted(current_levels),
                         'cm':sorted(value['cm_levels']),
                         'use_previous_mapping':value['use_previous_mapping']})
+        if mapping_references is not None:
+            records[-1]['mapping_reference'] = mapping_references[len(records)-1]
     presentation = sorted(records, key=lambda row: row['pts'])
     require(len({row['pts'] for row in records}) == len(records))
     transitions = sum(a['display_metadata_sha256'] != b['display_metadata_sha256']
@@ -266,10 +274,13 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
                 value['profile'] == 7 and row['enhancement_vcl_nals'] == 0
                 for value, row in zip(parsed, inventories)),
             'decoded_layer_pairing_verified': False}
+    if include_mapping:
+        result['schema_version'] = 3
+        result['mapping_reference_ids_resolved'] = True
     return result
 
 
-def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False):
+def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False, include_mapping=False):
     media = Path(media).resolve(strict=True)
     inspector = Path(inspector).resolve(strict=True)
     inspector_sha256 = file_digest(inspector)
@@ -301,12 +312,12 @@ def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=
             include_layers=include_layers)
     with tempfile.TemporaryDirectory(prefix='yl-dovi-rpus-') as scratch:
         path = Path(scratch)/'rpus.bin'; path.write_bytes(framed)
-        parsed = [json.loads(line) for line in run_bounded([str(Path(inspector).resolve(strict=True)),str(path)],
+        parsed = [json.loads(line) for line in run_bounded([str(Path(inspector).resolve(strict=True)),str(path)] + (['--mapping'] if include_mapping else []),
                   limit=128*1024*1024).splitlines()]
     require(file_digest(media) == expected_sha256)
     require(file_digest(inspector) == inspector_sha256)
     result = summarize(rows, parsed, time_base=stream['time_base'], media_sha256=expected_sha256, trace_sink=trace_sink,
-                       include_layers=include_layers)
+                       include_layers=include_layers, include_mapping=include_mapping)
     result['inspector_sha256'] = inspector_sha256
     result['packet_count'] = len(probe['packets'])
     result['declared_sample_count'] = declared_samples
@@ -322,11 +333,12 @@ def main():
     parser.add_argument('--inspector',required=True)
     parser.add_argument('--ffprobe',default='ffprobe')
     parser.add_argument('--layers', action='store_true', help='Include schema 2 BL/EL NAL coverage; not decoded pairing.')
+    parser.add_argument('--mapping', action='store_true', help='Resolve mapping ID provenance in decode order; not effective DM/trim state.')
     parser.add_argument('--trace',type=Path,help='Optional new JSONL trace file; existing paths are refused.')
     args = parser.parse_args()
     try:
         trace = io.BytesIO()
-        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers)
+        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers,include_mapping=args.mapping)
         if args.trace is not None:
             fd = os.open(args.trace,os.O_WRONLY | os.O_CREAT | os.O_EXCL,0o600)
             try:

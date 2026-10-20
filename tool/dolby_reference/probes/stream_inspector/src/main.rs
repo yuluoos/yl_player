@@ -29,7 +29,8 @@ fn levels(metadata: &DmData) -> Vec<u8> {
 
 fn run() -> ProbeResult<()> {
     let args: Vec<_> = std::env::args_os().collect();
-    if args.len() != 2 { return Err("arguments".into()); }
+    let mapping_mode = args.len() == 3 && args[2] == "--mapping";
+    if args.len() != 2 && !mapping_mode { return Err("arguments".into()); }
     let file = File::open(&args[1])?;
     if file.metadata()?.len() > 32*1024*1024 { return Err("size".into()); }
     let mut input = BufReader::new(file);
@@ -44,7 +45,7 @@ fn run() -> ProbeResult<()> {
             if let Some(value) = &dm.cmv29_metadata { cm_levels.insert("2.9", levels(value)); }
             if let Some(value) = &dm.cmv40_metadata { cm_levels.insert("4.0", levels(value)); }
         }
-        let record = serde_json::json!({
+        let mut record = serde_json::json!({
             "profile": rpu.dovi_profile,
             "el_type": rpu.el_type,
             "cm_levels": cm_levels,
@@ -52,6 +53,11 @@ fn run() -> ProbeResult<()> {
             "use_previous_mapping": rpu.header.use_prev_vdr_rpu_flag,
             "unparsed_rpu_bits": rpu.remaining.as_ref().map_or(0, |bits| bits.len()),
         });
+        if mapping_mode {
+            record["mapping"] = serde_json::to_value(&rpu.rpu_data_mapping)?;
+            record["previous_mapping_id"] = serde_json::to_value(
+                if rpu.header.use_prev_vdr_rpu_flag { Some(rpu.header.prev_vdr_rpu_id) } else { None })?;
+        }
         serde_json::to_writer(&mut output, &record)?;
         output.write_all(b"\n")?;
     }

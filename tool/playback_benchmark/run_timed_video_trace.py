@@ -18,14 +18,22 @@ import uuid
 class RowTail:
     def __init__(self,path):
         self.path=path; self.offset=0; self.pending=b''; self.latest=None
-    def poll(self):
-        if not self.path.exists(): return self.latest
+    def poll_rows(self):
+        """Consume a bounded chunk without discarding intermediate observations."""
+        if not self.path.exists(): return []
         with self.path.open('rb') as f:
-            f.seek(self.offset); data=f.read(); self.offset=f.tell()
+            if os.fstat(f.fileno()).st_size < self.offset:
+                raise ValueError('diagnostic rows truncated during capture')
+            f.seek(self.offset); data=f.read(65536); self.offset=f.tell()
         lines=(self.pending+data).split(b'\n');self.pending=lines.pop()
-        if len(self.pending)>1024*1024: raise ValueError('unterminated diagnostic row exceeds 1 MiB')
-        for line in lines:
-            if line: self.latest=json.loads(line)
+        if len(self.pending)>1024*1024 or any(len(line)>1024*1024 for line in lines):
+            raise ValueError('diagnostic row exceeds 1 MiB')
+        rows=[json.loads(line) for line in lines if line]
+        if rows: self.latest=rows[-1]
+        return rows
+
+    def poll(self):
+        self.poll_rows()
         return self.latest
 
 
@@ -209,8 +217,9 @@ def main():
                     if shutil.disk_usage(out).free<4*1024**3:
                         errors.append('capture stopped at 4 GiB free disk boundary');t.send_signal(signal.SIGINT);stop_sent=True
                     elif args.long:
-                        row=tail.poll()
-                        if row and trigger is None:
+                        rows=tail.poll_rows()
+                        for row in rows:
+                            if trigger is not None: break
                             if args.capture_system_drops:
                                 observed_drop=drop_detector.observe(row)
                                 if pending_drop is None: pending_drop=observed_drop
@@ -218,6 +227,7 @@ def main():
                             if event:
                                 trigger=dict(detectedUptime=now,row=row,**event);receipt['trigger']=trigger
                                 print(('Completed ready wait' if event['kind']=='completedReadyWait' else 'System drop')+' captured; recording a 250 ms tail after detection',flush=True)
+                        row=tail.latest
                         if trigger and capture_tail_complete(trigger,row,now):
                             t.send_signal(signal.SIGINT);stop_sent=True;receipt['traceStopRequestedUptime']=now
                 time.sleep(.2)

@@ -54,6 +54,70 @@ private final class DashLoadingRequest: YlHlsLoadingRequest {
 }
 
 final class YlDashResourceLoaderTests: XCTestCase {
+  @MainActor
+  func testActualOwnedDashAdaptiveObservation() async throws {
+    let env = ProcessInfo.processInfo.environment
+    guard let rawURL = env["YL_ABR_PROBE_URL"], let rawDirectory = env["YL_ABR_PROBE_DIRECTORY"] else { return }
+    let url = try XCTUnwrap(URL(string: rawURL))
+    XCTAssertEqual(url.host, "127.0.0.1")
+    let directory = URL(fileURLWithPath: rawDirectory)
+    let processProof: [String: Any] = ["pid": ProcessInfo.processInfo.processIdentifier,
+      "executable": ProcessInfo.processInfo.arguments[0], "token": try XCTUnwrap(env["YL_ABR_PROBE_TOKEN"])]
+    try JSONSerialization.data(withJSONObject: processProof, options: [.sortedKeys])
+      .write(to: directory.appendingPathComponent("process.json"), options: .atomic)
+    let prepared = try await Task.detached {
+      try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
+        configuration: .init(map: [:]), cancellationToken: .init())
+    }.value
+    let player = AVPlayer()
+    let output = AppleTestTexture()
+    var tick: (() -> Void)?
+    var states: [YlNativeState] = []
+    let backend = YlAvPlayerBackend(playerId: 991,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states = [state] } })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
+    try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
+    try backend.activate()
+    try backend.play()
+    _ = FileManager.default.createFile(atPath: directory.appendingPathComponent("rows.jsonl").path, contents: nil)
+    let file = try FileHandle(forWritingTo: directory.appendingPathComponent("rows.jsonl"))
+    defer { try? file.close() }
+    let started = ProcessInfo.processInfo.systemUptime
+    var completed = false
+    var frameCount = 0
+    while ProcessInfo.processInfo.systemUptime - started < 140 {
+      tick?(); _ = backend.copyPixelBuffer()
+      frameCount += output.frames.count
+      output.frames.removeAll(keepingCapacity: true)
+      let item = try XCTUnwrap(player.currentItem)
+      func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
+      let logs: [[String: Any]] = (item.accessLog()?.events ?? []).map {
+        ["observedBitrate": finite($0.observedBitrate), "indicatedBitrate": finite($0.indicatedBitrate),
+         "switchBitrate": finite($0.switchBitrate), "transferDuration": finite($0.transferDuration),
+         "bytes": $0.numberOfBytesTransferred, "requests": $0.numberOfMediaRequests,
+         "segmentsDuration": finite($0.segmentsDownloadedDuration), "stalls": $0.numberOfStalls]
+      }
+      let row: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
+        "position": finite(CMTimeGetSeconds(player.currentTime())), "rate": player.rate,
+        "status": item.status.rawValue, "width": item.presentationSize.width,
+        "height": item.presentationSize.height, "peak": item.preferredPeakBitRate,
+        "forwardBuffer": item.preferredForwardBufferDuration, "logs": logs,
+        "completed": states.last?.status == "completed", "framesPublished": frameCount]
+      try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
+      if states.last?.status == "completed" { completed = true; break }
+      XCTAssertNotEqual(item.status, .failed)
+      if item.status == .failed { break }
+      try await Task.sleep(nanoseconds: 250_000_000)
+    }
+    XCTAssertTrue(completed)
+    backend.dispose()
+    XCTAssertNil(player.currentItem)
+  }
+
   private let origin = URL(string: "https://origin.test/root/movie.mpd?token=private")!
   private var mpd: Data { Data("""
     <MPD type="static" mediaPresentationDuration="PT4S"><Period><AdaptationSet mimeType="video/mp4"><Representation id="v" bandwidth="1000" codecs="avc1.64001f" width="320" height="180"><SegmentTemplate initialization="init.mp4" media="seg-$Number$.m4s" duration="2"/></Representation></AdaptationSet></Period></MPD>

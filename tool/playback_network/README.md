@@ -171,3 +171,33 @@ status. Bounds are eight simultaneous connections, 10,000 lifetime connections,
 HLS files roll forward; FLV connections each start a fresh timestamp epoch.
 Source identity and generated timestamps do not establish a synchronized
 source-to-display clock. End-to-end latency and physical output remain unverified.
+
+## Apple ABR access-log diagnosis
+
+The explicit native observation entry
+`YlDashResourceLoaderTests.testActualOwnedDashAdaptiveObservation` uses the real
+DASH projection/proxy and AVPlayer backend with an injected player for read-only
+access-log inspection. It is dormant without `YL_ABR_PROBE_URL` and
+`YL_ABR_PROBE_DIRECTORY`. The collector owns its loopback server and freezes the
+built application files before/after the run:
+
+```sh
+python3 -B tool/playback_network/abr_accesslog.py \
+  --products /absolute/path/to/built/Build/Products \
+  --directory /private/tmp/new-abr-accesslog-run \
+  --device IOS_SIMULATOR_UUID
+```
+
+Omit `--device` for arm64 macOS. Build the current example native tests first;
+selecting a nonexistent method or stale binary cannot pass without complete
+observation rows. The normal profile is unchanged. An explicitly supplied
+`--profiles` file and `--profile` may define a separately identified diagnostic
+intervention; it must not replace the frozen baseline.
+
+Logs contain only scalar playback/geometry/bitrate/transfer counters, never
+access-log URLs or server addresses. The test discards published test pixel
+buffers every poll. The output records actual down/up geometry changes and
+AVPlayer's reported bitrate; it does not reveal the private ABR decision
+algorithm, establish a recovery deadline, or certify CAP-ABR/physical output.
+Native completion requires programme completion and disposal. Full public
+Flutter auto/caps/fixed acceptance remains a separate entry.
