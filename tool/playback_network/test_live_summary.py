@@ -102,6 +102,24 @@ class LiveSummaryTests(unittest.TestCase):
         r, s, receipt, connections = evidence(); connections[0]['phaseBytes'] = [0, 0, 60]
         self.assertEqual(summarize(r, s, receipt, connections, exit_code=0)['networkPhasesObserved'], [2])
 
+    def test_reconnected_epoch_needs_consecutive_playing_progress(self):
+        for states, expected in [
+            ([('buffering', 15000), ('playing', 0), ('playing', 500)], True),
+            ([('playing', 15000), ('playing', 0), ('playing', 0)], False),
+            ([('buffering', 0), ('buffering', 500), ('buffering', 1000)], False),
+            ([('playing', 0), ('playing', 500), ('buffering', 1000)], False),
+        ]:
+            r, s, receipt, connections = evidence()
+            template = s[3]
+            low = [dict(template, elapsedUs=400 + i * 10, revision=4,
+                        status=status, mediaClockUs=position, positionUs=position)
+                   for i, (status, position) in enumerate(states)]
+            s[3:5] = low
+            r['sampleCount'] = len(s)
+            with self.subTest(states=states):
+                report = summarize(r, s, receipt, connections, exit_code=0)
+                self.assertEqual(report['captureComplete'], expected)
+
     def test_partial_buffer_telemetry_is_not_a_comparable_maximum(self):
         r, s, receipt, connections = evidence()
         s[0]['managedBufferedUs'] = 0

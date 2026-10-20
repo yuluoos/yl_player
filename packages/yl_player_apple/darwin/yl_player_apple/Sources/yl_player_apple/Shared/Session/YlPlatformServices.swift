@@ -30,7 +30,8 @@ struct YlAppleCompatibility {
   var usesInterleavedPCM: Bool { false }
   var limitsVideoReservations: Bool { true }
   var retainsReplacementHls: Bool { platform == .ios }
-  var reconnectsAvPlayer: Bool { platform == .ios }
+  // P04 requires the same bounded live-HLS recovery on both Apple platforms.
+  var reconnectsAvPlayer: Bool { true }
 }
 
 protocol YlTextureOutput: AnyObject {

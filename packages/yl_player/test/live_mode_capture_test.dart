@@ -76,6 +76,36 @@ void main() {
     series.add(YlPlayerState(sessionId: id), 1);
     expect(series.samples.single['sessionId'], 'live-1');
   });
+
+  test(
+    'device capture permits only an explicitly declared private IPv4 host',
+    () {
+      for (final address in ['10.1.2.3', '172.16.2.3', '192.168.50.196']) {
+        final value = config('flv', 'http://$address:8000/live.flv');
+        expect(() => parseLiveModeConfig(value), throwsFormatException);
+        value['ownedHost'] = address;
+        expect(parseLiveModeConfig(value)['ownedHost'], address);
+      }
+      for (final address in [
+        'example.com',
+        '8.8.8.8',
+        '172.32.0.1',
+        '192.168.1.999',
+        '192.168.01.2',
+      ]) {
+        final value = config('flv', 'http://$address:8000/live.flv')
+          ..['ownedHost'] = address;
+        expect(() => parseLiveModeConfig(value), throwsFormatException);
+      }
+      expect(
+        () => parseLiveModeConfig(
+          config('flv', 'http://192.168.1.2:8000/live.flv')
+            ..['ownedHost'] = '192.168.1.3',
+        ),
+        throwsFormatException,
+      );
+    },
+  );
   test('observations bounded and missing metrics remain unknown', () {
     const id = YlPlaybackSessionId('live-1');
     final series = LiveModeSeries(id, limit: 2);

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "runId": "p04-merge-hls-switch",
+  "protocol": "hls",
+  "scenario": "switch",
+  "baselineMode": null,
+  "outcome": "completed",
+  "processExitCode": 0,
+  "captureComplete": false,
+  "violations": [
+    "low_clock_not_advancing"
+  ],
+  "modeSwitchLatencyUs": [
+    4347,
+    4282
+  ],
+  "rebufferCountDelta": 5,
+  "rebufferDurationUsDelta": 16981000,
+  "reconnectCountDelta": 2,
+  "networkPhaseBytes": [
+    580356,
+    0,
+    1516770
+  ],
+  "networkPhasesObserved": [
+    0,
+    2
+  ],
+  "downstreamBytesWritten": 2097126,
+  "maximumManagedBufferedUs": null,
+  "maximumSampleGapUs": 3288665,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "mediaIdentityVerified": false,
+  "baselineComparable": false
+}

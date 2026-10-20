@@ -1,0 +1,3 @@
+Independent read-only review: p04_merge_review
+Initial production merge review found no confirmed blocker. Actual native compilation subsequently found internal ylRtmpLimit usage. Follow-up review confirmed ylRtmpError("resource.exhausted") is exactly equivalent and preserves the core visibility boundary.
+Summary follow-up: reviewed summarize_live.py and regression cases; final uninterrupted playing-epoch rule agrees with collector observe(). No remaining confirmed findings. Review does not replace compilation or runtime evidence.

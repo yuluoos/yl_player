@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "runId": "p04-merge-flv-switch",
+  "protocol": "flv",
+  "sourceSha256": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+  "profileId": "owned-unshaped-v1",
+  "profileSha256": "34dc6fcf1c14c72f679715e4e1c97784fdf7317958a26616ba41f236c78dc364",
+  "requests": [
+    {
+      "id": 0,
+      "path": "/live.flv",
+      "startUs": 5,
+      "bytes": 704154,
+      "interrupted": true,
+      "endUs": 15850032
+    },
+    {
+      "id": 1,
+      "path": "/live.flv",
+      "startUs": 14078228,
+      "bytes": 750088,
+      "interrupted": true,
+      "endUs": 30925099
+    },
+    {
+      "id": 2,
+      "path": "/live.flv",
+      "startUs": 30945994,
+      "bytes": 635945,
+      "interrupted": true,
+      "endUs": 45195209
+    },
+    {
+      "id": 3,
+      "path": "/live.flv",
+      "startUs": 43242094,
+      "bytes": 716853,
+      "interrupted": true,
+      "endUs": 59349303
+    },
+    {
+      "id": 4,
+      "path": "/live.flv",
+      "startUs": 57338402,
+      "bytes": 173193,
+      "interrupted": true,
+      "endUs": 61395928
+    },
+    {
+      "id": 5,
+      "path": "/live.flv",
+      "startUs": 59386599,
+      "bytes": 173193,
+      "interrupted": true,
+      "endUs": 63352573
+    },
+    {
+      "id": 6,
+      "path": "/live.flv",
+      "startUs": 61344838,
+      "bytes": 85983,
+      "interrupted": true,
+      "endUs": 63380146
+    }
+  ],
+  "connections": 7,
+  "cleaned": true,
+  "endToEndLatencyUs": null,
+  "physicalOutputVerified": false
+}

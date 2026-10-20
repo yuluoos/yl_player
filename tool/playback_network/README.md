@@ -95,7 +95,8 @@ The generated 40-second MPD has structural/hash validation. The missing-high
 variant also has a macOS public-player run covering fixed selection across an
 existing Period, missing-track fallback and caps/seek. Full-trajectory ABR and
 three-platform acceptance remain open. Do not interpret repeated HTTP downloads
-as continuous media playback. The original static HTTP server does not generate live sources;
+as continuous media playback. Owned continuous HLS/HTTP-FLV sources are provided by `live_fixture.py`;
+RTMP fault injection uses `tool/rtmp_acceptance`. The static HTTP server serves DASH;
 protocol-transparent shaping is now provided by `live_relay.py` (see below). Real TCP RTT and end-to-end live latency remain
 unavailable, as do P08-derived device SLOs until measured and frozen. This tool
 does not establish CAP-ABR, CAP-LIVE, mode switching or three-platform acceptance.
@@ -137,3 +138,36 @@ All Python regressions are discovered by `tool/check_foundation.sh`, hence by
 the quick/full foundation CI shards. Public Flutter integration entries require
 an explicit owned source, identity and selected target. Offline unit tests and
 independent FFmpeg decoding do not count as those device entries running.
+
+
+## Owned continuous HLS / HTTP-FLV
+
+`live_fixture.py` uses FFmpeg to loop the repository-owned AVC/AAC source with
+continuous output timestamps. It verifies the pinned source SHA-256 before
+starting any process and serves only allowlisted loopback paths. It supports the
+same application bandwidth/stall/disconnect profiles. The profile begins at the
+first valid GET, so app build time does not consume it. No profile means no
+intentional network impairment. RTMP continues to use `tool/rtmp_acceptance/run.py`.
+
+```sh
+python3 -B tool/playback_network/live_fixture.py \
+  --protocol flv --run-id live-flv-001 \
+  --output /private/tmp/live-flv-001 \
+  --profile stall-and-recover-v1
+```
+
+Use `--protocol hls` for a moving six-segment playlist. Pass the startup URL,
+`sourceSha256` and run ID to `live_mode_switch_test.dart` as documented in the
+[capture protocol](capture-protocol.md). Use a new output directory for every run.
+For Android, explicitly reverse the printed port on the selected test device,
+then remove that mapping after the run. Do not run different native platforms or
+builds concurrently when collecting comparable timing samples.
+
+The process exits on Ctrl-C/SIGTERM or after 300 seconds. Cleanup interrupts
+blocked sockets and shaping, terminates only its own FFmpeg children, joins
+handlers, then writes `receipt.json` with hashes, request bytes/times and cleanup
+status. Bounds are eight simultaneous connections, 10,000 lifetime connections,
+32 lifetime FLV publishers, 8 KiB transfer chunks and two-second socket writes.
+HLS files roll forward; FLV connections each start a fresh timestamp epoch.
+Source identity and generated timestamps do not establish a synchronized
+source-to-display clock. End-to-end latency and physical output remain unverified.

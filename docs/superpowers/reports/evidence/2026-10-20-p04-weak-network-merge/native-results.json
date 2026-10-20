@@ -1,0 +1,26 @@
+[
+  {
+    "name": "apple-live",
+    "cmd": [
+      "python3",
+      "-B",
+      "tool/playback_network/check_live_mode_native.py",
+      "--flutter-sdk",
+      "/Users/yy2021_8689/flutter"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+    "exitCode": 1,
+    "seconds": 105.16
+  },
+  {
+    "name": "delivery-native",
+    "cmd": [
+      "python3",
+      "-B",
+      "tool/media_delivery/run_native_tests.py"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+    "exitCode": 0,
+    "seconds": 16.43
+  }
+]

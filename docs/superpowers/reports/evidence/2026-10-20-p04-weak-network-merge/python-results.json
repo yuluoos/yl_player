@@ -1,0 +1,19 @@
+[
+  {
+    "name": "python-network",
+    "cmd": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_network",
+      "-p",
+      "test_*.py"
+    ],
+    "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+    "exitCode": 0,
+    "seconds": 2.41
+  }
+]

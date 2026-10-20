@@ -31,7 +31,14 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
     require(type(result.get('cleaned')) is bool and result.get('outcome') in ('completed', 'failed', 'timeout'))
     require(result.get('endToEndLatencyUs') is None and result.get('physicalOutputVerified') is False and
             result.get('baselineComparable') is False and
-            result.get('clockRelation') == 'load-vs-first-get-unsynchronized')
+            result.get('clockRelation') in ('load-vs-first-get-unsynchronized', 'profile-head-bracket'))
+    alignment = result.get('clockAlignment')
+    if result['clockRelation'] == 'profile-head-bracket':
+        require(isinstance(alignment, dict) and set(alignment) == {'beforeUs','afterUs','serverUs'})
+        require(all(type(v) is int and 0 <= v <= 10**12 for v in alignment.values()))
+        require(alignment['afterUs'] >= alignment['beforeUs'])
+    else:
+        require(alignment is None)
     for key in ['policyAckUs', 'firstFrameUs']:
         require(result.get(key) is None or number(result[key]))
     previous = -1
@@ -77,6 +84,9 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
     recovery = False
     phase_bytes = [0, 0, 0]
     phase_available = True
+
+    media_phases = set()
+    weak_low_request, recovery_high_request = None, None
     for row in requests:
         require(isinstance(row, dict) and row.get('schemaVersion') == 1 and row.get('runId') == run and
                 row.get('profile') == result['profileId'] and row.get('profileSha256') == result['profileHash'] and
@@ -110,6 +120,16 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
             rendition = match.group(1) or match.group(2)
             if 'phaseBytesWritten' in row:
                 phase_bytes = [a+b for a,b in zip(phase_bytes, row['phaseBytesWritten'])]
+
+            if row['bodyBytesWritten'] > 0 and row['outcome'] == 'complete':
+                media_phases.add('initial' if row['startMs'] < 10000 else 'weak' if row['startMs'] < 25000 else 'recovery')
+            if match.group(1) in ('0', '1') and row['bodyBytesWritten'] > 0 and row['outcome'] == 'complete':
+                if rendition == '0' and 10000 <= row['startMs'] < 25000:
+                    value = round((row['startMs']-10000)*1000)
+                    weak_low_request = value if weak_low_request is None else min(value, weak_low_request)
+                if rendition == '1' and row['startMs'] >= 25000:
+                    value = round((row['startMs']-25000)*1000)
+                    recovery_high_request = value if recovery_high_request is None else min(value, recovery_high_request)
             if result['mode'] == 'caps' and rendition == '1':
                 violations.add('caps_high_video_requested')
             if row['endMs'] >= 25000 and row['bodyBytesWritten'] > 0:
@@ -134,7 +154,28 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
         if not values or any(v is None for v in values) or any(b < a for a,b in zip(values,values[1:])):
             return None
         return values[-1] - values[0]
+    down, up = None, None
+    high_before = False
+    if alignment is not None and result['mode'] == 'auto':
+        # A server timestamp emitted during the HEAD lies inside the client's
+        # before/after interval. Keep the uncertainty instead of guessing a point.
+        offset_min = alignment['beforeUs'] - alignment['serverUs']
+        offset_max = alignment['afterUs'] - alignment['serverUs']
+        for sample in samples:
+            lo, hi = sample['elapsedUs'] - offset_max, sample['elapsedUs'] - offset_min
+            geometry = sample['width'], sample['height']
+            if geometry == (640, 360) and hi < 10000000:
+                high_before = True
+            if high_before and down is None and geometry == (320, 180) and lo >= 10000000:
+                down = dict(min=lo-10000000, max=hi-10000000)
+            if down is not None and up is None and geometry == (640, 360) and lo >= 25000000:
+                up = dict(min=lo-25000000, max=hi-25000000)
     return dict(schemaVersion=1, runId=run, mode=result['mode'], captureComplete=bool(completed),
+                downshiftLatencyUs=down, upshiftLatencyUs=up,
+                weakLowRequestLatencyUs=weak_low_request, recoveryHighRequestLatencyUs=recovery_high_request,
+                adaptationObserved=bool(completed and not violations and down is not None and up is not None and
+                                        weak_low_request is not None and recovery_high_request is not None),
+                mediaRequestPhases=sorted(media_phases),
                 outcome=result['outcome'], processExitCode=exit_code, cleaned=result['cleaned'],
                 violations=sorted(violations), observedGeometrySwitches=geometry_switches,
                 fixedHighObserved=high_confirmed if result['mode']=='fixed' else None,

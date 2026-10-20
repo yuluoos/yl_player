@@ -66,7 +66,14 @@ Future<YlPlaybackSession> render(
   final events = <YlPlayerEvent>[];
   final sub = player.events.listen(events.add);
   try {
-    final session = await player.load(YlNetworkSource(endpoint(path)));
+    final session = await player.load(
+      YlNetworkSource(endpoint(path)),
+      options: const YlLoadOptions(
+        bufferStrategy: bool.fromEnvironment('YL_RTMP_LOW_LATENCY')
+            ? YlBufferStrategy.lowLatency()
+            : YlBufferStrategy.automatic(),
+      ),
+    );
     await readyAndPlay(player, session);
     expect(
       events.whereType<YlFirstFrameEvent>().any(

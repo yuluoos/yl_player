@@ -20,3 +20,15 @@ internal class YlRtmpLiveModePolicy {
     fun shouldRefresh(low: Boolean, playing: Boolean, bufferedMs: Long, maxBufferMs: Int) =
         low && playing && (refreshPending || bufferedMs > maxBufferMs)
 }
+
+/** HTTP-FLV has no DVR edge. A long paused low-mode stream needs a new extractor
+ * on resumed demand; short pauses and smooth playback keep their existing media. */
+internal class YlHttpFlvResumePolicy {
+    private var pausedAtMs: Long? = null
+    fun paused(nowMs: Long) { if (pausedAtMs == null) pausedAtMs = nowMs }
+    fun clear() { pausedAtMs = null }
+    fun requiresRefresh(low: Boolean, live: Boolean, nowMs: Long): Boolean {
+        val paused = pausedAtMs
+        return low && live && paused != null && nowMs - paused >= 2000L
+    }
+}

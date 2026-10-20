@@ -1,0 +1,175 @@
+{
+  "mainParent": "9afeeeaa69e23a92af73a11409f2995a1c389521",
+  "branchParent": "03f2eaf6edf344ef01cb3e123dffe8b05f56ff1a",
+  "dart": [
+    {
+      "package": "yl_player_platform_interface",
+      "passed": 137,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player",
+      "passed": 1700,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_android",
+      "passed": 97,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_apple",
+      "passed": 156,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_media_delivery",
+      "passed": 11,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_cast",
+      "passed": 48,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_cast_player_adapter",
+      "passed": 19,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_example",
+      "passed": 97,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_android_example",
+      "passed": 1,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_cast_example",
+      "passed": 2,
+      "exitCode": 0
+    },
+    {
+      "package": "yl_player_source_resolver",
+      "passed": 61,
+      "exitCode": 0
+    }
+  ],
+  "dartTotal": 2329,
+  "pythonTests": 71,
+  "appleNativeChecks": 69,
+  "android": {
+    "suites": 69,
+    "tests": 548,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "sourceHashCount": 1519,
+  "sourceHashesUnchangedAfterFinalChecks": true,
+  "analyzeFinal": "No issues found",
+  "iosArm64BuildExitCode": 0,
+  "liveFinal": {
+    "hlsSwitch": {
+      "exitCode": 0,
+      "summary": "hls-switch/summary-final.json",
+      "sampleCount": 211
+    },
+    "flvSwitch": {
+      "exitCode": 0,
+      "summary": "flv-switch/summary.json",
+      "sampleCount": 193
+    },
+    "hlsResume": {
+      "exitCode": 0,
+      "completed": true,
+      "sourceCleaned": true
+    }
+  },
+  "privateArchive": ".git/codex-archives/p04-weak-network-live-20261020",
+  "initialFailures": [
+    "analyze: missing braces",
+    "android wrapper: device ID required, no tests executed",
+    "native: internal ylRtmpLimit, replaced with equivalent public error builder",
+    "hls summary: clock epoch reset misclassified; original summary preserved; new regression failed first and passed after fix"
+  ],
+  "review": {
+    "production": "no remaining confirmed defects after cross-module compile fix",
+    "summary": "independent review confirms agreement with collector; identity and cleanup gates retained"
+  },
+  "files": {
+    "analyze-final.log.gz": "d27a394627b1407975404aba88466fc2b90be0c94ce7aaf72f454c3c4c82ab71",
+    "analyze.log.gz": "f69621f734acb4ff002f0bb7d58fe5446e9321c12b2839aeebbad1b35ef589ad",
+    "android-counts.json": "704395833750e3ac6b5d945af38d943339c1261d27f4b0e1c720a882699e2afc",
+    "android-jvm-direct.log.gz": "bf235cc8a299720eefa8842e2821ef1e113f977056619f9ffd14666482d17b15",
+    "android-jvm-results.tar.gz": "7a50717ab7e6249e8e974101cd82638ad2acb835aff895cd1f0b24fbc32253e9",
+    "android-jvm.log.gz": "f06331dae650a3c381e142a1cdd9b3f4e41dcd8efd26f0226ae79b255f7a3ffb",
+    "android-results.json": "f81fb25b96a3eddfe49c4fc2a8214e0fda0eea0c91829b4a0b0dfccb004dfa59",
+    "apple-live-final.log.gz": "342757d9b150e8e8981b43915d84f912d13bc5e74a5d6ed6092536f51795effd",
+    "apple-live.log.gz": "87a865612f6d103375c7378fed92f3332f7ca762d606e274814fdb56e0eeaaed",
+    "baseline.json": "05e5af51579ba0828680cc06ce0178574d64a5c178501a86494d5c1a039833c8",
+    "core-api-boundary.log.gz": "cf932c6e62e7cbb1937cd85250f5fb2b173a6dd8367ab46fa7c73a4bb86e6499",
+    "dart-results.json": "feec5eff63c602b7e862eeefc32d55fc6d5ddd8bb346706d3573d2b46b1b69ea",
+    "delivery-native.log.gz": "3e52a56496a19c3f03149c78a5152505e3699162741fac8a34da9e034be2b961",
+    "final-source-sha256.json": "d3b8f28b6c2a3e2560366f508d091c168f5bd66043cca982b216b013be1f1fb3",
+    "flv-switch/capture.log.gz": "0fd714cabdfd9acf79fa05b1994efd57f9f1bebb19ef4d03a7ad89416aa028e1",
+    "flv-switch/command.json": "58606ef0e72389443892a9d3434d93461ddffa38df78a2409a7121b7d5e3dbea",
+    "flv-switch/connections.jsonl": "44a45e4dad0bac3aa711ccb973888b364a808f5e8a803ab092b2871485c5ee09",
+    "flv-switch/relay-error.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/relay-receipt.json": "2637fa078ddab8a2b9c2c80bbf7ead477bda7563a576b1c63686307009ffa1c7",
+    "flv-switch/relay-start.json": "3ba5d02656c9bc048ee1de4cc8bcee0c00830fafd4cf52445b0815a7683ba592",
+    "flv-switch/source/publisher-0.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/publisher-1.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/publisher-2.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/publisher-3.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/publisher-4.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/publisher-5.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/publisher-6.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "flv-switch/source/receipt.json": "7ebd7735effb4bd63f6756cdf4b5853ca04bb5ba3c97946f8f6b7c5c01393454",
+    "flv-switch/summary.json": "3a33df7ddaf78eb9bda2d55423efc26373d24a15c862723d6c6c63fadc9f6cd4",
+    "flv-switch/summary.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "hls-resume/capture.log.gz": "863ec8efa8173602b23b6d4c377dfce63dc0872fa836883aa3e5db24b1ad19f6",
+    "hls-resume/command.json": "06dbeb0bcdf42eb3ccd5dfed78c94fff08a6f666e701869bb8bbe838ebc2c3a7",
+    "hls-resume/source/publisher-0.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "hls-resume/source/receipt.json": "2ab666e513eb0b4edba631041a2266cb12068b745a3151d3169d244cb0fe7d0b",
+    "hls-switch/capture.log.gz": "fa268f216dcb8a0e9d29cd6b92b885905e5637644bf069b654470d0e3c948207",
+    "hls-switch/command.json": "9333602df384e473e38229a38025df363bf677a1b09855ebcd210df8849c1b68",
+    "hls-switch/connections.jsonl": "5fc109b2d4725041c1206f05ad3103ab804e9f535e9ec397f3818e4609f11425",
+    "hls-switch/relay-error.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "hls-switch/relay-receipt.json": "15b3f413c3f2f0ab68f03d0cc8e36b3a57022a2d4811bd49910a79a99793cf34",
+    "hls-switch/relay-start.json": "8141281ed907d6cdd9698a0af72fd686775c102cd3f36621d4ecb39112c814bb",
+    "hls-switch/source/publisher-0.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "hls-switch/source/receipt.json": "b9f34123dfbe6b3065dcfd570ae9218454c2f02cf065e4f780da00b119025420",
+    "hls-switch/summary-final.json": "5f565551ae45e2189bff8a9fcba35652198fa3328d13d20c2dad8193817922ad",
+    "hls-switch/summary.json": "7df3084f02c8a4ee10e992078096e303f91c16de88af7589aaa4afa7eab22750",
+    "hls-switch/summary.log.gz": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+    "ios-arm64-build.log.gz": "62705d724c0086f12caaab747ac5856fe337af79a04ba832560317633b421c7a",
+    "ios-build-results.json": "6545b485c291a14d1bf9db92994baa8bf9b00ecc535b391e51b9d34f10c9a66d",
+    "ios-config.log.gz": "6a884af5e69173ce8a2d81c3c39f4fb3fee8511bd793b994f961198422ac4d8a",
+    "live-results.json": "28c47846b1360a6755cf55dc31f209628fb9545cc8daf0c9f5e24af9c353fa91",
+    "live-summary-red.log.gz": "d6c16c0fa936926d4632e1d6f899b24bb5c24509f5fa8592e2ceca23e5ec0267",
+    "native-results.json": "ca025be8edbd36b3608fda5e55b2bda3b6d18f266b0c63ed5b41bc4696362830",
+    "preservation.json": "e8ab61ff977a59e26ce69cc0bb7387a57fe26a0bb27343ad4ca4a493df546751",
+    "private-archive-manifest.json": "bcaa6322aadde16ae3c3e32362dbfc34f09130c71bca5eb424fae8fb3fe14e6d",
+    "python-network-final.log.gz": "751e495acca970854fdb2979d8a1c6be1497c4f166e47d821a13d3cd03defb00",
+    "python-network.log.gz": "bc8ae96254e8f02ea85edab1f73ad3116ae752b67e07bec824c3d100bc9fe8cb",
+    "python-results.json": "a0827e77f04f6522bb3f8d1a7d27dc7631b425f1c73336a4db2eef93ba8020b4",
+    "review.txt": "e24b48e697b2eb934e017f823cf91a8c84c0aa4d9c1eb4fc39eef6d9ee886233",
+    "run_checks.py": "f87e2bdf6c4eb3f8c7514545ea8f93035d65f14806499a02cdb8e69d56d6f4db",
+    "run_live.py": "f1b1097ba4f0cbb79a457a6dca0abcfccdf0e8291dc963aadb3fcd026e59e4dd",
+    "yl_player.log.gz": "1eca3de7a089af7629b14d7aa2feaeebe0e89e4dfe9507944db5e383ada66309",
+    "yl_player_android.log.gz": "bcfb50a74975e58a28ba630043a9674a687b09ae8d7bd2fea74e3d75f352f901",
+    "yl_player_android_example.log.gz": "1e1b430674b997dd53cf44a605f139890adb77c5726efac6e644fa1d2a89ce8b",
+    "yl_player_apple.log.gz": "088e132edb716c40c6e290233102a14b27eb9418b567aba368ea1c107d9b4d32",
+    "yl_player_cast.log.gz": "8616630572120f9c0e9a11f91fe2ccb31ffd71ca90a26723e597f230a0fa39bf",
+    "yl_player_cast_example.log.gz": "5b5f8cba5ee3ddda40bce9b93b4c9c43e93b8e6f253355bd21060f44f3919562",
+    "yl_player_cast_player_adapter.log.gz": "00b07104fa222a7e02a2edf4fd0d1bc50c7e8d76901ee0388d15175b02348db8",
+    "yl_player_example.log.gz": "3f2fb2538441dfccf294434980c6e7c3a6a5825f983a4c799e1125cafe86a689",
+    "yl_player_media_delivery.log.gz": "ed914277226d9ae403b4b9dba86800ca5d42b9942c656f2760571343f96d7d66",
+    "yl_player_platform_interface.log.gz": "ae1ef8ae2395fa9042ced3ba051711a1dc7cbc584f3d7065783556d840b9a74e",
+    "yl_player_source_resolver.log.gz": "0b2ff9e8a26980b09da0d5c726cbc40ad844d019a9399d533ad30d4c29db4767"
+  }
+}

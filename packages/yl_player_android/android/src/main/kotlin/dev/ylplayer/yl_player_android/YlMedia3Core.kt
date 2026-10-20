@@ -76,6 +76,7 @@ internal class YlMedia3Core(
     private val dashVideoFamily = if (dashAudio && protectedDrm == null) YlDashVideoFamilyPolicy() else null
     private val liveCatchUp = YlLiveCatchUpPolicy()
     private val rtmpLiveMode = YlRtmpLiveModePolicy()
+    private val httpFlvResume = YlHttpFlvResumePolicy()
     private var liveMode: AndroidLivePlaybackMode? = null
     private var liveModeRequestId: Long? = null
     private fun livePlaybackState(live: Boolean): AndroidLivePlaybackStateMessage? {
@@ -101,7 +102,7 @@ internal class YlMedia3Core(
         if (flushRtmp && !rtmpPaused()) {
             if (!rtmpRecovery.reserveLiveRefresh()) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
             recordRetry(rtmpRecovery.attempts, 0, SystemClock.elapsedRealtime())
-            restartRtmpEpoch()
+            restartFlvEpoch()
             ensureHealthy()
         } else if (flushRtmp) rtmpLiveMode.paused()
         // Restore explicit user speed before changing policy. No seek/reconnect/play here.
@@ -206,14 +207,27 @@ internal class YlMedia3Core(
     }
 
     fun play() {
+        val refreshHttpFlv = httpFlvResume.requiresRefresh(liveMode == AndroidLivePlaybackMode.LOW_LATENCY
+                && liveCatchUp.automaticEdgeAllowed && requestedPlaybackSpeed == 1f,
+            sourceClass == YlSourceClass.HTTP_FLV_LIVE && !rtmp, SystemClock.elapsedRealtime())
+        if (refreshHttpFlv && reconnectCount >= configuration.network.maxRetries) {
+            throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
+        }
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PLAY)
         if (!active) activate()
         syncRtmpDemand()
         refreshRtmpLiveHeadIfNeeded()
+        if (refreshHttpFlv) {
+            // Retain the session count and the factory's managed request policy.
+            reconnectCount++
+            restartFlvEpoch()
+        }
+        httpFlvResume.clear()
         ensureHealthy()
         exoPlayer.play(); refreshStallWatchdog()
     }
     fun pause() {
+        if (lifecycle.state.playbackIntended) httpFlvResume.paused(SystemClock.elapsedRealtime())
         cancelFocusGrace(); lifecycle.reduce(YlLifecycleEvent.USER_PAUSE)
         syncRtmpDemand(); stallWatchdog.cancel(); exoPlayer.pause()
     }
@@ -232,7 +246,7 @@ internal class YlMedia3Core(
     }
     fun seekToLiveEdge() {
         liveCatchUp.automaticEdgeAllowed = true
-        if (rtmp) { if (active) restartRtmpEpoch() else resumeAtLiveEdge = true; return }
+        if (rtmp) { if (active) restartFlvEpoch() else resumeAtLiveEdge = true; return }
         if (!sourceIsLive && !exoPlayer.isCurrentMediaItemLive) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         if (active) { resumeAtLiveEdge = false; exoPlayer.seekToDefaultPosition() }
         else { resumeAtLiveEdge = true; emitState() }
@@ -299,7 +313,7 @@ internal class YlMedia3Core(
         videoOutput.attach(sourceGeneration, sourceGeneration, ::attachSurface)
         if (exoPlayer.currentMediaItem != null && exoPlayer.playbackState == Player.STATE_IDLE) {
             status = "opening"
-            if (rtmp) restartRtmpEpoch() else prepareDecoder()
+            if (rtmp) restartFlvEpoch() else prepareDecoder()
             if (rtmp) { resumeAtLiveEdge = false } else if (resumeAtLiveEdge) {
                 exoPlayer.seekToDefaultPosition()
                 resumeAtLiveEdge = false
@@ -867,7 +881,7 @@ internal class YlMedia3Core(
                 rtmpBackoffRemainingMs = 0
                 if (rtmpPaused()) return // Keep the same reserved continuation for play().
                 rtmpBackoff = null
-                if (!disposed && !stopped && active && mediaEpoch == epoch) restartRtmpEpoch()
+                if (!disposed && !stopped && active && mediaEpoch == epoch) restartFlvEpoch()
             }
         }
     }
@@ -898,11 +912,12 @@ internal class YlMedia3Core(
             return
         }
         recordRetry(rtmpRecovery.attempts, 0, SystemClock.elapsedRealtime())
-        restartRtmpEpoch()
+        restartFlvEpoch()
     }
 
     /** A fresh media source/extractor, never a new FLV header inside an existing extractor. */
-    private fun restartRtmpEpoch() {
+    private fun restartFlvEpoch() {
+        httpFlvResume.clear()
         rtmpLiveMode.refreshed()
         outputObserver.invalidate()
         pendingVideoGeometry.clear()
@@ -1023,8 +1038,7 @@ internal class YlMedia3Core(
                 // timeout while its managed request budget still has scheduled work.
                 if (managedNetwork) return
                 reconnectCount += 1
-                exoPlayer.stop()
-                prepareDecoder()
+                restartFlvEpoch()
                 refreshStallWatchdog()
             }
             is YlRecoveryAction.SetCatchUpSpeed -> {

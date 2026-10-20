@@ -1,0 +1,16 @@
+[
+  "/Users/yy2021_8689/flutter/bin/flutter",
+  "test",
+  "--no-pub",
+  "integration_test/live_mode_switch_test.dart",
+  "-d",
+  "macos",
+  "--dart-define=YL_LIVE_RUN=p04-merge-flv-switch",
+  "--dart-define=YL_LIVE_PROTOCOL=flv",
+  "--dart-define=YL_LIVE_URL=http://127.0.0.1:51428/live.flv",
+  "--dart-define=P04_HLS=http://127.0.0.1:51428/live.flv",
+  "--dart-define=YL_LIVE_OWNED=true",
+  "--dart-define=YL_LIVE_MEDIA_SHA256=cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+  "--dart-define=YL_LIVE_PROFILE=stall-and-recover-v1",
+  "--dart-define=YL_LIVE_PROFILE_SHA256=ba08dcca1a8807a2abb71e2f71f9ffc643f1a8df87fc6c07ae21143264e2300b"
+]

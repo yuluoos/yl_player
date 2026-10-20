@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "runId": "p04-merge-flv-switch",
+  "protocol": "flv",
+  "scenario": "switch",
+  "baselineMode": null,
+  "outcome": "completed",
+  "processExitCode": 0,
+  "captureComplete": true,
+  "violations": [],
+  "modeSwitchLatencyUs": [
+    1721705,
+    1998062
+  ],
+  "rebufferCountDelta": null,
+  "rebufferDurationUsDelta": null,
+  "reconnectCountDelta": 1,
+  "networkPhaseBytes": [
+    449929,
+    0,
+    2778732
+  ],
+  "networkPhasesObserved": [
+    0,
+    2
+  ],
+  "downstreamBytesWritten": 3228661,
+  "maximumManagedBufferedUs": null,
+  "maximumSampleGapUs": 3260187,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "mediaIdentityVerified": false,
+  "baselineComparable": false
+}

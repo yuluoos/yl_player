@@ -1,0 +1,651 @@
+{
+  "schemaVersion": 1,
+  "runId": "p04-merge-hls-switch",
+  "protocol": "hls",
+  "sourceSha256": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+  "profileId": "owned-unshaped-v1",
+  "profileSha256": "34dc6fcf1c14c72f679715e4e1c97784fdf7317958a26616ba41f236c78dc364",
+  "requests": [
+    {
+      "id": 0,
+      "path": "/live.m3u8",
+      "startUs": 2,
+      "bytes": 260,
+      "endUs": 1605
+    },
+    {
+      "id": 1,
+      "path": "/live.m3u8",
+      "startUs": 103435,
+      "bytes": 260,
+      "endUs": 103635
+    },
+    {
+      "id": 2,
+      "path": "/segment38.ts",
+      "startUs": 154389,
+      "bytes": 47000,
+      "endUs": 155006
+    },
+    {
+      "id": 3,
+      "path": "/live.m3u8",
+      "startUs": 154582,
+      "bytes": 260,
+      "endUs": 154820
+    },
+    {
+      "id": 4,
+      "path": "/segment39.ts",
+      "startUs": 498292,
+      "bytes": 47564,
+      "endUs": 498760
+    },
+    {
+      "id": 5,
+      "path": "/segment40.ts",
+      "startUs": 659818,
+      "bytes": 47000,
+      "endUs": 660174
+    },
+    {
+      "id": 6,
+      "path": "/live.m3u8",
+      "startUs": 1110081,
+      "bytes": 260,
+      "endUs": 1110751
+    },
+    {
+      "id": 7,
+      "path": "/segment41.ts",
+      "startUs": 1161439,
+      "bytes": 47564,
+      "endUs": 1162424
+    },
+    {
+      "id": 8,
+      "path": "/live.m3u8",
+      "startUs": 2118661,
+      "bytes": 260,
+      "endUs": 2118984
+    },
+    {
+      "id": 9,
+      "path": "/segment42.ts",
+      "startUs": 2167073,
+      "bytes": 47000,
+      "endUs": 2167969
+    },
+    {
+      "id": 10,
+      "path": "/live.m3u8",
+      "startUs": 3115089,
+      "bytes": 260,
+      "endUs": 3115368
+    },
+    {
+      "id": 11,
+      "path": "/segment43.ts",
+      "startUs": 3164286,
+      "bytes": 47564,
+      "endUs": 3164617
+    },
+    {
+      "id": 12,
+      "path": "/live.m3u8",
+      "startUs": 4116698,
+      "bytes": 260,
+      "endUs": 4116840
+    },
+    {
+      "id": 13,
+      "path": "/segment44.ts",
+      "startUs": 4162298,
+      "bytes": 47000,
+      "endUs": 4162799
+    },
+    {
+      "id": 14,
+      "path": "/live.m3u8",
+      "startUs": 5121359,
+      "bytes": 260,
+      "endUs": 5121480
+    },
+    {
+      "id": 15,
+      "path": "/segment45.ts",
+      "startUs": 5166566,
+      "bytes": 47564,
+      "endUs": 5166917
+    },
+    {
+      "id": 16,
+      "path": "/live.m3u8",
+      "startUs": 6133204,
+      "bytes": 260,
+      "endUs": 6133349
+    },
+    {
+      "id": 17,
+      "path": "/segment46.ts",
+      "startUs": 6178900,
+      "bytes": 47000,
+      "endUs": 6179206
+    },
+    {
+      "id": 18,
+      "path": "/live.m3u8",
+      "startUs": 7131920,
+      "bytes": 260,
+      "endUs": 7132037
+    },
+    {
+      "id": 19,
+      "path": "/segment47.ts",
+      "startUs": 7178736,
+      "bytes": 47564,
+      "endUs": 7179262
+    },
+    {
+      "id": 20,
+      "path": "/live.m3u8",
+      "startUs": 8135906,
+      "bytes": 260,
+      "endUs": 8136565
+    },
+    {
+      "id": 21,
+      "path": "/segment48.ts",
+      "startUs": 8182853,
+      "bytes": 47000,
+      "endUs": 8183295
+    },
+    {
+      "id": 22,
+      "path": "/live.m3u8",
+      "startUs": 9142211,
+      "bytes": 260,
+      "endUs": 9142446
+    },
+    {
+      "id": 23,
+      "path": "/segment49.ts",
+      "startUs": 9188228,
+      "bytes": 47564,
+      "endUs": 9188600
+    },
+    {
+      "id": 24,
+      "path": "/live.m3u8",
+      "startUs": 10147658,
+      "bytes": 260,
+      "endUs": 10147848
+    },
+    {
+      "id": 25,
+      "path": "/live.m3u8",
+      "startUs": 28483889,
+      "bytes": 260,
+      "endUs": 28484450
+    },
+    {
+      "id": 26,
+      "path": "/live.m3u8",
+      "startUs": 28531254,
+      "bytes": 260,
+      "endUs": 28531686
+    },
+    {
+      "id": 27,
+      "path": "/segment66.ts",
+      "startUs": 28531479,
+      "bytes": 47000,
+      "endUs": 28531930
+    },
+    {
+      "id": 28,
+      "path": "/segment67.ts",
+      "startUs": 28696019,
+      "bytes": 47564,
+      "endUs": 28696490
+    },
+    {
+      "id": 29,
+      "path": "/segment68.ts",
+      "startUs": 28851492,
+      "bytes": 47000,
+      "endUs": 28853941
+    },
+    {
+      "id": 30,
+      "path": "/live.m3u8",
+      "startUs": 29488079,
+      "bytes": 260,
+      "endUs": 29488330
+    },
+    {
+      "id": 31,
+      "path": "/live.m3u8",
+      "startUs": 30495887,
+      "bytes": 260,
+      "endUs": 30496038
+    },
+    {
+      "id": 32,
+      "path": "/live.m3u8",
+      "startUs": 31504261,
+      "bytes": 260,
+      "endUs": 31504399
+    },
+    {
+      "id": 33,
+      "path": "/live.m3u8",
+      "startUs": 32514154,
+      "bytes": 260,
+      "endUs": 32514281
+    },
+    {
+      "id": 34,
+      "path": "/live.m3u8",
+      "startUs": 33195745,
+      "bytes": 260,
+      "endUs": 33195914
+    },
+    {
+      "id": 35,
+      "path": "/live.m3u8",
+      "startUs": 33242184,
+      "bytes": 260,
+      "endUs": 33242675
+    },
+    {
+      "id": 36,
+      "path": "/segment71.ts",
+      "startUs": 33242585,
+      "bytes": 47564,
+      "endUs": 33242904
+    },
+    {
+      "id": 37,
+      "path": "/segment72.ts",
+      "startUs": 33404835,
+      "bytes": 47000,
+      "endUs": 33405153
+    },
+    {
+      "id": 38,
+      "path": "/segment73.ts",
+      "startUs": 33558078,
+      "bytes": 47564,
+      "endUs": 33558422
+    },
+    {
+      "id": 39,
+      "path": "/live.m3u8",
+      "startUs": 34204999,
+      "bytes": 260,
+      "endUs": 34205140
+    },
+    {
+      "id": 40,
+      "path": "/segment74.ts",
+      "startUs": 34577222,
+      "bytes": 47000,
+      "endUs": 34577590
+    },
+    {
+      "id": 41,
+      "path": "/live.m3u8",
+      "startUs": 35210218,
+      "bytes": 260,
+      "endUs": 35210382
+    },
+    {
+      "id": 42,
+      "path": "/segment75.ts",
+      "startUs": 35558222,
+      "bytes": 47564,
+      "endUs": 35558500
+    },
+    {
+      "id": 43,
+      "path": "/live.m3u8",
+      "startUs": 36214823,
+      "bytes": 260,
+      "endUs": 36214974
+    },
+    {
+      "id": 44,
+      "path": "/segment76.ts",
+      "startUs": 36603886,
+      "bytes": 47000,
+      "endUs": 36604203
+    },
+    {
+      "id": 45,
+      "path": "/live.m3u8",
+      "startUs": 37220583,
+      "bytes": 260,
+      "endUs": 37220731
+    },
+    {
+      "id": 46,
+      "path": "/segment77.ts",
+      "startUs": 37584412,
+      "bytes": 47564,
+      "endUs": 37584812
+    },
+    {
+      "id": 47,
+      "path": "/live.m3u8",
+      "startUs": 38223631,
+      "bytes": 260,
+      "endUs": 38223793
+    },
+    {
+      "id": 48,
+      "path": "/segment78.ts",
+      "startUs": 38634354,
+      "bytes": 47000,
+      "endUs": 38699672
+    },
+    {
+      "id": 49,
+      "path": "/live.m3u8",
+      "startUs": 39230247,
+      "bytes": 260,
+      "endUs": 39230750
+    },
+    {
+      "id": 50,
+      "path": "/segment79.ts",
+      "startUs": 39612036,
+      "bytes": 47564,
+      "endUs": 39612488
+    },
+    {
+      "id": 51,
+      "path": "/live.m3u8",
+      "startUs": 40235545,
+      "bytes": 260,
+      "endUs": 40235725
+    },
+    {
+      "id": 52,
+      "path": "/segment80.ts",
+      "startUs": 40656881,
+      "bytes": 47000,
+      "endUs": 40657213
+    },
+    {
+      "id": 53,
+      "path": "/live.m3u8",
+      "startUs": 41240470,
+      "bytes": 260,
+      "endUs": 41240646
+    },
+    {
+      "id": 54,
+      "path": "/segment81.ts",
+      "startUs": 41638579,
+      "bytes": 47564,
+      "endUs": 41638876
+    },
+    {
+      "id": 55,
+      "path": "/live.m3u8",
+      "startUs": 42245283,
+      "bytes": 260,
+      "endUs": 42245417
+    },
+    {
+      "id": 56,
+      "path": "/segment82.ts",
+      "startUs": 42684102,
+      "bytes": 47000,
+      "endUs": 42684515
+    },
+    {
+      "id": 57,
+      "path": "/live.m3u8",
+      "startUs": 43251909,
+      "bytes": 260,
+      "endUs": 43252542
+    },
+    {
+      "id": 58,
+      "path": "/segment83.ts",
+      "startUs": 43668358,
+      "bytes": 47564,
+      "endUs": 43671929
+    },
+    {
+      "id": 59,
+      "path": "/live.m3u8",
+      "startUs": 44257474,
+      "bytes": 260,
+      "endUs": 44257822
+    },
+    {
+      "id": 60,
+      "path": "/segment84.ts",
+      "startUs": 44712782,
+      "bytes": 47000,
+      "endUs": 44713834
+    },
+    {
+      "id": 61,
+      "path": "/live.m3u8",
+      "startUs": 45261269,
+      "bytes": 260,
+      "endUs": 45261764
+    },
+    {
+      "id": 62,
+      "path": "/segment85.ts",
+      "startUs": 45311295,
+      "bytes": 47564,
+      "endUs": 45312638
+    },
+    {
+      "id": 63,
+      "path": "/live.m3u8",
+      "startUs": 46264058,
+      "bytes": 260,
+      "endUs": 46264713
+    },
+    {
+      "id": 64,
+      "path": "/segment86.ts",
+      "startUs": 46315848,
+      "bytes": 47000,
+      "endUs": 46316617
+    },
+    {
+      "id": 65,
+      "path": "/live.m3u8",
+      "startUs": 47268972,
+      "bytes": 260,
+      "endUs": 47269291
+    },
+    {
+      "id": 66,
+      "path": "/segment87.ts",
+      "startUs": 47313857,
+      "bytes": 47564,
+      "endUs": 47314315
+    },
+    {
+      "id": 67,
+      "path": "/live.m3u8",
+      "startUs": 48277004,
+      "bytes": 260,
+      "endUs": 48277407
+    },
+    {
+      "id": 68,
+      "path": "/segment88.ts",
+      "startUs": 48327549,
+      "bytes": 47000,
+      "endUs": 48330396
+    },
+    {
+      "id": 69,
+      "path": "/live.m3u8",
+      "startUs": 49285238,
+      "bytes": 260,
+      "endUs": 49285693
+    },
+    {
+      "id": 70,
+      "path": "/segment89.ts",
+      "startUs": 49338546,
+      "bytes": 47564,
+      "endUs": 49339163
+    },
+    {
+      "id": 71,
+      "path": "/live.m3u8",
+      "startUs": 50287543,
+      "bytes": 260,
+      "endUs": 50287996
+    },
+    {
+      "id": 72,
+      "path": "/segment90.ts",
+      "startUs": 50335217,
+      "bytes": 47000,
+      "endUs": 50335899
+    },
+    {
+      "id": 73,
+      "path": "/live.m3u8",
+      "startUs": 51294068,
+      "bytes": 260,
+      "endUs": 51294645
+    },
+    {
+      "id": 74,
+      "path": "/segment91.ts",
+      "startUs": 51346440,
+      "bytes": 47564,
+      "endUs": 51347274
+    },
+    {
+      "id": 75,
+      "path": "/live.m3u8",
+      "startUs": 52304657,
+      "bytes": 260,
+      "endUs": 52305259
+    },
+    {
+      "id": 76,
+      "path": "/segment92.ts",
+      "startUs": 52354879,
+      "bytes": 47000,
+      "endUs": 52355974
+    },
+    {
+      "id": 77,
+      "path": "/live.m3u8",
+      "startUs": 53302908,
+      "bytes": 260,
+      "endUs": 53303640
+    },
+    {
+      "id": 78,
+      "path": "/segment93.ts",
+      "startUs": 53353037,
+      "bytes": 47564,
+      "endUs": 53353934
+    },
+    {
+      "id": 79,
+      "path": "/live.m3u8",
+      "startUs": 54306797,
+      "bytes": 260,
+      "endUs": 54307099
+    },
+    {
+      "id": 80,
+      "path": "/segment94.ts",
+      "startUs": 54355480,
+      "bytes": 47000,
+      "endUs": 54356256
+    },
+    {
+      "id": 81,
+      "path": "/live.m3u8",
+      "startUs": 55341716,
+      "bytes": 260,
+      "endUs": 55341889
+    },
+    {
+      "id": 82,
+      "path": "/segment95.ts",
+      "startUs": 55387770,
+      "bytes": 47564,
+      "endUs": 55388557
+    },
+    {
+      "id": 83,
+      "path": "/live.m3u8",
+      "startUs": 56356074,
+      "bytes": 260,
+      "endUs": 56356224
+    },
+    {
+      "id": 84,
+      "path": "/segment96.ts",
+      "startUs": 56403263,
+      "bytes": 47000,
+      "endUs": 56403954
+    },
+    {
+      "id": 85,
+      "path": "/live.m3u8",
+      "startUs": 56960643,
+      "bytes": 260,
+      "endUs": 56960819
+    },
+    {
+      "id": 86,
+      "path": "/live.m3u8",
+      "startUs": 57022762,
+      "bytes": 260,
+      "endUs": 57025085
+    },
+    {
+      "id": 87,
+      "path": "/live.m3u8",
+      "startUs": 57077924,
+      "bytes": 260,
+      "endUs": 57078642
+    },
+    {
+      "id": 88,
+      "path": "/segment95.ts",
+      "startUs": 57078288,
+      "bytes": 47564,
+      "endUs": 57079018
+    },
+    {
+      "id": 89,
+      "path": "/segment96.ts",
+      "startUs": 57292922,
+      "bytes": 47000,
+      "endUs": 57293379
+    },
+    {
+      "id": 90,
+      "path": "/segment97.ts",
+      "startUs": 57471695,
+      "bytes": 47564,
+      "endUs": 57472088
+    }
+  ],
+  "connections": 91,
+  "cleaned": true,
+  "endToEndLatencyUs": null,
+  "physicalOutputVerified": false
+}

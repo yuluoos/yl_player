@@ -1,6 +1,6 @@
 import 'package:yl_player/yl_player.dart';
 
-/// Local owned fixture only. Hashes are declarations until joined with a server
+/// Owned loopback fixture, or an explicitly declared private LAN host. Hashes are declarations until joined with a server
 /// receipt; neither this config nor public timeline proves source-clock latency.
 Map<String, String> parseLiveModeConfig(Map<String, String> values) {
   const invalid = FormatException('Invalid owned live capture configuration');
@@ -19,13 +19,15 @@ Map<String, String> parseLiveModeConfig(Map<String, String> values) {
     }
     final protocol = values['protocol'];
     final uri = Uri.parse(values['url'] ?? '');
+    final ownedHost = values['ownedHost'] ?? '127.0.0.1';
     if (!{'hls', 'flv', 'rtmp'}.contains(protocol) ||
         !RegExp(
           r'^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$',
         ).hasMatch(values['runId'] ?? '') ||
         !RegExp(r'^[0-9a-f]{64}$').hasMatch(values['mediaHash'] ?? '') ||
         values['owned'] != 'true' ||
-        uri.host != '127.0.0.1' ||
+        uri.host != ownedHost ||
+        !_isOwnedCaptureHost(ownedHost) ||
         uri.scheme != (protocol == 'rtmp' ? 'rtmp' : 'http') ||
         uri.userInfo.isNotEmpty ||
         uri.hasQuery ||
@@ -43,6 +45,20 @@ Map<String, String> parseLiveModeConfig(Map<String, String> values) {
   } catch (_) {
     throw invalid;
   }
+}
+
+bool _isOwnedCaptureHost(String host) {
+  if (host == '127.0.0.1') return true;
+  final parts = host.split('.');
+  if (parts.length != 4 ||
+      parts.any((p) => !RegExp(r'^(0|[1-9][0-9]{0,2})$').hasMatch(p))) {
+    return false;
+  }
+  final bytes = parts.map(int.parse).toList();
+  if (bytes.any((v) => v > 255)) return false;
+  return bytes[0] == 10 ||
+      (bytes[0] == 172 && bytes[1] >= 16 && bytes[1] <= 31) ||
+      (bytes[0] == 192 && bytes[1] == 168);
 }
 
 final class LiveModeSeries {

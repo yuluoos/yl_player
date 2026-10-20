@@ -185,6 +185,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var metadataTask: Task<Void, Never>?
   private var automaticLiveCatchUpAllowed = true
   private var lastLiveCatchUpSeek: TimeInterval?
+  private var livePausedAt: TimeInterval?
   private var liveCatchUpRate = false
   private var liveMode: YlNativeLiveMode?
   private var liveModeRequestId: Int64?
@@ -365,7 +366,31 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   func play() throws {
     try checkAlive(); guard !stopped else { return }
+    let window = player.currentItem?.seekableTimeRanges.last?.timeRangeValue
+    if active, pendingLiveReconnect == nil, pendingUserSeek == nil,
+       let source = lastSource,
+       YlAvPlayerRecoveryPolicy.isDirectLiveHls(source, usesResourceLoader: hlsResourceLoader != nil),
+       YlLiveResumePolicy.requiresHlsRefresh(lowLatency: liveMode == .lowLatency,
+         live: sourceIsLive, pausedAt: livePausedAt, now: CACurrentMediaTime(),
+         automaticEdgeAllowed: automaticLiveCatchUpAllowed, requestedRate: desiredRate,
+         positionMs: milliseconds(player.currentTime()),
+         startMs: window.flatMap { milliseconds($0.start) },
+         endMs: window.flatMap { milliseconds(CMTimeRangeGetEnd($0)) }) {
+      let exhausted = NativePlayerError(category: "network", code: "network.retry_exhausted",
+        message: "Live reconnect attempts were exhausted.")
+      guard liveReconnectController.canRetry else { throw exhausted }
+      try beforeAudioOutput()
+      let previousIntent = playRequested
+      playRequested = true
+      guard scheduleLiveReconnect(source: source, retainingAttempt: true) else {
+        playRequested = previousIntent
+        throw exhausted
+      }
+      livePausedAt = nil
+      return
+    }
     try startOutput()
+    livePausedAt = nil
     playRequested = true
     status = services.platform == .ios
       ? (player.timeControlStatus == .playing ? "playing" : "buffering")
@@ -377,6 +402,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
   func pause() throws {
     try checkAlive(); guard !stopped else { return }
+    if playRequested { livePausedAt = CACurrentMediaTime() }
     playRequested = false
     videoProgressProbe.reset()
     stallWatchdog.cancel()
@@ -629,6 +655,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     savedPositionMs = 0
     savedPositionUs = 0
     resumeAtLiveEdge = false
+    livePausedAt = nil
     sourceIsLive = false
     selectedAudioTrackId = nil
     audioOptions.removeAll()
@@ -685,6 +712,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     finishBuffering()
     active = false
     playRequested = false
+    livePausedAt = nil
     player.pause()
     removeCurrentItem(releaseReplacement: !retainingHlsForReplacement, preserveDashCatalog: true, preserveAudioIdentity: true)
     if status != "error" && status != "completed" && status != "idle" {
@@ -725,6 +753,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   private func resetOpenState(_ source: YlAppleSourceDescriptor, resume: Bool) {
+    livePausedAt = nil
     stopped = false
     cancelLiveReconnect()
     liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
@@ -1640,8 +1669,12 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     case .rate(let rate):
       if player.rate != 0 { player.rate = rate; liveCatchUpRate = rate != desiredRate }
     case .edge:
-      lastLiveCatchUpSeek = now
-      try? seekToLiveEdge()
+      if let start = seekableRange.flatMap({ milliseconds($0.start) }), let end = dvrEndMs,
+         let target = YlLiveCatchUpPolicy.catchUpPosition(startMs: start, endMs: end, targetMs: 2_000) {
+        lastLiveCatchUpSeek = now
+        videoProgressProbe.reset()
+        player.seek(to: CMTime(value: target, timescale: 1_000), toleranceBefore: .zero, toleranceAfter: .zero)
+      }
     }
     emit(.delta(YlNativeTimelineDelta(positionMs: positionMs,
       bufferedPositionMs: loadedEndMs,
@@ -1721,12 +1754,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     hlsResourceLoader = nil
   }
 
-  private func scheduleLiveReconnect(source: YlAppleSourceDescriptor) -> Bool {
+  private func scheduleLiveReconnect(source: YlAppleSourceDescriptor, retainingAttempt: Bool = false) -> Bool {
     guard active,
           let delayMs = liveReconnectController.nextDelayMs() else {
       return false
     }
 
+    // Explicit pause refresh shares the existing retry ledger. A successful
+    // frame cannot replenish attempts already spent on user-driven refreshes.
+    if retainingAttempt { liveReconnectController.retainAttempts(liveReconnectController.attempt) }
     status = "buffering"
     currentError = nil
     // Reconnect the same live source without flashing an empty texture between

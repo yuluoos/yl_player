@@ -1,0 +1,23 @@
+{
+  "port": 50944,
+  "schemaVersion": 1,
+  "runId": "p04-merge-hls-switch",
+  "protocol": "hls",
+  "profileId": "stall-and-recover-v1",
+  "profileHash": "ba08dcca1a8807a2abb71e2f71f9ffc643f1a8df87fc6c07ae21143264e2300b",
+  "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+  "acceptedConnections": 0,
+  "rejectedConnections": 0,
+  "recordedConnections": 0,
+  "activeConnections": 0,
+  "cleaned": false,
+  "timelineMode": "first-client-bytes",
+  "byteScope": "downstream-tcp-including-protocol-headers",
+  "phaseBoundariesMs": [
+    0,
+    10000,
+    15000
+  ],
+  "physicalOutputVerified": false,
+  "endToEndLatencyUs": null
+}

@@ -82,6 +82,30 @@ quality. Opaque system software codecs cannot bypass the owned budget. Supported
 AAC, MP3, AC-3, E-AC-3, DTS, FLAC, Opus, and Vorbis. Standard HLS AES-128 is
 supported; Widevine, SAMPLE-AES, and DRM bypass are not.
 
+## Controlled weak-network/live observations (2026-10-19)
+
+The owned AVC/AAC test subset has Android and macOS DASH auto/caps/fixed
+captures with actual request and public output-geometry observations. Both
+platforms completed HLS, HTTP-FLV and RTMP smooth/low/smooth lifecycle tests,
+including paused intent, source replacement and stop fencing. Low-latency RTMP
+also passed three lifetime recoveries followed by terminal fourth-drop failure.
+iOS Simulator HLS passed 16 rapid mode pairs after an admission-order fix.
+A connected iPhone completed the three-protocol lifecycle subset; HTTP-FLV and
+RTMP mode replacement now hand off the exclusive decoder before construction.
+iPhone RTMP also passed the bounded recovery sequence. iOS Simulator DASH caps
+and fixed captures preserved their constraints. Auto downshift was observed, but
+recovery upshift was absent in both 40s and extended 80s captures and remains an
+open acceptance item.
+A subsequent iPhone regression reproduced an expired HLS seekable window after
+pausing. Low-latency direct HLS now refreshes that window using the existing
+bounded retry budget; successful frames retain spent refresh attempts. Two
+resumes passed, and a fourth refresh was rejected while playback stayed paused.
+The user confirmed basic moving picture/audio, pause and resume for all three
+protocols. This subjective check does not measure A/V synchronization.
+These are specific controlled observations, not complete CAP-ABR/CAP-LIVE,
+physical A/V, minimum-OS, long-play or P08 SLO qualification. See the
+[P04 stage report](superpowers/reports/2026-09-26-remaining-04-abr-live.md).
+
 ## RTMP foundation scope
 
 RTMP accepts automatic/FLV format and automatic/live intent. It is live,

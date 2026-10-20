@@ -1,0 +1,12 @@
+{
+  "baseline": "9afeeeaa69e23a92af73a11409f2995a1c389521",
+  "unchangedPathPrefixes": [
+    "packages/yl_player_cast/",
+    "packages/yl_player_cast_player_adapter/",
+    "packages/yl_player_media_delivery/",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/AirPlay/"
+  ],
+  "changedCorePaths": [
+    "packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Dependencies/YlOpenCancellationToken.swift"
+  ]
+}

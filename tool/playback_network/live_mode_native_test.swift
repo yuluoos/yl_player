@@ -15,6 +15,9 @@ struct LiveModeNativeTest {
         automaticEdgeAllowed: edge, requestedRate: rate, offsetMs: offset,
         targetMs: 2_000, hasSeekableWindow: window, maySeek: maySeek)
     }
+    check(YlLiveCatchUpPolicy.catchUpPosition(startMs: 1000, endMs: 10000, targetMs: 2000) == 8000, "automatic edge stays within available media")
+    check(YlLiveCatchUpPolicy.catchUpPosition(startMs: 9000, endMs: 10000, targetMs: 2000) == 9000, "short window clamps to its start")
+    check(YlLiveCatchUpPolicy.catchUpPosition(startMs: 10000, endMs: 10000, targetMs: 2000) == nil, "empty window has no safe automatic seek")
     check(catchUp() == .rate(1.03), "bounded catch-up rate")
     check(catchUp(offset: 1_000) == .rate(1), "return to normal rate")
     check(catchUp(offset: 9_000) == .edge, "seek excessive backlog in valid window")
@@ -32,6 +35,39 @@ struct LiveModeNativeTest {
     installedRate = 0
     _ = YlLiveCatchUpPolicy.endAutomaticCatchUp(requestedRate: 1.5, playing: false) { installedRate = $0 }
     check(installedRate == 0, "seek cannot resume paused output")
+    check(YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: true, pausedAt: 1, now: 4), "low live pause discards transport backlog")
+    check(!YlLiveResumePolicy.requiresRefresh(lowLatency: false, live: true, pausedAt: 1, now: 4), "smooth keeps paused media")
+    check(!YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: false, pausedAt: 1, now: 4), "VOD cannot refresh live edge")
+    check(!YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: true, pausedAt: nil, now: 4), "initial play does not reopen")
+    check(!YlLiveResumePolicy.requiresRefresh(lowLatency: true, live: true, pausedAt: 3.9, now: 4), "short pause avoids reconnect churn")
+    func expiredResume(low: Bool = true, live: Bool = true, paused: TimeInterval? = 0,
+      now: TimeInterval = 5, edge: Bool = true, rate: Float = 1,
+      position: Int64? = 37_000, start: Int64? = nil, end: Int64? = nil) -> Bool {
+      YlLiveResumePolicy.requiresHlsRefresh(lowLatency: low, live: live,
+        pausedAt: paused, now: now, automaticEdgeAllowed: edge, requestedRate: rate,
+        positionMs: position, startMs: start, endMs: end)
+    }
+    check(expiredResume(), "expired AVPlayer window refreshes on low resume")
+    check(expiredResume(start: 40_000, end: 43_000), "paused position outside sliding window refreshes")
+    check(!expiredResume(start: 36_000, end: 40_000), "available paused media needs no reopen")
+    check(!expiredResume(low: false), "smooth resume retains its media")
+    check(!expiredResume(live: false), "finite media cannot refresh as live")
+    check(!expiredResume(paused: nil), "initial play cannot spend resume budget")
+    check(!expiredResume(now: 1), "short pause cannot spend resume budget")
+    check(!expiredResume(edge: false), "explicit seek survives long pause")
+    check(!expiredResume(rate: 1.5), "explicit rate survives long pause")
+    check(expiredResume(start: 40_000, end: 40_000), "empty live window is expired")
+    check(expiredResume(position: 43_000, start: 40_000, end: 43_000), "exclusive end is not playable")
+    let rtmpBudget = YlRtmpRecoveryBudget()
+    let resumeRecovery = YlRecoveryCoordinator(configuration: .init(map: ["maxRetries": 3]), scheduler: YlDispatchRecoveryScheduler(queue: .main), rtmpBudget: rtmpBudget)
+    check(resumeRecovery.reserveLiveRefresh(), "low resume consumes shared RTMP retry budget")
+    check(rtmpBudget.attempts == 1, "refresh uses existing lifetime ledger")
+    check(resumeRecovery.reserveLiveRefresh() && resumeRecovery.reserveLiveRefresh(), "three lifetime refresh attempts")
+    check(!resumeRecovery.reserveLiveRefresh(), "low resume cannot replenish RTMP attempts")
+    let httpRecovery = YlRecoveryCoordinator(configuration: .init(map: ["maxRetries": 1]), scheduler: YlDispatchRecoveryScheduler(queue: .main))
+    check(httpRecovery.reserveLiveRefresh(), "HTTP low resume reserves existing retry budget")
+    httpRecovery.markFirstFrame()
+    check(!httpRecovery.reserveLiveRefresh(), "successful HTTP refresh cannot replenish reserved attempt")
     let oldBackend = LiveModeFakeBackend(), newBackend = LiveModeFakeBackend()
     var backend: YlPlaybackBackend = oldBackend
     var current = true
@@ -44,6 +80,31 @@ struct LiveModeNativeTest {
     current = false
     do { try audio.run(YlOpenCancellationToken()); preconditionFailure("stale queued command acknowledged") }
     catch { checks += 1 }
+    check(YlAppleCompatibility(platform: .macos).reconnectsAvPlayer, "macOS live HLS retains bounded recovery")
+    check(YlAppleCompatibility(platform: .ios).reconnectsAvPlayer, "iOS live HLS recovery preserved")
+    let parentToken = YlOpenCancellationToken()
+    let childToken = parentToken.makeChild()
+    childToken.cancel()
+    check(!parentToken.isCancelled, "discarding a failed candidate cannot cancel its command")
+    let secondChild = parentToken.makeChild()
+    parentToken.cancel()
+    check(secondChild.isCancelled, "stop cancellation reaches candidate")
+    check(parentToken.makeChild().isCancelled, "late candidate observes prior cancellation")
+    let exclusiveOld = LiveModeFakeBackend(), exclusiveNew = LiveModeFakeBackend()
+    let exclusiveSlot = YlBackendSlot(initial: exclusiveOld, compatibility: .init(platform: .ios))
+    try exclusiveSlot.replace(requiresExclusiveResources: true) {
+      check(!exclusiveOld.isActive, "iOS releases old exclusive resource before candidate construction")
+      return exclusiveNew
+    }
+    check(exclusiveSlot.current === exclusiveNew && exclusiveNew.isActive, "exclusive candidate installed")
+    do {
+      try exclusiveSlot.replace(requiresExclusiveResources: true) {
+        throw NativePlayerError(category: "decoder", code: "decoder.unavailable", message: "Rejected")
+      }
+      preconditionFailure("failed candidate accepted")
+    } catch {
+      check(exclusiveSlot.current === exclusiveNew && exclusiveNew.isActive, "failed candidate restores old resource owner")
+    }
     let config = PlayerConfiguration(positionEventIntervalMs: 250)
     var source = YlAppleSourceDescriptor(uri: "https://fixture.invalid/live.m3u8", kind: .network,
       formatHint: .hls, intent: .live, loadOptions: .init())
@@ -104,9 +165,9 @@ struct LiveModeNativeTest {
 private final class LiveModeFakeBackend: YlPlaybackBackend {
   var isActive = true
   var commands = [String]()
-  func activate() throws {}
+  func activate() throws { isActive = true }
   func stop() {}
-  func deactivate() {}
+  func deactivate() { isActive = false }
   func play() throws {}
   func pause() throws {}
   func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}

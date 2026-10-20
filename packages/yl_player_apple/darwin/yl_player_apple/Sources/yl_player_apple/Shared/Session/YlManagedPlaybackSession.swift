@@ -92,6 +92,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   private var active = false
   private var playing = false
   private var rtmpPaused = false
+  private var livePausedAt: TimeInterval?
   private var pausedRecovery: (() -> Void)?
   private var stopped = false
   private var resetting = false
@@ -299,7 +300,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     resetting = stopping
     if stopping { stopped = true; playing = false }
     active = false
-    rtmpPaused = false; pausedRecovery = nil
+    rtmpPaused = false; pausedRecovery = nil; livePausedAt = nil
     reconfiguring = true
     generation &+= 1
     audio.advanceGeneration()
@@ -461,8 +462,27 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       // wall clock or reacquire audio for a late play command.
       if stateLock.withLock({ completionSent }) { emitState(); return }
       try audio.prepareForPlayback()
+      let refreshGeneration = stateLock.withLock { () -> UInt64? in
+        guard active, !disposed, !reconfiguring, bufferBudget.boundedPlan == nil,
+          YlLiveResumePolicy.requiresRefresh(lowLatency: configuration.bufferMode == "lowLatency",
+            live: demux.mediaPolicy.isLive, pausedAt: livePausedAt, now: CACurrentMediaTime()) else { return nil }
+        return generation
+      }
+      if let refreshGeneration {
+        guard recovery.reserveLiveRefresh() else { throw ylRtmpError("resource.exhausted") }
+        let refreshCause = demux.sourceRecipe.isRtmp ? ylRtmpError("network.rtmp_disconnected")
+          : NativePlayerError(category: "network", code: "network.http_status", message: "The live transport is being refreshed.")
+        if beginLiveReconnect(after: refreshCause,
+            packetGeneration: refreshGeneration, explicitLiveAttempt: true) {
+          stateLock.withLock { playing = true; rtmpPaused = false; livePausedAt = nil }
+          status = "buffering"
+          emitState()
+          return
+        }
+      }
       let wasPlaying = stateLock.withLock { () -> Bool in
         let previous = playing
+        livePausedAt = nil
         playing = true
         return previous
       }
@@ -488,6 +508,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
   func pause() throws {
       if stateLock.withLock({ completionSent }) { emitState(); return }
       stateLock.withLock {
+        if playing { livePausedAt = CACurrentMediaTime() }
         playing = false
         if demux.sourceRecipe.isRtmp {
           rtmpPaused = true; demux.currentMedia?.setPlaybackPaused(true)
@@ -818,14 +839,15 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     beginLiveReconnect(after: error, packetGeneration: packetGeneration, explicitLiveAttempt: false)
   }
 
+  @discardableResult
   private func beginLiveReconnect(
     after error: NativePlayerError,
     packetGeneration: UInt64,
     explicitLiveAttempt: Bool
-  ) {
+  ) -> Bool {
     if demux.sourceRecipe.isRtmp && !YlRtmpRecoveryBudget.isTransient(error) {
       if shouldReportDemuxFailure(generation: packetGeneration) { setFailure(error) }
-      return
+      return false
     }
     let transition = stateLock.withLock { () -> (
       generation: UInt64,
@@ -855,7 +877,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         detachedAudio
       )
     }
-    guard let transition else { return }
+    guard let transition else { return false }
 
     transition.token?.cancel()
     transition.media?.cancelInput()
@@ -902,6 +924,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         transition.media?.close()
       }
     }
+    return true
   }
 
   var recoveryGeneration: UInt64 { stateLock.withLock { generation } }

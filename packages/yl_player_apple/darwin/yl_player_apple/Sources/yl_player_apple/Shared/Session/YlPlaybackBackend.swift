@@ -49,6 +49,7 @@ final class YlBackendSlot {
 
   @discardableResult
   func replace(
+    requiresExclusiveResources: Bool = false,
     beforeRollbackActivation: ((YlPlaybackBackend) throws -> Void)? = nil,
     afterActivation: ((YlPlaybackBackend) throws -> Void)? = nil,
     _ prepare: () throws -> YlPlaybackBackend
@@ -61,7 +62,9 @@ final class YlBackendSlot {
       )
     }
     rollbackRequiresExternalActivation = false
-    let preparedBeforeQuiescing = compatibility.retainsReplacementHls ? try prepare() : nil
+    // Retaining an HLS candidate must not retain a managed decoder's unique lease.
+    let preparesWhileRetaining = compatibility.retainsReplacementHls && !requiresExclusiveResources
+    let preparedBeforeQuiescing = preparesWhileRetaining ? try prepare() : nil
     let previous = current
     let previousWasActive = previous.isActive
     if previousWasActive || compatibility.retainsReplacementHls { previous.quiesceForReplacement() }

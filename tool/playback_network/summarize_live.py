@@ -57,7 +57,18 @@ def summarize(result, samples, receipt, connections, *, exit_code):
         if not group or any(s['mode'] != mode for s in group):
             violations.add(stage+'_mode_mismatch')
         clocks = [s['mediaClockUs'] if s['mediaClockUs'] is not None else s['positionUs'] for s in group]
-        if len(clocks) < 2 or clocks[-1] <= clocks[0]:
+        # Reconnection can reset the item's clock within the same public session.
+        # Require progression in the final uninterrupted playing epoch, matching
+        # the device collector; a reset or buffering clock alone cannot pass.
+        advancing = False
+        for index in range(1, len(group)):
+            if (group[index-1]['status'] != 'playing' or
+                    group[index]['status'] != 'playing' or
+                    clocks[index] < clocks[index-1]):
+                advancing = False
+            elif clocks[index] > clocks[index-1]:
+                advancing = True
+        if not advancing:
             violations.add(stage+'_clock_not_advancing')
     if scenario == 'baseline':
         baseline_samples = [s for s in samples if s['stage'] == 'baseline']

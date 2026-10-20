@@ -200,7 +200,10 @@ final class YlAppleSessionCoordinator: NSObject {
         }
       }
       guard let fallback, let source, let expectedIdentity else { return }
-      let prepare = { try self.prepareFallback(source: source, token: token, identity: expectedIdentity, reactivating: true) }
+      let prepare = {
+        // A rejected candidate releases its own input without changing command intent.
+        try self.prepareFallback(source: source, token: token.makeChild(), identity: expectedIdentity, reactivating: true)
+      }
       let prepared = try ["rtmp", "rtmps"].contains(source.url?.scheme?.lowercased() ?? "")
         ? source.rtmpRecovery.prepareRestoration(token: token, work: prepare) : prepare()
       defer { prepared.discard() }
@@ -235,7 +238,9 @@ final class YlAppleSessionCoordinator: NSObject {
         guard let installed = self.slot.current as? YlFallbackBackend else { throw YlNativeLivePlayback.unsupported }
         installed.retainLiveRecoveryContinuity(continuity)
         do {
-          if shouldPlay { try installed.play() }
+          // A silent candidate starts ready. Commit the retained pause intent
+          // as well as play intent before publishing this mode transaction.
+          if shouldPlay { try installed.play() } else { try installed.pause() }
           let value = try installed.setLivePlaybackMode(mode, requestId: requestId)
           installed.emitState()
           guard let current = self.activeEvents?.takeInitialSnapshot() else {
@@ -901,7 +906,7 @@ final class YlAppleSessionCoordinator: NSObject {
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: reactivating || source.loadOptions == nil ? lastQualityConstraint : source.loadOptions?.videoConstraints ?? .unconstrained
       )
-      let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) {
+      let previous = try slot.replace(requiresExclusiveResources: true, beforeRollbackActivation: beforeRollbackActivation) {
         try beforeFallbackConstruction?(slot.current)
         let backend = try YlFallbackBackend(
           playerId: playerId,

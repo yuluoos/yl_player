@@ -74,6 +74,17 @@ final class YlRecoveryCoordinator {
     reconnectCount = max(reconnectCount, value.reconnects)
   }
 
+  /// Automatic live-head refresh shares the source's retry allowance. A
+  /// successful refresh must not make repeated pause/resume an unlimited loop.
+  func reserveLiveRefresh() -> Bool {
+    if let rtmpBudget {
+      return rtmpBudget.nextDelay(after: ylRtmpError("network.rtmp_disconnected")) != nil
+    }
+    guard liveReconnectController.nextDelayMs() != nil else { return false }
+    liveReconnectController.retainAttempts(liveReconnectController.attempt)
+    return true
+  }
+
   struct ScheduledWork {
     private let item: DispatchWorkItem
     fileprivate init(_ item: DispatchWorkItem) { self.item = item }
@@ -117,7 +128,8 @@ final class YlRecoveryCoordinator {
       self?.scheduleLiveReconnect(after: error, generation: reconnectGeneration, explicitLiveAttempt: explicitLiveAttempt)
     }) { return }
     let nextDelay: Int64?
-    if let rtmpBudget { nextDelay = explicitLiveAttempt ? 0 : rtmpBudget.nextDelay(after: error) }
+    if explicitLiveAttempt { nextDelay = 0 }
+    else if let rtmpBudget { nextDelay = rtmpBudget.nextDelay(after: error) }
     else { nextDelay = liveReconnectController.nextDelayMs() }
     guard let delayMs = nextDelay else {
       finishLiveReconnectExhausted(error, generation: reconnectGeneration)

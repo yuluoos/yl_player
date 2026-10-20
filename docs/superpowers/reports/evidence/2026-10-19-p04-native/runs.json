@@ -1,0 +1,2188 @@
+[
+  {
+    "runId": "abr-auto-baseline",
+    "capture": "logs/abr-auto-baseline/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-android-auto-1",
+    "capture": "logs/p04-android-auto-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-auto-1",
+        "mode": "auto",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "android",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": false,
+        "sampleCount": 161,
+        "policyAckUs": 1626586,
+        "firstFrameUs": 1632256,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 1643687,
+          "afterUs": 1698688,
+          "serverUs": 910025
+        }
+      }
+    ],
+    "processExitCode": "1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-android-auto-1",
+      "mode": "auto",
+      "captureComplete": false,
+      "downshiftLatencyUs": {
+        "min": 17953680,
+        "max": 18008681
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 4518596,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 1,
+      "cleaned": false,
+      "violations": [],
+      "observedGeometrySwitches": 1,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 2049929,
+      "requestFailures": 0,
+      "requestCount": 114,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 285675,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-android-auto-2",
+    "capture": "logs/p04-android-auto-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-auto-2",
+        "mode": "auto",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "android",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 159,
+        "policyAckUs": 4231503,
+        "firstFrameUs": 4262298,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 4296243,
+          "afterUs": 4594487,
+          "serverUs": 3768507
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-android-auto-2",
+      "mode": "auto",
+      "captureComplete": true,
+      "downshiftLatencyUs": {
+        "min": 18662183,
+        "max": 18960427
+      },
+      "upshiftLatencyUs": {
+        "min": 15717814,
+        "max": 16016058
+      },
+      "weakLowRequestLatencyUs": 6397809,
+      "recoveryHighRequestLatencyUs": 782451,
+      "adaptationObserved": true,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 2085316,
+      "requestFailures": 0,
+      "requestCount": 115,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 397845,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-android-caps-1",
+    "capture": "logs/p04-android-caps-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-caps-1",
+        "mode": "caps",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "android",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 320,
+        "policyAckUs": 4268960,
+        "firstFrameUs": 4286717,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 4327702,
+          "afterUs": 4445924,
+          "serverUs": 3459289
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-android-caps-1",
+      "mode": "caps",
+      "captureComplete": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 348136,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 23,
+      "rebufferDurationUsDelta": 22536000,
+      "requestBodyBytesWritten": 1400980,
+      "requestFailures": 0,
+      "requestCount": 113,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 1911153,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-android-fixed-1",
+    "capture": "logs/p04-android-fixed-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-fixed-1",
+        "mode": "fixed",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "android",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 206,
+        "policyAckUs": 3828313,
+        "firstFrameUs": 3771902,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 3894383,
+          "afterUs": 3995784,
+          "serverUs": 2421639
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-android-fixed-1",
+      "mode": "fixed",
+      "captureComplete": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": null,
+      "recoveryHighRequestLatencyUs": 551663,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": true,
+      "rebufferCountDelta": 5,
+      "rebufferDurationUsDelta": 1229000,
+      "requestBodyBytesWritten": 2508755,
+      "requestFailures": 0,
+      "requestCount": 117,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 1787939,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-android-flv-1",
+    "capture": "logs/p04-android-flv-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-flv-1",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "android",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 7059616,
+            "revision": 25
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20183043,
+            "revision": 87
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20194125,
+            "revision": 88
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-android-hls-1",
+    "capture": "logs/p04-android-hls-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-hls-1",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "android",
+        "outcome": "failed",
+        "stage": "low-resume",
+        "failureKind": "TestFailure",
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6121310,
+            "revision": 26
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-android-hls-2",
+    "capture": "logs/p04-android-hls-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-hls-2",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "android",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6098875,
+            "revision": 25
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 19203386,
+            "revision": 82
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 19207751,
+            "revision": 83
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-android-rtmp-expanded",
+    "capture": "logs/p04-android-rtmp-expanded/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-android-rtmp-expanded",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "android",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 7165332,
+            "revision": 25
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20332145,
+            "revision": 91
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20334922,
+            "revision": 92
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-android-rtmp-low-recovery",
+    "capture": "logs/p04-android-rtmp-low-recovery/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-android-rtmp-low-recovery-2",
+    "capture": "logs/p04-android-rtmp-low-recovery-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-auto-aligned-1",
+    "capture": "logs/p04-auto-aligned-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-auto-aligned-1",
+        "mode": "auto",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "macos",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 167,
+        "policyAckUs": 715463,
+        "firstFrameUs": 775059,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 775595,
+          "afterUs": 823124,
+          "serverUs": 784452
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-auto-aligned-1",
+      "mode": "auto",
+      "captureComplete": true,
+      "downshiftLatencyUs": {
+        "min": 15008215,
+        "max": 15055744
+      },
+      "upshiftLatencyUs": {
+        "min": 15403458,
+        "max": 15450987
+      },
+      "weakLowRequestLatencyUs": 11848644,
+      "recoveryHighRequestLatencyUs": 5312437,
+      "adaptationObserved": true,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 3,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 2302969,
+      "requestFailures": 4,
+      "requestCount": 127,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 638816,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-caps-aligned-1",
+    "capture": "logs/p04-caps-aligned-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-caps-aligned-1",
+        "mode": "caps",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "macos",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 161,
+        "policyAckUs": 541384,
+        "firstFrameUs": 580895,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 581436,
+          "afterUs": 628065,
+          "serverUs": 610422
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-caps-aligned-1",
+      "mode": "caps",
+      "captureComplete": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 612450,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 1400980,
+      "requestFailures": 0,
+      "requestCount": 113,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 471145,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-fixed-aligned-1",
+    "capture": "logs/p04-fixed-aligned-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-fixed-aligned-1",
+        "mode": "fixed",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "macos",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 171,
+        "policyAckUs": 649883,
+        "firstFrameUs": 629917,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 651970,
+          "afterUs": 699474,
+          "serverUs": 670552
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-fixed-aligned-1",
+      "mode": "fixed",
+      "captureComplete": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": null,
+      "recoveryHighRequestLatencyUs": 168235,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": true,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 2666898,
+      "requestFailures": 5,
+      "requestCount": 124,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 517651,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-flv-baseline",
+    "capture": "logs/p04-flv-baseline/capture.log",
+    "exactCommandRecorded": false,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-flv-baseline",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 9087136,
+            "revision": 43
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-flv-expanded-1",
+    "capture": "logs/p04-flv-expanded-1/capture.log",
+    "exactCommandRecorded": false,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-flv-expanded-1",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 9030254,
+            "revision": 43
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 22162764,
+            "revision": 113
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 24125077,
+            "revision": 124
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-flv-pause-fixed",
+    "capture": "logs/p04-flv-pause-fixed/capture.log",
+    "exactCommandRecorded": false,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-flv-pause-fixed",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 8900432,
+            "revision": 43
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 15916692,
+            "revision": 81
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-flv-resume-2",
+    "capture": "logs/p04-flv-resume-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-flv-resume-2",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 9087185,
+            "revision": 43
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 22213407,
+            "revision": 116
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 24156887,
+            "revision": 127
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-flv-stall-1",
+    "capture": "logs/p04-flv-stall-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-flv-stall-1",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 9015307,
+            "revision": 43
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 22135102,
+            "revision": 113
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 24080621,
+            "revision": 123
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-hls-baseline",
+    "capture": "logs/p04-hls-baseline/capture.log",
+    "exactCommandRecorded": false,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-baseline",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "failed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 5694948,
+            "revision": 49
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 10763173,
+            "revision": 102
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-hls-expanded-1",
+    "capture": "logs/p04-hls-expanded-1/capture.log",
+    "exactCommandRecorded": false,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-expanded-1",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 5887392,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 19163489,
+            "revision": 179
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 19226602,
+            "revision": 186
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-hls-recovery-1",
+    "capture": "logs/p04-hls-recovery-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-recovery-1",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "failed",
+        "stage": "rapid",
+        "failureKind": "YlPlayerException",
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6318352,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 19473914,
+            "revision": 140
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 19475617,
+            "revision": 142
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-hls-recovery-2",
+    "capture": "logs/p04-hls-recovery-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-recovery-2",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6009043,
+            "revision": 50
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 31763069,
+            "revision": 162
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 31766151,
+            "revision": 164
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-hls-safe-edge-1",
+    "capture": "logs/p04-hls-safe-edge-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-safe-edge-1",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "failed",
+        "stage": "smooth-again",
+        "failureKind": "TestFailure",
+        "failureCode": "avplayer.stall_timeout",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 7419388,
+            "revision": 50
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20670242,
+            "revision": 126
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20672967,
+            "revision": 128
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-hls-stall-1",
+    "capture": "logs/p04-hls-stall-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-stall-1",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "failed",
+        "stage": "smooth-again",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 7153804,
+            "revision": 50
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20743112,
+            "revision": 133
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20746750,
+            "revision": 135
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-hls-stall-2",
+    "capture": "logs/p04-hls-stall-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-stall-2",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "failed",
+        "stage": "smooth-again",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6133452,
+            "revision": 50
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 19288341,
+            "revision": 128
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 19292888,
+            "revision": 130
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-hls-stop-fixed",
+    "capture": "logs/p04-hls-stop-fixed/capture.log",
+    "exactCommandRecorded": false,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-hls-stop-fixed",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 5572097,
+            "revision": 49
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 10633454,
+            "revision": 102
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-ios-auto-1",
+    "capture": "logs/p04-ios-auto-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-auto-1",
+        "mode": "auto",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "ios",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 160,
+        "policyAckUs": 1163287,
+        "firstFrameUs": 1201709,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 1202564,
+          "afterUs": 1269929,
+          "serverUs": 1187142
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-ios-auto-1",
+      "mode": "auto",
+      "captureComplete": true,
+      "downshiftLatencyUs": {
+        "min": 8400940,
+        "max": 8468305
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 2424566,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 1971026,
+      "requestFailures": 1,
+      "requestCount": 122,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 953678,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-ios-auto-80s-1",
+    "capture": "logs/p04-ios-auto-80s-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-auto-80s-1",
+        "mode": "auto",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "fca2e682a11fb2a9116e3d187804e0fdd82310e53953cae4848ac35497be5a13",
+        "platform": "ios",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 318,
+        "policyAckUs": 1495328,
+        "firstFrameUs": 1526202,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 1527004,
+          "afterUs": 1576611,
+          "serverUs": 1457214
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-ios-auto-80s-1",
+      "mode": "auto",
+      "captureComplete": true,
+      "downshiftLatencyUs": {
+        "min": 9689770,
+        "max": 9739377
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 2723629,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 3346912,
+      "requestFailures": 1,
+      "requestCount": 231,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 1114662,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-ios-caps-1",
+    "capture": "logs/p04-ios-caps-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-caps-1",
+        "mode": "caps",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "ios",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 161,
+        "policyAckUs": 1018694,
+        "firstFrameUs": 1063644,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 1064115,
+          "afterUs": 1109572,
+          "serverUs": 1035523
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-ios-caps-1",
+      "mode": "caps",
+      "captureComplete": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 45644,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 1400980,
+      "requestFailures": 0,
+      "requestCount": 113,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 807907,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-ios-fixed-1",
+    "capture": "logs/p04-ios-fixed-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-fixed-1",
+        "mode": "fixed",
+        "profileId": "down-and-recover-v1",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "mediaHash": "ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb",
+        "platform": "ios",
+        "buildMode": "debug",
+        "outcome": "completed",
+        "stage": "observe",
+        "cleaned": true,
+        "sampleCount": 192,
+        "policyAckUs": 1224261,
+        "firstFrameUs": 1195081,
+        "endToEndLatencyUs": null,
+        "physicalOutputVerified": false,
+        "baselineComparable": false,
+        "sampleIntervalMs": 250,
+        "clockRelation": "profile-head-bracket",
+        "clockAlignment": {
+          "beforeUs": 1231279,
+          "afterUs": 1277538,
+          "serverUs": 1119317
+        }
+      }
+    ],
+    "processExitCode": "0",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "p04-ios-fixed-1",
+      "mode": "fixed",
+      "captureComplete": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": null,
+      "recoveryHighRequestLatencyUs": 2459243,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": true,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 2705810,
+      "requestFailures": 6,
+      "requestCount": 125,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 912379,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    }
+  },
+  {
+    "runId": "p04-ios-flv-1",
+    "capture": "logs/p04-ios-flv-1/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": false,
+    "results": []
+  },
+  {
+    "runId": "p04-ios-flv-2",
+    "capture": "logs/p04-ios-flv-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-flv-2",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "load",
+        "failureKind": "YlPlayerException",
+        "failureCode": "decoder.unavailable",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-ios-hls-2",
+    "capture": "logs/p04-ios-hls-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-hls-2",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6791434,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20040075,
+            "revision": 167
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20090075,
+            "revision": 172
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-ios-hls-3",
+    "capture": "logs/p04-ios-hls-3/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-hls-3",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "rapid",
+        "failureKind": "YlPlayerException",
+        "failureCode": "protocol.mismatch",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6550912,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 19794482,
+            "revision": 167
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 19841637,
+            "revision": 172
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-ios-hls-ordered",
+    "capture": "logs/p04-ios-hls-ordered/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-hls-ordered",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 7077107,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20302885,
+            "revision": 167
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20353207,
+            "revision": 172
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-ios-hls-stress",
+    "capture": "logs/p04-ios-hls-stress/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-hls-stress",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "rapid",
+        "failureKind": "YlPlayerException",
+        "failureCode": "protocol.mismatch",
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6804757,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20090826,
+            "revision": 167
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20141129,
+            "revision": 172
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-ios-hls-trace",
+    "capture": "logs/p04-ios-hls-trace/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-ios-hls-trace",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 7132681,
+            "revision": 49
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 20415780,
+            "revision": 167
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 20462699,
+            "revision": 172
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-iphone-flv-exclusive-6",
+    "capture": "logs/p04-iphone-flv-exclusive-6/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-flv-exclusive-6",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "completed",
+        "stage": "stop",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 11580214,
+            "revision": 45
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 24798473,
+            "revision": 117
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 27011922,
+            "revision": 128
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-iphone-flv-live",
+    "capture": "logs/p04-iphone-flv-live/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-flv-live",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "load",
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.http_status",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-flv-live-2",
+    "capture": "logs/p04-iphone-flv-live-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-flv-live-2",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "load",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.http_status",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-flv-trace-3",
+    "capture": "logs/p04-iphone-flv-trace-3/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-flv-trace-3",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.cancelled",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-hls-live",
+    "capture": "logs/p04-iphone-hls-live/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-hls-live",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 8762836,
+            "revision": 51
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 34660415,
+            "revision": 163
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 34665754,
+            "revision": 165
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-iphone-rtmp-exclusive-6",
+    "capture": "logs/p04-iphone-rtmp-exclusive-6/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-rtmp-exclusive-6",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "completed",
+        "stage": "stop",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 13431963,
+            "revision": 48
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 26651560,
+            "revision": 120
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 29825687,
+            "revision": 136
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-iphone-rtmp-exclusive-6-recovery",
+    "capture": "logs/p04-iphone-rtmp-exclusive-6-recovery/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-iphone-rtmp-live",
+    "capture": "logs/p04-iphone-rtmp-live/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-rtmp-live",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.cancelled",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-rtmp-live-2",
+    "capture": "logs/p04-iphone-rtmp-live-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-rtmp-live-2",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.cancelled",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-rtmp-live-2-recovery",
+    "capture": "logs/p04-iphone-rtmp-live-2-recovery/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-iphone-rtmp-live-recovery",
+    "capture": "logs/p04-iphone-rtmp-live-recovery/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-rtmp-trace-3",
+    "capture": "logs/p04-iphone-rtmp-trace-3/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-rtmp-trace-3",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.cancelled",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-rtmp-trace-4",
+    "capture": "logs/p04-iphone-rtmp-trace-4/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-rtmp-trace-4",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.cancelled",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-iphone-rtmp-trace-5",
+    "capture": "logs/p04-iphone-rtmp-trace-5/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-iphone-rtmp-trace-5",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "ios",
+        "outcome": "failed",
+        "stage": "paused-low",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": "YlPlayerException",
+        "failureCode": "network.cancelled",
+        "cleaned": true,
+        "commits": [],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-macos-flv-exclusive",
+    "capture": "logs/p04-macos-flv-exclusive/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-macos-flv-exclusive",
+        "protocol": "flv",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "appLifecycle": [
+          {
+            "elapsedUs": 0,
+            "state": "resumed"
+          }
+        ],
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 9244591,
+            "revision": 43
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 22403323,
+            "revision": 117
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 24340287,
+            "revision": 127
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-macos-hls-ordered",
+    "capture": "logs/p04-macos-hls-ordered/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-macos-hls-ordered",
+        "protocol": "hls",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 6068091,
+            "revision": 50
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 19300404,
+            "revision": 168
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 19363861,
+            "revision": 174
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-macos-rtmp-expanded",
+    "capture": "logs/p04-macos-rtmp-expanded/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [
+      {
+        "schemaVersion": 1,
+        "runId": "p04-macos-rtmp-expanded",
+        "protocol": "rtmp",
+        "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+        "platform": "macos",
+        "outcome": "completed",
+        "stage": "stop",
+        "failureKind": null,
+        "failureCode": null,
+        "cleaned": true,
+        "commits": [
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 9848323,
+            "revision": 44
+          },
+          {
+            "mode": "lowLatency",
+            "elapsedUs": 22970381,
+            "revision": 117
+          },
+          {
+            "mode": "smoothPlayback",
+            "elapsedUs": 25061603,
+            "revision": 128
+          }
+        ],
+        "endToEndLatency": "unavailable",
+        "evidence": "public-state-only"
+      }
+    ],
+    "processExitCode": "0"
+  },
+  {
+    "runId": "p04-macos-rtmp-low-recovery",
+    "capture": "logs/p04-macos-rtmp-low-recovery/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "1"
+  },
+  {
+    "runId": "p04-macos-rtmp-low-recovery-2",
+    "capture": "logs/p04-macos-rtmp-low-recovery-2/capture.log",
+    "exactCommandRecorded": true,
+    "sourceIdentityRecorded": true,
+    "results": [],
+    "processExitCode": "0"
+  }
+]

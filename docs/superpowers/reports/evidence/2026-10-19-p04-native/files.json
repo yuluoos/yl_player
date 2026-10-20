@@ -1,0 +1,3978 @@
+[
+  {
+    "path": "logs/abr-auto-baseline/capture.log",
+    "bytes": 32513,
+    "sha256": "15de05f8fc76d4f003812927753a77cadfd687643e32d19a61f4437a9bd8e1ce",
+    "originalSha256": "15de05f8fc76d4f003812927753a77cadfd687643e32d19a61f4437a9bd8e1ce",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/abr-auto-baseline/command.json",
+    "bytes": 555,
+    "sha256": "588a2346734f0dd27c91a4a7f05c11e6d133bd3bdd6415d107c2bfcbf07e71a6",
+    "originalSha256": "588a2346734f0dd27c91a4a7f05c11e6d133bd3bdd6415d107c2bfcbf07e71a6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/abr-auto-baseline/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/abr-auto-baseline/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/abr-auto-baseline/requests.jsonl",
+    "bytes": 65700,
+    "sha256": "2da5a0770c6621aee67bbf1992e7e481b0f7bb22b2ad7218da0080a308bc348a",
+    "originalSha256": "2da5a0770c6621aee67bbf1992e7e481b0f7bb22b2ad7218da0080a308bc348a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/abr-auto-baseline/server.jsonl",
+    "bytes": 324,
+    "sha256": "bff4a3831d826190cec023a3f790d298a176ca9f1d33b0f9309b696a957315a3",
+    "originalSha256": "bff4a3831d826190cec023a3f790d298a176ca9f1d33b0f9309b696a957315a3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/abr-auto-baseline/startup.json",
+    "bytes": 243,
+    "sha256": "ad657892bc2958ccf22fe5513160c716f6e39bed68f06d28f8d2214b8602bb2a",
+    "originalSha256": "ad657892bc2958ccf22fe5513160c716f6e39bed68f06d28f8d2214b8602bb2a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/alignment-green.log",
+    "bytes": 331,
+    "sha256": "f9ba539b0438a831ff2dc6cf498d7c75fd7f20465b2d215322679b63d6f6d9dd",
+    "originalSha256": "f9ba539b0438a831ff2dc6cf498d7c75fd7f20465b2d215322679b63d6f6d9dd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/alignment-red.log",
+    "bytes": 1863,
+    "sha256": "ab966322d5f2cea2c4911b443c7f0aa83543023a9d4b1de14ee1fa0f8a984a3d",
+    "originalSha256": "ab966322d5f2cea2c4911b443c7f0aa83543023a9d4b1de14ee1fa0f8a984a3d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-auto-2-runner.log",
+    "bytes": 992,
+    "sha256": "2781228f3ed6c231e5ebd60addfe2abc97a4ae6b7493378edef2659dd905b9b9",
+    "originalSha256": "2781228f3ed6c231e5ebd60addfe2abc97a4ae6b7493378edef2659dd905b9b9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-final.log",
+    "bytes": 109932,
+    "sha256": "a887ac8f0cdcaa38194a54a68eb7ff1d64f17d532d8db54fc7a860721ec3cacd",
+    "originalSha256": "a887ac8f0cdcaa38194a54a68eb7ff1d64f17d532d8db54fc7a860721ec3cacd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-jdk17.log",
+    "bytes": 76761,
+    "sha256": "fa02549f1c6d032f371cc9d36a058f986635970b79ddbb1249bd34f44048430e",
+    "originalSha256": "fa02549f1c6d032f371cc9d36a058f986635970b79ddbb1249bd34f44048430e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-totals.json",
+    "bytes": 17734,
+    "sha256": "7c2638a353785a3f300750b3f6fcb821366875a40d02ef630b7c9b0c91a951d8",
+    "originalSha256": "7c2638a353785a3f300750b3f6fcb821366875a40d02ef630b7c9b0c91a951d8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest.xml",
+    "bytes": 2091,
+    "sha256": "60e1d5c8dd10ba5364e20c244a05853c846d3ef3f190450f252b89a00ba33bc0",
+    "originalSha256": "60e1d5c8dd10ba5364e20c244a05853c846d3ef3f190450f252b89a00ba33bc0",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest.xml",
+    "bytes": 1125,
+    "sha256": "78b42d3e9a2dd891312c470962e5f05da48a1f7afce821eeb4ddedb815c590d3",
+    "originalSha256": "78b42d3e9a2dd891312c470962e5f05da48a1f7afce821eeb4ddedb815c590d3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlAnnexBTest.xml",
+    "bytes": 642,
+    "sha256": "fb63d65da95e45da8ce6bc66e865eb7887e88a462b3790dbb9789438eab0b815",
+    "originalSha256": "fb63d65da95e45da8ce6bc66e865eb7887e88a462b3790dbb9789438eab0b815",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest.xml",
+    "bytes": 1502,
+    "sha256": "582af7650b672e50912e160a397e3bc5010840d28f41fa5ec4bdb2f7996a3523",
+    "originalSha256": "582af7650b672e50912e160a397e3bc5010840d28f41fa5ec4bdb2f7996a3523",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlAudioSelectionPolicyTest.xml",
+    "bytes": 2229,
+    "sha256": "59793f613581bf9563fde9669e37aca07aa9100a9222004dbcc0e8c60da715fe",
+    "originalSha256": "59793f613581bf9563fde9669e37aca07aa9100a9222004dbcc0e8c60da715fe",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlCallbackDispatcherTest.xml",
+    "bytes": 1385,
+    "sha256": "b920e36b53f4aa3b05f1109f068bf5afa3dbebe81d3e8a194cf9175bfe7c6939",
+    "originalSha256": "b920e36b53f4aa3b05f1109f068bf5afa3dbebe81d3e8a194cf9175bfe7c6939",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest.xml",
+    "bytes": 1844,
+    "sha256": "772e4cc666fc4d78af0d7ec5be13e8ca813588882325ce9a46bad05fd81cf009",
+    "originalSha256": "772e4cc666fc4d78af0d7ec5be13e8ca813588882325ce9a46bad05fd81cf009",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest.xml",
+    "bytes": 2410,
+    "sha256": "faa229c87068ce43e8bc821f6c8ce7c15ac83160fafb2601de105439c9c20f34",
+    "originalSha256": "faa229c87068ce43e8bc821f6c8ce7c15ac83160fafb2601de105439c9c20f34",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlConsumedAudioClockTest.xml",
+    "bytes": 521,
+    "sha256": "0a618cf9fbe5f27eba4e1bac39e94ca992a05ec289386eba672b5d2668e8e914",
+    "originalSha256": "0a618cf9fbe5f27eba4e1bac39e94ca992a05ec289386eba672b5d2668e8e914",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDashCandidateHttpTest.xml",
+    "bytes": 1547,
+    "sha256": "114e49853e34f6bff1a075920f8bca0e4472278762fe41f5128ebd41062d2594",
+    "originalSha256": "114e49853e34f6bff1a075920f8bca0e4472278762fe41f5128ebd41062d2594",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDashCandidateRegistryTest.xml",
+    "bytes": 693,
+    "sha256": "3933e9287fdd6a95d99bf5206667c779c793b201c4f944fd19bce7e561e90f73",
+    "originalSha256": "3933e9287fdd6a95d99bf5206667c779c793b201c4f944fd19bce7e561e90f73",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDashManifestParserTest.xml",
+    "bytes": 3685,
+    "sha256": "7da8bf1ed348bc0431dd5893a3a9216fa15e20f3738a174c7f8aa983f8966ab9",
+    "originalSha256": "7da8bf1ed348bc0431dd5893a3a9216fa15e20f3738a174c7f8aa983f8966ab9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDashPcmWindowTest.xml",
+    "bytes": 1550,
+    "sha256": "297ef333e5781316995a348d35aeefaaca48216221cabee6f02a69feb5273fa9",
+    "originalSha256": "297ef333e5781316995a348d35aeefaaca48216221cabee6f02a69feb5273fa9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDashProtectedRouteTest.xml",
+    "bytes": 690,
+    "sha256": "184c0e54500058ebf24ea477cb9c0f1b36748b907065976f793efe0fe8c9695e",
+    "originalSha256": "184c0e54500058ebf24ea477cb9c0f1b36748b907065976f793efe0fe8c9695e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDashVideoCoverageTest.xml",
+    "bytes": 521,
+    "sha256": "93d00869708dfeabf53577da7d5074f19a11f01f4cabdb095593570feec0ea90",
+    "originalSha256": "93d00869708dfeabf53577da7d5074f19a11f01f4cabdb095593570feec0ea90",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest.xml",
+    "bytes": 3270,
+    "sha256": "004fb65674d02246823196d52c01dd8ac69b31ea110ccd5082962e88d4322438",
+    "originalSha256": "004fb65674d02246823196d52c01dd8ac69b31ea110ccd5082962e88d4322438",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDrmBridgeTest.xml",
+    "bytes": 1367,
+    "sha256": "29255334873a69a2646e5dd590fc4e452e33943bf9478bbd775b52216715b20b",
+    "originalSha256": "29255334873a69a2646e5dd590fc4e452e33943bf9478bbd775b52216715b20b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlDrmKeySessionTest.xml",
+    "bytes": 2695,
+    "sha256": "d848eee9eb89de8cf2e12a559360dc11b3852c6c0fa30dfbd7b9ef8f3689d4ad",
+    "originalSha256": "d848eee9eb89de8cf2e12a559360dc11b3852c6c0fa30dfbd7b9ef8f3689d4ad",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlFailureMapperTest.xml",
+    "bytes": 1810,
+    "sha256": "ad39a06f551e00deb9c05b5c394ee0c51281c837020fb72ae9f9915bd671d097",
+    "originalSha256": "ad39a06f551e00deb9c05b5c394ee0c51281c837020fb72ae9f9915bd671d097",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlFallbackRoutingPolicyTest.xml",
+    "bytes": 874,
+    "sha256": "e136039756fc0a195ce15f6b9b73ce1bc33a05e531e324f16d3f8af917de70c6",
+    "originalSha256": "e136039756fc0a195ce15f6b9b73ce1bc33a05e531e324f16d3f8af917de70c6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlFinalBoundaryTest.xml",
+    "bytes": 2911,
+    "sha256": "e7d43cfdab6f06b0c9c0463c6fafd8320511bb0fa50b6d0dc1966a2c17c3c11a",
+    "originalSha256": "e7d43cfdab6f06b0c9c0463c6fafd8320511bb0fa50b6d0dc1966a2c17c3c11a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlFirstFrameGateTest.xml",
+    "bytes": 642,
+    "sha256": "0959645403660796ca90efd8a37bed75e9017a10f4eba1e0eb794eb3e3103e6d",
+    "originalSha256": "0959645403660796ca90efd8a37bed75e9017a10f4eba1e0eb794eb3e3103e6d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest.xml",
+    "bytes": 3061,
+    "sha256": "22945db3075d2852513de34ff9bb4b8298bcce2ff7ff6c77d75bc57aaeb17158",
+    "originalSha256": "22945db3075d2852513de34ff9bb4b8298bcce2ff7ff6c77d75bc57aaeb17158",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest.xml",
+    "bytes": 981,
+    "sha256": "ac84184fcd134f327fbe1cc5b18550b665bf40b02c5e9605c362a8149166e884",
+    "originalSha256": "ac84184fcd134f327fbe1cc5b18550b665bf40b02c5e9605c362a8149166e884",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlLifecyclePolicyTest.xml",
+    "bytes": 1533,
+    "sha256": "57abd6516a30b189e86dc621732f7ff249ca14142a343f092b692f4f8eca017c",
+    "originalSha256": "57abd6516a30b189e86dc621732f7ff249ca14142a343f092b692f4f8eca017c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlLiveModePolicyTest.xml",
+    "bytes": 978,
+    "sha256": "9bd40e31847b0287763465c997aa3ffae83a90c48e185a21e1fe08138a9f1b2c",
+    "originalSha256": "9bd40e31847b0287763465c997aa3ffae83a90c48e185a21e1fe08138a9f1b2c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlLivePlaybackModeTest.xml",
+    "bytes": 872,
+    "sha256": "32b0cdf3673a7049612fab3213053bf098bb40f4e5cfb6a77d9532b8e5ddcd4a",
+    "originalSha256": "32b0cdf3673a7049612fab3213053bf098bb40f4e5cfb6a77d9532b8e5ddcd4a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest.xml",
+    "bytes": 2151,
+    "sha256": "c7065cd9e7803dcce435d1f33373cdb9afda80803c5e2755b27ade9b7d4d5c10",
+    "originalSha256": "c7065cd9e7803dcce435d1f33373cdb9afda80803c5e2755b27ade9b7d4d5c10",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest.xml",
+    "bytes": 4306,
+    "sha256": "1d5b6820b156b8fed095029e2b7a351cd77469df7e86b91160990bd0c71fbd06",
+    "originalSha256": "1d5b6820b156b8fed095029e2b7a351cd77469df7e86b91160990bd0c71fbd06",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest.xml",
+    "bytes": 893,
+    "sha256": "968aef76954788f19922fde0b3320b012d5c935239738501368f0d5709147584",
+    "originalSha256": "968aef76954788f19922fde0b3320b012d5c935239738501368f0d5709147584",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3AcknowledgementTest.xml",
+    "bytes": 890,
+    "sha256": "a30273079ae3d6b7bcf6946fd5f9175bf2007190103376a51405e850e3d71469",
+    "originalSha256": "a30273079ae3d6b7bcf6946fd5f9175bf2007190103376a51405e850e3d71469",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest.xml",
+    "bytes": 1603,
+    "sha256": "3e007354c4714d9c65a6f299fff949c24e31231dcc8f2f480177af48237ff186",
+    "originalSha256": "3e007354c4714d9c65a6f299fff949c24e31231dcc8f2f480177af48237ff186",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3ConfigurationTest.xml",
+    "bytes": 916,
+    "sha256": "ebbcce7192204155340da04dd88cfca22348a408ce9bebbc74b9b55acda11bff",
+    "originalSha256": "ebbcce7192204155340da04dd88cfca22348a408ce9bebbc74b9b55acda11bff",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest.xml",
+    "bytes": 2500,
+    "sha256": "41d7cf6c4ad4e3a7ef4645d42cd0f849e426f758cece92a70b93e77ea538e638",
+    "originalSha256": "41d7cf6c4ad4e3a7ef4645d42cd0f849e426f758cece92a70b93e77ea538e638",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest.xml",
+    "bytes": 2566,
+    "sha256": "5c99fb657c53cc978eb60d23d24826db4cd842461526f2ec1d3a65fe7d661c94",
+    "originalSha256": "5c99fb657c53cc978eb60d23d24826db4cd842461526f2ec1d3a65fe7d661c94",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest.xml",
+    "bytes": 847,
+    "sha256": "23319ca5f95588d6ee696dffa4508b259f46afa185192069b58627a42ee3c604",
+    "originalSha256": "23319ca5f95588d6ee696dffa4508b259f46afa185192069b58627a42ee3c604",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMedia3StatePolicyTest.xml",
+    "bytes": 649,
+    "sha256": "c463bd4bd409f07bbc1ec6a53de64cbb851188d3b39e4e0f8d41765db1e1edd6",
+    "originalSha256": "c463bd4bd409f07bbc1ec6a53de64cbb851188d3b39e4e0f8d41765db1e1edd6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlMetricsCollectorTest.xml",
+    "bytes": 2155,
+    "sha256": "2b6f494ef8ef24fedd946ed925927f46dfc4a045a556781fa0841b5549476af4",
+    "originalSha256": "2b6f494ef8ef24fedd946ed925927f46dfc4a045a556781fa0841b5549476af4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlNativeByteSourceCancellationTest.xml",
+    "bytes": 526,
+    "sha256": "f1c5362d99dc520ba0c88329d0f61b1d9cb62e463c9a657085f9dc2ea95ff1ef",
+    "originalSha256": "f1c5362d99dc520ba0c88329d0f61b1d9cb62e463c9a657085f9dc2ea95ff1ef",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlNativePcmPrerollTest.xml",
+    "bytes": 674,
+    "sha256": "b0fc847854e5c71b5b3e5ff8e9f5207bc5b9f425ef6b45d55389de751bd5c746",
+    "originalSha256": "b0fc847854e5c71b5b3e5ff8e9f5207bc5b9f425ef6b45d55389de751bd5c746",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest.xml",
+    "bytes": 2933,
+    "sha256": "f3fc006bf4ec639057ca02964b986fc2f7a5f1f0ce018e9206c754022180d867",
+    "originalSha256": "f3fc006bf4ec639057ca02964b986fc2f7a5f1f0ce018e9206c754022180d867",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlNetworkByteCounterTest.xml",
+    "bytes": 897,
+    "sha256": "02336395f01d90f518c27ab336398213012624181644b21af0dd993729ec16b2",
+    "originalSha256": "02336395f01d90f518c27ab336398213012624181644b21af0dd993729ec16b2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest.xml",
+    "bytes": 1817,
+    "sha256": "9f9660b2c33351e95692d6940decbaa864cb306054d350cd7d870d173b42e4e9",
+    "originalSha256": "9f9660b2c33351e95692d6940decbaa864cb306054d350cd7d870d173b42e4e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlPlaybackPolicyTest.xml",
+    "bytes": 1948,
+    "sha256": "76f5a4e306b6a2f03b8da675becd576369f35e63d00dcdddce241c08faa1c66b",
+    "originalSha256": "76f5a4e306b6a2f03b8da675becd576369f35e63d00dcdddce241c08faa1c66b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest.xml",
+    "bytes": 1141,
+    "sha256": "622700cff2d79436cef0063ea6b1993501e06a8f2f9b14d97f158187bc2873bd",
+    "originalSha256": "622700cff2d79436cef0063ea6b1993501e06a8f2f9b14d97f158187bc2873bd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest.xml",
+    "bytes": 1103,
+    "sha256": "1fe985b7df6aa3fe55940de29c03b77ec00a5f83148528726d0eca3a53221895",
+    "originalSha256": "1fe985b7df6aa3fe55940de29c03b77ec00a5f83148528726d0eca3a53221895",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlPlayerRegistryTest.xml",
+    "bytes": 4333,
+    "sha256": "0954c0eda9c5677ea5c4b4558feed0b16f1cdd96b7863278d97bf79d59198d51",
+    "originalSha256": "0954c0eda9c5677ea5c4b4558feed0b16f1cdd96b7863278d97bf79d59198d51",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest.xml",
+    "bytes": 1155,
+    "sha256": "84683a46058a62821cb45d794ca4aae8f740d7c9ed250b195bd7fd8ad3595a24",
+    "originalSha256": "84683a46058a62821cb45d794ca4aae8f740d7c9ed250b195bd7fd8ad3595a24",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest.xml",
+    "bytes": 879,
+    "sha256": "1a655e5624b3f672440b6395e55da705f8e1c9e7d7cb19321d2cffc97d7afbf5",
+    "originalSha256": "1a655e5624b3f672440b6395e55da705f8e1c9e7d7cb19321d2cffc97d7afbf5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlProtectedOutputTest.xml",
+    "bytes": 2619,
+    "sha256": "e88559fe1fa0cb3e457353d7e2608f6dbb4deee08c2519f8978d87545a392097",
+    "originalSha256": "e88559fe1fa0cb3e457353d7e2608f6dbb4deee08c2519f8978d87545a392097",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlProtectedViewTest.xml",
+    "bytes": 700,
+    "sha256": "46249c9bb3d25e1054d63c98903159e52cf8e9500c7dfea1ccea22eba036b7b7",
+    "originalSha256": "46249c9bb3d25e1054d63c98903159e52cf8e9500c7dfea1ccea22eba036b7b7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRedirectCredentialPolicyTest.xml",
+    "bytes": 1886,
+    "sha256": "cd241b1d39d6c6ce9451605e78e154cc5b342ca17628581fdc5c7aa1520bd0ab",
+    "originalSha256": "cd241b1d39d6c6ce9451605e78e154cc5b342ca17628581fdc5c7aa1520bd0ab",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpAdmissionTest.xml",
+    "bytes": 1110,
+    "sha256": "18c2b5d80e4b6ee4bfcac3452f737406404f55feeab9d0c997704cc47fa22390",
+    "originalSha256": "18c2b5d80e4b6ee4bfcac3452f737406404f55feeab9d0c997704cc47fa22390",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpControlTest.xml",
+    "bytes": 2018,
+    "sha256": "8aae7bc547c01719e482d1b0c07dd38981d67f383e2a32e16871ef54d48ae136",
+    "originalSha256": "8aae7bc547c01719e482d1b0c07dd38981d67f383e2a32e16871ef54d48ae136",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpExtractorTest.xml",
+    "bytes": 3375,
+    "sha256": "3b61e3076d85fb7b0236a038178c536c30f847b641eda9082e3b0b78f0bdf930",
+    "originalSha256": "3b61e3076d85fb7b0236a038178c536c30f847b641eda9082e3b0b78f0bdf930",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpFlowControlTest.xml",
+    "bytes": 860,
+    "sha256": "f5b39aa12cfc5bf44d408fd4c3d06535815092bb7120d6abd00d7cff9ed412c6",
+    "originalSha256": "f5b39aa12cfc5bf44d408fd4c3d06535815092bb7120d6abd00d7cff9ed412c6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpLifecycleTest.xml",
+    "bytes": 1551,
+    "sha256": "fc520e91db7242c2e0e64c5a2885cc10a48f2721eb1745ce15343b99bedd273c",
+    "originalSha256": "fc520e91db7242c2e0e64c5a2885cc10a48f2721eb1745ce15343b99bedd273c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpProtocolTest.xml",
+    "bytes": 2495,
+    "sha256": "5c764a6904d249d951a38007b9fa4306cb01641ac65a58d0a3ef6e68292743ea",
+    "originalSha256": "5c764a6904d249d951a38007b9fa4306cb01641ac65a58d0a3ef6e68292743ea",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpReadinessTest.xml",
+    "bytes": 1046,
+    "sha256": "c861d6d56c635d47e74b085204b046ada40ff045152f2ba6bcec5225d2b4bbd2",
+    "originalSha256": "c861d6d56c635d47e74b085204b046ada40ff045152f2ba6bcec5225d2b4bbd2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlRtmpTransportTest.xml",
+    "bytes": 1120,
+    "sha256": "7e179a47a679059da89d7052c851ce2dff2e080e2d7ae7dbb1bad49377667343",
+    "originalSha256": "7e179a47a679059da89d7052c851ce2dff2e080e2d7ae7dbb1bad49377667343",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlSessionAudioTest.xml",
+    "bytes": 3381,
+    "sha256": "eff3ad5617275099c95c07f9fb24589181c516b93514cbef3e386810874bc229",
+    "originalSha256": "eff3ad5617275099c95c07f9fb24589181c516b93514cbef3e386810874bc229",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlSessionCoordinatorTest.xml",
+    "bytes": 9598,
+    "sha256": "92b50609e1962e29f945e64951054b3d02d912f386792d5cde40a32a90b5ede2",
+    "originalSha256": "92b50609e1962e29f945e64951054b3d02d912f386792d5cde40a32a90b5ede2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlSoftwareDecodeBudgetTest.xml",
+    "bytes": 1591,
+    "sha256": "1c0311e6dc1e1039ad22ebb464d29b14e831777bdfd1248db50f67afcb8b3608",
+    "originalSha256": "1c0311e6dc1e1039ad22ebb464d29b14e831777bdfd1248db50f67afcb8b3608",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlSourceAssessmentTest.xml",
+    "bytes": 1162,
+    "sha256": "163feaa29c1ded5f616ad6352b3907f3af3dcbb91f63fd6f8e86eaba67410c58",
+    "originalSha256": "163feaa29c1ded5f616ad6352b3907f3af3dcbb91f63fd6f8e86eaba67410c58",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlStateReducerTest.xml",
+    "bytes": 1382,
+    "sha256": "247e42d6abfd0b1e120f1868b3eb2b86c5de709b401db84c771b85af42fc708f",
+    "originalSha256": "247e42d6abfd0b1e120f1868b3eb2b86c5de709b401db84c771b85af42fc708f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlStopPolicyTest.xml",
+    "bytes": 499,
+    "sha256": "6940158369f4e46de7b5b6cdde51553a7af57718dc715ef024f968ee24e8e6c2",
+    "originalSha256": "6940158369f4e46de7b5b6cdde51553a7af57718dc715ef024f968ee24e8e6c2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlUnavailableDecoderGateTest.xml",
+    "bytes": 670,
+    "sha256": "a65a4c7bef81a17da27d3f21cf44089606f8e4ba9c2f534e0543bd3ea8fc4a3e",
+    "originalSha256": "a65a4c7bef81a17da27d3f21cf44089606f8e4ba9c2f534e0543bd3ea8fc4a3e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest.xml",
+    "bytes": 2589,
+    "sha256": "790481f472f620997e47cc2728f7d57f153abe1d9d585eeac24d56c6ad2a406d",
+    "originalSha256": "790481f472f620997e47cc2728f7d57f153abe1d9d585eeac24d56c6ad2a406d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-jvm-xml/TEST-dev.ylplayer.yl_player_android.YlWidevineDriverTest.xml",
+    "bytes": 1368,
+    "sha256": "33da3aca92f7c7a6c310439729d9762713333395483ca14181fef2066e64a981",
+    "originalSha256": "33da3aca92f7c7a6c310439729d9762713333395483ca14181fef2066e64a981",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-resume-green.log",
+    "bytes": 11074,
+    "sha256": "a27e577f796aa022e7e7fa667d072407022d9579bc88b2fd0104bd321b98224a",
+    "originalSha256": "a27e577f796aa022e7e7fa667d072407022d9579bc88b2fd0104bd321b98224a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-resume-red.log",
+    "bytes": 12652,
+    "sha256": "6d4cc1cf71ac65752cc9607d725376620a1809ccdc423ab0a7aee9aa4bf6babd",
+    "originalSha256": "6d4cc1cf71ac65752cc9607d725376620a1809ccdc423ab0a7aee9aa4bf6babd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/android-video-selection-final.log",
+    "bytes": 2277,
+    "sha256": "09d657dcf2ca43e308ef7a917384ec307170e4edf8b4dbdabb14e205e39ad697",
+    "originalSha256": "09d657dcf2ca43e308ef7a917384ec307170e4edf8b4dbdabb14e205e39ad697",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple-dart-final.log",
+    "bytes": 27251,
+    "sha256": "8d177a67c2af04303d43d28064c365f84b6d2a77c7e1720494537244ee378cf7",
+    "originalSha256": "8d177a67c2af04303d43d28064c365f84b6d2a77c7e1720494537244ee378cf7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple-dart-root-final.log",
+    "bytes": 25492,
+    "sha256": "d437d4ce2948cc6c2f1ec97bec8d447bd96662dbbfe1eca1808108b80a45cd7b",
+    "originalSha256": "d437d4ce2948cc6c2f1ec97bec8d447bd96662dbbfe1eca1808108b80a45cd7b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple-native-exclusive-green.log",
+    "bytes": 17653,
+    "sha256": "0e250459363da8ff63cd55e78b92ba3697159de51e05361e0a6bc0a8931fbc3a",
+    "originalSha256": "0e250459363da8ff63cd55e78b92ba3697159de51e05361e0a6bc0a8931fbc3a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple-native-exclusive-red.log",
+    "bytes": 51912,
+    "sha256": "e69898a5a09fb3601892d150c11a68cf595101deef648071287f41a8d9586597",
+    "originalSha256": "e69898a5a09fb3601892d150c11a68cf595101deef648071287f41a8d9586597",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple-native-final.log",
+    "bytes": 17653,
+    "sha256": "0c7de367e36e6100a287e3c633052199a8dc1f0bf757fc112cae568e339c35bc",
+    "originalSha256": "0c7de367e36e6100a287e3c633052199a8dc1f0bf757fc112cae568e339c35bc",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple-native-ordered.log",
+    "bytes": 17653,
+    "sha256": "d1ad83320cd346a2f7aefe25bb4345ba0e472fa93955521ebbf5ab6f5b35968e",
+    "originalSha256": "d1ad83320cd346a2f7aefe25bb4345ba0e472fa93955521ebbf5ab6f5b35968e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple_dash_fixed_selection_test-final.log",
+    "bytes": 897,
+    "sha256": "f327ca6f02bf2969ad412b7af6ef80027d2cc3e35a54fb54d503f7b048ac52c3",
+    "originalSha256": "f327ca6f02bf2969ad412b7af6ef80027d2cc3e35a54fb54d503f7b048ac52c3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/apple_dash_runtime_caps_test-final.log",
+    "bytes": 2031,
+    "sha256": "3c55ea9ea8bf73d34559578dd9f0dbf7031f4015af33f666925e6504ccaac7a2",
+    "originalSha256": "3c55ea9ea8bf73d34559578dd9f0dbf7031f4015af33f666925e6504ccaac7a2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/capture-analyze-final.log",
+    "bytes": 96,
+    "sha256": "68977f52316d1db3bac7606d3f72fb1f5bc30b26a304849565be78a0b25761d1",
+    "originalSha256": "68977f52316d1db3bac7606d3f72fb1f5bc30b26a304849565be78a0b25761d1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/capture-dart-final.log",
+    "bytes": 2067,
+    "sha256": "ab038c69ca78ec82a50cb0778add74f110a66a23f16c0f296dc1c03f4429b0e8",
+    "originalSha256": "ab038c69ca78ec82a50cb0778add74f110a66a23f16c0f296dc1c03f4429b0e8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/cleanup-final.json",
+    "bytes": 405,
+    "sha256": "094d2de80d12a630fc517be168c6b908b0c4c562c6b3f31f891b7835e96ddba2",
+    "originalSha256": "094d2de80d12a630fc517be168c6b908b0c4c562c6b3f31f891b7835e96ddba2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/clock-green.log",
+    "bytes": 119,
+    "sha256": "351932703faeb7483ca50ef822554d4e2d5f4236a1fada3e7e31199b1734dc28",
+    "originalSha256": "351932703faeb7483ca50ef822554d4e2d5f4236a1fada3e7e31199b1734dc28",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/clock-red.log",
+    "bytes": 840,
+    "sha256": "95d570045a5acff6b2e69dc17194a5eaa1c7500c198c9e91e2cb49381683e4d8",
+    "originalSha256": "95d570045a5acff6b2e69dc17194a5eaa1c7500c198c9e91e2cb49381683e4d8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/environment.json",
+    "bytes": 1927,
+    "sha256": "3bc8a4a2448681ea2e8cb894ffe85e52324c04b19ffb91fccf181141304c3bef",
+    "originalSha256": "3bc8a4a2448681ea2e8cb894ffe85e52324c04b19ffb91fccf181141304c3bef",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/final-capture-analyze-2.log",
+    "bytes": 1257,
+    "sha256": "83e140806cf00918fc6c50b2f4e8b7c5090bd63f24fdc9e0f934b4c7e99fafbd",
+    "originalSha256": "83e140806cf00918fc6c50b2f4e8b7c5090bd63f24fdc9e0f934b4c7e99fafbd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/final-capture-analyze.log",
+    "bytes": 1485,
+    "sha256": "e205d1926d9da6448194218015ac09c05c7c14708765a1a61e2d0c4944c5a22a",
+    "originalSha256": "e205d1926d9da6448194218015ac09c05c7c14708765a1a61e2d0c4944c5a22a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-auto-80s-runner.log",
+    "bytes": 948,
+    "sha256": "315917ef698e54c9c11bbe006d5f9e0dd5bc790c5fb524873c7007b6acde78cc",
+    "originalSha256": "315917ef698e54c9c11bbe006d5f9e0dd5bc790c5fb524873c7007b6acde78cc",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-auto-runner.log",
+    "bytes": 939,
+    "sha256": "cd9b821edb544f248af91ac592341167d3584f6fe88d241206dc0a9cca51d28b",
+    "originalSha256": "cd9b821edb544f248af91ac592341167d3584f6fe88d241206dc0a9cca51d28b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-caps-runner.log",
+    "bytes": 897,
+    "sha256": "2eaca3040ef8758957c6cacff4ed861901ac4d4c91b96e0f29f06495e67a1c06",
+    "originalSha256": "2eaca3040ef8758957c6cacff4ed861901ac4d4c91b96e0f29f06495e67a1c06",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-fixed-runner.log",
+    "bytes": 902,
+    "sha256": "82e9b5632df91eb9d6c467471bc8e4a8f2aa62a89afe61555f8c9da8bbe67c50",
+    "originalSha256": "82e9b5632df91eb9d6c467471bc8e4a8f2aa62a89afe61555f8c9da8bbe67c50",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-hls-ordered-runner.log",
+    "bytes": 22,
+    "sha256": "bfaa380b23fe5a96820c6a7375b22ff1bdfe405301fa93d3006263baa05bbb4f",
+    "originalSha256": "bfaa380b23fe5a96820c6a7375b22ff1bdfe405301fa93d3006263baa05bbb4f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-hls-stress-runner.log",
+    "bytes": 21,
+    "sha256": "18f6cfb0311d0737d1e5d4e8d17fffc545f1629752d4db5d9a20743fd8459b6c",
+    "originalSha256": "18f6cfb0311d0737d1e5d4e8d17fffc545f1629752d4db5d9a20743fd8459b6c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/ios-hls-trace-runner.log",
+    "bytes": 20,
+    "sha256": "ba18b51ea2cb5dbd46a835bdc135546348fa86438fbc769c93d57fb33605dec6",
+    "originalSha256": "ba18b51ea2cb5dbd46a835bdc135546348fa86438fbc769c93d57fb33605dec6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-flv-exclusive-runner.log",
+    "bytes": 29,
+    "sha256": "801b135177fc435a1c31612ec653f3877d55ff8e98c53f5d042c14836f1db40b",
+    "originalSha256": "801b135177fc435a1c31612ec653f3877d55ff8e98c53f5d042c14836f1db40b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-flv-repeat-runner.log",
+    "bytes": 24,
+    "sha256": "54094fa12447f6b440b318d8d6032e982aebd7824d32c504780e63906a864337",
+    "originalSha256": "54094fa12447f6b440b318d8d6032e982aebd7824d32c504780e63906a864337",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-flv-trace-runner.log",
+    "bytes": 25,
+    "sha256": "da9801abed603e5cefc5e21b68080b78860a25d63b764e27a628a86053f2ba5f",
+    "originalSha256": "da9801abed603e5cefc5e21b68080b78860a25d63b764e27a628a86053f2ba5f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-http-live-runner.log",
+    "bytes": 44,
+    "sha256": "29a0b6095051a1e5b8f814ff60efadf9bc2af8c23163aed7458319374bc1cfcb",
+    "originalSha256": "29a0b6095051a1e5b8f814ff60efadf9bc2af8c23163aed7458319374bc1cfcb",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-native-cancellation-diagnostic.log",
+    "bytes": 10931,
+    "sha256": "36c69b34650888894f31398257cf11cb6f8e1920939e89caf424caf0bd7ab111",
+    "originalSha256": "36c69b34650888894f31398257cf11cb6f8e1920939e89caf424caf0bd7ab111",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-native-trace.log",
+    "bytes": 22,
+    "sha256": "76248649dd42f61d3cf89341393aff039358e9e7fd3924e3ea097cc3c41bc016",
+    "originalSha256": "76248649dd42f61d3cf89341393aff039358e9e7fd3924e3ea097cc3c41bc016",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-rtmp-exclusive-runner.log",
+    "bytes": 136,
+    "sha256": "039af8f352913c1a0e321db53bff535285c5f34872e70f9ffe48b4df69f8e1a4",
+    "originalSha256": "039af8f352913c1a0e321db53bff535285c5f34872e70f9ffe48b4df69f8e1a4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-rtmp-repeat-runner.log",
+    "bytes": 126,
+    "sha256": "ed616e9236af2bc236c6036509eafbaf3c52b88b7b2b9dc33f5672751ea2faf7",
+    "originalSha256": "ed616e9236af2bc236c6036509eafbaf3c52b88b7b2b9dc33f5672751ea2faf7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-rtmp-runner.log",
+    "bytes": 122,
+    "sha256": "a4270a1b5c7ee86246bd4ab70f0522968c1512469247aa9bcd17468f67e5d033",
+    "originalSha256": "a4270a1b5c7ee86246bd4ab70f0522968c1512469247aa9bcd17468f67e5d033",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-rtmp-trace-runner.log",
+    "bytes": 93,
+    "sha256": "a9d641752e3fb0e9dd4cb2dcf74f77b8fa210ea5937a57486ddf33bbeec2dc9e",
+    "originalSha256": "a9d641752e3fb0e9dd4cb2dcf74f77b8fa210ea5937a57486ddf33bbeec2dc9e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-rtmp-trace4-runner.log",
+    "bytes": 93,
+    "sha256": "40ad7bf10be3239b0642912f726dc86ba287846a4652ae0f6de1f890555d5695",
+    "originalSha256": "40ad7bf10be3239b0642912f726dc86ba287846a4652ae0f6de1f890555d5695",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-rtmp-trace5-runner.log",
+    "bytes": 93,
+    "sha256": "5670dc0cde5ab59a41edc9ded3951f1a192b38af58aa3cf16a006c62e4ae1885",
+    "originalSha256": "5670dc0cde5ab59a41edc9ded3951f1a192b38af58aa3cf16a006c62e4ae1885",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/iphone-startup-diagnostics.log",
+    "bytes": 22,
+    "sha256": "76248649dd42f61d3cf89341393aff039358e9e7fd3924e3ea097cc3c41bc016",
+    "originalSha256": "76248649dd42f61d3cf89341393aff039358e9e7fd3924e3ea097cc3c41bc016",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/lifecycle-analyze.log",
+    "bytes": 96,
+    "sha256": "6abfa3737f1e080d705c9f40eeb9b9bbb47b5b94efb3eb0e1e3028e5ad096e3f",
+    "originalSha256": "6abfa3737f1e080d705c9f40eeb9b9bbb47b5b94efb3eb0e1e3028e5ad096e3f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/lifecycle-format.log",
+    "bytes": 127,
+    "sha256": "811af63f4939c30f7fbd8662b8b45d90a39ff12bb33531cb2c055c95dd06c21e",
+    "originalSha256": "811af63f4939c30f7fbd8662b8b45d90a39ff12bb33531cb2c055c95dd06c21e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-analyze-final.log",
+    "bytes": 96,
+    "sha256": "a893841acc0cb62493e29338eacd9a767e68c0f485faba171bee5410b82d5f89",
+    "originalSha256": "a893841acc0cb62493e29338eacd9a767e68c0f485faba171bee5410b82d5f89",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-expanded-analyze.log",
+    "bytes": 96,
+    "sha256": "862eb6d2492788f416a4ba7abe5cb24beb998a4b03dc2ea62f060712ca136ff9",
+    "originalSha256": "862eb6d2492788f416a4ba7abe5cb24beb998a4b03dc2ea62f060712ca136ff9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-fixture-green.log",
+    "bytes": 101,
+    "sha256": "02fe8d04eaf1ec5456680b2417b6ecd255563b44efd7677739268044d9feac04",
+    "originalSha256": "02fe8d04eaf1ec5456680b2417b6ecd255563b44efd7677739268044d9feac04",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-fixture-red.log",
+    "bytes": 1080,
+    "sha256": "450ea87862232f6e0aa82f42e9151d60099cf13049fd50bc7af885beb3ee0bb8",
+    "originalSha256": "450ea87862232f6e0aa82f42e9151d60099cf13049fd50bc7af885beb3ee0bb8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-host-format.log",
+    "bytes": 274,
+    "sha256": "be29e8b263e94a1400903711d3dd29587f5f8777ca558eeba90a8bd3173afc49",
+    "originalSha256": "be29e8b263e94a1400903711d3dd29587f5f8777ca558eeba90a8bd3173afc49",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-private-host-green.log",
+    "bytes": 746,
+    "sha256": "0e063968f1f7915671f291170261ba145c8eefcfbf741cdea6a22702887a8e74",
+    "originalSha256": "0e063968f1f7915671f291170261ba145c8eefcfbf741cdea6a22702887a8e74",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-private-host-red.log",
+    "bytes": 1304,
+    "sha256": "d83f072e54dcd8af08450599f82372587cdec3ecb26e148c7c7b625e345e8eaa",
+    "originalSha256": "d83f072e54dcd8af08450599f82372587cdec3ecb26e148c7c7b625e345e8eaa",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/live-source.json",
+    "bytes": 3217,
+    "sha256": "906df4b523db3dfd1c678020d7d15ae7cc98d89ce446a04a5fabb78484d105b8",
+    "originalSha256": "906df4b523db3dfd1c678020d7d15ae7cc98d89ce446a04a5fabb78484d105b8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/low-resume-green.log",
+    "bytes": 17653,
+    "sha256": "7e8b99528f2702be15c0b9fb1ef4911ea03c28e1327867aee02a898fb7d7872c",
+    "originalSha256": "7e8b99528f2702be15c0b9fb1ef4911ea03c28e1327867aee02a898fb7d7872c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/low-resume-red.log",
+    "bytes": 46824,
+    "sha256": "40d0dabb7fd6ff37d8317804a3a97286ea4e939b5afbc8b321d37d7d060f4ee7",
+    "originalSha256": "40d0dabb7fd6ff37d8317804a3a97286ea4e939b5afbc8b321d37d7d060f4ee7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/macos-flv-exclusive-runner.log",
+    "bytes": 26,
+    "sha256": "222556e9095af95dd9eea206f9d2c5a433d9287228478185843b431e744dac55",
+    "originalSha256": "222556e9095af95dd9eea206f9d2c5a433d9287228478185843b431e744dac55",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/macos-hls-ordered-runner.log",
+    "bytes": 24,
+    "sha256": "629fb7afc2b201690dd661eff53264987677e0b6ba4ea3e5600878dce8de4346",
+    "originalSha256": "629fb7afc2b201690dd661eff53264987677e0b6ba4ea3e5600878dce8de4346",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/network-baseline.log",
+    "bytes": 141,
+    "sha256": "79413667826f06d5b91ed9a2bdb5cde1b7374416a60cccc6b1767403fe2ddfba",
+    "originalSha256": "79413667826f06d5b91ed9a2bdb5cde1b7374416a60cccc6b1767403fe2ddfba",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/network-clock-green.log",
+    "bytes": 143,
+    "sha256": "f158cc1b6337417cdf191f9262b4148289b8fbf3434da0b60fa5c5fc64ae7d50",
+    "originalSha256": "f158cc1b6337417cdf191f9262b4148289b8fbf3434da0b60fa5c5fc64ae7d50",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/network-current.log",
+    "bytes": 143,
+    "sha256": "4c1e4ab0c0edc63744c89ae99fe16ace7012a14162805a85dabec7df7d1e8203",
+    "originalSha256": "4c1e4ab0c0edc63744c89ae99fe16ace7012a14162805a85dabec7df7d1e8203",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/network-final.log",
+    "bytes": 146,
+    "sha256": "b0eb790569f164e9e3e7f0b55db6999e1fa4bc90349d715b07049483a801167f",
+    "originalSha256": "b0eb790569f164e9e3e7f0b55db6999e1fa4bc90349d715b07049483a801167f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/capture.log",
+    "bytes": 67862,
+    "sha256": "9f9d59b2ef251e0abb174da46ff7d78e6297e565e65952ba58611cb05a87b1db",
+    "originalSha256": "9f9d59b2ef251e0abb174da46ff7d78e6297e565e65952ba58611cb05a87b1db",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/command.json",
+    "bytes": 564,
+    "sha256": "f1fa962985eca9026183822b636ac0b96c71794d8773a7b4aad79262c8ee64e1",
+    "originalSha256": "f1fa962985eca9026183822b636ac0b96c71794d8773a7b4aad79262c8ee64e1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/requests.jsonl",
+    "bytes": 61917,
+    "sha256": "8f354fd55875e5fcb90f6e9003aee14561d4fa495a7d3d919d5cfd8fb04426cb",
+    "originalSha256": "8f354fd55875e5fcb90f6e9003aee14561d4fa495a7d3d919d5cfd8fb04426cb",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/server.jsonl",
+    "bytes": 325,
+    "sha256": "40edf639e397c4decea22c63d0c2b411fb0e13d98a53820bbd8829ebc0e90f6c",
+    "originalSha256": "40edf639e397c4decea22c63d0c2b411fb0e13d98a53820bbd8829ebc0e90f6c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-1/summary.json",
+    "bytes": 910,
+    "sha256": "2c36379065c41b48e7911036437e157bfe906c2203dbc8bd75b23ae816d23f99",
+    "originalSha256": "2c36379065c41b48e7911036437e157bfe906c2203dbc8bd75b23ae816d23f99",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/capture.log",
+    "bytes": 65101,
+    "sha256": "1c64a2f947ead4ef567e128df7b851620c97c362fd0b6f0903ce1c0e91f09b37",
+    "originalSha256": "1c64a2f947ead4ef567e128df7b851620c97c362fd0b6f0903ce1c0e91f09b37",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/command.json",
+    "bytes": 564,
+    "sha256": "6df05c336840ac35064b4d09355b05937cfaef5fcb7e2a139be07c432c1ecc68",
+    "originalSha256": "6df05c336840ac35064b4d09355b05937cfaef5fcb7e2a139be07c432c1ecc68",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/requests.jsonl",
+    "bytes": 62507,
+    "sha256": "3456ce8312a8cd7b66772e8e69201dfdbf42205c4d6d3cc792f229e4d9ece276",
+    "originalSha256": "3456ce8312a8cd7b66772e8e69201dfdbf42205c4d6d3cc792f229e4d9ece276",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/server.jsonl",
+    "bytes": 325,
+    "sha256": "8d2d3f1d9e9268c564bb34512cf4ae2062615dd09f4a2248bc3516a2eed4f172",
+    "originalSha256": "8d2d3f1d9e9268c564bb34512cf4ae2062615dd09f4a2248bc3516a2eed4f172",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-auto-2/summary.json",
+    "bytes": 957,
+    "sha256": "df3e155092b4c8fb6d46abf709503b26385d3b4891f9a9b47a3717071da0f89c",
+    "originalSha256": "df3e155092b4c8fb6d46abf709503b26385d3b4891f9a9b47a3717071da0f89c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/capture.log",
+    "bytes": 132532,
+    "sha256": "0eba427d5dfb07eeea7781f13aa30322a3584a1e860138d4826531e9a8560b25",
+    "originalSha256": "0eba427d5dfb07eeea7781f13aa30322a3584a1e860138d4826531e9a8560b25",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/command.json",
+    "bytes": 564,
+    "sha256": "363ba83a723515cf68509481cbdf6ff5b05c5747fd0b3d74c4a992c4e636f368",
+    "originalSha256": "363ba83a723515cf68509481cbdf6ff5b05c5747fd0b3d74c4a992c4e636f368",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/requests.jsonl",
+    "bytes": 61441,
+    "sha256": "3e763e9909cf3e28ca9657f420c2fee6d20d1165fdefe0ae67aecafe1155906f",
+    "originalSha256": "3e763e9909cf3e28ca9657f420c2fee6d20d1165fdefe0ae67aecafe1155906f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/server.jsonl",
+    "bytes": 325,
+    "sha256": "5ca498aded5f2fc7c0b497a3930e883dcfa681e6cd651cfb47b3e2822402945b",
+    "originalSha256": "5ca498aded5f2fc7c0b497a3930e883dcfa681e6cd651cfb47b3e2822402945b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-caps-1/summary.json",
+    "bytes": 874,
+    "sha256": "0df700d6eea293e72b2ce39ead530fa6732b490539de929083bd6cc0b039f4d7",
+    "originalSha256": "0df700d6eea293e72b2ce39ead530fa6732b490539de929083bd6cc0b039f4d7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/capture.log",
+    "bytes": 85089,
+    "sha256": "02418312471e53a8fcf83577ef45cff66e6f03affcafec65f6ec3daacebd9d11",
+    "originalSha256": "02418312471e53a8fcf83577ef45cff66e6f03affcafec65f6ec3daacebd9d11",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/command.json",
+    "bytes": 566,
+    "sha256": "ff40952b0f6bed695a1fe2f40c4192575645b7927a199524bb3ae7dbcf493ea1",
+    "originalSha256": "ff40952b0f6bed695a1fe2f40c4192575645b7927a199524bb3ae7dbcf493ea1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/requests.jsonl",
+    "bytes": 63771,
+    "sha256": "e6c6ef2036d618facc25f067f78143889ba22ffac1023590957c23f29fe7d5b3",
+    "originalSha256": "e6c6ef2036d618facc25f067f78143889ba22ffac1023590957c23f29fe7d5b3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/server.jsonl",
+    "bytes": 326,
+    "sha256": "478b1f7a43c2137acbce987f79b8e41196af306e8df75a8c626d4b308e16fb91",
+    "originalSha256": "478b1f7a43c2137acbce987f79b8e41196af306e8df75a8c626d4b308e16fb91",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-fixed-1/summary.json",
+    "bytes": 874,
+    "sha256": "2345bfa656e29531aef6944c80a5fc9ee008b4637a982fc470dc339767f08cf5",
+    "originalSha256": "2345bfa656e29531aef6944c80a5fc9ee008b4637a982fc470dc339767f08cf5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/capture.log",
+    "bytes": 25748,
+    "sha256": "2270422f793245c32ec851de50b55bc4452d366275d34a05262f01655a7e7cac",
+    "originalSha256": "2270422f793245c32ec851de50b55bc4452d366275d34a05262f01655a7e7cac",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/command.json",
+    "bytes": 443,
+    "sha256": "7ccd9834535a01fc703d13849e478651ca76fe37f20373cd5b32c244b0dc7332",
+    "originalSha256": "7ccd9834535a01fc703d13849e478651ca76fe37f20373cd5b32c244b0dc7332",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/server/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/server/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/server/receipt.json",
+    "bytes": 871,
+    "sha256": "932da98899b4eb5e76230178adc4cdde6a49d1a757f3d1d7de68c839fe45ba8d",
+    "originalSha256": "932da98899b4eb5e76230178adc4cdde6a49d1a757f3d1d7de68c839fe45ba8d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-flv-1/source-identity.json",
+    "bytes": 177367,
+    "sha256": "4baaa1cc88aef91ed221ac943f3bc22cb9923f21f915ad6bf2085a25ca455fe2",
+    "originalSha256": "4baaa1cc88aef91ed221ac943f3bc22cb9923f21f915ad6bf2085a25ca455fe2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-1/capture.log",
+    "bytes": 13579,
+    "sha256": "e98f4cec4c1b497d8ceaab984dfd688eff4d6cc662fa7384f4472ba28fa78c35",
+    "originalSha256": "e98f4cec4c1b497d8ceaab984dfd688eff4d6cc662fa7384f4472ba28fa78c35",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-1/command.json",
+    "bytes": 444,
+    "sha256": "748d2f5c4e345a9cba551bcd8f341c9d041c55906319c3665c060714357fca1e",
+    "originalSha256": "748d2f5c4e345a9cba551bcd8f341c9d041c55906319c3665c060714357fca1e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-1/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-1/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-1/server/receipt.json",
+    "bytes": 4241,
+    "sha256": "1c6d4d9fdfdd4bd838b0c09d99229b0161a3c8edc8fcf0f1abdcf48a8abaaf82",
+    "originalSha256": "1c6d4d9fdfdd4bd838b0c09d99229b0161a3c8edc8fcf0f1abdcf48a8abaaf82",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-1/source-identity.json",
+    "bytes": 177367,
+    "sha256": "4baaa1cc88aef91ed221ac943f3bc22cb9923f21f915ad6bf2085a25ca455fe2",
+    "originalSha256": "4baaa1cc88aef91ed221ac943f3bc22cb9923f21f915ad6bf2085a25ca455fe2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-2/capture.log",
+    "bytes": 25491,
+    "sha256": "cf1f1343c0670377a94b7b58529dac69933eb17bc95037634840e1ca944ead30",
+    "originalSha256": "cf1f1343c0670377a94b7b58529dac69933eb17bc95037634840e1ca944ead30",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-2/command.json",
+    "bytes": 444,
+    "sha256": "3ec0090ed28011dc64a4fa44e3d9ef97dc88b9422e000028d6751f100b49f3d1",
+    "originalSha256": "3ec0090ed28011dc64a4fa44e3d9ef97dc88b9422e000028d6751f100b49f3d1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-2/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-2/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-2/server/receipt.json",
+    "bytes": 7768,
+    "sha256": "2fcd65f53577c28d2a2399ad694f0f42166013c5708f706cc3c2f5e42bce3e79",
+    "originalSha256": "2fcd65f53577c28d2a2399ad694f0f42166013c5708f706cc3c2f5e42bce3e79",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-hls-2/source-identity.json",
+    "bytes": 177367,
+    "sha256": "0e68817945ab4a65d7a66ea334e689cc02c3845ffb0bb47ebebded06f0181d03",
+    "originalSha256": "0e68817945ab4a65d7a66ea334e689cc02c3845ffb0bb47ebebded06f0181d03",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-expanded/capture.log",
+    "bytes": 26174,
+    "sha256": "bc43676d0818e9b470e7cf13c64187028beb4408602d3b86300a67fd749f9769",
+    "originalSha256": "bc43676d0818e9b470e7cf13c64187028beb4408602d3b86300a67fd749f9769",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-expanded/command.json",
+    "bytes": 454,
+    "sha256": "8c8ff38412a322607702624700ae1fc7d05c63aa3e44466891696cdced464ae4",
+    "originalSha256": "8c8ff38412a322607702624700ae1fc7d05c63aa3e44466891696cdced464ae4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-expanded/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-expanded/source-identity.json",
+    "bytes": 172507,
+    "sha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "originalSha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery/capture.log",
+    "bytes": 3087,
+    "sha256": "6423f62ee3620dc9dbdf0122d5deb3ef73abd0b3dc10f464dfb021711a05a80d",
+    "originalSha256": "6423f62ee3620dc9dbdf0122d5deb3ef73abd0b3dc10f464dfb021711a05a80d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery/command.json",
+    "bytes": 364,
+    "sha256": "e579a3b47a1e78116bc2199891b36408041775d78da3e394106fd857e6518093",
+    "originalSha256": "e579a3b47a1e78116bc2199891b36408041775d78da3e394106fd857e6518093",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery/source-identity.json",
+    "bytes": 172507,
+    "sha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "originalSha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery-2/capture.log",
+    "bytes": 1269,
+    "sha256": "c5f83c40ec4652d7afd4ec489c4f3b737d720d410752205d0d1016217e81a682",
+    "originalSha256": "c5f83c40ec4652d7afd4ec489c4f3b737d720d410752205d0d1016217e81a682",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery-2/command.json",
+    "bytes": 366,
+    "sha256": "d4c2f8d995cc498dbbe4e279535e443b69ae9e1bdffde74291eed76fe629a34f",
+    "originalSha256": "d4c2f8d995cc498dbbe4e279535e443b69ae9e1bdffde74291eed76fe629a34f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery-2/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-android-rtmp-low-recovery-2/source-identity.json",
+    "bytes": 172507,
+    "sha256": "7d0121e3021ba070051d575ebf1a9eaea7b9145921463a51ff75b21179b1f857",
+    "originalSha256": "7d0121e3021ba070051d575ebf1a9eaea7b9145921463a51ff75b21179b1f857",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/capture.log",
+    "bytes": 69393,
+    "sha256": "42ceede882c731b04372caacf8f0da6fb1fa7ec10e81d149ff785a62d4cd5d1a",
+    "originalSha256": "42ceede882c731b04372caacf8f0da6fb1fa7ec10e81d149ff785a62d4cd5d1a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/command.json",
+    "bytes": 556,
+    "sha256": "19f32d4d4870c31e69e7ceaea12b89dc174f276b3e3127c0d8754c76ff46f61c",
+    "originalSha256": "19f32d4d4870c31e69e7ceaea12b89dc174f276b3e3127c0d8754c76ff46f61c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/requests.jsonl",
+    "bytes": 69088,
+    "sha256": "af2c415f74455bbc3ae155042ba49990c22c0896352fc5d318286f455ff43d5a",
+    "originalSha256": "af2c415f74455bbc3ae155042ba49990c22c0896352fc5d318286f455ff43d5a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/server.jsonl",
+    "bytes": 325,
+    "sha256": "445a60b2331b29b733cdf7b3e601720fc988dbabb0123247a2061800d8ec1b79",
+    "originalSha256": "445a60b2331b29b733cdf7b3e601720fc988dbabb0123247a2061800d8ec1b79",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/summary-v2.json",
+    "bytes": 959,
+    "sha256": "ef1d2a09784c2ea6eddd86aedcfa42bb6f2981adffd39eff880467fce5ac51f3",
+    "originalSha256": "ef1d2a09784c2ea6eddd86aedcfa42bb6f2981adffd39eff880467fce5ac51f3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-auto-aligned-1/summary.json",
+    "bytes": 794,
+    "sha256": "a309ca7f7c2715d6c74e1d1769fd3e674679d2f3b246fad5f7a4f11d1f48cd4a",
+    "originalSha256": "a309ca7f7c2715d6c74e1d1769fd3e674679d2f3b246fad5f7a4f11d1f48cd4a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/capture.log",
+    "bytes": 66503,
+    "sha256": "1f0301d9f36bb6f2f11436109807766e9f3cd47479776bea699ee7f4cee1e622",
+    "originalSha256": "1f0301d9f36bb6f2f11436109807766e9f3cd47479776bea699ee7f4cee1e622",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/command.json",
+    "bytes": 556,
+    "sha256": "152f6c0cb02408fc01b85d7becc2fadc6195f27c8eda31424458d62b672fd3b2",
+    "originalSha256": "152f6c0cb02408fc01b85d7becc2fadc6195f27c8eda31424458d62b672fd3b2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/requests.jsonl",
+    "bytes": 61394,
+    "sha256": "e98e8098d3bb3f667b5c20d2165f618845c012d55ed0efd428d62b1e2cc86621",
+    "originalSha256": "e98e8098d3bb3f667b5c20d2165f618845c012d55ed0efd428d62b1e2cc86621",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/server.jsonl",
+    "bytes": 325,
+    "sha256": "23f748d4ddadd4aa877ff890fd852036c009b4ab0bcede62fa92cb8af38f3c07",
+    "originalSha256": "23f748d4ddadd4aa877ff890fd852036c009b4ab0bcede62fa92cb8af38f3c07",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/summary-v2.json",
+    "bytes": 871,
+    "sha256": "3586c50c25e75449b5e331a1337f6330ed3f44e69b65bdf38fb1709522549c1b",
+    "originalSha256": "3586c50c25e75449b5e331a1337f6330ed3f44e69b65bdf38fb1709522549c1b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-caps-aligned-1/summary.json",
+    "bytes": 794,
+    "sha256": "3329e004653765e747cff680f8340d2118b6a0b8f64d3ea3ca79c69415226929",
+    "originalSha256": "3329e004653765e747cff680f8340d2118b6a0b8f64d3ea3ca79c69415226929",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/capture.log",
+    "bytes": 70897,
+    "sha256": "794f0f81b736cde3be33b3e09ffd076d5464937e4d7293b071538b93026122f1",
+    "originalSha256": "794f0f81b736cde3be33b3e09ffd076d5464937e4d7293b071538b93026122f1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/command.json",
+    "bytes": 558,
+    "sha256": "59b8eb6bb8cfd6ddeebb11aba51660e9c43297e32e5420d748f785a3cd58de36",
+    "originalSha256": "59b8eb6bb8cfd6ddeebb11aba51660e9c43297e32e5420d748f785a3cd58de36",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/requests.jsonl",
+    "bytes": 67572,
+    "sha256": "e20e2eda937433ccfc97c0ac8edb15952a4bde2e22828381c3e281ce0ef2699a",
+    "originalSha256": "e20e2eda937433ccfc97c0ac8edb15952a4bde2e22828381c3e281ce0ef2699a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/server.jsonl",
+    "bytes": 326,
+    "sha256": "6238bf25e73b896cf9171280a33c6cc28a2f21747ce60802a8182c8d43d8eb50",
+    "originalSha256": "6238bf25e73b896cf9171280a33c6cc28a2f21747ce60802a8182c8d43d8eb50",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/summary-v2.json",
+    "bytes": 873,
+    "sha256": "d1a6b8a385d0d69b919ec3019ead1d83d65924df2edbfe5f2f77fc4db64350d8",
+    "originalSha256": "d1a6b8a385d0d69b919ec3019ead1d83d65924df2edbfe5f2f77fc4db64350d8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-fixed-aligned-1/summary.json",
+    "bytes": 873,
+    "sha256": "d1a6b8a385d0d69b919ec3019ead1d83d65924df2edbfe5f2f77fc4db64350d8",
+    "originalSha256": "d1a6b8a385d0d69b919ec3019ead1d83d65924df2edbfe5f2f77fc4db64350d8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-baseline/capture.log",
+    "bytes": 8809,
+    "sha256": "454b6fccfe01187e2ea34deaf3fd394e70c45e161b6f58f5f6a6c36d199ee4c5",
+    "originalSha256": "454b6fccfe01187e2ea34deaf3fd394e70c45e161b6f58f5f6a6c36d199ee4c5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-baseline/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-baseline/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-baseline/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-baseline/receipt.json",
+    "bytes": 379,
+    "sha256": "162e56576a1a3bbea202b3e7c2f0b900a0613f74c927262c3fb166e4aec6379b",
+    "originalSha256": "162e56576a1a3bbea202b3e7c2f0b900a0613f74c927262c3fb166e4aec6379b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/capture.log",
+    "bytes": 24900,
+    "sha256": "2a9b393f440fea0e5049f47101a69656f99982fa58211682f5d87f335df43e72",
+    "originalSha256": "2a9b393f440fea0e5049f47101a69656f99982fa58211682f5d87f335df43e72",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/publisher-3.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/publisher-4.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/publisher-5.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-expanded-1/receipt.json",
+    "bytes": 833,
+    "sha256": "e34e3fa674199590f403e4d48e57bb4f140b4c7ff297d066217a26a0f98f2f15",
+    "originalSha256": "e34e3fa674199590f403e4d48e57bb4f140b4c7ff297d066217a26a0f98f2f15",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/capture.log",
+    "bytes": 23966,
+    "sha256": "c235ffc2df1e2b3e5b49862067e83dc810180683f90b2562c6322e1f278ca8e9",
+    "originalSha256": "c235ffc2df1e2b3e5b49862067e83dc810180683f90b2562c6322e1f278ca8e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/publisher-3.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/publisher-4.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-pause-fixed/receipt.json",
+    "bytes": 720,
+    "sha256": "9bb10a53553145c8a9b8f9502e3474f8482f22464dca392696df2050dfc9c68e",
+    "originalSha256": "9bb10a53553145c8a9b8f9502e3474f8482f22464dca392696df2050dfc9c68e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/capture.log",
+    "bytes": 32242,
+    "sha256": "35b021e5bb3b5745b582631580862a96e4433935ce674de9b090cae2543595b6",
+    "originalSha256": "35b021e5bb3b5745b582631580862a96e4433935ce674de9b090cae2543595b6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/command.json",
+    "bytes": 434,
+    "sha256": "542198b4ceb93a9282d4af105cdcdf0b5d29a266e5edd4e6791efa5a90f6a671",
+    "originalSha256": "542198b4ceb93a9282d4af105cdcdf0b5d29a266e5edd4e6791efa5a90f6a671",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-3.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-4.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-5.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/publisher-6.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-resume-2/server/receipt.json",
+    "bytes": 1494,
+    "sha256": "8c1119daf1f0cb4f9b0480504d9355dd3499212530cba31d96e72b129d91b561",
+    "originalSha256": "8c1119daf1f0cb4f9b0480504d9355dd3499212530cba31d96e72b129d91b561",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/capture.log",
+    "bytes": 24656,
+    "sha256": "32038d0bf044b6bbd06f217f786dd266c8eedcb14a14a4fc2ada7ea61ec382b1",
+    "originalSha256": "32038d0bf044b6bbd06f217f786dd266c8eedcb14a14a4fc2ada7ea61ec382b1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/command.json",
+    "bytes": 433,
+    "sha256": "53aac07c8f56acf033ffca45eda3086ab657b4812c29af14ba4a2fbc69ca1bac",
+    "originalSha256": "53aac07c8f56acf033ffca45eda3086ab657b4812c29af14ba4a2fbc69ca1bac",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/publisher-3.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/publisher-4.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/publisher-5.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-flv-stall-1/server/receipt.json",
+    "bytes": 1337,
+    "sha256": "d96f727a9a5559e299d12fd23c44bbcfbb9140cfec8241b063ad8e386ef19ed7",
+    "originalSha256": "d96f727a9a5559e299d12fd23c44bbcfbb9140cfec8241b063ad8e386ef19ed7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-baseline/capture.log",
+    "bytes": 20725,
+    "sha256": "1c5159b066f771a61515bc72e7045e9918abe57569b9fab337a85948297e70b0",
+    "originalSha256": "1c5159b066f771a61515bc72e7045e9918abe57569b9fab337a85948297e70b0",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-baseline/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-baseline/publisher.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-baseline/receipt.json",
+    "bytes": 150,
+    "sha256": "599a3fb3342729bfee8f672bcf6211b115aba86de444559c861ad7fbdbfc3ffe",
+    "originalSha256": "599a3fb3342729bfee8f672bcf6211b115aba86de444559c861ad7fbdbfc3ffe",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-expanded-1/capture.log",
+    "bytes": 25026,
+    "sha256": "95ae92a837666e10f08ef235b3a57fb3fd65fd0a84ada962ab325cf8583ce25e",
+    "originalSha256": "95ae92a837666e10f08ef235b3a57fb3fd65fd0a84ada962ab325cf8583ce25e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-expanded-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-expanded-1/publisher.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-expanded-1/receipt.json",
+    "bytes": 150,
+    "sha256": "599a3fb3342729bfee8f672bcf6211b115aba86de444559c861ad7fbdbfc3ffe",
+    "originalSha256": "599a3fb3342729bfee8f672bcf6211b115aba86de444559c861ad7fbdbfc3ffe",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-1/capture.log",
+    "bytes": 39489,
+    "sha256": "60934f72da8f5e01dddfe2441e408b16928a00cc2222e4a9a1c7af04cd0b1e04",
+    "originalSha256": "60934f72da8f5e01dddfe2441e408b16928a00cc2222e4a9a1c7af04cd0b1e04",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-1/command.json",
+    "bytes": 437,
+    "sha256": "880b0d9e44d1b85da868d6b38157110486ae214724d296b09fe6377631a91524",
+    "originalSha256": "880b0d9e44d1b85da868d6b38157110486ae214724d296b09fe6377631a91524",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-1/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-1/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-1/server/receipt.json",
+    "bytes": 8333,
+    "sha256": "506a5428a1c5be5733b48695d191579f0a40a4362e072752a920204bafcbc595",
+    "originalSha256": "506a5428a1c5be5733b48695d191579f0a40a4362e072752a920204bafcbc595",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-1/source-identity.json",
+    "bytes": 177136,
+    "sha256": "9eb60cf753f3382ed1f1229ca7b9c6ced3abffa9848e35793b33a4cba4af3259",
+    "originalSha256": "9eb60cf753f3382ed1f1229ca7b9c6ced3abffa9848e35793b33a4cba4af3259",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-2/capture.log",
+    "bytes": 40722,
+    "sha256": "a92256072803eea6d6731cff440a1148ead3058c6d4eda0c1f7582ab34254e73",
+    "originalSha256": "a92256072803eea6d6731cff440a1148ead3058c6d4eda0c1f7582ab34254e73",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-2/command.json",
+    "bytes": 437,
+    "sha256": "a091cbae7ffcd6887e7aa919bd517a613e0465822ed71770bed983a8180a2f2b",
+    "originalSha256": "a091cbae7ffcd6887e7aa919bd517a613e0465822ed71770bed983a8180a2f2b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-2/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-2/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-2/server/receipt.json",
+    "bytes": 8477,
+    "sha256": "6bd36a279c5d22ff6bb8ffba287e2c649f70e1ae6a98dc97bed64dffc299b241",
+    "originalSha256": "6bd36a279c5d22ff6bb8ffba287e2c649f70e1ae6a98dc97bed64dffc299b241",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-recovery-2/source-identity.json",
+    "bytes": 177136,
+    "sha256": "e5077a1e21ef6cb2626bebf79b66b6753d5b94de582c1668af7851d87f8bf14c",
+    "originalSha256": "e5077a1e21ef6cb2626bebf79b66b6753d5b94de582c1668af7851d87f8bf14c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-safe-edge-1/capture.log",
+    "bytes": 39650,
+    "sha256": "d51f103d3b0b665dce4c4ecf2dd9fb1ee5446b69ae0f8657f7931fdba7ed645e",
+    "originalSha256": "d51f103d3b0b665dce4c4ecf2dd9fb1ee5446b69ae0f8657f7931fdba7ed645e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-safe-edge-1/command.json",
+    "bytes": 438,
+    "sha256": "613f6c3e58773ba3677b43ee2389a2fe4010560f8db982be0dcb051e484e3ae4",
+    "originalSha256": "613f6c3e58773ba3677b43ee2389a2fe4010560f8db982be0dcb051e484e3ae4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-safe-edge-1/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-safe-edge-1/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-safe-edge-1/server/receipt.json",
+    "bytes": 8603,
+    "sha256": "e5b463e2db98987f349c5aff0a6c7fc54a1f524d92e3504f33ce41d8f74a98d4",
+    "originalSha256": "e5b463e2db98987f349c5aff0a6c7fc54a1f524d92e3504f33ce41d8f74a98d4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-1/capture.log",
+    "bytes": 25709,
+    "sha256": "ff242845eb4206dc8b0d224f54b5b1b4c0c485446276acf6e5dc37ba361ff00c",
+    "originalSha256": "ff242845eb4206dc8b0d224f54b5b1b4c0c485446276acf6e5dc37ba361ff00c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-1/command.json",
+    "bytes": 434,
+    "sha256": "a98d59265a3bdfa882cbc65e19f8cf2f7048fd04cbeb7f09a62a4b2ba248d0f3",
+    "originalSha256": "a98d59265a3bdfa882cbc65e19f8cf2f7048fd04cbeb7f09a62a4b2ba248d0f3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-1/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-1/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-1/server/receipt.json",
+    "bytes": 7002,
+    "sha256": "ffa75ef70a58bc7953aaad5c7c0fc38913d8ada7db5f37151c3e3fde6c1a6dbf",
+    "originalSha256": "ffa75ef70a58bc7953aaad5c7c0fc38913d8ada7db5f37151c3e3fde6c1a6dbf",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-2/capture.log",
+    "bytes": 34351,
+    "sha256": "a82623f0f1b84a90f5fba60ded577d0f6c91f57fbc965744cc003e1ff379db87",
+    "originalSha256": "a82623f0f1b84a90f5fba60ded577d0f6c91f57fbc965744cc003e1ff379db87",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-2/command.json",
+    "bytes": 434,
+    "sha256": "afadeee2925734a420c2c172fecbd433ba69e23d60b25f10fb3d82a99f6fd6a7",
+    "originalSha256": "afadeee2925734a420c2c172fecbd433ba69e23d60b25f10fb3d82a99f6fd6a7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-2/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-2/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stall-2/server/receipt.json",
+    "bytes": 8464,
+    "sha256": "44dde853fc879dc9447aba270123226bf6f3ef95c73747f1514258e39ea64e88",
+    "originalSha256": "44dde853fc879dc9447aba270123226bf6f3ef95c73747f1514258e39ea64e88",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stop-fixed/capture.log",
+    "bytes": 18839,
+    "sha256": "f31b1dfb8973c4fe8a57d2888ef91980cf010c94ce1e22a7a4cbc04dbeee41a3",
+    "originalSha256": "f31b1dfb8973c4fe8a57d2888ef91980cf010c94ce1e22a7a4cbc04dbeee41a3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stop-fixed/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stop-fixed/publisher.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-hls-stop-fixed/receipt.json",
+    "bytes": 150,
+    "sha256": "599a3fb3342729bfee8f672bcf6211b115aba86de444559c861ad7fbdbfc3ffe",
+    "originalSha256": "599a3fb3342729bfee8f672bcf6211b115aba86de444559c861ad7fbdbfc3ffe",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/capture.log",
+    "bytes": 65413,
+    "sha256": "a9803e2d0cbf3e56f95714fe96fd54f8bfa2c0c40c89c98f137e03ccaec9afe3",
+    "originalSha256": "a9803e2d0cbf3e56f95714fe96fd54f8bfa2c0c40c89c98f137e03ccaec9afe3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/command.json",
+    "bytes": 583,
+    "sha256": "8a5c711083db9a982a62768090b98da882fd017ffe1e9ca4891ec6a143c1e793",
+    "originalSha256": "8a5c711083db9a982a62768090b98da882fd017ffe1e9ca4891ec6a143c1e793",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/requests.jsonl",
+    "bytes": 65867,
+    "sha256": "acc19c205cbb21235af6d6547058057b2b4f58439c0795dc8ee3a342ac15a62a",
+    "originalSha256": "acc19c205cbb21235af6d6547058057b2b4f58439c0795dc8ee3a342ac15a62a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/server.jsonl",
+    "bytes": 321,
+    "sha256": "6cc9274020cca73e8a8ca2bb6c00abe040f26c397d4316513e19ea61900ff292",
+    "originalSha256": "6cc9274020cca73e8a8ca2bb6c00abe040f26c397d4316513e19ea61900ff292",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-1/summary.json",
+    "bytes": 908,
+    "sha256": "c0e71ae33895d92fad2f0e4d9205163bc234be5745f2a4c89b8486e2efc55755",
+    "originalSha256": "c0e71ae33895d92fad2f0e4d9205163bc234be5745f2a4c89b8486e2efc55755",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/capture.log",
+    "bytes": 130364,
+    "sha256": "a5b6a541dfe2173209ed269ba90c85eaf4fe6dd4a6a545e9499abb8c7920eba3",
+    "originalSha256": "a5b6a541dfe2173209ed269ba90c85eaf4fe6dd4a6a545e9499abb8c7920eba3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/command.json",
+    "bytes": 587,
+    "sha256": "18146181a007e14c1a2770e4d3e28697fa6eaf6ea623062b27761eaa2fb4989b",
+    "originalSha256": "18146181a007e14c1a2770e4d3e28697fa6eaf6ea623062b27761eaa2fb4989b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/extended-program-validation.json",
+    "bytes": 174,
+    "sha256": "17197dafa9d5db8dfac9595ad34435e1b6b5f7b22d64b213cbb94eae1d7f6606",
+    "originalSha256": "17197dafa9d5db8dfac9595ad34435e1b6b5f7b22d64b213cbb94eae1d7f6606",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/fixture.json",
+    "bytes": 436,
+    "sha256": "2c92205721c30e23d034121e2626661b0b816cde6bee4aadd83309031904d8c4",
+    "originalSha256": "2c92205721c30e23d034121e2626661b0b816cde6bee4aadd83309031904d8c4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/requests.jsonl",
+    "bytes": 126013,
+    "sha256": "253d7174ce369aecf67669d4ac10840c4bc6968d824fbc065da1ea3b11fb6726",
+    "originalSha256": "253d7174ce369aecf67669d4ac10840c4bc6968d824fbc065da1ea3b11fb6726",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/server.jsonl",
+    "bytes": 325,
+    "sha256": "697d7f63c1c65787d5348e3a853d01f5933e76f2354a7d5e3878ad52a53f3fa4",
+    "originalSha256": "697d7f63c1c65787d5348e3a853d01f5933e76f2354a7d5e3878ad52a53f3fa4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-auto-80s-1/summary.json",
+    "bytes": 913,
+    "sha256": "a0d0d28da78b03c7606403a9661e012ee4990bc4eec31f67cffc1c98f874cf8c",
+    "originalSha256": "a0d0d28da78b03c7606403a9661e012ee4990bc4eec31f67cffc1c98f874cf8c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/capture.log",
+    "bytes": 65819,
+    "sha256": "3b208b9ce2cbf7ca0cb8fde67737cc3fdebc5f19a18b6405aa1847fce60a5d5e",
+    "originalSha256": "3b208b9ce2cbf7ca0cb8fde67737cc3fdebc5f19a18b6405aa1847fce60a5d5e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/command.json",
+    "bytes": 583,
+    "sha256": "aa189e46bbbb72052ee988634ed2d03733ff94814d3083528c6943e4c30031a5",
+    "originalSha256": "aa189e46bbbb72052ee988634ed2d03733ff94814d3083528c6943e4c30031a5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/requests.jsonl",
+    "bytes": 60961,
+    "sha256": "d0e3b4f3195475a62db9381d3201fe7971f0f797b1ab337eb28a3781f0af6d03",
+    "originalSha256": "d0e3b4f3195475a62db9381d3201fe7971f0f797b1ab337eb28a3781f0af6d03",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/server.jsonl",
+    "bytes": 321,
+    "sha256": "9590320dae17715d729d7ae3c2edb6b8a3ae85d40c799cad24ae8c549c4df6ee",
+    "originalSha256": "9590320dae17715d729d7ae3c2edb6b8a3ae85d40c799cad24ae8c549c4df6ee",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-caps-1/summary.json",
+    "bytes": 866,
+    "sha256": "f6a1ef52fce9622e34c9f9ccee5add520a6dcb233da79d4211f8566e3ec12417",
+    "originalSha256": "f6a1ef52fce9622e34c9f9ccee5add520a6dcb233da79d4211f8566e3ec12417",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/capture.log",
+    "bytes": 78830,
+    "sha256": "a708d1e8cadaca013b93fc648622ffc1e79722b728622d8eb487cfbe0eada49b",
+    "originalSha256": "a708d1e8cadaca013b93fc648622ffc1e79722b728622d8eb487cfbe0eada49b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/command.json",
+    "bytes": 585,
+    "sha256": "c646e4df4912eb6081f1b2ac286c5de6e72cf5598cf6e8641698e8155df22400",
+    "originalSha256": "c646e4df4912eb6081f1b2ac286c5de6e72cf5598cf6e8641698e8155df22400",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/fixture.json",
+    "bytes": 327,
+    "sha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "originalSha256": "a506d63719fab346c46d24023222d5351424f6902f1ec924136004d719752345",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/requests.jsonl",
+    "bytes": 67635,
+    "sha256": "aa306a2d64081f8f9ffea9f25c1f12af7bfb8e59c25de88853b66bc329f885d8",
+    "originalSha256": "aa306a2d64081f8f9ffea9f25c1f12af7bfb8e59c25de88853b66bc329f885d8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/server.jsonl",
+    "bytes": 322,
+    "sha256": "f1026aa44ce622e48d1db3839c1b5b4d38a22f1a2df87f0a835bcb872810122f",
+    "originalSha256": "f1026aa44ce622e48d1db3839c1b5b4d38a22f1a2df87f0a835bcb872810122f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-fixed-1/summary.json",
+    "bytes": 870,
+    "sha256": "b9224733a29787b5058db4fc8c6a6f855219d78e365494cee3cb6afc180e7993",
+    "originalSha256": "b9224733a29787b5058db4fc8c6a6f855219d78e365494cee3cb6afc180e7993",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-1/capture.log",
+    "bytes": 289,
+    "sha256": "1180ec2fb08c0973f2d004f1c44868493356288ac91c4aba3679978d71c5bf21",
+    "originalSha256": "1180ec2fb08c0973f2d004f1c44868493356288ac91c4aba3679978d71c5bf21",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-1/command.json",
+    "bytes": 462,
+    "sha256": "efc06e659746f1108ee71b580e65d9ac7840c122ab7ed890557b2fb29df68539",
+    "originalSha256": "efc06e659746f1108ee71b580e65d9ac7840c122ab7ed890557b2fb29df68539",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-1/server/receipt.json",
+    "bytes": 404,
+    "sha256": "29a63eef9a2aa705044d2962cade22df2b1a0129a42f26fdb25c8a52dcb9a645",
+    "originalSha256": "29a63eef9a2aa705044d2962cade22df2b1a0129a42f26fdb25c8a52dcb9a645",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-2/capture.log",
+    "bytes": 589434,
+    "sha256": "9cdf18db21a23e4626cd845279dfdaf420052aa46c30b8d5b93539c7699015e7",
+    "originalSha256": "9cdf18db21a23e4626cd845279dfdaf420052aa46c30b8d5b93539c7699015e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-2/command.json",
+    "bytes": 487,
+    "sha256": "7108ccdac9c38cae3cb966dc48ef8cc9f981d4d9a2fabf1264dee83a74d077eb",
+    "originalSha256": "7108ccdac9c38cae3cb966dc48ef8cc9f981d4d9a2fabf1264dee83a74d077eb",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-2/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-2/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-2/server/receipt.json",
+    "bytes": 553,
+    "sha256": "3e857517bcd20119cbc218a5d7723639be4d13bdcadc8a74bf28105fba0e58b6",
+    "originalSha256": "3e857517bcd20119cbc218a5d7723639be4d13bdcadc8a74bf28105fba0e58b6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-flv-2/source-identity.json",
+    "bytes": 177367,
+    "sha256": "0e68817945ab4a65d7a66ea334e689cc02c3845ffb0bb47ebebded06f0181d03",
+    "originalSha256": "0e68817945ab4a65d7a66ea334e689cc02c3845ffb0bb47ebebded06f0181d03",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-2/capture.log",
+    "bytes": 567451,
+    "sha256": "b3255013481b2c3bc7895253654862f3b0a9f3aac79a1fe3afe5d2afb6063be1",
+    "originalSha256": "b3255013481b2c3bc7895253654862f3b0a9f3aac79a1fe3afe5d2afb6063be1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-2/command.json",
+    "bytes": 488,
+    "sha256": "1253c9d5d1f502c3ad7c86b3489abdf5fd68a47cf45fbab28aa6988927e448d7",
+    "originalSha256": "1253c9d5d1f502c3ad7c86b3489abdf5fd68a47cf45fbab28aa6988927e448d7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-2/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-2/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-2/server/receipt.json",
+    "bytes": 7910,
+    "sha256": "6be597ea308321072385364a88244ad2662b8362c6b4bd805b0bbb0319826c8c",
+    "originalSha256": "6be597ea308321072385364a88244ad2662b8362c6b4bd805b0bbb0319826c8c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-2/source-identity.json",
+    "bytes": 177367,
+    "sha256": "0e68817945ab4a65d7a66ea334e689cc02c3845ffb0bb47ebebded06f0181d03",
+    "originalSha256": "0e68817945ab4a65d7a66ea334e689cc02c3845ffb0bb47ebebded06f0181d03",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-3/capture.log",
+    "bytes": 568105,
+    "sha256": "99ba7d988b835865ab7737e17f9f0310692e2444cfd77a23058cdeabc621faa2",
+    "originalSha256": "99ba7d988b835865ab7737e17f9f0310692e2444cfd77a23058cdeabc621faa2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-3/command.json",
+    "bytes": 476,
+    "sha256": "512b530a1f9bda866ccdde2e87814177dc51b3e110c8014c5eed63fbc808e705",
+    "originalSha256": "512b530a1f9bda866ccdde2e87814177dc51b3e110c8014c5eed63fbc808e705",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-3/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-3/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-3/server/receipt.json",
+    "bytes": 7120,
+    "sha256": "3471dbc9d96b4233d3e5c25771735621e5f90d881cdf91b3e6d19400976ce3b5",
+    "originalSha256": "3471dbc9d96b4233d3e5c25771735621e5f90d881cdf91b3e6d19400976ce3b5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-3/source-identity.json",
+    "bytes": 177367,
+    "sha256": "5e745f7fa05299a1c0c8129e56ead2737ee49b36a3178041d5a16bd0cbf95b0b",
+    "originalSha256": "5e745f7fa05299a1c0c8129e56ead2737ee49b36a3178041d5a16bd0cbf95b0b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-ordered/capture.log",
+    "bytes": 625713,
+    "sha256": "0b55e2e736a67ba6efe67e68faca94862ac8f33840c7659292d361aa6135111a",
+    "originalSha256": "0b55e2e736a67ba6efe67e68faca94862ac8f33840c7659292d361aa6135111a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-ordered/command.json",
+    "bytes": 482,
+    "sha256": "7edbfdaa63cca72f0cb81976ba5bf272bb199c71fb71d8e970944d944e7715d5",
+    "originalSha256": "7edbfdaa63cca72f0cb81976ba5bf272bb199c71fb71d8e970944d944e7715d5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-ordered/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-ordered/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-ordered/server/receipt.json",
+    "bytes": 7916,
+    "sha256": "d4d803bf0e14928e6001564af7d155fb4a43ccd821a6afeda40f27edb83053b5",
+    "originalSha256": "d4d803bf0e14928e6001564af7d155fb4a43ccd821a6afeda40f27edb83053b5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-ordered/source-identity.json",
+    "bytes": 177367,
+    "sha256": "7a4a44162070e91787d68636913b602b1cde6da37d0e264d2ff481993a595a4b",
+    "originalSha256": "7a4a44162070e91787d68636913b602b1cde6da37d0e264d2ff481993a595a4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-stress/capture.log",
+    "bytes": 632289,
+    "sha256": "4770843e2a3b98b08c0b5beab0344c94ff46a2d71b6b97db318e7c334d87ac4f",
+    "originalSha256": "4770843e2a3b98b08c0b5beab0344c94ff46a2d71b6b97db318e7c334d87ac4f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-stress/command.json",
+    "bytes": 525,
+    "sha256": "2daa50c5187cfb4f230cdcad833d1183e093ad43890b1cb5294ec75bae7d867b",
+    "originalSha256": "2daa50c5187cfb4f230cdcad833d1183e093ad43890b1cb5294ec75bae7d867b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-stress/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-stress/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-stress/server/receipt.json",
+    "bytes": 7257,
+    "sha256": "21c783458d934fc2d16f89789bd22df433790198329951df294d1ae9e1112067",
+    "originalSha256": "21c783458d934fc2d16f89789bd22df433790198329951df294d1ae9e1112067",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-stress/source-identity.json",
+    "bytes": 177367,
+    "sha256": "1dcb668999139787a59c48f27e68488383d32070855dd6daf08cd686d3d68fab",
+    "originalSha256": "1dcb668999139787a59c48f27e68488383d32070855dd6daf08cd686d3d68fab",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-trace/capture.log",
+    "bytes": 1139799,
+    "sha256": "7b7908798576232be84183591bd4d7d6573ada1833155a112dc3c1f94ba2f68c",
+    "originalSha256": "f9af5676c6efd581105cda4be746003af0a9505965aba51dec81bf02dd3edf9e",
+    "redactedUnrelatedDeviceInventoryOrAccount": true
+  },
+  {
+    "path": "logs/p04-ios-hls-trace/command.json",
+    "bytes": 524,
+    "sha256": "951e9366d38cd79a113092b15c2a00514e6ce68c0ffe2f8dc71591aafd8d47cd",
+    "originalSha256": "951e9366d38cd79a113092b15c2a00514e6ce68c0ffe2f8dc71591aafd8d47cd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-trace/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-trace/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-trace/server/receipt.json",
+    "bytes": 7914,
+    "sha256": "c75dd70004beda318038acb779227bf31c320c1ad09fb9e57cf1660acee2f8ae",
+    "originalSha256": "c75dd70004beda318038acb779227bf31c320c1ad09fb9e57cf1660acee2f8ae",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-ios-hls-trace/source-identity.json",
+    "bytes": 177367,
+    "sha256": "64ad5d2f87954c4719b10e8098cc6bbd7ae5e892e0ff9c12355614d28363ab0e",
+    "originalSha256": "64ad5d2f87954c4719b10e8098cc6bbd7ae5e892e0ff9c12355614d28363ab0e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-armproxy.log",
+    "bytes": 636,
+    "sha256": "27d998ed58966b220fe73713f35e840017fcb6a938913c6623ed443c1a3861df",
+    "originalSha256": "27d998ed58966b220fe73713f35e840017fcb6a938913c6623ed443c1a3861df",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6/capture.log",
+    "bytes": 25864,
+    "sha256": "42231b7a0f3feba0d74ceb8a55ccd094e0082341dd4eb51151d4076527404720",
+    "originalSha256": "42231b7a0f3feba0d74ceb8a55ccd094e0082341dd4eb51151d4076527404720",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6/command.json",
+    "bytes": 538,
+    "sha256": "82d6a402a9f96a4e704da540b85d83253ff4b4f59f8bfce6bcc980b9c04b2099",
+    "originalSha256": "82d6a402a9f96a4e704da540b85d83253ff4b4f59f8bfce6bcc980b9c04b2099",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6/relay-cleanup.json",
+    "bytes": 72,
+    "sha256": "5921d5134b78ac5fd0ca195e3e5fa23b772137f1986d935b2c2a9c764b9f9d50",
+    "originalSha256": "5921d5134b78ac5fd0ca195e3e5fa23b772137f1986d935b2c2a9c764b9f9d50",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6/source-identity.json",
+    "bytes": 172507,
+    "sha256": "38a12ff57c9fd0806dd7ba5ac0f26a5cff92efa374fc29d1129b7573b5ff4253",
+    "originalSha256": "38a12ff57c9fd0806dd7ba5ac0f26a5cff92efa374fc29d1129b7573b5ff4253",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-3.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-4.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-5.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/publisher-6.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-exclusive-6-source/receipt.json",
+    "bytes": 1504,
+    "sha256": "815d324fbef26d1d9fb8869ee614718b4510bd0f8212a04d7e420d9f97821150",
+    "originalSha256": "815d324fbef26d1d9fb8869ee614718b4510bd0f8212a04d7e420d9f97821150",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-existing.log",
+    "bytes": 1956,
+    "sha256": "f396c994bfd9f56d654f234877e1611fa24cfa3e5d932425b210bbae41c808e7",
+    "originalSha256": "f396c994bfd9f56d654f234877e1611fa24cfa3e5d932425b210bbae41c808e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live/capture.log",
+    "bytes": 2997,
+    "sha256": "ebfcd9c5735bf4607689f187ac1deaa9199509db64c423081ce61e887898481b",
+    "originalSha256": "ebfcd9c5735bf4607689f187ac1deaa9199509db64c423081ce61e887898481b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live/command.json",
+    "bytes": 513,
+    "sha256": "c1126b756c9c05654fff70cda499dc4c949745bc2f56bdd238776d4646ce11b8",
+    "originalSha256": "c1126b756c9c05654fff70cda499dc4c949745bc2f56bdd238776d4646ce11b8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live/relay-cleanup.json",
+    "bytes": 72,
+    "sha256": "bf044e452dc6df00925599ca792b4226c577a721d5cc8314006c180c6e016702",
+    "originalSha256": "bf044e452dc6df00925599ca792b4226c577a721d5cc8314006c180c6e016702",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live/source-identity.json",
+    "bytes": 172507,
+    "sha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "originalSha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-2/capture.log",
+    "bytes": 3050,
+    "sha256": "e06be5a14a0da1b169453b3af61e5b2904a5e72a180eea329807defb3ac06824",
+    "originalSha256": "e06be5a14a0da1b169453b3af61e5b2904a5e72a180eea329807defb3ac06824",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-2/command.json",
+    "bytes": 533,
+    "sha256": "866fd72198851fed9c4d564a08ea3b0163042392ae60d8bea6fd3c2c06893eb9",
+    "originalSha256": "866fd72198851fed9c4d564a08ea3b0163042392ae60d8bea6fd3c2c06893eb9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-2/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-2/relay-cleanup.json",
+    "bytes": 72,
+    "sha256": "8cb20aa5f022b453bee1fc406f412b850ccf4ffc96d7c5de493621fd0311b502",
+    "originalSha256": "8cb20aa5f022b453bee1fc406f412b850ccf4ffc96d7c5de493621fd0311b502",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-2/source-identity.json",
+    "bytes": 172507,
+    "sha256": "b79780b5136282d43d77b7fc47ecbcbc811ff208e54f0cfa2937f9016d93f5e9",
+    "originalSha256": "b79780b5136282d43d77b7fc47ecbcbc811ff208e54f0cfa2937f9016d93f5e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-2-source/receipt.json",
+    "bytes": 415,
+    "sha256": "2d5c56e83600bab61a243bf83f90170c8287ebf1d76098f77748bfa3acccd51a",
+    "originalSha256": "2d5c56e83600bab61a243bf83f90170c8287ebf1d76098f77748bfa3acccd51a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-live-source/receipt.json",
+    "bytes": 413,
+    "sha256": "c65da86e14e5b0347b939af52d8a78b66b583f9b1a1e13c14e633713da8c9e17",
+    "originalSha256": "c65da86e14e5b0347b939af52d8a78b66b583f9b1a1e13c14e633713da8c9e17",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-signed.log",
+    "bytes": 775,
+    "sha256": "4b9a287482a708c4ad2128d60d20c1bd78639ee1b78a45a2ea17a612523559e8",
+    "originalSha256": "4b9a287482a708c4ad2128d60d20c1bd78639ee1b78a45a2ea17a612523559e8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3/capture.log",
+    "bytes": 9135,
+    "sha256": "e8ea037a2e9d0e68281f028adc916c9b784b21695b16712c823713a4f617eeab",
+    "originalSha256": "e8ea037a2e9d0e68281f028adc916c9b784b21695b16712c823713a4f617eeab",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3/command.json",
+    "bytes": 534,
+    "sha256": "f23d0758d37bea144ac0b9430b6df876dbd2fe19d38403f532e9f5312d5a9da5",
+    "originalSha256": "f23d0758d37bea144ac0b9430b6df876dbd2fe19d38403f532e9f5312d5a9da5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3/relay-cleanup.json",
+    "bytes": 72,
+    "sha256": "e82e82d14fab341990937a6727fca716dcdea99352dfed44b6b72c9a84c881e9",
+    "originalSha256": "e82e82d14fab341990937a6727fca716dcdea99352dfed44b6b72c9a84c881e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3/source-identity.json",
+    "bytes": 172507,
+    "sha256": "dae413bc2ba493d44b6ced852964a9008f3e90b596d0142063991a728567fbe3",
+    "originalSha256": "dae413bc2ba493d44b6ced852964a9008f3e90b596d0142063991a728567fbe3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3-source/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3-source/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trace-3-source/receipt.json",
+    "bytes": 719,
+    "sha256": "05afe278d7ec9717f418b3f66c8060c36dc2d560e87d5df81fc42e3cd7f0b225",
+    "originalSha256": "05afe278d7ec9717f418b3f66c8060c36dc2d560e87d5df81fc42e3cd7f0b225",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-flv-trusted.log",
+    "bytes": 590793,
+    "sha256": "70449603624a649ad58b5e20e6194a302c44e21e4c80a685bb259de0753786c7",
+    "originalSha256": "460ca892b281601e22d6772ae497ff9a05eaa59a90c02f9abb1a2a29c3777f66",
+    "redactedUnrelatedDeviceInventoryOrAccount": true
+  },
+  {
+    "path": "logs/p04-iphone-hls-live/capture.log",
+    "bytes": 41094,
+    "sha256": "a2713229026853c27d63ccb289093f318d0a323684fcb2d7c13181ef71c24ce7",
+    "originalSha256": "a2713229026853c27d63ccb289093f318d0a323684fcb2d7c13181ef71c24ce7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-hls-live/command.json",
+    "bytes": 514,
+    "sha256": "9281fe8ab796114638b4c83eb5d6638974f6d80f73ab4ef0777cadc3ba50d802",
+    "originalSha256": "9281fe8ab796114638b4c83eb5d6638974f6d80f73ab4ef0777cadc3ba50d802",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-hls-live/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-hls-live/relay-cleanup.json",
+    "bytes": 72,
+    "sha256": "c2983b1ee6d2d502702a02dc6f58b9205b89eab9ccf80542022ad0851b70bec2",
+    "originalSha256": "c2983b1ee6d2d502702a02dc6f58b9205b89eab9ccf80542022ad0851b70bec2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-hls-live/source-identity.json",
+    "bytes": 172507,
+    "sha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "originalSha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-hls-live-source/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-hls-live-source/receipt.json",
+    "bytes": 8039,
+    "sha256": "868228de396c023390eca98fcaeb6f2fa1c2335f13f4ef36380383ed7c07dd8c",
+    "originalSha256": "868228de396c023390eca98fcaeb6f2fa1c2335f13f4ef36380383ed7c07dd8c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6/capture.log",
+    "bytes": 26009,
+    "sha256": "45e8829ef4063ba61d6421db302cfe4dfd60064484c9fcd8608a4bed7c92fca8",
+    "originalSha256": "45e8829ef4063ba61d6421db302cfe4dfd60064484c9fcd8608a4bed7c92fca8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6/command.json",
+    "bytes": 542,
+    "sha256": "567a9d50fb5d7de7646ea71583413a6c3f81bc00e5ebe6c2d9c15ddb19b4b53e",
+    "originalSha256": "567a9d50fb5d7de7646ea71583413a6c3f81bc00e5ebe6c2d9c15ddb19b4b53e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6/source-identity.json",
+    "bytes": 172507,
+    "sha256": "38a12ff57c9fd0806dd7ba5ac0f26a5cff92efa374fc29d1129b7573b5ff4253",
+    "originalSha256": "38a12ff57c9fd0806dd7ba5ac0f26a5cff92efa374fc29d1129b7573b5ff4253",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6-recovery/capture.log",
+    "bytes": 1249,
+    "sha256": "8242762736ef4fd3e749e291ed0b47fb5617675d400daf4c8cd93d6af7ad99a3",
+    "originalSha256": "8242762736ef4fd3e749e291ed0b47fb5617675d400daf4c8cd93d6af7ad99a3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6-recovery/command.json",
+    "bytes": 380,
+    "sha256": "757eb47b722941cf98900c8e55b74490ea706aabc3c0b155467c1ab13d84e035",
+    "originalSha256": "757eb47b722941cf98900c8e55b74490ea706aabc3c0b155467c1ab13d84e035",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6-recovery/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6-recovery/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-exclusive-6-recovery/source-identity.json",
+    "bytes": 172507,
+    "sha256": "38a12ff57c9fd0806dd7ba5ac0f26a5cff92efa374fc29d1129b7573b5ff4253",
+    "originalSha256": "38a12ff57c9fd0806dd7ba5ac0f26a5cff92efa374fc29d1129b7573b5ff4253",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live/capture.log",
+    "bytes": 9088,
+    "sha256": "9f3314912ce54d62edbb1cf018d59cff544227048826a9556330feb3aaa589bd",
+    "originalSha256": "9f3314912ce54d62edbb1cf018d59cff544227048826a9556330feb3aaa589bd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live/command.json",
+    "bytes": 517,
+    "sha256": "2d0e684d9902a1064752b8e57f8be68e5ca46407dbd5c257d2f3fda4d726feba",
+    "originalSha256": "2d0e684d9902a1064752b8e57f8be68e5ca46407dbd5c257d2f3fda4d726feba",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live/source-identity.json",
+    "bytes": 172507,
+    "sha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "originalSha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2/capture.log",
+    "bytes": 9168,
+    "sha256": "a27d4d1a9f569401299c71e06812eba4eeaa014714ed043389fc89d85747f03b",
+    "originalSha256": "a27d4d1a9f569401299c71e06812eba4eeaa014714ed043389fc89d85747f03b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2/command.json",
+    "bytes": 537,
+    "sha256": "52eb3a8c12efe97248e62901df731bb63b7ee5f69e67860676bb2cfb5d41d2b8",
+    "originalSha256": "52eb3a8c12efe97248e62901df731bb63b7ee5f69e67860676bb2cfb5d41d2b8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2/source-identity.json",
+    "bytes": 172507,
+    "sha256": "b79780b5136282d43d77b7fc47ecbcbc811ff208e54f0cfa2937f9016d93f5e9",
+    "originalSha256": "b79780b5136282d43d77b7fc47ecbcbc811ff208e54f0cfa2937f9016d93f5e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2-recovery/capture.log",
+    "bytes": 1249,
+    "sha256": "e16b66532b2ad11fb66b7775f54f46783df4a82181e1c79158842c2442da817a",
+    "originalSha256": "e16b66532b2ad11fb66b7775f54f46783df4a82181e1c79158842c2442da817a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2-recovery/command.json",
+    "bytes": 380,
+    "sha256": "757eb47b722941cf98900c8e55b74490ea706aabc3c0b155467c1ab13d84e035",
+    "originalSha256": "757eb47b722941cf98900c8e55b74490ea706aabc3c0b155467c1ab13d84e035",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2-recovery/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2-recovery/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-2-recovery/source-identity.json",
+    "bytes": 172507,
+    "sha256": "b79780b5136282d43d77b7fc47ecbcbc811ff208e54f0cfa2937f9016d93f5e9",
+    "originalSha256": "b79780b5136282d43d77b7fc47ecbcbc811ff208e54f0cfa2937f9016d93f5e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-recovery/capture.log",
+    "bytes": 2458,
+    "sha256": "daee5fdaa6702195b7ce19ec4032a20c9b5ab163de2a2bda74dc90ab63aac537",
+    "originalSha256": "daee5fdaa6702195b7ce19ec4032a20c9b5ab163de2a2bda74dc90ab63aac537",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-recovery/command.json",
+    "bytes": 362,
+    "sha256": "4983461f6f79165b526e32278e379730ad0079dcebaf8f7b0aad3dcf91e46e94",
+    "originalSha256": "4983461f6f79165b526e32278e379730ad0079dcebaf8f7b0aad3dcf91e46e94",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-recovery/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-recovery/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-live-recovery/source-identity.json",
+    "bytes": 172507,
+    "sha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "originalSha256": "e62c0171d328c7f3893267471bc3121b8a7139565daa89bace4b773ca15d7b3f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-3/capture.log",
+    "bytes": 9188,
+    "sha256": "020f76d7bfe3e5cb6f3463a5fc8c0f608abc66ca0251ea81fb0c1c2a570472fb",
+    "originalSha256": "020f76d7bfe3e5cb6f3463a5fc8c0f608abc66ca0251ea81fb0c1c2a570472fb",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-3/command.json",
+    "bytes": 538,
+    "sha256": "52cf3cacc75760dfb6e88c08f8b47df1bd2986f107b19ac9d230483c789465ca",
+    "originalSha256": "52cf3cacc75760dfb6e88c08f8b47df1bd2986f107b19ac9d230483c789465ca",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-3/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-3/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-3/source-identity.json",
+    "bytes": 172507,
+    "sha256": "dae413bc2ba493d44b6ced852964a9008f3e90b596d0142063991a728567fbe3",
+    "originalSha256": "dae413bc2ba493d44b6ced852964a9008f3e90b596d0142063991a728567fbe3",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-4/capture.log",
+    "bytes": 9189,
+    "sha256": "01e8a2309ce91633f5b769cac1d0e316c55c4ac8216889ba816d978fbb02171c",
+    "originalSha256": "01e8a2309ce91633f5b769cac1d0e316c55c4ac8216889ba816d978fbb02171c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-4/command.json",
+    "bytes": 538,
+    "sha256": "5482498ce2c9099015755846142b4ede0ba610f6858e1caa3060689b7629da8e",
+    "originalSha256": "5482498ce2c9099015755846142b4ede0ba610f6858e1caa3060689b7629da8e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-4/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-4/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-4/source-identity.json",
+    "bytes": 172507,
+    "sha256": "df309539c81dca6a23a146b4f6ce02a64a75724bc95671d997070a04ee36245e",
+    "originalSha256": "df309539c81dca6a23a146b4f6ce02a64a75724bc95671d997070a04ee36245e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-5/capture.log",
+    "bytes": 9187,
+    "sha256": "9c5518134a0adac9103e6776ab09673d8428514d954867a8796da608c25cb4ad",
+    "originalSha256": "9c5518134a0adac9103e6776ab09673d8428514d954867a8796da608c25cb4ad",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-5/command.json",
+    "bytes": 538,
+    "sha256": "cccf302101d5efc7defb2f76c6ce450a9dd7ed5b1322dc303ea287e7fe91e4bb",
+    "originalSha256": "cccf302101d5efc7defb2f76c6ce450a9dd7ed5b1322dc303ea287e7fe91e4bb",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-5/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-5/relay-cleanup.json",
+    "bytes": 79,
+    "sha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "originalSha256": "8dd13f096a3b8f99bdafe51376c62dc3cff245b3ce969c92a16f3c2849d41af1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-iphone-rtmp-trace-5/source-identity.json",
+    "bytes": 172507,
+    "sha256": "6ddf499d19310232bc373dd2cfd44a8c35d317d44cc9821eeda148ac65308fa6",
+    "originalSha256": "6ddf499d19310232bc373dd2cfd44a8c35d317d44cc9821eeda148ac65308fa6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/capture.log",
+    "bytes": 36666,
+    "sha256": "fa924589c1b984b308037ec0e76847f304a1c4ac43085724203cf11adc4bad99",
+    "originalSha256": "fa924589c1b984b308037ec0e76847f304a1c4ac43085724203cf11adc4bad99",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/command.json",
+    "bytes": 441,
+    "sha256": "7ff103b38e4c7d16bb77614113a54f8571a7785498d6ce1d0b258b0258e32d65",
+    "originalSha256": "7ff103b38e4c7d16bb77614113a54f8571a7785498d6ce1d0b258b0258e32d65",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-1.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-2.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-3.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-4.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-5.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/publisher-6.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/server/receipt.json",
+    "bytes": 1501,
+    "sha256": "62ac9dfb8ed50dd49158abe5231697e2e9c090c417938b5c646554579dfe45fb",
+    "originalSha256": "62ac9dfb8ed50dd49158abe5231697e2e9c090c417938b5c646554579dfe45fb",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-flv-exclusive/source-identity.json",
+    "bytes": 177367,
+    "sha256": "2beb0765edd25873192ba08fe9cf503bad67a7ed255b97e471cf93bdc1567fad",
+    "originalSha256": "2beb0765edd25873192ba08fe9cf503bad67a7ed255b97e471cf93bdc1567fad",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-hls-ordered/capture.log",
+    "bytes": 30618,
+    "sha256": "05157f6acbd7f5342f8d50e2cacdebd232c03adbd1d310d6b87ae5d9d97a1142",
+    "originalSha256": "05157f6acbd7f5342f8d50e2cacdebd232c03adbd1d310d6b87ae5d9d97a1142",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-hls-ordered/command.json",
+    "bytes": 440,
+    "sha256": "ea1a4d8ccc4b45a3c84f112327b747c355f161034a349e62f4f1379dbb768069",
+    "originalSha256": "ea1a4d8ccc4b45a3c84f112327b747c355f161034a349e62f4f1379dbb768069",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-hls-ordered/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-hls-ordered/server/publisher-0.log",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-hls-ordered/server/receipt.json",
+    "bytes": 7554,
+    "sha256": "d0fcbeaa53f46d3d9a0e4216e4ed70005a53070179696629a37c6db181f2cf1e",
+    "originalSha256": "d0fcbeaa53f46d3d9a0e4216e4ed70005a53070179696629a37c6db181f2cf1e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-hls-ordered/source-identity.json",
+    "bytes": 177367,
+    "sha256": "7036db5da2d9b8946a533bee6688d800011f7f70e0996deaece9869887587945",
+    "originalSha256": "7036db5da2d9b8946a533bee6688d800011f7f70e0996deaece9869887587945",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-expanded/capture.log",
+    "bytes": 25512,
+    "sha256": "3f92c04f86dd7c1d840e1b72d7c857e1f8a1c06dc395036f683c38f04f79d703",
+    "originalSha256": "3f92c04f86dd7c1d840e1b72d7c857e1f8a1c06dc395036f683c38f04f79d703",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-expanded/command.json",
+    "bytes": 444,
+    "sha256": "5d882345385bc7a6bba6418a079a1f5eceb2a903e8f127b9fc6748164a7bc50a",
+    "originalSha256": "5d882345385bc7a6bba6418a079a1f5eceb2a903e8f127b9fc6748164a7bc50a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-expanded/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-expanded/source-identity.json",
+    "bytes": 172507,
+    "sha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "originalSha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery/capture.log",
+    "bytes": 2422,
+    "sha256": "c1fc4f3068e6216417384e5d2a26c53b1c019f7719298f84ae870e0a00efaa24",
+    "originalSha256": "c1fc4f3068e6216417384e5d2a26c53b1c019f7719298f84ae870e0a00efaa24",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery/command.json",
+    "bytes": 354,
+    "sha256": "eae1a79000ef9ea30999a89422fb64779ba3a80475b9cf974de96a56149479f6",
+    "originalSha256": "eae1a79000ef9ea30999a89422fb64779ba3a80475b9cf974de96a56149479f6",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery/exit-code",
+    "bytes": 1,
+    "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "originalSha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery/source-identity.json",
+    "bytes": 172507,
+    "sha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "originalSha256": "d0e33dc55e736e946801a62234f4d263279c47dfc39b252e6d61cad0860b585b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery-2/capture.log",
+    "bytes": 1101,
+    "sha256": "6b8e5ccfa82de0318d4be4b3ec866a12a6ea68c4dd1ec5d1b4e661e7f0a04253",
+    "originalSha256": "6b8e5ccfa82de0318d4be4b3ec866a12a6ea68c4dd1ec5d1b4e661e7f0a04253",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery-2/command.json",
+    "bytes": 356,
+    "sha256": "31eaa9cc1dc618f8f0f0cc5fdf173ff416fdd9a45fb8f411419c87d97fc30daf",
+    "originalSha256": "31eaa9cc1dc618f8f0f0cc5fdf173ff416fdd9a45fb8f411419c87d97fc30daf",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery-2/exit-code",
+    "bytes": 1,
+    "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "originalSha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/p04-macos-rtmp-low-recovery-2/source-identity.json",
+    "bytes": 172507,
+    "sha256": "7d0121e3021ba070051d575ebf1a9eaea7b9145921463a51ff75b21179b1f857",
+    "originalSha256": "7d0121e3021ba070051d575ebf1a9eaea7b9145921463a51ff75b21179b1f857",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/period-regression-results.json",
+    "bytes": 77,
+    "sha256": "df5416b325cb2b40660130002f9c8c92e6d5936d28e13ae0b3f1dff2faa2f844",
+    "originalSha256": "df5416b325cb2b40660130002f9c8c92e6d5936d28e13ae0b3f1dff2faa2f844",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/pub-get.log",
+    "bytes": 2293,
+    "sha256": "83b4b7c7dbcc48da42f8906ed2fd4d3999cd8bc7ab883e2dca485b6f7e28454a",
+    "originalSha256": "83b4b7c7dbcc48da42f8906ed2fd4d3999cd8bc7ab883e2dca485b6f7e28454a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/rapid-format.log",
+    "bytes": 127,
+    "sha256": "811af63f4939c30f7fbd8662b8b45d90a39ff12bb33531cb2c055c95dd06c21e",
+    "originalSha256": "811af63f4939c30f7fbd8662b8b45d90a39ff12bb33531cb2c055c95dd06c21e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/rtmp-baseline.log",
+    "bytes": 3180,
+    "sha256": "e41df951f15c8aecdd3b7030befe73b9a690ac8ea6467b927d81e71ae8000fab",
+    "originalSha256": "e41df951f15c8aecdd3b7030befe73b9a690ac8ea6467b927d81e71ae8000fab",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/rtmp-final-runner.log",
+    "bytes": 336,
+    "sha256": "240ae404e2758921ae92ef1a7f808019b698cd356f66918083f75946e6fb7102",
+    "originalSha256": "240ae404e2758921ae92ef1a7f808019b698cd356f66918083f75946e6fb7102",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/rtmp-recovery-runner-2.log",
+    "bytes": 224,
+    "sha256": "2a48374a2869dbdd53fc89c8fc2893a2479ac2efb3c3c86e87cbd0e250a6874c",
+    "originalSha256": "2a48374a2869dbdd53fc89c8fc2893a2479ac2efb3c3c86e87cbd0e250a6874c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/summary-buffered-red.log",
+    "bytes": 971,
+    "sha256": "eca970096d3161a44b71e65c119ea92b0443125df23abbc0f91a37bf7a9b4ccd",
+    "originalSha256": "eca970096d3161a44b71e65c119ea92b0443125df23abbc0f91a37bf7a9b4ccd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "logs/summary-clock-red.log",
+    "bytes": 1966,
+    "sha256": "0f2c0115792a20c99fb36a685c6724503812cd5fdafbaeb84f400ae92df76fc7",
+    "originalSha256": "0f2c0115792a20c99fb36a685c6724503812cd5fdafbaeb84f400ae92df76fc7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "progress.md",
+    "bytes": 13105,
+    "sha256": "304c60ee4dbe0a69355e422781da6c77edcf8f9e67a75c906d5be71f424403e9",
+    "originalSha256": "304c60ee4dbe0a69355e422781da6c77edcf8f9e67a75c906d5be71f424403e9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "final-review.md",
+    "bytes": 750,
+    "sha256": "53d94286f098e04e0f7558735e81537a3a4cf99eed9dfe5149e1f1f3c50ff2cd",
+    "originalSha256": "53d94286f098e04e0f7558735e81537a3a4cf99eed9dfe5149e1f1f3c50ff2cd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_abr_run.py",
+    "bytes": 2372,
+    "sha256": "4c529862cc010dd18363fa7bc1720ae23f49ba4b47b93621976525bcc81d4f90",
+    "originalSha256": "4c529862cc010dd18363fa7bc1720ae23f49ba4b47b93621976525bcc81d4f90",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_abr_extended.py",
+    "bytes": 4389,
+    "sha256": "60b125e49a34a2eb08149bfff0e0bdfc41e31c71ca395aca51b3c08bd9879147",
+    "originalSha256": "60b125e49a34a2eb08149bfff0e0bdfc41e31c71ca395aca51b3c08bd9879147",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_make_extended_driver.py",
+    "bytes": 2322,
+    "sha256": "de16709739dde9cf1f54d31048cbc4b84231312a8e4b9c32c3f12fe25ba3e1b5",
+    "originalSha256": "de16709739dde9cf1f54d31048cbc4b84231312a8e4b9c32c3f12fe25ba3e1b5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_http_live_run.py",
+    "bytes": 3955,
+    "sha256": "b950ec7342d3a765d9aaa7bc400f22668031ef30d0b6e7bc7c1c74a523fedb48",
+    "originalSha256": "b950ec7342d3a765d9aaa7bc400f22668031ef30d0b6e7bc7c1c74a523fedb48",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_live_run_v2.py",
+    "bytes": 2199,
+    "sha256": "0355211c5414f2b637a51b6ad0be6a595b5f15732b95ebf1df3bb449251d6704",
+    "originalSha256": "0355211c5414f2b637a51b6ad0be6a595b5f15732b95ebf1df3bb449251d6704",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_live_trace.py",
+    "bytes": 2242,
+    "sha256": "764ae135587959a32d660d0ac2d331b938db8a4653ade0ddf8ba1d8be4294a92",
+    "originalSha256": "764ae135587959a32d660d0ac2d331b938db8a4653ade0ddf8ba1d8be4294a92",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_rtmp_cases.py",
+    "bytes": 2101,
+    "sha256": "227b9a69951b06dca6dc94ed15a481cb7fcafef7fee8dab31bc59b8a1402ce98",
+    "originalSha256": "227b9a69951b06dca6dc94ed15a481cb7fcafef7fee8dab31bc59b8a1402ce98",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_rtmp_recovery.py",
+    "bytes": 2142,
+    "sha256": "14f14724d5d5b45c8f9a263aa0df2c4c0f8755f8ded74d557a22f56da78977a8",
+    "originalSha256": "14f14724d5d5b45c8f9a263aa0df2c4c0f8755f8ded74d557a22f56da78977a8",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_device_live.py",
+    "bytes": 4136,
+    "sha256": "005747644c9dfe03df467aaa58a1c54d1c36f0c0181fa4c96bf900903daca2d9",
+    "originalSha256": "005747644c9dfe03df467aaa58a1c54d1c36f0c0181fa4c96bf900903daca2d9",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_device_live_repeat.py",
+    "bytes": 4172,
+    "sha256": "7f423629b6e9706dd8b16d4e3c32855385632ecf3f35d21171b445acddc46424",
+    "originalSha256": "7f423629b6e9706dd8b16d4e3c32855385632ecf3f35d21171b445acddc46424",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_device_trace.py",
+    "bytes": 3760,
+    "sha256": "f272011d23c697564280caacbbd1632a02478e0d9da5624f1541c973ddb73e11",
+    "originalSha256": "f272011d23c697564280caacbbd1632a02478e0d9da5624f1541c973ddb73e11",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_device_trace4.py",
+    "bytes": 3760,
+    "sha256": "df762b4ead0928b01fdc05dd97a6b8bae163fcbaa21679ddc782d7fc5e041226",
+    "originalSha256": "df762b4ead0928b01fdc05dd97a6b8bae163fcbaa21679ddc782d7fc5e041226",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_device_trace5.py",
+    "bytes": 3760,
+    "sha256": "b0f7b450fc26767467d3f8f3bb1708d88aa4f12335deeecbe55f3b8939842c8c",
+    "originalSha256": "b0f7b450fc26767467d3f8f3bb1708d88aa4f12335deeecbe55f3b8939842c8c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_device_exclusive.py",
+    "bytes": 4177,
+    "sha256": "cdc2c614cb689a91fbc31c33728b5e62c97a476621497952df51a5ea2a2f6a0a",
+    "originalSha256": "cdc2c614cb689a91fbc31c33728b5e62c97a476621497952df51a5ea2a2f6a0a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_restore_iproxy.py",
+    "bytes": 614,
+    "sha256": "9841d8aa183cf5703e22f96c8892d18dba7b569ff2a76ce304fc0c29feaf363f",
+    "originalSha256": "9841d8aa183cf5703e22f96c8892d18dba7b569ff2a76ce304fc0c29feaf363f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_finalize_evidence.py",
+    "bytes": 3961,
+    "sha256": "d774e5ab662ad256d7048d6f901bb18f81a3a75216700e47c026ed6a28fed91c",
+    "originalSha256": "d774e5ab662ad256d7048d6f901bb18f81a3a75216700e47c026ed6a28fed91c",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "launchers/p04_archive.py",
+    "bytes": 4841,
+    "sha256": "00764c918491f8e89cddc18ac46c262a0fba50278ce0f64a288bc99c692d76b7",
+    "originalSha256": "00764c918491f8e89cddc18ac46c262a0fba50278ce0f64a288bc99c692d76b7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bhcnh7sm/owned.log",
+    "bytes": 235,
+    "sha256": "78fe6b280e5a5f7f4622320cc260a0431610d52c35b0e632f2921d1469b8c425",
+    "originalSha256": "78fe6b280e5a5f7f4622320cc260a0431610d52c35b0e632f2921d1469b8c425",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bhcnh7sm/peer.log",
+    "bytes": 2393,
+    "sha256": "19cb32625db3aaaea098025a52339fe59775f4dcbb5f108c041a3a385a6a6957",
+    "originalSha256": "19cb32625db3aaaea098025a52339fe59775f4dcbb5f108c041a3a385a6a6957",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bhcnh7sm/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bhcnh7sm/proxy.json",
+    "bytes": 1572,
+    "sha256": "6039a6968865e6b34c37fcec2bdbcf2376f85563041bf946418516a108396007",
+    "originalSha256": "6039a6968865e6b34c37fcec2bdbcf2376f85563041bf946418516a108396007",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bhcnh7sm/video.log",
+    "bytes": 235,
+    "sha256": "48c1fbe0a73953ea6dc75abeaf9ad6a60beac035f90041aa729ea2db70be1935",
+    "originalSha256": "48c1fbe0a73953ea6dc75abeaf9ad6a60beac035f90041aa729ea2db70be1935",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-xdju75nm/owned.log",
+    "bytes": 235,
+    "sha256": "02b15fe32c4a038ca12c56ed425800ab596c0a92b9886cd10990a94dddaa6fad",
+    "originalSha256": "02b15fe32c4a038ca12c56ed425800ab596c0a92b9886cd10990a94dddaa6fad",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-xdju75nm/peer.log",
+    "bytes": 4350,
+    "sha256": "103f6aebbb1cd2921a8e7afde067d64db5021ddf6689cff2c6c3bd9874825fe2",
+    "originalSha256": "103f6aebbb1cd2921a8e7afde067d64db5021ddf6689cff2c6c3bd9874825fe2",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-xdju75nm/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-xdju75nm/proxy.json",
+    "bytes": 2158,
+    "sha256": "b9ffcda7a20d22c9150fe364b0c5ca7cf12125f14cca5a6753fdd6faf24fe094",
+    "originalSha256": "b9ffcda7a20d22c9150fe364b0c5ca7cf12125f14cca5a6753fdd6faf24fe094",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-xdju75nm/video.log",
+    "bytes": 235,
+    "sha256": "d1b68b4abe0f9783a01a877059a6299535fd68903caf03888d18bde83af72a26",
+    "originalSha256": "d1b68b4abe0f9783a01a877059a6299535fd68903caf03888d18bde83af72a26",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-mghd9he4/owned.log",
+    "bytes": 235,
+    "sha256": "76204837fe8ea9b82c8f67a0ec8b41961e16701e092ad89608fd88fc49991d1d",
+    "originalSha256": "76204837fe8ea9b82c8f67a0ec8b41961e16701e092ad89608fd88fc49991d1d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-mghd9he4/peer.log",
+    "bytes": 3918,
+    "sha256": "e41c424f5746300cc0ecd2444e179744a4e6e8680ba2427fd3c76980e783200d",
+    "originalSha256": "e41c424f5746300cc0ecd2444e179744a4e6e8680ba2427fd3c76980e783200d",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-mghd9he4/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-mghd9he4/proxy.json",
+    "bytes": 1989,
+    "sha256": "1f3c4d12225883c003a2b0dab71f7121103ac70341fa5af286b5f118f2af214f",
+    "originalSha256": "1f3c4d12225883c003a2b0dab71f7121103ac70341fa5af286b5f118f2af214f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-mghd9he4/video.log",
+    "bytes": 235,
+    "sha256": "2d901fd7f7b05f1edc1d18ce26dfaba6663ec4f2903d44f231b07392bdab88f5",
+    "originalSha256": "2d901fd7f7b05f1edc1d18ce26dfaba6663ec4f2903d44f231b07392bdab88f5",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-rlvnkl8u/owned.log",
+    "bytes": 235,
+    "sha256": "89bfc5877ae9b943ceef8b264177e9559023c508df92417bd73d3c426b282204",
+    "originalSha256": "89bfc5877ae9b943ceef8b264177e9559023c508df92417bd73d3c426b282204",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-rlvnkl8u/peer.log",
+    "bytes": 1478,
+    "sha256": "2cdd0d50a3b4dd6d8f46ee77ee58521d45649b52a17c9afc003b8967bd152138",
+    "originalSha256": "2cdd0d50a3b4dd6d8f46ee77ee58521d45649b52a17c9afc003b8967bd152138",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-rlvnkl8u/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-rlvnkl8u/proxy.json",
+    "bytes": 1323,
+    "sha256": "5aee9efca0717f39680a76980f99ec1e5d0cd330739415811b02a9f7338b532b",
+    "originalSha256": "5aee9efca0717f39680a76980f99ec1e5d0cd330739415811b02a9f7338b532b",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-rlvnkl8u/video.log",
+    "bytes": 235,
+    "sha256": "943b585bbdf47e18c2cf585e98ab4bfa4061a48c8f223a80c97aab9b821ae695",
+    "originalSha256": "943b585bbdf47e18c2cf585e98ab4bfa4061a48c8f223a80c97aab9b821ae695",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-gzd58ccs/owned.log",
+    "bytes": 235,
+    "sha256": "6fd2e59965f0f6afb9d3d4230d03e096bef08fd8db19e9203d6f5a388d68c520",
+    "originalSha256": "6fd2e59965f0f6afb9d3d4230d03e096bef08fd8db19e9203d6f5a388d68c520",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-gzd58ccs/peer.log",
+    "bytes": 4528,
+    "sha256": "e0dea51f6b133df4fbf6e9986fbf26b227f2c01f958c971a7d401164a8c42246",
+    "originalSha256": "e0dea51f6b133df4fbf6e9986fbf26b227f2c01f958c971a7d401164a8c42246",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-gzd58ccs/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-gzd58ccs/proxy.json",
+    "bytes": 2155,
+    "sha256": "81c3b959b46b89ef5efd000d5c696e27c64d46b362ceace4b3d1ffcd9356289e",
+    "originalSha256": "81c3b959b46b89ef5efd000d5c696e27c64d46b362ceace4b3d1ffcd9356289e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-gzd58ccs/video.log",
+    "bytes": 235,
+    "sha256": "4da98136f48e880a1e1795fd3e95a73c141ac399ce684443640d9dd00529921a",
+    "originalSha256": "4da98136f48e880a1e1795fd3e95a73c141ac399ce684443640d9dd00529921a",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-oxms0t0x/owned.log",
+    "bytes": 235,
+    "sha256": "fe2f54f07262a14aba31e48881e34770437eab4a28d04314b01b4a8265cbdb2f",
+    "originalSha256": "fe2f54f07262a14aba31e48881e34770437eab4a28d04314b01b4a8265cbdb2f",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-oxms0t0x/peer.log",
+    "bytes": 1478,
+    "sha256": "023736f90a25ccce758f928f1dcf7ab839a451e7e2c4f4e22f439dbb7b3e8aae",
+    "originalSha256": "023736f90a25ccce758f928f1dcf7ab839a451e7e2c4f4e22f439dbb7b3e8aae",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-oxms0t0x/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-oxms0t0x/proxy.json",
+    "bytes": 1323,
+    "sha256": "b271114cb06e7994f06085ce2d71478f4f96a2ff8d7c67670e3dc6eb3e77cd71",
+    "originalSha256": "b271114cb06e7994f06085ce2d71478f4f96a2ff8d7c67670e3dc6eb3e77cd71",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-oxms0t0x/video.log",
+    "bytes": 235,
+    "sha256": "53cdbc6bf39a0474cb24245b284c8aaaa37b9e1a5b66bc163959a4654be32b4e",
+    "originalSha256": "53cdbc6bf39a0474cb24245b284c8aaaa37b9e1a5b66bc163959a4654be32b4e",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-6asa_gzr/owned.log",
+    "bytes": 235,
+    "sha256": "64f850461c867a1c9261ef453f55dc06b64647782e204969b4f6bed7c3d8e042",
+    "originalSha256": "64f850461c867a1c9261ef453f55dc06b64647782e204969b4f6bed7c3d8e042",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-6asa_gzr/peer.log",
+    "bytes": 1478,
+    "sha256": "cb12983ceef6e3a194714d3ef623c3989755adc1d2402b65c9c834a71c858afc",
+    "originalSha256": "cb12983ceef6e3a194714d3ef623c3989755adc1d2402b65c9c834a71c858afc",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-6asa_gzr/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-6asa_gzr/proxy.json",
+    "bytes": 1323,
+    "sha256": "8980684ea077a5e51671c2d5774a2b21f5050d01295d4f6b1a6118e7c96119e4",
+    "originalSha256": "8980684ea077a5e51671c2d5774a2b21f5050d01295d4f6b1a6118e7c96119e4",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-6asa_gzr/video.log",
+    "bytes": 235,
+    "sha256": "a97b894a9e839288cc87467d6f4fe6593d8e12aff83b3598bd397df5dd33d317",
+    "originalSha256": "a97b894a9e839288cc87467d6f4fe6593d8e12aff83b3598bd397df5dd33d317",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bj3o0zkj/owned.log",
+    "bytes": 235,
+    "sha256": "70a8d9c30fb71097f06fc12c16597739f5d9eb6c11f03b776ad6a7dd9047a944",
+    "originalSha256": "70a8d9c30fb71097f06fc12c16597739f5d9eb6c11f03b776ad6a7dd9047a944",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bj3o0zkj/peer.log",
+    "bytes": 1478,
+    "sha256": "17c9f68c9e2ae6dd5482728ed4fd37af23f0ba3af96f59f38283c84be5bff6ae",
+    "originalSha256": "17c9f68c9e2ae6dd5482728ed4fd37af23f0ba3af96f59f38283c84be5bff6ae",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bj3o0zkj/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bj3o0zkj/proxy.json",
+    "bytes": 1323,
+    "sha256": "e378f23f9ed8f51f8add50068afa3731aa39d98ac28d4f2c12b8b4a1d17bc6ca",
+    "originalSha256": "e378f23f9ed8f51f8add50068afa3731aa39d98ac28d4f2c12b8b4a1d17bc6ca",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bj3o0zkj/video.log",
+    "bytes": 235,
+    "sha256": "ea630c50197a2a23ec5617ef940546bd6036bbd30f29be06a42c747922009f61",
+    "originalSha256": "ea630c50197a2a23ec5617ef940546bd6036bbd30f29be06a42c747922009f61",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bn3dd3is/owned.log",
+    "bytes": 235,
+    "sha256": "1298bf6341e37f6730af5a64906c508707711e6fc99748c12155a370b96cbadc",
+    "originalSha256": "1298bf6341e37f6730af5a64906c508707711e6fc99748c12155a370b96cbadc",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bn3dd3is/peer.log",
+    "bytes": 3003,
+    "sha256": "627da3d689ad57f5d8d59f44127b0894f8dc78975a3ac4c35279976300459c58",
+    "originalSha256": "627da3d689ad57f5d8d59f44127b0894f8dc78975a3ac4c35279976300459c58",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bn3dd3is/peer.yml",
+    "bytes": 190,
+    "sha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "originalSha256": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bn3dd3is/proxy.json",
+    "bytes": 1737,
+    "sha256": "ce08e504eb9e8baa1595ba1da3d37d15efd8496026100a826d20da0ffd4b5cef",
+    "originalSha256": "ce08e504eb9e8baa1595ba1da3d37d15efd8496026100a826d20da0ffd4b5cef",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "rtmp-peers/app-bn3dd3is/video.log",
+    "bytes": 235,
+    "sha256": "35035346b1def1a2088caeae81b856f77e1911cd56f1657e4613fada86cbbefd",
+    "originalSha256": "35035346b1def1a2088caeae81b856f77e1911cd56f1657e4613fada86cbbefd",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "environment/p04-rtmp-current.log",
+    "bytes": 18872,
+    "sha256": "14166903186da5eba8f3673d985327ba2a245c4794471aea732e56c4662f8093",
+    "originalSha256": "14166903186da5eba8f3673d985327ba2a245c4794471aea732e56c4662f8093",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "environment/p04-libusbmuxd-install.log",
+    "bytes": 2051,
+    "sha256": "196cc727703a3be03fc2e3d01c1abfde227a087e6e8fb1083d402d22cf1217e1",
+    "originalSha256": "196cc727703a3be03fc2e3d01c1abfde227a087e6e8fb1083d402d22cf1217e1",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "environment/p04-iproxy-backup.json",
+    "bytes": 207,
+    "sha256": "1aba9960273596c313da2f38130614708d78204bac9cd0da1c90f8a4f58ae712",
+    "originalSha256": "1aba9960273596c313da2f38130614708d78204bac9cd0da1c90f8a4f58ae712",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  },
+  {
+    "path": "environment/p04-iproxy-restored.json",
+    "bytes": 172,
+    "sha256": "d49fc440f0a37034efd1701c77e94c3c4666f73e76ee22efcc91341c9df7e590",
+    "originalSha256": "d49fc440f0a37034efd1701c77e94c3c4666f73e76ee22efcc91341c9df7e590",
+    "redactedUnrelatedDeviceInventoryOrAccount": false
+  }
+]
