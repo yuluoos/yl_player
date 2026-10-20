@@ -1,0 +1,91 @@
+{
+  "kind": "independent-decoder-protocol-smoke",
+  "reports": [
+    {
+      "schemaVersion": 1,
+      "runId": "smoke-hls",
+      "protocol": "hls",
+      "profileId": "protocol-smoke-v1",
+      "profileHash": "f311e267764c1848149814608002a60232f8a96f25533c5d49673437af863f4f",
+      "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+      "acceptedConnections": 5,
+      "rejectedConnections": 0,
+      "recordedConnections": 5,
+      "activeConnections": 0,
+      "cleaned": true,
+      "timelineMode": "first-client-bytes",
+      "byteScope": "downstream-tcp-including-protocol-headers",
+      "phaseBoundariesMs": [
+        0,
+        1000,
+        2000
+      ],
+      "physicalOutputVerified": false,
+      "endToEndLatencyUs": null,
+      "decoderExitCode": 0,
+      "phaseBytes": [
+        105291,
+        0,
+        158346
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "runId": "smoke-flv",
+      "protocol": "flv",
+      "profileId": "protocol-smoke-v1",
+      "profileHash": "f311e267764c1848149814608002a60232f8a96f25533c5d49673437af863f4f",
+      "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+      "acceptedConnections": 1,
+      "rejectedConnections": 0,
+      "recordedConnections": 1,
+      "activeConnections": 0,
+      "cleaned": true,
+      "timelineMode": "first-client-bytes",
+      "byteScope": "downstream-tcp-including-protocol-headers",
+      "phaseBoundariesMs": [
+        0,
+        1000,
+        2000
+      ],
+      "physicalOutputVerified": false,
+      "endToEndLatencyUs": null,
+      "decoderExitCode": 0,
+      "phaseBytes": [
+        49338,
+        42798,
+        106108
+      ]
+    },
+    {
+      "schemaVersion": 1,
+      "runId": "smoke-rtmp",
+      "protocol": "rtmp",
+      "profileId": "protocol-smoke-v1",
+      "profileHash": "f311e267764c1848149814608002a60232f8a96f25533c5d49673437af863f4f",
+      "declaredMediaHash": "cfe009b1b03b6cacf4ae9f037eed4441a32b99508d4fabccb429bea439cf570b",
+      "acceptedConnections": 1,
+      "rejectedConnections": 0,
+      "recordedConnections": 1,
+      "activeConnections": 0,
+      "cleaned": true,
+      "timelineMode": "first-client-bytes",
+      "byteScope": "downstream-tcp-including-protocol-headers",
+      "phaseBoundariesMs": [
+        0,
+        1000,
+        2000
+      ],
+      "physicalOutputVerified": false,
+      "endToEndLatencyUs": null,
+      "decoderExitCode": 0,
+      "phaseBytes": [
+        31914,
+        42019,
+        102608
+      ]
+    }
+  ],
+  "physicalOutputVerified": false,
+  "capabilityAccepted": false
+}

@@ -113,13 +113,15 @@ The outputs always retain `baselineComparable=false`, `capabilityAccepted=false`
 clocks, physical output, HTTP-FLV/RTMP, runtime live modes and P08 SLO freezing are
 separate remaining work. Do not infer them from this VOD tool.
 
-## P04 live mode capture (schema 1, prepared 2026-10-16)
+## P04 live mode capture (schema 2, updated 2026-10-20)
 
 `packages/yl_player/example/integration_test/live_mode_switch_test.dart` is an
 explicit device-run entry point for **owned, loopback-only** HLS, HTTP-FLV and
 RTMP fixtures. It is not part of offline tests. For each protocol provide
 `YL_LIVE_RUN`, `YL_LIVE_PROTOCOL=hls|flv|rtmp`, `YL_LIVE_URL`,
-`YL_LIVE_MEDIA_SHA256` (64 lowercase hex), and `YL_LIVE_OWNED=true`.
+`YL_LIVE_MEDIA_SHA256` (64 lowercase hex), `YL_LIVE_OWNED=true`, and
+`YL_LIVE_PROFILE` / `YL_LIVE_PROFILE_SHA256` from the same-run relay. See
+[live protocol engineering](live-protocol.md) for relay, validation and repeated trials.
 Use an explicit local port; HLS/FLV paths end in `.m3u8`/`.flv`, RTMP paths contain
 an app and stream. Credentials, queries, fragments and non-loopback origins are
 rejected. Device-local forwarding and the fixture server must be supplied by the

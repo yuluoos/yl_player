@@ -37,6 +37,19 @@ class FixtureTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 prepare.create(output)
 
+    def test_missing_variant_only_disappears_after_two_compatible_periods(self):
+        with tempfile.TemporaryDirectory() as work:
+            output = Path(work) / 'fixture'
+            receipt = prepare.create(output, missing_high_after=2)
+            ns = {'d': prepare.NS}
+            periods = ET.parse(output / 'manifest.mpd').getroot().findall('d:Period', ns)
+            highs = [[r for r in p.findall('d:AdaptationSet/d:Representation', ns)
+                      if r.get('width') == '640'] for p in periods]
+            self.assertEqual([len(v) for v in highs], [1, 1, 0, 0, 0, 0, 0, 0, 0, 0])
+            self.assertEqual(receipt['fixedMissingAtMs'], 8000)
+            self.assertFalse((output / 'network-period-2/init-1.m4s').exists())
+            self.assertTrue((output / 'network-period-2/init-0.m4s').exists())
+
     def test_regeneration_is_byte_identical(self):
         self.assertIsNotNone(prepare, 'long owned programme is not implemented')
         with tempfile.TemporaryDirectory() as work:

@@ -75,6 +75,8 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
     request_failures = 0
     manifest_seen = False
     recovery = False
+    phase_bytes = [0, 0, 0]
+    phase_available = True
     for row in requests:
         require(isinstance(row, dict) and row.get('schemaVersion') == 1 and row.get('runId') == run and
                 row.get('profile') == result['profileId'] and row.get('profileSha256') == result['profileHash'] and
@@ -85,6 +87,13 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
         require(type(row.get('bodyBytesWritten')) is int and row['bodyBytesWritten'] >= 0)
         require(row.get('method') in ('GET','HEAD') and row.get('outcome') in
                 ('complete','timeout','disconnected','client_io_error'))
+        if 'phaseBytesWritten' in row or 'phaseBoundariesMs' in row:
+            require(row.get('phaseBoundariesMs') == [0, 10000, 25000] and
+                    isinstance(row.get('phaseBytesWritten'), list) and len(row['phaseBytesWritten']) == 3 and
+                    all(type(v) is int and v >= 0 for v in row['phaseBytesWritten']) and
+                    sum(row['phaseBytesWritten']) == row['bodyBytesWritten'])
+        else:
+            phase_available = False
         total_bytes += row['bodyBytesWritten']
         request_failures += row['outcome'] != 'complete' or row.get('status') not in (200,206)
         if row.get('timelineState') == 'pending':
@@ -99,6 +108,8 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
         match = re.fullmatch(r'network-period-[0-9]+/(?:chunk-([012])-[0-9]+|init-([012]))\.m4s', asset or '')
         if match and row['method'] == 'GET':
             rendition = match.group(1) or match.group(2)
+            if 'phaseBytesWritten' in row:
+                phase_bytes = [a+b for a,b in zip(phase_bytes, row['phaseBytesWritten'])]
             if result['mode'] == 'caps' and rendition == '1':
                 violations.add('caps_high_video_requested')
             if row['endMs'] >= 25000 and row['bodyBytesWritten'] > 0:
@@ -131,6 +142,8 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
                 requestBodyBytesWritten=total_bytes, requestFailures=request_failures,
                 requestCount=len(requests), mediaRequestReachedRecovery=recovery,
                 maximumSampleGapUs=max((b['elapsedUs']-a['elapsedUs'] for a,b in zip(samples,samples[1:])),default=None),
+                networkPhaseBytes=phase_bytes if phase_available else None,
+                networkPhasesCovered=phase_available and all(v > 0 for v in phase_bytes),
                 adaptationLatencyUs=None, endToEndLatencyUs=None, capabilityAccepted=False,
                 physicalOutputVerified=False, baselineComparable=False)
 

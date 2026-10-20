@@ -1,0 +1,564 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "3433d03fe04a1efebdcb1e77a5ef184d18948922",
+  "date": "2026-10-20",
+  "environment": {
+    "platform": "macos",
+    "os": "27.0.1",
+    "osBuild": "26A434",
+    "architecture": "arm64",
+    "deviceModel": "MacBookPro17,1",
+    "deviceKind": "host",
+    "publicIntegrationBuildMode": "debug",
+    "flutter": "3.44.0",
+    "dart": "3.12.0",
+    "xcode": "27.1",
+    "androidJava": "17"
+  },
+  "sourceFiles": [
+    {
+      "path": "docs/superpowers/plans/2026-09-26-remaining-04-abr-live.md",
+      "sha256": "cfbd148fd3540251a9687de050efdd6faa4a69cbb660fc7858888b6207b6ef70"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-26-remaining-overview.md",
+      "sha256": "5872381bda4bb3fba7af4bd8b3ca131088c7813f93fea725e9e2f7393f3c3793"
+    },
+    {
+      "path": "docs/superpowers/reports/2026-09-26-remaining-04-abr-live.md",
+      "sha256": "1bd638f6ef82e85cb04c23cf4e49afa186149441a80d9112a36c54a4be407a74"
+    },
+    {
+      "path": "packages/yl_player/example/integration_test/abr_fixed_period_test.dart",
+      "sha256": "38048a5a7e9cc11088a6348d03a2d0957d12d27cadf494e9759e8fefc89b300a"
+    },
+    {
+      "path": "packages/yl_player/example/integration_test/abr_network_profile_test.dart",
+      "sha256": "2cf4da7403c7e499a37506aec9f240278bfb6938896da430998053b518ca66aa"
+    },
+    {
+      "path": "packages/yl_player/example/integration_test/live_mode_baseline_test.dart",
+      "sha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7"
+    },
+    {
+      "path": "packages/yl_player/example/integration_test/live_mode_switch_test.dart",
+      "sha256": "50ced6f11e10f9e6cbdfc8c7c3e37c99412fb81b70c5c4ef029c6720f71cb791"
+    },
+    {
+      "path": "packages/yl_player/example/integration_test/support/live_mode_series.dart",
+      "sha256": "9f224c7850d3511c6fca95b27660b0f74aea183f5eed7e6d1a522a4f6edba671"
+    },
+    {
+      "path": "packages/yl_player/test/live_mode_capture_test.dart",
+      "sha256": "45b080ebd0c6728e09416685b23f5f91fadde5e232c27a7cc1289855779c8857"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d"
+    },
+    {
+      "path": "tool/check_foundation.sh",
+      "sha256": "ee17056ebe57fece82c380634c0154cc838312d221273567ef21d9995d8d2979"
+    },
+    {
+      "path": "tool/playback_network/README.md",
+      "sha256": "515e0b19cc85ef2698c2d32448c0dc1bb8e548d9d9f112f3f753e714de907fa9"
+    },
+    {
+      "path": "tool/playback_network/aggregate_experiment.py",
+      "sha256": "8c28f3f69f453f0bbc5bac6a009163659304ff87fc6c98ab08806ab496fed20d"
+    },
+    {
+      "path": "tool/playback_network/aggregate_live.py",
+      "sha256": "a6c378c740b2a207a36c3203458d7cb8d51c477690e128ce2c63c40a4380d5ca"
+    },
+    {
+      "path": "tool/playback_network/capture-protocol.md",
+      "sha256": "82c6f76566bc2784daa327326488b35bd3da12618fd5e33ac905e9429fa8260b"
+    },
+    {
+      "path": "tool/playback_network/evaluate_targets.py",
+      "sha256": "8ca749b12803a8d309c7c5308ff0285031fb20f5478252af8fc86403f78994eb"
+    },
+    {
+      "path": "tool/playback_network/experiment-protocol.md",
+      "sha256": "ceedce3e6349282ab9ed861ad3dc304e19e1260b24187c5952439a7b71baf06d"
+    },
+    {
+      "path": "tool/playback_network/live-protocol.md",
+      "sha256": "b80719655fec143ee4f04c56b88f8b541b25b797b2c0a80fe0032c836bd1a51b"
+    },
+    {
+      "path": "tool/playback_network/live_relay.py",
+      "sha256": "8a2e6e725e316a7658a2157d135897fcfd13422c83600196fe8ade6a8ed9ccf2"
+    },
+    {
+      "path": "tool/playback_network/network_profile.py",
+      "sha256": "f80abd70a7a2d3d8f8311714231c38f4877c43a7e8be76ae6c5f5e59b9fa34d3"
+    },
+    {
+      "path": "tool/playback_network/prepare_fixture.py",
+      "sha256": "9680ed4aba5d4269623d35acaf2aa8a3ed56b9371b38a43dc2060722fec1aeea"
+    },
+    {
+      "path": "tool/playback_network/profiles.json",
+      "sha256": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de"
+    },
+    {
+      "path": "tool/playback_network/summarize_capture.py",
+      "sha256": "8045f2188387434eb9ce6326959daa69138a5d0a20e2885ed04ccc14ad23e86c"
+    },
+    {
+      "path": "tool/playback_network/summarize_live.py",
+      "sha256": "80f4e12079b7d454d09c479ff10d3590ab83d1d5d48a72e9ada2b274b6976f38"
+    },
+    {
+      "path": "tool/playback_network/test_aggregate_experiment.py",
+      "sha256": "b704e87b6a98e3828d29ed41e4db320954f5f507eb24a1596d6bf60d7573a72c"
+    },
+    {
+      "path": "tool/playback_network/test_aggregate_live.py",
+      "sha256": "d0bd868a83ef224d37ffafe70c850c6501bd61c1b29467cb8417e38aec8b9a05"
+    },
+    {
+      "path": "tool/playback_network/test_live_relay.py",
+      "sha256": "3251bb0e6f1f9f991737d88ccc67becbed49b29940dd3e596dfbefbea43e7a8b"
+    },
+    {
+      "path": "tool/playback_network/test_live_summary.py",
+      "sha256": "7d54ff45dd927dc6eb6b7327eda994b37fd9a0572414a9a8ff41dfe77c666f43"
+    },
+    {
+      "path": "tool/playback_network/test_network_profile.py",
+      "sha256": "a64ec1e2542d2ebffe02202ad34a58c31ff558b4f73b21685c71397fcddc8cb2"
+    },
+    {
+      "path": "tool/playback_network/test_prepare_fixture.py",
+      "sha256": "3fd1c3a8fa13f9e95b2b898a172a7a63b576080c6b5ae638954f107cd343b3fe"
+    },
+    {
+      "path": "tool/playback_network/test_summarize_capture.py",
+      "sha256": "7c4a036d4cc3ae9952d2d50e555cf973d6378c8a1e11143fc54f3394264b4939"
+    },
+    {
+      "path": "tool/playback_network/test_targets.py",
+      "sha256": "9ca7d762c17de408d404010f9002e77d758c8d75ccdea1f5f7a671f2abf2b529"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "README.md",
+      "sha256": "c3201a90870f2603c33cef4b1f80dcbc624c1fb9d42c082880d647dfe18c9131",
+      "bytes": 767
+    },
+    {
+      "path": "android-junit-summary.json",
+      "sha256": "18f53d69b0f74f8b41db4cf3ab6c4b1c93683b6de292b7cce5987fb18e02fdf2",
+      "bytes": 83
+    },
+    {
+      "path": "device-model.txt",
+      "sha256": "992988af63be4261aebe63c3993f2476bc3d722b522ca40861393f2a74b449d8",
+      "bytes": 15
+    },
+    {
+      "path": "flutter-version.json",
+      "sha256": "3efa176f85497ba795fb41284468a646de087a743a70e173662debc4e8151173",
+      "bytes": 607
+    },
+    {
+      "path": "java-version.txt",
+      "sha256": "67732c1a52f008070b8222ad1b1694a9643188135d8fcb7878cb6c21cda20237",
+      "bytes": 165
+    },
+    {
+      "path": "logs/abr-dart.log.gz",
+      "sha256": "dafe085d239337b8c8dfdc6be4c0bbfdc0dee0884cf62eaedc4ed850945269da",
+      "bytes": 421
+    },
+    {
+      "path": "logs/analysis-final.log.gz",
+      "sha256": "58297cf56d5bda3da0232d97df3d7e793e3b793ef05c51b3628f8a0138538829",
+      "bytes": 75
+    },
+    {
+      "path": "logs/android-java17.log.gz",
+      "sha256": "67a5dfdcc7d28f5566c23496ac2d3cc40aef9881ffad46fffe026c195056664b",
+      "bytes": 18525
+    },
+    {
+      "path": "logs/android.log.gz",
+      "sha256": "b11506cce445b0bd28e17f302a0889b716c2408fd4f6506ca2282145e94979f4",
+      "bytes": 23426
+    },
+    {
+      "path": "logs/baseline.log.gz",
+      "sha256": "58b2937aa94d830046ddad7c246c06fb4cef4fde1308e71d12c1418a5eac8b14",
+      "bytes": 56
+    },
+    {
+      "path": "logs/dart-suite.log.gz",
+      "sha256": "e0cba1e1c2a179dff2d448a86b7ae0f4bfee0904731348410beb34404005fade",
+      "bytes": 17170
+    },
+    {
+      "path": "logs/format-verified.log.gz",
+      "sha256": "6c4a7b07c7fa2392fe2d3e478af5fa72343f71db2eb95cbe6b684d179c982fda",
+      "bytes": 67
+    },
+    {
+      "path": "logs/live-aggregate-red.log.gz",
+      "sha256": "e6e51d665cf034182e0c0677bb5d42aec5c310f8865ed05efc240e546775a4ac",
+      "bytes": 440
+    },
+    {
+      "path": "logs/live-dart-green.log.gz",
+      "sha256": "b312a1ea4ec8064c989ef85d9791441d5fa8e8fead479b1d31fe62efd627c60f",
+      "bytes": 376
+    },
+    {
+      "path": "logs/live-dart-red.log.gz",
+      "sha256": "74ea6954e37d135f348dcb0d79e15329e35fc58548f10607c1c1612be65694b3",
+      "bytes": 694
+    },
+    {
+      "path": "logs/live-final.log.gz",
+      "sha256": "c0edbc9a72cb51e1451c7316e633ec31475d4da1f32af5bacbfee5cdbb92a8d2",
+      "bytes": 1420
+    },
+    {
+      "path": "logs/live-summary-green.log.gz",
+      "sha256": "97effd2ebbe61a3cfcf40329e17e13f516d31d2e57d4b9d61ead10a9bad8e5fd",
+      "bytes": 54
+    },
+    {
+      "path": "logs/live-summary-red.log.gz",
+      "sha256": "c602b020a6179bd89be0e7174b9cb41c8678a3b0425311b352f939397439d3fb",
+      "bytes": 551
+    },
+    {
+      "path": "logs/missing-red.log.gz",
+      "sha256": "fc2eaa469b107d9ac31e6719721f43314456ee4ac6229bd5a4aa7f56e34a123f",
+      "bytes": 345
+    },
+    {
+      "path": "logs/phase-red.log.gz",
+      "sha256": "c5c79ba70dec31f29fec6d620e994b9fb640dc05010b6b5f2062a86a68237db1",
+      "bytes": 343
+    },
+    {
+      "path": "logs/phase-summary-red.log.gz",
+      "sha256": "a0e6513dad37b148552bcca846e95ed0c62a858666eb6c2cf8347b2f5c282418",
+      "bytes": 347
+    },
+    {
+      "path": "logs/python-final.log.gz",
+      "sha256": "69ee09c38962a25f1bf971c05270bbfdae7a551518e16ca3af5739a856f5497d",
+      "bytes": 306
+    },
+    {
+      "path": "logs/relay-green.log.gz",
+      "sha256": "a95f1e3f7f71b2c01235d2bbfec50e0f0f02a54ae4fdf5656402de4fc3b12beb",
+      "bytes": 507
+    },
+    {
+      "path": "logs/relay-red.log.gz",
+      "sha256": "01403f0a887a88055a23a4d40dee600c5e682621f95a0390168cce385ede210c",
+      "bytes": 676
+    },
+    {
+      "path": "logs/review-green.log.gz",
+      "sha256": "295e5fd20efa790f42ced4aa150f5632fd6b17894a24507ded965ae2174b95b3",
+      "bytes": 56
+    },
+    {
+      "path": "logs/review-red.log.gz",
+      "sha256": "96f8a2010ec2eba820689f1fed95bb151054f379e20150d80f49ce711229e523",
+      "bytes": 889
+    },
+    {
+      "path": "logs/swift.log.gz",
+      "sha256": "5bfdf91da0bf4efbee86374134c6e64bc68d2eaad9f4627929a9eb7b287c49ef",
+      "bytes": 3078
+    },
+    {
+      "path": "logs/targets-red.log.gz",
+      "sha256": "3bbbac209a63d34e4cc9f4532cbd769d7b6a10ef68bd9b9589cf7b90ab383598",
+      "bytes": 502
+    },
+    {
+      "path": "logs/timeout-final.log.gz",
+      "sha256": "3199c7734941435f83c0902efcafc423135381cd95b22270367e517cff6b6330",
+      "bytes": 1465
+    },
+    {
+      "path": "logs/timeout-isolated.log.gz",
+      "sha256": "a8029a867a12e886a1e8dc02a03b58f385133da715048b2ae1414d040218b193",
+      "bytes": 2145
+    },
+    {
+      "path": "macos-public-period/01-initial/capture.log.gz",
+      "sha256": "38de0e3e7780f86f8d4c7e130647ee3d3a244febcb9db924764e50472b20872c",
+      "bytes": 3979
+    },
+    {
+      "path": "macos-public-period/01-initial/interpretation.json",
+      "sha256": "14649cbb82e6c0367ff52a3826f4bf74088bb1accce5f2df7e97b51bed9d6dd7",
+      "bytes": 102
+    },
+    {
+      "path": "macos-public-period/01-initial/requests.jsonl.gz",
+      "sha256": "f9acdc3a1547289cfaf4521f474621722f924d15c78caac6ae1ca77edc2df0df",
+      "bytes": 1231
+    },
+    {
+      "path": "macos-public-period/01-initial/runner.json",
+      "sha256": "ffacc2af49c73473198081d34a0bbaf73ed9102cece41aae6456184092bf61ee",
+      "bytes": 582
+    },
+    {
+      "path": "macos-public-period/02-stage-diagnostic/capture.log.gz",
+      "sha256": "1e909da8d8bd2bd009b35a02d8dcd13aa5a13207ff6b271ac566b9f974c6949f",
+      "bytes": 1065
+    },
+    {
+      "path": "macos-public-period/02-stage-diagnostic/interpretation.json",
+      "sha256": "217895bad76da456026a9ac2b1b9721112e28d3bd5df44b19dfba15a1eb9e1b5",
+      "bytes": 99
+    },
+    {
+      "path": "macos-public-period/02-stage-diagnostic/requests.jsonl.gz",
+      "sha256": "31fe0dd0d9fe0564f7016be563d4a19f56fb99bf16ce3286834353493ed71ae7",
+      "bytes": 1117
+    },
+    {
+      "path": "macos-public-period/02-stage-diagnostic/runner.json",
+      "sha256": "40c76896557e4d7b8b026ebbff35e08600ed14ddd2f5d30fa045b05ff51c77d3",
+      "bytes": 582
+    },
+    {
+      "path": "macos-public-period/03-state-diagnostic/capture.log.gz",
+      "sha256": "8b7d8afcfb398dce0bd5cb913bc2e5d45ce48813d02c0651c3013d5488db2a4d",
+      "bytes": 1091
+    },
+    {
+      "path": "macos-public-period/03-state-diagnostic/interpretation.json",
+      "sha256": "5354d7e7717bb914a6dbbecfebabf4df2f228912ce2da168c4ac4a456bc977c3",
+      "bytes": 145
+    },
+    {
+      "path": "macos-public-period/03-state-diagnostic/requests.jsonl.gz",
+      "sha256": "458e57da374946597ba2ef47c8dbddfb9b71c4a29588287e72807f653c4262d6",
+      "bytes": 1040
+    },
+    {
+      "path": "macos-public-period/03-state-diagnostic/runner.json",
+      "sha256": "ab1b98645e2d87496871d3d36a629ee12b4d4f77bda07428c7942471b00fc83b",
+      "bytes": 580
+    },
+    {
+      "path": "macos-public-period/04-state-wait/capture.log.gz",
+      "sha256": "09d765f6e257158fd3ba7d35546499f95831e565971b808c1c8318d7156f61bb",
+      "bytes": 915
+    },
+    {
+      "path": "macos-public-period/04-state-wait/interpretation.json",
+      "sha256": "7650528f020a7d74b862e52753c9e793cfc68a260360b2020db3c15c773f4294",
+      "bytes": 136
+    },
+    {
+      "path": "macos-public-period/04-state-wait/requests.jsonl.gz",
+      "sha256": "6c8386557664ffe9f949bbdce9f134cca59612f830284cf424040b7eaa10aa42",
+      "bytes": 3762
+    },
+    {
+      "path": "macos-public-period/04-state-wait/runner.json",
+      "sha256": "c9d84af645e0ac8d26db73353af5e97513d69efbc5e38943576d3c1abf37577a",
+      "bytes": 585
+    },
+    {
+      "path": "macos-public-period/05-log-flush-import/capture.log.gz",
+      "sha256": "79fec619dedd2a03ed35b1ea64d283ef0c19710d2d8e5cfbe4aa439db47dcc2c",
+      "bytes": 645
+    },
+    {
+      "path": "macos-public-period/05-log-flush-import/interpretation.json",
+      "sha256": "61fb6ac934bddd41778a1c35ae00b8572c0c08ae3ea63c855032846870db4324",
+      "bytes": 126
+    },
+    {
+      "path": "macos-public-period/05-log-flush-import/requests.jsonl.gz",
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "bytes": 20
+    },
+    {
+      "path": "macos-public-period/05-log-flush-import/runner.json",
+      "sha256": "acba746fa186ed9b73953f631ccbd2f96ab3990e7fb851c9ad6e5dec271e9fa0",
+      "bytes": 580
+    },
+    {
+      "path": "macos-public-period/06-complete/capture.log.gz",
+      "sha256": "38bcbc2b44f195733642bb95321655be74b0042ed9ef3e9c2fa481544b92f890",
+      "bytes": 1977
+    },
+    {
+      "path": "macos-public-period/06-complete/interpretation.json",
+      "sha256": "94244225b0fdfbbdfcb5145deadfc7b16a3242c6df911323445ba1d2e5bde96d",
+      "bytes": 127
+    },
+    {
+      "path": "macos-public-period/06-complete/requests.jsonl.gz",
+      "sha256": "a6ef559ed21ed9148f375d84c4a32717577b01ffbb0f135aee04b4d73bef309f",
+      "bytes": 3926
+    },
+    {
+      "path": "macos-public-period/06-complete/runner.json",
+      "sha256": "67863785e1a9903aad15126bd24a03d172fa508972e094cbd8ad77504a20ea9b",
+      "bytes": 585
+    },
+    {
+      "path": "macos-public-period/manifest.mpd",
+      "sha256": "36a7eb35dd512e19141c6dbda51dcc85bf66a908d1728b880aef588aa55ebc50",
+      "bytes": 15471
+    },
+    {
+      "path": "macos-public-period/reproduce.py",
+      "sha256": "7ddd72cfdde91678a2198ab319ef619822034a507bb28d631e23789ec03a2502",
+      "bytes": 2071
+    },
+    {
+      "path": "macos-public-period/verified-summary.json",
+      "sha256": "868618bd71f4b37c80cce24728da82d78cfa4a94beb341a3333f7efcd1846b35",
+      "bytes": 862
+    },
+    {
+      "path": "protocol-smoke/flv.jsonl",
+      "sha256": "e5083f252f501c0681bdc2d6f2156051777bb4dc3088e47b8f70b730c0cb9d63",
+      "bytes": 472
+    },
+    {
+      "path": "protocol-smoke/hls.jsonl",
+      "sha256": "c0415a88519e7d9f829811c00f596aa6cd708897722e30a5da3cdd7339874418",
+      "bytes": 2300
+    },
+    {
+      "path": "protocol-smoke/report.json",
+      "sha256": "68385e2fc8fa45cd00da31809f63f07f7a031dcb1a6aa85c819cfa526b66ac52",
+      "bytes": 2607
+    },
+    {
+      "path": "protocol-smoke/reproduce.py",
+      "sha256": "d38cc5846b6d14c0289632b15114ea561ca405870f8fccbf07193747c18c407e",
+      "bytes": 4408
+    },
+    {
+      "path": "protocol-smoke/rtmp.jsonl",
+      "sha256": "160e37aed4d651ba18721f1447c9606e120f17c1e1e249f1f5c52838a69630d2",
+      "bytes": 477
+    },
+    {
+      "path": "xcode-version.txt",
+      "sha256": "ee3fe26035862d2b9653c1a570be3eca4ee5be2815f0ce99ff2d8ffa3399e4c8",
+      "bytes": 33
+    }
+  ],
+  "results": {
+    "python": {
+      "passed": 65
+    },
+    "dartLive": {
+      "passed": 58
+    },
+    "dartAbrCapture": {
+      "passed": 5
+    },
+    "dartAnalysis": {
+      "files": 6,
+      "issues": 0
+    },
+    "dartFullInitial": {
+      "passed": 2070,
+      "failed": 4
+    },
+    "dartAffectedFirst": {
+      "passed": 82,
+      "failed": 2
+    },
+    "dartAffectedFinal": {
+      "passed": 62,
+      "failed": 0
+    },
+    "android": {
+      "tests": 547,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    "applePolicy": {
+      "passed": 36,
+      "allProductionSwiftCompiled": true
+    },
+    "independentProtocolDecode": {
+      "hls": 0,
+      "flv": 0,
+      "rtmp": 0,
+      "fullWeakPhaseCoverage": false
+    },
+    "macosPublicPeriod": {
+      "result": {
+        "schemaVersion": 1,
+        "runId": "fixed-period-public",
+        "mediaHash": "36a7eb35dd512e19141c6dbda51dcc85bf66a908d1728b880aef588aa55ebc50",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "failureCode": null,
+        "failureType": null,
+        "beforeRollbackAutomatic": false,
+        "afterRollbackAutomatic": false,
+        "outcome": "completed",
+        "stage": "caps-seek",
+        "cleaned": true,
+        "sampleCount": 96,
+        "physicalOutputVerified": false,
+        "capabilityAccepted": false
+      },
+      "sampleCountVerified": true,
+      "requestCount": 89,
+      "phaseBytesWritten": [
+        1068782,
+        23522,
+        0
+      ],
+      "existingPeriodFixed640": true,
+      "missingPeriodAuto320": true,
+      "returnedCappedAuto320": true,
+      "fullWeakNetworkTrajectory": false,
+      "physicalOutputVerified": false,
+      "capabilityAccepted": false
+    }
+  },
+  "commands": {
+    "python": "python3 -B -m unittest discover -s tool/playback_network -p 'test_*.py'",
+    "dartFull": "flutter test --no-pub packages/yl_player_platform_interface/test packages/yl_player/test packages/yl_player_android/test packages/yl_player_apple/test",
+    "dartAffectedFinal": "flutter test --no-pub --concurrency=1 packages/yl_player/test/embedded_vobsub_network_test.dart packages/yl_player/test/network_matroska_test.dart --reporter expanded",
+    "apple": "python3 tool/playback_network/check_live_mode_native.py --flutter-sdk /Users/yy2021_8689/flutter",
+    "androidReproduction": "JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home /Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_android/example/android/gradlew -p packages/yl_player_android/example/android :yl_player_android:testDebugUnitTest",
+    "publicPeriod": "Run macos-public-period/reproduce.py from the repository root with the recorded Flutter SDK",
+    "independentSmoke": "Run protocol-smoke/reproduce.py from repository root with pinned owned fixture/MediaMTX"
+  },
+  "review": {
+    "independentReadOnlyReviews": 1,
+    "importantFindings": 3,
+    "fixed": 3,
+    "deferredMinor": 0,
+    "secondReviewClaimed": false
+  },
+  "limitations": [
+    "Not a single all-green full-suite run; original four failures and all targeted reruns retained",
+    "Java22 initial ByteBuddy failures retained; Java17 matches CI",
+    "Intermediate public diagnostic source versions are not reconstructed; final manifest binds only final source",
+    "Public state/geometry are not independent physical AV evidence",
+    "No three-platform full-trajectory measurement matrix, frozen P08 device thresholds or long-duration/low-end acceptance",
+    "Unknown end-to-end latency, real RTT and media identity stay unavailable; no CAP acceptance"
+  ],
+  "capabilityAccepted": false
+}

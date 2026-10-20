@@ -13,7 +13,10 @@ SOURCE = Path(__file__).resolve().parents[2] / (
 NS = 'urn:mpeg:dash:schema:mpd:2011'
 
 
-def create(output):
+def create(output, missing_high_after=None):
+    if missing_high_after is not None and (type(missing_high_after) is not int or
+                                          not 2 <= missing_high_after <= 9):
+        raise ValueError("missing boundary must follow two compatible Periods")
     output = Path(output)
     assets = load_assets(SOURCE)
     root = ET.fromstring(assets['manifest.mpd'])
@@ -38,6 +41,18 @@ def create(output):
         for name, body in assets.items():
             if name.startswith(source_prefix) and name.endswith('.m4s'):
                 generated[prefix + name.removeprefix(source_prefix)] = body
+        if missing_high_after is not None and index >= missing_high_after:
+            for adaptation in period.findall(f'{{{NS}}}AdaptationSet'):
+                for representation in list(adaptation):
+                    if representation.get('width') == '640':
+                        adaptation.remove(representation)
+                if adaptation.get('contentType') == 'video':
+                    adaptation.set('maxWidth', '320')
+                    adaptation.set('maxHeight', '180')
+            for name in list(generated):
+                if name.startswith(prefix) and (name.endswith('/init-1.m4s') or
+                                                '/chunk-1-' in name):
+                    del generated[name]
         root.append(period)
     root.set('mediaPresentationDuration', 'PT40S')
     ET.register_namespace('', NS)
@@ -52,7 +67,8 @@ def create(output):
     (output / 'SHA256SUMS').write_text(''.join(
         f'{hashlib.sha256(body).hexdigest()}  ./{name}\n'
         for name, body in sorted(generated.items())))
-    return dict(durationSeconds=40, periodCount=10, assetCount=len(generated),
+    return dict(fixedMissingAtMs=missing_high_after*4000 if missing_high_after is not None else None,
+                durationSeconds=40, periodCount=10, assetCount=len(generated),
                 sourceManifestSha256=hashlib.sha256(assets['manifest.mpd']).hexdigest(),
                 manifestSha256=hashlib.sha256(generated['manifest.mpd']).hexdigest(),
                 inventorySha256=hashlib.sha256((output / 'SHA256SUMS').read_bytes()).hexdigest())
@@ -62,5 +78,6 @@ if __name__ == '__main__':
     import json
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--missing-high-after', type=int)
     args = parser.parse_args()
-    print(json.dumps(create(args.output), sort_keys=True))
+    print(json.dumps(create(args.output, args.missing_high_after), sort_keys=True))

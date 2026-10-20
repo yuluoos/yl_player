@@ -50,6 +50,11 @@ class ExperimentTests(unittest.TestCase):
               for i,asset,digest,start in [(1,'manifest.mpd','e'*64,0),
                   (2,f'network-period-8/chunk-{1 if high else 0}-00001.m4s','f'*64,
                    26000 if recovery else 2)]]
+        for row in rows:
+            row['phaseBoundariesMs'] = [0, 10000, 25000]
+            row['phaseBytesWritten'] = [20, 30, 50] if recovery and row['requestId'] == 2 else [100, 0, 0]
+            if recovery and row['requestId'] == 2:
+                row['startMs'] = 0
         contents=dict(capture=''.join('YL_ABR_SAMPLE='+json.dumps(s)+'\n' for s in samples)+
                       'YL_ABR_RESULT='+json.dumps(result)+'\n',
                       requests=''.join(json.dumps(r)+'\n' for r in rows),
