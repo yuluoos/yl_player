@@ -119,3 +119,29 @@ macOS 验收还要求 `owned-all-spaces-window-v1` 与逐像素 `windowVisible=t
 这些是 clear 内容的受控暂停快照，采集会调整显示时钟和验收窗口，不证明未经仪器干预的
 连续显示、受保护读回、物理扬声器/屏幕同步、release 或完整格式矩阵。生产
 解码准入、调度和显示实现不因采集而更改。
+
+### iPhone 冻结构建采集
+
+先用 `integration_test/bound_av_test.dart` 构建已签名的 Debug App，并在原生编译中
+显式添加 `-D YL_BOUND_AV`。随后指定唯一物理设备和已构建 App：
+
+```sh
+python3 -B tool/media_matrix/run_bound_flutter_apple.py \
+  --platform ios --device <UDID> --flutter <flutter-executable> \
+  --app <Debug-iphoneos/Runner.app> --out <new-output-directory>
+```
+
+默认运行固定六控制；`--case <catalog-id> --transport file|http` 运行单格。
+`run_bound_flutter_matrix.py` 接受相同的设备参数，固定保留 44 格（40 必需、2 诊断、
+2 损坏输入），失败或不支持不会缩小分母。一次只让一个采集器使用该设备上的示例 App。
+
+真机通过 Flutter `--no-hot --use-application-binary` 冷启动调试，禁用热重载代码同步。
+CoreDevice 将最多 1 MiB 的一次性计划写入应用临时目录；只有显式验收 Debug 构建读取，
+读取后立即删除，符号链接和无效内容被拒绝。安装产物及实际加载镜像仍由原生验证。
+结果只从本次 UUID 的 appDataContainer 固定文件回收，每次复制使用新的本地目标，
+并验证大小和 runId。采集超时、错误身份、框架失败、复制失败或未收到所属应用的
+`app.stop` 成功回执都不能通过。输出保留原始记录、失败和清理结果供独立重放。
+
+`renderPullAcceptance` 仅表示 AVPlayer source-pull 观测成立，不代表硬件已消费样本；
+缺少该时钟的格仍会返回严格验收失败。设备实跑也不自动关闭 release、最低系统、Intel、
+物理音画同步或软件解码长期热稳定性资格。
