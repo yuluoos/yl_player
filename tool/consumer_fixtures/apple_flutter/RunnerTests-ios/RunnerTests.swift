@@ -86,7 +86,7 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     try backend.activate()
     backend.stop()
-    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/a.mp4", kind: .network))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/a.mp4", kind: .network, formatHint: .mp4))
     XCTAssertEqual(calls, 0)
   }
   func testLoadTokenBelongsToCommittedAVSourceAndRequestStateDoesNotActivate() throws {
@@ -96,7 +96,7 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     backend.emitState()
     XCTAssertFalse(backend.isActive)
-    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/a.mp4", kind: .network, loadRequestId: "17"))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/a.mp4", kind: .network, formatHint: .mp4, loadRequestId: "17"))
     XCTAssertEqual(events.last?["loadRequestId"] as? String, "17")
     XCTAssertThrowsError(try backend.open(YlAppleSourceDescriptor(uri: "", kind: .file, loadRequestId: "18")))
     backend.emitState()
@@ -111,6 +111,8 @@ class RunnerTests: XCTestCase {
   }
 
   private final class StopBarrierSession: YlVTSession {
+    // This test controls allocation; it does not establish physical hardware support.
+    let hardwareEvidence = YlHardwareDecoderEvidence(mode: .hardware)
     let usesHardwareDecoder = true
     private let lock = NSLock()
     private var invalidated = false
@@ -209,7 +211,7 @@ class RunnerTests: XCTestCase {
     XCTAssertEqual((events.last?["state"] as? [String: Any?])?["positionMs"] as? Int64, 0)
     XCTAssertNoThrow(try backend.setVolume(0.25))
     XCTAssertNoThrow(try backend.setPlaybackSpeed(1.5))
-    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/fresh.mp4", kind: .network))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/fresh.mp4", kind: .network, formatHint: .mp4))
     XCTAssertTrue(backend.isActive)
   }
 
@@ -223,12 +225,12 @@ class RunnerTests: XCTestCase {
     defer { backend.dispose() }
     try backend.activate()
     XCTAssertEqual(activationCount, 1)
-    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/first.mp4", kind: .network))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/first.mp4", kind: .network, formatHint: .mp4))
     backend.stop()
     try backend.activate()
     XCTAssertEqual(activationCount, 1, "Lifecycle activation must not reacquire audio after Stop")
     XCTAssertFalse(backend.isActive)
-    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/second.mp4", kind: .network))
+    try backend.open(YlAppleSourceDescriptor(uri: "https://example.test/second.mp4", kind: .network, formatHint: .mp4))
     XCTAssertEqual(activationCount, 2, "A fresh open must establish audio activation again")
     XCTAssertTrue(backend.isActive)
   }

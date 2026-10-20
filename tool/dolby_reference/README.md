@@ -83,3 +83,17 @@ python3 -B tool/dolby_reference/stream_inventory.py \
 ## 参考对应与数值比较工程
 
 `reference_timeline.py` 提供有界 MDF 时间轴、精确有理数帧定位、原始 EXR 头信息和官方校验清单绑定；`pixel_compare.py` 提供预先冻结合同下的多帧/多区域绝对RGB误差比较，以及显示目标/代次变化失效检查。依赖与格式、退出码和信任边界见 [REFERENCE_COMPARISON.md](REFERENCE_COMPARISON.md)。候选输出不能通过验收，数值通过也不会自动更新完整画质/原生信号状态。
+
+
+For actual decoded BL/EL output provenance beyond packet inventory, see
+[decoded alignment](DECODED_ALIGNMENT.md). It verifies parser POC and keeps effective metadata inheritance, target
+quality and physical signalling claims separate.
+
+`stream_inventory.py --mapping` opts into schema 3 and requires an inspector
+built with the matching `--mapping` option. It resolves signalled mapping IDs
+(0–15) in decode order within a fresh epoch, recording coefficient-record SHA
+and the defining packet index. Missing references and contradictory inline/
+reused records fail. `--layers` remains independently selectable. Schema 1/2
+are unchanged without `--mapping`. This resolves reference provenance only;
+`effective_metadata_resolved` remains false because DM/trim inheritance and
+header interpretation are not replaced by mapping-ID lookup.

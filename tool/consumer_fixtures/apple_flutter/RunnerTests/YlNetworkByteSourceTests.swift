@@ -926,7 +926,15 @@ final class YlNetworkByteSourceTests: XCTestCase {
     for format in [YlSourceFormat.hls, .mp4, .mov, .avi, .mpegTs, .mpegPs] {
       let source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network,
         formatHint: format, credentials: ["X-Private": "secret"], networkPolicy: .managed)
-      let result = YlEngineRouter.assess(source)
+      let supported = YlEngineRouter.assess(source)
+      let routes: [YlSourceFormat: YlAppleSourceRoute] = [.mp4: .progressiveMp4, .mov: .progressiveMp4,
+        .avi: .avi, .mpegTs: .transportStream, .mpegPs: .programStream]
+      if let route = routes[format] {
+        XCTAssertNil(supported.rejection)
+        XCTAssertEqual(supported.candidate, route)
+      } else { XCTAssertEqual(supported.rejection?.code, "policy.unsupported") }
+      // Unavailable mechanisms reject before I/O; current implemented formats above are admitted.
+      let result = YlEngineRouter.assess(source, availability: .init())
       XCTAssertEqual(result.rejection?.code, "policy.unsupported")
       XCTAssertNil(result.candidate)
       let failure = YlAppleFailureMapper.message(try XCTUnwrap(result.rejection), scope: .command)

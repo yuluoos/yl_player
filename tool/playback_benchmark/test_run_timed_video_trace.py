@@ -26,6 +26,42 @@ class TraceTailTests(unittest.TestCase):
             with p.open('a') as f:f.write('2}\n')
             self.assertEqual(tail.poll()['n'],2)
 
+class LosslessTraceTailTests(unittest.TestCase):
+    def test_batched_rows_preserve_short_drop_window_before_disposal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)/'rows'
+            rows=[{'phase':'playing','uptime':10,'systemMetrics':{'dropped':0}},
+                  {'phase':'playing','uptime':11,'systemMetrics':{'dropped':1}},
+                  {'phase':'disposed','uptime':12}]
+            p.write_text(''.join(json.dumps(row)+'\n' for row in rows))
+            tail=RowTail(p); detector=trace.SystemDropTrigger()
+            observed=tail.poll_rows()
+            self.assertEqual(observed,rows)
+            events=[event for row in observed if (event:=detector.observe(row))]
+            self.assertEqual(len(events),1)
+            self.assertEqual(events[0]['before']['uptime'],10)
+            self.assertEqual(events[0]['after']['uptime'],11)
+            self.assertEqual(tail.poll_rows(),[])
+
+    def test_bounded_reads_deliver_each_row_once_and_preserve_partial_line(self):
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)/'rows'; rows=[{'n':n,'padding':'x'*1000} for n in range(200)]
+            p.write_text(''.join(json.dumps(row)+'\n' for row in rows)+'{"n":')
+            tail=RowTail(p); observed=[]
+            while tail.offset<p.stat().st_size:
+                previous=tail.offset; observed.extend(tail.poll_rows())
+                self.assertLessEqual(tail.offset-previous,65536)
+            self.assertEqual(observed,rows)
+            with p.open('a') as f:f.write('200}\n')
+            self.assertEqual(tail.poll_rows(),[{'n':200}])
+
+    def test_truncation_is_explicit_failure_instead_of_silent_loss(self):
+        with tempfile.TemporaryDirectory() as directory:
+            p=Path(directory)/'rows';p.write_text('{"n":123}\n')
+            tail=RowTail(p);tail.poll()
+            p.write_text('')
+            with self.assertRaisesRegex(ValueError,'truncated'): tail.poll_rows()
+
 class RecorderLifecycleTests(unittest.TestCase):
     def test_failed_receipt_write_does_not_prevent_cleanup_or_keep_gate(self):
         with tempfile.TemporaryDirectory() as directory:

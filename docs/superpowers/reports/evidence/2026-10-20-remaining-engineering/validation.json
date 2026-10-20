@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "implementationCommit": "c2a16196891f0c3f8472f74afdbd869293fd067f",
+  "baselineCommit": "978c2c5c3872d5570e3bd1a01f1a3d2e80d08f44",
+  "branch": "codex/remaining-engineering",
+  "sourceHash": "69f6e5fc191dc55021a1f96b8a2398f8441eee84deeca9ca57521e1819053b60",
+  "overallAcceptancePassed": false,
+  "releaseReady": false,
+  "foundation": {
+    "pythonExecuted": 633,
+    "pythonSuiteCounts": [
+      76,
+      294,
+      2,
+      20,
+      7,
+      80,
+      21,
+      81,
+      6,
+      7,
+      5,
+      9,
+      5,
+      3,
+      3,
+      4,
+      9,
+      1
+    ],
+    "dartPassed": 2331,
+    "dartSuiteCounts": [
+      137,
+      1705,
+      109,
+      97,
+      1,
+      156,
+      11,
+      48,
+      19,
+      48
+    ],
+    "skips": [
+      "OK (skipped=1)",
+      "OK (skipped=1)"
+    ],
+    "exit": 0,
+    "pythonSkipped": 2,
+    "pythonPassed": 631,
+    "skipReasons": [
+      "optional independent CGL reference",
+      "local historical focused R19 capture absent in isolated worktree"
+    ]
+  },
+  "dolbyExplicitProbeSuite": {
+    "total": 83,
+    "passed": 82,
+    "skipped": 1
+  },
+  "native": {
+    "ios": {
+      "expected": 813,
+      "currentCounts": {
+        "Passed": 779,
+        "Failed": 33,
+        "Skipped": 1
+      },
+      "canonicalIdentityCoverage": true,
+      "singleFreshFullRunPassed": false,
+      "resolvedInitialFailures": [
+        "RunnerTests/testAppManagedAVNeverActivatesAudioSession()",
+        "RunnerTests/testFreshOpenAfterStopReactivatesAudioWithoutLifecycleRevival()",
+        "RunnerTests/testLoadTokenBelongsToCommittedAVSourceAndRequestStateDoesNotActivate()",
+        "YlApplePublicationTests/testFailedCandidateRetainsActiveHlsSessionAndRestoresPublicProjection()",
+        "YlFallbackBackendTests/testRealMkvPreflightEitherPreparesOrReturnsStableHardwareError()",
+        "YlManagedFallbackCharacterizationTests/testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce()",
+        "YlVideoToolboxDecoderTests/testInBandHEVCLocalReactivationKeepsRecoveredFormat()"
+      ],
+      "remainingFailures": [
+        "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+        "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+        "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+        "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+        "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+        "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+        "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+        "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+        "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+        "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+        "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+        "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+        "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+        "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+        "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+        "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+        "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+        "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+        "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+        "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+        "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+        "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+        "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+        "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+        "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+        "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+        "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+        "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+        "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+        "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+        "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+        "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+        "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+      ]
+    },
+    "macos": {
+      "expected": 860,
+      "currentCounts": {
+        "Passed": 860
+      },
+      "canonicalIdentityCoverage": true,
+      "singleFreshFullRunPassed": false,
+      "resolvedInitialFailures": [
+        "RunnerTests/testStopRejectsDecoderCreatedAfterTeardown()",
+        "RunnerTests/testStoppedAVRejectsSourceCommandsButAllowsControlsAndFreshOpen()",
+        "YlDashResourceLoaderTests/testLoadCapsRetainedDashCannotVetoLegacyMp4AfterFallbackChangesAcceptedTuple()",
+        "YlMacosAudioTests/testActualDecodedEOFResourceObservation()",
+        "YlMacosAudioTests/testActualDecodedRepeatedLifecycleResources()",
+        "YlNetworkByteSourceTests/testManagedUnsupportedFormatsRejectBeforeOpeningLoopback()"
+      ],
+      "remainingFailures": []
+    }
+  },
+  "review": {
+    "comprehensiveRounds": 1,
+    "importantFindings": 1,
+    "fixed": 1,
+    "directedFixReviewNewBlockers": 0,
+    "deferredMinors": 0
+  },
+  "realDolby": {
+    "felPairs": 2908,
+    "p5Frames": 6314,
+    "felReorderedPackets": 2114,
+    "mappingReferences": 2908,
+    "realUsePrevious": 0,
+    "effectiveMetadataResolved": false,
+    "independentTargetVerified": false
+  },
+  "abrRecoveryUpshift": false,
+  "timedDownstreamBoundProven": false,
+  "mainModified": false,
+  "reuseBasis": "Only production delta is fixed-fallback quality validation before beginOpen willCommit. Final two-platform run covers host Load, lifecycle/restoration/commands, AirPlay, HLS/DASH host, RTMP host and related real resource probes; all iOS prior failures and modified fixture owners rerun. Direct decoder/demux/renderer algorithms, dependencies, generated API and other languages unchanged. Full initial result and earlier focused repairs retained; no claim of one fresh passing full run.",
+  "readinessChecks": [
+    {
+      "name": "release-readiness",
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "release-required",
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "name": "thresholds",
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "name": "thresholds-required",
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "name": "release-tests",
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tool/playback_benchmark",
+        "-p",
+        "test_release_readiness.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    }
+  ]
+}

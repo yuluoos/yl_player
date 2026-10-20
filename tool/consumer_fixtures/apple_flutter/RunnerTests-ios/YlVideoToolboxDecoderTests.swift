@@ -6,6 +6,8 @@ import YlFFmpegBridge
 
 final class YlVideoToolboxDecoderTests: XCTestCase {
   private final class FakeSession: YlVTSession {
+    // Controlled decoder lifetime evidence; this is not a physical decode probe.
+    let hardwareEvidence = YlHardwareDecoderEvidence(mode: .hardware)
     let usesHardwareDecoder = true
     let output: (YlVTDecodedImage) -> Void
     private(set) var invalidateCount = 0

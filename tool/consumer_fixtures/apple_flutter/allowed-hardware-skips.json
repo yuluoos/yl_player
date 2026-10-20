@@ -21,13 +21,21 @@
       "message": "This simulator runtime does not expose hardware H.264 decoding.",
       "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
       "source": "RunnerTests-ios/YlFallbackBackendTests.swift",
-      "source_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e"
+      "source_sha256": "8fa8ca95900a147474cf43ee139164daacff7edb9e474727a85a2ddc774af047",
+      "preflight_error_reconciliation": {
+        "from_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e",
+        "reason": "Only testRealMkvPreflightEitherPreparesOrReturnsStableHardwareError expected positive-evidence rejection code changes to decoder.unavailable. Every historical conditional skip predicate and message remains byte-for-byte unchanged; no expanded skip."
+      }
     },
     "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()": {
       "message": "This simulator runtime does not expose hardware H.264 decoding.",
       "condition": "Only initial real decoder.video_hardware_unavailable; other errors fail; Simulator only.",
       "source": "RunnerTests-ios/YlFallbackBackendTests.swift",
-      "source_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e"
+      "source_sha256": "8fa8ca95900a147474cf43ee139164daacff7edb9e474727a85a2ddc774af047",
+      "preflight_error_reconciliation": {
+        "from_sha256": "ec97d09a7e6bed716602b36f88626ce45188816c153c1b09cfd80469afa5c56e",
+        "reason": "Only testRealMkvPreflightEitherPreparesOrReturnsStableHardwareError expected positive-evidence rejection code changes to decoder.unavailable. Every historical conditional skip predicate and message remains byte-for-byte unchanged; no expanded skip."
+      }
     },
     "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()": {
       "message": "Simulator VideoToolbox unavailable; no hardware playback claim",

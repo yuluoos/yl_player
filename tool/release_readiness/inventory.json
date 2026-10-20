@@ -283,7 +283,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlLiveReconnectController.swift": "c12d8748fa708fe2a5367a842cc9e9b6efa8fd1def9ecc1923909b86cb4f2985",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "639d04960ba3d8b0221b57c9713d8d1d58f48fdb5f5c988e279ca070e941d785",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerRegistry.swift": "d0f9575d184691cc4b270d8bc1a044eaa0d6f3561dcd52d357417de41c3abb06",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "f977d2bda378a5c9cbc3886a4dee6816e04f2ab0ed64068d2a13e3d6fcc9845e",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "c34e327b43b9ba5ecd46728579043c95ce8d8732c9b560bcdf73c8dc8f42e1f0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift": "ca9916cd2abf206d93cea261f265c225bb91b789c60287294f9647605ca013b4",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleStateReducer.swift": "c052ec2f6464b9548f48b6a738b8b9bbb5287a4f2b83ee10f3ceeb94bec68bad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift": "6d5d8bed04bc376d4df93c2b89d7a134860c1c6adfce70a317d93f6a208ea8c0",
@@ -596,7 +596,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "4800cd8c8991eb32b3bec9b5a9d7f9aca248b38ba870ff02c6de716c81ae2278"
     },
-    "sha256": "9f19de495e72ba8fb7ec3a2f352b04f3db16a14f91e07828db05b1b44a920134"
+    "sha256": "69f6e5fc191dc55021a1f96b8a2398f8441eee84deeca9ca57521e1819053b60"
   },
   "evidence": {
     "p01": {
@@ -643,6 +643,11 @@
       "path": "docs/platform-support.md",
       "sha256": "2696c2a3e49a9c0000ab065c569356cbe095bed37c9d7ea800b5ddcac0dea84b",
       "kind": "report"
+    },
+    "remaining-engineering": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-20-remaining-engineering.md",
+      "sha256": "41ca1615b5d69829c172ee392e89fe0d56a553de9208cbd58a68932ab16595dd"
     }
   },
   "rows": [
@@ -665,10 +670,11 @@
       "verification": "not_run",
       "evidence": [
         "p04",
-        "p01"
+        "p01",
+        "remaining-engineering"
       ],
       "acceptance": null,
-      "nextAction": "run-controlled-weak-network-and-fixed-quality"
+      "nextAction": "resolve-observed-avplayer-recovery-no-upshift-and-run-full-bound-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -787,10 +793,11 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p07"
+        "p07",
+        "remaining-engineering"
       ],
       "acceptance": null,
-      "nextAction": "supply-original-fel-independent-reference-and-tolerance"
+      "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
     },
     {
       "requirement": "CAP-DV-MAP",
@@ -798,10 +805,11 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p07"
+        "p07",
+        "remaining-engineering"
       ],
       "acceptance": null,
-      "nextAction": "supply-original-fel-independent-reference-and-tolerance"
+      "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
     },
     {
       "requirement": "CAP-DV-MAP",
@@ -809,10 +817,11 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p07"
+        "p07",
+        "remaining-engineering"
       ],
       "acceptance": null,
-      "nextAction": "supply-original-fel-independent-reference-and-tolerance"
+      "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
     },
     {
       "requirement": "CAP-DV-OUT",
@@ -820,7 +829,8 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p07"
+        "p07",
+        "remaining-engineering"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -831,7 +841,8 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p07"
+        "p07",
+        "remaining-engineering"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -842,7 +853,8 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p07"
+        "p07",
+        "remaining-engineering"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -1804,7 +1816,8 @@
       "implementation": "partial",
       "verification": "external_missing",
       "evidence": [
-        "p08"
+        "p08",
+        "remaining-engineering"
       ],
       "acceptance": null,
       "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"

@@ -241,7 +241,7 @@ final class YlFallbackBackendTests: XCTestCase {
     } catch {
       XCTAssertEqual(
         (error as? NativePlayerError)?.code,
-        "decoder.video_hardware_unavailable"
+        "decoder.unavailable"
       )
     }
     if let prepared {

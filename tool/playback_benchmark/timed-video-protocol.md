@@ -27,3 +27,9 @@ Final formal runs keep the owned test window at floating level with `canJoinAllS
 New runs require `audioClockProtocol=1`, `audioClockRequired` from the selected audio/candidate context, and an `audioClock` object on every row. Required audio must prove `isolated=true`, positive integer `samples`, nonnegative integer rejection/stale counters, zero `staleEvents`, finite nonnegative read/age maxima, and `maximumAgeSeconds<=0.1`. These are cumulative actual sampler counters, including disposed rows. Video worker gaps and native read time are independent; a long blocked read cannot pass by hiding clock expiry. No-audio paths explicitly record `required=false`.
 
 `run.json.audioClockProtocolRequired=true` prevents missing protocol fields from opting new runs into legacy validation. Historical archives keep their original records and validator mode; no inferred true/zero fields are added. Performance runs remove RPAC only in their copied manifest and must prove it absent in every runtime row; daily diagnostics remain enabled.
+
+The trace runner consumes every complete JSONL observation, including multiple
+rows appended between polls. Reads are capped at 64 KiB and individual rows at
+1 MiB; truncation fails explicitly. A final disposal row cannot hide a preceding
+system-drop interval. This collector correction does not establish the cause of
+historical renderer backpressure or admit the candidate.

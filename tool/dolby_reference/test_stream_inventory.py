@@ -33,6 +33,28 @@ def parsed():
 
 
 class StreamInventoryTests(unittest.TestCase):
+    def test_mapping_references_are_resolved_before_presentation_reordering(self):
+        rows=[dict(packet_index=0,pts=2,dts=0,rpu_sha256='a'*64),
+              dict(packet_index=1,pts=1,dts=1,rpu_sha256='b'*64)]
+        first=dict(parsed(),mapping={'vdr_rpu_id':3,'curves':[1]},previous_mapping_id=None)
+        reuse=dict(parsed(),mapping=None,previous_mapping_id=3,use_previous_mapping=True)
+        trace=io.BytesIO()
+        result=summarize(rows,[first,reuse],time_base='1/24',media_sha256='f'*64,
+                         trace_sink=trace,include_mapping=True)
+        decoded=[json.loads(line) for line in trace.getvalue().splitlines()]
+        self.assertEqual(result['schema_version'],3)
+        self.assertTrue(result['mapping_reference_ids_resolved'])
+        self.assertFalse(result['effective_metadata_resolved'])
+        self.assertEqual(decoded[0]['packet_index'],1)
+        self.assertEqual(decoded[0]['mapping_reference']['mapping_source_packet_index'],0)
+
+    def test_mapping_rejects_rows_reordered_before_resolution(self):
+        rows=[dict(packet_index=1,pts=1,dts=0,rpu_sha256='a'*64),
+              dict(packet_index=0,pts=0,dts=1,rpu_sha256='b'*64)]
+        value=dict(parsed(),mapping={'vdr_rpu_id':0},previous_mapping_id=None)
+        with self.assertRaises(InspectionError):
+            summarize(rows,[value,value],time_base='1/24',media_sha256='f'*64,include_mapping=True)
+
     def test_hvcc_length_size_is_read_from_bytes_not_assumed(self):
         for size in [1, 2, 3, 4]:
             hvcc = bytearray(23); hvcc[0] = 1; hvcc[21] = 0xfc | (size - 1)

@@ -225,6 +225,8 @@ final class YlApplePublicationTests: XCTestCase {
     let accepted = try await host.load(request: request)
     try await AppleHostCharacterizations.waitFor({ !callbacks.frames.isEmpty }, timeout: 10)
     let item = try XCTUnwrap(av.currentItem)
+    var candidateCommitCount = 0
+    host.willCommit = { _ in candidateCommitCount += 1 }
     let rejected = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia())
     defer { rejected.close() }
     do {
@@ -235,11 +237,8 @@ final class YlApplePublicationTests: XCTestCase {
       XCTAssertEqual(error.code, "decoder.quality_constraint_unsupported")
     }
     XCTAssertEqual(host.sessionId, accepted.sessionId)
-    #if os(iOS)
-    XCTAssertTrue(av.currentItem === item, "iOS must keep the actual retained AV/HLS item on rollback")
-    #else
-    _ = item
-    #endif
+    XCTAssertEqual(candidateCommitCount, 0, "Reject a known impossible constraint before retiring any accepted engine")
+    XCTAssertTrue(av.currentItem === item, "Failed preflight must retain the actual AV/HLS item")
     try await AppleHostCharacterizations.waitFor({ host.isActive && host.playbackIntent }, timeout: 10)
     try await Task.sleep(nanoseconds: 200_000_000)
     XCTAssertEqual(host.initialState.sessionId, accepted.sessionId)
