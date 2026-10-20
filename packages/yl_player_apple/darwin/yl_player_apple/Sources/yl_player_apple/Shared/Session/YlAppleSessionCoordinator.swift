@@ -476,6 +476,15 @@ final class YlAppleSessionCoordinator: NSObject {
             message: "The Apple player has been disposed."
           )
         }
+        // Reject known fixed-stream limits before willCommit can quiesce this
+        // session or peer decoders. Construction keeps its own defensive check.
+        if case let .fallback(_, prepared) = candidate {
+          try YlFallbackQualityPolicy.validate(
+            constraint: YlFallbackQualityConstraint(validating: loadConstraints),
+            stream: .init(width: Int(prepared.videoStream.width),
+                          height: Int(prepared.videoStream.height), bitrate: nil)
+          )
+        }
         let rollbackPlaybackIntent = self.currentPlaybackIntent
         willCommit(candidate.requiresHardwareDecoderLease)
         do {

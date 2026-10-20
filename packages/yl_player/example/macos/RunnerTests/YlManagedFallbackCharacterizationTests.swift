@@ -1117,7 +1117,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let reply = try await f.load(hardwareRequest("positive"))
     XCTAssertEqual(publicCommitCount, 1)
     XCTAssertEqual(factory.sessions.count, 1, "Commit must adopt the exact proven decoder")
-    await f.settle()
+    try await AppleHostCharacterizations.waitFor { f.callbacks.states.contains { $0.sessionId == reply.sessionId } }
     let published = f.callbacks.states.filter { $0.sessionId == reply.sessionId }
     XCTAssertFalse(published.isEmpty)
     XCTAssertTrue(published.allSatisfy { $0.decoderMode == .hardware }, "Strict public commit must never expose an unknown placeholder")

@@ -303,14 +303,22 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     XCTAssertGreaterThanOrEqual(f.host.initialState.timeline.positionMs, 2_950)
     XCTAssertNil(f.host.initialState.failure)
     rejectCandidate = false
-    let fresh = try await f.load(AppleHostFixture.request("persistent-av"))
+    // This continuation actually plays. A placeholder network URL can fail
+    // between Load and Play and cannot establish persistent-control behavior.
+    let mp4 = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().appendingPathComponent("assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var freshRequest = AppleHostFixture.request("persistent-av")
+    freshRequest.source.kind = .file; freshRequest.source.locator = mp4.path
+    let fresh = try await f.load(freshRequest)
     try await f.host.play(command: .init(sessionId: fresh.sessionId))
+    try await AppleHostCharacterizations.waitFor({ f.av.rate == 1.5 || f.host.initialState.failure != nil })
+    XCTAssertNil(f.host.initialState.failure)
     XCTAssertEqual(f.av.volume, 0.2, accuracy: 0.001)
     XCTAssertEqual(f.av.rate, 1.5, accuracy: 0.001)
   }
 
   /// Exercise the iOS retention policy with real macOS media services. Managed
-  /// candidates still require the exclusive decoder lease introduced by P04.
+  /// candidates reject known impossible limits before retiring that lease.
   func testRetainedTransactionEarlyQualityFailurePreservesAcknowledgedPauseAndSeek() async throws {
     try await retainedTransactionEarlyFailure(newerSeek: false)
   }
@@ -323,13 +331,9 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     let server = try ReactivationMediaServer(data: AppleHostCharacterizations.fixtureMedia()); defer { server.close() }
     let commands = YlAsyncCommandCoordinator()
     var observingFailure = false
-    var former: YlPlaybackBackend?
-    let f = AppleHostFixture(commandCoordinator: commands, beforeFallbackConstruction: { backend in
-      if observingFailure {
-        XCTAssertFalse(backend.isActive, "Managed candidates release the former decoder lease before construction, including under the iOS retention policy")
-        XCTAssertTrue(backend is YlFallbackBackend)
-        former = backend
-      }
+    var candidateConstructions = 0
+    let f = AppleHostFixture(commandCoordinator: commands, beforeFallbackConstruction: { _ in
+      if observingFailure { candidateConstructions += 1 }
     }, slotCompatibility: .init(platform: .ios)); defer { f.host.close() }
     let loaded = try await f.load(AppleHostFixture.request("retained-current", url: server.url.absoluteString, format: .matroska, autoplay: true))
     try await AppleHostCharacterizations.waitFor({ f.host.initialState.timeline.positionMs > 50 })
@@ -345,10 +349,11 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
       _ = try await f.load(AppleHostFixture.request("valid-unplayable-width", url: server.url.absoluteString, format: .matroska, width: 1))
       XCTFail("Media cannot satisfy the valid positive width constraint")
     } catch { XCTAssertEqual((error as NSError).domain, "decoder.quality_constraint_unsupported") }
-    XCTAssertFalse(try XCTUnwrap(former).isActive, "Network rollback reconstructs asynchronously; the former decoder must remain retired")
-    XCTAssertEqual(f.output.clears, clears + 1, "Exclusive managed replacement clears former output exactly once before rollback")
+    XCTAssertEqual(candidateConstructions, 0, "Known impossible limits fail before candidate construction")
+    XCTAssertTrue(f.host.isActive, "Early rejection keeps the accepted engine active")
+    XCTAssertEqual(f.output.clears, clears, "Early rejection must not retire accepted output")
     XCTAssertEqual(f.host.sessionId, loaded.sessionId)
-    XCTAssertFalse(f.host.playbackIntent, "Acknowledged Pause survives exclusive candidate failure and rollback activation")
+    XCTAssertFalse(f.host.playbackIntent, "Acknowledged Pause survives early rejection without engine retirement")
     XCTAssertNil(f.host.initialState.failure)
     XCTAssertTrue(commands.hasCurrent)
     if newerSeek { try f.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 4_500)) }
