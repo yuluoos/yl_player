@@ -14,8 +14,10 @@ case "$mode" in
     ;;
 esac
 
-release_version=0.3.0-dev.1
-package_names='yl_player_platform_interface yl_player_android yl_player_apple yl_player'
+core_release_version=0.3.0-dev.1
+apple_release_version=0.3.0-dev.2
+source_resolver_release_version=0.3.0-dev.2
+package_names='yl_player_platform_interface yl_player_android yl_player_apple yl_player_source_resolver yl_player'
 log_root=${YL_PUBLICATION_LOG_DIR:-}
 cleanup_logs=0
 if [ -z "$log_root" ]; then
@@ -29,9 +31,14 @@ fi
 
 for package_name in $package_names; do
   package="packages/$package_name"
+  case "$package_name" in
+    yl_player_apple) expected_version=$apple_release_version ;;
+    yl_player_source_resolver) expected_version=$source_resolver_release_version ;;
+    *) expected_version=$core_release_version ;;
+  esac
   actual_version=$(awk '$1 == "version:" { print $2; exit }' "$package/pubspec.yaml")
-  if [ "$actual_version" != "$release_version" ]; then
-    echo "$package_name version is $actual_version; expected $release_version" >&2
+  if [ "$actual_version" != "$expected_version" ]; then
+    echo "$package_name version is $actual_version; expected $expected_version" >&2
     exit 1
   fi
   for required in README.md CHANGELOG.md LICENSE; do
@@ -46,27 +53,34 @@ if grep -nE '^[[:space:]]+path:' \
   packages/yl_player/pubspec.yaml \
   packages/yl_player_platform_interface/pubspec.yaml \
   packages/yl_player_android/pubspec.yaml \
-  packages/yl_player_apple/pubspec.yaml; then
+  packages/yl_player_apple/pubspec.yaml \
+  packages/yl_player_source_resolver/pubspec.yaml; then
   echo 'Publishable packages contain path dependencies.' >&2
   exit 1
 fi
 
 for dependency in yl_player_platform_interface yl_player_android yl_player_apple; do
-  if ! grep -Eq "^[[:space:]]+$dependency: \^$release_version$" \
+  if ! grep -Eq "^[[:space:]]+$dependency: \^$core_release_version$" \
     packages/yl_player/pubspec.yaml; then
-    echo "yl_player must constrain $dependency to ^$release_version" >&2
+    echo "yl_player must constrain $dependency to ^$core_release_version" >&2
     exit 1
   fi
 done
-for package in packages/yl_player_android packages/yl_player_apple; do
-  if ! grep -Eq "^[[:space:]]+yl_player_platform_interface: \^$release_version$" \
+for package in \
+  packages/yl_player_android \
+  packages/yl_player_apple \
+  packages/yl_player_source_resolver; do
+  if ! grep -Eq "^[[:space:]]+yl_player_platform_interface: \^$core_release_version$" \
     "$package/pubspec.yaml"; then
-    echo "$package must constrain yl_player_platform_interface to ^$release_version" >&2
+    echo "$package must constrain yl_player_platform_interface to ^$core_release_version" >&2
     exit 1
   fi
 done
 
-for example in packages/yl_player/example packages/yl_player_android/example; do
+for example in \
+  packages/yl_player/example \
+  packages/yl_player_android/example \
+  packages/yl_player_source_resolver/example; do
   publish_to=$(awk '$1 == "publish_to:" { value=$2; gsub(/[\047\"]/, "", value); print value; exit }' "$example/pubspec.yaml")
   if [ "$publish_to" != none ]; then
     echo "$example must remain publish_to: none." >&2
@@ -130,4 +144,4 @@ for required in \
   fi
 done
 
-echo "Publication gate passed for four synchronized $release_version packages."
+echo "Publication gate passed for all publishable packages."
