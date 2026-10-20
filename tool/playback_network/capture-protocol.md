@@ -181,3 +181,11 @@ command, source hashes and server receipt together. The phone needs access to
 that LAN and must allow local networking. This does not alter production URLs.
 HLS capture performs 16 pairs of rapid low/smooth requests to expose native
 command-admission ordering; FLV/RTMP use one pair to respect recovery budgets.
+
+For a physical iPhone, use `flutter test --no-uninstall` during a capture batch
+so Local Network consent survives between cases. The default uninstall resets
+consent; a permission dialog can also interrupt an in-flight mode command.
+The live result retains at most 32 application lifecycle transitions with the
+public capture clock, so background interruptions remain distinguishable from
+a foreground transaction failure. Complete platform permission setup before
+timing a comparable experiment. Keep failed preflight/cancelled runs separately.

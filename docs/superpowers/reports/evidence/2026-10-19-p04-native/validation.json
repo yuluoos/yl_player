@@ -1,0 +1,111 @@
+{
+  "schemaVersion": 1,
+  "base": "c218d52bc28c367286d246fd0b8ef1a4fafd281a",
+  "implementationCommits": [
+    "7a30890c",
+    "f79308a4",
+    "13c8e4b6",
+    "1a2f627c"
+  ],
+  "fullP04Accepted": false,
+  "physicalOutputVerified": false,
+  "comparablePerformanceBaseline": false,
+  "endToEndLatencyUs": null,
+  "archive": {
+    "path": "captures.tar.gz",
+    "sha256": "71e0b15b58d68e6212c5ceb9568ddaf48e42c53e8cbbe3d1ab3f32ae57259409",
+    "fileCount": 568,
+    "runCount": 57
+  },
+  "verifiedLiveRuns": [
+    "p04-macos-hls-ordered",
+    "p04-macos-flv-exclusive",
+    "p04-macos-rtmp-expanded",
+    "p04-android-hls-2",
+    "p04-android-flv-1",
+    "p04-android-rtmp-expanded",
+    "p04-ios-hls-ordered",
+    "p04-iphone-hls-live",
+    "p04-iphone-flv-exclusive-6",
+    "p04-iphone-rtmp-exclusive-6"
+  ],
+  "verifiedAbrCaptures": [
+    "p04-auto-aligned-1",
+    "p04-caps-aligned-1",
+    "p04-fixed-aligned-1",
+    "p04-android-auto-2",
+    "p04-android-caps-1",
+    "p04-android-fixed-1",
+    "p04-ios-auto-1",
+    "p04-ios-caps-1",
+    "p04-ios-fixed-1",
+    "p04-ios-auto-80s-1"
+  ],
+  "verifiedRtmpRecoveryRuns": [
+    "p04-macos-rtmp-low-recovery-2",
+    "p04-android-rtmp-low-recovery-2",
+    "p04-iphone-rtmp-exclusive-6-recovery"
+  ],
+  "abrAdaptationObserved": {
+    "p04-auto-aligned-1": true,
+    "p04-android-auto-2": true,
+    "p04-ios-auto-1": false,
+    "p04-ios-auto-80s-1": false
+  },
+  "suites": [
+    {
+      "name": "Python network tools",
+      "passed": 47,
+      "log": "logs/network-final.log"
+    },
+    {
+      "name": "Apple native P04 policy",
+      "passed": 58,
+      "log": "logs/apple-native-exclusive-green.log"
+    },
+    {
+      "name": "Apple Dart",
+      "passed": 129,
+      "log": "logs/apple-dart-root-final.log"
+    },
+    {
+      "name": "Android JVM",
+      "passed": 545,
+      "skipped": 3,
+      "log": "logs/android-jvm-jdk17.log"
+    },
+    {
+      "name": "capture Dart base",
+      "passed": 10,
+      "log": "logs/capture-dart-final.log"
+    },
+    {
+      "name": "live capture private host",
+      "passed": 9,
+      "log": "logs/live-private-host-green.log"
+    }
+  ],
+  "analysis": [
+    "logs/final-capture-analyze-2.log",
+    "logs/lifecycle-analyze.log"
+  ],
+  "review": {
+    "range": "c218d52b..13c8e4b6",
+    "confirmedFindings": 0,
+    "file": "final-review.md",
+    "laterDeviceFixIndependentlyReviewed": false
+  },
+  "remaining": [
+    "iOS automatic recovery upshift was not observed in either 40s or 80s captures",
+    "physical A/V and sync qualification",
+    "trusted source/display clock if end-to-end latency is required",
+    "frozen P08 targets and comparable repeated cold/warm runs",
+    "long background backlog, low-tier/minimum OS/Intel matrix"
+  ],
+  "evidenceLimits": [
+    "All attempts, including failures and timeouts, remain in runs.json and the archive.",
+    "Some early runs lack per-run source hashes; source-identity.json describes final source, not every historical build.",
+    "Android and iOS DASH here use simulators; iPhone live and hardware HTTP-FLV are separate physical-device runs.",
+    "Public clock/geometry/frame observations do not prove physical audio/display output."
+  ]
+}

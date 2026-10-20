@@ -688,3 +688,11 @@ JS-07 仅固定受控测试时钟，保留原脚本和历史摘要。TVS 新增�
 
 
 2026-10-16 P03工程收尾：严格progressive与Opus/Vorbis/VP9策略路径及EOF竞争依赖已实现，macOS原生108/iOS共用39项通过，最终同构建公开完整矩阵37/40。AV1当前硬件、AVPlayer硬件消费观测和物理/最低系统/Intel/持续热资格仍开放，生产软件准入保持关闭；不将完整CAP标完成。见[P03报告](../reports/2026-09-26-remaining-03-formats-decoding.md)。
+
+### 2026-10-19 P04 实播修复与定量采集
+
+Android/macOS auto/caps/fixed 的受控弱网采集及三协议模式生命周期已执行；
+修复暂停意图、低延迟长暂停积压、macOS HLS 恢复与 Apple 快速请求乱序。
+iOS 模拟器 HLS 连续切换、iPhone 三协议生命周期通过；修复真机候选独占解码器交接及取消错误覆盖。iOS caps/fixed 通过，auto 在 40/80 秒采集中只观察到降档。恢复升档、完整物理输出、
+重复测量与 P08 SLO 仍开放，不能标记整个 CAP-ABR/CAP-LIVE 完成。见
+[P04 最新报告](../reports/2026-09-26-remaining-04-abr-live.md#2026-10-19真实弱网与三协议生命周期续做)。
