@@ -1,0 +1,2033 @@
+{
+  "branch": "codex/p02-tracks-subtitles",
+  "branchHead": "db769ffd042c982cc1676a87839b47a7e124e55e",
+  "mainBeforeCleanup": "eaebd8f9ad56fa1bd4ef00783ab293a80a7bb9e9",
+  "worktree": "/Users/yy2021_8689/.codex/worktrees/p02-tracks-subtitles/yl_player",
+  "appArchiveAvailable": false,
+  "appReason": "This worktree is owned by another task.",
+  "archiveMethod": "Repository-private verified incremental Git bundle plus exact ignored-file tar archive",
+  "privateArchive": "/Users/yy2021_8689/Desktop/Flutter/yl_player/.git/codex-archives/p02-tracks-subtitles-20261020",
+  "bundlePrerequisite": "989fb83ddfe42ae8185ddf3c24cb8961db272314",
+  "preservedIgnoredFiles": [
+    {
+      "path": ".flutter-plugins-dependencies",
+      "bytes": 777,
+      "sha256": "5205d89776b8b9261fe8da9af707216a8e8d544738401e138f25fd721ce72469"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/analyze-full-final.log",
+      "bytes": 96,
+      "sha256": "2015391ff0dba85fde4b76d3ba996f5b29246d41594a71de67a2482b034068aa"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/analyze-full.log",
+      "bytes": 298,
+      "sha256": "91eb1640c775fbc7fa01b1a55e463db68e7831ea02258a2431feb008d329b984"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/android-composition-20261020-005238/cleanup.json",
+      "bytes": 30,
+      "sha256": "aa5dd0ee4ab9b7bd3dba2d7ab3c51f333ec9219f2cf9eacef7d5dd6401f3338f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/android-composition-20261020-005238/command.json",
+      "bytes": 159,
+      "sha256": "da94a3c22ff52e987f4ae5e4eeebcbf73a7b30c64bb18491c4b30101d5ca0519"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/android-composition-20261020-005238/exit-code",
+      "bytes": 1,
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/android-composition-20261020-005238/test.log",
+      "bytes": 6023,
+      "sha256": "c79058d496155ffb75578111651f3e43b1cb21c5c250c98f11ab8de0d1ae75f2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/baseline.log",
+      "bytes": 6205,
+      "sha256": "511d51f783b8f533cd4e295c7147381eaa205040211e81d08aacdaf2af69f332"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/completed-seek-green.log",
+      "bytes": 5579,
+      "sha256": "ea127bbd24f971ebaa2a43678860c003c27b415b7aa2aa4d3a9f24ce4a892179"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/completed-seek-red-repeat.log",
+      "bytes": 2631,
+      "sha256": "30e0df1b0f704119ced1e69e2fb6e554c33fb695efd07657004564fc80216dbe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/completed-seek-red.log",
+      "bytes": 2631,
+      "sha256": "30e0df1b0f704119ced1e69e2fb6e554c33fb695efd07657004564fc80216dbe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/dart-full.log",
+      "bytes": 402929,
+      "sha256": "e1ae1d063e79e9f118a2e83ee152b000d2c04f996d5de7ed5070e0bd378d01dd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/device-analyze.log",
+      "bytes": 96,
+      "sha256": "e54f6263d7a6c6c4e00414de0f45bf92af379284cc17cb80d97b99804b2e2cfa"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/final-cleanup.json",
+      "bytes": 308,
+      "sha256": "53cc7da3497ffa5f860c62c269ba7b8cd8e64963deef1e5390480cc11650b3fd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/format.log",
+      "bytes": 214,
+      "sha256": "c029fc4bca83379eb7678be149e912d9752a3c7df7c9a8080d0615c5cc2e75a4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/initial-command-error.log",
+      "bytes": 713,
+      "sha256": "6b2f063f219d9761eb724ed70e74d5667f8f460973867f0934c48d4c76d29a21"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/integration-analyze.log",
+      "bytes": 556,
+      "sha256": "3c79f498fc21e0dfc572734946add770d620b3b22363ba46190f4c81c71a6f65"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-002956/capture.log",
+      "bytes": 4391,
+      "sha256": "df54d9ffda8650a991fac7aee728073919e67f8fd2c88fddadfe95348995a6e6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-002956/cleanup.json",
+      "bytes": 24,
+      "sha256": "9832bf292a9cc41f0a37d4fbedea88cb14d02e0fbdac4339853b807cab9a90f7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-002956/command.json",
+      "bytes": 193,
+      "sha256": "b5f563d14076f52cb582ed0ec3e68439288e2c5e314e080f2c8f54def0fb5787"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-002956/exit-code",
+      "bytes": 1,
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-002956/source-hashes.json",
+      "bytes": 449,
+      "sha256": "75ff1c758fdd903530708e5468dc9997dcdbdf06646f2e55db92006f4f34a70a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-003231/capture.log",
+      "bytes": 4404,
+      "sha256": "aeaecf6a56a9c95dddcc617c3eb51c303ced89e8d5bd6ccb3e228da26d514fae"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-003231/cleanup.json",
+      "bytes": 24,
+      "sha256": "9832bf292a9cc41f0a37d4fbedea88cb14d02e0fbdac4339853b807cab9a90f7"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-003231/command.json",
+      "bytes": 193,
+      "sha256": "b5f563d14076f52cb582ed0ec3e68439288e2c5e314e080f2c8f54def0fb5787"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-003231/exit-code",
+      "bytes": 1,
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-003231/source-hashes.json",
+      "bytes": 449,
+      "sha256": "0cebdd936b0b91c59254f4ffbd257405785c85a0f7d5f095701ad645a1d07d45"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/capture.log",
+      "bytes": 15204,
+      "sha256": "1b2351059a2d630b82112105fb3b70e444644b3e4134c36c8a2a59e4832f68d0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/cleanup.json",
+      "bytes": 54,
+      "sha256": "0b02794628085ca519d68ebcd862e61f8a619b245fddb5a7d8c86bf87eea3e0a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/command.json",
+      "bytes": 336,
+      "sha256": "dcbdf650472b3ebd8d42b527a1b81005def78adab8ea7c6e5a60b709e8b32677"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/exit-code",
+      "bytes": 1,
+      "sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/helper-errors.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/helper-start.json",
+      "bytes": 79,
+      "sha256": "7771719ca41af44bda289c0645377d3a8823a951120bf6eca273d0d898a39d4f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/helper.log",
+      "bytes": 13227,
+      "sha256": "a398d095b858e6f94d7106ff0f99e3ec47d35a77b039d492295cd7d06f3adbd2"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/001.png",
+      "bytes": 83988,
+      "sha256": "5f845e81ba48a8da5ce354bf111ab7e1ad104e8f68b63d55f9805b036b69b10c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/002.png",
+      "bytes": 87421,
+      "sha256": "3a5012e7b79572e9ca2ad3c5920f9a63c3561d89b134c7bb67ebdbeef419d9d0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/003.png",
+      "bytes": 87421,
+      "sha256": "3a5012e7b79572e9ca2ad3c5920f9a63c3561d89b134c7bb67ebdbeef419d9d0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/004.png",
+      "bytes": 83963,
+      "sha256": "194c19451438b0b54a472e05f772c4d8bc727eb35bcdca62861f06c64661a304"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/005.png",
+      "bytes": 263789,
+      "sha256": "71ec904cf14dba9b068c65c84dbd0c7c485b412f3d0babb05e15a84247051a25"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/006.png",
+      "bytes": 87421,
+      "sha256": "3a5012e7b79572e9ca2ad3c5920f9a63c3561d89b134c7bb67ebdbeef419d9d0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/007.png",
+      "bytes": 83963,
+      "sha256": "194c19451438b0b54a472e05f772c4d8bc727eb35bcdca62861f06c64661a304"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/008.png",
+      "bytes": 87399,
+      "sha256": "9059304162ddb0038f0813988b9b62581bd6925b9460eb0dd407e4af2714cc2f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/009.png",
+      "bytes": 206693,
+      "sha256": "b0efb408131b772a3714c39a8544e8f867bba60b6a183b8b5045a1d3d044c5cb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/010.png",
+      "bytes": 83963,
+      "sha256": "194c19451438b0b54a472e05f772c4d8bc727eb35bcdca62861f06c64661a304"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/011.png",
+      "bytes": 95255,
+      "sha256": "c9414c951ebaab643b3aa450cee9ae7d8f77ada0caad33bb0ae191e4d8067565"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/012.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/013.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/014.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/015.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/016.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/017.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/018.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/019.png",
+      "bytes": 83492,
+      "sha256": "27de7fc562313e7daa7f53d1cb697809b6821ca12c98b707a04e1bc15739281b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/020.png",
+      "bytes": 83492,
+      "sha256": "27de7fc562313e7daa7f53d1cb697809b6821ca12c98b707a04e1bc15739281b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/021.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/022.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/023.png",
+      "bytes": 83553,
+      "sha256": "024c1bbf3c5886079590321ff5c5bb7a01c3223615d562847702f3ede7a01ebe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/024.png",
+      "bytes": 83553,
+      "sha256": "024c1bbf3c5886079590321ff5c5bb7a01c3223615d562847702f3ede7a01ebe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/025.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/026.png",
+      "bytes": 286280,
+      "sha256": "f55bd6c93f55e5c9c58fb51ee8fe1c645aab8c1489194831c464544d3f4527c1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/027.png",
+      "bytes": 285050,
+      "sha256": "f8547bf20b4380f87903e0311a5de0e985f11b2db4e643a4546f612b04beb736"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/028.png",
+      "bytes": 273731,
+      "sha256": "7c508b8c038865cb1127b5aaeb7d5712ab005ec8e4a39dc796861892b972d3f3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/029.png",
+      "bytes": 217096,
+      "sha256": "5788ad0e2b4115d264b5e72f84b7472f5615e6facfcd4fcfc736d409a76224e8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/030.png",
+      "bytes": 119587,
+      "sha256": "7f8eb1c62c5dd2696fec476932345ddeb7a8b4ef3240866223805a0829d6692a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/031.png",
+      "bytes": 104400,
+      "sha256": "6a31ba2579c4aa8515ce67ce9cf7b309b5ffd04750ce84d230ff3883d6e944e8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/032.png",
+      "bytes": 112100,
+      "sha256": "3f85bcfd877fc87d81732b050f1db6806f65aa80b0cd8b69ab539f10b19544b3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/033.png",
+      "bytes": 101928,
+      "sha256": "8b7ab994cf91cf9486f28cbe50469662f53df0ba6fcc58523264bf02ef0d5bfd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/034.png",
+      "bytes": 103849,
+      "sha256": "3806131bd5c2951c6da8c268da0c3539947932b9aca4e9fddbf00937ad4221cc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/035.png",
+      "bytes": 124838,
+      "sha256": "07d5163140bf37111dca99aa47f09fc6ed36e515b8836a45a29124d54320a31a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/036.png",
+      "bytes": 106902,
+      "sha256": "13054611fb3076480a466d2b8dd259fa848be27fbda1389d44160a72f3483b17"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/037.png",
+      "bytes": 116545,
+      "sha256": "079a2ce15561166669d39684cc1c84512b124fe88b5e3b0901b112e29b52d183"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/038.png",
+      "bytes": 104366,
+      "sha256": "fa2a5a3b82a8f07828bbe98d40423802a02e18172c4f96f47817d724aa3c3734"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/039.png",
+      "bytes": 106446,
+      "sha256": "3da1ea360764791addd033fbc70a3f09c44d0d90cf04179b01e4fe581bc01fed"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/040.png",
+      "bytes": 120492,
+      "sha256": "69cd16f37c44cc6442d36ec583df463f712486bc4e669b39c094fe814b88596b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/041.png",
+      "bytes": 104205,
+      "sha256": "49940cdfbf65b26e3e245c144ca22ef1bf157a55812ceacc5234e082a8c931b3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/042.png",
+      "bytes": 111174,
+      "sha256": "6ce5a08e6c2e7e4026f6c1615a55e50dd69dc03fdd9cf9e026072f209d0c84f3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/043.png",
+      "bytes": 102021,
+      "sha256": "fde34127ae4496e9ae8945f7f8860029205930e4ddff584d069af3901eb25f4b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/044.png",
+      "bytes": 111579,
+      "sha256": "5268533b88af56c4cbacb85ce18707160c45059148282a64999fe5cd98d7fbb6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/045.png",
+      "bytes": 130111,
+      "sha256": "777e7cdf67090bba7389261a94289a55eb53a470b9fd7378b3a58940c797d25c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/046.png",
+      "bytes": 105618,
+      "sha256": "891b05519d82c5df2fd3936e10c58e616d5bf24471b027237538da50bead1145"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/047.png",
+      "bytes": 122928,
+      "sha256": "853137a4f9e171077684c4ca8282a77fb28bc29a1300faf08725376e3f1ea2a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/048.png",
+      "bytes": 103119,
+      "sha256": "1128bea7c5316e9728ba7c9caee64c402ae733fbaf0db8aba99031681ade29ca"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/049.png",
+      "bytes": 104973,
+      "sha256": "13f39fbee651ae340e224f05caa5ddd676200bc36b480c1ec8e3298038d35c35"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/050.png",
+      "bytes": 130525,
+      "sha256": "dd2a52ab3f1780da8254b911227d2d484fc6249947d567e58411a00771950686"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/051.png",
+      "bytes": 105667,
+      "sha256": "032ee02dece9b97bcb8c033496a71c54693ad4c85308c3e156abfba75d81b7b5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/052.png",
+      "bytes": 123303,
+      "sha256": "4c9f7cf0bed9f182047cde03c3b04ecc2b0220495f5765b4e4c7707bd6c5d4f8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/053.png",
+      "bytes": 103181,
+      "sha256": "82aa33800f9784e8e7c58b0fa969b7e540f552e660d7b74ab5870177b188a43f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/054.png",
+      "bytes": 104936,
+      "sha256": "503d945b71f8ebba1587570237184f370ca0561529e9c70e6bff473d60552adf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/055.png",
+      "bytes": 112761,
+      "sha256": "9fc24fe069804fc7518fd6fcf9972141ba38b6987aefa148cf060985107cd723"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/056.png",
+      "bytes": 105915,
+      "sha256": "fb94cdff3756b09d5fab8b719c077d0b583629b2673dfce0b6cdd410ef6ec70f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/057.png",
+      "bytes": 105585,
+      "sha256": "ff50aa2dae72e48e1fdf26754e59fa80efed1635132c99347d9c84d99dec7a24"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/058.png",
+      "bytes": 103494,
+      "sha256": "e83bee4e1fbc2eaa9ed94c1b450c675bf127e5cbc169535329042baba41426c9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/059.png",
+      "bytes": 105366,
+      "sha256": "2dd42f2c988207484b8606388d615e3466c987ce854356041f4f2b01b233a7bb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/060.png",
+      "bytes": 115454,
+      "sha256": "e49ec3343277cb36a51ba2be434302b157b4c1c160a1f5b9ddb2d425e2f698f4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/061.png",
+      "bytes": 107211,
+      "sha256": "0f5b0759a51381749db9bf99881956fe7ba80b0911f6b69746ad742f4d25186d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/062.png",
+      "bytes": 107037,
+      "sha256": "c55dcb5a28468b7ccbaf792ff2a1b06c52ab62696afcbb28d506a6c566259d86"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/063.png",
+      "bytes": 104637,
+      "sha256": "dc49ce336ea3416dc1d5b2d41adec0982bc51af538ee16fdd24a4cee7119f927"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/064.png",
+      "bytes": 106905,
+      "sha256": "d30c400e25135054ed20c463d9e84d054097ba01b5ede2b2e0582d7fe466d6c1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/pixels/065.png",
+      "bytes": 99998,
+      "sha256": "cf2776bb40238657837b4225800a3c9ea8efa62f6e3050f183faf54008f9c664"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004132/source-hashes.json",
+      "bytes": 449,
+      "sha256": "25f7c326da85d9df00c580a5e8b99f103b86742a03649c5e8d11766b984e8078"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/capture.log",
+      "bytes": 2064,
+      "sha256": "b8bd6d57bb33ae9e720f09bb160c7693f60265fec5672f05dedee6da691da4a8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/cleanup.json",
+      "bytes": 54,
+      "sha256": "0b02794628085ca519d68ebcd862e61f8a619b245fddb5a7d8c86bf87eea3e0a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/command.json",
+      "bytes": 374,
+      "sha256": "7f4c69801b98e7078dab8e40c413d71c12bc7f6efed609d21747bf2ffdb41e1c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/exit-code",
+      "bytes": 1,
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/helper-errors.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/helper-start.json",
+      "bytes": 79,
+      "sha256": "e0c5c5c97b3fd86d3d8e57617f71e13132536d138a32c9cefcc8b5c94ac1f513"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/helper.log",
+      "bytes": 1616,
+      "sha256": "08646f5cf10bb7650bfee0212faa943ef9db76e86d44ac723b81eea82590a8bb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/001.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/002.png",
+      "bytes": 86417,
+      "sha256": "0e09d9e67cd51a5e573515856391da5d86d4f46b5c8c052073696d56794cea81"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/003.png",
+      "bytes": 86417,
+      "sha256": "0e09d9e67cd51a5e573515856391da5d86d4f46b5c8c052073696d56794cea81"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/004.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/005.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/006.png",
+      "bytes": 86424,
+      "sha256": "7e6140e2f84f606c79c8789a6910b4ed9a83492a65f2d9b313aea8c6b3eb7add"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/007.png",
+      "bytes": 86424,
+      "sha256": "7e6140e2f84f606c79c8789a6910b4ed9a83492a65f2d9b313aea8c6b3eb7add"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/pixels/008.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-004612/source-hashes.json",
+      "bytes": 449,
+      "sha256": "25f7c326da85d9df00c580a5e8b99f103b86742a03649c5e8d11766b984e8078"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/capture.log",
+      "bytes": 12735,
+      "sha256": "93829fb8c7c776e0ab336f9fb95e9ea3a20f5d09834aa543d8afbf8da7dcbadd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/cleanup.json",
+      "bytes": 54,
+      "sha256": "0b02794628085ca519d68ebcd862e61f8a619b245fddb5a7d8c86bf87eea3e0a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/command.json",
+      "bytes": 336,
+      "sha256": "35d8ed942d277b38f500718294ea0173324fb53c35aff3bf467504f175123493"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/exit-code",
+      "bytes": 1,
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/helper-errors.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/helper-start.json",
+      "bytes": 79,
+      "sha256": "431ce9ba5b9540ea2e39941bc7d71a5f9376e3d296480d83e8f304fa44000d87"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/helper.log",
+      "bytes": 13834,
+      "sha256": "ae6f77cc2e57d1cf0bc03d14b5f1149141ac52947b315c3f7cecf865297f0c28"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/001.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/002.png",
+      "bytes": 86417,
+      "sha256": "0e09d9e67cd51a5e573515856391da5d86d4f46b5c8c052073696d56794cea81"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/003.png",
+      "bytes": 86417,
+      "sha256": "0e09d9e67cd51a5e573515856391da5d86d4f46b5c8c052073696d56794cea81"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/004.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/005.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/006.png",
+      "bytes": 86417,
+      "sha256": "0e09d9e67cd51a5e573515856391da5d86d4f46b5c8c052073696d56794cea81"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/007.png",
+      "bytes": 86417,
+      "sha256": "0e09d9e67cd51a5e573515856391da5d86d4f46b5c8c052073696d56794cea81"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/008.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/009.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/010.png",
+      "bytes": 86424,
+      "sha256": "7e6140e2f84f606c79c8789a6910b4ed9a83492a65f2d9b313aea8c6b3eb7add"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/011.png",
+      "bytes": 86424,
+      "sha256": "7e6140e2f84f606c79c8789a6910b4ed9a83492a65f2d9b313aea8c6b3eb7add"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/012.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/013.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/014.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/015.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/016.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/017.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/018.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/019.png",
+      "bytes": 94260,
+      "sha256": "e4eb117da965f7002f8b72e93e93c2eafdf26a48ae4d4f873b5eaec43c62bb3c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/020.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/021.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/022.png",
+      "bytes": 83492,
+      "sha256": "27de7fc562313e7daa7f53d1cb697809b6821ca12c98b707a04e1bc15739281b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/023.png",
+      "bytes": 83492,
+      "sha256": "27de7fc562313e7daa7f53d1cb697809b6821ca12c98b707a04e1bc15739281b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/024.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/025.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/026.png",
+      "bytes": 83553,
+      "sha256": "024c1bbf3c5886079590321ff5c5bb7a01c3223615d562847702f3ede7a01ebe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/027.png",
+      "bytes": 83553,
+      "sha256": "024c1bbf3c5886079590321ff5c5bb7a01c3223615d562847702f3ede7a01ebe"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/028.png",
+      "bytes": 82969,
+      "sha256": "c99a0dcf61644da229fe08ff56484f9e161ab61181758cdf0e60ded10d58ae71"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/029.png",
+      "bytes": 286280,
+      "sha256": "f55bd6c93f55e5c9c58fb51ee8fe1c645aab8c1489194831c464544d3f4527c1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/030.png",
+      "bytes": 285050,
+      "sha256": "f8547bf20b4380f87903e0311a5de0e985f11b2db4e643a4546f612b04beb736"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/031.png",
+      "bytes": 282630,
+      "sha256": "677128d99df8582a4d6d09dfc2ceb8a4db473ef9c7f843ce53e05bc3033c14fa"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/032.png",
+      "bytes": 217603,
+      "sha256": "1ce2f05b919610dbbe268bd4e6b2f8dc4a71672bb3f877b40e5d35b30fae9e0e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/033.png",
+      "bytes": 119587,
+      "sha256": "7f8eb1c62c5dd2696fec476932345ddeb7a8b4ef3240866223805a0829d6692a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/034.png",
+      "bytes": 104400,
+      "sha256": "6a31ba2579c4aa8515ce67ce9cf7b309b5ffd04750ce84d230ff3883d6e944e8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/035.png",
+      "bytes": 112100,
+      "sha256": "3f85bcfd877fc87d81732b050f1db6806f65aa80b0cd8b69ab539f10b19544b3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/036.png",
+      "bytes": 101928,
+      "sha256": "8b7ab994cf91cf9486f28cbe50469662f53df0ba6fcc58523264bf02ef0d5bfd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/037.png",
+      "bytes": 103849,
+      "sha256": "3806131bd5c2951c6da8c268da0c3539947932b9aca4e9fddbf00937ad4221cc"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/038.png",
+      "bytes": 124838,
+      "sha256": "07d5163140bf37111dca99aa47f09fc6ed36e515b8836a45a29124d54320a31a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/039.png",
+      "bytes": 106902,
+      "sha256": "13054611fb3076480a466d2b8dd259fa848be27fbda1389d44160a72f3483b17"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/040.png",
+      "bytes": 116545,
+      "sha256": "079a2ce15561166669d39684cc1c84512b124fe88b5e3b0901b112e29b52d183"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/041.png",
+      "bytes": 104366,
+      "sha256": "fa2a5a3b82a8f07828bbe98d40423802a02e18172c4f96f47817d724aa3c3734"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/042.png",
+      "bytes": 106446,
+      "sha256": "3da1ea360764791addd033fbc70a3f09c44d0d90cf04179b01e4fe581bc01fed"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/043.png",
+      "bytes": 120492,
+      "sha256": "69cd16f37c44cc6442d36ec583df463f712486bc4e669b39c094fe814b88596b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/044.png",
+      "bytes": 104205,
+      "sha256": "49940cdfbf65b26e3e245c144ca22ef1bf157a55812ceacc5234e082a8c931b3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/045.png",
+      "bytes": 111174,
+      "sha256": "6ce5a08e6c2e7e4026f6c1615a55e50dd69dc03fdd9cf9e026072f209d0c84f3"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/046.png",
+      "bytes": 102021,
+      "sha256": "fde34127ae4496e9ae8945f7f8860029205930e4ddff584d069af3901eb25f4b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/047.png",
+      "bytes": 103708,
+      "sha256": "02b7bfb11f1c0fc407dcdb64c45498db623ad7806a6294e6d3463223407de079"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/048.png",
+      "bytes": 130111,
+      "sha256": "777e7cdf67090bba7389261a94289a55eb53a470b9fd7378b3a58940c797d25c"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/049.png",
+      "bytes": 105618,
+      "sha256": "891b05519d82c5df2fd3936e10c58e616d5bf24471b027237538da50bead1145"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/050.png",
+      "bytes": 122928,
+      "sha256": "853137a4f9e171077684c4ca8282a77fb28bc29a1300faf08725376e3f1ea2a9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/051.png",
+      "bytes": 103119,
+      "sha256": "1128bea7c5316e9728ba7c9caee64c402ae733fbaf0db8aba99031681ade29ca"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/052.png",
+      "bytes": 104973,
+      "sha256": "13f39fbee651ae340e224f05caa5ddd676200bc36b480c1ec8e3298038d35c35"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/053.png",
+      "bytes": 130525,
+      "sha256": "dd2a52ab3f1780da8254b911227d2d484fc6249947d567e58411a00771950686"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/054.png",
+      "bytes": 105667,
+      "sha256": "032ee02dece9b97bcb8c033496a71c54693ad4c85308c3e156abfba75d81b7b5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/055.png",
+      "bytes": 123303,
+      "sha256": "4c9f7cf0bed9f182047cde03c3b04ecc2b0220495f5765b4e4c7707bd6c5d4f8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/056.png",
+      "bytes": 103181,
+      "sha256": "82aa33800f9784e8e7c58b0fa969b7e540f552e660d7b74ab5870177b188a43f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/057.png",
+      "bytes": 104936,
+      "sha256": "503d945b71f8ebba1587570237184f370ca0561529e9c70e6bff473d60552adf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/058.png",
+      "bytes": 112761,
+      "sha256": "9fc24fe069804fc7518fd6fcf9972141ba38b6987aefa148cf060985107cd723"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/059.png",
+      "bytes": 105915,
+      "sha256": "fb94cdff3756b09d5fab8b719c077d0b583629b2673dfce0b6cdd410ef6ec70f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/060.png",
+      "bytes": 105585,
+      "sha256": "ff50aa2dae72e48e1fdf26754e59fa80efed1635132c99347d9c84d99dec7a24"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/061.png",
+      "bytes": 103494,
+      "sha256": "e83bee4e1fbc2eaa9ed94c1b450c675bf127e5cbc169535329042baba41426c9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/062.png",
+      "bytes": 105366,
+      "sha256": "2dd42f2c988207484b8606388d615e3466c987ce854356041f4f2b01b233a7bb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/063.png",
+      "bytes": 115454,
+      "sha256": "e49ec3343277cb36a51ba2be434302b157b4c1c160a1f5b9ddb2d425e2f698f4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/064.png",
+      "bytes": 107211,
+      "sha256": "0f5b0759a51381749db9bf99881956fe7ba80b0911f6b69746ad742f4d25186d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/065.png",
+      "bytes": 107037,
+      "sha256": "c55dcb5a28468b7ccbaf792ff2a1b06c52ab62696afcbb28d506a6c566259d86"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/066.png",
+      "bytes": 104637,
+      "sha256": "dc49ce336ea3416dc1d5b2d41adec0982bc51af538ee16fdd24a4cee7119f927"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/067.png",
+      "bytes": 106905,
+      "sha256": "d30c400e25135054ed20c463d9e84d054097ba01b5ede2b2e0582d7fe466d6c1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/pixels/068.png",
+      "bytes": 99998,
+      "sha256": "cf2776bb40238657837b4225800a3c9ea8efa62f6e3050f183faf54008f9c664"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005512/source-hashes.json",
+      "bytes": 16449,
+      "sha256": "ea91177485a451a767068d891ba6832ab0a699a974a697ad7943c327538a3ce5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/capture.log",
+      "bytes": 2951,
+      "sha256": "8a114a8cf5574d9b869d29c950cece3b7cc77742ce3a36c7dbe12da781e10f93"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/cleanup.json",
+      "bytes": 54,
+      "sha256": "0b02794628085ca519d68ebcd862e61f8a619b245fddb5a7d8c86bf87eea3e0a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/command.json",
+      "bytes": 355,
+      "sha256": "cd5ea7307d3c403895a53607bb5009ea5d4673ab65038ca48fcbf25b84eb565b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/exit-code",
+      "bytes": 1,
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/helper-errors.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/helper-start.json",
+      "bytes": 79,
+      "sha256": "62bc20b2884264a475bf61ffb7de3cce9556b39bb18f358454aca13f0f6cac87"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/helper.log",
+      "bytes": 4051,
+      "sha256": "82f56c49dc82fe4a6a9b33c41673eaea6c2396b64584fa51ca007abaec549314"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/001.png",
+      "bytes": 85831,
+      "sha256": "4410f0ec9ff7153d370e051601527781ba9ca597aec1ee2efcea62a7d25e2a79"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/002.png",
+      "bytes": 86024,
+      "sha256": "2efd38ca4ba956cfe802042358a8ba744efc8384c05f0aef634e5850d8c906df"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/003.png",
+      "bytes": 82913,
+      "sha256": "f33bcab6361ad9ddf5382ab2fc6ee011844e9d37d5fbc07ddc7310f0589d10cf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/004.png",
+      "bytes": 85060,
+      "sha256": "fea764182aeb50d973dd58b3564f360753de3deebad119d201c1192091027b03"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/005.png",
+      "bytes": 85397,
+      "sha256": "6d125482ea11c831a40fe80099f31a98fccc1043977a7d38675e8f63bfcf3983"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/006.png",
+      "bytes": 85601,
+      "sha256": "e1763924cfe8c5a978b3c4af3de737e2dc28fad3474d7b9518334066c37338c4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/007.png",
+      "bytes": 86140,
+      "sha256": "a3b0cbfaec82113aec89274be20e553dd2735b000b02cbcf330e062456f176f6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/008.png",
+      "bytes": 82913,
+      "sha256": "f33bcab6361ad9ddf5382ab2fc6ee011844e9d37d5fbc07ddc7310f0589d10cf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/009.png",
+      "bytes": 85007,
+      "sha256": "b9623e08a8dafbe624c7b95af3f810dcf32c39e90941a08d2cc6023ddad0402f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/010.png",
+      "bytes": 84282,
+      "sha256": "d4f5246dc5a4f10d1e403ba15b43753401539226fa48322bbb4efa79df2630fd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/011.png",
+      "bytes": 85831,
+      "sha256": "4410f0ec9ff7153d370e051601527781ba9ca597aec1ee2efcea62a7d25e2a79"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/012.png",
+      "bytes": 86024,
+      "sha256": "2efd38ca4ba956cfe802042358a8ba744efc8384c05f0aef634e5850d8c906df"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/013.png",
+      "bytes": 82913,
+      "sha256": "f33bcab6361ad9ddf5382ab2fc6ee011844e9d37d5fbc07ddc7310f0589d10cf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/014.png",
+      "bytes": 85060,
+      "sha256": "fea764182aeb50d973dd58b3564f360753de3deebad119d201c1192091027b03"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/015.png",
+      "bytes": 85397,
+      "sha256": "6d125482ea11c831a40fe80099f31a98fccc1043977a7d38675e8f63bfcf3983"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/016.png",
+      "bytes": 85601,
+      "sha256": "e1763924cfe8c5a978b3c4af3de737e2dc28fad3474d7b9518334066c37338c4"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/017.png",
+      "bytes": 86140,
+      "sha256": "a3b0cbfaec82113aec89274be20e553dd2735b000b02cbcf330e062456f176f6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/018.png",
+      "bytes": 82913,
+      "sha256": "f33bcab6361ad9ddf5382ab2fc6ee011844e9d37d5fbc07ddc7310f0589d10cf"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/019.png",
+      "bytes": 85007,
+      "sha256": "b9623e08a8dafbe624c7b95af3f810dcf32c39e90941a08d2cc6023ddad0402f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/pixels/020.png",
+      "bytes": 84282,
+      "sha256": "d4f5246dc5a4f10d1e403ba15b43753401539226fa48322bbb4efa79df2630fd"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/iphone-20261020-005959/source-hashes.json",
+      "bytes": 16449,
+      "sha256": "ea91177485a451a767068d891ba6832ab0a699a974a697ad7943c327538a3ce5"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/capture-helper-errors.log",
+      "bytes": 4200,
+      "sha256": "88509b15572eaa38e38fcb4b9342f2f803a2c357cc593ee571a93da75cb8ce8e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/capture-window",
+      "bytes": 90944,
+      "sha256": "ed765560f9eed08100e1736785102ccec14a3d2d1d4e84fbe8642b2950d1b552"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/cleanup.json",
+      "bytes": 30,
+      "sha256": "aa5dd0ee4ab9b7bd3dba2d7ab3c51f333ec9219f2cf9eacef7d5dd6401f3338f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/command.json",
+      "bytes": 240,
+      "sha256": "b43b85b9b49d628c198fe6de5e31c01a555017b532067a2e5d76c6894e41db8b"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/exit-code",
+      "bytes": 1,
+      "sha256": "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/helper-start.json",
+      "bytes": 74,
+      "sha256": "b3c5d960b3beb557179356d4c524c259d43ff1a10395472d68eca4a3f6534f68"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/helper.log",
+      "bytes": 8979,
+      "sha256": "16a59e90ba965ce62c4905bab6bf2f950923df682feaccc397bb7ed6e929473a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/001.png",
+      "bytes": 39392,
+      "sha256": "923abe050402b629ac0c0d0067eb2855d66e9adc3705c81379ac7f807784e4e1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/002.png",
+      "bytes": 40431,
+      "sha256": "c281f52cfab29e3ca5bcc3cddd83ebc33667c6b270e948b1cb0a07b4e723e425"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/003.png",
+      "bytes": 44079,
+      "sha256": "dc1bae8917e4deb8b2ce4a80c44c809251a207eae4cf22204787a6d447cddb4e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/004.png",
+      "bytes": 44079,
+      "sha256": "dc1bae8917e4deb8b2ce4a80c44c809251a207eae4cf22204787a6d447cddb4e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/005.png",
+      "bytes": 39392,
+      "sha256": "923abe050402b629ac0c0d0067eb2855d66e9adc3705c81379ac7f807784e4e1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/006.png",
+      "bytes": 40431,
+      "sha256": "c281f52cfab29e3ca5bcc3cddd83ebc33667c6b270e948b1cb0a07b4e723e425"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/007.png",
+      "bytes": 39392,
+      "sha256": "923abe050402b629ac0c0d0067eb2855d66e9adc3705c81379ac7f807784e4e1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/008.png",
+      "bytes": 40431,
+      "sha256": "c281f52cfab29e3ca5bcc3cddd83ebc33667c6b270e948b1cb0a07b4e723e425"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/009.png",
+      "bytes": 44079,
+      "sha256": "dc1bae8917e4deb8b2ce4a80c44c809251a207eae4cf22204787a6d447cddb4e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/010.png",
+      "bytes": 44079,
+      "sha256": "dc1bae8917e4deb8b2ce4a80c44c809251a207eae4cf22204787a6d447cddb4e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/011.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/012.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/013.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/014.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/015.png",
+      "bytes": 47258,
+      "sha256": "bf727ec299c741452d6e9a0b29c8b4d9a9e1740108c177e4c540c203a0932e57"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/016.png",
+      "bytes": 47258,
+      "sha256": "bf727ec299c741452d6e9a0b29c8b4d9a9e1740108c177e4c540c203a0932e57"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/017.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/018.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/019.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/020.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/021.png",
+      "bytes": 53607,
+      "sha256": "0b579ed442dfb0d70daa6ee5c770c408f271e04f489e56f503a36d7c3d663fd6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/022.png",
+      "bytes": 53607,
+      "sha256": "0b579ed442dfb0d70daa6ee5c770c408f271e04f489e56f503a36d7c3d663fd6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/023.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/024.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/025.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/026.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/027.png",
+      "bytes": 53607,
+      "sha256": "0b579ed442dfb0d70daa6ee5c770c408f271e04f489e56f503a36d7c3d663fd6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/028.png",
+      "bytes": 53607,
+      "sha256": "0b579ed442dfb0d70daa6ee5c770c408f271e04f489e56f503a36d7c3d663fd6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/029.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/030.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/031.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/032.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/033.png",
+      "bytes": 43838,
+      "sha256": "a1785ad4c6c834ca5c6eb5a26f21e267a1e27df6bc2b8a7a234fc61a89fe4131"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/034.png",
+      "bytes": 43838,
+      "sha256": "a1785ad4c6c834ca5c6eb5a26f21e267a1e27df6bc2b8a7a234fc61a89fe4131"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/035.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/036.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/037.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/038.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/039.png",
+      "bytes": 43917,
+      "sha256": "1ce99859afd262fa1dc9d8d0ad116ac96f65324360366b0b826462482de2556e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/040.png",
+      "bytes": 43917,
+      "sha256": "1ce99859afd262fa1dc9d8d0ad116ac96f65324360366b0b826462482de2556e"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/041.png",
+      "bytes": 42797,
+      "sha256": "41476170a9a0d55b6196624f61b7e78232e70a6cb8cd3107b2926c57518ee672"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/pixels/042.png",
+      "bytes": 43711,
+      "sha256": "6c246c113461ad65d407dc52fab8eeb576c1a98ce6897f8b636201c784d89590"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-composition-20261020-004750/test.log",
+      "bytes": 6279,
+      "sha256": "7254c1ca64df97a604e5fdfb9e552bf29c24c37ce6b8af706629d6a59ee3dc94"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/macos-probe.log",
+      "bytes": 20065,
+      "sha256": "b2f53b22752da65219c08c4e7db91a6088d32e75b6175e9e8534cddb84239fd8"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/pub-get.log",
+      "bytes": 2293,
+      "sha256": "83b4b7c7dbcc48da42f8906ed2fd4d3999cd8bc7ab883e2dca485b6f7e28454a"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/logs/review-cleanup-analyze.log",
+      "bytes": 96,
+      "sha256": "f097a65ebeb694c4d591ee50f5539f211e17b837052f4b9b7eecf04e417ebd67"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p02-device-completion/progress.md",
+      "bytes": 2658,
+      "sha256": "986e89ece4bec50ba7ee3eb1f161f37ae54ecdfd1661a1165e07bcbb2eb41910"
+    },
+    {
+      "path": "packages/yl_player/example/.flutter-plugins-dependencies",
+      "bytes": 1441,
+      "sha256": "08dc7e83117985b5d5236a6759a26ec903de42f096e4f0d8753f7782dc26e6ac"
+    },
+    {
+      "path": "packages/yl_player/example/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "bytes": 1053,
+      "sha256": "7e02e02a82ac8f3b5052824f49a2d92f4bad0665936f351c54c3f64ee7702979"
+    },
+    {
+      "path": "packages/yl_player/example/android/gradle/wrapper/gradle-wrapper.jar",
+      "bytes": 53636,
+      "sha256": "16caeaf66d57a0d1d2087fef6a97efa62de8da69afa5b908f40db35afc4342da"
+    },
+    {
+      "path": "packages/yl_player/example/android/gradlew",
+      "bytes": 4971,
+      "sha256": "ec56c02543666d92d9ac5ae7fcc48f88ce4de0deb8b7f9b39928ca46f68c1b2b"
+    },
+    {
+      "path": "packages/yl_player/example/android/gradlew.bat",
+      "bytes": 2404,
+      "sha256": "c13c6e91b9a517783976de213d46398c661ea9e17651376d7301e839eaedcc62"
+    },
+    {
+      "path": "packages/yl_player/example/android/local.properties",
+      "bytes": 163,
+      "sha256": "77d79874494ec5856041b2e3c79599b9ab86c67defdc1321e634e2f491470560"
+    },
+    {
+      "path": "packages/yl_player/example/ios/Flutter/Generated.xcconfig",
+      "bytes": 1432,
+      "sha256": "445d49eab60d83047f6f20233d446365e6b8b3738a77803803efb8bce54d0e82"
+    },
+    {
+      "path": "packages/yl_player/example/ios/Flutter/flutter_export_environment.sh",
+      "bytes": 1480,
+      "sha256": "74485a02a9b082e6709fd137adb12369ccf2e44b232736a82f8b730fe8bbff33"
+    },
+    {
+      "path": "packages/yl_player/example/ios/Runner/GeneratedPluginRegistrant.h",
+      "bytes": 378,
+      "sha256": "a5f88cc6415d2e639d2cb549348b84e02a7fdd0261603b0063abef6fa11f075a"
+    },
+    {
+      "path": "packages/yl_player/example/ios/Runner/GeneratedPluginRegistrant.m",
+      "bytes": 728,
+      "sha256": "8eda4884ad248b0b521f833fd2a64a5ba10cbd057460df7aedf3d2fb6f48d01b"
+    },
+    {
+      "path": "packages/yl_player_android/example/.flutter-plugins-dependencies",
+      "bytes": 887,
+      "sha256": "d4c8b7af7e32f8922aaadfb3aa72ecc1da45ca7b1b94306995c7b8a09da5f941"
+    },
+    {
+      "path": "packages/yl_player_android/example/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "bytes": 1053,
+      "sha256": "7e02e02a82ac8f3b5052824f49a2d92f4bad0665936f351c54c3f64ee7702979"
+    },
+    {
+      "path": "packages/yl_player_android/example/android/local.properties",
+      "bytes": 91,
+      "sha256": "b6f667b7d58a520caf6c46afeb48d9e6480ffa5bcecb9aa7c130fabc775c75ea"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/.flutter-plugins-dependencies",
+      "bytes": 1441,
+      "sha256": "bf60cb91e1f3df30e5fcb1464ca69f8f576a7d2a98d4f9444f2d5cb76de37c1b"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java",
+      "bytes": 1053,
+      "sha256": "7e02e02a82ac8f3b5052824f49a2d92f4bad0665936f351c54c3f64ee7702979"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/android/local.properties",
+      "bytes": 91,
+      "sha256": "b6f667b7d58a520caf6c46afeb48d9e6480ffa5bcecb9aa7c130fabc775c75ea"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Flutter/Generated.xcconfig",
+      "bytes": 784,
+      "sha256": "aa6f44127fb3998e717e8cf3d7760981439e7649f3351fa261097b2ecb5bfc4d"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Flutter/flutter_export_environment.sh",
+      "bytes": 823,
+      "sha256": "fb6806a7eb63ec0a9d8c0815d7192335b683686a987e657a607b6e2f067f30a0"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/GeneratedPluginRegistrant.h",
+      "bytes": 378,
+      "sha256": "a5f88cc6415d2e639d2cb549348b84e02a7fdd0261603b0063abef6fa11f075a"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/example/ios/Runner/GeneratedPluginRegistrant.m",
+      "bytes": 728,
+      "sha256": "8eda4884ad248b0b521f833fd2a64a5ba10cbd057460df7aedf3d2fb6f48d01b"
+    }
+  ],
+  "preservedIgnoredBytes": 19863687,
+  "discardedRegenerableCacheFiles": 7489,
+  "unchangedRecords": [
+    {
+      "path": "docs/superpowers/plans/2026-09-26-remaining-02-tracks-subtitles.md",
+      "sha256": "4af233fd2321a787a2c63006ba73ec5f07970ad5b3eccbe0715b866302e37acf"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-14-p02-completion.md",
+      "sha256": "33f518c5348e3db6c88e2b3209069ee46848f01df706b80934cdef3c2febeadc"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-20-p02-device-completion.md",
+      "sha256": "1f4dfaa48ec8a7416fa9a4093f352ce3d3899c6c1accb0a76722cdf120a349de"
+    },
+    {
+      "path": "docs/superpowers/reports/2026-09-26-remaining-02-tracks-subtitles.md",
+      "sha256": "1fbd2de3267b07bdf8d09217398c08b7187d868c00fb973976b8086dab2d67f1"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-001.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-002.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-003.png",
+      "sha256": "90f89ca1006efc2956e88d8a384a79acad0a6a7c8cb5134e48089719916a0298"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-004.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-005.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-006.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-007.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-008.png",
+      "sha256": "90f89ca1006efc2956e88d8a384a79acad0a6a7c8cb5134e48089719916a0298"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-009.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-010.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-011.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-012.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-013.png",
+      "sha256": "80c837c38f7c94c19c99dd13d4354039d770a0afae587fb51ffd01f3f85be8db"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-014.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-015.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-016.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-017.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-018.png",
+      "sha256": "355a58940dc900bed688f755779575f71d118de6ef903073d32c780625ee0d0b"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-019.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-020.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-021.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-022.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-023.png",
+      "sha256": "355a58940dc900bed688f755779575f71d118de6ef903073d32c780625ee0d0b"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-024.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-025.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-026.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-027.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-028.png",
+      "sha256": "f3696f31b12a0a289b60d92882b24d70b7ee6e43736ae44807196e572e5e2a65"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-029.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-030.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-031.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-032.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-033.png",
+      "sha256": "6476253d7410cec966dbd4beff2230c8f7de6b8b7cbdb02c48968371cf1955c6"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-034.png",
+      "sha256": "04f36abfc4ed6321f39785bffd24184125997f1935ffdedd8955e81020d34e47"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/ios-035.png",
+      "sha256": "18139bcf9b245227d3492221c1631661e1b8180155800fa1ce39c351a4572a19"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/macos-001.png",
+      "sha256": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/macos-002.png",
+      "sha256": "aaf24cc72e438bb6cc31971121112c40214fb89dd16500bc3dd1105c632dc26f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/macos-080.png",
+      "sha256": "22704319ca910b1431ad0065647e204af74732419598c6e47e7f9a227c4cbc03"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/macos-081.png",
+      "sha256": "e45f7d98f306b0882dd5050898bf979f8fa184dd44438c6ea8e3844db458bb3c"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/composition-captures/macos-082.png",
+      "sha256": "4de28fab0b390b36cb3a63692e8bd33809f7a75e95725031845171aa8eecffe9"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/execution-ledger.md",
+      "sha256": "433b9899c32249b5efaa10e7f45e63b571a95e0ddd0e0633a0ec85501ebef0a1"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-analyze-clean.log",
+      "sha256": "63d9236e7b639673c97a918744750a54607a4b9882483cac54a621856f48aa43"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-analyze.log",
+      "sha256": "4363fb0602c677a0cc125c98a17ea5bd77b918df75daf11fb6698fdb48ec9d2f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-android-integration.log",
+      "sha256": "57a73453d7f05b5f98b0cf099840ca6df64f64115ba3d875f8d4478eb7838acd"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-budget-green-corrected.log",
+      "sha256": "cb8482daec2f055fa9627a512a02d7fa6d9d9de0b33106f5aaea50816170d0f9"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-budget-green.log",
+      "sha256": "b845cbdf9cac34a1d916225424ad0f53338a7468039f3cf196143ba213bdb58e"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-budget-red.log",
+      "sha256": "9ad3b4172d772e211fb146f093bb8e7183219316efb7f095e4d04eab8b38889d"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-player-suite.log",
+      "sha256": "c89c1a3a570597bcac532de2c7780a424bd8ff17802b5ca121b2befebd9c1fa4"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-public-surface.log",
+      "sha256": "de504a5235a005ff253854b64d1d0ce117a30bd759d69e5613766a859a948858"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-review.md",
+      "sha256": "683cc4a8b52fc2354f83a7d81b561bd87ebc3fa0476f9d7dd5b935b0ca947d31"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/final-source-hashes.json",
+      "sha256": "50a3ce08ba11efcec18eea17c5401b791da2653bd886de58be7364a04443ce4c"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1-analyze-final.log",
+      "sha256": "aa3a88f121849dc640a9424c6b9fc805bb0d89c3367a99c106b6c57e82bd0b97"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1-analyze.log",
+      "sha256": "cfc1310d8aa63c55160dbe78c79984669d9bce060aca1b69eb664ba04ae64132"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1-green.log",
+      "sha256": "d3f37a440d6c3ae336c2957043742ffe124b00551a5d11bf6431f7e94b3967e6"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1-red-behavior.log",
+      "sha256": "39675db84fa69d26ffed4b72acb8e7a46771e03a3be7fc447b1dd9678278af30"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1-red.log",
+      "sha256": "6741b729ae0d2d4a38f91d6eaef8370be48121932afaf3e47c7db015bd2773ac"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1-suite.log",
+      "sha256": "11dc220e027acb5e7b8ebd29960c8ee84341e3e58e035a223d8469f1491cfe3f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task1.json",
+      "sha256": "237c5717171a8dd8c632d60bfb77946fdefb1caad0fcc6eb0bb97bff42a8da22"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-analyze-final.log",
+      "sha256": "a31930b487ba25a8fab66a4e8783da93c1e720a991f031f242b6b7129d924eeb"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-analyze.log",
+      "sha256": "eb50747f86b7ab3b3a7eb5d5f7d914219b4095e7bd0c92a60d3a27d000089d1a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-android-probe-bounded.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-android-probe-cold.log",
+      "sha256": "4a053609ebf26db4d347b477d9d0e3ab8776f2454478c2bd69a93293e73c636c"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-android-probe-diagnostic.log",
+      "sha256": "2d2ce3d9ba8faa44e743e487531575451c83f65cfddb0eafb3de6ade81def411"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-android-probe-final.log",
+      "sha256": "d53ea3247ec1e1d8cc37d0fb03425b3d6c7faf203d43576ad22e602d57043c25"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-android-probe.log",
+      "sha256": "f7a6ae34b9458774a381feac2932cae72ae6cf1a571a0b8ca44311b96cf15936"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-dart-suite.log",
+      "sha256": "4b9495df3627ea3463a0978364e1a9bf228e471c6d65a24c27a689d8e84ab318"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-green-final.log",
+      "sha256": "973198438b5861c641bbcb2cd16792d6e5ed0813fe18fa218d48511becd93b03"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-green.log",
+      "sha256": "119cc7a235d5612a1fff86840b852cbe18d5bf63122f5d1752a93157ef8e9de4"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-ios-probe.log",
+      "sha256": "ecd9fb000d475ec60639a081d5d15346b97c989305832c1109cd66710ffa69e3"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-macos-probe.log",
+      "sha256": "55e136b2c290852195451a92405499408e3c9661c351b337be2f2e051dd704aa"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-red-behavior.log",
+      "sha256": "ecccce00b966edcf584b6dd68c179d2ac991f93d3ba464baffbd0440f08ea859"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2-red.log",
+      "sha256": "9c87a74337a2969b978dc9eb50e4884cab18fccd35318d6a0f3c175172a3494e"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task2.json",
+      "sha256": "8decbf6aac3313a61f53d4f012b68c24cc4982d89b4b43d8ed1c32bcab5d2de9"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-analyze-complete.log",
+      "sha256": "fce00126a6910021065a6fe26f76740876cca63ee6218cfc0879a7f927ef5bbf"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-analyze-final.log",
+      "sha256": "24a5e2308a04c7341fbfe6245c36df4bd997756af9bf202ed56c9a72d5299c00"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-analyze.log",
+      "sha256": "2fff6d2d5c648598a1b2f4a1512b5fa55afd9ec331ed508a46e637ad442ae02a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-font-red.log",
+      "sha256": "3130b5c4e7b1a271df9d724c5e44d9f8ed7ac28e352999bac9ed3670a550c452"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-green.log",
+      "sha256": "356d360c218ee37e11bbb20a94295b5a64cc1a1c2130b7f5e15d4934911de007"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-nbsp-green.log",
+      "sha256": "7e5e0f246098511fc84e14d5ac91cdf3e8a69019e3c36f88fb3ee420e6f8a998"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-nbsp-red.log",
+      "sha256": "525ec7619302f41e768289348cb49f0b35c4a7922a9951349b9696191db4e769"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-red.log",
+      "sha256": "3b342a1d7c9b9b38a5cbe286b59edd64b7074233bef9dd40cafb01de75d07633"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-suite-final.log",
+      "sha256": "cf13b08fa662169f8af3386404437701398e4b5d9cf0ad5ddcb96e24649b6f7d"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-suite.log",
+      "sha256": "5de004f7819eef9174aac2d22ea41662e265baf36ab9bc5d1dca8659cbb0a3d5"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3-unicode-red.log",
+      "sha256": "42827bc419cdbe49c190a03a2395681c5da91ad3232d6313a5261bfab8a9cc82"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task3.json",
+      "sha256": "273972b3b04420517c718426c6cf957ecba33eb98cdaa0176786afb20f614466"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-analyze-packages.log",
+      "sha256": "2a2ebe95a0b49e9e436dcdd67ab876b41d36355dd19b6e15dcf8a58920c8f43f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-analyze.log",
+      "sha256": "864bb5781145ca2f09c5d3808095a477b7ef7a1b81147a2d4ac0e61b7ddc5b4a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-android-corrected.log",
+      "sha256": "3a0d39f20fde259697ee49fa183f2837d2f974ccd6f8ce2f1df78772004e5f5c"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-android-final.log",
+      "sha256": "c66b9461c30bfa0ce0f1f2c1a0da449f5c8d20c8c61976636df0083c26541613"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-android.log",
+      "sha256": "46e1e2444a47fea60b3fab31679f32967a9ff3994ffb7169504ccd20fe7319eb"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-integration-analyze-final.log",
+      "sha256": "bf7b18ca8babc88f0cf467a9c3d303a49dae67bed83604d3c34222aaf55b364a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-integration-analyze.log",
+      "sha256": "0f046328402891df731a86b16796201ad2f0cac73232f92b333651b437f6fae9"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-ios.log",
+      "sha256": "56ac77362247ef43a3ef15160003181e532837dbb5ecf10c45402df4f40d234d"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-macos-ass.log",
+      "sha256": "b279547f2ca5c7efaeddba1cb79b50a112aa487f3246bf557fd287cc836a5409"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-macos-corrected.log",
+      "sha256": "69e2076f46297bcfa94948d01676782b8a3db897eff0ebdfc929f684e0b3dfc7"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-macos-final.log",
+      "sha256": "cf9c306532bfc3a993bc284e3145e85cd2c789fc67b8f2976882218716e15dce"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-macos.log",
+      "sha256": "3831b6088d36e8b67f109b8178206ec85cdc386206b3d30706a254426a5ad0b4"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-pub.log",
+      "sha256": "83b4b7c7dbcc48da42f8906ed2fd4d3999cd8bc7ab883e2dca485b6f7e28454a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-public-surface.log",
+      "sha256": "de504a5235a005ff253854b64d1d0ce117a30bd759d69e5613766a859a948858"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player-final.log",
+      "sha256": "3f08fc1ce91e2900f4e6dcf7e39811501c785349bcbf267150bff85dd8a9fefe"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player.log",
+      "sha256": "91cad4c3009c3ebee87d4a2c3dfafd17c84aae530f806f78dd75bd0e59d51182"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player_android-pigeon.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player_android-suite.log",
+      "sha256": "725c059a7e82a2667147f6ed091d3f9d378ec306e76690606e0d3ddf14cb7a9a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player_apple-pigeon.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player_apple-suite.log",
+      "sha256": "00581a0def72b0a7484760fe4c668e7e57a90b5f222ac9ee92abe9bc547d9bde"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4-yl_player_platform_interface.log",
+      "sha256": "7d82fd8464601ad8e1bd441a33248202f7e876537559184c64040f516b42509f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-14-p02-completion/task4.json",
+      "sha256": "46ce31453a9541c9fb00924f9e1f644c4aae46f9ea59576af3b7f6f7f10733fa"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/README.md",
+      "sha256": "d8662da54a8c4c7b8de649b738699fbd53e8bec1f4d982fee1d4b8979d8dab38"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/archive-manifest.json",
+      "sha256": "9c58fc87b2b6a5389c03b43a6adf27f92f717febe2d5ed43d80872374ebb0b59"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/execution-ledger.md",
+      "sha256": "986e89ece4bec50ba7ee3eb1f161f37ae54ecdfd1661a1165e07bcbb2eb41910"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/final-review.md",
+      "sha256": "47c9db87c271f6e3e6dcc7f8ed773bc23b9765682eaee76d4362a5fc2acaee49"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/p02-formats-contact.png",
+      "sha256": "9d0ead1f1fb7fbb341d960dd3908a56f4c2420e67ce6d7626d3741936c716e78"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/p02-iphone-record.log",
+      "sha256": "75e8cdef0a9240f9b3b6fa9297b93c90cbda75518b8530c71a9f6f46cd9d3417"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/p02_composition_run.py",
+      "sha256": "f8dbea4013fb8775383094557731c74a22d51dc5751db5aa68b1e7f25a08288c"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/p02_device_run.py",
+      "sha256": "7b8d970e376d09ad6b6111f4f39dd432f1f9a06717dc8822868cf1fc881d24aa"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/raw-evidence.tar.gz",
+      "sha256": "96ccb698fb9f3b7cec21256367a9c5a0559ce7a36ba45e298cee97e581446777"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/source-hashes.json",
+      "sha256": "791305d33e3e36d07a58b7e5ccea10a19c6f6b7e61ce2bc4024e00b844a9275f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-20-p02-device-completion/validation.json",
+      "sha256": "36a8ba4ac60a42a2e6c584100681c1ee16215b21889a51334359981c00459fb2"
+    },
+    {
+      "path": "docs/superpowers/specs/2026-10-14-p02-runtime-completion.md",
+      "sha256": "ebacd59b52a460c7e6b1a14f7b985b805b1a000915cb0c4f2cb9c3fbd117c76e"
+    },
+    {
+      "path": "tool/release_readiness/inventory.json",
+      "sha256": "cb1dab2b9c7d609d888f87df8acfc4aa846cb58ee4f664473950b56afae510b3"
+    },
+    {
+      "path": "docs/superpowers/reports/2026-10-20-remaining-main-merge.md",
+      "sha256": "28625a2e302164f43d361858ed54124625ca4741325f2d40d68bac080cbbc43f"
+    }
+  ],
+  "prepared": true,
+  "archiveFiles": [
+    {
+      "path": "RESTORE.md",
+      "sha256": "caa4c128b3fdcb4c87f0ece58de93c0d08a56a6323b68b7b5c9b0693c496a342",
+      "bytes": 1066
+    },
+    {
+      "path": "SHA256SUMS",
+      "sha256": "697d9ffe2bac2d5a988d1a5246274b3c072481f6deb368db812841867780a622",
+      "bytes": 408
+    },
+    {
+      "path": "branch.bundle",
+      "sha256": "57f338dd3296d93173e0a88e39bbabb443ebacb622241bf7f063fcfa4872634d",
+      "bytes": 1047
+    },
+    {
+      "path": "bundle-verify.txt",
+      "sha256": "bef78f0c72d4486b554e9970a0fed51076a2cbb579e9a8d8e4ef660704903310",
+      "bytes": 340
+    },
+    {
+      "path": "ignored-files.tar.gz",
+      "sha256": "da1b212240131509ce36c6445decf6142c42c6d19cb5e1f3af114780ced647ec",
+      "bytes": 9492599
+    },
+    {
+      "path": "manifest.json",
+      "sha256": "2ab3b208367e7a4857ec3fe71f2c261f4cbf8a94db63b55b23664c7af69a354e",
+      "bytes": 92226
+    }
+  ],
+  "status": "completed_private_archive_cleanup",
+  "worktreeRemoved": true,
+  "branchDeletedWith": "git branch -d codex/p02-tracks-subtitles",
+  "branchCommitReachableFromMain": true,
+  "archiveVerifiedAfterRemoval": true,
+  "remainingBranches": [
+    "main"
+  ],
+  "remainingWorktrees": [
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player"
+  ],
+  "productionAndTestsUnchanged": true,
+  "remoteChanged": false
+}
