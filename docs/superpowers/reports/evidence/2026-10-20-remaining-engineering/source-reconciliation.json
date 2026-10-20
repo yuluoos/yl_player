@@ -1,0 +1,10 @@
+{
+  "previousSourceHash": "9f19de495e72ba8fb7ec3a2f352b04f3db16a14f91e07828db05b1b44a920134",
+  "currentSourceHash": "69f6e5fc191dc55021a1f96b8a2398f8441eee84deeca9ca57521e1819053b60",
+  "changedProductionPaths": [
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift"
+  ],
+  "implementationOrVerificationStatesChanged": false,
+  "acceptanceRecordsAdded": false,
+  "note": "Bind inventory to one final production fix. No historical pass is rebound as current acceptance. Report adds diagnostic evidence only; full CAP-ABR remains not_run and partial diagnostic failures remain explicit in report."
+}

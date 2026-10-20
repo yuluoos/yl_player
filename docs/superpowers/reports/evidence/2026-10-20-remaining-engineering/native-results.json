@@ -1,0 +1,50 @@
+[
+  {
+    "name": "mac-build",
+    "command": [
+      "xcodebuild",
+      "build-for-testing",
+      "-quiet",
+      "-workspace",
+      "macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-configuration",
+      "Debug",
+      "-derivedDataPath",
+      "/private/tmp/remaining-native-debug",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "ARCHS=arm64",
+      "ONLY_ACTIVE_ARCH=YES",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES"
+    ],
+    "exit": 0,
+    "seconds": 18.02500587499526
+  },
+  {
+    "name": "mac-tests",
+    "command": [
+      "xcodebuild",
+      "test-without-building",
+      "-quiet",
+      "-xctestrun",
+      "/private/tmp/remaining-native-debug/Build/Products/Runner_macosx27.0-arm64.xctestrun",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "-parallel-testing-enabled",
+      "NO",
+      "-test-timeouts-enabled",
+      "YES",
+      "-default-test-execution-time-allowance",
+      "90",
+      "-maximum-test-execution-time-allowance",
+      "120",
+      "-resultBundlePath",
+      "/private/tmp/remaining-native-final/mac.xcresult"
+    ],
+    "exit": 65,
+    "seconds": 930.4588812919974
+  }
+]

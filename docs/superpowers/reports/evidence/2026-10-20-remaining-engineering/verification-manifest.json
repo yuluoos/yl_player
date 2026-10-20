@@ -1,0 +1,1316 @@
+[
+  {
+    "path": "foundation.txt.gz",
+    "originalSha256": "c9d8707a8afacdf1188ce31d0d9777f9846bd083c27c16e5aa9b6dc2b9bbe0d5",
+    "contentSha256": "62e4a0296aa841b8f06c9a63a1bf56a83375f90dbdd3a5e6d27a753d3382985a",
+    "archivedSha256": "022f0440a9d52bc47f31300268ed66941e9e10a40634844717f744671194efc7"
+  },
+  {
+    "path": "foundation-summary.json",
+    "originalSha256": "c309d7d631ae34d9e7d7a01abd6c9ceba32aac3832ab269bd3d732e4dfc707ea",
+    "contentSha256": "c309d7d631ae34d9e7d7a01abd6c9ceba32aac3832ab269bd3d732e4dfc707ea",
+    "archivedSha256": "c309d7d631ae34d9e7d7a01abd6c9ceba32aac3832ab269bd3d732e4dfc707ea"
+  },
+  {
+    "path": "dolby-final.txt.gz",
+    "originalSha256": "4240510ddb5040b565ac327adf718569616e6aebd52f3c5a3479ac8f39efff35",
+    "contentSha256": "4240510ddb5040b565ac327adf718569616e6aebd52f3c5a3479ac8f39efff35",
+    "archivedSha256": "99e5ce1195110c54fa48525b8a09ceb83fcea792536b4fc9594e22f99a10e52e"
+  },
+  {
+    "path": "ios-build.txt.gz",
+    "originalSha256": "e223ebb987bbe897fbd3794f5dcb651aafd74a1d79b68330e440387acbd2d1ca",
+    "contentSha256": "ab9d9fcc3791ac93a2ad6994447f2feff9a8c0dab9cee5641900abbafeb5ffd5",
+    "archivedSha256": "109c92e1cb9bbaec5724150cbacadf32f2290dccebfa11ffdf8e75307cef7590"
+  },
+  {
+    "path": "native-results.json",
+    "originalSha256": "f35816e2fa63d683ff8137910036ed6cfe9356c1c800bb24b176cea869ed02cc",
+    "contentSha256": "f35816e2fa63d683ff8137910036ed6cfe9356c1c800bb24b176cea869ed02cc",
+    "archivedSha256": "f35816e2fa63d683ff8137910036ed6cfe9356c1c800bb24b176cea869ed02cc"
+  },
+  {
+    "path": "native/macos-session-fix-build.log.gz",
+    "originalSha256": "67822ade3d53c1284a0583728387126ae325c62ae85303f5345f1092926a7e9e",
+    "contentSha256": "122adbfd2d91618da2042f4870c36ec2adbb0c5a1b9c2723fc6eaeacf88b0eb1",
+    "archivedSha256": "5e44ea71dd96dc9e981e3ed2a9cc523fa43b13acf8a866c4a64027c08886bb95"
+  },
+  {
+    "path": "native/ios-rollback-red-runtime.log.gz",
+    "originalSha256": "073651312c2792037bd19424de2ff47a2981e374f1b763d2bd57fa18852ff67a",
+    "contentSha256": "073651312c2792037bd19424de2ff47a2981e374f1b763d2bd57fa18852ff67a",
+    "archivedSha256": "af134ed1f45b95217077208ad449d2a9b08af722330d84aa374e258670234ee4"
+  },
+  {
+    "path": "native/mac-tests.log.gz",
+    "originalSha256": "b450e37cbd1cd5327fd86712c2d579aafd7b7ed59994d47bb24122dfb91dde4a",
+    "contentSha256": "b450e37cbd1cd5327fd86712c2d579aafd7b7ed59994d47bb24122dfb91dde4a",
+    "archivedSha256": "bde699ecd685737aa4a8fa50fe52cf6b3cf7b604c355acea88769a62a04673bc"
+  },
+  {
+    "path": "native/macos-session-fix.log.gz",
+    "originalSha256": "bb1641e87f8fe906c35632bf5f0574b2d83a73cd6908a0221387a0832f58407c",
+    "contentSha256": "bb1641e87f8fe906c35632bf5f0574b2d83a73cd6908a0221387a0832f58407c",
+    "archivedSha256": "befa74cdf15b85a998aa294732e47e18670a5e7e4deb4968d82cdab00292fb05"
+  },
+  {
+    "path": "native/mac-intent-fix.log.gz",
+    "originalSha256": "5f4d06e4b894e4f26765ffb2e2a9deaa2821c6235b2a699b436acef330c6570b",
+    "contentSha256": "5f4d06e4b894e4f26765ffb2e2a9deaa2821c6235b2a699b436acef330c6570b",
+    "archivedSha256": "0fefe9133ffe0acfec4c213ce582e4a4781aff383e7c58f5a2c64ceecbd7bbe9"
+  },
+  {
+    "path": "native/parity-after-fix.log.gz",
+    "originalSha256": "a54982de883d6c1b3a798da3a5db37047d44bafbbd3acff8d32bb19655b76833",
+    "contentSha256": "a54982de883d6c1b3a798da3a5db37047d44bafbbd3acff8d32bb19655b76833",
+    "archivedSha256": "1041c507af624007cd02148ffe6d24fd4465b5a95c4ed1bb29cae61f77dd1739"
+  },
+  {
+    "path": "native/mac-intent-local-build.log.gz",
+    "originalSha256": "66aa0ce527c116038a004c4192500aac282168783027124a46fc9554534c5e6e",
+    "contentSha256": "b64f5d288d3f5cd4b3174c4cc0ecc928a4e1b14655be049033ec29e87bc9fd5f",
+    "archivedSha256": "4b39ad7d96aa72c304a5a0266de1c968a9b3e0ead84a2c7a232b81c979c05504"
+  },
+  {
+    "path": "native/migration-tests.log.gz",
+    "originalSha256": "bbbe52704a976ccf13ffaba653c206252c82e3fe0bd4704e84af8415667a4ace",
+    "contentSha256": "bbbe52704a976ccf13ffaba653c206252c82e3fe0bd4704e84af8415667a4ace",
+    "archivedSha256": "108f0e27f6b6ff32e6cfd5b91f57b03a8bf31306aee2379e37cd917d3f723c54"
+  },
+  {
+    "path": "native/post-fix-source-parity.log.gz",
+    "originalSha256": "9068bbe077f245dd394b48d9f233f5d918122725d3783572e8640656a73c0c60",
+    "contentSha256": "9068bbe077f245dd394b48d9f233f5d918122725d3783572e8640656a73c0c60",
+    "archivedSha256": "e7d690509219bd006e71ca1d4e5b9f393eb4924af9d7bcc36db4e128e67447be"
+  },
+  {
+    "path": "native/source-parity-tests.log.gz",
+    "originalSha256": "f19009471c89f2e2e26989012944de1c074639737e7c535be6a5aa0ff8cae930",
+    "contentSha256": "f19009471c89f2e2e26989012944de1c074639737e7c535be6a5aa0ff8cae930",
+    "archivedSha256": "46ddbdf0e29b9bad1081cafbbb6acd2c93e2b03a38ae7dbea4d264a000a6a250"
+  },
+  {
+    "path": "native/ios-flv-capability-export.log.gz",
+    "originalSha256": "62a9797bd2152edb41f9a3e608d7ba377eee057a84c5b513b4014fde0807b009",
+    "contentSha256": "b159a7640a87cb4b28da0f6e49eeac3b76280034f2a76da3fa8e38d4f671e726",
+    "archivedSha256": "4acf63f83e692398b681316fe502b5d38ee3c9d7224fc3b2682a32eb98984445"
+  },
+  {
+    "path": "native/regression-red-build.log.gz",
+    "originalSha256": "aa0326cbdb918cc68671a53fef845dcfa3fc2ea033cc500134b9fc444bf77e9c",
+    "contentSha256": "6f7c4cb824aa159866c4a2f851f0eddbf26bbf6259d0ae31e88e8a7aca763e41",
+    "archivedSha256": "59105f3efec8d8aed4bec45317a1f5d8e6eabfc5097f8b536979ff232d6ef8bf"
+  },
+  {
+    "path": "native/ios-session-fix.log.gz",
+    "originalSha256": "08acc5a22936b51b731a6f9bcd9d6a990e0473547ff1a39d54b97705f5c8d7e0",
+    "contentSha256": "08acc5a22936b51b731a6f9bcd9d6a990e0473547ff1a39d54b97705f5c8d7e0",
+    "archivedSha256": "7a76b6660dc593cf3d678ef74b43e42bcbf2e4b1b850242d4c568c1f6d5ba3c2"
+  },
+  {
+    "path": "native/mac-build.log.gz",
+    "originalSha256": "a6a3334dfdd4a225a7e76c104017492c1f7b702901a221c61a78850658595184",
+    "contentSha256": "164600bcfa22b58570f11e449f1338c5d56f8965ca872ddcce6c560c2f16a549",
+    "archivedSha256": "44fd9cbf98bc1fa2a13973b28d0b8f06e5c7ec4a2a7271502745829de49a604c"
+  },
+  {
+    "path": "native/post-fix-runtime-evidence.log.gz",
+    "originalSha256": "00d1cc3a1a3a397469cf2f983a1a511b3983a395972cbce53baa7c2238691ec4",
+    "contentSha256": "00d1cc3a1a3a397469cf2f983a1a511b3983a395972cbce53baa7c2238691ec4",
+    "archivedSha256": "89d2742922342d351ba562af1f2cfef07939b6af74dc939eb9fa7078e98ea380"
+  },
+  {
+    "path": "native/mac-fix.log.gz",
+    "originalSha256": "872158097b338b86487191ad595b3f25b7caeae3c99a533d6670e2a3ad86450d",
+    "contentSha256": "872158097b338b86487191ad595b3f25b7caeae3c99a533d6670e2a3ad86450d",
+    "archivedSha256": "764c4c15ac49dd4f34f030d3632eab8b132718b73bebd0cf4810bfafa23ec753"
+  },
+  {
+    "path": "native/final-source-parity.log.gz",
+    "originalSha256": "9068bbe077f245dd394b48d9f233f5d918122725d3783572e8640656a73c0c60",
+    "contentSha256": "9068bbe077f245dd394b48d9f233f5d918122725d3783572e8640656a73c0c60",
+    "archivedSha256": "e7d690509219bd006e71ca1d4e5b9f393eb4924af9d7bcc36db4e128e67447be"
+  },
+  {
+    "path": "native/ios-diagnostics-export.log.gz",
+    "originalSha256": "e95677b86d410005462626204d181ab0d59d251e73d68d2f5a8bf86c7d04874c",
+    "contentSha256": "e95677b86d410005462626204d181ab0d59d251e73d68d2f5a8bf86c7d04874c",
+    "archivedSha256": "a0103d09de27ece62a78321811259de3c67aeaaef13b8a7eb64d268f47378c5e"
+  },
+  {
+    "path": "native/ios-final-build.log.gz",
+    "originalSha256": "879eb45a8f91a3b91568a98af0636b22efd6c7fb4e1614143364344f5a46504a",
+    "contentSha256": "4b41c463fad4d6bbe8e82353cf8598a89956525a466cdea52029a0b24132bf24",
+    "archivedSha256": "b37b279562322a8baaea58d32acab5b3f985b53e5ea8d7b6284c6eae54185e22"
+  },
+  {
+    "path": "native/mac-intent-local.log.gz",
+    "originalSha256": "2afeaca60ee62f050163c1faa26e452b9a63d437bd1ff4923dcccad8a6d271cf",
+    "contentSha256": "2afeaca60ee62f050163c1faa26e452b9a63d437bd1ff4923dcccad8a6d271cf",
+    "archivedSha256": "394d2a635dfaaca35267ee25890dfde11d959dcd73728944532bb053e0702ccd"
+  },
+  {
+    "path": "native/ios-rollback-red.log.gz",
+    "originalSha256": "286c9e1a1b307b41bb4a293da24e234d496b5566c4bb2002aacb1a5aa1527b5e",
+    "contentSha256": "286c9e1a1b307b41bb4a293da24e234d496b5566c4bb2002aacb1a5aa1527b5e",
+    "archivedSha256": "13effdd07557a29e461379b688fbfbae10cc7cc766450f5afcf0fbbff317423e"
+  },
+  {
+    "path": "native/fix-build.log.gz",
+    "originalSha256": "246bb2d4aac91d0bfccd54251c42cbc88ef7b606d4772093bde5059496c293af",
+    "contentSha256": "798e6a39406b2ec40bd096299e4c6051e5a3f8fb621afa1a907aee5a272081cd",
+    "archivedSha256": "97df5272e79b283cfacc5e8f37442546f9b95222fe515ac704f816e1cf16782e"
+  },
+  {
+    "path": "native/ios-rollback-red-build.log.gz",
+    "originalSha256": "7a82a0ea52a4b4dac2da8e78be8a78c511abd5d5e25c143083cc625b9ee2271d",
+    "contentSha256": "5ac10ec98f24733b793cd77feec1b96202af24754505ed8857f626ebb84af925",
+    "archivedSha256": "a83e0655089bb37de73c21413832f80d043303af14e3a385ae1484e6c26b1364"
+  },
+  {
+    "path": "native/mac-intent-fix-build.log.gz",
+    "originalSha256": "a3792237e3ed4fa1de163d01923e0826723648e6ae841ac77c8617491d82f58b",
+    "contentSha256": "fc20a24114f6c760ca1be356399587740d7b347867cddee0b1fe2fbc760a6f41",
+    "archivedSha256": "ded5ffb49716a5c5675cb2a2a03b220f7660b93cb175a8888e0f22ffee8a0242"
+  },
+  {
+    "path": "native/ios-tests.log.gz",
+    "originalSha256": "576fbf90f5d392ced51c7904c503afa3c94b0ef9b0d3c8dec9606eace0858ab4",
+    "contentSha256": "576fbf90f5d392ced51c7904c503afa3c94b0ef9b0d3c8dec9606eace0858ab4",
+    "archivedSha256": "5793b9344cf8a10ff12b1b7036b1ab4a80791ee966aaec6fb6b4fddb2ba3594b"
+  },
+  {
+    "path": "native/macos-resource-attachments-export.log.gz",
+    "originalSha256": "e1d2dc555a6f578fbbe4bb796219ba03cb2f2434bc90318e8145fe610eb24b12",
+    "contentSha256": "0f5a46f04a70108b99e50b89856adf42e37a13147220d250533ff13aa99ad409",
+    "archivedSha256": "5aea93ba919fa175df0842ad8bb4318dc60bd9bb08e785976bfe85d5eb811ec8"
+  },
+  {
+    "path": "native/parity-final.log.gz",
+    "originalSha256": "a54982de883d6c1b3a798da3a5db37047d44bafbbd3acff8d32bb19655b76833",
+    "contentSha256": "a54982de883d6c1b3a798da3a5db37047d44bafbbd3acff8d32bb19655b76833",
+    "archivedSha256": "1041c507af624007cd02148ffe6d24fd4465b5a95c4ed1bb29cae61f77dd1739"
+  },
+  {
+    "path": "native/regression-red-build-v2.log.gz",
+    "originalSha256": "4a81a127e474e860b4e1027ba2fcb633b328dbbdbc378893d2ce0b77df382ecd",
+    "contentSha256": "b01012334d30909be46cbdaf995f8894dd03fe9e5a2f04b5157375d0f868c407",
+    "archivedSha256": "18c93144205c5527a8d213de8bc7f0f5139bd109acfcde94ab4049e47ce5e9b2"
+  },
+  {
+    "path": "native/fix-build-v2.log.gz",
+    "originalSha256": "a680e9721fa5847237b80c82b4a9c90de033ac137b9474a4ec3ceb19bab8add6",
+    "contentSha256": "1c8a484687be27d7317e5d8b2659ccf8c22fdc68ee6b450957468840cdf7ddce",
+    "archivedSha256": "8ede86091a4b97bc4156f9df49eba83d2223a58ede5fd8749646fc31059335b3"
+  },
+  {
+    "path": "native/sample-command.log.gz",
+    "originalSha256": "0815480997bc0727abad3dab536a60435ad9f0ab0017b788e7882fef00fbf670",
+    "contentSha256": "0815480997bc0727abad3dab536a60435ad9f0ab0017b788e7882fef00fbf670",
+    "archivedSha256": "1518d6f17595eaa0e9783cb1a859e524c1dcafba846a2999741c6e705aed9617"
+  },
+  {
+    "path": "native/ios-identities.log.gz",
+    "originalSha256": "55f8e150668bb0ed95abcda0641f00a303707c56fa5a0ae315ded3a17bb34652",
+    "contentSha256": "3723bf0fb818560fd12897a20715deefe77e1c8c82b8be8c5402ba840fccedcf",
+    "archivedSha256": "bdd6a34ecf7e102cfc720e059761e70ee3d96961ae24b13864629d2821850957"
+  },
+  {
+    "path": "native/regression-red.log.gz",
+    "originalSha256": "f431dc9a25b6ce0c91a57a7004b8c46d53b362df1d7c5e098ca02ccf6ad76b01",
+    "contentSha256": "f431dc9a25b6ce0c91a57a7004b8c46d53b362df1d7c5e098ca02ccf6ad76b01",
+    "archivedSha256": "2c94ba0f0ba79797524b69cbcbafe1b79b0a0ea13adec843fcc0fbfec7823896"
+  },
+  {
+    "path": "native/ios-session-fix-build.log.gz",
+    "originalSha256": "755e2699c70edf6b874bb008e96a64fd033e8f5e1f438f47f4c569a34a319ba7",
+    "contentSha256": "f40a13fbaa1f3a4dbeff9908849fa14f3682a79657014db21235a1ce7bbc2ace",
+    "archivedSha256": "7d3ee687e7f6735c4db572d5c0e1a6717c1e57fcb08eb6672c9ea6670c73bf12"
+  },
+  {
+    "path": "native/post-fix-migration.log.gz",
+    "originalSha256": "371296827886008f34b00685a8832936720e79255229f8c4a7da57e5c2321f62",
+    "contentSha256": "371296827886008f34b00685a8832936720e79255229f8c4a7da57e5c2321f62",
+    "archivedSha256": "2c94d72cd37728cfc2a516b577f1bd66d3d74e2ca424f88586c3e34656da24dd"
+  },
+  {
+    "path": "native/runtime-evidence-tests.log.gz",
+    "originalSha256": "b8a849aaa3b4f493c17f3c0344cb28daf9219a480a5231116187a00355a716cd",
+    "contentSha256": "b8a849aaa3b4f493c17f3c0344cb28daf9219a480a5231116187a00355a716cd",
+    "archivedSha256": "7c9a1c07ed3847b74726f1d75251064c1827caed85c6d0a04dfa4cfdbbd5e06e"
+  },
+  {
+    "path": "native/exit-sample-command.log.gz",
+    "originalSha256": "a43cfa457864284085f4391a5137c03d08356c752ef57fd1e877aebf474ecf01",
+    "contentSha256": "a43cfa457864284085f4391a5137c03d08356c752ef57fd1e877aebf474ecf01",
+    "archivedSha256": "67674b3758b3dffb967cd5d780e5ae11fb8f5b441a9513101d0b0654a82ed276"
+  },
+  {
+    "path": "native/final-migration.log.gz",
+    "originalSha256": "6b9eeee33659fd98d179b5428a5a843db8e27ebba533a3b417a4ba6b136219f4",
+    "contentSha256": "6b9eeee33659fd98d179b5428a5a843db8e27ebba533a3b417a4ba6b136219f4",
+    "archivedSha256": "c0b3b0258ca411086002b50070714598b2b7f7bd9bcac3a60378e8ab379e0142"
+  },
+  {
+    "path": "native/ios-run.log.gz",
+    "originalSha256": "8ef08d973be7dbdcd5f089996018b6d4b9de0847382e5cb1b985f3305e72339e",
+    "contentSha256": "8ef08d973be7dbdcd5f089996018b6d4b9de0847382e5cb1b985f3305e72339e",
+    "archivedSha256": "2e885683f9538e6488b572afde3819b03f6636ccd54af7fad026535c8d76be1c"
+  },
+  {
+    "path": "native/behavioral-constants.log.gz",
+    "originalSha256": "cf98aa5986dd0e3244e95c445ce4596194bd6cd9455ce590a3822c2ee0eb7d4a",
+    "contentSha256": "cf98aa5986dd0e3244e95c445ce4596194bd6cd9455ce590a3822c2ee0eb7d4a",
+    "archivedSha256": "18e765e5a18a245d652e0dfdffb7c8f342a22fbf4cf5aec901a87acb30a00662"
+  },
+  {
+    "path": "native/ios-console.txt.gz",
+    "originalSha256": "5a45a54471bc0637602d12db400585b547f3e6eba7c16467299a28cab2c8d02b",
+    "contentSha256": "0e07edb20c3b06dad9d1345e2774a83322d2d9b8da29f870dd4595d9272ea472",
+    "archivedSha256": "f6a657738080bcc6a29dae24ac75abbbbfd326d62b65e6ec13bbced4edf6f2c3"
+  },
+  {
+    "path": "native/mac-running-sample.txt.gz",
+    "originalSha256": "4e9f6ad505f2e3c936a94d74f2a9b6fb2dabb9fc506bd4653ebb55b5fbde8cda",
+    "contentSha256": "d14844437a3cfe935ed2f181e6e9ce04b4fae0b2467d8545197d6a22f6ee7867",
+    "archivedSha256": "405c2cb485360bf6d5ba57ced91f5984e393b4a4fdc044a11ab719c234ce1b09"
+  },
+  {
+    "path": "native/mac-console.txt.gz",
+    "originalSha256": "2b0b029404b775df5e3e7a5a4d8c2ea553889e46498a8ea078b980ea42a76153",
+    "contentSha256": "d99afba4a4fd5a28b60787020dbd0dbefc66588a79f3a77fd4dd8f6fa64dd7f6",
+    "archivedSha256": "d437d20a23b6567e3630d115cf3b489cce1afc045ddb097e3540fa1b2f101e58"
+  },
+  {
+    "path": "native/ios-results.json.gz",
+    "originalSha256": "30317331b79ee87e3156d90e18da53d1bcd586943c3e1b61e28cfbcce16ec39c",
+    "contentSha256": "0e219d0d5c0f78789fc6427404c8b07a3794105a1284ee555269dd14e0e9ca9c",
+    "archivedSha256": "20d161088277e15df3b98bb0aeb846827a25ff43571c8a993dd129a99e1b99f7"
+  },
+  {
+    "path": "native/macos-session-fix-summary.json.gz",
+    "originalSha256": "907ad9e43a17867048912dc99bca611697326f95dfed89c35486bc9b606e051a",
+    "contentSha256": "60aae78224ccb4dd5af1315cc8c1481c4d16a1251cdae0b0210acaf713560a26",
+    "archivedSha256": "d4745bef9e5d7239b36a5d691df68a0bf51eb8c8228b310526fa4af15372aab1"
+  },
+  {
+    "path": "native/intent-fix-results.json.gz",
+    "originalSha256": "1d9f94f1d46f13eca3839ef4b9428c17cddc8254940cfb5b4df80f612df5488d",
+    "contentSha256": "1d9f94f1d46f13eca3839ef4b9428c17cddc8254940cfb5b4df80f612df5488d",
+    "archivedSha256": "6a8f6a5a9cad336fb8c01e7d945edef3cec7cbb82b955004c703689722008695"
+  },
+  {
+    "path": "native/results.json.gz",
+    "originalSha256": "f35816e2fa63d683ff8137910036ed6cfe9356c1c800bb24b176cea869ed02cc",
+    "contentSha256": "f35816e2fa63d683ff8137910036ed6cfe9356c1c800bb24b176cea869ed02cc",
+    "archivedSha256": "4d86ba4c5bd5b0add093979cb8484cffe87227d90d3494b176c06d64b392945b"
+  },
+  {
+    "path": "native/intent-fix-first-results.json.gz",
+    "originalSha256": "e2de8e212c925a48f2c4cf5d19befb240f758acd2a0d7c1885d20f40b9aff2c2",
+    "contentSha256": "e2de8e212c925a48f2c4cf5d19befb240f758acd2a0d7c1885d20f40b9aff2c2",
+    "archivedSha256": "9ac6df7fe22e804b192e848c4f0fc1814ffec29a387d7ae19980dc25ff51df83"
+  },
+  {
+    "path": "native/final-source.json.gz",
+    "originalSha256": "6f960801822939db5a85d5aed11f49b437ae0d275cb612a38db53e3954d318b9",
+    "contentSha256": "6f960801822939db5a85d5aed11f49b437ae0d275cb612a38db53e3954d318b9",
+    "archivedSha256": "566e3223eee88fd13aab83c99e839d2b6594f790c53bedbaff29f5da8dc64b61"
+  },
+  {
+    "path": "native/ios-session-fix-summary.json.gz",
+    "originalSha256": "0580a7debf3400980c1c7819b93579dd038de2df84040c3008be8e4f9d1d3636",
+    "contentSha256": "cbeee8d86e72533782a00812f8e3c15023e6236e09057fc2c7e4a8e92738ccf7",
+    "archivedSha256": "61d845dcebbcd99c3633b7709c0041c5126ce2f0d30ffc8156a7512457e50ede"
+  },
+  {
+    "path": "native/session-fix-results.json.gz",
+    "originalSha256": "7574c486d59a5f29dbe738a58d67a5c3e45a03dab022826c1907c66d2202657e",
+    "contentSha256": "d597abd8fbc05821a8fa15eed8f10fbaef9585eabc15c54996f62ef2596f6bcf",
+    "archivedSha256": "2800c700eeba230ea2a8c98d96b358882ad1f88017eee8ff670c9be52fcfb22d"
+  },
+  {
+    "path": "native/mac-intent-failure-activities.json.gz",
+    "originalSha256": "ab95f52da0e42832a2c1d4b8e2113dbeda32f3bc8f7be3165b4bf741ffb69f44",
+    "contentSha256": "ab95f52da0e42832a2c1d4b8e2113dbeda32f3bc8f7be3165b4bf741ffb69f44",
+    "archivedSha256": "032867c34e2b7282b8a9cdf92a9abf67dc882970b4cdd3826724eaae87b2f8a9"
+  },
+  {
+    "path": "native/mac-intent-failure-detail.json.gz",
+    "originalSha256": "599922963194337dc1d7db20f0cfd15671c8d024162007675984740d328200ac",
+    "contentSha256": "3c05f8448a8cd5877934068482f004e756df46886e34181dbba0bf5dac76fbae",
+    "archivedSha256": "0c96c2a6217923aed6acb226685bb9bdd404b435ccc778e05e4fe56cbb7ac26d"
+  },
+  {
+    "path": "native/mac-summary.json.gz",
+    "originalSha256": "442e7809249b9641b8abbe42b3878a3f4626fbb6c8e1a458c4d86574a1f0f4f3",
+    "contentSha256": "ce9854b1ead7ab86f46dfbeb5ce53484ebfbb678b7f657a3da0cdbc1ceb2eb3e",
+    "archivedSha256": "aae79bcdb87c820a61f932903fa5aa849681706b19d72e5211d742aeabcf6ad1"
+  },
+  {
+    "path": "native/mac-intent-fix-summary.json.gz",
+    "originalSha256": "c781e7ca97cc100c295b4336f850b8eb7c3e4a1bdcf4171850bf4faf54095b06",
+    "contentSha256": "9bafd7bb06779e3b858a31275fd5e98758eaafa0a48278cc3f99ccc403d9c903",
+    "archivedSha256": "789a8cc24877c10e2a5afaf3169a5ab5ebcd43e31f72486c1b87443f2d7a136f"
+  },
+  {
+    "path": "native/ios-dash-failure-detail.json.gz",
+    "originalSha256": "1bf64200fb7dacc2e9bfe034b6c809ff7a36ef57852b5e4ff94a64d9d9a85d48",
+    "contentSha256": "e3ab71a93c4f4460ca4f08886b98135c36e251aae20dffa9a55b6b8cc601147b",
+    "archivedSha256": "53ebe2646b4494d2c82eeb4fa93cbd93c22500c641e20bb099d1bebcd2b59411"
+  },
+  {
+    "path": "native/regression-red-summary.json.gz",
+    "originalSha256": "1e7b94b02ce2e28614a1082357639f8c7cf4231cf1eed3fa0be0e5dce1b6ed9e",
+    "contentSha256": "1e7b94b02ce2e28614a1082357639f8c7cf4231cf1eed3fa0be0e5dce1b6ed9e",
+    "archivedSha256": "927ccdd06804df3dc640e37b88d88c050ef32ecd0bb07d00fa325f89708781a4"
+  },
+  {
+    "path": "native/mac-tests.json.gz",
+    "originalSha256": "22447afc8842988eaac2fe148992d7a4e1b08530380bd355d944a0ea72099c1b",
+    "contentSha256": "676b3a4af253973c287d3597ac92af25ca4906206acdbb6760b5b2a8b23c5677",
+    "archivedSha256": "12cc8c040a207bb95e802048db44b1a4a3aeed5de8d4ef15ee90c76ca4b882b4"
+  },
+  {
+    "path": "native/mac-identities/case-identities.json.gz",
+    "originalSha256": "606fbe944d050712c36cde8923cb9a5e2499275c1648b291e48306ff1e6a1eb9",
+    "contentSha256": "606fbe944d050712c36cde8923cb9a5e2499275c1648b291e48306ff1e6a1eb9",
+    "archivedSha256": "4d7b93c0f8f150ab9cfb3fc52d08b4b8bae0f921e4bcbefe7cd3947b2730b04e"
+  },
+  {
+    "path": "native/mac-identities/focused-summary.json.gz",
+    "originalSha256": "3f2c934c4215782307646ed2d1297da826092044a87f42a7543546d62f514c0c",
+    "contentSha256": "415274cfe1af472fde51b6206c28012e5158549333c2ab6e74edb5b78ebadcd7",
+    "archivedSha256": "699b64117f2eb5e4c424190e832724b59a58ca86a4b8b4e0f1c44059156f6659"
+  },
+  {
+    "path": "native/mac-identities/focused-tests.json.gz",
+    "originalSha256": "cae37cf6cb4aca2f2ec15229c79ef980505aecc3e6c5b424caadeb5679eabd05",
+    "contentSha256": "09028c8b4169e9014e1e819b7bdad02f9fb95c7989c42b651b10ec97d9e19337",
+    "archivedSha256": "e4fbb94c0b2b9d80c7a70e0700ad21179f00c4991be86df6a4074d9890841c33"
+  },
+  {
+    "path": "native/mac-identities/initial-summary.json.gz",
+    "originalSha256": "442e7809249b9641b8abbe42b3878a3f4626fbb6c8e1a458c4d86574a1f0f4f3",
+    "contentSha256": "ce9854b1ead7ab86f46dfbeb5ce53484ebfbb678b7f657a3da0cdbc1ceb2eb3e",
+    "archivedSha256": "aae79bcdb87c820a61f932903fa5aa849681706b19d72e5211d742aeabcf6ad1"
+  },
+  {
+    "path": "native/mac-identities/initial-tests.json.gz",
+    "originalSha256": "22447afc8842988eaac2fe148992d7a4e1b08530380bd355d944a0ea72099c1b",
+    "contentSha256": "676b3a4af253973c287d3597ac92af25ca4906206acdbb6760b5b2a8b23c5677",
+    "archivedSha256": "12cc8c040a207bb95e802048db44b1a4a3aeed5de8d4ef15ee90c76ca4b882b4"
+  },
+  {
+    "path": "native/ios-identities/YlManagedFallbackCharacterizationTests_testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF__-activities.json.gz",
+    "originalSha256": "f4f44d7aa74d06da9af065539ebc81443868e8d5859636ef55af7ab683562a2c",
+    "contentSha256": "45516d3b8dae5e9b41cb66449f7bb11b8a24411ffe86009f15b11c18747eb9dd",
+    "archivedSha256": "2ae1cb85a20699a886a40c49ffe04831e8b2e78185fb69f0119432c3200c308a"
+  },
+  {
+    "path": "native/ios-identities/YlManagedFallbackCharacterizationTests_testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF__-attachments/LOCAL-dea1bea0de70d553.txt.gz",
+    "originalSha256": "a9214ab8e36f7ecfcdfe5d8d337ca24f49e6b0f0df62402d5944ef5be76548c3",
+    "contentSha256": "a9214ab8e36f7ecfcdfe5d8d337ca24f49e6b0f0df62402d5944ef5be76548c3",
+    "archivedSha256": "f4b2e0d5bc40b3396b423c8f228479d325ac668afa501b92471ab7c2d827bbc1"
+  },
+  {
+    "path": "native/ios-identities/YlManagedFallbackCharacterizationTests_testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF__-attachments/manifest.json.gz",
+    "originalSha256": "e299a7fc8b672215c870869ae9d6caf5fcd6a9e2691ed8c6ec3ce89926e6f19f",
+    "contentSha256": "2b587681cebf3ede2ae7dbe489bab3fc88d6d2a16ca0e3a7e34494d74fb0a894",
+    "archivedSha256": "284ba5a940a4dda8b961f5b3f0582474dac0b89c8ff6962c247f0463ffa78da4"
+  },
+  {
+    "path": "native/ios-identities/summary.json.gz",
+    "originalSha256": "89e876420deccd72e0ec33d7c00c79a6c13e88fa9e73b4e5b11d1ee0b01c69e3",
+    "contentSha256": "ab4cc353f8f53d8d5c3cd05ec3bccfc761b22f895a2c282e9d65c274501314d1",
+    "archivedSha256": "0193921ed19271932292fb2bb5bdd11cbbd726d2777a2b6acb3c6134aec9c1a8"
+  },
+  {
+    "path": "native/ios-identities/tests.json.gz",
+    "originalSha256": "d8e58c122f99c69778465cc4cab3014d4cbcf14b9814e927111018c07ada04db",
+    "contentSha256": "53449db41cface9b658705af78c22610462cfa53e179e3d3036ea901f8abe7ef",
+    "archivedSha256": "b930a91d54efad541183786a1249fe9a3d670b410bbeafce53567215bbf6f650"
+  },
+  {
+    "path": "native/ios-failures/RunnerTests--testAppManagedAVNeverActivatesAudioSession().json.gz",
+    "originalSha256": "8e2ade0db9dab15b14102cac408e558af61af604b9a52dc770fa039d8780986c",
+    "contentSha256": "f31a0a1d0b06f896b2991d62438449cce30ee9b547ca13822dc27f5d4a43c8cf",
+    "archivedSha256": "66fef7196c2917b1c70a98a2b4a13a4d4ce1407bdccbdc574060d8fd976d465c"
+  },
+  {
+    "path": "native/ios-failures/RunnerTests--testFreshOpenAfterStopReactivatesAudioWithoutLifecycleRevival().json.gz",
+    "originalSha256": "52b4ada5db5ff3e11a3ae9a67185b2f48a3ce3c602e87dc8e79bbe2dc23d075c",
+    "contentSha256": "2507c93b7d20f3b062f21d196fdf435d0157266b0e8b789c4ba4d485325d1ccb",
+    "archivedSha256": "d7d6997d31352aabeff541a874f1203a0038ad00ef29803c5afa88db3244dedf"
+  },
+  {
+    "path": "native/ios-failures/RunnerTests--testLoadTokenBelongsToCommittedAVSourceAndRequestStateDoesNotActivate().json.gz",
+    "originalSha256": "10c4d1026c2ce0f17610ca1a8fd3f2b2ff7ebf18778a99d6b3e6cd4a37ff1f26",
+    "contentSha256": "91931bb2f3d5a5edf4a49dc7a30d1a063a5cc2d70597289be3fa5868c08b7c3b",
+    "archivedSha256": "c009c6d3f76ed00c8c964660d52d340a6d2a22702bae98e0b1cb8424c3adfc6a"
+  },
+  {
+    "path": "native/ios-failures/YlAppleHostTests--testFailedReplacementThenReactivationPreservesAcceptedSessionControls().json.gz",
+    "originalSha256": "0298ac8c2515986c25e6185c8d5de50e3b4cd3bd9b2ad89d0c87705f68b282f7",
+    "contentSha256": "bbdc720768972d0188bc94731dc7a66bde5fadfcecc7f58aaed5e97b15692579",
+    "archivedSha256": "10e09fe04bcc50e931e42641a0870c6bd6045729e93d14a4580bc1ab71c86e80"
+  },
+  {
+    "path": "native/ios-failures/YlApplePublicationTests--testFailedCandidateRetainsActiveHlsSessionAndRestoresPublicProjection().json.gz",
+    "originalSha256": "74af02567e249dfbd363dc246ed2b779259231ca3397474538d611c3e213d3ef",
+    "contentSha256": "db5439bc027ab9925cab92a9f9aa9fc14a25d30753cbcc4727f748d7d498dc8f",
+    "archivedSha256": "729367ba652f06b2276637b0fdbe294253f3045919c028dcddf786745e15ed63"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testAC3SurroundActualPixelsSixChannelPCMAndSeek().json.gz",
+    "originalSha256": "ab319e58aec8f4a4a4b460d1b2fe707d5fb91fd415e02e960a24180f17286e92",
+    "contentSha256": "c26b5d0c0fd4de159e1795ef3a30734d3b2bff04c407fa252b38381b817cec25",
+    "archivedSha256": "e2308f69ec5d92519315668339052555cae25acb7303da2c025332e648b4e6a6"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testCodecTrackSwitchPreservesTargetSamplesAndTail().json.gz",
+    "originalSha256": "94b66c56ea0f7093d63c755041dd32e53a1debe2459756e93bc4210e433d6878",
+    "contentSha256": "2378eae2eb1f4cba4e85d8b45a7a3b829d36e65b63f3f511dd7c2784866a2ffe",
+    "archivedSha256": "e9c36581eef9c9cdd68fab2d4cec07cabe0588a7be7834f01c7ea576ff214fa8"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testDTSActualPixelsPCMAndSeek().json.gz",
+    "originalSha256": "348af7b1f7faaea9474527ae6736834a385f3f55dbdefd422775c049fedcf96b",
+    "contentSha256": "00b6fc08827d5124b82af82fb3ff989ccbe1426a3cef1082a557b3c4d1b8aa5a",
+    "archivedSha256": "72a89e3d10cb08112eaea6a782e2975f9a19dbe1d3ae1ac8c60439578a468b1a"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testEAC3ActualPixelsPCMAndSeek().json.gz",
+    "originalSha256": "1028fb5958661af718161d1fb321df1596221f6eea868a266973a0b08cd8c1c7",
+    "contentSha256": "67455bbf524b20cb7d09a5c61553d52c3a885b44d8f6815acb19b04163aac313",
+    "archivedSha256": "a3d320019e9e121d5ceca1fb3fcf2ed27f9bafd492d9379bea2942d10a2f366a"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testFLACActualPixelsPCMAndSeek().json.gz",
+    "originalSha256": "017dd7d99615ee7083a7f2168c570145d620d3cacad26b17d063d31a995242d9",
+    "contentSha256": "46df551f7f9103dfcdc3e9bba3d24eb59a1981065ee8c13945bcf9f0f74ccc77",
+    "archivedSha256": "1f25dc9b3112582a084b21988f8546d7f44b95790be8e0aae846fa81ede9c809"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek().json.gz",
+    "originalSha256": "fadd992474683c7ebf8d7f191fd7ea4969cf80d8b03ce333087c9302b499c052",
+    "contentSha256": "5852bcfafd3ce2dfa86f8a985a30a3214bb0b85e1df0b9bc233c40d20df2ca14",
+    "archivedSha256": "7112324fe74f1c195cbd200473f9f382ea7a597778a0c6c5f3ec5ce2d753348d"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testProgramStreamActualPixelsPCMAndBidirectionalSeek().json.gz",
+    "originalSha256": "3c5d766084e8e0adf4374f53634c35f904f0af7016abc9162d8868df1131b90f",
+    "contentSha256": "96a20fb4aa5b518e1f923ba71ee2616f5e78e4d89502c58226c84af7de426ae3",
+    "archivedSha256": "38e0325135d481968c4da74a33066985edf2947fefd8c78e3e4d9470660e28a6"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testStrictOpusVorbisManagedBoundedHardwareActualOutputs().json.gz",
+    "originalSha256": "19315051895881e95cd7e7394c3835ac3d6fa95cfe094bda9698931776d55583",
+    "contentSha256": "a9d16a3ebc44a645b3bfcd1599440a6b7a8957559976172e376a5d30113d7a86",
+    "archivedSha256": "95ab414de1886d6fa872df721da7a99f680661aa044bd6e96adc28d5d80344b2"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testStrictProgressiveManagedBoundedHardwareActualOutputs().json.gz",
+    "originalSha256": "432632c13761a9127c3001e568df959b3c6b1c64e7105b575e241091545faa45",
+    "contentSha256": "dea213d03dad08527b775216bb170edfb934a59d4a72c1d8dfef4017c36d7ab3",
+    "archivedSha256": "509dc32d517fdc296672fc48ff6e2db23cf8b898223f757b6437e3e7b9ee87e6"
+  },
+  {
+    "path": "native/ios-failures/YlContainerOutputTests--testStrictVP9ManagedBoundedHardwareActualOutputs().json.gz",
+    "originalSha256": "cfceac12458f5272286acdbb8765e0037eb7e4395008ef66cb3caa8581b06f25",
+    "contentSha256": "da69a13ed234940a9ea64b01f5fdac442407155fda15a2b3456bc32fe6dea9fa",
+    "archivedSha256": "04d17b9654d4dbfdcbf47f940c24b33571f76a4b2c19f3e6cdefc54ee7597eca"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges().json.gz",
+    "originalSha256": "d53ccb9a7a995ed19635a090049761903d0fd3290c27da4e5c097dbc2a16038b",
+    "contentSha256": "95a24319e0f1caafd41cc46eb180da0ba8e0bb5495d892b60438322a4a894cff",
+    "archivedSha256": "35c9053d2295ebeaa05bb2f5348919df048947d69cdc7dfea26e03d9bd0523f4"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek().json.gz",
+    "originalSha256": "622f5ec757580831db7b3dce374e3e09ac01cf8a6b11b0423b14e00e4fa2cc57",
+    "contentSha256": "9da1f02764c833400a1a853cb0859b1ad4b7b39b70616a93b1645818f63b4a23",
+    "archivedSha256": "131ced075fa42c0dcd4afacecfa177c67433074f72256ed629d8578a86c1b074"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramAudioIdentitySurvivesCatalogAddition().json.gz",
+    "originalSha256": "3adbede722d96b71c64117314c209c245b9165531179097e3d70ee742a3dac69",
+    "contentSha256": "cdd6e7e4659b0d0c94d391adaf2e60060250bbc5dbe522a3481f45ee148745ea",
+    "archivedSha256": "72aee538ca892c033190674ca30d569f3fce31146d4ec7a864b09b0d788e9638"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime().json.gz",
+    "originalSha256": "30e6ab9aee67f86bf535d03be99af54bdc43706587e94b239104ea332cb8e47a",
+    "contentSha256": "d6073d587d21583b74d36101e83a93e2d94951be6e98971859e7b21cb56474ec",
+    "archivedSha256": "6d4c15790ed48496cce4f5c22522acecf8e8cb07577108c09b05b59c06b446e6"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramBackendClipsThreePointFiveAndSeeksOriginalClock().json.gz",
+    "originalSha256": "b27d1315dbba2ad9ec8b2bcf64d57ccc8e40d2b2510ad820d41d1077cdb8cf04",
+    "contentSha256": "67621752d86dd966ebe81b8fe83518b3fb2a5a82fbf9125ffd4ff66330813c6c",
+    "archivedSha256": "9beb7da4fa2f621dd2e5ceceb22d05d2f687fab60c27b8825b077d9257040c65"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramBackendIndependentPTOAndNaturalPeriods().json.gz",
+    "originalSha256": "6f0fdab5c63f0128d403615a11a1a0f0c464a5a2d2a29f852eaf12b6566c78a9",
+    "contentSha256": "ce4cf40755d2c53c033caf1444e3015ff5b1037ef88c3e268aba763e811c9266",
+    "archivedSha256": "3ed4f03534b4f4231f4db8123dce4288f2a95766062c5b05b70425724a05eb3d"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramBackendPlaysAndClipsActualHalfSecond().json.gz",
+    "originalSha256": "0d461439d2d30f4cc4421e9054a9f60733b33055e3b3b23b16af1106a560fac2",
+    "contentSha256": "a5ad37ee08dcaddcaafd1ffe94d8e02226841f2ee2eb3c5f44420720e3246255",
+    "archivedSha256": "8c8c716eddfc5c401c2b1687ecb3a7a6fd4bfae440099ff5f1cfc8c50a730359"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput().json.gz",
+    "originalSha256": "6871f431eee25541e915154dbcdf157f0e7000a11eb448ddcb3cc9dda1c34208",
+    "contentSha256": "ae5fad60654681c5c55af234e05f02209c05fd2912bc9a0908db4db937df0eec",
+    "archivedSha256": "31c3a13eb820642619f732873752f26d0b33cf952b46a0e1aba23882e1f2d408"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramCompletedPlayHonorsCommandCancellationDuringReload().json.gz",
+    "originalSha256": "3e2cfe9ea635b3017aa6f3f030a825630ec226735c8577e79db70208f9e8b4fa",
+    "contentSha256": "1824e34fb454560bf1e7708a18a2a3e0a41df990ce0150c6e36049db382cc375",
+    "archivedSha256": "93097ad9d896e4e0869bf436f206f02a3eb1c7170339ac38595ae174f49c1c7d"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels().json.gz",
+    "originalSha256": "24947f5c7d3284a13cb35bf2a25ee8868b07b15e146267f1f6e4ac3b5148981d",
+    "contentSha256": "6cef8dd924785af4aebd936bbdca94ffd17a74fe956c28c93a90f659094fba40",
+    "archivedSha256": "fa900c84ba9dbaf762e26a1b0fec7ccbb2af2463dd82536344934b36270a59df"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramFailedCandidatePreservesVideoFamilyForRestoration().json.gz",
+    "originalSha256": "50ffe5a55ea6b3871e301220a685e60e2330da7c0bff78fb953ee22d76e85fd3",
+    "contentSha256": "e75e2be4a67f192e5959a67188d575a62fe2e9d46df02ad21acbf1b67026d6bc",
+    "archivedSha256": "34b68cb9d0ec75a3701eeef8eb922c3fb9ecd0b62bfc97570cab7b7ae0fc5a6f"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack().json.gz",
+    "originalSha256": "3e12bece45e53563580359724d7e4ec5b37d9a18bf7bb0e861fb0e68843787c2",
+    "contentSha256": "3b175a90415b4b0a2a0e46bd358ae647b4992990a72cdb7a3620c0616ae1d73b",
+    "archivedSha256": "b4f01d1e402c1ad7691586cd3eb0afb51fb2aa443ba64898eec3902f14dc131a"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramNativeJointBaseline().json.gz",
+    "originalSha256": "0958863e03386c941066e94191fbfaa5680e970fbf6b9d2fd04c0b9d0cb5915c",
+    "contentSha256": "04ca99ce4b7c12031bce2317b59429c983cf156db08080b301591294451aed44",
+    "archivedSha256": "0abd24bfdede46753cff336e5fbf9faa0954cbb2bc23bf66e30eb787107adb85"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative().json.gz",
+    "originalSha256": "51464043580212e61177199fc175210463d6f7f91f79ffabe4b84a1a832eff2f",
+    "contentSha256": "6257f61dd6578077b40041c3111e6ec4dd4b8bf16e7f46d36550661dd859de63",
+    "archivedSha256": "46d1bdf2fd9c781f949db922327d865543768e7e688970f67e80c4e09034e0d8"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples().json.gz",
+    "originalSha256": "938ba0a22b4682ea8610529df025a93921e34d4eb40748e8d2762f13fff839bf",
+    "contentSha256": "88d8024a87037436b03b7a9b14675c7ae6be9c976b1cb0d76e27a31e21c593c0",
+    "archivedSha256": "7b43b368f1bc73a9204f0745c65db33dc0d566c57e797f4186b87133a30ba5aa"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment().json.gz",
+    "originalSha256": "03a4224ee0cfca7e268d75016435d3f6ac81ba03b59007b54a061cdc8cfd022b",
+    "contentSha256": "4aebdae31a2fe335e171d0d926093ee5d565c777894c2faba68c893c90b2d48d",
+    "archivedSha256": "7644b1b4468aa75ee9ba4ab1c28a2f18144a19dacca9b0fc29cfb2796c6c5180"
+  },
+  {
+    "path": "native/ios-failures/YlDashSampleSourceNativeTests--testPublicProgramLoadCommandsAndManagedPolicy().json.gz",
+    "originalSha256": "9d8799a22373daadb246856f76ecd57caa0ed4d0a631af45cfea29cd5d0c9d44",
+    "contentSha256": "135861f39450c19cf78bd6e31a4d66961e5116a8aba832d67a22868a5ec714b1",
+    "archivedSha256": "a55fe58251b6b7cb747d9a6e748f1b3b5c8929a8f67720b0de138e90547d7802"
+  },
+  {
+    "path": "native/ios-failures/YlFallbackBackendTests--testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF().json.gz",
+    "originalSha256": "62ec080d9ddafaf19db173dcafd1f1f959d78b77669959e9fcec4d235b14f27c",
+    "contentSha256": "6f929e0f2fcd119f4eeaff462aec3b9721d97a7560ad8e48452e165655f2d4ba",
+    "archivedSha256": "9d132e24b49164d162a3d4313ab9c2903d5b784b5dfc168674fea9d38cd0c7a2"
+  },
+  {
+    "path": "native/ios-failures/YlFallbackBackendTests--testRealMkvPreflightEitherPreparesOrReturnsStableHardwareError().json.gz",
+    "originalSha256": "f13435e1c2674cbef2a68f4b55425b6af2b16c877e6f557ee1cabcd4f67c35bf",
+    "contentSha256": "eec47d482e9196a3b39036497116fefcde5b42bef20aa670fb17370246d18112",
+    "archivedSha256": "34e4b06ebb6688ba494361429f2660835753f8bb526b0d67fe88e7a4a2282d8c"
+  },
+  {
+    "path": "native/ios-failures/YlFallbackBackendTests--testRejectedQualityConstraintKeepsActiveFallbackUsable().json.gz",
+    "originalSha256": "c0d9f41c8ea7a046937590b168483a7f398a99ca313c6a7626ef7b94126bb44d",
+    "contentSha256": "1784c93f79f552fefce046f9e412b7e84fd02c279428dcf8497851aa97ff35e6",
+    "archivedSha256": "b3f756de87fbdb26377d83da2a1c209fe6b92537fc882f4509fe08addecb5444"
+  },
+  {
+    "path": "native/ios-failures/YlHeaderedProgressivePlaybackTests--testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat().json.gz",
+    "originalSha256": "95a7bc9ad9f903070acc66aac987c5cfb71dbf399f88e1a3ded6db3298def2c3",
+    "contentSha256": "c993f9a3b1880c9077d287c791660d3da8a6be63e67c8af0909c797f565a1f18",
+    "archivedSha256": "405dc2bccf5b39474e7d5e6b48ac7ed6aa31bd764eda7b06466a45cf103a2f7f"
+  },
+  {
+    "path": "native/ios-failures/YlHeaderedProgressivePlaybackTests--testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat().json.gz",
+    "originalSha256": "3b43592f05ba4e4ee8a8403c9f747faa6992d0553180f3c367234ef1157bc0e2",
+    "contentSha256": "9a1986ea147154177a0e996afef9673edb617e1b697efada7c0bedef5dd7f650",
+    "archivedSha256": "36c023034eccb6012e7a3e2bd1494324c138d956423e7738fb0e9c0312747770"
+  },
+  {
+    "path": "native/ios-failures/YlManagedFallbackCharacterizationTests--testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload().json.gz",
+    "originalSha256": "e7edd13145e89a96e5f495c2c793ede0bef77ef171179af18cd6e2fa8a5a4181",
+    "contentSha256": "8b49514bc5e21e9dc426bcd762e7769dc83710d03d30256a3aa89415f41f659d",
+    "archivedSha256": "1e2a505eac5078e20d10463f8cbba628bc9ed4ff5438cc3932356f1076520bd0"
+  },
+  {
+    "path": "native/ios-failures/YlManagedFallbackCharacterizationTests--testStrictHostTransfersExactProvenDecoderBeforeCommitAndFirstFrameOnce().json.gz",
+    "originalSha256": "1ee5f1bc2b8d76893176d3e30b16201dffeed493cf2d631f44a3b99d19914fe0",
+    "contentSha256": "53af3f09c1bed238e8b0a5ff56bf7db57d3cc09ec69399fd5e03f16fae1cace3",
+    "archivedSha256": "efcda64667e76c6cc5357a8537c9d0be4a67d4fe4e754d659983a5781e895469"
+  },
+  {
+    "path": "native/ios-failures/YlVideoToolboxDecoderTests--testInBandHEVCLocalReactivationKeepsRecoveredFormat().json.gz",
+    "originalSha256": "590a834274d8bc66dd9b121e5d557577f2a836e5fffe9eb450eea27133a371ac",
+    "contentSha256": "7d89525be7a5fb4ad56642881b902d4042a1fc3116e3544bd434f000365107a2",
+    "archivedSha256": "26674b1c642f2a6e66b6de41fc65b57f72f690c31e7285fc32762ff12b091e54"
+  },
+  {
+    "path": "native/ios-flv-capability/LOCAL-d6592118bfeedc1f.txt.gz",
+    "originalSha256": "81bbeaae8e395ab730b75f9a66181786b67a187d0b4f01814ba39c326b96fdf6",
+    "contentSha256": "81bbeaae8e395ab730b75f9a66181786b67a187d0b4f01814ba39c326b96fdf6",
+    "archivedSha256": "df76d6b5226ce3febce3549ffb505599a3413c5f4e06fdd43149ecc506cc03d1"
+  },
+  {
+    "path": "native/ios-flv-capability/manifest.json.gz",
+    "originalSha256": "427c44b9cc35dab4046ad9796906c6f91ff2f849844175b1de218df2e781aca8",
+    "contentSha256": "c6a039da9f5daa2f3ba1c2e6f7bd7428a3ca8161de647b26efdfabf6aeb3fc1b",
+    "archivedSha256": "3441cc032e081927ec9763831147e65354a69f2f9022238c57cb52d351e176c1"
+  },
+  {
+    "path": "native/ios-session-identities/r19-attachments/LOCAL-37b38ddb7e2027ec.txt.gz",
+    "originalSha256": "a9214ab8e36f7ecfcdfe5d8d337ca24f49e6b0f0df62402d5944ef5be76548c3",
+    "contentSha256": "a9214ab8e36f7ecfcdfe5d8d337ca24f49e6b0f0df62402d5944ef5be76548c3",
+    "archivedSha256": "f4b2e0d5bc40b3396b423c8f228479d325ac668afa501b92471ab7c2d827bbc1"
+  },
+  {
+    "path": "native/ios-session-identities/r19-attachments/manifest.json.gz",
+    "originalSha256": "bcca5c3cf815dfff3acfc685922a17458613dd89b32a1b4f426a06984a4863cf",
+    "contentSha256": "3e8d7a792307ee3438cc11a13f74e80ce2c37a96bcecfe397f71e01618c9244d",
+    "archivedSha256": "e95acebadc0119647867ddeb781604a534ae31aff95e7172dfef9c59eef77b05"
+  },
+  {
+    "path": "native/ios-session-identities/skip-proof.json.gz",
+    "originalSha256": "e43859072f918b3bb35ad8b891bc942b8110aa63aa0ab5a0f4a19531a6ab3308",
+    "contentSha256": "e43859072f918b3bb35ad8b891bc942b8110aa63aa0ab5a0f4a19531a6ab3308",
+    "archivedSha256": "40bc8b9d3784f1496b60165a588dff817eb404e6b28803f1969299476b3f2837"
+  },
+  {
+    "path": "native/coverage/ios-coverage.json.gz",
+    "originalSha256": "35493802e5f77237221e664da7a5b81e354bd359ef65c5a929b588ce95a71570",
+    "contentSha256": "35493802e5f77237221e664da7a5b81e354bd359ef65c5a929b588ce95a71570",
+    "archivedSha256": "784ed1dfd6f32daa7830e6ec0ec0cf002351ba438c08fa16355f33ffc2be0924"
+  },
+  {
+    "path": "native/coverage/ios-rollback-red-runtime-summary.json.gz",
+    "originalSha256": "6f0ee9271acf583553a18d0fe10de02e4365e43b08499f97fa893ac95f0b39b1",
+    "contentSha256": "999a17c68a48435ad9d52d28de8bf3f54a3db4e6bd9815679e7340a996d42470",
+    "archivedSha256": "8fa89157dd4a4035e415dd4924f7dce0407b488a292be8d1f39355657a645605"
+  },
+  {
+    "path": "native/coverage/ios-session-fix-summary.json.gz",
+    "originalSha256": "22baded833699fe5e07dc5cf23472cc61038f14c350813a696cea37d977d88f6",
+    "contentSha256": "0d705e3d46b66a58d897e1e63d822b7e6f0823099c14064232149b7f0d2aef65",
+    "archivedSha256": "fdb47d5dbdb8ea6e755c737d2ca6e0bd29a8e352d82bd7648bb4572106b4886b"
+  },
+  {
+    "path": "native/coverage/ios-session-fix-tests.json.gz",
+    "originalSha256": "788de7851c6135613302a46f9338deb11425b31544194817f2453525ba03a988",
+    "contentSha256": "a37a60255aa02f2015d730bbd8b8a16d965ebceb474ae51088239b6a593e3c12",
+    "archivedSha256": "03f5057549cb5eda766020c06c73c02fcbd477e94ee6f3b1a12222673984d66c"
+  },
+  {
+    "path": "native/coverage/ios-summary.json.gz",
+    "originalSha256": "1efe526293c95606d76160794a26ef49bb749de603411f31027c629b770103e9",
+    "contentSha256": "69cc3311dec9c8d0c4a515c461297c0431c23e9b1b00f1a6ab7b6ea8f5bb284b",
+    "archivedSha256": "e41970594e380c3fa982a1489531b3a6568c6033e38af02f5bd929a689db4bfc"
+  },
+  {
+    "path": "native/coverage/ios-tests.json.gz",
+    "originalSha256": "06f5b381655aca8c646d3db73cde87f91effa238d989cc4e98b2b2c37bdcbbd8",
+    "contentSha256": "ca825834440eabe35052c872cec893c7f416bddb8d133e65edb1d2422789411e",
+    "archivedSha256": "49a137040d654c274c3c0b521dfe3a5d1e107ed830cc8d5783817f7337e577b3"
+  },
+  {
+    "path": "native/coverage/mac-fix-summary.json.gz",
+    "originalSha256": "3f2c934c4215782307646ed2d1297da826092044a87f42a7543546d62f514c0c",
+    "contentSha256": "415274cfe1af472fde51b6206c28012e5158549333c2ab6e74edb5b78ebadcd7",
+    "archivedSha256": "699b64117f2eb5e4c424190e832724b59a58ca86a4b8b4e0f1c44059156f6659"
+  },
+  {
+    "path": "native/coverage/mac-fix-tests.json.gz",
+    "originalSha256": "cae37cf6cb4aca2f2ec15229c79ef980505aecc3e6c5b424caadeb5679eabd05",
+    "contentSha256": "09028c8b4169e9014e1e819b7bdad02f9fb95c7989c42b651b10ec97d9e19337",
+    "archivedSha256": "e4fbb94c0b2b9d80c7a70e0700ad21179f00c4991be86df6a4074d9890841c33"
+  },
+  {
+    "path": "native/coverage/mac-intent-fix-summary.json.gz",
+    "originalSha256": "c781e7ca97cc100c295b4336f850b8eb7c3e4a1bdcf4171850bf4faf54095b06",
+    "contentSha256": "9bafd7bb06779e3b858a31275fd5e98758eaafa0a48278cc3f99ccc403d9c903",
+    "archivedSha256": "789a8cc24877c10e2a5afaf3169a5ab5ebcd43e31f72486c1b87443f2d7a136f"
+  },
+  {
+    "path": "native/coverage/mac-intent-fix-tests.json.gz",
+    "originalSha256": "a186d337765737e9ea7e1108d2cf4e7bc7f885c21ad9a9c0ddc0767ab139f16e",
+    "contentSha256": "2b4738c9a6388147741557aaf18c0f6dc72c84f9e0337d56d8c550381ab7576b",
+    "archivedSha256": "69df04fe9f23c2a36470f33eed94fe957f7a05862490632b892ec0be1fab4362"
+  },
+  {
+    "path": "native/coverage/mac-intent-local-summary.json.gz",
+    "originalSha256": "aaf056b48207e30b33659136c835d0655014da430a1636b5351c7a0e7ea4c310",
+    "contentSha256": "1c121b4c9a4ce2f94fc0bf752a26d94fb1e030232c253816f53e7294907020a4",
+    "archivedSha256": "e58070825757313e86d2813cfd8b3f481e2a8a03fa01d75a3fc3473fe71d3125"
+  },
+  {
+    "path": "native/coverage/mac-intent-local-tests.json.gz",
+    "originalSha256": "78de0a4d4105b4cca13108d008406985e529d665d92165d4743627fb9656bacf",
+    "contentSha256": "eb536296d1748b9c4a445cf4902cda05e4200be579b6839216592909cc86b21d",
+    "archivedSha256": "d75741df3d1686101c00a1d0cdcbc25464123f038bf9fb8aef70d70bee7bc558"
+  },
+  {
+    "path": "native/coverage/mac-summary.json.gz",
+    "originalSha256": "442e7809249b9641b8abbe42b3878a3f4626fbb6c8e1a458c4d86574a1f0f4f3",
+    "contentSha256": "ce9854b1ead7ab86f46dfbeb5ce53484ebfbb678b7f657a3da0cdbc1ceb2eb3e",
+    "archivedSha256": "aae79bcdb87c820a61f932903fa5aa849681706b19d72e5211d742aeabcf6ad1"
+  },
+  {
+    "path": "native/coverage/mac-tests.json.gz",
+    "originalSha256": "22447afc8842988eaac2fe148992d7a4e1b08530380bd355d944a0ea72099c1b",
+    "contentSha256": "676b3a4af253973c287d3597ac92af25ca4906206acdbb6760b5b2a8b23c5677",
+    "archivedSha256": "12cc8c040a207bb95e802048db44b1a4a3aeed5de8d4ef15ee90c76ca4b882b4"
+  },
+  {
+    "path": "native/coverage/macos-coverage.json.gz",
+    "originalSha256": "611ce3dedfc25bc2ebe12b9bc059eb2ba48d8b3410675f746732be22190ea7c1",
+    "contentSha256": "611ce3dedfc25bc2ebe12b9bc059eb2ba48d8b3410675f746732be22190ea7c1",
+    "archivedSha256": "597de803186cb07116ce6dc9b970e94e2a1291ff6347594fc265d48c57ce0faf"
+  },
+  {
+    "path": "native/coverage/macos-session-fix-summary.json.gz",
+    "originalSha256": "5374ff370f5339c5325bcf427ab747f89b8fef3a64119b6d7ec5f0a15ff0d2ff",
+    "contentSha256": "3a3e23f2606158ab8c5189cdf80bc69ee0a92e1ae27f8f7a54289993260e907a",
+    "archivedSha256": "6213f89cd1a219fd8c5caf3fca33761a2e6f402ac9e9fe811b2b86a487f095cc"
+  },
+  {
+    "path": "native/coverage/macos-session-fix-tests.json.gz",
+    "originalSha256": "541c91af370939eb451d47fb3a7dd8b5e038d0e3e616de689f1725043e2818f3",
+    "contentSha256": "ce4bcec8bae77df7b362fff55c7f1969cc49ad6fd820d80b2b75649f41f7c111",
+    "archivedSha256": "87bf97e2a9b818111a9d20b962e75f1b99b150306bc771e42df46376fcb0a46b"
+  },
+  {
+    "path": "native/coverage/regression-red-summary.json.gz",
+    "originalSha256": "1e7b94b02ce2e28614a1082357639f8c7cf4231cf1eed3fa0be0e5dce1b6ed9e",
+    "contentSha256": "1e7b94b02ce2e28614a1082357639f8c7cf4231cf1eed3fa0be0e5dce1b6ed9e",
+    "archivedSha256": "927ccdd06804df3dc640e37b88d88c050ef32ecd0bb07d00fa325f89708781a4"
+  },
+  {
+    "path": "native/coverage/summary.json.gz",
+    "originalSha256": "f8ef73330a202c9c8b2f54a10a50a99965c3cfffdc342cb1c851346f7919f13a",
+    "contentSha256": "f8ef73330a202c9c8b2f54a10a50a99965c3cfffdc342cb1c851346f7919f13a",
+    "archivedSha256": "cf214074d6fcd812ec2a8a500c3a66d53e783cdf5b8ff70b0b944d3a84f7c3ab"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-465b8a0b3d4ac4a1.json.gz",
+    "originalSha256": "934f5ab0caffb4aa8c1d79d60786d0e7deb02397957df678d6e12e4eaeba6b69",
+    "contentSha256": "934f5ab0caffb4aa8c1d79d60786d0e7deb02397957df678d6e12e4eaeba6b69",
+    "archivedSha256": "2133dd3ef41029895c0884b316491e262ee29f07de7845994265d7ae16fe4d7d"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-c2af5d4466f52e73.json.gz",
+    "originalSha256": "d2ce1ad8def02102fee312ec52db0aa91931f21daa71ed6bc7ef74786b56df01",
+    "contentSha256": "d2ce1ad8def02102fee312ec52db0aa91931f21daa71ed6bc7ef74786b56df01",
+    "archivedSha256": "0ef1ed75c570e06f300c5a7b29f92aa0dafc1643f647659ec4a1204f876dd1e8"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6de653b612fe441b.json.gz",
+    "originalSha256": "e457f5a8a9c8e1158574cb187368825d608ed6dcec9d12266274fb2449a2d521",
+    "contentSha256": "e457f5a8a9c8e1158574cb187368825d608ed6dcec9d12266274fb2449a2d521",
+    "archivedSha256": "b602229373562f5899f4c432da36abedefce3917e567bd59fc166a9e06a20caf"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-759e11e3f3dc1b59.json.gz",
+    "originalSha256": "8b6af12529abc4244408d1b4b275e8d06200fbc2a72b8c885e9e3b06f2a6b81c",
+    "contentSha256": "8b6af12529abc4244408d1b4b275e8d06200fbc2a72b8c885e9e3b06f2a6b81c",
+    "archivedSha256": "a749b24878a5e6dddeed00faf2751135a5e8b4acf85a95cacd87297b47670f5e"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-7b7b9b151a55d04b.json.gz",
+    "originalSha256": "0a4e526157a15b464667e8aa5a9c5e87fd09e86004f939e3fd161fb533bd7342",
+    "contentSha256": "0a4e526157a15b464667e8aa5a9c5e87fd09e86004f939e3fd161fb533bd7342",
+    "archivedSha256": "f39fddfd4133bec41e82959a2d03ba8cd59a55d1b53636953eac20e1cfd2234e"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-8fc72cb10004df7e.json.gz",
+    "originalSha256": "78cb0612709a4a73e66779e098e527795a6746251bcdacdefba02af23eac47c1",
+    "contentSha256": "78cb0612709a4a73e66779e098e527795a6746251bcdacdefba02af23eac47c1",
+    "archivedSha256": "4b899c7479409ae847579f765ec05538abde619105495aa56aa2728d8686a018"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-70ec44f8c7d99d8a.json.gz",
+    "originalSha256": "ad0d46359dd3869e796b2643fa4214ddc9414abad3c711498b890c427d834bc1",
+    "contentSha256": "ad0d46359dd3869e796b2643fa4214ddc9414abad3c711498b890c427d834bc1",
+    "archivedSha256": "ab5315347a4020764ec161f91b2fad5bd0108561e710b7dc2447594051df09e1"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-1b22ad94e2d42a44.json.gz",
+    "originalSha256": "58749f5abdae35ef5bd0eef80c2682b1b3333091c0746126665cd04ed8e89310",
+    "contentSha256": "58749f5abdae35ef5bd0eef80c2682b1b3333091c0746126665cd04ed8e89310",
+    "archivedSha256": "aca5199a05c05b2a6421d86ce16829c4a1f8850927b6d168bac1cabe90a27a5a"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-3abc506da781ef33.json.gz",
+    "originalSha256": "e79e16db915cf48813ccbe626cc9cdc3d788e2db2258fb2827a37297cd31c158",
+    "contentSha256": "e79e16db915cf48813ccbe626cc9cdc3d788e2db2258fb2827a37297cd31c158",
+    "archivedSha256": "bec5f6184f3063cc1c5f637f6497aad952001745c28730304906327330f73bd1"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6c6482a39d863941.json.gz",
+    "originalSha256": "a40d18b8a5561d48b35a8c951af779e1bbaca1ed7a1b00fcc292b693d628f22b",
+    "contentSha256": "a40d18b8a5561d48b35a8c951af779e1bbaca1ed7a1b00fcc292b693d628f22b",
+    "archivedSha256": "80643b258176d9cacaeef58140bb36e2af40f457161fa1a999419a858f221aea"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-d87906772236182e.json.gz",
+    "originalSha256": "f5d58a7611fc222588f680c559b8cce13d791085fcb429a0bc5555404b6d49ee",
+    "contentSha256": "f5d58a7611fc222588f680c559b8cce13d791085fcb429a0bc5555404b6d49ee",
+    "archivedSha256": "ce461a773057eb2f863f46521cb1a4714e65050c3525fe74b42f50ab32588a06"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-7ae2fe107432acf7.json.gz",
+    "originalSha256": "14e17a28c17fc2a18b932f96eb431abdf5d72c2768d7e49b92a98b437d31a7c2",
+    "contentSha256": "14e17a28c17fc2a18b932f96eb431abdf5d72c2768d7e49b92a98b437d31a7c2",
+    "archivedSha256": "0fe05c320da23104d69da3b50b6cb291ba2acd253c627209625cee2b9be08dd8"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6db040c308a3307f.json.gz",
+    "originalSha256": "fd346c005e9f047aef661b71ba79b23826c7616d08c73ac1f4c86bf18f08f750",
+    "contentSha256": "fd346c005e9f047aef661b71ba79b23826c7616d08c73ac1f4c86bf18f08f750",
+    "archivedSha256": "16d667200f2cd99706b7ce87290f01e821b2fae9647d466b6b1c917563430940"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-876784e0e4381e51.json.gz",
+    "originalSha256": "c6e626bc6611e521dba987dccf0078fb59d0c3078d2075f404a15d3a788a144e",
+    "contentSha256": "c6e626bc6611e521dba987dccf0078fb59d0c3078d2075f404a15d3a788a144e",
+    "archivedSha256": "dfc0fd1f7994171064184665893d9537c608a9cf59ceb906561b709356bb05bb"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-c2feac30ca8933e7.json.gz",
+    "originalSha256": "bd2ffb544fc0647ed1da3a9786d0f86233c697c521020a2f0e6439aac95a04f3",
+    "contentSha256": "bd2ffb544fc0647ed1da3a9786d0f86233c697c521020a2f0e6439aac95a04f3",
+    "archivedSha256": "8ea1e34ed35f3e5fabde4299c377b22d0f7efbbc47a67fec239c913232d25d3a"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-980bb89ec414d6de.json.gz",
+    "originalSha256": "b195a3e4eee4c263f439dd8d757d9f78648fad94c407efe7ea2038575c046415",
+    "contentSha256": "b195a3e4eee4c263f439dd8d757d9f78648fad94c407efe7ea2038575c046415",
+    "archivedSha256": "3bdf9bbd7125b866d3e0826c2ec933203653437cab7e0b9e180d2bd15dc27130"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-8b302926f99ba3eb.json.gz",
+    "originalSha256": "69b36be19293611b334351fa5b65b4b819a4a0e10ba4c0966e4c582db2e1553b",
+    "contentSha256": "69b36be19293611b334351fa5b65b4b819a4a0e10ba4c0966e4c582db2e1553b",
+    "archivedSha256": "81cae3480d21c7e523ca24c15cd98f0c6da1e1b26678656982f89a47c0a7b82c"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-ddd7d90aed315cb0.json.gz",
+    "originalSha256": "0e25233812a5915f26baedb791ed6cd8037c52af99124dbdf17f0829b10bdb74",
+    "contentSha256": "0e25233812a5915f26baedb791ed6cd8037c52af99124dbdf17f0829b10bdb74",
+    "archivedSha256": "7df13d6511c2efc843e456471bd793be311ecded631e4935848268a65ee130aa"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-efdddb04287972fa.json.gz",
+    "originalSha256": "c43a6a3a3e9d7b51a222de9fa7964eb29c07676274ba738e444de27ef3116d5b",
+    "contentSha256": "c43a6a3a3e9d7b51a222de9fa7964eb29c07676274ba738e444de27ef3116d5b",
+    "archivedSha256": "7bf2c97b4cc7c5ac6ef928e5a6db73d8b51eddab5f58c5e39b3f31d953a93c0a"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-a541f25e85a9b278.json.gz",
+    "originalSha256": "4ca76410cc86cae70f17cfabdba2670fbdb34a31e8fc008674cd9f125ae610a1",
+    "contentSha256": "4ca76410cc86cae70f17cfabdba2670fbdb34a31e8fc008674cd9f125ae610a1",
+    "archivedSha256": "c1d630771b0a7e092e580752a79690b02bb6c507442de82bd836e915eac543ac"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-a0bd71d1ee79e635.json.gz",
+    "originalSha256": "435e3acf8c7eb305e2b49316967dd0d5164f05b001d61f4778b16a67fa363661",
+    "contentSha256": "435e3acf8c7eb305e2b49316967dd0d5164f05b001d61f4778b16a67fa363661",
+    "archivedSha256": "cae1e1701e8a9bc98b0b51201f781091d3f3456589e576b6c5ff78c4145cb0a6"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-b2dafba4a144c67e.json.gz",
+    "originalSha256": "d8ecdf6174af401efaa9e4260ed0346cbeb31578464b3284240334b820a4a831",
+    "contentSha256": "d8ecdf6174af401efaa9e4260ed0346cbeb31578464b3284240334b820a4a831",
+    "archivedSha256": "17d03b8fb3d0a3d0c18f67d6e33e4e868bb9b37d785da590ddcce0339e2c3504"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6c22288290f78aa7.json.gz",
+    "originalSha256": "3f909586d916ef3f186c4766bf155adc995d254c69f6300293c19a43cdba39f0",
+    "contentSha256": "3f909586d916ef3f186c4766bf155adc995d254c69f6300293c19a43cdba39f0",
+    "archivedSha256": "a82248d1ca25d020d9e0e72c6228274cacfd1717031e6f1b52a475eed1c469bf"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-c4b9614546455bb6.json.gz",
+    "originalSha256": "d4ada0e45caff265dcd44b2cb37da9f863fcac77eb59525fd0866cddd09660f7",
+    "contentSha256": "d4ada0e45caff265dcd44b2cb37da9f863fcac77eb59525fd0866cddd09660f7",
+    "archivedSha256": "b38ce11de603ca1a37d2be970f602b1b9ecdae3f8a8e9a82ef0b502856ed1492"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-ce0807c75a04e309.json.gz",
+    "originalSha256": "8dccd88f114b9eaaacb022b177bff852e9a29848f90a2a9be759cd34364f86f2",
+    "contentSha256": "8dccd88f114b9eaaacb022b177bff852e9a29848f90a2a9be759cd34364f86f2",
+    "archivedSha256": "66bd650714fa76c8c72439965f54425f1a7e876713b5e6f5ddbfc0abed0b58f5"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-2f0e4eec59e86322.json.gz",
+    "originalSha256": "9f708350c796bbe7d89689559900fdf7f1fa904fe45d2a6b85ef5144da0145f8",
+    "contentSha256": "9f708350c796bbe7d89689559900fdf7f1fa904fe45d2a6b85ef5144da0145f8",
+    "archivedSha256": "77b99f0fb60c9702a6ca78d616b110f6207e2bd01edcb0560b5a95bddfa517d5"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-d90e93f2ff905707.json.gz",
+    "originalSha256": "004c5447233e9a5e2ae8227fa615b5c8bf86e0e98e2c7412707297ab2501b60e",
+    "contentSha256": "004c5447233e9a5e2ae8227fa615b5c8bf86e0e98e2c7412707297ab2501b60e",
+    "archivedSha256": "5b5cb520fddf37b64f96eb5bbfa3ef7659447b3454647e40aaf47e9c32b45bc6"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-457b08e9e02d9ed0.json.gz",
+    "originalSha256": "916350539ffe7f0ea4adf72004bd4ef48cde2b4825cda7c711403828b96ab580",
+    "contentSha256": "916350539ffe7f0ea4adf72004bd4ef48cde2b4825cda7c711403828b96ab580",
+    "archivedSha256": "0ac5f0d66bea0942b76bcdad0d3a7efef78936d557cb41c486a05bbaa3844d94"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-3682d4f584747931.json.gz",
+    "originalSha256": "11d6377d031da1505f0066378e2b375d66eaacebb905bba96e438b648484d359",
+    "contentSha256": "11d6377d031da1505f0066378e2b375d66eaacebb905bba96e438b648484d359",
+    "archivedSha256": "18b14366f069e08f2838fa2c86f1e13109bdbf63c6ac90b3ee848b0ccb7095c9"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-82d537cda4a9b9c4.json.gz",
+    "originalSha256": "7872cb70a104655e11d263efab544fc9e48d130a95e778d946585a97d629f2f0",
+    "contentSha256": "7872cb70a104655e11d263efab544fc9e48d130a95e778d946585a97d629f2f0",
+    "archivedSha256": "64dc866ae5722defdd3c503ddc649375ec481b70bd194bb9d39e6d240ed8e348"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6eaadfaa839a9fef.json.gz",
+    "originalSha256": "e0bb4fe809f1c73cc5acccd944d233cacb080130ef307ba64f496c7cbd83aa36",
+    "contentSha256": "e0bb4fe809f1c73cc5acccd944d233cacb080130ef307ba64f496c7cbd83aa36",
+    "archivedSha256": "40cfcefaa7f6aa623718753d55eb12f92ac7498910dae02e52b4b0ea90762f2c"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-7cd8c9c0b68baf5c.json.gz",
+    "originalSha256": "db11ab5e8ecc8e0d3d11e88d44a5743a3cd38f25f9c873fe9b7276b512455851",
+    "contentSha256": "db11ab5e8ecc8e0d3d11e88d44a5743a3cd38f25f9c873fe9b7276b512455851",
+    "archivedSha256": "1269e0a59f71e9c0200c974c95f04b45ce4058c38a97ee19135bf25497528fe2"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-0d6d3df9a20503ac.json.gz",
+    "originalSha256": "e52e963adbf466f8ff5d0f73d3fe3b3aae05ce3a1693cf451816ac62ddcbb455",
+    "contentSha256": "e52e963adbf466f8ff5d0f73d3fe3b3aae05ce3a1693cf451816ac62ddcbb455",
+    "archivedSha256": "81d0645961c90e79ee38bf17ac8b4154a0db8101fe58ad53518dc7804685617a"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6617295847bbf383.json.gz",
+    "originalSha256": "82f44135c04fcf209775f75a91048602238ee12439e3e670218fd388573cc116",
+    "contentSha256": "82f44135c04fcf209775f75a91048602238ee12439e3e670218fd388573cc116",
+    "archivedSha256": "540080281e2c942fb83e535af019b11dfc1ef6b1a73ac675a19b1c9136b054b3"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-c3aa790812f977b6.json.gz",
+    "originalSha256": "3a666548dca001614c0bfb1b4ae43985fd8de464c93826575823e9a9cfce4336",
+    "contentSha256": "3a666548dca001614c0bfb1b4ae43985fd8de464c93826575823e9a9cfce4336",
+    "archivedSha256": "a17f45030e0666f6d34aec8214a2f7198e6924951d0d5c9c86e62a928fb292b4"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-62ae9dec2df597d3.json.gz",
+    "originalSha256": "7f3f1f111592dc0dc700bb7dc92d20c61a64b612991cefc19731d602e6759b8b",
+    "contentSha256": "7f3f1f111592dc0dc700bb7dc92d20c61a64b612991cefc19731d602e6759b8b",
+    "archivedSha256": "4edb5e270ee308b9181cf8d54c32357cc882c9bb0ecc5e0f0efa5c1d9a441ee2"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-c8b7d41431bf9950.json.gz",
+    "originalSha256": "5c547b2448f46d089ad30f61fc9708bd694ba63e04810e7836877fd554826867",
+    "contentSha256": "5c547b2448f46d089ad30f61fc9708bd694ba63e04810e7836877fd554826867",
+    "archivedSha256": "c8ef39c60ad89c708f871a1d7ac1e755663288f59bfd840a94a52e3246e2467c"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-6af1c0684fd0be31.json.gz",
+    "originalSha256": "588da7e8eeb53907ee55e06abf29d9a9c6ba266df9cdb17650fb8603a415bcf2",
+    "contentSha256": "588da7e8eeb53907ee55e06abf29d9a9c6ba266df9cdb17650fb8603a415bcf2",
+    "archivedSha256": "4234618a82185cf5b266b65c14180dcf985532eb87ece0d328b6892997c4626b"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-41dd4b422a2b72cc.json.gz",
+    "originalSha256": "2cda0286bb10f6c893a8dc3f82ca5c4c373aa065614bf049b4570b4b10c66a3f",
+    "contentSha256": "2cda0286bb10f6c893a8dc3f82ca5c4c373aa065614bf049b4570b4b10c66a3f",
+    "archivedSha256": "7cd199e854f1f523c3768231f39ad94de7e6be5a7f443d0c6f274ee1bace61dc"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-43a0942c371bd6d5.json.gz",
+    "originalSha256": "a106d262920ed198182dcc2537f8600bd41d387e798ad0d61225d9d854862528",
+    "contentSha256": "a106d262920ed198182dcc2537f8600bd41d387e798ad0d61225d9d854862528",
+    "archivedSha256": "9aa2bc3dbdc8a4de739da07bdc82d44ab79ba396697016000480f8aeb3721f95"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-9349b3dc1db76efd.json.gz",
+    "originalSha256": "c4d25254ca56706f537172ca6f58a1f44b3282aa032b964e69c81a29ebfb96cb",
+    "contentSha256": "c4d25254ca56706f537172ca6f58a1f44b3282aa032b964e69c81a29ebfb96cb",
+    "archivedSha256": "f5bd255b2a28e477922fbe17d8b2368b06579da7be7b9be255972646f0dfef14"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-56644117b3b0d9b8.json.gz",
+    "originalSha256": "8926646d0ec18c3aa62db28215e4590e1dca83efe515face11f3d6ac5f1a2165",
+    "contentSha256": "8926646d0ec18c3aa62db28215e4590e1dca83efe515face11f3d6ac5f1a2165",
+    "archivedSha256": "b8cdad938af397b4f7c4f3ae062b21e5a6b3997a1f42611110eef83b5cfcae80"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-aa41a745d02f272c.json.gz",
+    "originalSha256": "b0d0c14555bcf1eaeb55855a4b2ae6086a78958e48bc29cd7d2da199b3162a88",
+    "contentSha256": "b0d0c14555bcf1eaeb55855a4b2ae6086a78958e48bc29cd7d2da199b3162a88",
+    "archivedSha256": "3222e99b11ebadf775b46d6b006440987e13c8fce07e30e65f23a3b1d00a1d91"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-79ce305ae174c43a.json.gz",
+    "originalSha256": "f3f05999da724a207844bdc0eda71f9f2afc62e934eb8034314cf0a987df9560",
+    "contentSha256": "f3f05999da724a207844bdc0eda71f9f2afc62e934eb8034314cf0a987df9560",
+    "archivedSha256": "ff52c163540d31cd8c251d189f23224dd8b718c1003707720907b09905e823ce"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-829784bda96ba5e2.json.gz",
+    "originalSha256": "c1077cd0a90bad9bdd61bbfdaf85904cb57ea3c5c56dc9c0cf785e4270b84f89",
+    "contentSha256": "c1077cd0a90bad9bdd61bbfdaf85904cb57ea3c5c56dc9c0cf785e4270b84f89",
+    "archivedSha256": "0d16e9533c5b57c8684fe52614178ff2c60d2f0da25eab348a96ad27288dbc3c"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-f41c34a5684f90ad.json.gz",
+    "originalSha256": "bddfee4148cb81d4b3b43ff5df860dcdfc0572972c75cea794eb3385ec8a6ef2",
+    "contentSha256": "bddfee4148cb81d4b3b43ff5df860dcdfc0572972c75cea794eb3385ec8a6ef2",
+    "archivedSha256": "414e032ceec241fe154b1a3ff40d2cf21553d8015962e88b785fc3a4b71a8db5"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-3951ab8b28106ce0.json.gz",
+    "originalSha256": "88143eff4f3354176d09f3517493cd6f9762c4bf6636365d394c6d562d921be3",
+    "contentSha256": "88143eff4f3354176d09f3517493cd6f9762c4bf6636365d394c6d562d921be3",
+    "archivedSha256": "921d0f7bafb217c8305e5e805ce97d4a5adfff953176cf8b054abea05060fc3f"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-82d3385f2090b677.json.gz",
+    "originalSha256": "40c332be0c1670233deee0f36fb396bc1e1f53d9c45fff8d5eb0a22429c61e0e",
+    "contentSha256": "40c332be0c1670233deee0f36fb396bc1e1f53d9c45fff8d5eb0a22429c61e0e",
+    "archivedSha256": "629b5b29ec295276ee529d761c0a46821f814f8194c560c27ae25d6183f4023f"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-a23c319864018732.json.gz",
+    "originalSha256": "6db94fb9d4db024b32471908c7ac2016e7b7301d1427b6871a1526662d03689a",
+    "contentSha256": "6db94fb9d4db024b32471908c7ac2016e7b7301d1427b6871a1526662d03689a",
+    "archivedSha256": "bd06bdfbe6a73c8da98e186dd675b479acaafdfd4f6e915398510e80717ef21c"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-fe291d353cad273f.json.gz",
+    "originalSha256": "7985377d7ff80a1733560098404ef06f594266d069bd780bb89641295e29e565",
+    "contentSha256": "7985377d7ff80a1733560098404ef06f594266d069bd780bb89641295e29e565",
+    "archivedSha256": "1516f83dc3e59f4216bd3f47e5a067b4ed274cf0f34c171e8b71d66e45147d7c"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-0113367b7662cbb9.json.gz",
+    "originalSha256": "498de138a31bfad3af6d7f1da92af8df4613c45cf839d2d73dbb6ed3536b33bb",
+    "contentSha256": "498de138a31bfad3af6d7f1da92af8df4613c45cf839d2d73dbb6ed3536b33bb",
+    "archivedSha256": "4ec2091fc09ee44c47f1c65536fa19366b8e16100beb75a8063507d217fc2a62"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-8d59981fc1e28fa1.json.gz",
+    "originalSha256": "6476248a7fd032e9b7a6f29de1e7b44f469dbdd9be5dd89b7753d0422e84eb2b",
+    "contentSha256": "6476248a7fd032e9b7a6f29de1e7b44f469dbdd9be5dd89b7753d0422e84eb2b",
+    "archivedSha256": "4c8a7cf5a00ef83cd4e98c2c39a35ebd1830628f05cf0084b571a20e4f7fade5"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-21661693c59e32b7.json.gz",
+    "originalSha256": "5a225a7066d64fda18a6c6bd04347ccb90d2f8c7c0a91865b04961a46b6401bc",
+    "contentSha256": "5a225a7066d64fda18a6c6bd04347ccb90d2f8c7c0a91865b04961a46b6401bc",
+    "archivedSha256": "ffad112e8995f477b2dd3d3b320ef97a19d06fb5b1843e474530b84fc945e09d"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-a6c67e0388e3ae2c.json.gz",
+    "originalSha256": "d4227d427d914e3575eb9021cfe0b9ec6712492b28ee79f70c2dbd6452d0492b",
+    "contentSha256": "d4227d427d914e3575eb9021cfe0b9ec6712492b28ee79f70c2dbd6452d0492b",
+    "archivedSha256": "08eb0037f80cfd05c80808c84c1382186a0967feffba913b7498cd97b6a3cdbe"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-e618413bb9636730.json.gz",
+    "originalSha256": "0245cfa40f09eba905102725e2c8845cdde7eb82fde16875c5cce967bacc9ff9",
+    "contentSha256": "0245cfa40f09eba905102725e2c8845cdde7eb82fde16875c5cce967bacc9ff9",
+    "archivedSha256": "8bf68e76dbaaf5c9eae471d4199d57216e11baafb301d8d1ff3d684847d5b8d0"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-f9af1fbc7e60ccac.json.gz",
+    "originalSha256": "1152eb7be0acfc8638f098340f6f97b26d337a2f35dfcec1783dffd269b7f5f8",
+    "contentSha256": "1152eb7be0acfc8638f098340f6f97b26d337a2f35dfcec1783dffd269b7f5f8",
+    "archivedSha256": "bfcbc127cc147fddf0ca788cbcbdbeb75fe58ac9127602eaccae9291a9b16e6a"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-8fbf596453464f22.json.gz",
+    "originalSha256": "3af03144d66e5d699a976934bd61a49a96c430b30f42fb0fc0011225fde7ec9d",
+    "contentSha256": "3af03144d66e5d699a976934bd61a49a96c430b30f42fb0fc0011225fde7ec9d",
+    "archivedSha256": "af8ed6382ff1aafccb8bb2063e61551768369784bcf79d9783d9df2ccb90e108"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-39f23bdb88db8d88.json.gz",
+    "originalSha256": "9f482ea202cd826a8653467d69b178c60a3a451dc4a1a063724d737c324425ef",
+    "contentSha256": "9f482ea202cd826a8653467d69b178c60a3a451dc4a1a063724d737c324425ef",
+    "archivedSha256": "5efea18007d88443caeab15e56df16af393fd2d97e44e5703eab1158eccd026e"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-2dd432ad4d3471c5.json.gz",
+    "originalSha256": "d26b57c04956d8456dba12e422349d2c9e15b52baf66a441e8e60713f5e19138",
+    "contentSha256": "d26b57c04956d8456dba12e422349d2c9e15b52baf66a441e8e60713f5e19138",
+    "archivedSha256": "ab8e757e891a4e6b6747feacde948a7cf20dfc6ace7642f444c02c6fbbb0cd9f"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-4a08057512821e9e.json.gz",
+    "originalSha256": "ae1956146151008075f71a8e335ca4e914931cbc566fa019aed34bbe576ce287",
+    "contentSha256": "ae1956146151008075f71a8e335ca4e914931cbc566fa019aed34bbe576ce287",
+    "archivedSha256": "c5aef2d41b1e832743188f2afce065f2e6da0c5e7f279b6d3c980d50d9eb4a18"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-1236b85ec970fb5a.json.gz",
+    "originalSha256": "6d8ac30198f0a8e57a0b2a68b3e1a6df8f4ca86460f1a4ca2ebfa7c6eec24048",
+    "contentSha256": "6d8ac30198f0a8e57a0b2a68b3e1a6df8f4ca86460f1a4ca2ebfa7c6eec24048",
+    "archivedSha256": "b29fb97cdb6c46cb0588adfc0ba1dc7b8af88493c7b6586a87bf9d8699372b10"
+  },
+  {
+    "path": "native/macos-resource-attachments/LOCAL-e030fdf5e865193f.json.gz",
+    "originalSha256": "6a38fd15e87fbebc94fddda3163ced605dac929e269b82892a15ba3eaa39739a",
+    "contentSha256": "6a38fd15e87fbebc94fddda3163ced605dac929e269b82892a15ba3eaa39739a",
+    "archivedSha256": "3d50f90691695161fd0415740ec93cf7330705ce14c70aea68cbaca5da9d0963"
+  },
+  {
+    "path": "native/macos-resource-attachments/manifest.json.gz",
+    "originalSha256": "5ecebac522480d788509dcb88033e56f73c12ada0eba351470c4e72cf5f9802f",
+    "contentSha256": "3a74a8dcb0b4b4b4f1dfcd2a0574e6a4a13e2a2aa603bdc75f669c7367a72a58",
+    "archivedSha256": "94bdc61810a088e82a53e309aed4bcae9132e2a13bcb9a42057c86f0659e2391"
+  },
+  {
+    "path": "readiness-before-hls-fix/thresholds-required.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness-before-hls-fix/results.json",
+    "originalSha256": "151f56eb4a4cf6ba46f378b8b203957729bd794ba1972c224e4d1f6de021df4f",
+    "contentSha256": "151f56eb4a4cf6ba46f378b8b203957729bd794ba1972c224e4d1f6de021df4f",
+    "archivedSha256": "151f56eb4a4cf6ba46f378b8b203957729bd794ba1972c224e4d1f6de021df4f"
+  },
+  {
+    "path": "readiness-before-hls-fix/release-readiness.json",
+    "originalSha256": "065e4623b2d411d36d6b4d1f96f2e7bd977161b7706d551570ad850ffad3116b",
+    "contentSha256": "065e4623b2d411d36d6b4d1f96f2e7bd977161b7706d551570ad850ffad3116b",
+    "archivedSha256": "065e4623b2d411d36d6b4d1f96f2e7bd977161b7706d551570ad850ffad3116b"
+  },
+  {
+    "path": "readiness-before-hls-fix/release-readiness.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness-before-hls-fix/thresholds.json",
+    "originalSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "contentSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archivedSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630"
+  },
+  {
+    "path": "readiness-before-hls-fix/release-required.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness-before-hls-fix/release-required.json",
+    "originalSha256": "065e4623b2d411d36d6b4d1f96f2e7bd977161b7706d551570ad850ffad3116b",
+    "contentSha256": "065e4623b2d411d36d6b4d1f96f2e7bd977161b7706d551570ad850ffad3116b",
+    "archivedSha256": "065e4623b2d411d36d6b4d1f96f2e7bd977161b7706d551570ad850ffad3116b"
+  },
+  {
+    "path": "readiness-before-hls-fix/thresholds.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness-before-hls-fix/thresholds-required.json",
+    "originalSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "contentSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archivedSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630"
+  },
+  {
+    "path": "readiness/release-tests.stderr.gz",
+    "originalSha256": "ec51dc2e60e0a521e9b1e3140ac18fc046f3a75cdc77294392da59ffd5b7bf37",
+    "contentSha256": "ec51dc2e60e0a521e9b1e3140ac18fc046f3a75cdc77294392da59ffd5b7bf37",
+    "archivedSha256": "75f6312273ea09cba007efd0a86c53cec1f668ccf11e532bdaf219eaa32f8777"
+  },
+  {
+    "path": "readiness/thresholds-required.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness/results.json",
+    "originalSha256": "0be07684b296dfafead76448b7c8291534faeb7469ff5d5601bda2cbd9fc8bad",
+    "contentSha256": "0be07684b296dfafead76448b7c8291534faeb7469ff5d5601bda2cbd9fc8bad",
+    "archivedSha256": "0be07684b296dfafead76448b7c8291534faeb7469ff5d5601bda2cbd9fc8bad"
+  },
+  {
+    "path": "readiness/release-tests.txt.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness/release-readiness.json",
+    "originalSha256": "74d50c06c110bfd9aea504f035b45ff7e1380337c5e23d6daf6ab8ef5717246f",
+    "contentSha256": "74d50c06c110bfd9aea504f035b45ff7e1380337c5e23d6daf6ab8ef5717246f",
+    "archivedSha256": "74d50c06c110bfd9aea504f035b45ff7e1380337c5e23d6daf6ab8ef5717246f"
+  },
+  {
+    "path": "readiness/release-readiness.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness/thresholds.json",
+    "originalSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "contentSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archivedSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630"
+  },
+  {
+    "path": "readiness/release-required.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness/release-required.json",
+    "originalSha256": "74d50c06c110bfd9aea504f035b45ff7e1380337c5e23d6daf6ab8ef5717246f",
+    "contentSha256": "74d50c06c110bfd9aea504f035b45ff7e1380337c5e23d6daf6ab8ef5717246f",
+    "archivedSha256": "74d50c06c110bfd9aea504f035b45ff7e1380337c5e23d6daf6ab8ef5717246f"
+  },
+  {
+    "path": "readiness/thresholds.stderr.gz",
+    "originalSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "contentSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archivedSha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64"
+  },
+  {
+    "path": "readiness/thresholds-required.json",
+    "originalSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "contentSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archivedSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630"
+  }
+]
