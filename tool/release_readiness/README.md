@@ -73,3 +73,12 @@ PERF-BASELINE / RELEASE-CONSUMERS / RELEASE-CI及platform=all。
 
 当前产品决定以需求v2.2为准：PD-01、PD-02、PD-03均已确认。历史P08计划中的
 “PD-02/03尚未确认”不是当前阻塞；具体DRM/Dolby/设备/参考缺口仍需独立解决。
+
+## P08 combined engineering and readiness entry
+
+`YL_FLUTTER=/path/to/flutter sh tool/check_p08.sh --validate` runs all benchmark
+Python tests, all example Dart unit tests, the threshold registry and the current
+release inventory. A successful diagnostic run explicitly does not admit a
+release. `sh tool/check_p08.sh --require-ready` requires both the source-bound
+performance registry and the full CAP/ERR/REG/consumer/CI inventory. Missing
+qualified baselines exit 1; malformed evidence exits 2. Neither command publishes.

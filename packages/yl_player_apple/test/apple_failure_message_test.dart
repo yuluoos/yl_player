@@ -15,8 +15,7 @@ void main() {
         'AirPlay preparation requires H.264 video and mono or stereo AAC-LC audio.',
     'airplay.unsupported_timeline':
         'The source timeline is unsupported for AirPlay preparation.',
-    'airplay.resource_limit':
-        'AirPlay processing exceeded its resource limit.',
+    'airplay.resource_limit': 'AirPlay processing exceeded its resource limit.',
     'airplay.remux_failed':
         'AirPlay HLS output failed. Check the connection, source timeline and codecs.',
     'airplay.lan_unavailable':

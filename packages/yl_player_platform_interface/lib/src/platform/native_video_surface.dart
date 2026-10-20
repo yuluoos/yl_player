@@ -11,6 +11,7 @@ final class YlNativeVideoSurface {
 
   /// Registered platform-view factory name.
   final String viewType;
+
   /// Host platform on which this factory may be mounted.
   final TargetPlatform platform;
 }
@@ -46,8 +47,10 @@ final class YlProtectedVideoSurface {
 
   /// Monotonic native generation rejecting replaced or detached surfaces.
   final int generation;
+
   /// Registered platform-view factory name.
   final String viewType;
+
   /// Host platform on which this factory may be mounted.
   final TargetPlatform platform;
 

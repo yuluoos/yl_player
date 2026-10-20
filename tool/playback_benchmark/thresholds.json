@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "status": "pending-qualified-baselines",
+  "entries": [],
+  "requiredProfiles": [
+    {
+      "id": "android-api24-low-memory",
+      "platform": "android",
+      "deviceKind": "physical",
+      "nextAction": "collect-qualified-minimum-os-32bit-profile",
+      "constraints": {
+        "apiLevel": 24,
+        "processBits": 32,
+        "memoryClass": "low"
+      }
+    },
+    {
+      "id": "ios15-physical",
+      "platform": "ios",
+      "deviceKind": "physical",
+      "nextAction": "collect-calibrated-output-and-thermal-profile",
+      "constraints": {
+        "osMajor": 15,
+        "architectures": [
+          "arm64"
+        ]
+      }
+    },
+    {
+      "id": "macos12-intel",
+      "platform": "macos",
+      "deviceKind": "physical",
+      "nextAction": "collect-minimum-os-intel-profile",
+      "constraints": {
+        "osMajor": 12,
+        "architectures": [
+          "x86_64"
+        ]
+      }
+    },
+    {
+      "id": "macos-apple-silicon",
+      "platform": "macos",
+      "deviceKind": "physical",
+      "nextAction": "qualify-content-output-and-freeze-product-limits",
+      "constraints": {
+        "architectures": [
+          "arm64"
+        ]
+      }
+    }
+  ]
+}

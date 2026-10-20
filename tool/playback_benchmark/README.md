@@ -694,3 +694,91 @@ exit 0 validates the inventory, not release readiness; `--require-ready` returns
 1 while any requirement remains open. Historical partial reports cannot become
 full acceptance by relabeling their status. This tool does not run devices or
 freeze numerical performance targets.
+
+## P08 multi-metric engineering contract
+
+The original JSONL `summarize.py` remains smoke-only. `performance_gate.py`
+accepts one complete run object with `conditions`, `qualification`, explicit
+`metrics` and ordered `trials`. The examples in `test_performance_gate.py` are
+synthetic unit-test values, **not product thresholds**.
+
+Each metric defines a fixed unit and observation boundary. Public event receipt,
+command acknowledgement and phase-clock spans can be measured without claiming
+physical output. Output/seek-stability/synchronization metrics require a physical
+device plus a calibration hash; source-to-output latency also needs a trusted
+source-clock hash. Process RSS/CPU, GPU observations, script heap and media ledger
+stay separate. Nonnegative absolute errors or observations are supported; signed
+resource changes remain in the existing resource-series tools. Unknown values are
+null. No inferred zero CPU/GPU/thermal/synchronization is emitted.
+
+All attempts, including warmups, remain in the outcome counts. Warmups are
+excluded only from latency statistics; warmup failures and failed/unknown cleanup
+still count against the failure budget. A failed attempt's partial measurements
+are retained in the run but excluded from successful statistics. Every selected
+metric must have the declared minimum successful samples. Median and nearest-rank
+p95 include `n`; a small `n` does not establish a statistically strong SLO.
+
+```sh
+python3 -B tool/playback_benchmark/performance_gate.py summarize RUN.json
+python3 -B tool/playback_benchmark/performance_gate.py freeze BASELINE.json POLICY.json NEW_FROZEN.json
+python3 -B tool/playback_benchmark/performance_gate.py check CANDIDATE.json FROZEN.json
+python3 -B tool/playback_benchmark/threshold_registry.py --require-ready
+```
+
+`freeze` requires profile/release, nominal thermal state, known power, explicit
+content-verification evidence, sufficient samples and a product-supplied policy.
+It writes exclusively to a new file and embeds/hashes the full baseline and policy.
+Freeze it **before** making the optimization; retained commit/source identities
+support review but cannot prove when a human originally created an external file.
+The checker does not supply product tradeoffs or infer physical evidence from a
+hash. Evidence authenticity and calibration semantics require separate review.
+
+The policy contains `version`, `minimumSamples`, `maximumNonPasses`, and per-metric
+`p50`, `p95`, `maximum`, `maxRegressionRatio` (nullable, relative to baseline p95).
+Candidate conditions, method, dependencies, sample/warmup counts and comparability
+must match exactly. Source/commit/native artifacts may change for the optimization.
+Changed methods/cache/devices require a new baseline version. When
+`baselineComparable=false`, only absolute limits apply; no improvement percentage
+is printed. A zero baseline likewise never divides by zero.
+
+`thresholds.json` is a versioned registry with explicitly pending device profiles,
+not invented numeric SLOs. Each future entry references hash-bound frozen baseline,
+candidate and the complete source map used by the public collector. The registry
+recomputes the current source map and rejects stale comparisons. Entries are
+excluded from the measured source map to avoid self-referential hashes. The
+registry must be marked `frozen` and every required profile must pass before it is
+ready. Pending/missing/failed/stale evidence is not a release pass.
+
+Commands return 0 for valid summaries/freezes or passing comparisons, 1 for a
+failed comparison/readiness gate, 2 for invalid input. Error messages do not echo
+input, credentials or native exceptions. Full release acceptance additionally
+requires the separate CAP/ERR/REG, consumer and CI inventory; use
+`sh tool/check_p08.sh --require-ready` to require both gates.
+
+## Public multi-player ownership workload
+
+```sh
+python3 -B tool/playback_benchmark/run_public_stress.py NEW_OUTPUT /absolute/path/to/flutter
+```
+
+The host collector freezes source/dependency/artifact/media identity and
+`stress-protocol.json` before launching a bounded macOS profile run. All failures,
+raw log prefixes and result receipts remain in the fresh output directory. It
+never kills unrelated applications. The portable Flutter target
+`integration_test/playback_stress_test.dart` also supports Android/iOS when given
+an actual device/build context and the protocol hash via Dart defines.
+
+Three attempts each create two controllers, load/seek/pause/resume/replace,
+reject stale commands, stop the active controller, explicitly restore the peer,
+observe its progress and dispose both. Apple commits intentionally deactivate
+peer video leases; this exercises multi-instance ownership, **not simultaneous
+independent video playback**. Muted app-managed audio avoids claiming audible or
+physical synchronization. Actual observed metrics include event/command durations
+and nullable native buffering/media bytes; no RSS/GPU values are synthesized.
+
+The workload is short and does not impersonate long playback, physical background,
+low-memory or thermal tests. Existing `run_resources.py --profile-endurance`,
+`run_continuous.py`, lifetime/heap/Timeline tools and platform lifecycle tests
+remain the corresponding execution paths. This new run's content qualification
+stays false until independent evidence exists; its `run.json` cannot be frozen
+into a formal output baseline merely because playback assertions passed.

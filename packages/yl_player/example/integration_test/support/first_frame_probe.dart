@@ -8,6 +8,8 @@ final class FirstFrameProbe {
   final _frames = <String, int>{};
   bool _closed = false;
 
+  bool get hasStarted => _start != null;
+
   void start() {
     if (_start != null || _closed) throw StateError('Probe cannot be reused');
     _start = nowUs();

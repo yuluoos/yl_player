@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "public-two-player-v2",
+  "plannedAttempts": 3,
+  "warmupAttempts": 0,
+  "players": 2,
+  "media": "packages/yl_player/example/assets/test_media/network_seek_h264_aac.mkv",
+  "operations": [
+    "create-two",
+    "mount-two",
+    "load-play-each",
+    "pause-first",
+    "seek-first-5s",
+    "resume-first",
+    "replace-first",
+    "reject-stale-session",
+    "stop-first",
+    "restore-peer-explicitly",
+    "verify-peer-progress",
+    "stop-peer",
+    "dispose-two",
+    "unmount"
+  ],
+  "audio": "muted-app-managed",
+  "cacheState": "os-cache-uncontrolled",
+  "commandTimeoutSeconds": 900,
+  "testTimeoutSeconds": 600,
+  "presentationBoundary": "public-event-only",
+  "physicalBackground": false,
+  "longPlayback": false,
+  "concurrentPlaybackClaim": false
+}

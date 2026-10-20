@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 
-import 'support/first_frame_probe.dart';
+import 'support/benchmark_trials.dart';
 import 'support/benchmark_reporting.dart';
 
 void main() {
@@ -35,36 +34,34 @@ void main() {
         media.buffer.asUint8List(media.offsetInBytes, media.lengthInBytes),
       );
       final failures = <int>[];
-      var aborted = false;
       final runClock = Stopwatch()..start();
-      void emitRow(Map<String, Object?> row) =>
-          debugPrint('YL_BENCHMARK_ROW=${jsonEncode(row)}', wrapWidth: 100000);
-      for (var attempt = 1; attempt <= attempts; attempt++) {
-        if (aborted) {
-          emitRow({
-            ...context,
-            'attempt': attempt,
-            'outcome': 'skipped',
-            'startedUs': runClock.elapsedMicroseconds,
-            'firstPresentedUs': null,
-            'firstFrameUs': null,
+      await runBenchmarkTrials(
+        attempts: attempts,
+        nowUs: () => runClock.elapsedMicroseconds,
+        record: (row) {
+          if (row['outcome'] != 'passed') failures.add(row['attempt'] as int);
+          debugPrint(
+            'YL_BENCHMARK_ROW=${jsonEncode({...context, ...row})}',
+            wrapWidth: 100000,
+          );
+        },
+        body: (trial) async {
+          final player = await trial.create(
+            YlPlayerController.create(),
+            release: (player) => player.dispose(),
+          );
+          trial.cleanup.add(() => tester.pumpWidget(const SizedBox.shrink()));
+          await tester
+              .pumpWidget(MaterialApp(home: YlPlayerView(controller: player)))
+              .timeout(const Duration(seconds: 10));
+          final probe = trial.probe;
+          final subscription = player.events.listen((event) {
+            if (event is YlFirstFrameEvent) {
+              probe.observe(event.sessionId.value);
+            }
           });
-          continue;
-        }
-        final player = await YlPlayerController.create();
-        await tester.pumpWidget(
-          MaterialApp(home: YlPlayerView(controller: player)),
-        );
-        final probe = FirstFrameProbe(
-          nowUs: () => runClock.elapsedMicroseconds,
-        );
-        final subscription = player.events.listen((event) {
-          if (event is YlFirstFrameEvent) probe.observe(event.sessionId.value);
-        });
-        var outcome = 'failed';
-        probe
-            .start(); // Immediately before public Load, never after its Future.
-        try {
+          trial.cleanup.insert(0, subscription.cancel);
+          probe.start(); // Immediately before public Load, never its Future.
           final session = await player
               .load(YlFileSource(file.path, format: YlMediaFormat.matroska))
               .timeout(const Duration(seconds: 20));
@@ -76,7 +73,6 @@ void main() {
           expect(player.state.failure, isNull);
           expect(player.state.videoGeometry, isNotNull);
           expect(player.state.audioTracks, isNotEmpty);
-          // A frame alone is not evidence of sustained playback correctness.
           await player.states
               .firstWhere(
                 (state) =>
@@ -84,40 +80,8 @@ void main() {
                     state.timeline.position > const Duration(milliseconds: 500),
               )
               .timeout(const Duration(seconds: 10));
-          outcome = 'passed';
-        } on TimeoutException {
-          outcome = 'timeout';
-        } catch (_) {
-          outcome =
-              'failed'; // Never print exception strings, addresses or stacks.
-        } finally {
-          probe.close();
-          final row = {
-            ...context,
-            'attempt': attempt,
-            ...probe.fields(outcome),
-          };
-          final cleaned = await recordBenchmarkTrial(
-            row: row,
-            observe: (value) => debugPrint(
-              'YL_BENCHMARK_OBSERVATION=${jsonEncode(value)}',
-              wrapWidth: 100000,
-            ),
-            record: emitRow,
-            cleanup: () async {
-              await subscription.cancel();
-              await player.dispose();
-              await tester.pumpWidget(const SizedBox.shrink());
-            },
-          );
-          if (!cleaned) {
-            aborted = true;
-            failures.add(attempt);
-            debugPrint('YL_BENCHMARK_RUN_FAILED=cleanup');
-          }
-        }
-        if (outcome != 'passed') failures.add(attempt);
-      }
+        },
+      );
       expect(
         failures,
         isEmpty,

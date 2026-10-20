@@ -7,7 +7,10 @@ import 'dart:typed_data';
 ) {
   final packed = <String, Uint8List>{};
   final xml = manifest.replaceAllMapped(
-    RegExp(r'<Period[^>]*><BaseURL>(period\d+)/</BaseURL>.*?</Period>', dotAll: true),
+    RegExp(
+      r'<Period[^>]*><BaseURL>(period\d+)/</BaseURL>.*?</Period>',
+      dotAll: true,
+    ),
     (period) => period.group(0)!.replaceAllMapped(
       RegExp(
         r'<Representation id="([^"]+)"[^>]*>.*?</Representation>',
