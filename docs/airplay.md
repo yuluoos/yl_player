@@ -93,6 +93,26 @@ terminal errors. Pause keeps ingesting the source; seeking is limited to the
 available live window. Stop, disposal and successful source replacement stop
 the producer. A failed replacement leaves the existing live session intact.
 
+## Resolved script live sources
+
+The optional `yl_player_source_resolver` can hand off header-free RTMP and RTMPS
+results to the same Apple live bridge. Resolve the script first, then load its
+validated result with AirPlay enabled:
+
+```dart
+final resolved = await pending.result; // YlScriptResolution
+final session = await player.load(
+  resolved.toNetworkSource(),
+  options: const YlLoadOptions(airPlay: true),
+);
+await session.play();
+```
+
+Conversion preserves live intent, the secure scheme, explicit port and query,
+rejects HTTP headers for RTMP(S), and rechecks any supplied expiry. It does not
+add a decoder or bypass native policy. Use `YlAirPlayButton` to choose a receiver.
+H.264/AAC and LAN reachability requirements remain those of the live bridge.
+
 ## Custom-source remux limits
 
 The bridge uses the existing FFmpeg demux library and AVFoundation compressed

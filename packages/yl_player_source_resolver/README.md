@@ -69,10 +69,16 @@ an input. Use an application generation counter before accepting results and
 serialize player load/stop operations. Cancellation is distinct from failure.
 `expiresAt` is unknown unless the script explicitly returns the supported UTC
 value; refresh is always an explicit new resolution. `toNetworkSource()` accepts
-a valid header-free RTMP app/playpath URI and preserves live intent. RTMP results
-with HTTP headers fail with `script.invalid_headers`; RTMPS remains
-`script.media_protocol_unsupported`. Conversion delegates playback to the core
-player's native route and policy checks; this resolver supplies no RTMP engine.
+a valid header-free RTMP or RTMPS app/playpath URI and preserves live intent,
+explicit ports and encoded query data. Both reject HTTP headers with
+`script.invalid_headers` and recheck expiry before conversion. Conversion
+delegates playback to the core player's native route and policy checks; this
+resolver supplies no RTMP engine. RTMPS playback is supported by the Apple
+adapter; Android still rejects it during native assessment. On iOS/macOS, pass
+the converted source to `player.load` with
+`options: const YlLoadOptions(airPlay: true)` to use the existing live AirPlay
+bridge. Its codec and receiver/network limits still apply; see
+[AirPlay support](../../docs/airplay.md).
 Do not log returned URLs, headers, parameters or script text.
 
 ## Separate optional example
@@ -99,7 +105,7 @@ flutter test --no-pub integration_test/script_runtime_test.dart -d DEVICE
 
 This checked-in entry exercises the actual public native runtime, deadlines,
 live cancellation, socket disconnect, memory bounds/reuse, header-free RTMP
-conversion and explicit RTMPS rejection,
+and RTMPS conversion,
 and actual `YlPlayerView` HTTP handoff/first frame. It has no private fixture import.
 
 `integration_test/rtmp_handoff_test.dart` is the focused owned-JavaScript RTMP

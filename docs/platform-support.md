@@ -530,10 +530,11 @@ Its HTTP host has separate request and response budgets; these are not the
 player's media `buffer.bounded` policy. Caller/script headers are all treated
 as credentials, with sticky removal after a cross-origin redirect.
 
-A valid header-free resolved RTMP app/playpath URI converts to a player source
-and retains live intent. RTMP results with HTTP headers are rejected; RTMPS
-conversion remains explicitly unsupported. HTTP(S) conversion retains credentials
-and live intent. Playback remains subject to the selected engine's route and
+A valid header-free resolved RTMP or RTMPS app/playpath URI converts to a
+player source and retains live intent. Both reject HTTP headers and use core
+URI validation. RTMPS playback is supported on Apple, including opt-in AirPlay;
+Android still rejects RTMPS during native assessment. HTTP(S) conversion retains
+credentials and live intent. Playback remains subject to the selected engine's route and
 policy checks above. Unknown script expiry remains unknown.
 
 The focused application matrix has 26 passing cases on each of macOS arm64,

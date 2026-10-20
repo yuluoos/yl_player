@@ -15,96 +15,94 @@ void main() {
   Matcher failure(String code) =>
       isA<YlScriptException>().having((e) => e.code, 'code', code);
 
-  test('header-free RTMP result converts to a validated live source', () {
-    final resolved = result('rtmp://media.test/app/stream?key=a%2Fb+q');
-    final source = resolved.toNetworkSource();
-    expect(identical(source.uri, resolved.uri), isTrue);
-    expect(source.intent, YlStreamIntent.live);
-    expect(source.request.headers, isEmpty);
-    expect(source.request.credentials, isEmpty);
-    validateYlSource(source);
-  });
-  test(
-    'RTMP conversion retains opaque encoded app playpath and query bytes',
-    () {
+  for (final scheme in ['rtmp', 'rtmps']) {
+    test('header-free $scheme result converts to a validated live source', () {
+      for (final authority in ['media.test', 'media.test:8443']) {
+        final url = '$scheme://$authority/app/stream?key=a%2Fb+q';
+        final resolved = result(url);
+        final source = resolved.toNetworkSource();
+        expect(identical(source.uri, resolved.uri), isTrue);
+        expect(source.uri.toString(), url);
+        expect(source.intent, YlStreamIntent.live);
+        expect(source.format, YlMediaFormat.automatic);
+        expect(source.request.headers, isEmpty);
+        expect(source.request.credentials, isEmpty);
+        validateYlSource(source);
+      }
+    });
+    test('$scheme conversion retains opaque app playpath and query bytes', () {
       for (final value in [
-        'rtmp://media.test/app%FF/stream',
-        'rtmp://media.test/app/stream%FF',
-        'rtmp://media.test/app/stream?key=%FE',
-        'rtmp://media.test/app%85/stream%C3%A9?key=%FE+%FF',
+        '$scheme://media.test/app%FF/stream',
+        '$scheme://media.test/app/stream%FF',
+        '$scheme://media.test/app/stream?key=%FE',
+        '$scheme://media.test/app%85/stream%C3%A9?key=%FE+%FF',
       ]) {
         final resolved = result(value);
         final source = resolved.toNetworkSource();
         expect(identical(source.uri, resolved.uri), isTrue);
         expect(source.uri.toString(), value);
       }
-    },
-  );
-  test('RTMP conversion explicitly rejects all nonempty HTTP headers', () {
-    for (final headers in [
-      {'Accept': 'video/*'},
-      {'Authorization': 'secret'},
-    ]) {
-      expect(
-        () => result(
-          'rtmp://media.test/app/stream',
-          headers: headers,
-        ).toNetworkSource(),
-        throwsA(failure('script.invalid_headers')),
-      );
-    }
-  });
-  test(
-    'RTMP conversion uses core URI validation with safe resolver errors',
-    () {
+    });
+    test('$scheme conversion rejects all nonempty HTTP headers', () {
+      for (final headers in [
+        {'Accept': 'video/*'},
+        {'Authorization': 'secret'},
+      ]) {
+        expect(
+          () => result(
+            '$scheme://media.test/app/stream',
+            headers: headers,
+          ).toNetworkSource(),
+          throwsA(failure('script.invalid_headers')),
+        );
+      }
+    });
+    test('$scheme conversion uses core URI validation with safe errors', () {
       for (final url in [
-        'rtmp://media.test/app',
-        'rtmp://media.test/app/stream%00',
-        'rtmp://media.test/app%FF/stream%00',
-        'rtmp://media.test/app/stream%FF?key=%7F',
-        'rtmp://media.test/app/stream?key=%FF%C2%85',
-        'rtmp://media.test:65536/app/stream',
-        'rtmp://media.test/app/${'x' * 8192}',
+        '$scheme://media.test/app',
+        '$scheme://media.test/app/stream%00',
+        '$scheme://media.test/app%FF/stream%00',
+        '$scheme://media.test/app/stream%FF?key=%7F',
+        '$scheme://media.test/app/stream?key=%FF%C2%85',
+        '$scheme://media.test:65536/app/stream',
+        '$scheme://user:secret@media.test/app/stream',
+        '$scheme://media.test/app/stream#fragment',
+        '$scheme://media.test/app/${'x' * 8192}',
       ]) {
         expect(
           () => result(url).toNetworkSource(),
           throwsA(failure('script.invalid_url')),
         );
       }
-    },
-  );
-  test('RTMPS conversion stays explicitly unsupported', () {
-    expect(
-      () => result('rtmps://media.test/app/stream').toNetworkSource(),
-      throwsA(failure('script.media_protocol_unsupported')),
-    );
-  });
-  test('HTTP conversion keeps credentials and RTMP expiry is checked', () {
+    });
+    test('$scheme expiry is checked during resolution', () {
+      expect(
+        () => result(
+          '$scheme://media.test/app/stream',
+          expiry: '2000-01-01T00:00:00Z',
+        ),
+        throwsA(failure('script.expired')),
+      );
+    });
+    test('$scheme conversion rechecks expiry after resolution', () async {
+      final resolved = result(
+        '$scheme://media.test/app/stream',
+        expiry: DateTime.now()
+            .toUtc()
+            .add(const Duration(milliseconds: 100))
+            .toIso8601String(),
+      );
+      await Future<void>.delayed(const Duration(milliseconds: 150));
+      expect(resolved.toNetworkSource, throwsA(failure('script.expired')));
+    });
+  }
+  test('HTTP conversion keeps credentials', () {
     final source = result(
       'https://media.test/a',
       headers: {'Authorization': 'secret'},
       expiry: '2099-01-01T00:00:00Z',
     ).toNetworkSource();
     expect(source.request.credentials, {'authorization': 'secret'});
-    expect(
-      () => result(
-        'rtmp://media.test/app/stream',
-        expiry: '2000-01-01T00:00:00Z',
-      ),
-      throwsA(failure('script.expired')),
-    );
-  });
-
-  test('RTMP conversion rechecks expiry after resolution', () async {
-    final resolved = result(
-      'rtmp://media.test/app/stream',
-      expiry: DateTime.now()
-          .toUtc()
-          .add(const Duration(milliseconds: 100))
-          .toIso8601String(),
-    );
-    await Future<void>.delayed(const Duration(milliseconds: 150));
-    expect(resolved.toNetworkSource, throwsA(failure('script.expired')));
   });
   test('reference parser preserves raw query spelling and plus', () {
     final reference = YlScriptReference.parse(

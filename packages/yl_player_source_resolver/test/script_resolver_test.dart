@@ -81,22 +81,28 @@ void main() {
       );
     }
   });
-  test('RTMP live conversion succeeds; file output rejected', () async {
-    final result = await resolver
-        .resolveSource(
-          'function main(){return {url:"rtmp://fixture.invalid/live/stream"}}',
-        )
-        .result;
-    expect(result.uri.scheme, 'rtmp');
-    expect(result.toNetworkSource().intent, YlStreamIntent.live);
-    expect(result.toNetworkSource().request.credentials, isEmpty);
-    await expectLater(
-      resolver
-          .resolveSource('function main(){return {url:"file:///secret"}}')
-          .result,
-      throwsA(code('script.invalid_url')),
-    );
-  });
+  test(
+    'RTMP and RTMPS live conversion succeeds; file output rejected',
+    () async {
+      for (final scheme in ['rtmp', 'rtmps']) {
+        final url = '$scheme://fixture.invalid:8443/live/stream?key=a%2Fb+q';
+        final result = await resolver
+            .resolveSource('function main(){return {url:"$url"}}')
+            .result;
+        final source = result.toNetworkSource();
+        expect(source.uri.toString(), url);
+        expect(source.intent, YlStreamIntent.live);
+        expect(source.request.credentials, isEmpty);
+        validateYlSource(source);
+      }
+      await expectLater(
+        resolver
+            .resolveSource('function main(){return {url:"file:///secret"}}')
+            .result,
+        throwsA(code('script.invalid_url')),
+      );
+    },
+  );
   test(
     'unsupported host API and thrown secrets use safe fixed failures',
     () async {
