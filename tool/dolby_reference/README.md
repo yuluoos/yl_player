@@ -78,3 +78,8 @@ python3 -B tool/dolby_reference/stream_inventory.py \
 ```
 
 解析器构建仍使用上文固定源码/离线缓存入口。`--layers` 选择 schema2，默认 schema1 与旧 P5 轨迹不变。只支持单轨、layer-zero BL 和 UNSPEC63 封装 EL；双轨 MP4、MKV 或其他 layer ID 不在该探针覆盖范围。新统计保留缺 EL VCL 包数和原始 wrapper 哈希；不解码、不证明层配对，也不提升画质或信号状态。媒体缓存在忽略目录；Git 只收录派生盘点与下载哈希。公开素材清单中的来源 URL 仅用于研究下载，不是可执行配置或正式通过声明。
+
+
+## 参考对应与数值比较工程
+
+`reference_timeline.py` 提供有界 MDF 时间轴、精确有理数帧定位、原始 EXR 头信息和官方校验清单绑定；`pixel_compare.py` 提供预先冻结合同下的多帧/多区域绝对RGB误差比较，以及显示目标/代次变化失效检查。依赖与格式、退出码和信任边界见 [REFERENCE_COMPARISON.md](REFERENCE_COMPARISON.md)。候选输出不能通过验收，数值通过也不会自动更新完整画质/原生信号状态。

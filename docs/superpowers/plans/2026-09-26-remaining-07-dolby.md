@@ -117,3 +117,6 @@ Task1工程调查已提交的内容不等于原始参考/画质验收完成。�
 2026-09-28 Task1B1 已完成六个arm64候选库构建，libdovi三端C API链接；macOS libplacebo13通过/1 GPU跳过、libdovi2单测及5个C API退出预期匹配。官方P5 1080p完整媒体hash已核验，首RPU为CM2.9/L1/L2/L4/L5/L6。独立目标参考、原始P7 FEL、容差及实际GPU/设备链仍缺，Task1整体不勾选。
 
 2026-09-29 Task1B2 的macOS GPU子实验完成：固定候选在Apple M1加速CGL上执行原始GPU测试，含浮点往返及10-bit位对齐断言；非全功能验收。compute/SSBO相关功能、FEL增强层、独立画质与物理信号仍未验证。新实验记录和原EGL跳过记录分开。原始P7 FEL/独立参考/容差未取得，移动设备不可用，1B2及Task1保持未完成，Task2/3不提前开始。
+
+
+2026-10-20 P07 参考比较增量：Sparks EXR 第1000帧与官方 VDM checksum 字节身份一致；发现第960/1000帧原始时码相同，不能自动跨序列配帧。补齐整数/有理数 XML 帧定位、官方清单绑定和离线 RGB 全图/区域指标比较，候选强制 diagnostic、目标/显示代次/元数据不匹配拒绝。集中 Python 66通过/1既有CGL跳过，Rust3通过，Apple HDR/Metal及原始P5/P7回归通过；目标生成/同源FEL参考/冻结容差和物理DV仍缺，完整CAP不提升。详见[参考核验与比较报告](../reports/2026-10-20-p07-reference-comparison.md)。

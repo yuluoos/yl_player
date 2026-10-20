@@ -1,0 +1,183 @@
+....FFFFF.........
+======================================================================
+FAIL: test_cli_cyclic_symlinks_are_safe_invalid_input (test_pixel_compare.PixelComparisonTests.test_cli_cyclic_symlinks_are_safe_invalid_input) (where='contract')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_pixel_compare.py", line 189, in test_cli_cyclic_symlinks_are_safe_invalid_input
+    self.assertEqual(result.returncode,2,result.stdout+result.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1240, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 424, in realpath
+  File "<frozen posixpath>", line 491, in _joinrealpath
+  File "<frozen posixpath>", line 486, in _joinrealpath
+OSError: [Errno 62] Too many levels of symbolic links: '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmpqwhvzwur/PRIVATE-loop'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 241, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 229, in main
+    result=compare_bundle(args.contract,args.sha256,args.capture)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 181, in compare_bundle
+    contract_path=Path(contract_path).resolve(strict=True)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1242, in resolve
+    check_eloop(e)
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1237, in check_eloop
+    raise RuntimeError("Symlink loop from %r" % e.filename)
+RuntimeError: Symlink loop from '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmpqwhvzwur/PRIVATE-loop'
+
+
+======================================================================
+FAIL: test_cli_cyclic_symlinks_are_safe_invalid_input (test_pixel_compare.PixelComparisonTests.test_cli_cyclic_symlinks_are_safe_invalid_input) (where='capture')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_pixel_compare.py", line 189, in test_cli_cyclic_symlinks_are_safe_invalid_input
+    self.assertEqual(result.returncode,2,result.stdout+result.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1240, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 424, in realpath
+  File "<frozen posixpath>", line 491, in _joinrealpath
+  File "<frozen posixpath>", line 486, in _joinrealpath
+OSError: [Errno 62] Too many levels of symbolic links: '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmpm8wm0sur/PRIVATE-loop'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 241, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 229, in main
+    result=compare_bundle(args.contract,args.sha256,args.capture)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 182, in compare_bundle
+    capture_path=Path(capture_path).resolve(strict=True)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1242, in resolve
+    check_eloop(e)
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1237, in check_eloop
+    raise RuntimeError("Symlink loop from %r" % e.filename)
+RuntimeError: Symlink loop from '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmpm8wm0sur/PRIVATE-loop'
+
+
+======================================================================
+FAIL: test_cli_cyclic_symlinks_are_safe_invalid_input (test_pixel_compare.PixelComparisonTests.test_cli_cyclic_symlinks_are_safe_invalid_input) (where='reference')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_pixel_compare.py", line 189, in test_cli_cyclic_symlinks_are_safe_invalid_input
+    self.assertEqual(result.returncode,2,result.stdout+result.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1240, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 424, in realpath
+  File "<frozen posixpath>", line 491, in _joinrealpath
+  File "<frozen posixpath>", line 486, in _joinrealpath
+OSError: [Errno 62] Too many levels of symbolic links: '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmpntok85wh/PRIVATE-loop'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 241, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 229, in main
+    result=compare_bundle(args.contract,args.sha256,args.capture)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 201, in compare_bundle
+    data=bound_asset(root,descriptor,size)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 141, in bound_asset
+    path=(root/relative).resolve(strict=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1242, in resolve
+    check_eloop(e)
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1237, in check_eloop
+    raise RuntimeError("Symlink loop from %r" % e.filename)
+RuntimeError: Symlink loop from '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmpntok85wh/PRIVATE-loop'
+
+
+======================================================================
+FAIL: test_cli_cyclic_symlinks_are_safe_invalid_input (test_pixel_compare.PixelComparisonTests.test_cli_cyclic_symlinks_are_safe_invalid_input) (where='actual')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_pixel_compare.py", line 189, in test_cli_cyclic_symlinks_are_safe_invalid_input
+    self.assertEqual(result.returncode,2,result.stdout+result.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1240, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 424, in realpath
+  File "<frozen posixpath>", line 491, in _joinrealpath
+  File "<frozen posixpath>", line 486, in _joinrealpath
+OSError: [Errno 62] Too many levels of symbolic links: '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmphhscqbsi/PRIVATE-loop'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 241, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 229, in main
+    result=compare_bundle(args.contract,args.sha256,args.capture)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 201, in compare_bundle
+    data=bound_asset(root,descriptor,size)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 141, in bound_asset
+    path=(root/relative).resolve(strict=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1242, in resolve
+    check_eloop(e)
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1237, in check_eloop
+    raise RuntimeError("Symlink loop from %r" % e.filename)
+RuntimeError: Symlink loop from '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmphhscqbsi/PRIVATE-loop'
+
+
+======================================================================
+FAIL: test_cli_cyclic_symlinks_are_safe_invalid_input (test_pixel_compare.PixelComparisonTests.test_cli_cyclic_symlinks_are_safe_invalid_input) (where='evidence')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_pixel_compare.py", line 189, in test_cli_cyclic_symlinks_are_safe_invalid_input
+    self.assertEqual(result.returncode,2,result.stdout+result.stderr)
+AssertionError: 1 != 2 : Traceback (most recent call last):
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1240, in resolve
+    s = self._flavour.realpath(self, strict=strict)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen posixpath>", line 424, in realpath
+  File "<frozen posixpath>", line 491, in _joinrealpath
+  File "<frozen posixpath>", line 486, in _joinrealpath
+OSError: [Errno 62] Too many levels of symbolic links: '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmp7oiizrj1/PRIVATE-loop'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 241, in <module>
+    raise SystemExit(main())
+                     ^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 229, in main
+    result=compare_bundle(args.contract,args.sha256,args.capture)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 189, in compare_bundle
+    bound_asset(contract_path.parent,{key:proof[key] for key in ('path','sha256')},4*1024*1024)
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/pixel_compare.py", line 141, in bound_asset
+    path=(root/relative).resolve(strict=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1242, in resolve
+    check_eloop(e)
+  File "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1237, in check_eloop
+    raise RuntimeError("Symlink loop from %r" % e.filename)
+RuntimeError: Symlink loop from '/private/var/folders/7k/p9cms6417rlfqrpv2_6hs1900000gn/T/tmp7oiizrj1/PRIVATE-loop'
+
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.498s
+
+FAILED (failures=5)

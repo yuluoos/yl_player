@@ -1,0 +1,9 @@
+    Finished `release` profile [optimized] target(s) in 0.16s
+     Running unittests src/main.rs (/private/tmp/p07-engineering-20261020/inspector-build/target/release/deps/yl_dovi_stream_inspector-48fb9faaa9a8f68a)
+
+running 3 tests
+test tests::declared_lengths_are_bounded_before_allocation ... ok
+test tests::empty_eof_is_distinct_from_truncated_frame ... ok
+test tests::original_bytes_are_preserved_and_eof_checked ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
