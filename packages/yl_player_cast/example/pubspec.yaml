@@ -1,0 +1,18 @@
+name: yl_player_cast_example
+description: DLNA 与 AirPlay 投屏示例。
+publish_to: none
+resolution: workspace
+version: 1.0.0+1
+environment:
+  sdk: ^3.12.0
+dependencies:
+  flutter:
+    sdk: flutter
+  yl_player: ^0.3.0-dev.1
+  yl_player_cast: ^0.3.0-dev.1
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  uses-material-design: true

@@ -1,0 +1,24 @@
+name: yl_player_cast
+description: Optional DLNA remote playback and AirPlay integration for yl_player.
+version: 0.3.0-dev.1
+resolution: workspace
+repository: https://github.com/yuluoos/yl_player
+environment:
+  sdk: ^3.12.0
+  flutter: '>=3.44.0'
+dependencies:
+  flutter:
+    sdk: flutter
+  xml: ^7.0.1
+  yl_player: ^0.3.0-dev.1
+dev_dependencies:
+  yl_player_platform_interface: ^0.3.0-dev.1
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: dev.ylplayer.cast
+        pluginClass: YlPlayerCastPlugin

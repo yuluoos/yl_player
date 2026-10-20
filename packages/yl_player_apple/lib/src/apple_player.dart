@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'apple_airplay.dart';
+import 'apple_media_delivery.dart';
 import 'apple_callbacks.dart';
 import 'apple_codec.dart';
 import 'apple_drm.dart';
@@ -16,6 +17,7 @@ final class ApplePlayer
     implements
         YlPlatformPlayer,
         YlAirPlayPlatformPlayer,
+        YlMediaDeliveryPlatformPlayer,
         YlNetworkTrafficPlatformPlayer,
         YlLivePlaybackPlatformPlayer,
         YlPlatformDrmSourceSupport,
@@ -203,6 +205,18 @@ final class ApplePlayer
       }
       throw failure;
     }
+  }
+
+  AppleMediaDeliveryChannel? _mediaDelivery;
+  @override
+  YlMediaDeliveryPreparation prepareMediaDelivery(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) {
+    _checkAlive();
+    return (_mediaDelivery ??= AppleMediaDeliveryChannel(
+      _suffix,
+    )).prepare(source, options: options);
   }
 
   AppleAirPlayChannel? _airPlayChannel;
@@ -1041,6 +1055,7 @@ final class ApplePlayer
     if (_disposeFuture case final result?) return result;
     _disposed = true;
     _airPlayChannel?.close();
+    _mediaDelivery?.close();
     _airPlaySupported = false;
     _routePicker = null;
     _resetAirPlay();

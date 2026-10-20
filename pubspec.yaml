@@ -11,6 +11,8 @@ workspace:
   - packages/yl_player_android
   - packages/yl_player_android/example
   - packages/yl_player_apple
+  - packages/yl_player_cast
+  - packages/yl_player_cast/example
 
 dependencies:
   flutter:

@@ -14,6 +14,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   private let outbound = YlAppleOutboundQueue()
   private var coordinator: YlAppleSessionCoordinator!
   private var textureOwner: YlAppleTextureOwner!
+  lazy var mediaDelivery = YlMediaDeliveryManager(configuration: PlayerConfiguration(positionEventIntervalMs: positionUpdateIntervalMs))
   private var attached = false
   private(set) var disposed = false
   private var lastLiveModeRequestId: Int64 = 0
@@ -144,6 +145,25 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   }
   func assess(request: AppleAssessRequest) throws -> AppleAssessmentReply {
     try assess(request: request, airPlay: false)
+  }
+  func prepareMediaDelivery(id: String, request: AppleAssessRequest,
+                            reply: @escaping (Result<[String: Any], Error>) -> Void) throws {
+    let source = try admitMediaDelivery(request: request)
+    mediaDelivery.prepare(id: id, source: source, reply: reply)
+  }
+  /// Validates the exact prepare request without touching the pending or accepted resource.
+  func admitMediaDelivery(request: AppleAssessRequest) throws -> YlAppleSourceDescriptor {
+    try alive()
+    let recipe = try YlAppleNativeInput.load(source: request.source, options: request.options, defaults: options, loadRequestId: nil)
+    let load = request.options
+    guard recipe.source.intent != .onDemand, (load.startPositionMs ?? 0) == 0,
+      load.videoConstraints.maxWidth == nil, load.videoConstraints.maxHeight == nil,
+      load.videoConstraints.maxBitrate == nil,
+      load.bufferStrategy.kind == .automatic || load.bufferStrategy.kind == .smoothPlayback else {
+      throw YlAppleFailureMapper.unsupported
+    }
+    try mediaDelivery.validateAdmission(source: recipe.source)
+    return recipe.source
   }
   func assessAirPlay(request: AppleAssessRequest) throws -> AppleAssessmentReply {
     try assess(request: request, airPlay: true)
@@ -364,6 +384,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     restorationVersion &+= 1
     stagedSnapshot = nil
     outbound.close()
+    mediaDelivery.close()
     coordinator.dispose()
     refreshAirPlayState()
     textureOwner.dispose()

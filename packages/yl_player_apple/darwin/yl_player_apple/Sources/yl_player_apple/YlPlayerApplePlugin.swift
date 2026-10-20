@@ -52,6 +52,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     YlBoundFlutterProbe.register(messenger: messenger)
     #endif
     let airPlay = YlAirPlayChannels(messenger: hostMessenger)
+    let delivery = YlMediaDeliveryChannels(messenger: hostMessenger)
     registrar.register(airPlay.picker, withId: YlAirPlayRoutePickerFactory.viewType)
     let protectedViews = YlFairPlayViewRegistry()
     registrar.register(YlFairPlayViewFactory(registry: protectedViews), withId: YlFairPlayViewFactory.viewType)
@@ -60,6 +61,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
       installHost: { suffix, host in
         ApplePlayerHostApiSetup.setUp(binaryMessenger: hostMessenger, api: host, messageChannelSuffix: suffix)
         airPlay.install(suffix: suffix, host: host as? YlApplePlayerHost)
+        delivery.install(suffix: suffix, host: host as? YlApplePlayerHost)
       }, lifecycle: lifecycle, makeDrmBridge: { id, suffix in
         let bridge = YlFairPlayBridge(playerId: id, views: protectedViews,
           callbacks: AppleDrmFlutterApi(binaryMessenger: YlApplePlatformMessenger(messenger), messageChannelSuffix: suffix))

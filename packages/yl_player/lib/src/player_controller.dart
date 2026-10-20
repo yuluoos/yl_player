@@ -368,6 +368,28 @@ final class YlPlayerController implements Listenable {
     }
   }
 
+  /// 当前平台是否提供独立媒体交付能力；具体源仍需经过准备验证。
+  bool get supportsMediaDelivery =>
+      !_disposed && _backend is YlMediaDeliveryPlatformPlayer;
+
+  /// 准备可被局域网接收端拉取的媒体，保持本地播放不变。
+  YlMediaDeliveryPreparation prepareMediaDelivery(
+    YlMediaSource source, {
+    YlLoadOptions options = const YlLoadOptions(),
+  }) {
+    _check();
+    validateYlSource(source);
+    validateYlLoadOptions(options);
+    final backend = _backend;
+    if (backend is! YlMediaDeliveryPlatformPlayer) {
+      throw _exception(YlFailureCodes.policyUnsupported);
+    }
+    return (backend as YlMediaDeliveryPlatformPlayer).prepareMediaDelivery(
+      source,
+      options: options,
+    );
+  }
+
   Future<YlSourceAssessment> assess(
     YlMediaSource source, {
     YlLoadOptions options = const YlLoadOptions(),

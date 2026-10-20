@@ -18,6 +18,10 @@ package; the player does not depend on it. See its
 [implementation and validation record](docs/superpowers/reports/2026-09-22-script-resolver.md)
 for current evidence and limits.
 
+可选 [`yl_player_cast`](packages/yl_player_cast/README.md) 提供 DLNA 设备发现、
+远端控制、AirPlay 统一入口，以及 Apple 自定义直播 HLS/fMP4 交付。
+播放器不反向依赖该包；接入限制和宿主权限见其中文文档。
+
 Start with the [application API and lifecycle](packages/yl_player/README.md).
 Before adopting v0.2, read the [migration guide](docs/migration-to-0.2.md),
 [platform support matrix](docs/platform-support.md), [policy semantics](docs/policies.md),
