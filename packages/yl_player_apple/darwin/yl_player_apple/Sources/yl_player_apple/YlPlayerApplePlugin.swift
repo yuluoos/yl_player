@@ -16,6 +16,15 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
   }
 
   public static func register(with registrar: FlutterPluginRegistrar) {
+    register(with: registrar, useFlutterTexture: false)
+  }
+
+  /// Use Flutter composition for ordinary video on a dedicated external-display
+  /// engine (for example CarPlay). This avoids UIKit platform-view composition
+  /// using the phone screen's scale for an external screen. Texture output uses
+  /// Flutter's SDR pipeline; protected FairPlay output remains a secure view.
+  /// Configure once at registration, before creating any players on this engine.
+  public static func register(with registrar: FlutterPluginRegistrar, useFlutterTexture: Bool) {
     #if os(iOS)
     let messenger = registrar.messenger()
     let hostMessenger = messenger
@@ -25,7 +34,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     let services: (ApplePlayerOptionsMessage) throws -> YlPlatformServices = { [weak registrar] _ in
       guard let registrar else { throw YlAppleFailureMapper.invalid("player.detached") }
       // appManaged must not mutate application-owned AVAudioSession state.
-      return YlIosPlatformAdapter.makeServices(textures: registrar.textures(), activateAudioSession: {}, nativeViews: nativeViews)
+      return YlIosPlatformAdapter.makeServices(textures: registrar.textures(), activateAudioSession: {}, nativeViews: useFlutterTexture ? nil : nativeViews)
     }
     #else
     let messenger = registrar.messenger
@@ -36,7 +45,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     let services: (ApplePlayerOptionsMessage) throws -> YlPlatformServices = { [weak registrar] _ in
       guard let registrar else { throw YlAppleFailureMapper.invalid("player.detached") }
       return YlMacosPlatformAdapter.makeServices(textures: registrar.textures,
-        displayView: registrar.view, activateAudioSession: {}, nativeViews: nativeViews)
+        displayView: registrar.view, activateAudioSession: {}, nativeViews: useFlutterTexture ? nil : nativeViews)
     }
     #endif
     #if DEBUG && YL_BOUND_AV

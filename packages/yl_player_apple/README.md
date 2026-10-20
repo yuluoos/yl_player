@@ -154,3 +154,19 @@ prove physical CarPlay/video support.
 
 The iOS `YlAppleMemoryWarningTests` covers background creation, continued
 external playback, revocation, and default foreground restoration.
+
+## Dedicated external-display engines
+
+An iOS app that registers its own CarPlay/external-display Flutter engine can
+opt ordinary video into Flutter texture composition at registration:
+
+```swift
+YlPlayerApplePlugin.register(with: registrar, useFlutterTexture: true)
+```
+
+This avoids the main-screen scale used by UIKit platform-view composition in
+Flutter versions affected by external-display sizing errors. The normal generated
+plugin registration still uses native video surfaces. Choose once per engine,
+before creating players. This option uses Flutter's SDR texture pipeline and is
+not an HDR presentation mode. FairPlay retains its separate secure native view;
+this option does not change protected playback or audio/background policies.

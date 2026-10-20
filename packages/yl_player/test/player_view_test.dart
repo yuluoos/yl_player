@@ -315,6 +315,47 @@ void main() {
     );
   }
 
+  for (final scale in [1.0, 2.0, 3.0]) {
+    testWidgets('iOS texture fills an external display at scale $scale', (
+      tester,
+    ) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      tester.view.devicePixelRatio = scale;
+      tester.view.physicalSize = const Size(800, 480);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
+      final controller = await _presentedController(
+        FakePlatformPlayer(),
+        geometry: _wideGeometry,
+      );
+      await tester.pumpWidget(
+        Directionality(
+          textDirection: TextDirection.ltr,
+          child: YlPlayerView(controller: controller),
+        ),
+      );
+      expect(find.byType(UiKitView), findsNothing);
+      _expectRect(
+        tester.getRect(find.byType(Texture)),
+        left: 0,
+        top: 15 / scale,
+        width: 800 / scale,
+        height: 450 / scale,
+      );
+      // A changed car display size must re-fit the same texture without stretching.
+      tester.view.physicalSize = const Size(1280, 720);
+      await tester.pump();
+      _expectRect(
+        tester.getRect(find.byType(Texture)),
+        left: 0,
+        top: 0,
+        width: 1280 / scale,
+        height: 720 / scale,
+      );
+      await _dispose(tester, controller);
+    });
+  }
+
   testWidgets('keeps placeholder until current session first frame', (
     tester,
   ) async {

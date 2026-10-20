@@ -1,3 +1,9 @@
+## 0.3.0-dev.2
+
+- Add an opt-in `useFlutterTexture` registration option for dedicated external
+  display engines, avoiding phone/CarPlay scale mismatches in UIKit composition.
+  Default native output and protected FairPlay output remain unchanged.
+
 ## 0.3.0-dev.1
 
 - Add AirPlay route selection for supported video and live sources, including
