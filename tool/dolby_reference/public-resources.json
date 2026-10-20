@@ -1,0 +1,306 @@
+{
+  "schema_version": 1,
+  "recorded_date": "2026-10-20",
+  "source": "https://opencontent.netflix.com/",
+  "attribution": "Netflix Open Content: Sol Levante and Sparks, CC BY 4.0. Downloaded bytes unmodified; this catalog is derived metadata.",
+  "cache_directory": ".superpowers/sdd/2026-10-20-p07-public-resources/resources",
+  "assets": [
+    {
+      "file": "sollevante-metadata.xml",
+      "url": "https://s3.amazonaws.com/download.opencontent.netflix.com/SolLevante/vdm/sollevante_lp_16b_hdr_p3d65pq_dolbyvision29.xml",
+      "bytes": 203263,
+      "sha256": "ed782c213d158dad8204d3a4bde8d72e5956649696bb39ae6d9a0162d58c4ceb",
+      "publisher": "Netflix",
+      "license": "CC-BY-4.0",
+      "modified": false,
+      "role": "source_metadata"
+    },
+    {
+      "file": "sparks-metadata.xml",
+      "url": "https://s3.amazonaws.com/download.opencontent.netflix.com/sparks/SPARKS_4K_P3_PQ_4000nits_EXR_DoVi_metadata/20161103_SPARKS_DOVI_METADATA_AR_CORRECT.xml",
+      "bytes": 311836,
+      "sha256": "a18f5960f61f868932416000c35f08bb39d9966b1dc35a8b6778e9718bb16c0f",
+      "publisher": "Netflix",
+      "license": "CC-BY-4.0",
+      "modified": false,
+      "role": "source_metadata"
+    },
+    {
+      "file": "netflix-license.txt",
+      "url": "https://s3.amazonaws.com/download.opencontent.netflix.com/SolLevante/creative-commons-attribution-4-intl-public-license.txt",
+      "bytes": 105020,
+      "sha256": "7d3512159f970cdcf296e8404be05947228d0bfaf72801cb5b3077f4330f71f9",
+      "publisher": "Netflix",
+      "license": "CC-BY-4.0",
+      "modified": false,
+      "role": "license"
+    },
+    {
+      "file": "sparks-input-01000.exr",
+      "url": "https://s3.amazonaws.com/download.opencontent.netflix.com/sparks/SPARKS_4K_P3_PQ_4000nits_EXR/SPARKS_P3_PQ_4000nit_01000.exr",
+      "bytes": 53119100,
+      "sha256": "f34e1c18693c3bb6d218936b1957bf392a0f2888beda81c7dbf8a631aec75285",
+      "publisher": "Netflix",
+      "license": "CC-BY-4.0",
+      "modified": false,
+      "role": "unqualified_reference_candidate"
+    },
+    {
+      "file": "sparks-target-01000.tif",
+      "url": "https://s3.amazonaws.com/download.opencontent.netflix.com/sparks/HDR10_1000nit_PQ_2020_image_sequence/SPARKS_HDR10_4K_2020_PQ_1000nits_01000.tif",
+      "bytes": 53084342,
+      "sha256": "a751144a91f8105f2122c179f2936f487ca0b80dd555965a1561c9615c00f93f",
+      "publisher": "Netflix",
+      "license": "CC-BY-4.0",
+      "modified": false,
+      "role": "unqualified_reference_candidate"
+    },
+    {
+      "file": "netflix-techblog-readme.txt",
+      "url": "https://s3.amazonaws.com/download.opencontent.netflix.com/TechblogAssets/README.txt",
+      "bytes": 7883,
+      "sha256": "b997f0019e436499c35045bdcdc3df3ddf4a14a24a5a6695a1830c48aff3c9e6",
+      "publisher": "Netflix",
+      "license": "publisher_documentation_copyright_netflix",
+      "modified": false,
+      "role": "workflow_documentation"
+    }
+  ],
+  "metadata_observations": [
+    {
+      "file": "sollevante-metadata.xml",
+      "mdf_version": "2.0.5",
+      "track_rates": [
+        {
+          "n": 24,
+          "d": 1
+        }
+      ],
+      "shot_count": 72,
+      "record_end_exclusive": 6314,
+      "displays": [
+        {
+          "kind": "MasteringDisplay",
+          "ID": "20",
+          "Name": "1000-nit, P3, D65, ST.2084, Full",
+          "MinimumBrightness": "0.0001",
+          "PeakBrightness": "1000",
+          "Encoding": "PQ",
+          "BitDepth": "16",
+          "ColorSpace": "RGB",
+          "SignalRange": "computer",
+          "ChromaFormat": "4:4:4",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.68,0.32",
+            "Green": "0.265,0.69",
+            "Blue": "0.15,0.06"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "1",
+          "Name": "100-nit, BT.709, BT.1886, Full",
+          "MinimumBrightness": "0.005",
+          "PeakBrightness": "100",
+          "Encoding": "BT1886",
+          "BitDepth": "16",
+          "ColorSpace": "RGB",
+          "SignalRange": "computer",
+          "ChromaFormat": "4:4:4",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.64,0.33",
+            "Green": "0.3,0.6",
+            "Blue": "0.15,0.06"
+          }
+        }
+      ]
+    },
+    {
+      "file": "sparks-metadata.xml",
+      "mdf_version": "2.0.5",
+      "track_rates": [
+        {
+          "n": 60000,
+          "d": 1001
+        }
+      ],
+      "shot_count": 39,
+      "record_end_exclusive": 13777,
+      "displays": [
+        {
+          "kind": "MasteringDisplay",
+          "ID": "7",
+          "Name": "Dolby Pulsar 4000-nit,P3/D65,ST.2084,Full",
+          "MinimumBrightness": "0.005",
+          "PeakBrightness": "4000",
+          "Encoding": "pq",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "computer",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.68,0.32",
+            "Green": "0.265,0.69",
+            "Blue": "0.15,0.06"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "1",
+          "Name": "100-nit, Rec. 709, BT.1886, Full",
+          "MinimumBrightness": "0.005",
+          "PeakBrightness": "100",
+          "Encoding": "gamma_bt1886",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "computer",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.64,0.33",
+            "Green": "0.3,0.6",
+            "Blue": "0.15,0.06"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "27",
+          "Name": "600-nit, P3/D65, ST.2084, Full",
+          "MinimumBrightness": "0",
+          "PeakBrightness": "600",
+          "Encoding": "pq",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "computer",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.68,0.32",
+            "Green": "0.265,0.69",
+            "Blue": "0.15,0.06"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "37",
+          "Name": "2000-nit, P3/D65, ST.2084, Full",
+          "MinimumBrightness": "0",
+          "PeakBrightness": "2000",
+          "Encoding": "pq",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "signal",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.68,0.32",
+            "Green": "0.265,0.69",
+            "Blue": "0.15,0.06"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "38",
+          "Name": "2000-nit, Rec. 2020, ST.2084, Full",
+          "MinimumBrightness": "0",
+          "PeakBrightness": "2000",
+          "Encoding": "pq",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "signal",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.708,0.292",
+            "Green": "0.17,0.797",
+            "Blue": "0.131,0.046"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "48",
+          "Name": "1000-nit, P3/D65, ST.2084, Full",
+          "MinimumBrightness": "0",
+          "PeakBrightness": "1000",
+          "Encoding": "pq",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "computer",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.68,0.32",
+            "Green": "0.265,0.69",
+            "Blue": "0.15,0.06"
+          }
+        },
+        {
+          "kind": "TargetDisplay",
+          "ID": "49",
+          "Name": "1000-nit, Rec. 2020, ST.2084, Full",
+          "MinimumBrightness": "0",
+          "PeakBrightness": "1000",
+          "Encoding": "pq",
+          "BitDepth": "16",
+          "ColorSpace": "rgb",
+          "SignalRange": "computer",
+          "ChromaFormat": "444",
+          "WhitePoint": "0.3127,0.329",
+          "Primaries": {
+            "Red": "0.708,0.292",
+            "Green": "0.17,0.797",
+            "Blue": "0.131,0.046"
+          }
+        }
+      ]
+    }
+  ],
+  "frame_observations": {
+    "filename_index": 1000,
+    "width": 4096,
+    "height": 2160,
+    "decode_tool": "FFmpeg 8.0.1 host software decoding, one frame per file, exit 0",
+    "exr_channels": "RGB half float",
+    "tiff_channels": "RGB unsigned 16-bit",
+    "exr_embedded_fps": {
+      "n": 60000,
+      "d": 1001
+    },
+    "exr_embedded_colorimetry": null,
+    "ffprobe_exr_transfer_label": "linear",
+    "publisher_exr_encoding_label": "P3/PQ 4000 nits",
+    "frame_alignment_verified": false,
+    "caution": "ffprobe linear label is not proof of encoding: EXR header has no explicit transfer/colorimetry attribute. Matching filenames do not prove grade/version/frame alignment.",
+    "metadata_record_containing_index": {
+      "start": 917,
+      "duration": 567,
+      "trim_target_ids": [
+        "1",
+        "27",
+        "48"
+      ]
+    }
+  },
+  "qualification": {
+    "independent_publisher": true,
+    "same_frame_and_grade_verified": false,
+    "target_generation_path_verified": false,
+    "frozen_tolerance": null,
+    "mapping_quality": "external_missing",
+    "native_dv_signal": "external_missing"
+  },
+  "output_chain_research": {
+    "source": "https://support.apple.com/en-ie/105099",
+    "candidate": "Supported USB-C iPhone -> Apple USB-C Digital AV Multiport Adapter -> Dolby Vision capable HDMI TV",
+    "actual_device_os_adapter_tv_firmware": null,
+    "physical_evidence": null,
+    "status": "external_missing"
+  },
+  "workflow_sources": [
+    "https://netflixtechblog.com/engineers-making-movies-aka-open-source-test-content-f21363ea3781",
+    "https://s3.amazonaws.com/download.opencontent.netflix.com/TechblogAssets/README.txt"
+  ]
+}

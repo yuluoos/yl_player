@@ -734,3 +734,6 @@ P02/CAP-SUB 全场景验收不标完成。P04 独立分支未改动。
 [证据包](../reports/evidence/2026-10-20-p02-device-completion/README.md)。
 
 2026-10-20 P03 批准工程范围已完成：最终 iPhone 选择范围严格8/8、AVPlayer source-pull1/1、两项真实负例拒绝；采集超时及 seek/恢复竞态已修复。完整40格、硬件消费时钟、最低系统/Intel/物理同步和生产软解资格仍开放，见[P03收尾证据](../reports/evidence/2026-10-20-p03-engineering-completion/README.md)。
+
+
+2026-10-20 P07 Task1 资源获取增量：从公开目录取得未改字节的 P7 FEL/CM4 功能测试 MP4，固定解析器完整盘点 2908 包，包包含 BL/EL VCL，保存原始 RPU/增强层哈希轨迹；新增 `--layers` 保持默认历史 schema1。另下载 Netflix 官方 Sol Levante/Sparks XML 及 Sparks 原始 EXR、1000 nit TIFF 各一帧，均为待进一步核验的参考候选。仍缺 FEL 同源独立目标输出、目标生成/帧对齐契约、冻结容差及实际 DV 物理链；Task1 整体和 CAP-DV-MAP/OUT 未完成。详见 [公开资源核验报告](../reports/2026-10-20-p07-public-resources.md)。
