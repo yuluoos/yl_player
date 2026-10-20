@@ -111,10 +111,8 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
                                   launchEnvironment=dict(MallocStackLogging='full',MallocStackLoggingNoCompact='1'),
                                   forcedGC=False,observerTimeoutSeconds=10)
     try:
-        paths=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
-        source={n:digest(ROOT/n) for n in sorted(set(paths)) if Path(n).suffix in (
-            '.dart','.swift','.m','.h','.kt','.py','.sh','.pbxproj','.xcconfig',
-            '.podspec','.plist','.entitlements','.yaml','.lock') or Path(n).name=='Podfile'}
+        from run_public_stress import source_identity
+        source=source_identity()
         dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock',
             'packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']}
         artifact='packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock'
@@ -167,7 +165,7 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
         assert all(t['runId']==run and t['buildMode']==mode and t['plannedAttempts']==attempts and t.get('workload')==workload and t['schemaVersion']==2 for t in trials)
         if profile_cycles: result['disposedMemory']=summarize_disposed_memory(trials)
         if extended: result['endurance']=summarize_endurance(trials)
-        result['sourceIdentityVerified']=all(digest(ROOT/p)==v for p,v in source.items())
+        result['sourceIdentityVerified']=source_identity()==source
         assert result['sourceIdentityVerified']
         result.update(runStatus='collected' if exit_code==0 and (not extended or result['endurance']['protocolCompleted']) else 'playback_failed',stage='complete',observations=trials)
     except (OSError,ValueError,TypeError,KeyError,AssertionError,subprocess.SubprocessError):

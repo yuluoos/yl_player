@@ -68,6 +68,26 @@ Map<String, Object?> Function() openResourceSampler(String path) {
   };
 }
 
+/// Register cancellation at acquisition, before any later phase can fail.
+Timer startResourceSampling({
+  required ResourceSeries series,
+  required List<Future<void> Function()> cleanup,
+  required void Function() onFailure,
+  Duration interval = const Duration(milliseconds: 250),
+}) {
+  final timer = Timer.periodic(interval, (_) {
+    try {
+      series.sample();
+    } catch (_) {
+      onFailure();
+    }
+  });
+  cleanup.add(() async {
+    timer.cancel();
+  });
+  return timer;
+}
+
 class ResourceSeries {
   ResourceSeries({required this.read});
   final Map<String, Object?> Function() read;

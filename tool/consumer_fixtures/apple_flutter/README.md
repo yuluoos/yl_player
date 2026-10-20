@@ -124,3 +124,14 @@ python3 -B -m unittest discover -s tool/consumer_fixtures/apple_flutter -p test_
 The P01 final-validation evidence
 records the native failure, a real negative architecture check, and the exact
 isolated consumer invocation used for this environment.
+
+The reusable command now supports `--lipo-compat` for macOS. It installs the
+adapter only in the selected owned host, patches the two Flutter shell phases
+and SwiftPM prepare action, and records its SHA-256 in `lipo-compat.json`. Reusing
+that host without the explicit flag is rejected; choose a fresh output directory
+to test unmodified native defaults. Non-macOS use is rejected.
+
+The combined five-consumer gate also accepts `YL_MACOS_LIPO_COMPAT=1`
+(`YL_FLUTTER=/path/to/flutter sh tool/check_consumers.sh`). The default is 0;
+only the two generated macOS hosts receive the adapter. iOS, Android, final
+architecture inspection and deployment-floor checks keep their normal commands.

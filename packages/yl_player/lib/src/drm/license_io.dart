@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 import 'license_client.dart';
+import 'license_timing.dart';
 import 'license_secure_socket.dart';
 
 Future<YlDrmBytes> sendLicense(
@@ -89,7 +90,10 @@ Future<YlDrmBytes> sendLicense(
     final visited = <Uri>{uri};
     while (active()) {
       try {
-        final request = await http.postUrl(uri);
+        final request = await timeLicenseTransport(
+          () => http.postUrl(uri),
+          phase: LicenseTimingPhase.connect,
+        );
         current = request;
         if (!active()) {
           request.abort();
@@ -106,7 +110,10 @@ Future<YlDrmBytes> sendLicense(
         endpoint.request.credentials.forEach(request.headers.set);
         request.contentLength = challenge.length;
         request.add(challenge.bytes);
-        final response = await request.close();
+        final response = await timeLicenseTransport(
+          request.close,
+          phase: LicenseTimingPhase.responseHeaders,
+        );
         if (!active()) return;
         final status = response.statusCode;
         if (status >= 300 && status < 400) {
@@ -168,14 +175,16 @@ Future<YlDrmBytes> sendLicense(
           return;
         }
         final bytes = BytesBuilder(copy: false);
-        await for (final chunk in response) {
-          if (!active()) return;
-          if (chunk.length > endpoint.maxResponseBytes - bytes.length) {
-            fail(YlFailureCodes.drmPayloadTooLarge);
-            return;
+        await timeLicenseTransport(() async {
+          await for (final chunk in response) {
+            if (!active()) return;
+            if (chunk.length > endpoint.maxResponseBytes - bytes.length) {
+              fail(YlFailureCodes.drmPayloadTooLarge);
+              return;
+            }
+            bytes.add(chunk);
           }
-          bytes.add(chunk);
-        }
+        }, phase: LicenseTimingPhase.body);
         if (!active()) return;
         if (bytes.isEmpty) {
           fail(YlFailureCodes.drmLicenseResponseInvalid);

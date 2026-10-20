@@ -1,4 +1,5 @@
 import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
+import 'license_timing.dart';
 import 'license_stub.dart' if (dart.library.io) 'license_io.dart' as backend;
 
 /// Idempotent cancellation for one request or a group of requests. Listeners are
@@ -36,6 +37,7 @@ final class YlDrmCancellationToken {
 /// Bounded raw binary license POST client, independent of media GET policy.
 /// This does not decrypt content or install licenses into a native DRM session.
 final class YlDrmLicenseClient {
+  final _timingOwner = currentLicenseTimingTrace;
   final _active = <YlDrmCancellationToken>{};
   bool _closed = false;
   Future<YlDrmBytes> send(
@@ -59,7 +61,10 @@ final class YlDrmLicenseClient {
     final remove = cancellation?.listen(token.cancel);
     _active.add(token);
     try {
-      return await backend.sendLicense(endpoint, challenge, token);
+      return await timeLicenseTransport(
+        () => backend.sendLicense(endpoint, challenge, token),
+        owner: _timingOwner,
+      );
     } finally {
       remove?.call();
       _active.remove(token);

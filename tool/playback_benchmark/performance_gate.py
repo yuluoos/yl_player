@@ -13,7 +13,7 @@ from summarize import TOKEN, SHA256, COMMIT, OUTCOMES, unique_object, reject_con
 MAX_BYTES = 16 * 1024 * 1024
 MAX_TRIALS = 10000
 BOUNDARIES = {
-    'public-event': ('us',), 'output-presented': ('us',),
+    'compositor-capture': ('us',), 'public-state': ('us',), 'public-event': ('us',), 'output-presented': ('us',),
     'command-completed': ('us',), 'phase-clock': ('us',),
     'seek-output-stable': ('us',), 'source-to-output': ('us',),
     'calibrated-output': ('us',), 'process-sample': ('bytes', 'percent', 'celsius'),

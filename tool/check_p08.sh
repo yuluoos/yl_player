@@ -6,6 +6,10 @@ cd "$root"
 case "${1:---validate}" in
   --validate)
     python3 -B -m unittest discover -s tool/playback_benchmark -p 'test_*.py'
+    python3 -B -m unittest discover -s tool/consumer_fixtures/apple_flutter -p 'test_*compat.py'
+    (cd packages/yl_player_source_resolver && "${YL_FLUTTER:-flutter}" test --no-pub test)
+    "${YL_FLUTTER:-flutter}" test --no-pub packages/yl_player/test/drm_license_timing_test.dart packages/yl_player/test/drm_license_client_test.dart packages/yl_player/test/drm_apple_bridge_test.dart packages/yl_player/test/drm_android_bridge_test.dart
+    if [ "$(uname -s)" = Darwin ]; then sh tool/playback_benchmark/check_compositor_probe.sh; fi
     (cd packages/yl_player/example && "${YL_FLUTTER:-flutter}" test test)
     python3 -B tool/playback_benchmark/threshold_registry.py
     python3 -B tool/release_readiness/check.py

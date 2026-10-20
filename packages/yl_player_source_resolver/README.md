@@ -178,3 +178,11 @@ shared19 exact-original controlled cases and real AVPlayer/Media3 firstFrame.
 Physical devices and runtime execution at the minimum supported OS floors were
 not tested. The initial macOS handoff correctly rejected headered MP4; the final
 owned fixture uses header-free MP4. No native hook/player fix was required.
+
+Settled `YlScriptResolution.timings` provides immutable monotonic wall-clock
+`input`, `download`, `evaluation`, `host`, `result`, `cleanup`, and `total`
+durations. Before settlement it is null; unvisited phases remain null even on
+failure. Repeated host/evaluation phases accumulate. Evaluation includes VM
+polling; host includes request waits. These are not CPU/heap measurements, and
+contain no script/URI/credentials. The optional example's `P08_SCRIPT_HANDOFF`
+records the corresponding public first-frame boundary separately.

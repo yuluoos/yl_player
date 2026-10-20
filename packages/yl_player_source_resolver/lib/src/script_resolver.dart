@@ -16,6 +16,37 @@ final class YlScriptResolution {
   final _clock = Stopwatch();
   final String _diagnosticId = createScriptDiagnosticId();
   String _phase = 'input';
+  String _timingPhase = 'input';
+  int _timingStartUs = 0;
+  final _timings = <String, Duration?>{
+    for (final phase in [
+      'input',
+      'download',
+      'evaluation',
+      'host',
+      'result',
+      'cleanup',
+      'total',
+    ])
+      phase: null,
+  };
+
+  /// Settled monotonic wall times. Repeated evaluation/host spans accumulate;
+  /// host includes request waits and evaluation includes VM polling. This is
+  /// not CPU time. Unvisited phases stay null; no source or URL is retained.
+  Map<String, Duration?>? get timings =>
+      _done ? Map.unmodifiable(_timings) : null;
+
+  void _enterTiming(String phase) {
+    final now = _clock.elapsedMicroseconds;
+    _timings[_timingPhase] = Duration(
+      microseconds:
+          (_timings[_timingPhase]?.inMicroseconds ?? 0) + now - _timingStartUs,
+    );
+    _timingStartUs = now;
+    _timingPhase = phase;
+  }
+
   ScriptHttp? _http;
   NativeRuntimeJob? _native;
   Timer? _timer;
@@ -66,12 +97,14 @@ final class YlScriptResolution {
       );
       if (source == null) {
         _phase = 'download';
+        _enterTiming('download');
         source = await _http!.download(reference!);
       }
       _checkStopped();
       final remaining = _limits.timeout - _clock.elapsed;
       if (remaining.inMilliseconds < 1) throw scriptFailure('timeout');
       _phase = 'evaluation';
+      _enterTiming('evaluation');
       final native = _native = NativeRuntimeJob.start(
         source,
         parameters: parameters,
@@ -84,6 +117,7 @@ final class YlScriptResolution {
         final request = native.takeRequest();
         if (request != null) {
           _phase = 'host';
+          _enterTiming('host');
           final reply = await _http!.host(request);
           _checkStopped();
           if (!native.reply(jsonEncode(reply))) {
@@ -91,6 +125,7 @@ final class YlScriptResolution {
             throw _nativeFailure(native.status);
           }
           _phase = 'evaluation';
+          _enterTiming('evaluation');
         } else {
           await Future<void>.delayed(const Duration(milliseconds: 2));
         }
@@ -98,6 +133,7 @@ final class YlScriptResolution {
       _checkStopped();
       if (native.status != 1) throw _nativeFailure(native.status);
       _phase = 'result';
+      _enterTiming('result');
       resolved = normalizeScriptResult(native.resultJson);
     } on YlScriptException catch (error) {
       failure = error;
@@ -106,6 +142,7 @@ final class YlScriptResolution {
     } on Object {
       failure = scriptFailure('execution');
     } finally {
+      _enterTiming('cleanup');
       _http?.abort();
       try {
         await _native?.close();
@@ -114,6 +151,8 @@ final class YlScriptResolution {
       }
       _timer?.cancel();
       _clock.stop();
+      _enterTiming('total');
+      _timings['total'] = _clock.elapsed;
       failure = _stop ?? failure;
       _done = true;
       _onDone(this);

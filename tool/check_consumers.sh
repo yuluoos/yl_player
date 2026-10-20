@@ -20,6 +20,12 @@ case "${1:-}" in
   *) echo "usage: $0 [--list|--android-only|--apple-only]" >&2; exit 2 ;;
 esac
 
+case "${YL_MACOS_LIPO_COMPAT:-0}" in
+  0) macos_compat= ;;
+  1) macos_compat=--lipo-compat ;;
+  *) echo 'YL_MACOS_LIPO_COMPAT must be 0 or 1' >&2; exit 2 ;;
+esac
+
 flutter=${YL_FLUTTER:-}
 if [ -z "$flutter" ]; then
   flutter=$(command -v flutter || true)
@@ -117,9 +123,9 @@ fi
 
 if [ "$mode" = all ] || [ "$mode" = apple ]; then
   run_logged ios-cocoapods sh "$YL_REPO_ROOT/tool/check_apple_consumer.sh" --platform ios --manager cocoapods --link
-  run_logged macos-cocoapods sh "$YL_REPO_ROOT/tool/check_apple_consumer.sh" --platform macos --manager cocoapods --link
+  run_logged macos-cocoapods sh "$YL_REPO_ROOT/tool/check_apple_consumer.sh" --platform macos --manager cocoapods --link ${macos_compat:+"$macos_compat"}
   run_logged ios-swiftpm sh "$YL_REPO_ROOT/tool/check_apple_consumer.sh" --platform ios --manager swiftpm --link
-  run_logged macos-swiftpm sh "$YL_REPO_ROOT/tool/check_apple_consumer.sh" --platform macos --manager swiftpm --link
+  run_logged macos-swiftpm sh "$YL_REPO_ROOT/tool/check_apple_consumer.sh" --platform macos --manager swiftpm --link ${macos_compat:+"$macos_compat"}
 fi
 
 printf 'Independent consumers passed: %s\n' "$mode"

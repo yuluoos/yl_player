@@ -782,3 +782,69 @@ low-memory or thermal tests. Existing `run_resources.py --profile-endurance`,
 remain the corresponding execution paths. This new run's content qualification
 stays false until independent evidence exists; its `run.json` cannot be frozen
 into a formal output baseline merely because playback assertions passed.
+
+## P08 completed acquisition paths (2026-10-20)
+
+The following commands require fresh output directories. They freeze current
+source identities before execution and retain failures. None publishes or admits
+physical-output latency SLOs.
+
+```sh
+python3 tool/playback_benchmark/run_public_stress.py /tmp/NEW-stress /absolute/flutter
+python3 tool/playback_benchmark/run_compositor.py /tmp/NEW-compositor /absolute/flutter
+python3 tool/playback_benchmark/run_tvs_performance.py /tmp/NEW-tvs \
+  --tvs /absolute/tvs --player /absolute/yl_player --flutter /absolute/flutter
+```
+
+- Stress now includes actual self-process CPU, RSS, footprint, power/thermal,
+  post-dispose samples, and seek near-target/one-second progress windows. The
+  latter are **public-state** observations, not rendered audio/video. Native and
+  Dart epochs are not subtracted. Missing counters remain null. Resource sample
+  failure makes collection incomplete. The two-player lease protocol still
+  restores the peer explicitly; it does not claim simultaneous video.
+- The macOS 14+ acceptance-only compositor probe uses ScreenCaptureKit to select
+  **only its own process/window**. It does not request permission or save images.
+  A generated silent video encodes 10 Hz frame IDs. Three rows of pixels must
+  agree with the marker; stale/unknown/gapped observations cannot prove recovery.
+  Load/seek timestamps and capture display timestamps use the same mach host
+  clock. The app clears the previous surface before each fresh Session. A
+  one-second hide/unhide cycle verifies this owned macOS window's recovery.
+  Window settings are restored. This measures the captured window composition,
+  **not panel scanout, speakers, A/V sync, protected output, or mobile background**.
+  Capture correctness tolerances (200 ms target, 1 s stability, 250 ms maximum
+  gap) belong to the frozen protocol, not product latency targets.
+- TVS freezes both repositories and verifies the resolved package paths, then
+  runs the existing owned RTMP/M3U/JS acceptance. It retains source-attempt and
+  script/preparation/kernel wall spans and the actual firstFrame-future observation
+  point. Nested spans overlap: never sum them as CPU or total switch time. It
+  uses debug mode; this is instrumentation/functional evidence, not a baseline.
+- `YlScriptResolution.timings` exposes settled wall-clock phase totals, including
+  download, evaluation, host waits and cleanup. Unvisited phases are null;
+  failures keep partial totals. No script, URL, headers or native error text is
+  stored. The existing resolver device handoff prints `P08_SCRIPT_HANDOFF`.
+- The package-internal `LicenseTimingTrace` binds to controller construction and
+  collects real license transport/connect/response-header/body wall spans. The
+  authorized DRM lifecycle and fault entries emit `YL_DRM_LICENSE_TIMINGS`.
+  Late unfinished work is marked incomplete; bounded overflow is explicit. Real
+  loopback HTTP/TLS tests validate instrumentation. They do not issue usable DRM
+  licenses or grant provider/physical acceptance.
+
+macOS universal consumer builds can explicitly opt into the already audited
+system-lipo adapter:
+
+```sh
+YL_FLUTTER=/absolute/flutter sh tool/check_apple_consumer.sh \
+  --platform macos --manager cocoapods --link --lipo-compat
+# Repeat with --manager swiftpm. Use a new owned host for native-default checks.
+```
+
+The adapter stays inside the generated consumer's Flutter build phases. All final
+arm64/x86_64, deployment-floor, linkage, and symbol checks remain enabled. It does
+not modify Flutter/Xcode or prove an Intel runtime.
+
+Physical synchronized optical/audio/subtitle measurements and trusted live-source
+clocks remain external measurement prerequisites. Current minimum-OS/low-memory
+32-bit/Intel devices and authorized DRM/Dolby/reference resources are separately
+listed in the P08 report. GPU and temperature counters are null where the sampler
+has no supported observation; RSS is not relabeled GPU memory. Current-host
+measurements do not populate missing device profiles or invent numeric SLOs.

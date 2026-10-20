@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "public-two-player-v2",
+  "id": "public-two-player-v3",
   "plannedAttempts": 3,
   "warmupAttempts": 0,
   "players": 2,
@@ -28,5 +28,20 @@
   "presentationBoundary": "public-event-only",
   "physicalBackground": false,
   "longPlayback": false,
-  "concurrentPlaybackClaim": false
+  "concurrentPlaybackClaim": false,
+  "seekProgressWindow": {
+    "boundary": "public-state",
+    "targetUs": 5000000,
+    "toleranceUs": 250000,
+    "windowUs": 1000000,
+    "maximumGapUs": 500000,
+    "minimumRate": 0.5,
+    "maximumRate": 1.5
+  },
+  "resources": {
+    "intervalMs": 250,
+    "beforeCreateMs": 300,
+    "afterDisposeMs": 500,
+    "scope": "self-process"
+  }
 }

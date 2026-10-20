@@ -12,6 +12,35 @@ Map<String, Object?> snapshot(int time) => {
   'status': 'ok',
 };
 void main() {
+  test(
+    'opening sample failure still cancels the owned periodic sampler',
+    () async {
+      var reads = 0;
+      final series = ResourceSeries(
+        read: () {
+          reads++;
+          if (reads == 2) throw const FormatException('opening failed');
+          return snapshot(reads);
+        },
+      )..enter('idle');
+      final cleanup = <Future<void> Function()>[];
+      startResourceSampling(
+        series: series,
+        cleanup: cleanup,
+        onFailure: () {},
+        interval: const Duration(milliseconds: 2),
+      );
+      expect(() => series.enter('opening'), throwsFormatException);
+      for (final action in cleanup) {
+        await action();
+      }
+      final stoppedAt = reads;
+      await Future<void>.delayed(const Duration(milliseconds: 12));
+      expect(reads, stoppedAt);
+      series.close();
+    },
+  );
+
   test('creation deadline returns ownership before expiry', () async {
     var releases = 0;
     expect(

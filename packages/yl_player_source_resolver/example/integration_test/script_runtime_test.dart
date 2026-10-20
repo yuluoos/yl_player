@@ -189,14 +189,14 @@ void registerRuntimeContracts() {
       addTearDown(server.close);
       final resolver = YlScriptResolver();
       addTearDown(resolver.dispose);
-      final resolved = await resolver
-          .resolve(
-            YlScriptReference(
-              scriptUri: server.scriptUri,
-              parameters: 'channel=synthetic',
-            ),
-          )
-          .result;
+      final operationClock = Stopwatch()..start();
+      final resolution = resolver.resolve(
+        YlScriptReference(
+          scriptUri: server.scriptUri,
+          parameters: 'channel=synthetic',
+        ),
+      );
+      final resolved = await resolution.result;
       expect(resolved.uri == server.mediaUri, isTrue);
       final player = await YlPlayerController.create();
       addTearDown(player.dispose);
@@ -211,12 +211,17 @@ void registerRuntimeContracts() {
           home: Scaffold(body: YlPlayerView(controller: player)),
         ),
       );
+      final loadStartUs = operationClock.elapsedMicroseconds;
       final session = await player
           .load(resolved.toNetworkSource())
           .timeout(const Duration(seconds: 30));
       await session.play();
       await session.ready.timeout(const Duration(seconds: 20));
       await session.firstFrame.timeout(const Duration(seconds: 20));
+      final firstFrameUs = operationClock.elapsedMicroseconds;
+      debugPrint(
+        'P08_SCRIPT_HANDOFF=${jsonEncode({'boundary': 'public-first-frame-future-observed', 'businessFirstFrameUs': firstFrameUs, 'kernelFirstFrameUs': firstFrameUs - loadStartUs, 'scriptPhasesUs': resolution.timings?.map((k, v) => MapEntry(k, v?.inMicroseconds)), 'physicalOutputVerified': false})}',
+      );
       expect(player.state.sessionId, session.id);
       expect(frames.any((e) => e.sessionId == session.id), isTrue);
       expect(

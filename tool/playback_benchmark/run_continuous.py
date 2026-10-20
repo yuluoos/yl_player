@@ -24,8 +24,8 @@ def collect(output,flutter,*,memory_diagnostics=False):
     result=dict(schemaVersion=1,runId=run,stage='setup',complete=False,protocol=protocol,
         performanceBaseline=False,budgetAdmission=False,physicalOutput='not_verified',leakVerdict=None)
     try:
-        files=subprocess.check_output(['git','ls-files','--cached','--others','--exclude-standard','--','packages','tool/playback_benchmark'],cwd=ROOT,text=True).splitlines()
-        source={n:digest(ROOT/n) for n in sorted(set(files)) if Path(n).suffix in ('.dart','.swift','.m','.h','.kt','.py','.sh','.pbxproj','.xcconfig','.podspec','.plist','.entitlements','.yaml','.lock') or Path(n).name=='Podfile'}
+        from run_public_stress import source_identity
+        source=source_identity()
         result.update(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             sourceFingerprints=source,sourceHash=hashlib.sha256(json.dumps(source,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
             dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock','packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']},
@@ -65,7 +65,7 @@ def collect(output,flutter,*,memory_diagnostics=False):
             if len(rows)>247:raise ValueError('Excess continuous records')
         (output/'observations.jsonl').write_text(''.join(json.dumps(r,separators=(',',':'))+'\n' for r in rows))
         result['summary']=summarize_continuous(rows,run)
-        result['sourceIdentityVerified']=all(digest(ROOT/p)==v for p,v in source.items()) and digest(media)==result['mediaSha256'] and all(digest(ROOT/p)==v for p,v in result['dependencies'].items()) and all(digest(ROOT/p)==v for p,v in result['artifactFingerprints'].items())
+        result['sourceIdentityVerified']=source_identity()==source and digest(media)==result['mediaSha256'] and all(digest(ROOT/p)==v for p,v in result['dependencies'].items()) and all(digest(ROOT/p)==v for p,v in result['artifactFingerprints'].items())
         executable=EXAMPLE/'build/macos/Build/Products/Profile/yl_player_example.app/Contents/MacOS/yl_player_example'
         result['appSha256']=digest(executable)
         result.update(complete=result['flutterExitCode']==0 and result['summary']['complete'] and result['sourceIdentityVerified'],stage='complete')

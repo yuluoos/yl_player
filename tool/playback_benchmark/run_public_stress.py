@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Collect current-host macOS public stress evidence with bounded owned execution."""
 import argparse
+import base64
 import datetime
 import json
 from pathlib import Path
@@ -35,18 +36,18 @@ def source_identity(root=ROOT):
     return result
 
 
-def extract(log):
+def extract(log, prefix="YL_PERFORMANCE_RUN=", validate=True):
     runs=[]
     with log.open() as stream:
         for line in stream:
-            if 'YL_PERFORMANCE_RUN=' not in line: continue
-            raw=line.split('YL_PERFORMANCE_RUN=',1)[1]
+            if prefix not in line: continue
+            raw=line.split(prefix,1)[1]
             if len(raw)>256*1024: raise ValueError('record limit')
             from summarize import unique_object, reject_constant
             runs.append(json.loads(raw,object_pairs_hook=unique_object,parse_constant=reject_constant))
             if len(runs)>1: raise ValueError('duplicate run')
     if len(runs)!=1: raise ValueError('incomplete run')
-    summarize_run(runs[0])
+    if validate: summarize_run(runs[0])
     return runs[0]
 
 
@@ -62,6 +63,10 @@ def collect(output,flutter):
         artifact='packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock'
         native='packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
         artifacts={name:digest(ROOT/name) for name in (artifact,native)}
+        library=output/'resources.dylib'
+        subprocess.run(['sh',str(ROOT/'tool/playback_benchmark/build_apple_resources.sh'),str(library)],
+            check=True,timeout=60,capture_output=True)
+        artifacts[str(library)]=digest(library)
         context=dict(schemaVersion=1,runId='p08-stress-'+datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%SZ'),
             commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             sourceHash=object_digest(source),dependencyHash=object_digest(dependencies),artifactHash=object_digest(artifacts),
@@ -75,7 +80,8 @@ def collect(output,flutter):
         (output/'protocol.json').write_bytes(canonical(result))
         defines=output/'defines.json'
         defines.write_text(json.dumps({'YL_BENCHMARK_CONTEXT':json.dumps(context),
-            'YL_STRESS_PROTOCOL_HASH':object_digest(protocol)}))
+            'YL_STRESS_PROTOCOL_HASH':object_digest(protocol),
+            'YL_RESOURCE_LIBRARY_BYTES':base64.b64encode(library.read_bytes()).decode()}))
         command=['env','FLUTTER_XCODE_ARCHS='+platform.machine(),flutter,'drive','-d','macos','--profile','--no-pub',
             '--driver=test_driver/integration_test.dart','--target=integration_test/playback_stress_test.dart',
             '--dart-define-from-file='+str(defines)]
@@ -86,10 +92,19 @@ def collect(output,flutter):
         if any(run[k]!=context[k] for k in ('runId','commit','sourceHash','dependencyHash','artifactHash','plannedAttempts')):
             raise ValueError('identity mismatch')
         if run['conditions']['protocolHash']!=object_digest(protocol): raise ValueError('protocol mismatch')
+        raw_resources=extract(output/'playback.log','YL_STRESS_RESOURCES=',False)
+        from stress_resources import attach
+        run,resource_summary=attach(run,raw_resources)
+        (output/'resources.json').write_text(json.dumps(raw_resources,indent=2)+'\n')
+        result['resources']=resource_summary
+        result['resourceCollectionComplete']=all(t['unavailableSamples']==0 and
+            t['phases'].get('playing',{}).get('cpuOneCorePercent',{}).get('coveredUs',0)>0 and
+            t['phases'].get('disposed',{}).get('sampledWindowUs',0)>=500000
+            for t in resource_summary['trials'])
         (output/'run.json').write_text(json.dumps(run,indent=2)+'\n')
         result['summary']=summarize_run(run)
         result['sourceUnchanged']=source_identity()==source and all(digest(ROOT/n)==v for n,v in dependencies.items()) and all(digest(ROOT/n)==v for n,v in artifacts.items())
-        result['complete']=result['exitCode']==0 and result['summary']['nonPasses']==0 and result['sourceUnchanged']
+        result['complete']=result['exitCode']==0 and result['summary']['nonPasses']==0 and result['sourceUnchanged'] and result['resourceCollectionComplete']
         result['stage']='complete'
     except (OSError,ValueError,TypeError,KeyError,RecursionError,subprocess.SubprocessError):
         result['failure']='collection-incomplete'

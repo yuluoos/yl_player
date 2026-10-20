@@ -250,13 +250,18 @@ def verify_graph(host, platform, manager, link=False):
     require(found and all(value.strip('"') == floor for value in found), "Consumer deployment floors differ")
 
 
-def check(platform, manager, link):
+def check(platform, manager, link, lipo_compat=False):
     diagnostics = os.environ.get("YL_APPLE_TEST_DIAGNOSTICS")
     require(diagnostics is None or diagnostics == "never",
             "YL_APPLE_TEST_DIAGNOSTICS must be unset or exactly 'never'")
     require(diagnostics is None or not link,
             "YL_APPLE_TEST_DIAGNOSTICS applies only to unit-test gates")
     host = bootstrap(platform, manager, link)
+    from consumer_compat import configure
+    if platform == "macos":
+        configure(host, ROOT, manager, lipo_compat)
+    elif lipo_compat:
+        raise ValueError("--lipo-compat is macOS-only")
     native = host / platform
     host_architecture = subprocess.check_output(["uname", "-m"], text=True).strip()
     destination = "platform=macOS,arch=" + host_architecture
@@ -377,10 +382,11 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--unit-only", action="store_true")
     mode.add_argument("--link", action="store_true")
+    parser.add_argument("--lipo-compat", action="store_true", help="Explicit owned macOS Flutter phase adapter; final universal inspection remains mandatory")
     args = parser.parse_args()
     if args.action == "check":
         require(args.platform and args.manager and (args.unit_only or args.link), "check requires --platform, --manager and --unit-only|--link")
-        check(args.platform, args.manager, args.link)
+        check(args.platform, args.manager, args.link, args.lipo_compat)
     else:
         for platform in [args.platform] if args.platform else ["macos", "ios"]:
             for manager in [args.manager] if args.manager else ["swiftpm", "cocoapods"]:
