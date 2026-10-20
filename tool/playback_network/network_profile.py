@@ -322,6 +322,10 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header('Connection', 'close')
             self.send_header('X-Yl-Timeline-Mode', self.server.timeline_mode)
             self.send_header('X-Yl-Timeline-State', 'active' if active else 'pending')
+            if active:
+                # Client brackets this header with its own monotonic clock.
+                # It is profile time, never source-to-display latency.
+                self.send_header('X-Yl-Elapsed-Us', str(round(s.elapsed() * 1_000_000)))
             self.send_header('X-Yl-Profile-Id', s.profile.id)
             self.send_header('X-Yl-Profile-Sha256', s.profile.sha256)
             if self.server.run_id is not None:

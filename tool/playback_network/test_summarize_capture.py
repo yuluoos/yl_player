@@ -51,6 +51,38 @@ class SummaryTests(unittest.TestCase):
         self.assertIsNone(report['endToEndLatencyUs'])
         self.assertFalse(report['capabilityAccepted'])
 
+    def test_bracketed_clock_quantifies_observed_adaptation_without_claiming_physical_output(self):
+        result, samples, requests = data()
+        result.update(mode='auto', clockRelation='profile-head-bracket',
+                      clockAlignment=dict(beforeUs=1000, afterUs=2000, serverUs=0), sampleCount=4)
+        samples = [dict(samples[0], elapsedUs=t, width=w, height=h,
+                        positionUs=p, status=status) for t,w,h,p,status in [
+            (9000000,640,360,8000000,'playing'),
+            (12000000,320,180,11000000,'playing'),
+            (27000000,640,360,26000000,'playing'),
+            (41000000,640,360,40000000,'completed')]]
+        requests.append(dict(requests[-1], requestId=3, startMs=11000,endMs=12000))
+        requests[1]['asset'] = 'network-period-8/chunk-1-00001.m4s'
+        report=summarize(result,samples,requests,exit_code=0,
+                         server_summary=dict(acceptedConnections=3,rejectedConnections=0,recordedRequests=3))
+        self.assertEqual(report['downshiftLatencyUs'], dict(min=1998000,max=1999000))
+        self.assertEqual(report['upshiftLatencyUs'], dict(min=1998000,max=1999000))
+        self.assertTrue(report['adaptationObserved'])
+        self.assertFalse(report['capabilityAccepted'])
+        self.assertIsNone(report['endToEndLatencyUs'])
+        # Playback of already buffered high media can delay visible downshift
+        # beyond network recovery; retain that latency instead of dropping it.
+        samples[1]['elapsedUs'] = 26000000
+        delayed=summarize(result,samples,requests,exit_code=0,
+                          server_summary=dict(acceptedConnections=3,rejectedConnections=0,recordedRequests=3))
+        self.assertEqual(delayed['downshiftLatencyUs'], dict(min=15998000,max=15999000))
+        requests[-1].update(startMs=100,endMs=200)
+        report=summarize(result,samples,requests,exit_code=0,
+                         server_summary=dict(acceptedConnections=3,rejectedConnections=0,recordedRequests=3))
+        self.assertFalse(report['adaptationObserved'], 'preloaded media cannot prove weak-phase adaptation')
+        result['clockAlignment']['afterUs']=-1
+        with self.assertRaises(ValueError): summarize(result,samples,requests,exit_code=0)
+
     def test_caps_checks_requests_and_geometry_independently(self):
         result,samples,requests=data()
         samples[-1]['height']=360

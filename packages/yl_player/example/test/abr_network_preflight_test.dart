@@ -5,6 +5,43 @@ import '../integration_test/support/abr_network_preflight.dart';
 
 void main() {
   test(
+    'clock alignment binds active identities and brackets server time',
+    () async {
+      final server = await HttpServer.bind(InternetAddress.loopbackIPv4, 0);
+      addTearDown(() => server.close(force: true));
+      final config = {
+        'url': 'http://127.0.0.1:${server.port}/manifest.mpd',
+        'runId': 'clock-run',
+        'profileId': 'profile-v1',
+        'profileHash': 'a' * 64,
+        'mediaHash': 'b' * 64,
+      };
+      var bad = false;
+      server.listen((request) async {
+        for (final entry in {
+          'X-Yl-Run-Id': bad ? 'other' : config['runId']!,
+          'X-Yl-Profile-Id': config['profileId']!,
+          'X-Yl-Profile-Sha256': config['profileHash']!,
+          'X-Yl-Asset-Sha256': config['mediaHash']!,
+          'X-Yl-Timeline-Mode': 'first-get',
+          'X-Yl-Timeline-State': 'active',
+          'X-Yl-Elapsed-Us': '300',
+        }.entries) {
+          request.response.headers.set(entry.key, entry.value);
+        }
+        await request.response.close();
+      });
+      var now = 400;
+      final alignment = await alignAbrClock(config, nowUs: () => now += 600);
+      expect(alignment, {'beforeUs': 1000, 'afterUs': 1600, 'serverUs': 300});
+      bad = true;
+      await expectLater(
+        alignAbrClock(config, nowUs: () => now += 600),
+        throwsA(isA<StateError>()),
+      );
+    },
+  );
+  test(
     'preflight timeout closes its actual socket before reporting cleanup',
     () async {
       final server = await ServerSocket.bind(InternetAddress.loopbackIPv4, 0);

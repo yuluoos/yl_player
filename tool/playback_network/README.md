@@ -101,3 +101,36 @@ does not establish CAP-ABR, CAP-LIVE, mode switching or three-platform acceptanc
 Repeated measurements can be predeclared and summarized without a test environment
 using [the offline experiment protocol](experiment-protocol.md). It groups results
 by mode/cache state and preserves every planned, failed and timed-out attempt.
+
+
+## Owned continuous HLS / HTTP-FLV
+
+`live_fixture.py` uses FFmpeg to loop the repository-owned AVC/AAC source with
+continuous output timestamps. It verifies the pinned source SHA-256 before
+starting any process and serves only allowlisted loopback paths. It supports the
+same application bandwidth/stall/disconnect profiles. The profile begins at the
+first valid GET, so app build time does not consume it. No profile means no
+intentional network impairment. RTMP continues to use `tool/rtmp_acceptance/run.py`.
+
+```sh
+python3 -B tool/playback_network/live_fixture.py \
+  --protocol flv --run-id live-flv-001 \
+  --output /private/tmp/live-flv-001 \
+  --profile stall-and-recover-v1
+```
+
+Use `--protocol hls` for a moving six-segment playlist. Pass the startup URL,
+`sourceSha256` and run ID to `live_mode_switch_test.dart` as documented in the
+[capture protocol](capture-protocol.md). Use a new output directory for every run.
+For Android, explicitly reverse the printed port on the selected test device,
+then remove that mapping after the run. Do not run different native platforms or
+builds concurrently when collecting comparable timing samples.
+
+The process exits on Ctrl-C/SIGTERM or after 300 seconds. Cleanup interrupts
+blocked sockets and shaping, terminates only its own FFmpeg children, joins
+handlers, then writes `receipt.json` with hashes, request bytes/times and cleanup
+status. Bounds are eight simultaneous connections, 10,000 lifetime connections,
+32 lifetime FLV publishers, 8 KiB transfer chunks and two-second socket writes.
+HLS files roll forward; FLV connections each start a fresh timestamp epoch.
+Source identity and generated timestamps do not establish a synchronized
+source-to-display clock. End-to-end latency and physical output remain unverified.

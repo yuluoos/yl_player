@@ -32,7 +32,9 @@ void main() {
       var outcome = 'failed';
       var stage = 'preflight';
       int? policyAckUs;
+      Map<String, int>? clockAlignment;
       var cleaned = false;
+      var cleanupStage = 'subscription';
       try {
         // HEAD does not arm the server. Fail before player creation on identity
         // mismatch or a server already used by another attempt.
@@ -91,6 +93,10 @@ void main() {
         stage = 'play';
         await session.play().timeout(const Duration(seconds: 10));
         await session.firstFrame.timeout(const Duration(seconds: 20));
+        clockAlignment = await alignAbrClock(
+          config,
+          nowUs: () => clock.elapsedMicroseconds,
+        );
         stage = 'observe';
         while (clock.elapsed < const Duration(seconds: 180)) {
           series.add(player.state, clock.elapsedMicroseconds);
@@ -115,13 +121,18 @@ void main() {
         try {
           await subscription?.cancel();
           if (player != null) {
+            cleanupStage = 'dispose';
             await player.dispose().timeout(const Duration(seconds: 5));
           }
+          cleanupStage = 'unmount';
           await tester.pumpWidget(const SizedBox.shrink());
           // A timed-out create may still own a late native value whose cleanup
           // is handled by createResourceOwner, but not yet verified here.
           cleaned = player != null || stage == 'preflight';
-        } catch (_) {
+        } catch (error) {
+          debugPrint(
+            'YL_ABR_CLEANUP_FAILURE=${jsonEncode({'stage': cleanupStage, 'kind': error is TimeoutException ? 'timeout' : error.runtimeType.toString()})}',
+          );
           cleaned = false;
         }
         for (final sample in series?.samples ?? <Map<String, Object?>>[]) {
@@ -146,10 +157,14 @@ void main() {
             'physicalOutputVerified': false,
             'baselineComparable': false,
             'sampleIntervalMs': 250,
-            'clockRelation': 'load-vs-first-get-unsynchronized',
+            'clockRelation': clockAlignment == null ? 'load-vs-first-get-unsynchronized' : 'profile-head-bracket',
+            'clockAlignment': clockAlignment,
           })}',
           wrapWidth: 100000,
         );
+        // The runner can terminate the process immediately after this test.
+        // Retain every sample and the final result before returning control.
+        await debugPrintDone;
       }
       expect(
         outcome,

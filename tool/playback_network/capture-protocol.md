@@ -1,8 +1,9 @@
 # P04 preliminary public-player capture
 
-This prepares Task 1 baseline acquisition; it is not a measured baseline or
-CAP-ABR acceptance. Native execution has **not** been run for this entry yet.
-Wait until other native profiling/playback work releases the machine. Run one
+The entry has been exercised on native players; per-run evidence and limitations
+are in the [P04 report](../../docs/superpowers/reports/2026-09-26-remaining-04-abr-live.md).
+A successful capture is not complete CAP-ABR acceptance. Run native measurements
+when other profiling/build work releases the machine. Run one
 mode/attempt per fresh server, preserve every failure, and do not run modes
 concurrently. Use a fresh unique run ID for each auto/caps/fixed attempt.
 
@@ -101,8 +102,24 @@ If media preloaded before the weak interval, the capture cannot quantify that
 ABR response even if playback completes. Preserve this result; do not count it
 as a successful weak-network trial.
 
-Player times are Load-relative, HTTP times are first-GET-relative. No offset
-calibration is implemented, so adaptation latency stays null. Public geometry
+Player times are Load-relative, HTTP times are first-GET-relative. After firstFrame,
+the client brackets an identity-checked HEAD with its monotonic clock and records
+`beforeUs`, `afterUs`, and the server's `X-Yl-Elapsed-Us`. The server time falls
+inside that client interval; mapping a client observation back to profile time
+therefore yields an interval, not a falsely precise point. HEAD never arms an
+unused timeline. Old captures without this bracket remain supported and unaligned.
+
+`downshiftLatencyUs` and `upshiftLatencyUs` are the first sampled public geometry
+changes relative to the 10 s weak and 25 s recovery boundaries, with min/max bounds
+from that clock bracket. They include playback-buffer delay and sample cadence;
+they are **not** native ABR decision latency. A delayed downshift can first appear
+after network recovery. `weakLowRequestLatencyUs` and
+`recoveryHighRequestLatencyUs` report the first successful low/high video segment
+request in those phases. `adaptationObserved` requires both request changes and
+both output changes in a complete, violation-free automatic capture. It does not
+prove causality or a quantitative SLO. `mediaRequestPhases` lists successful media
+GET start phases. Unknown/rejected evidence never becomes a zero latency.
+The legacy `adaptationLatencyUs` remains null because native decision time is unknown. Public geometry
 switch counts are sampled observations and can include Period transitions;
 they are not automatically ABR oscillations. State polling can miss short
 buffering/quality events; maximum sample gap is retained. Native rebuffer deltas
@@ -126,7 +143,11 @@ rejected. Device-local forwarding and the fixture server must be supplied by the
 measurement owner; this test never configures global networking.
 
 The test exercises automatic live default, smooth→paused low→playing low→smooth,
-rapid ordered requests, and stale-command rejection after Stop. It records
+long pause/resume while low, repeated same-mode ACKs, rapid ordered requests,
+replacement Load, and stale-command rejection after replacement and Stop. It waits
+for authoritative idle after the Stop ACK (the ACK immediately fences commands).
+Each observation records at least five seconds and allows up to twenty seconds
+for progression after a declared stall; this finite test guard is not a latency SLO. It records
 `YL_LIVE_SAMPLE` and `YL_LIVE_RESULT` JSON without URLs or exception text.
 Snapshots require public media-clock progression. This does **not** establish
 physical video output, audio output, source-clock delay, or weak-network SLOs.

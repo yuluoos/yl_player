@@ -147,6 +147,17 @@ class ServerTests(unittest.TestCase):
         self.server.wait_handlers()
         return [json.loads(line) for line in self.log.getvalue().splitlines()]
 
+    def test_active_clock_header_is_bracketable_and_head_does_not_arm(self):
+        clock = Clock()
+        self.start(clock=clock, start_on_first_get=True, run_id='clock-run')
+        headers = self.request(method='HEAD')[1]
+        self.assertNotIn('X-Yl-Elapsed-Us', headers)
+        self.request()
+        clock.value += 2
+        headers = self.request(method='HEAD')[1]
+        self.assertEqual(headers.get('X-Yl-Elapsed-Us'), '2000300')
+        self.assertEqual(headers['X-Yl-Timeline-State'], 'active')
+
     def test_get_range_head_and_actual_byte_log(self):
         self.start()
         self.assertEqual(self.request()[2], self.payload)
