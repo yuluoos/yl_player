@@ -47,3 +47,5 @@ Ruling: use the finishing skill with the session's already authorized local-bran
 Ruling: preserve the final frozen app under example/build/p03-acceptance, archive raw JSON/gzip and xcresult exports, then delete only this plan's scratch directory — keeps reproducible evidence without committing build binaries — cost: old full xcresult bundles and intermediate apps are not retained after their exports are verified.
 
 Delivery: archived raw replay verified all six final runs, all stop receipts, source commit 190d05a3, retained app and SDK restoration. Only this plan scratch directory was then removed; the managed worktree and frozen app remain for local review/reuse.
+
+Archive packaging: the original review patch contains required blank context lines that git whitespace-check treats as trailing spaces when embedded as a new text file. Stored the exact bytes as .diff.gz instead; decompression equality verified. No source or evidence contents changed.
