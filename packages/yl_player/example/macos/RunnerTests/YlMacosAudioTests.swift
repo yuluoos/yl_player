@@ -2361,7 +2361,10 @@ final class YlMacosAudioTests: XCTestCase {
     let retired = try XCTUnwrap(factory.entries.first), oldRenderer = try XCTUnwrap(retired.renderers.first)
     retired.output.captureNextPlayedCompletion = true
     try await host.play(command: .init(sessionId: session.sessionId))
-    try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
+    // Public state is delivered asynchronously after the internal transition.
+    try await AppleHostCharacterizations.waitFor({
+      host.initialState.status == .completed && callbacks.states.contains { $0.status == .completed }
+    }, timeout: 10)
     func completions() -> Int { callbacks.states.filter { $0.status == .completed }.count }
     XCTAssertEqual(completions(), 1); XCTAssertFalse(host.playbackIntent)
     XCTAssertFalse(oldRenderer.hasPendingPlayback); XCTAssertEqual(oldRenderer.scheduledBytes, 0)
@@ -2415,7 +2418,9 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertGreaterThan(registry.positivePublicFrames, pausedFrames)
     XCTAssertEqual(completions(), 1); XCTAssertEqual(host.initialState.status, .playing)
     XCTAssertTrue(callbacks.failures.isEmpty); XCTAssertEqual(renderer.usesSubmissionAnchor, candidate)
-    try await AppleHostCharacterizations.waitFor({ host.initialState.status == .completed }, timeout: 10)
+    try await AppleHostCharacterizations.waitFor({
+      host.initialState.status == .completed && completions() >= 2
+    }, timeout: 10)
     XCTAssertEqual(completions(), 2); XCTAssertEqual(callbacks.frames.count, 1)
     XCTAssertTrue(callbacks.frames.allSatisfy { $0.sessionId == session.sessionId })
     XCTAssertEqual(host.sessionId, session.sessionId); XCTAssertEqual(factory.entries.count, 2)
