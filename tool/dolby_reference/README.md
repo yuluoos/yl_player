@@ -63,3 +63,23 @@ CLI退出0只表示完整的**输入元数据盘点**，`mapping_quality`、`nat
 默认 Python discovery 现在也执行 `tool/apple_fel/run_tests.sh` 的配对/元数据校验及 `tool/apple_fel/run_failure_tests.py` 的真实错误发布检查。后者编译生产Swift、Pigeon和现有框架，仅调用元数据/错误方法，不创建播放器、Flutter引擎、解码器或GPU。需要macOS、Xcode及已缓存的Flutter macOS框架；可用`FLUTTER_ROOT`指定SDK，缺依赖退出77，在发现入口明确记为跳过。
 
 检查覆盖损坏/不支持区分、schema v1字段、L1/L5/L6、L5空区域、桥接unsupported码、资源类别和安全错误封装；不证明CM显示映射、物理信号或真实样本画质。历史基线快照继续绑定原提交；新生产源码变化不能据此改写历史快照。
+
+
+## 2026-10-20：公开资源与单轨双层 NAL 盘点
+
+新增 [public-resources.json](public-resources.json)、[fel-observation.json](fel-observation.json) 和 [fel-trace.jsonl.gz](fel-trace.jsonl.gz)。已取得公开社区 P7 FEL 功能输入、Netflix 官方 XML 和 Sparks 原始/1000 nit 目标序列各一帧。详细来源、使用边界、缺口和本机检查见 [本次报告](../../docs/superpowers/reports/2026-10-20-p07-public-resources.md)。历史缺失记录保持其原日期；新输入不是完整参考/质量通过。
+
+```sh
+python3 -B tool/dolby_reference/stream_inventory.py \
+  --media .superpowers/sdd/2026-10-20-p07-public-resources/resources/fel-test-st-dl-p7-cmv4-v4.mp4 \
+  --sha256 419fc183988cb57b0cac2907a01d9f43b1a5ec34012b4c0655574d77678ee4fa \
+  --inspector /tmp/p07-stream-inspector-new/target/release/yl-dovi-stream-inspector \
+  --layers --trace /tmp/p07-fel-trace-new.jsonl
+```
+
+解析器构建仍使用上文固定源码/离线缓存入口。`--layers` 选择 schema2，默认 schema1 与旧 P5 轨迹不变。只支持单轨、layer-zero BL 和 UNSPEC63 封装 EL；双轨 MP4、MKV 或其他 layer ID 不在该探针覆盖范围。新统计保留缺 EL VCL 包数和原始 wrapper 哈希；不解码、不证明层配对，也不提升画质或信号状态。媒体缓存在忽略目录；Git 只收录派生盘点与下载哈希。公开素材清单中的来源 URL 仅用于研究下载，不是可执行配置或正式通过声明。
+
+
+## 参考对应与数值比较工程
+
+`reference_timeline.py` 提供有界 MDF 时间轴、精确有理数帧定位、原始 EXR 头信息和官方校验清单绑定；`pixel_compare.py` 提供预先冻结合同下的多帧/多区域绝对RGB误差比较，以及显示目标/代次变化失效检查。依赖与格式、退出码和信任边界见 [REFERENCE_COMPARISON.md](REFERENCE_COMPARISON.md)。候选输出不能通过验收，数值通过也不会自动更新完整画质/原生信号状态。

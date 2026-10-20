@@ -1,0 +1,136 @@
+[
+  {
+    "name": "hdr",
+    "command": [
+      "sh",
+      "tool/apple_hdr/run_tests.sh"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 31.559232375002466,
+    "log": "hdr.txt"
+  },
+  {
+    "name": "metal",
+    "command": [
+      "bash",
+      "tool/apple_hdr/run_fel_compositor_tests.sh"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 11.429099458000564,
+    "log": "metal.txt"
+  },
+  {
+    "name": "airplay",
+    "command": [
+      "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tool/airplay/run_module_tests.py",
+      "--build-dir",
+      "/private/tmp/p07-main-merge-20261020/airplay-build",
+      "--live-fixture"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 31.04663054199773,
+    "log": "airplay.txt"
+  },
+  {
+    "name": "delivery",
+    "command": [
+      "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tool/media_delivery/run_native_tests.py",
+      "--build-dir",
+      "/private/tmp/p07-main-merge-20261020/delivery-build"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 26.553592000003846,
+    "log": "delivery.txt"
+  },
+  {
+    "name": "header-parity",
+    "command": [
+      "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tool/media_delivery/run_header_parity_tests.py",
+      "--build-dir",
+      "/private/tmp/p07-main-merge-20261020/header-build"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 98.88144062500214,
+    "log": "header-parity.txt"
+  },
+  {
+    "name": "rust",
+    "command": [
+      "env",
+      "CARGO_HOME=/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/cargo-home",
+      "RUSTC=/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/rust-sysroot/bin/rustc",
+      "CARGO_TARGET_DIR=/private/tmp/p07-engineering-20261020/inspector-build/target",
+      "cargo",
+      "test",
+      "--locked",
+      "--offline",
+      "--release",
+      "--manifest-path",
+      "/private/tmp/p07-engineering-20261020/inspector-build/inspector/Cargo.toml"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 0.17757137500302633,
+    "log": "rust.txt"
+  },
+  {
+    "name": "real-regressions",
+    "command": [
+      "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "/private/tmp/p07-main-merge-20261020/real_regressions.py"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 13.688264666001487,
+    "log": "real-regressions.txt"
+  },
+  {
+    "name": "threshold-registry",
+    "command": [
+      "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py"
+    ],
+    "exit": 0,
+    "expected_exit": 0,
+    "seconds": 0.051130125000781845,
+    "log": "threshold-registry.txt"
+  },
+  {
+    "name": "p08-readiness",
+    "command": [
+      "sh",
+      "tool/check_p08.sh",
+      "--require-ready"
+    ],
+    "exit": 1,
+    "expected_exit": 1,
+    "seconds": 0.04800699999759672,
+    "log": "p08-readiness.txt"
+  },
+  {
+    "name": "release-readiness-required",
+    "command": [
+      "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "exit": 1,
+    "expected_exit": 1,
+    "seconds": 0.2785743749991525,
+    "log": "release-readiness-required.txt"
+  }
+]

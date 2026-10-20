@@ -1,0 +1,20 @@
+E
+======================================================================
+ERROR: test_reference_timeline (unittest.loader._FailedTest.test_reference_timeline)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_reference_timeline
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 426, in _find_test_path
+    module = self._get_module_from_name(name)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/loader.py", line 367, in _get_module_from_name
+    __import__(name)
+    ~~~~~~~~~~^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_reference_timeline.py", line 8, in <module>
+    from reference_timeline import ReferenceError, parse_mdf, locate_frame, locate_pts, exr_header, verify_publisher_asset
+ImportError: cannot import name 'verify_publisher_asset' from 'reference_timeline' (/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/reference_timeline.py)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

@@ -1,0 +1,160 @@
+EEEEEEEEEEE.EE
+======================================================================
+ERROR: test_absent_enhancement_is_explicit_and_does_not_hash_empty_bytes (test_layer_inventory.LayerInventoryTests.test_absent_enhancement_is_explicit_and_does_not_hash_empty_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 33, in test_absent_enhancement_is_explicit_and_does_not_hash_empty_bytes
+    rows, _ = self.extract(nal(19) + nal(62))
+              ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_enhancement_wrappers_are_counted_and_hashed_without_rewriting (test_layer_inventory.LayerInventoryTests.test_enhancement_wrappers_are_counted_and_hashed_without_rewriting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 20, in test_enhancement_wrappers_are_counted_and_hashed_without_rewriting
+    rows, rpus = self.extract(data)
+                 ~~~~~~~~~~~~^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_hash_framing_is_canonical_independent_of_mp4_length_size (test_layer_inventory.LayerInventoryTests.test_hash_framing_is_canonical_independent_of_mp4_length_size)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 51, in test_hash_framing_is_canonical_independent_of_mp4_length_size
+    rows, _ = extract_rpus(io.BytesIO(data), [packet(data)], length_size=length_size,
+              ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                          stream_index=0, media_size=len(data), include_layers=True)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'&')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'\xa6\x01bad')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'&\x00bad')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'&\tother-layer')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'~\x01nested')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory) (inner=b'|\x01rpu')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 41, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(nal(19) + nal(63, inner) + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory (test_layer_inventory.LayerInventoryTests.test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 44, in test_invalid_nested_or_nonzero_layer_headers_refuse_complete_inventory
+    self.extract(len(raw).to_bytes(4, 'big') + raw + nal(62))
+    ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_parameter_sets_do_not_count_as_enhancement_pictures (test_layer_inventory.LayerInventoryTests.test_parameter_sets_do_not_count_as_enhancement_pictures)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 28, in test_parameter_sets_do_not_count_as_enhancement_pictures
+    rows, _ = self.extract(nal(19) + nal(63, b'\x40\x01vps') + nal(62))
+              ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+======================================================================
+ERROR: test_summary_exposes_missing_p7_layers_without_claiming_pairing (test_layer_inventory.LayerInventoryTests.test_summary_exposes_missing_p7_layers_without_claiming_pairing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 58, in test_summary_exposes_missing_p7_layers_without_claiming_pairing
+    rows, _ = self.extract(nal(19) + nal(62))
+              ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 12, in extract
+    return extract_rpus(io.BytesIO(data), [packet(data)], length_size=4,
+                        stream_index=0, media_size=len(data), include_layers=True)
+TypeError: extract_rpus() got an unexpected keyword argument 'include_layers'
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.003s
+
+FAILED (errors=13)

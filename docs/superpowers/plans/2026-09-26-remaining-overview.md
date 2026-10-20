@@ -738,3 +738,8 @@ P02/CAP-SUB 全场景验收不标完成。P04 独立分支未改动。
 ### 2026-10-20 P08 测量和门禁工程
 
 补齐多指标采集契约、基线冻结/同条件比较、设备档位与完整源码身份校验、试次失败及清理保留，新增公共双实例所有权压力入口和联合检查脚本。Python280、example101、本机profile3/3通过；复审缺陷已修复。真实呈现/稳定窗口/业务分段及跨设备长播资格、数值SLO和远程CI仍开放，完整P08不标完成，见[P08报告](../reports/2026-09-26-remaining-08-performance-release.md#2026-10-20测量阈值和发布门禁工程补齐)。
+
+2026-10-20 P07 Task1 资源获取增量：从公开目录取得未改字节的 P7 FEL/CM4 功能测试 MP4，固定解析器完整盘点 2908 包，包包含 BL/EL VCL，保存原始 RPU/增强层哈希轨迹；新增 `--layers` 保持默认历史 schema1。另下载 Netflix 官方 Sol Levante/Sparks XML 及 Sparks 原始 EXR、1000 nit TIFF 各一帧，均为待进一步核验的参考候选。仍缺 FEL 同源独立目标输出、目标生成/帧对齐契约、冻结容差及实际 DV 物理链；Task1 整体和 CAP-DV-MAP/OUT 未完成。详见 [公开资源核验报告](../reports/2026-10-20-p07-public-resources.md)。
+
+
+2026-10-20 P07 参考比较增量：Sparks EXR 第1000帧与官方 VDM checksum 字节身份一致；发现第960/1000帧原始时码相同，不能自动跨序列配帧。补齐整数/有理数 XML 帧定位、官方清单绑定和离线 RGB 全图/区域指标比较，候选强制 diagnostic、目标/显示代次/元数据不匹配拒绝。集中 Python 66通过/1既有CGL跳过，Rust3通过，Apple HDR/Metal及原始P5/P7回归通过；目标生成/同源FEL参考/冻结容差和物理DV仍缺，完整CAP不提升。详见[参考核验与比较报告](../reports/2026-10-20-p07-reference-comparison.md)。

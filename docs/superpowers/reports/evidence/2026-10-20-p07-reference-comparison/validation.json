@@ -1,0 +1,76 @@
+{
+  "base_commit": "175145fc",
+  "candidate": "working tree; final source bytes bound by SHA256SUMS",
+  "python": "3.12.14",
+  "numpy": "2.3.5",
+  "scope": "research tools and existing P07 host regression; no physical DV qualification",
+  "commands": [
+    {
+      "command": "FLUTTER_ROOT=/Users/yy2021_8689/flutter /Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tool/dolby_reference -p 'test_*.py'",
+      "exit": 0,
+      "ran": 67,
+      "passed": 66,
+      "skipped": 1,
+      "log": "final-python.txt"
+    },
+    {
+      "command": "FLUTTER_ROOT=/Users/yy2021_8689/flutter sh tool/apple_hdr/run_tests.sh",
+      "exit": 0,
+      "log": "final-hdr.txt"
+    },
+    {
+      "command": "bash tool/apple_hdr/run_fel_compositor_tests.sh",
+      "exit": 0,
+      "log": "final-metal.txt"
+    },
+    {
+      "command": "CARGO_HOME=/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/cargo-home RUSTC=/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd/2026-09-26-remaining-07-dolby/build-probes/rust-sysroot/bin/rustc CARGO_TARGET_DIR=/private/tmp/p07-engineering-20261020/inspector-build/target cargo test --locked --offline --release --manifest-path /private/tmp/p07-engineering-20261020/inspector-build/inspector/Cargo.toml",
+      "exit": 0,
+      "passed": 3,
+      "log": "final-rust.txt"
+    },
+    {
+      "command": "python3 -B tool/dolby_reference/pixel_compare.py --contract tool/dolby_reference/fixtures/comparison/contract.json --sha256 <value in fixtures/comparison/contract.sha256> --capture tool/dolby_reference/fixtures/comparison/capture.json (using NumPy interpreter above)",
+      "exit": 3,
+      "log": "example-cli.json"
+    },
+    {
+      "command": "python3 -B tool/dolby_reference/reference_timeline.py --xml .superpowers/sdd/2026-10-20-p07-public-resources/resources/sparks-metadata.xml --sha256 a18f5960f61f868932416000c35f08bb39d9966b1dc35a8b6778e9718bb16c0f --frame 1000",
+      "exit": 0,
+      "log": "timeline-cli.json"
+    },
+    {
+      "command": "/Users/yy2021_8689/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3 -B -m unittest discover -s tool/dolby_reference -p test_pixel_compare.py",
+      "exit_before_fix": 1,
+      "before_fix": "14 tests with 5 failing subcases in new symlink test",
+      "exit_after_fix": 0,
+      "passed_after_fix": 14,
+      "logs": [
+        "review-fix-red.txt",
+        "review-fix-green.txt"
+      ]
+    }
+  ],
+  "additional_observations": {
+    "p5": "stream_inventory.inspect on unchanged full original P5, default schema; summary and trace hash compared with stream-observation.json",
+    "p7": "stream_inventory.inspect on unchanged full original P7, layers=True; summary and trace hash compared with fel-observation.json",
+    "4k": "compare_bundle on synthetic 4096x2160 RGB float32 arrays, ref all10nit, actual [0,0,R]=12nit; candidate, threshold1nit; raw transient files not committed"
+  },
+  "mapping_quality_pass": null,
+  "native_dv_signal_pass": null,
+  "main_observed_at_finalization": {
+    "head": "8614375448fce17b5f6872903218c99e90f5b03b",
+    "status": "clean",
+    "note": "P08 work landed concurrently; this P07 increment remains isolated on base 175145fc and is not a validation of main at this newer revision"
+  },
+  "log_archival": "Text logs preserve diagnostic content; trailing horizontal whitespace and terminal blank lines normalized. Original raw logs remain in /private/tmp/p07-reference-alignment-20261020.",
+  "review": {
+    "reviewer": "/root/p07_comparison_review",
+    "critical": 0,
+    "important": 1,
+    "minor": 1,
+    "unresolved": 0,
+    "record": "independent-review.md"
+  },
+  "validation_reuse": "Final local fix changes only comparator path exception handling and regression tests. Comparator 14 tests rerun; remaining Python/native/Rust source, dependencies and environment unchanged, earlier full relevant matrix reused. No claim of a fresh 68-test full run."
+}

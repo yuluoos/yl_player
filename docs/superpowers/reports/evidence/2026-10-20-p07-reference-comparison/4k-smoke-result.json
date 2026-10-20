@@ -1,0 +1,79 @@
+{
+  "test": "synthetic_known_error_4096x2160_not_Dolby_quality",
+  "elapsed_seconds": 0.5734406670017052,
+  "process_maxrss_bytes_macos": 819970048,
+  "result": {
+    "schema_version": 1,
+    "contract_sha256": "b2ed553da76ead67398f044c1c180e237991b76a2917668f7c17e612d7559a3c",
+    "capture_manifest_sha256": "c7631ffeb4f15520f13ee1e6db0db54ceee4407b388eb4dd287be3e7fa849357",
+    "comparison_status": "diagnostic",
+    "numeric_thresholds_met": false,
+    "reference_mode": "candidate",
+    "numpy_version": "2.3.5",
+    "mapping_quality_pass": null,
+    "native_dv_signal_pass": null,
+    "acceptance": "separate_review_required",
+    "display_generation": 1,
+    "frames": [
+      {
+        "id": 0,
+        "pts": [
+          0,
+          1
+        ],
+        "reference_sha256": "ba56d83b9ce196f3ca88b80a1b3d22aad022b272166041335c4950ebd27c0f7c",
+        "actual_sha256": "e482cb58310488f624251269524b9c1a0214e3dbb4c880b53195b0180cebfcad",
+        "regions": {
+          "full": {
+            "max_abs_nits": 2.0,
+            "rmse_nits": 0.0003882062460937135,
+            "p99_abs_nits": 0.0,
+            "max_error_at": [
+              0,
+              0,
+              0
+            ],
+            "channel_samples": 26542080,
+            "thresholds_met": false
+          },
+          "active": {
+            "max_abs_nits": 2.0,
+            "rmse_nits": 0.00038829613986499914,
+            "p99_abs_nits": 0.0,
+            "max_error_at": [
+              0,
+              0,
+              0
+            ],
+            "channel_samples": 26529792,
+            "thresholds_met": false
+          },
+          "bottom": {
+            "max_abs_nits": 0.0,
+            "rmse_nits": 0.0,
+            "p99_abs_nits": 0.0,
+            "max_error_at": [
+              0,
+              2159,
+              0
+            ],
+            "channel_samples": 12288,
+            "thresholds_met": true
+          },
+          "left": {
+            "max_abs_nits": 2.0,
+            "rmse_nits": 0.024845199749997663,
+            "p99_abs_nits": 0.0,
+            "max_error_at": [
+              0,
+              0,
+              0
+            ],
+            "channel_samples": 6480,
+            "thresholds_met": false
+          }
+        }
+      }
+    ]
+  }
+}

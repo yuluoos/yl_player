@@ -1,0 +1,25 @@
+{
+  "main_before": "8614375448fce17b5f6872903218c99e90f5b03b",
+  "p07_head": "a057886188cca41fc83b4ca496c266c827cf8d33",
+  "base": "ab73405190a1996f8d081236d7bb48865c47dbdc",
+  "product_packages_and_locks_byte_identical_to_main": true,
+  "platform_support_byte_identical_to_main": true,
+  "p08_changed_paths": 40,
+  "p08_all_other_paths_identical": true,
+  "p07_changed_paths": 65,
+  "p07_all_other_paths_identical": true,
+  "conflict": "overview retained both append-only histories",
+  "inventory_change": "only evidence.p07.sha256; rows/source/statuses unchanged",
+  "historical_manifests_verified_at_original_revision": [
+    {
+      "manifest": "docs/superpowers/reports/evidence/2026-10-20-p07-public-resources/SHA256SUMS",
+      "original_revision": "a057886188cca41fc83b4ca496c266c827cf8d33",
+      "entries_verified": 13
+    },
+    {
+      "manifest": "docs/superpowers/reports/evidence/2026-10-20-p07-reference-comparison/SHA256SUMS",
+      "original_revision": "a057886188cca41fc83b4ca496c266c827cf8d33",
+      "entries_verified": 82
+    }
+  ]
+}

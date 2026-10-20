@@ -127,7 +127,18 @@ def mp4_media_ranges(source, media_size):
     return ranges
 
 
-def extract_rpus(source, packets, *, length_size, stream_index, media_size):
+def layer_nal_kind(nal):
+    """This inventory supports layer-zero HEVC and UNSPEC63 EL wrapping only."""
+    require(len(nal) >= 2 and not (nal[0] & 128) and (nal[1] & 7) != 0)
+    require(((nal[0] & 1) << 5 | nal[1] >> 3) == 0)
+    kind = (nal[0] >> 1) & 63
+    # A VCL header alone cannot contain even first_slice_segment_in_pic_flag.
+    require(kind > 31 or len(nal) > 2)
+    return kind
+
+
+def extract_rpus(source, packets, *, length_size, stream_index, media_size,
+                 include_layers=False):
     require(length_size in (1, 2, 3, 4) and 0 < media_size <= MAX_MEDIA)
     require(isinstance(packets, list) and 0 < len(packets) <= MAX_PACKETS)
     rows, framed, seen_pts, ranges = [], bytearray(), set(), []
@@ -142,6 +153,7 @@ def extract_rpus(source, packets, *, length_size, stream_index, media_size):
         source.seek(pos); data = source.read(size)
         require(len(data) == size)
         offset, rpus, vcl = 0, [], 0
+        el_nals, el_vcl, el_hash = 0, 0, hashlib.sha256()
         while offset < size:
             require(offset + length_size <= size)
             length = int.from_bytes(data[offset:offset+length_size], 'big')
@@ -151,6 +163,17 @@ def extract_rpus(source, packets, *, length_size, stream_index, media_size):
             require(not (nal[0] & 128) and (nal[1] & 7) != 0)
             kind = (nal[0] >> 1) & 63
             vcl += int(kind <= 31)
+            if include_layers:
+                layer_nal_kind(nal)
+                if kind == 63:
+                    inner_kind = layer_nal_kind(nal[2:])
+                    require(inner_kind not in (62, 63))
+                    el_nals += 1
+                    el_vcl += int(inner_kind <= 31)
+                    # Hash original wrapper bytes with canonical u32 lengths,
+                    # independent of the MP4's lengthSizeMinusOne setting.
+                    el_hash.update(len(nal).to_bytes(4, 'big'))
+                    el_hash.update(nal)
             if kind == 62:
                 require(length <= MAX_RPU)
                 rpus.append(nal)
@@ -162,12 +185,18 @@ def extract_rpus(source, packets, *, length_size, stream_index, media_size):
         framed.extend(len(rpu).to_bytes(4, 'big')); framed.extend(rpu)
         rows.append({'packet_index': index, 'pts': pts, 'dts': dts,
                      'rpu_sha256': digest(rpu)})
+        if include_layers:
+            rows[-1]['nal_inventory'] = {
+                'base_vcl_nals': vcl, 'enhancement_vcl_nals': el_vcl,
+                'enhancement_nals': el_nals,
+                'enhancement_sha256': el_hash.hexdigest() if el_nals else None}
+
     ranges.sort()
     require(all(a[1] <= b[0] for a, b in zip(ranges, ranges[1:])))
     return rows, bytes(framed)
 
 
-def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None):
+def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False):
     require(0 < len(rows) == len(parsed) <= MAX_PACKETS)
     require(isinstance(time_base, str) and re.fullmatch('[1-9][0-9]*/[1-9][0-9]*', time_base))
     require(re.fullmatch('[0-9a-f]{64}', media_sha256))
@@ -210,7 +239,7 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None):
                      for row in presentation)
     if trace_sink is not None:
         trace_sink.write(trace)
-    return {'schema_version':1, 'inspection':'signalled_rpu_inventory',
+    result = {'schema_version':1, 'inspection':'signalled_rpu_inventory',
             'media_sha256':media_sha256, 'rpu_count':len(rows),
             'profile_counts':dict(profiles), 'el_type_counts':dict(el_types),
             'cm_counts':dict(sorted(cms.items())),
@@ -224,9 +253,23 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None):
             'first_packet_rpu_sha256':rows[0]['rpu_sha256'],
             'effective_metadata_resolved':False, 'decoded_frame_alignment_verified':False,
             'mapping_quality':'external_missing', 'native_dv_signal':'external_missing'}
+    if include_layers:
+        result['schema_version'] = 2
+        inventories = [row['nal_inventory'] for row in rows]
+        result['layer_inventory'] = {
+            'encoding': 'single_track_unspec63_wrapped_el',
+            'base_vcl_nals': sum(row['base_vcl_nals'] for row in inventories),
+            'enhancement_vcl_nals': sum(row['enhancement_vcl_nals'] for row in inventories),
+            'enhancement_nals': sum(row['enhancement_nals'] for row in inventories),
+            'packets_with_enhancement_vcl': sum(row['enhancement_vcl_nals'] > 0 for row in inventories),
+            'p7_packets_without_enhancement_vcl': sum(
+                value['profile'] == 7 and row['enhancement_vcl_nals'] == 0
+                for value, row in zip(parsed, inventories)),
+            'decoded_layer_pairing_verified': False}
+    return result
 
 
-def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None):
+def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False):
     media = Path(media).resolve(strict=True)
     inspector = Path(inspector).resolve(strict=True)
     inspector_sha256 = file_digest(inspector)
@@ -254,14 +297,16 @@ def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=
     with media.open('rb') as source:
         rows, framed = extract_rpus(source, probe['packets'],
             length_size=nal_length_size(stream['extradata']),
-            stream_index=integer(stream['index']), media_size=media.stat().st_size)
+            stream_index=integer(stream['index']), media_size=media.stat().st_size,
+            include_layers=include_layers)
     with tempfile.TemporaryDirectory(prefix='yl-dovi-rpus-') as scratch:
         path = Path(scratch)/'rpus.bin'; path.write_bytes(framed)
         parsed = [json.loads(line) for line in run_bounded([str(Path(inspector).resolve(strict=True)),str(path)],
                   limit=128*1024*1024).splitlines()]
     require(file_digest(media) == expected_sha256)
     require(file_digest(inspector) == inspector_sha256)
-    result = summarize(rows, parsed, time_base=stream['time_base'], media_sha256=expected_sha256, trace_sink=trace_sink)
+    result = summarize(rows, parsed, time_base=stream['time_base'], media_sha256=expected_sha256, trace_sink=trace_sink,
+                       include_layers=include_layers)
     result['inspector_sha256'] = inspector_sha256
     result['packet_count'] = len(probe['packets'])
     result['declared_sample_count'] = declared_samples
@@ -276,11 +321,12 @@ def main():
     parser.add_argument('--sha256',required=True)
     parser.add_argument('--inspector',required=True)
     parser.add_argument('--ffprobe',default='ffprobe')
+    parser.add_argument('--layers', action='store_true', help='Include schema 2 BL/EL NAL coverage; not decoded pairing.')
     parser.add_argument('--trace',type=Path,help='Optional new JSONL trace file; existing paths are refused.')
     args = parser.parse_args()
     try:
         trace = io.BytesIO()
-        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace)
+        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers)
         if args.trace is not None:
             fd = os.open(args.trace,os.O_WRONLY | os.O_CREAT | os.O_EXCL,0o600)
             try:

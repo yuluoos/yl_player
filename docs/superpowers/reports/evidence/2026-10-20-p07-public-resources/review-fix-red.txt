@@ -1,0 +1,32 @@
+.F....FF....
+======================================================================
+FAIL: test_header_only_enhancement_cannot_publish_a_trace (test_layer_inventory.LayerCliTests.test_header_only_enhancement_cannot_publish_a_trace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 127, in test_header_only_enhancement_cannot_publish_a_trace
+    self.assertEqual(result.returncode, 2)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 2
+
+======================================================================
+FAIL: test_header_only_base_and_enhancement_vcl_are_rejected (test_layer_inventory.LayerInventoryTests.test_header_only_base_and_enhancement_vcl_are_rejected) (data=b'\x00\x00\x00\x02&\x01\x00\x00\x00\t|\x01payload')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 51, in test_header_only_base_and_enhancement_vcl_are_rejected
+    with self.subTest(data=data), self.assertRaises(InspectionError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: InspectionError not raised
+
+======================================================================
+FAIL: test_header_only_base_and_enhancement_vcl_are_rejected (test_layer_inventory.LayerInventoryTests.test_header_only_base_and_enhancement_vcl_are_rejected) (data=b'\x00\x00\x00\t&\x01payload\x00\x00\x00\x04~\x01&\x01\x00\x00\x00\t|\x01payload')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player/tool/dolby_reference/test_layer_inventory.py", line 51, in test_header_only_base_and_enhancement_vcl_are_rejected
+    with self.subTest(data=data), self.assertRaises(InspectionError):
+                                  ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AssertionError: InspectionError not raised
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.710s
+
+FAILED (failures=3)
