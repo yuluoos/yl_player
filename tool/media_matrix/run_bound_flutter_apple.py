@@ -91,7 +91,7 @@ def main():
         environment['SIMCTL_CHILD_YL_P03_BOUND_PLAN']=encoded
         environment['SIMCTL_CHILD_NSUnbufferedIO']='YES'
     write(out/'launch.json',dict(command=command,preverified=verify(app,product)))
-    status={};rows=[];remote=None
+    status={};rows=[];remote=None;collection_completed=False
     with (out/'flutter.log').open('wb') as log:
         process=subprocess.Popen(command,env=environment,stdout=log,stderr=subprocess.STDOUT,
             stdin=subprocess.PIPE if device else None,
@@ -103,8 +103,12 @@ def main():
                     current=device.read_json('status.json')
                     if current is not None:
                         status=current
-                        if device.has_started(out/'flutter.log'):break
-                    if process.poll() is not None:break
+                        if device.has_started(out/'flutter.log'):
+                            collection_completed=True
+                            break
+                    if process.poll() is not None:
+                        collector_error='process_exited_before_completion'
+                        break
                     time.sleep(2)
                     continue
                 content=(out/'flutter.log').read_text(errors='replace')
@@ -116,9 +120,14 @@ def main():
                     status=json.loads((remote/'status.json').read_bytes())
                     if not isinstance(status,dict):status={}
                     if (remote/'rows.json').is_file():rows=json.loads((remote/'rows.json').read_bytes())
+                    collection_completed=True
                     break
-                if process.poll() is not None:break
+                if process.poll() is not None:
+                    collector_error='process_exited_before_completion'
+                    break
                 time.sleep(0.5)
+            else:
+                collector_error='collection_timeout'
         except (ValueError,OSError,subprocess.SubprocessError) as error:
             collector_error=type(error).__name__
         finally:
@@ -142,8 +151,8 @@ def main():
         (out/'unfinished.json').write_bytes((remote/'unfinished.json').read_bytes())
     write(out/'status.json',status)
     with gzip.open(out/'rows.json.gz','wb') as stream:stream.write(canonical(rows))
-    result=acceptance(plan,rows,status,verify(app,product) and cleanup and collector_error is None)
-    result.update(deviceCleanupCompleted=cleanup if device else None,collectorError=collector_error,executionTarget=plan['executionTarget'])
+    result=acceptance(plan,rows,status,verify(app,product) and cleanup and collection_completed and collector_error is None)
+    result.update(collectionCompleted=collection_completed,deviceCleanupCompleted=cleanup if device else None,collectorError=collector_error,executionTarget=plan['executionTarget'])
     result.update(processExit=process.returncode,negativeIdentity=args.negative_identity,negativeFramework=args.negative_framework)
     write(out/'result.json',result)
     print(json.dumps({k:v for k,v in result.items() if k!='measurements'},indent=2))

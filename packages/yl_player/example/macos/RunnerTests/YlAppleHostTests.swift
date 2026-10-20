@@ -382,7 +382,11 @@ final class YlAppleAcceptedIntentTests: XCTestCase {
     XCTAssertThrowsError(try f.host.setPlaybackSpeed(command: .init(sessionId: loaded.sessionId, speed: .infinity)))
     XCTAssertTrue(commands.hasCurrent, "Both synchronous setters acknowledged while effects remain queued")
     if stopFirst { try await f.host.stop() }
-    let fresh = try await f.load(AppleHostFixture.request("fresh-av"))
+    let mp4 = URL(fileURLWithPath: #filePath).deletingLastPathComponent().deletingLastPathComponent()
+      .deletingLastPathComponent().appendingPathComponent("assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var freshRequest = AppleHostFixture.request("fresh-av")
+    freshRequest.source.kind = .file; freshRequest.source.locator = mp4.path
+    let fresh = try await f.load(freshRequest)
     XCTAssertNotEqual(fresh.sessionId, loaded.sessionId)
     try await f.host.play(command: .init(sessionId: fresh.sessionId))
     XCTAssertEqual(f.av.volume, 0.2, accuracy: 0.001, "Acknowledged volume is player intent, even if the retired backend's queued effect is cancelled")

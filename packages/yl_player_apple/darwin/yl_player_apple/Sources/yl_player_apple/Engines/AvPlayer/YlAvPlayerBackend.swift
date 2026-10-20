@@ -1035,6 +1035,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     ), !disposed, active else {
       return
     }
+    #if DEBUG && YL_BOUND_AV
+    boundAudio?.recordFailure(error)
+    #endif
     recordPlaybackDiagnostic(event: "playbackFailure", error: error, errorLogCode: log?.statusCode)
     if services.compatibility.reconnectsAvPlayer, let source = lastSource,
        YlAvPlayerRecoveryPolicy.shouldReconnect(

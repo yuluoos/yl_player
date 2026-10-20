@@ -205,7 +205,13 @@ struct YlQueuedPlaybackCommand {
       try onMain {
         try token.throwIfCancelled()
         guard try resolve() === backend else { throw YlOpenCancellationToken.cancellationError() }
-        try command.apply(to: backend, cancellationToken: token)
+        // An inactive timeline seek only records retained intent on main. Track
+        // changes still need their activity checks even when they perform no I/O.
+        if case .seek = command, !backend.isActive {
+          try command.apply(to: backend)
+        } else {
+          try command.apply(to: backend, cancellationToken: token)
+        }
       }
     }
   }
