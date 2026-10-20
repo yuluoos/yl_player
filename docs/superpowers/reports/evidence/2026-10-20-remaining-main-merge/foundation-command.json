@@ -1,0 +1,17 @@
+{
+  "command": [
+    "sh",
+    "tool/check_foundation.sh"
+  ],
+  "cwd": "$MAIN",
+  "environment": {
+    "PATH_prefix": [
+      "$HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin",
+      "$HOME/flutter/bin"
+    ],
+    "YL_RUN_DECODE_PROBE": "1"
+  },
+  "exitCode": 0,
+  "revision": "b24282a5d5812237b5c15a7f425a0a4ed264b629",
+  "reuseForFinal": "Only macOS lifecycle test waits changed; Dart/Python/interfaces/dependencies/production unchanged. Updated native test paths were recompiled and rerun."
+}

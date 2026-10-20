@@ -1,0 +1,605 @@
+[
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult",
+      "--test-id",
+      "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "activities",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult",
+      "--test-id",
+      "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "attachments",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult",
+      "--test-id",
+      "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-attachments/0"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "attachments",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult",
+      "--test-id",
+      "YlMacosAudioTests/testActualDecodedEOFResourceObservation()",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-attachments/1"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "attachments",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult",
+      "--test-id",
+      "YlMacosAudioTests/testActualDecodedRepeatedLifecycleResources()",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-attachments/2"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "get",
+      "test-results",
+      "test-details",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "attachments",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--test-id",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios-attachments/0"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios-diagnostics"
+    ],
+    "exitCode": 0,
+    "stderr": ""
+  }
+]

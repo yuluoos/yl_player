@@ -1,0 +1,130 @@
+[
+  {
+    "name": "macos-build",
+    "command": [
+      "xcodebuild",
+      "build-for-testing",
+      "-quiet",
+      "-workspace",
+      "packages/yl_player/example/macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-configuration",
+      "Debug",
+      "-derivedDataPath",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/build-macos",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "ARCHS=arm64",
+      "ONLY_ACTIVE_ARCH=YES",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES"
+    ],
+    "exitCode": 0,
+    "startedAt": 1792514058.980733,
+    "durationSeconds": 63.83022117614746
+  },
+  {
+    "name": "macos-test",
+    "command": [
+      "xcodebuild",
+      "test-without-building",
+      "-quiet",
+      "-xctestrun",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/build-macos/Build/Products/Runner_macosx27.0-arm64.xctestrun",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "-parallel-testing-enabled",
+      "NO",
+      "-collect-test-diagnostics",
+      "never",
+      "-resultBundlePath",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult"
+    ],
+    "exitCode": 65,
+    "startedAt": 1792514122.812247,
+    "durationSeconds": 982.0752339363098
+  },
+  {
+    "name": "macos-identity",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+      "--result-bundle",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos.xcresult",
+      "--platform",
+      "macos",
+      "--output",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-results"
+    ],
+    "exitCode": 1,
+    "startedAt": 1792515104.888213,
+    "durationSeconds": 0.7144482135772705
+  },
+  {
+    "name": "ios-build",
+    "command": [
+      "xcodebuild",
+      "build-for-testing",
+      "-quiet",
+      "-workspace",
+      "packages/yl_player/example/ios/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-configuration",
+      "Debug",
+      "-derivedDataPath",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/build-ios",
+      "-destination",
+      "platform=iOS Simulator,id=LOCAL-45e96df4297dafb9",
+      "ARCHS=arm64",
+      "ONLY_ACTIVE_ARCH=YES",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "-sdk",
+      "iphonesimulator"
+    ],
+    "exitCode": 0,
+    "startedAt": 1792515105.6031082,
+    "durationSeconds": 55.09899377822876
+  },
+  {
+    "name": "ios-test",
+    "command": [
+      "xcodebuild",
+      "test-without-building",
+      "-quiet",
+      "-xctestrun",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/build-ios/Build/Products/Runner_iphonesimulator27.1-arm64.xctestrun",
+      "-destination",
+      "platform=iOS Simulator,id=LOCAL-45e96df4297dafb9",
+      "-parallel-testing-enabled",
+      "NO",
+      "-collect-test-diagnostics",
+      "never",
+      "-resultBundlePath",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult"
+    ],
+    "exitCode": 65,
+    "startedAt": 1792515160.703131,
+    "durationSeconds": 145.92775797843933
+  },
+  {
+    "name": "ios-identity",
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+      "--result-bundle",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios.xcresult",
+      "--platform",
+      "ios",
+      "--output",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/ios-results"
+    ],
+    "exitCode": 1,
+    "startedAt": 1792515306.631916,
+    "durationSeconds": 0.8906359672546387
+  }
+]

@@ -1,0 +1,72 @@
+{
+  "macos": {
+    "counts": {
+      "Passed": 859,
+      "Failed": 1
+    },
+    "canonicalIdentityCoverage": true,
+    "expected": 860,
+    "failures": [
+      "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+    ],
+    "newFailures": [
+      "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+    ],
+    "resolvedFailures": [],
+    "strictGatePassed": false
+  },
+  "ios": {
+    "counts": {
+      "Passed": 779,
+      "Failed": 33,
+      "Skipped": 1
+    },
+    "canonicalIdentityCoverage": true,
+    "expected": 813,
+    "failures": [
+      "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    ],
+    "newFailures": [],
+    "resolvedFailures": [],
+    "strictGatePassed": false,
+    "skip": {
+      "identity": "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+      "reason": "Test skipped - Task4 actual H264 hardware fixture: simulator VTIsHardwareDecodeSupported=false; physical iOS evidence pending (R19).",
+      "platform": "iOS Simulator",
+      "capability": "fixture=h264_aac.mkv subtype=1635148593 h264=1635148593 hardwareAvailable=false controlledVideo=false",
+      "exactContractVerified": true
+    }
+  }
+}

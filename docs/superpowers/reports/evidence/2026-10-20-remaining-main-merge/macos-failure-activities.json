@@ -1,0 +1,68 @@
+{
+  "testIdentifier" : "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay",
+  "testName" : "testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1792514648.301,
+          "title" : "XCTAssertEqual failed: (\"0\") is not equal to (\"1\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1792514648.332,
+          "title" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+        },
+        {
+          "activityType" : "com.apple.dt.xctest.activity-type.attachmentContainer",
+          "attachments" : [
+            {
+              "lifetime" : "keepAlways",
+              "name" : "decoded-eof-background-false_0_F11CAC0F-75E1-40DA-AAC8-4ED5E7FB422B.json",
+              "payloadId" : "0~g4f5X56T4Q-fiV7nRQ4T9DK_5O_6HmJDEQhZm8Qk7GtzG93-o91ea3Y3-HAnYXZrGNKowr95k6vOH1_qbb_t_A==",
+              "timestamp" : 1792514656.082,
+              "uuid" : "LOCAL-7ea7c73c199852e4"
+            }
+          ],
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "startTime" : 1792514656.082,
+              "title" : "decoded-eof-background-false"
+            }
+          ],
+          "isAssociatedWithFailure" : false,
+          "startTime" : 1792514656.082,
+          "title" : "Added attachment named 'decoded-eof-background-false'"
+        }
+      ],
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

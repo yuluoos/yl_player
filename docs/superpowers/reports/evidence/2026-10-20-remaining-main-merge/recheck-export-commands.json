@@ -1,0 +1,47 @@
+[
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-1.xcresult",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-1-diagnostics"
+    ],
+    "exitCode": 0,
+    "stdout": "Exported 1 object to /private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-1-diagnostics\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-2.xcresult",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-2-diagnostics"
+    ],
+    "exitCode": 0,
+    "stdout": "Exported 1 object to /private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-2-diagnostics\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-3.xcresult",
+      "--output-path",
+      "/private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-3-diagnostics"
+    ],
+    "exitCode": 0,
+    "stdout": "Exported 1 object to /private/tmp/yl-remaining-main-merge-qiu5k5ok/macos-recheck-3-diagnostics\n",
+    "stderr": ""
+  }
+]

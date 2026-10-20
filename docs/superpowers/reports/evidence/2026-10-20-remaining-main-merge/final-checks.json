@@ -1,0 +1,54 @@
+[
+  {
+    "name": "current",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+      "--current-only"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 0.15928173065185547
+  },
+  {
+    "name": "migration",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/test_main_example_migration.py"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 2.2739248275756836
+  },
+  {
+    "name": "runtime-evidence",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 0.15220022201538086
+  },
+  {
+    "name": "parity",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/source_parity.py",
+      "--verify-identical"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 0.09253096580505371
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0,
+    "durationSeconds": 0.027759790420532227
+  }
+]

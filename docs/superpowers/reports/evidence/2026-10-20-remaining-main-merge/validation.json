@@ -1,0 +1,317 @@
+{
+  "mergeCommit": "b24282a5d5812237b5c15a7f425a0a4ed264b629",
+  "validatedFinalCodeCommit": "0e0e3066f887deb6037855cfcbdaf26705cec5c8",
+  "branchHead": "11c7f5c357b5b0b46273949f327a4b0f5dae052d",
+  "productionSourceHash": "69f6e5fc191dc55021a1f96b8a2398f8441eee84deeca9ca57521e1819053b60",
+  "foundation": {
+    "exitCode": 0,
+    "pythonSuites": [
+      {
+        "total": 76,
+        "seconds": 2.458,
+        "skipped": 0
+      },
+      {
+        "total": 294,
+        "seconds": 32.646,
+        "skipped": 0
+      },
+      {
+        "total": 2,
+        "seconds": 0.002,
+        "skipped": 0
+      },
+      {
+        "total": 20,
+        "seconds": 68.407,
+        "skipped": 0
+      },
+      {
+        "total": 7,
+        "seconds": 2.178,
+        "skipped": 0
+      },
+      {
+        "total": 80,
+        "seconds": 9.028,
+        "skipped": 0
+      },
+      {
+        "total": 21,
+        "seconds": 0.034,
+        "skipped": 0
+      },
+      {
+        "total": 83,
+        "seconds": 26.105,
+        "skipped": 1
+      },
+      {
+        "total": 6,
+        "seconds": 15.832,
+        "skipped": 0
+      },
+      {
+        "total": 7,
+        "seconds": 2.942,
+        "skipped": 0
+      },
+      {
+        "total": 5,
+        "seconds": 0.011,
+        "skipped": 0
+      },
+      {
+        "total": 9,
+        "seconds": 0.143,
+        "skipped": 0
+      },
+      {
+        "total": 5,
+        "seconds": 0.873,
+        "skipped": 0
+      },
+      {
+        "total": 3,
+        "seconds": 0.052,
+        "skipped": 0
+      },
+      {
+        "total": 3,
+        "seconds": 0.284,
+        "skipped": 0
+      },
+      {
+        "total": 4,
+        "seconds": 2.195,
+        "skipped": 0
+      },
+      {
+        "total": 9,
+        "seconds": 0.074,
+        "skipped": 0
+      },
+      {
+        "total": 1,
+        "seconds": 0.78,
+        "skipped": 0
+      }
+    ],
+    "pythonTotal": 635,
+    "pythonSkipped": 1,
+    "flutterSuitePassCounts": [
+      137,
+      1705,
+      109,
+      97,
+      1,
+      156,
+      11,
+      48,
+      19,
+      48
+    ],
+    "flutterPassed": 2331,
+    "decodeProbeOptIn": true
+  },
+  "nativeFullRuns": {
+    "macos": {
+      "counts": {
+        "Passed": 859,
+        "Failed": 1
+      },
+      "canonicalIdentityCoverage": true,
+      "expected": 860,
+      "failures": [
+        "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+      ],
+      "newFailures": [
+        "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+      ],
+      "resolvedFailures": [],
+      "strictGatePassed": false
+    },
+    "ios": {
+      "counts": {
+        "Passed": 779,
+        "Failed": 33,
+        "Skipped": 1
+      },
+      "canonicalIdentityCoverage": true,
+      "expected": 813,
+      "failures": [
+        "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+        "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+        "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+        "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+        "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+        "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+        "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+        "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+        "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+        "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+        "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+        "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+        "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+        "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+        "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+        "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+        "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+        "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+        "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+        "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+        "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+        "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+        "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+        "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+        "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+        "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+        "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+        "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+        "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+        "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+        "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+        "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+        "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+      ],
+      "newFailures": [],
+      "resolvedFailures": [],
+      "strictGatePassed": false,
+      "skip": {
+        "identity": "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+        "reason": "Test skipped - Task4 actual H264 hardware fixture: simulator VTIsHardwareDecodeSupported=false; physical iOS evidence pending (R19).",
+        "platform": "iOS Simulator",
+        "capability": "fixture=h264_aac.mkv subtype=1635148593 h264=1635148593 hardwareAvailable=false controlledVideo=false",
+        "exactContractVerified": true
+      }
+    }
+  },
+  "macosDirectedRechecks": [
+    {
+      "run": 1,
+      "summary": {
+        "totalTestCount": 6,
+        "passedTests": 6,
+        "skippedTests": 0,
+        "failedTests": 0
+      },
+      "observed": [
+        "YlMacosAudioTests/testActualDecodedCandidateEOFSeekReplayWithoutManualStop()",
+        "YlMacosAudioTests/testActualDecodedCandidateEOFStopSeekReplay()",
+        "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()",
+        "YlMacosAudioTests/testActualDecodedLegacyEOFSeekReplayWithoutManualStop()",
+        "YlMacosAudioTests/testActualDecodedLegacyEOFStopSeekReplay()",
+        "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+      ],
+      "strictIdentityGatePassed": true
+    },
+    {
+      "run": 2,
+      "summary": {
+        "totalTestCount": 2,
+        "passedTests": 2,
+        "skippedTests": 0,
+        "failedTests": 0
+      },
+      "observed": [
+        "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()",
+        "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+      ],
+      "strictIdentityGatePassed": true
+    },
+    {
+      "run": 3,
+      "summary": {
+        "totalTestCount": 2,
+        "passedTests": 2,
+        "skippedTests": 0,
+        "failedTests": 0
+      },
+      "observed": [
+        "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()",
+        "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()"
+      ],
+      "strictIdentityGatePassed": true
+    }
+  ],
+  "macosFinalCoverage": {
+    "counts": {
+      "Passed": 860
+    },
+    "canonicalIdentityCoverage": true,
+    "singleFreshFullRunPassed": false,
+    "basis": "Fresh merged-main full suite plus recompiled affected helper and replay neighbors; only test waits changed. All original full-run failures retained."
+  },
+  "iosFinalCoverage": {
+    "counts": {
+      "Passed": 779,
+      "Failed": 33,
+      "Skipped": 1
+    },
+    "canonicalIdentityCoverage": true,
+    "newFailures": [],
+    "strictGatePassed": false
+  },
+  "readiness": [
+    {
+      "name": "release",
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.3242831230163574
+    },
+    {
+      "name": "release-required",
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exitCode": 1,
+      "durationSeconds": 0.19979023933410645
+    },
+    {
+      "name": "thresholds",
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.06842875480651855
+    },
+    {
+      "name": "thresholds-required",
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py",
+        "--require-ready"
+      ],
+      "exitCode": 1,
+      "durationSeconds": 0.06381511688232422
+    }
+  ],
+  "retention": {
+    "productionSourceHash": "69f6e5fc191dc55021a1f96b8a2398f8441eee84deeca9ca57521e1819053b60",
+    "productionSourceEntries": 588,
+    "productionMatchesMergedBranchInventory": true,
+    "priorEvidenceVerifiedEntries": 229,
+    "oldEvidenceUnmodified": true,
+    "postMergeChangedPaths": [
+      "packages/yl_player/example/macos/RunnerTests/YlMacosAudioTests.swift",
+      "tool/consumer_fixtures/apple_flutter/RunnerTests-macos/YlMacosAudioTests.swift"
+    ]
+  },
+  "review": {
+    "critical": 0,
+    "important": 0,
+    "minor": 0,
+    "scopedImportantFixed": 1
+  },
+  "scope": "Authorized local merge and unified validation; not release acceptance. No push or branch/worktree cleanup."
+}
