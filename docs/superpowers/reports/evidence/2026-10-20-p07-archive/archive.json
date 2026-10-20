@@ -1,0 +1,117 @@
+{
+  "branch": "codex/p07-engineering",
+  "branch_head": "a057886188cca41fc83b4ca496c266c827cf8d33",
+  "main_before_cleanup": "eb6697410f0b13acd4f6c31796cfaf91b5c8cdb5",
+  "original_worktree": "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player",
+  "preserved_cache_root": "/Users/yy2021_8689/Desktop/Flutter/yl_player/.superpowers/sdd",
+  "cache_files": [
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/fel-test-st-dl-p7-cmv4-v4.mp4",
+      "bytes": 52039065,
+      "sha256": "419fc183988cb57b0cac2907a01d9f43b1a5ec34012b4c0655574d77678ee4fa"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/netflix-license.txt",
+      "bytes": 105020,
+      "sha256": "7d3512159f970cdcf296e8404be05947228d0bfaf72801cb5b3077f4330f71f9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/netflix-techblog-readme.txt",
+      "bytes": 7883,
+      "sha256": "b997f0019e436499c35045bdcdc3df3ddf4a14a24a5a6695a1830c48aff3c9e6"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/sollevante-metadata.xml",
+      "bytes": 203263,
+      "sha256": "ed782c213d158dad8204d3a4bde8d72e5956649696bb39ae6d9a0162d58c4ceb"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/sparks-input-01000.exr",
+      "bytes": 53119100,
+      "sha256": "f34e1c18693c3bb6d218936b1957bf392a0f2888beda81c7dbf8a631aec75285"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/sparks-metadata.xml",
+      "bytes": 311836,
+      "sha256": "a18f5960f61f868932416000c35f08bb39d9966b1dc35a8b6778e9718bb16c0f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-public-resources/resources/sparks-target-01000.tif",
+      "bytes": 53084342,
+      "sha256": "a751144a91f8105f2122c179f2936f487ca0b80dd555965a1561c9615c00f93f"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/exr-0.bin",
+      "bytes": 4096,
+      "sha256": "77273a82eb994eed180b0d31b91b89e66750ae3fd04dc79996aa1cc23856a83d"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/exr-1.bin",
+      "bytes": 4096,
+      "sha256": "738c5160c9038e0a6afeb6b5fc988dd2b92aab03f2980e0805b796870c50a281"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/exr-1001.bin",
+      "bytes": 4096,
+      "sha256": "6c51e3ff8be08704f242b835d5c6bf559883439b2af016c720062d49a59785e9"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/exr-13776.bin",
+      "bytes": 4096,
+      "sha256": "39b2f0acf0da4cf46fd78a2e7bc1d27a520263b76397443ab07fe8863849cab1"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/exr-960.bin",
+      "bytes": 4096,
+      "sha256": "fa031d3794fd440e9a0301b53eccd93dd818685cbdd8a0e4a0bca3292c160ab0"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/exr-999.bin",
+      "bytes": 4096,
+      "sha256": "21e572cde9147bd418f6160901caa831e4635a50a9cbd3d2a48362ede6642426"
+    },
+    {
+      "path": ".superpowers/sdd/2026-10-20-p07-reference-comparison/official-checksum.txt",
+      "bytes": 1611909,
+      "sha256": "b5cdc1d6274fe5ae2696e04c00942f7024d6c2c9e36d7cdf19854acd6ccab493"
+    }
+  ],
+  "cache_bytes": 160506994,
+  "cache_verification": "All 14 source and destination SHA-256 values matched before archival. Media remains ignored and is not committed.",
+  "discarded_ignored_only": [
+    "regenerable tool/dolby_reference/__pycache__",
+    "regenerable tool/media_delivery/__pycache__"
+  ],
+  "full_p07_complete": false,
+  "archive_status": "archived_worktree_confirmed",
+  "archived_attachment_id": "01a159b0-673a-7c12-97c1-51dde743957c",
+  "archive_identity_key": "/Users/yy2021_8689/.codex/worktrees/p07-engineering/yl_player",
+  "branch_deleted_with": "git branch -d codex/p07-engineering",
+  "worktree_path_removed": true,
+  "branch_reachable_from_main": true,
+  "cache_verified_after_worktree_removal": true,
+  "unchanged_p07_records": [
+    {
+      "path": "docs/superpowers/reports/2026-09-26-remaining-07-dolby.md",
+      "sha256": "8cda92317480d9c574344c062dd9d6c931175d416a299d60201ac2f08a506433"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-09-26-remaining-07-dolby.md",
+      "sha256": "85b8c669592a3ad7bb397d8908ae32494c79c27b9b41cedc14103ab7930362cb"
+    },
+    {
+      "path": "docs/superpowers/reports/2026-10-20-p07-public-resources.md",
+      "sha256": "533fa1d048ac51b266079c139e4565df3e0430d0c95a913b28576ffa3aab66ef"
+    },
+    {
+      "path": "docs/superpowers/reports/2026-10-20-p07-reference-comparison.md",
+      "sha256": "9575483d015e85b347958ea6895809dff3beb8aa756f29955cd9c83135b828d1"
+    },
+    {
+      "path": "docs/superpowers/reports/2026-10-20-p07-main-merge.md",
+      "sha256": "5818545a7a3298c692bebce01692951274de5cfdcc94a2f37adf509b05898a01"
+    }
+  ],
+  "production_and_tool_changes": false,
+  "tests": "Not repeated: only archival/bookkeeping; previous merged verification retained."
+}
