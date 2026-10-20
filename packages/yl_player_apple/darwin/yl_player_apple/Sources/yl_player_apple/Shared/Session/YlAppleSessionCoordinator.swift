@@ -188,7 +188,10 @@ final class YlAppleSessionCoordinator: NSObject {
         }
       }
       guard let fallback, let source, let expectedIdentity else { return }
-      let prepare = { try self.prepareFallback(source: source, token: token, identity: expectedIdentity, reactivating: true) }
+      let prepare = {
+        // A rejected candidate releases its own input without changing command intent.
+        try self.prepareFallback(source: source, token: token.makeChild(), identity: expectedIdentity, reactivating: true)
+      }
       let prepared = try source.url?.scheme?.lowercased() == "rtmp"
         ? source.rtmpRecovery.prepareRestoration(token: token, work: prepare) : prepare()
       defer { prepared.discard() }
@@ -887,7 +890,7 @@ final class YlAppleSessionCoordinator: NSObject {
       let qualityConstraint = try YlFallbackQualityConstraint(
         validating: reactivating || source.loadOptions == nil ? lastQualityConstraint : source.loadOptions?.videoConstraints ?? .unconstrained
       )
-      let previous = try slot.replace(beforeRollbackActivation: beforeRollbackActivation) {
+      let previous = try slot.replace(requiresExclusiveResources: true, beforeRollbackActivation: beforeRollbackActivation) {
         try beforeFallbackConstruction?(slot.current)
         let backend = try YlFallbackBackend(
           playerId: playerId,

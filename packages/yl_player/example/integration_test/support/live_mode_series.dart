@@ -39,8 +39,9 @@ bool _isOwnedCaptureHost(String host) {
   if (host == '127.0.0.1') return true;
   final parts = host.split('.');
   if (parts.length != 4 ||
-      parts.any((p) => !RegExp(r'^(0|[1-9][0-9]{0,2})$').hasMatch(p)))
+      parts.any((p) => !RegExp(r'^(0|[1-9][0-9]{0,2})$').hasMatch(p))) {
     return false;
+  }
   final bytes = parts.map(int.parse).toList();
   if (bytes.any((v) => v > 255)) return false;
   return bytes[0] == 10 ||

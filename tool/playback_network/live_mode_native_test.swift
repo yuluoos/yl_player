@@ -64,6 +64,29 @@ struct LiveModeNativeTest {
     catch { checks += 1 }
     check(YlAppleCompatibility(platform: .macos).reconnectsAvPlayer, "macOS live HLS retains bounded recovery")
     check(YlAppleCompatibility(platform: .ios).reconnectsAvPlayer, "iOS live HLS recovery preserved")
+    let parentToken = YlOpenCancellationToken()
+    let childToken = parentToken.makeChild()
+    childToken.cancel()
+    check(!parentToken.isCancelled, "discarding a failed candidate cannot cancel its command")
+    let secondChild = parentToken.makeChild()
+    parentToken.cancel()
+    check(secondChild.isCancelled, "stop cancellation reaches candidate")
+    check(parentToken.makeChild().isCancelled, "late candidate observes prior cancellation")
+    let exclusiveOld = LiveModeFakeBackend(), exclusiveNew = LiveModeFakeBackend()
+    let exclusiveSlot = YlBackendSlot(initial: exclusiveOld, compatibility: .init(platform: .ios))
+    try exclusiveSlot.replace(requiresExclusiveResources: true) {
+      check(!exclusiveOld.isActive, "iOS releases old exclusive resource before candidate construction")
+      return exclusiveNew
+    }
+    check(exclusiveSlot.current === exclusiveNew && exclusiveNew.isActive, "exclusive candidate installed")
+    do {
+      try exclusiveSlot.replace(requiresExclusiveResources: true) {
+        throw NativePlayerError(category: "decoder", code: "decoder.unavailable", message: "Rejected")
+      }
+      preconditionFailure("failed candidate accepted")
+    } catch {
+      check(exclusiveSlot.current === exclusiveNew && exclusiveNew.isActive, "failed candidate restores old resource owner")
+    }
     let config = PlayerConfiguration(positionEventIntervalMs: 250)
     var source = YlAppleSourceDescriptor(uri: "https://fixture.invalid/live.m3u8", kind: .network,
       formatHint: .hls, intent: .live, loadOptions: .init())
@@ -124,9 +147,9 @@ struct LiveModeNativeTest {
 private final class LiveModeFakeBackend: YlPlaybackBackend {
   var isActive = true
   var commands = [String]()
-  func activate() throws {}
+  func activate() throws { isActive = true }
   func stop() {}
-  func deactivate() {}
+  func deactivate() { isActive = false }
   func play() throws {}
   func pause() throws {}
   func seek(toMs: Int64, cancellationToken: YlOpenCancellationToken?) throws {}

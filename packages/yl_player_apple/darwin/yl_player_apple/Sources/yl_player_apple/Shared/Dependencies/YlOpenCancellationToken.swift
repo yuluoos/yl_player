@@ -28,6 +28,13 @@ final class YlOpenCancellationToken {
     pending.forEach { $0() }
   }
 
+  /// Resource retirement is local; caller cancellation still reaches all candidates.
+  func makeChild() -> YlOpenCancellationToken {
+    let child = YlOpenCancellationToken()
+    onCancel { [weak child] in child?.cancel() }
+    return child
+  }
+
   func throwIfCancelled() throws {
     if isCancelled { throw Self.cancellationError() }
   }

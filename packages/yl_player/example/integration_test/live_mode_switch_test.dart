@@ -28,6 +28,19 @@ void main() {
     YlPlayerController? player;
     LiveModeSeries? series;
     final clock = Stopwatch()..start();
+    final lifecycle = <Map<String, Object?>>[
+      {'elapsedUs': 0, 'state': WidgetsBinding.instance.lifecycleState?.name},
+    ];
+    final lifecycleListener = AppLifecycleListener(
+      onStateChange: (state) {
+        if (lifecycle.length < 32) {
+          lifecycle.add({
+            'elapsedUs': clock.elapsedMicroseconds,
+            'state': state.name,
+          });
+        }
+      },
+    );
     final commits = <Map<String, Object?>>[];
     var stage = 'create', outcome = 'failed', cleaned = false;
     String? failureKind, commandFailureCode;
@@ -203,6 +216,7 @@ void main() {
       failureKind = error.runtimeType.toString();
       if (error is YlPlayerException) commandFailureCode = error.failure.code;
     } finally {
+      lifecycleListener.dispose();
       try {
         await player?.dispose().timeout(const Duration(seconds: 5));
         await tester.pumpWidget(const SizedBox.shrink());
@@ -217,7 +231,7 @@ void main() {
         );
       }
       debugPrint(
-        'YL_LIVE_RESULT=${jsonEncode({'schemaVersion': 1, 'runId': config['runId'], 'protocol': config['protocol'], 'declaredMediaHash': config['mediaHash'], 'platform': Platform.operatingSystem, 'outcome': outcome, 'stage': stage, 'failureKind': failureKind, 'failureCode': commandFailureCode ?? player?.state.failure?.code, 'cleaned': cleaned, 'commits': commits, 'endToEndLatency': 'unavailable', 'evidence': 'public-state-only'})}',
+        'YL_LIVE_RESULT=${jsonEncode({'schemaVersion': 1, 'runId': config['runId'], 'protocol': config['protocol'], 'declaredMediaHash': config['mediaHash'], 'platform': Platform.operatingSystem, 'outcome': outcome, 'stage': stage, 'appLifecycle': lifecycle, 'failureKind': failureKind, 'failureCode': commandFailureCode ?? player?.state.failure?.code, 'cleaned': cleaned, 'commits': commits, 'endToEndLatency': 'unavailable', 'evidence': 'public-state-only'})}',
         wrapWidth: 100000,
       );
       // Drain throttled evidence before the integration runner exits the app.
