@@ -76,6 +76,25 @@ final class YlApplePublicationTests: XCTestCase {
       XCTAssertEqual(failure.message, message)
       XCTAssertFalse(failure.message.contains("private secret"))
     }
+    for (error, code) in [(URLError(.cannotFindHost), "network.dns_failed"),
+      (URLError(.timedOut), "network.read_timeout"),
+      (URLError(.serverCertificateUntrusted), "network.tls_failed"),
+      (URLError(.cannotConnectToHost), "network.connection_failed")] {
+      let failure = YlAppleSafeDiagnostics.failure(YlNetworkByteSource.transportError(error), scope: .session)
+      XCTAssertEqual(failure.code, code)
+      XCTAssertFalse(failure.message.contains("unknown"))
+    }
+    let upstream = YlHlsUpstreamDiagnostics()
+    upstream.record(YlHTTPFailure.error(status: 404), resource: "segment")
+    upstream.record(YlNetworkByteSource.transportError(URLError(.cancelled)), resource: "segment")
+    upstream.succeeded(resource: "another-segment")
+    XCTAssertEqual(upstream.latestFailure?.code, "network.http_status.404")
+    upstream.succeeded(resource: "segment")
+    XCTAssertNil(upstream.latestFailure)
+    upstream.record(YlHTTPFailure.error(status: 503), resource: "segment")
+    upstream.clear()
+    upstream.record(YlHTTPFailure.error(status: 500), resource: "late-callback")
+    XCTAssertNil(upstream.latestFailure)
     let unknown = YlAppleSafeDiagnostics.failure(NSError(domain: "private", code: 7,
       userInfo: [NSLocalizedDescriptionKey: "secret"]), scope: .command)
     XCTAssertEqual(unknown.message, "Playback failed for an unknown reason.")
@@ -91,7 +110,7 @@ final class YlApplePublicationTests: XCTestCase {
     let repeated = YlAppleSafeDiagnostics.failure(PigeonError(code: bridged.code,
       message: "another secret", details: bridged), scope: .player)
     XCTAssertEqual(repeated.code, "network.http_forbidden")
-    XCTAssertEqual(repeated.message, "The media server refused the request. Check access credentials and request configuration.")
+    XCTAssertEqual(repeated.message, "HTTP 403: The media server refused the request. Check access credentials and request configuration.")
     XCTAssertFalse(repeated.retryable)
     XCTAssertEqual(repeated.scope, .player)
     // Both output invalidation and startup failure share this code. Never use

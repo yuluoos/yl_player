@@ -208,6 +208,8 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   private let headerPolicy: YlHlsHeaderPolicy
   private let configuration: YlNetworkConfiguration
   private let mediaProxy: YlHlsMediaProxy
+  private let upstreamDiagnostics = YlHlsUpstreamDiagnostics()
+  var upstreamFailure: NativePlayerError? { upstreamDiagnostics.latestFailure }
   let trafficScope: YlManagedBufferScope?
   private let stateLock = NSLock()
   private var records: [Int: TaskRecord] = [:]
@@ -246,6 +248,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     self.configuration = configuration
     self.mediaProxy = try YlHlsMediaProxy(
       originURL: originURL,
+      upstreamDiagnostics: upstreamDiagnostics,
       headers: headers,
       credentials: credentials,
       configuration: configuration,
@@ -573,6 +576,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     guard let record else { return }
     switch result {
     case let .success(cached):
+      upstreamDiagnostics.succeeded(resource: record.cacheKey)
       if let preflight = record.request as? PreflightRequest {
         preflight.effectiveURL = record.destinationURL
         preflight.credentialsStripped = record.credentialsStripped
@@ -588,6 +592,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
         record.request.finishLoading()
       }
     case let .failure(error):
+      upstreamDiagnostics.record(error, resource: record.cacheKey, httpStatus: record.response?.statusCode)
       task.cancel()
       record.request.finishLoading(with: error)
     }
@@ -675,23 +680,7 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   }
 
   private static func transportError(_ error: Error) -> NativePlayerError {
-    let nsError = error as NSError
-    if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorTimedOut {
-      return NativePlayerError(
-        category: "network",
-        code: "network.read_timeout",
-        message: "The HLS resource request timed out."
-      )
-    }
-    if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorCancelled {
-      return cancelledError()
-    }
-    return NativePlayerError(
-      category: "network",
-      code: "network.http_status",
-      message: "The HLS resource request failed.",
-      diagnostic: "\(nsError.domain) \(nsError.code)"
-    )
+    YlNetworkByteSource.transportError(error)
   }
 
   private static func indexRangeError() -> NativePlayerError {
@@ -754,12 +743,7 @@ extension YlHlsResourceLoader: URLSessionDataDelegate, URLSessionTaskDelegate {
     }
     guard (200...299).contains(response.statusCode) else {
       completionHandler(.cancel)
-      finish(task: dataTask, result: .failure(NativePlayerError(
-        category: "network",
-        code: isDash && response.statusCode == 403 ? "network.http_forbidden" : "network.http_status",
-        message: "The HLS server rejected the resource request.",
-        diagnostic: "HTTP \(response.statusCode)"
-      )))
+      finish(task: dataTask, result: .failure(YlHTTPFailure.error(status: response.statusCode)))
       return
     }
     record.response = response

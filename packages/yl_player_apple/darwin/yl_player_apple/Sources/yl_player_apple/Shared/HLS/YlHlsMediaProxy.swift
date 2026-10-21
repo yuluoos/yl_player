@@ -2,6 +2,34 @@ import yl_player_media_core
 import Foundation
 import Network
 
+/// Owned by one loader/session. Bounded unresolved failures are removed when the
+/// same resource succeeds; cancellation never replaces an upstream cause.
+final class YlHlsUpstreamDiagnostics {
+  private let lock = NSLock()
+  private var failures: [(String, NativePlayerError)] = []
+  private var active = true
+  var latestFailure: NativePlayerError? { lock.withLock { failures.last?.1 } }
+
+  func record(_ error: NativePlayerError, resource: String, httpStatus: Int? = nil) {
+    guard error.code != "network.cancelled" else { return }
+    let recorded = lock.withLock { () -> Bool in
+      guard active else { return false }
+      failures.removeAll { $0.0 == resource }
+      failures.append((resource, error))
+      if failures.count > 16 { failures.removeFirst() }
+      return true
+    }
+    guard recorded else { return }
+    let failure = YlAppleSafeDiagnostics.failure(error, scope: .session)
+    let status = httpStatus ?? YlHTTPFailure.status(from: failure.code)
+    NSLog("YlPlayer upstream httpStatus=%@ code=%@ reason=%@ diagnosticId=%@",
+      status.map(String.init) ?? "none", failure.code, failure.message, failure.diagnosticId)
+  }
+
+  func succeeded(resource: String) { lock.withLock { failures.removeAll { $0.0 == resource } } }
+  func clear() { lock.withLock { active = false; failures.removeAll() } }
+}
+
 final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   enum CompletionAction: Equatable {
     case badGateway
@@ -23,6 +51,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     var pendingSends = 0
     var upstreamFinished = false
     var upstreamError: Error?
+    var reportedFailure: NativePlayerError?
+    var httpStatus: Int?
 
     init(connection: NWConnection, method: String, range: String?, opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil) {
       self.opaqueRetention = opaqueRetention
@@ -31,6 +61,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       self.range = range
     }
   }
+
+  let upstreamDiagnostics: YlHlsUpstreamDiagnostics
 
   private let queue = DispatchQueue(
     label: "dev.ylplayer.hls.media-proxy",
@@ -53,6 +85,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
 
   init(
     originURL: URL,
+    upstreamDiagnostics: YlHlsUpstreamDiagnostics = YlHlsUpstreamDiagnostics(),
     headers: [String: String],
     credentials: [String: String] = [:],
     configuration: YlNetworkConfiguration,
@@ -63,6 +96,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       URLSession(configuration: $0, delegate: $1, delegateQueue: $2)
     }
   ) throws {
+    self.upstreamDiagnostics = upstreamDiagnostics
     self.trafficScope = trafficScope
     self.opaqueRetention = opaqueRetention
     self.credentialContext = credentialContext
@@ -169,6 +203,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       connections.removeAll()
       return values
     }
+    upstreamDiagnostics.clear()
     listener.cancel()
     session.invalidateAndCancel()
     activeConnections.forEach { $0.cancel() }
@@ -349,10 +384,25 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     didReceive response: URLResponse,
     completionHandler: @escaping (URLSession.ResponseDisposition) -> Void
   ) {
-    guard let response = response as? HTTPURLResponse,
-          let record = lock.withLock({ taskRecords[dataTask.taskIdentifier] }) else {
+    guard let record = lock.withLock({ taskRecords[dataTask.taskIdentifier] }) else {
       completionHandler(.cancel)
       return
+    }
+    guard let response = response as? HTTPURLResponse else {
+      let failure = NativePlayerError(category: "network", code: "network.response_invalid",
+        message: "The media server returned an invalid response.")
+      record.reportedFailure = failure
+      upstreamDiagnostics.record(failure, resource: record.resourceKey)
+      completionHandler(.cancel)
+      return
+    }
+    record.httpStatus = response.statusCode
+    if !(200...299).contains(response.statusCode), record.reportedFailure == nil {
+      let failure = YlHTTPFailure.error(status: response.statusCode)
+      record.reportedFailure = failure
+      upstreamDiagnostics.record(failure, resource: record.resourceKey, httpStatus: record.httpStatus)
+    } else if (200...299).contains(response.statusCode) {
+      upstreamDiagnostics.succeeded(resource: record.resourceKey)
     }
     let declaredContentLength = response
       .value(forHTTPHeaderField: "Content-Length")
@@ -439,9 +489,14 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       completionHandler(nil)
       return
     }
+    record.httpStatus = response.statusCode
     record.requestContext = record.requestContext?.child(at: destination, redirect: true)
     if record.credentialsStripped { credentialContext.strip(record.resourceKey) }
     guard record.redirectCount <= configuration.maxRedirects else {
+      let failure = NativePlayerError(category: "network", code: "network.redirect_limit",
+        message: "The media request exceeded the configured redirect limit.")
+      record.reportedFailure = failure
+      upstreamDiagnostics.record(failure, resource: record.resourceKey, httpStatus: record.httpStatus)
       completionHandler(nil)
       return
     }
@@ -462,10 +517,14 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       guard let record = taskRecords[task.taskIdentifier] else { return nil }
       record.upstreamFinished = true
       record.upstreamError = error
+      if let error, record.reportedFailure == nil {
+        let failure = YlNetworkByteSource.transportError(error)
+        upstreamDiagnostics.record(failure, resource: record.resourceKey, httpStatus: record.httpStatus)
+      }
       guard record.pendingSends == 0 else { return nil }
       taskRecords.removeValue(forKey: task.taskIdentifier)
       connectionTasks.removeValue(forKey: ObjectIdentifier(record.connection))
-      return (record, error)
+      return (record, record.upstreamError)
     }
     guard let (record, error) = outcome else { return }
     finishProxyResponse(record, error: error)
@@ -489,7 +548,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   }
 
   static func badGatewayBody(_ error: Error?) -> Data {
-    error.map { Data(YlAppleSafeDiagnostics.diagnostic($0).utf8) } ?? Data()
+    guard let error else { return Data() }
+    let failure = YlAppleSafeDiagnostics.failure(YlNetworkByteSource.transportError(error), scope: .session)
+    return Data("\(failure.code): \(failure.message)".utf8)
   }
 
   private func finishProxyResponse(_ record: TaskRecord, error: Error?) {
@@ -502,7 +563,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     case .badGateway:
       send(
         status: 502,
-        body: Self.badGatewayBody(error),
+        body: Self.badGatewayBody(record.reportedFailure ?? error),
         headers: ["Content-Type": "text/plain; charset=utf-8"],
         to: record.connection
       )

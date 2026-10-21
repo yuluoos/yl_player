@@ -32,7 +32,7 @@ class YlFailureMapperTest {
             assertFalse(lines.last().contains('\n'))
         }
         assertEquals(2, lines.size)
-        assertEquals("The network request failed.", mapper.toFlutterError(IOException("different")).message)
+        assertEquals("The media request failed before a usable response was received.", mapper.toFlutterError(IOException("different")).message)
         assertEquals("An internal player failure occurred.", mapper.toFlutterError(IllegalStateException("different")).message)
     }
 
@@ -131,12 +131,50 @@ class YlFailureMapperTest {
     }
 
     @Test
-    fun `non 403 http status remains conservative`() {
-        val response = invalidResponse(404)
-        assertEquals("network.failed", YlFailureMapper(YlSafeDiagnostics {}).toMessage(response).code)
-        assertEquals(YlFailureKind.NETWORK_FAILED, mediaFailure(
-            androidx.media3.common.PlaybackException.ERROR_CODE_IO_BAD_HTTP_STATUS,
-            response, AndroidDecoderPolicy.SYSTEM_DEFAULT))
+    fun `upstream status and safe reason survive wrapped command and session failures`() {
+        val lines = mutableListOf<String>()
+        val mapper = YlFailureMapper(YlSafeDiagnostics(lines::add))
+        for (status in listOf(401, 404, 429, 503)) {
+            val failure = mapper.toMessage(IOException("private wrapper", invalidResponse(status)), AndroidFailureScope.SESSION)
+            assertEquals("network.http_status.$status", failure.code)
+            assertTrue(failure.message.contains("HTTP $status"))
+            assertTrue(lines.last().contains("httpStatus=$status"))
+            assertTrue(lines.last().contains(failure.diagnosticId))
+            assertFalse(lines.last().contains("private"))
+        }
+    }
+
+    @Test
+    fun `transport exceptions retain specific reasons through a wrapper`() {
+        val mapper = YlFailureMapper(YlSafeDiagnostics {})
+        for ((error, code) in listOf(
+            java.net.SocketTimeoutException("secret") to "network.read_timeout",
+            javax.net.ssl.SSLHandshakeException("secret") to "network.tls_failed",
+            java.net.ConnectException("secret") to "network.connection_failed",
+            java.net.SocketException("secret") to "network.connection_lost",
+        )) {
+            val failure = mapper.toMessage(IllegalStateException("wrapper", error))
+            assertEquals(code, failure.code)
+            assertEquals(AndroidFailureCategory.NETWORK, failure.category)
+            assertFalse(failure.message.contains("secret"))
+        }
+    }
+
+    @Test
+    fun `generic boundary retains HTTP cause but explicit decoder and cancellation keep authority`() {
+        val mapper = YlFailureMapper(YlSafeDiagnostics {})
+        val http = invalidResponse(404)
+        assertEquals("network.http_status.404", mapper.toMessage(YlBoundaryException(YlFailureKind.NETWORK_FAILED, http)).code)
+        assertEquals("network.http_status.404", mapper.toMessage(YlBoundaryException(YlFailureKind.PLATFORM_FAILURE, http)).code)
+        assertEquals("decoder.unavailable", mapper.toMessage(YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE, http)).code)
+        assertEquals("load.cancelled", mapper.toMessage(CancellationException().apply { initCause(http) }).code)
+    }
+
+    @Test fun `only proven cancellation is reported as cancelled`() {
+        val mapper = YlFailureMapper(YlSafeDiagnostics {})
+        assertEquals("load.cancelled", mapper.toMessage(YlRequestCancelledException()).code)
+        assertEquals("network.failed", mapper.toMessage(java.io.InterruptedIOException("timeout")).code)
+        assertEquals("network.connect_timeout", mapper.toMessage(YlHeaderTimeoutException()).code)
     }
 
     private fun invalidResponse(status: Int) = HttpDataSource.InvalidResponseCodeException(

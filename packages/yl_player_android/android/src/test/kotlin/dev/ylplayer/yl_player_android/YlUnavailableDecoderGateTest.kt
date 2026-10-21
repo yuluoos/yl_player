@@ -5,6 +5,13 @@ import kotlinx.coroutines.runBlocking
 import kotlin.test.*
 
 class YlUnavailableDecoderGateTest {
+    @Test fun networkFailureSurvivesTheReadinessFuture() = runBlocking {
+        val gate = YlInitializedDecoderGate(AndroidDecoderPolicy.SYSTEM_DEFAULT)
+        gate.fail(YlFailureKind.NETWORK_FAILED, YlHttpStatusException(503))
+        val failure = assertFailsWith<YlBoundaryException> { gate.ready.await() }
+        assertEquals("network.http_status.503", YlFailureMapper(YlSafeDiagnostics {}).toMessage(failure).code)
+    }
+
     @Test fun declaredButUnselectedVideoCannotWaitForAnImpossibleDecoderIdentity() = runBlocking {
         val gate=YlInitializedDecoderGate(AndroidDecoderPolicy.HARDWARE_REQUIRED)
         gate.accept(YlEngineSnapshot(status=AndroidPlaybackStatus.READY,

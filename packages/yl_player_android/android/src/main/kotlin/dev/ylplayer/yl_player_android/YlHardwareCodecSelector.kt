@@ -159,7 +159,7 @@ internal class YlInitializedDecoderGate(private val policy: dev.ylplayer.yl_play
     /** A restore operation can span automatic media epochs. Keep its pending waiter while
      * Core clears decoder evidence and fences old callbacks; completed epochs get a new gate. */
     fun resetForEpoch() { if (ready.isCompleted) reset() }
-    fun fail(kind: YlFailureKind) { ready.completeExceptionally(YlBoundaryException(kind)) }
+    fun fail(kind: YlFailureKind, cause: Throwable? = null) { ready.completeExceptionally(YlBoundaryException(kind, cause)) }
     fun accept(snapshot: YlEngineSnapshot) {
         if (snapshot.status !in listOf(dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.READY, dev.ylplayer.yl_player_android.pigeon.AndroidPlaybackStatus.PLAYING)) return
         if (policy == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_REQUIRED) {

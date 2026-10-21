@@ -224,21 +224,8 @@ public final class YlNetworkRequestPolicy {
         isEOF: true
       )
 
-    case 403:
-      throw NativePlayerError(
-        category: "network",
-        code: "network.http_forbidden",
-        message: "The media server refused the request. Check access credentials and request configuration.",
-        diagnostic: "HTTP 403 \(Self.sanitized(response.url))"
-      )
-
     default:
-      throw NativePlayerError(
-        category: "network",
-        code: "network.http_status",
-        message: "The server returned an unsupported HTTP status.",
-        diagnostic: "HTTP \(status) \(Self.sanitized(response.url))"
-      )
+      throw YlHTTPFailure.error(status: status)
     }
   }
 

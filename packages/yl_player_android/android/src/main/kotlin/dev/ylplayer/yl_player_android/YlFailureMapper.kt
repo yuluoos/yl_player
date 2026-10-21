@@ -39,9 +39,15 @@ internal enum class YlFailureKind(
     SOURCE_INVALID(AndroidFailureCategory.SOURCE, "source.invalid", "The playback source is invalid."),
     TRACK_NOT_FOUND(AndroidFailureCategory.SOURCE, "track.not_found", "The requested audio track is unavailable."),
     SOURCE_MISSING(AndroidFailureCategory.SOURCE, "source.missing", "The playback source is unavailable."),
-    NETWORK_FAILED(AndroidFailureCategory.NETWORK, "network.failed", "The network request failed.", true),
+    NETWORK_FAILED(AndroidFailureCategory.NETWORK, "network.failed", "The media request failed before a usable response was received.", true),
     NETWORK_DNS_FAILED(AndroidFailureCategory.NETWORK, "network.dns_failed", "The media host could not be resolved. Check the network connection and source host configuration.", true),
     NETWORK_HTTP_FORBIDDEN(AndroidFailureCategory.NETWORK, "network.http_forbidden", "The media server refused the request. Check access credentials and request configuration."),
+    NETWORK_CONNECT_TIMEOUT(AndroidFailureCategory.NETWORK, "network.connect_timeout", "The connection to the media server timed out.", true),
+    NETWORK_READ_TIMEOUT(AndroidFailureCategory.NETWORK, "network.read_timeout", "The media request timed out while reading.", true),
+    NETWORK_TLS_FAILED(AndroidFailureCategory.NETWORK, "network.tls_failed", "The secure media connection failed. Check the server certificate and TLS configuration."),
+    NETWORK_CONNECTION_FAILED(AndroidFailureCategory.NETWORK, "network.connection_failed", "The connection to the media server could not be established.", true),
+    NETWORK_CONNECTION_LOST(AndroidFailureCategory.NETWORK, "network.connection_lost", "The connection to the media server was interrupted.", true),
+    NETWORK_REDIRECT_LIMIT(AndroidFailureCategory.NETWORK, "network.redirect_limit", "The media request exceeded the configured redirect limit."),
     NETWORK_PROTOCOL_UNSUPPORTED(AndroidFailureCategory.UNSUPPORTED, "network.protocol_unsupported", "This streaming protocol is unsupported. Use standard RTMP over TCP."),
     RTMP_HANDSHAKE_FAILED(AndroidFailureCategory.NETWORK, "network.rtmp_handshake_failed", "RTMP setup failed or timed out. Check the connection and stream configuration.", true),
     RTMP_HANDSHAKE_INVALID(AndroidFailureCategory.NETWORK, "network.rtmp_handshake_failed", "The RTMP handshake is invalid. Check server protocol compatibility."),
@@ -57,26 +63,82 @@ internal enum class YlFailureKind(
     INTERNAL(AndroidFailureCategory.INTERNAL, "internal.failure", "An internal player failure occurred."),
 }
 
-internal class YlBoundaryException(val kind: YlFailureKind) : RuntimeException()
+internal class YlBoundaryException(val kind: YlFailureKind, cause: Throwable? = null) : RuntimeException(cause)
+internal class YlHttpStatusException(val status: Int) : IOException()
+internal class YlRequestCancelledException : java.io.InterruptedIOException()
+internal class YlHeaderTimeoutException : java.net.SocketTimeoutException()
+internal class YlRedirectException(val status: Int) : java.net.ProtocolException()
+
+internal data class YlFailureDescription(
+    val kind: YlFailureKind,
+    val code: String = kind.code,
+    val message: String = kind.publicMessage,
+    val httpStatus: Int? = null,
+    val retryable: Boolean = kind.retryable,
+)
+
+/** Derives public data only from exception types and numeric HTTP evidence. */
+internal object YlFailureDescriptions {
+    private val generic = setOf(YlFailureKind.NETWORK_FAILED, YlFailureKind.PLATFORM_FAILURE, YlFailureKind.INTERNAL)
+    fun describe(error: Throwable): YlFailureDescription {
+        val causes = error.boundedCauses().toList()
+        val status = causes.firstNotNullOfOrNull {
+            when (it) {
+                is YlHttpStatusException -> it.status
+                is HttpDataSource.InvalidResponseCodeException -> it.responseCode
+                is YlRedirectException -> it.status
+                else -> null
+            }?.takeIf { value -> value in 100..599 }
+        }
+        val explicit = causes.filterIsInstance<YlBoundaryException>().firstOrNull { it.kind !in generic }?.kind
+            ?: causes.filterIsInstance<YlRtmpException>().firstOrNull()?.kind
+        if (explicit != null) return if (explicit == YlFailureKind.NETWORK_HTTP_FORBIDDEN) http(403)
+            else YlFailureDescription(explicit, httpStatus = status)
+        if (causes.any { it is CancellationException || it is YlRequestCancelledException })
+            return YlFailureDescription(YlFailureKind.LOAD_CANCELLED)
+        if (causes.any { it is YlRedirectException }) return YlFailureDescription(YlFailureKind.NETWORK_REDIRECT_LIMIT, httpStatus = status)
+        if (status != null) return http(status)
+        val kind = when {
+            causes.any { it is UnknownHostException } -> YlFailureKind.NETWORK_DNS_FAILED
+            causes.any { it is javax.net.ssl.SSLException } -> YlFailureKind.NETWORK_TLS_FAILED
+            causes.any { it is YlHeaderTimeoutException } -> YlFailureKind.NETWORK_CONNECT_TIMEOUT
+            causes.any { it is java.net.SocketTimeoutException } -> YlFailureKind.NETWORK_READ_TIMEOUT
+            causes.any { it is java.net.ConnectException } -> YlFailureKind.NETWORK_CONNECTION_FAILED
+            causes.any { it is java.net.SocketException || it is java.io.EOFException } -> YlFailureKind.NETWORK_CONNECTION_LOST
+            causes.any { it is FileNotFoundException } -> YlFailureKind.SOURCE_MISSING
+            causes.any { it is IOException } -> YlFailureKind.NETWORK_FAILED
+            causes.any { it is OutOfMemoryError } -> YlFailureKind.RESOURCE_EXHAUSTED
+            else -> causes.filterIsInstance<YlBoundaryException>().firstOrNull()?.kind ?: YlFailureKind.INTERNAL
+        }
+        return YlFailureDescription(kind)
+    }
+
+    fun http(status: Int): YlFailureDescription {
+        if (status !in 100..599) return YlFailureDescription(YlFailureKind.NETWORK_FAILED)
+        val reason = when (status) {
+            401 -> "The media server requires authentication. Check access credentials."
+            403 -> "The media server refused the request. Check access credentials and request configuration."
+            404 -> "The requested media resource was not found."
+            408 -> "The media server timed out waiting for the request."
+            410 -> "The requested media resource is no longer available."
+            416 -> "The media server rejected the requested byte range."
+            429 -> "Too many requests. Wait before retrying."
+            in 500..599 -> "The upstream media service is unavailable or failed to complete the request."
+            in 300..399 -> "The media redirect could not be followed."
+            else -> "The media server returned an unexpected HTTP response."
+        }
+        return YlFailureDescription(
+            if (status == 403) YlFailureKind.NETWORK_HTTP_FORBIDDEN else YlFailureKind.NETWORK_FAILED,
+            if (status == 403) "network.http_forbidden" else "network.http_status.$status",
+            "HTTP $status: $reason", status, status in listOf(408, 429, 500, 502, 503, 504))
+    }
+}
 
 internal class YlFailureMapper(private val diagnostics: YlSafeDiagnostics = YlSafeDiagnostics()) {
     fun toMessage(error: Throwable, scope: AndroidFailureScope = AndroidFailureScope.COMMAND): AndroidFailureMessage {
-        val causes = error.boundedCauses().toList()
-        val kind = when {
-            error is YlBoundaryException -> error.kind
-            causes.any { it is YlRtmpException } -> (causes.first { it is YlRtmpException } as YlRtmpException).kind
-            error is CancellationException -> YlFailureKind.LOAD_CANCELLED
-            error is FileNotFoundException -> YlFailureKind.SOURCE_MISSING
-            causes.firstOrNull { it is YlBoundaryException } != null ->
-                (causes.first { it is YlBoundaryException } as YlBoundaryException).kind
-            causes.any { it is CancellationException } -> YlFailureKind.LOAD_CANCELLED
-            causes.any { it is UnknownHostException } -> YlFailureKind.NETWORK_DNS_FAILED
-            causes.any { it is HttpDataSource.InvalidResponseCodeException && it.responseCode == 403 } -> YlFailureKind.NETWORK_HTTP_FORBIDDEN
-            error is IOException -> YlFailureKind.NETWORK_FAILED
-            error is OutOfMemoryError -> YlFailureKind.RESOURCE_EXHAUSTED
-            else -> YlFailureKind.INTERNAL
-        }
-        return AndroidFailureMessage(kind.category, kind.code, kind.publicMessage, kind.retryable, scope, diagnostics.record(error))
+        val failure = YlFailureDescriptions.describe(error)
+        return AndroidFailureMessage(failure.kind.category, failure.code, failure.message,
+            failure.retryable, scope, diagnostics.record(error))
     }
 
     fun toFlutterError(error: Throwable, scope: AndroidFailureScope = AndroidFailureScope.COMMAND): FlutterError {

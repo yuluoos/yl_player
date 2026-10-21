@@ -203,7 +203,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
 
     let proseOnly = YlNetworkByteSource.transportError(NSError(domain: "custom", code: NSURLErrorCannotFindHost,
       userInfo: [NSLocalizedDescriptionKey: "cannot find host \(secret)"]))
-    XCTAssertEqual(proseOnly.code, "network.http_status")
+    XCTAssertEqual(proseOnly.code, "network.request")
   }
 
   func testTransportCancellationOutranksNestedDnsEvidence() {
@@ -478,7 +478,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
       var next = [UInt8](repeating: 0, count: 1)
       return try next.withUnsafeMutableBytes { try source.read(into: $0) }
     }
-    XCTAssertEqual(received.code, "network.http_status")
+    XCTAssertEqual(received.code, "network.connection_lost")
     XCTAssertEqual(ScriptedURLProtocol.recordedRequests.count, 1)
   }
 
@@ -980,6 +980,19 @@ final class YlNetworkByteSourceTests: XCTestCase {
         done.fulfill()
       }.resume()
       wait(for: [done], timeout: 5)
+      let rejected = try YlHlsMediaProxy(originURL: server.url, headers: [:],
+        configuration: YlNetworkConfiguration(map: [:]))
+      defer { rejected.cancelAll() }
+      let denied = expectation(description: "upstream HTTP rejection is retained")
+      session.dataTask(with: try rejected.proxyURL(for: server.url)) { _, response, error in
+        XCTAssertNil(error)
+        XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 401)
+        let failure = rejected.upstreamDiagnostics.latestFailure
+        XCTAssertEqual(failure?.code, "network.http_status.401")
+        XCTAssertTrue(failure?.message.contains("HTTP 401") == true)
+        denied.fulfill()
+      }.resume()
+      wait(for: [denied], timeout: 5)
     }
   }
 
@@ -1063,7 +1076,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
       if succeeds { XCTAssertEqual(try readToEnd(source), [1, 2, 3]) }
       else {
         let error = nativeError { try readToEnd(source) }
-        XCTAssertEqual(error.code, "network.http_status")
+        XCTAssertEqual(error.code, "network.tls_failed")
         XCTAssertEqual(error.diagnostic, "transport.-1202")
       }
       XCTAssertEqual(attempts, 1, "Certificate validation failures are never retryable")

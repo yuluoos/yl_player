@@ -17,6 +17,15 @@ final _nativeOperations = YlPlayerOperation.values
     .toList();
 
 void main() {
+  test('upstream status remains visible through the Android public boundary', () {
+    for (final status in [401, 404, 429, 503]) {
+      final wire = wireFailure()..code = 'network.http_status.$status';
+      final failure = AndroidCodec.failure(wire);
+      expect(failure.message, contains('HTTP $status'));
+      expect(failure.message, isNot(contains('secret')));
+    }
+  });
+
   test('native capabilities do not advertise Dart-only subtitle commands', () {
     final capabilities = AndroidCodec.capabilities(wireCreate().capabilities);
     expect(
@@ -637,7 +646,10 @@ void main() {
     'failure prose is fixed and transport errors never expose native details',
     () {
       final failure = AndroidCodec.failure(wireFailure());
-      expect(failure.message, 'Playback operation failed.');
+      expect(
+        failure.message,
+        'The media request failed before a usable response was received.',
+      );
       expect(failure.diagnosticId, 'android-network-1');
       final unsafe = wireFailure()
         ..code = 'https://media.test/a'

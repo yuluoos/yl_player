@@ -464,7 +464,7 @@ internal class YlNativeFallbackEngine(
         if (closed || terminalFailure) return
         terminalFailure = true; playing = false; budgetJob?.cancel(); playbackJob?.cancel()
         session?.cancel(); softwareLease?.close()
-        emit(YlEngineEvent.Failed((error as? YlBoundaryException)?.kind ?: YlFailureKind.PLATFORM_FAILURE))
+        emit(YlEngineEvent.Failed((error as? YlBoundaryException)?.kind ?: YlFailureKind.PLATFORM_FAILURE, error))
     }
     private fun emit(event: YlEngineEvent) { events.launch { if (!closed) callback?.invoke(identity, event) } }
     private fun requireSession() = checkNotNull(session)

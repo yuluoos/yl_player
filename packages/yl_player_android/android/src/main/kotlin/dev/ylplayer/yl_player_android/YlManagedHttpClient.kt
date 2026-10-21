@@ -3,9 +3,7 @@ package dev.ylplayer.yl_player_android
 import java.io.Closeable
 import java.io.EOFException
 import java.io.IOException
-import java.io.InterruptedIOException
 import java.net.ProtocolException
-import java.net.SocketTimeoutException
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ExecutionException
 import java.util.concurrent.Executors
@@ -46,6 +44,7 @@ internal class YlManagedHttpClient(
     transport: OkHttpClient = OkHttpClient(),
     private val dashCandidates: ((HttpUrl) -> List<HttpUrl>)? = null,
     private val networkBytes: YlNetworkByteCounter? = null,
+    private val diagnostics: YlSafeDiagnostics = YlSafeDiagnostics(),
 ) : Call.Factory {
     private val client = transport.newBuilder().followRedirects(false).followSslRedirects(false).apply {
         if (networkBytes != null) addNetworkInterceptor { chain ->
@@ -116,7 +115,7 @@ internal class YlManagedHttpClient(
                 cancelled = true
                 current?.cancel()
                 calls.remove(this)
-                pending?.completeExceptionally(InterruptedIOException("Cancelled"))
+                pending?.completeExceptionally(YlRequestCancelledException())
             }
         }
         override fun execute(): Response {
@@ -133,7 +132,7 @@ internal class YlManagedHttpClient(
             }
         }
         private fun checkCancelled() {
-            if (cancelled || Thread.currentThread().isInterrupted) { cancel(); throw InterruptedIOException("Cancelled") }
+            if (cancelled || Thread.currentThread().isInterrupted) { cancel(); throw YlRequestCancelledException() }
         }
         private fun executeResource(): Response {
             val request = if (network == null) original else original.newBuilder().url(candidates.first()).header("Accept-Encoding", "identity").build()
@@ -158,11 +157,15 @@ internal class YlManagedHttpClient(
                 stripped = stripped || credentials.isStripped(request.url)
                 lastRequest = request
                 val response = try { hop(request) } catch (error: IOException) {
+                    if (!cancelled) diagnostics.record(error)
                     scheduleRetry(request.method, error = error) ?: throw error
                     request = advanceCandidate(initial, request, allowCandidateSwitch)
                     continue
                 }
-                val follow = try { redirects.follow(response, redirectCount) } catch (error: IOException) { response.close(); throw error }
+                if (response.code >= 400) diagnostics.record(YlHttpStatusException(response.code))
+                val follow = try { redirects.follow(response, redirectCount) } catch (error: IOException) {
+                    diagnostics.record(error, response.code); response.close(); throw error
+                }
                 if (follow != null) {
                     redirectCount++
                     stripped = stripped || credentials.isStripped(follow.url)
@@ -186,7 +189,7 @@ internal class YlManagedHttpClient(
             val deadline = network?.let {
                 clock.schedule((it.connectTimeoutMs.toLong() - (clock.monotonicMs() - began)).coerceAtLeast(0)) {
                     // Completion wins exactly once. Late headers are closed by the callback.
-                    if (result.completeExceptionally(SocketTimeoutException("Response header deadline"))) call.cancel()
+                    if (result.completeExceptionally(YlHeaderTimeoutException())) call.cancel()
                 }
             }
             call.enqueue(object : Callback {
@@ -202,7 +205,7 @@ internal class YlManagedHttpClient(
             }
         }
         private fun <T> await(result: CompletableFuture<T>): T = try { result.get() } catch (_: InterruptedException) {
-            Thread.currentThread().interrupt(); cancel(); throw InterruptedIOException("Cancelled")
+            Thread.currentThread().interrupt(); cancel(); throw YlRequestCancelledException()
         } catch (error: ExecutionException) { throw (error.cause as? IOException ?: IOException("Transport failure")) }
         private fun scheduleRetry(method: String, error: IOException): Unit? {
             checkCancelled()
@@ -269,6 +272,7 @@ internal class YlManagedHttpClient(
                             return count
                         } catch (error: IOException) {
                             checkCancelled()
+                            diagnostics.record(error, response.code)
                             // A strong entity validator and exact range response are required once
                             // bytes have escaped this body. Never buffer the whole representation.
                             if (delivered > 0 && (etag == null || total == null || initial.header("Content-Encoding") !in listOf(null, "identity"))) throw ProtocolException("Unsafe byte resume")
@@ -285,6 +289,10 @@ internal class YlManagedHttpClient(
                                 .header("Range", "bytes=$offset-${initialRange?.second ?: ""}")
                                 .header("If-Range", etag!!).header("Accept-Encoding", "identity").build()
                             response = acquire(request)
+                            if (!response.isSuccessful) {
+                                val failure = YlHttpStatusException(response.code)
+                                response.close(); throw failure
+                            }
                             if (delivered > 0) {
                                 val range = contentRange(response)
                                 if (response.code != 206 || response.header("ETag") != etag || range?.first != offset || range.third != total ||

@@ -9,6 +9,41 @@ import kotlin.test.*
 import okio.buffer
 
 class YlManagedRedirectInterceptorTest {
+    @Test fun `logs retain real upstream statuses across managed retries without exposing request data`() {
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setResponseCode(503).setBody("secret body"))
+            server.enqueue(MockResponse().setResponseCode(404).setBody("private body"))
+            val lines = mutableListOf<String>()
+            val client = YlManagedHttpClient(YlOriginCredentialPolicy(server.address("/"), emptyMap(), emptyMap()),
+                network(1), diagnostics = YlSafeDiagnostics(lines::add))
+            try {
+                client.newCall(Request.Builder().url(server.address("/secret?token=private")).build()).execute().use {
+                    assertEquals(404, it.code)
+                }
+                assertEquals(2, server.requestCount)
+                assertTrue(lines.any { it.contains("httpStatus=503") && it.contains("unavailable") })
+                assertTrue(lines.any { it.contains("httpStatus=404") && it.contains("not found") })
+                assertTrue(lines.none { it.contains("599") || it.contains("private") || it.contains("secret") })
+            } finally { client.close() }
+        }
+    }
+
+    @Test fun `redirect limit log includes the actual upstream redirect status`() {
+        MockWebServer().use { server ->
+            server.enqueue(MockResponse().setResponseCode(302).addHeader("Location", "/next"))
+            val lines = mutableListOf<String>()
+            val client = YlManagedHttpClient(YlOriginCredentialPolicy(server.address("/"), emptyMap(), emptyMap()),
+                network(0, 0), diagnostics = YlSafeDiagnostics(lines::add))
+            try {
+                val error = assertFailsWith<YlRedirectException> {
+                    client.newCall(Request.Builder().url(server.address("/")).build()).execute()
+                }
+                assertEquals("network.redirect_limit", YlFailureMapper(YlSafeDiagnostics {}).toMessage(error).code)
+                assertTrue(lines.single().contains("httpStatus=302"))
+            } finally { client.close() }
+        }
+    }
+
     private fun MockWebServer.address(path: String) = url(path).newBuilder().host("127.0.0.1").build()
     private fun network(retries: Int = 0, redirects: Int = 4, headers: Int = 500, body: Int = 150) = NetworkConfiguration(headers, body, retries, 0, 1000, redirects)
     private fun client(server: MockWebServer, managed: Boolean = true, config: NetworkConfiguration = network(), retries: (Int, Long) -> Unit = { _, _ -> }) =

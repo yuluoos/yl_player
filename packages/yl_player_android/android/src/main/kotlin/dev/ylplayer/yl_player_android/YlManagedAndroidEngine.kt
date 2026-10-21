@@ -67,7 +67,7 @@ internal class YlManagedAndroidEngine(
                 val activeOutput = output
                 if (activeOutput != null) scope.launch {
                     runCatching { switchToFallback(activeOutput) }
-                        .onFailure { callback?.invoke(identity, YlEngineEvent.Failed(failureKind(it))) }
+                        .onFailure { callback?.invoke(identity, YlEngineEvent.Failed(failureKind(it), it)) }
                 }
                 return@registerCallback
             }

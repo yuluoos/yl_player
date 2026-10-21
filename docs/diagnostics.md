@@ -23,7 +23,11 @@ or `internal`.
 | `source.invalid` / `source.missing` | Invalid source metadata or unavailable local source |
 | `network.failed` | Managed or platform network operation failed without a more specific structured classification |
 | `network.dns_failed` | A platform DNS error proved that the source host could not be resolved |
-| `network.http_forbidden` | The media server returned HTTP 403; check credentials and request configuration |
+| `network.http_forbidden` | The media server returned HTTP 403; the message includes HTTP 403 and access guidance |
+| `network.http_status.<status>` | Apple/Android upstream HTTP rejection, with the exact three-digit status (for example `network.http_status.404`) |
+| `network.read_timeout` / `network.connect_timeout` | Reading or connecting exceeded its deadline |
+| `network.tls_failed` | Structured TLS negotiation or certificate validation failure |
+| `network.connection_failed` / `network.connection_lost` / `network.offline` | Structured connection refusal, connection interruption, or unavailable network |
 | `container.unsupported` | No supported container route |
 | `decoder.unsupported` / `decoder.unavailable` | Unsupported media or unavailable required decoder |
 | `render.audio_engine_failed` | Apple native audio output could not start or became invalid; check the output device and reload the media |
@@ -46,10 +50,39 @@ is not retryable. These codes refine failures that previously appeared as
 DNS classification requires a bounded native cause chain containing
 `UnknownHostException` on Android or an `NSURLErrorDomain` DNS/host lookup code
 on Apple. HTTP 403 classification requires the structured response status.
-Messages and diagnostic strings are never parsed to infer either code. Other
-I/O, HTTP statuses, and unknown failures keep their existing conservative
-classification. This phase does not classify every network, decoder, container,
-render, DRM, subtitle, or external-device failure.
+Messages and diagnostic strings are never parsed to infer a cause. Apple and
+Android HTTP responses use `network.http_status.<status>`;
+403 retains `network.http_forbidden`. Public boundaries accept only canonical
+status values from 100 through 599 and regenerate fixed messages. Response
+bodies, server reason phrases and arbitrary native prose remain private.
+Transport failures without an HTTP response use a structured transport code,
+or `network.request` (Apple) / `network.failed` (Android) when the transport cause is unknown.
+
+The Apple HLS/DASH loader and media proxy log upstream failures with
+`httpStatus`, `code`, a safe reason and a request-log `diagnosticId` (separate
+from the final playback failure ID). `httpStatus=none` means
+no HTTP response was received. Proxy-generated 502 is not reported as an
+upstream HTTP status. The loader keeps at most 16 unresolved resource failures
+for its playback item. A successful request for the same resource clears the
+old failure, and cancellation clears the item history and rejects late callbacks.
+An AVPlayer network/source failure uses this evidence; explicit decoder and
+container failures retain their own diagnosis. HTTP error response bodies still
+complete normally through the proxy. Retry budgets are unchanged; public
+retryability follows the classified failure code. Managed retry exhaustion
+retains its existing code, with the attempted HTTP
+status recorded in the native attempt log.
+
+Android managed and default HTTP requests log failed attempts with the same
+safe `httpStatus`, `code`, `reason` and `diagnosticId` fields. Retry responses
+record the actual upstream status after restoring any internal transport
+sentinel. Body-read failures also record the response status when available.
+Attempt IDs are separate from the final command/session failure ID.
+Media3 errors keep their cause through decoder readiness and session publication;
+FFmpeg byte sources retain read/seek failures across JNI exception clearing.
+Successful byte reads clear retained evidence. HTTP 401/404/429/5xx, DNS,
+connection/header deadline, read timeout, TLS, connection refusal/interruption,
+and redirect-limit failures receive specific safe diagnoses when supported by
+structured evidence. Retry and redirect budgets remain unchanged.
 
 `message` is safe user-facing text supplied at the public boundary. Native
 adapters replace untrusted native text with package-owned fixed wording. Known
@@ -70,7 +103,8 @@ try {
   final failure = error.failure;
   logger.warning(
     'playback code=${failure.code} category=${failure.category.name} '
-    'scope=${failure.scope.name} diagnostic=${failure.diagnosticId}',
+    'scope=${failure.scope.name} diagnostic=${failure.diagnosticId} '
+    'reason=${failure.message}',
   );
 }
 ```

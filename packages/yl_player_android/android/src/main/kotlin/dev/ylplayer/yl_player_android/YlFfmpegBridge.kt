@@ -48,9 +48,12 @@ internal class YlFfmpegSession private constructor(
         YlFfmpegBridge.nativeConfigureSoftwareAudio(handle, streamIndex)
 
     fun readPacket(): YlNativePacket? {
-        val metadata = YlFfmpegBridge.nativeReadPacket(handle) ?: return null
+        val metadata = YlFfmpegBridge.nativeReadPacket(handle) ?: run {
+            throwSourceFailure()
+            return null
+        }
         if (metadata[0] == -2L) throw YlBoundaryException(YlFailureKind.RESOURCE_EXHAUSTED)
-        if (metadata[0] < 0) throw YlBoundaryException(YlFailureKind.NETWORK_FAILED)
+        if (metadata[0] < 0) throw YlBoundaryException(YlFailureKind.NETWORK_FAILED, source.lastFailure)
         if (metadata.size != 6 || metadata[5] !in 1..Int.MAX_VALUE.toLong()) throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         val ownership = software?.budget?.reservePacket(metadata[5].toInt())
         try {
@@ -82,7 +85,12 @@ internal class YlFfmpegSession private constructor(
         return YlNativePcmChunk(YlFfmpegBridge.nativeTakePcmData(handle), metadata[0].toInt(), metadata[1].toInt(), metadata[2])
     }
 
-    fun seekTo(positionUs: Long): Boolean = YlFfmpegBridge.nativeSeek(handle, positionUs)
+    private fun throwSourceFailure() {
+        source.lastFailure?.let { throw YlBoundaryException(YlFailureKind.NETWORK_FAILED, it) }
+    }
+    fun seekTo(positionUs: Long): Boolean = YlFfmpegBridge.nativeSeek(handle, positionUs).also {
+        if (!it) throwSourceFailure()
+    }
     fun flush() = YlFfmpegBridge.nativeFlush(handle)
     fun cancel() = source.cancel()
 
@@ -101,7 +109,9 @@ internal class YlFfmpegSession private constructor(
             if (!YlFfmpegBridge.available) throw YlBoundaryException(YlFailureKind.PLATFORM_UNAVAILABLE)
             val handle = YlFfmpegBridge.nativeOpen(source)
             if (handle == 0L) {
+                val failure = source.lastFailure
                 source.close()
+                failure?.let { throw YlBoundaryException(YlFailureKind.NETWORK_FAILED, it) }
                 throw YlBoundaryException(YlFailureKind.CONTAINER_UNSUPPORTED)
             }
             return try { YlFfmpegSession(handle, source) }

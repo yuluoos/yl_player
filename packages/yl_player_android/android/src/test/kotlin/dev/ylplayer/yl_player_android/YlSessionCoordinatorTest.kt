@@ -7,6 +7,34 @@ import kotlin.test.*
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlSessionCoordinatorTest {
+    @Test fun `upstream status survives committed failure and stale failure cannot overwrite replacement`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        f.coordinator.load(request("first"))
+        val first = f.engines.single()
+        first.emit(YlEngineEvent.Failed(YlFailureKind.NETWORK_FAILED, YlHttpStatusException(404)))
+        assertEquals("network.http_status.404", f.coordinator.initialState.failure?.code)
+        assertEquals("network.http_status.404", f.events.failures.single().failure.code)
+        val replacement = f.coordinator.load(request("replacement"))
+        first.emit(YlEngineEvent.Failed(YlFailureKind.NETWORK_FAILED, YlHttpStatusException(503)))
+        assertEquals(replacement.sessionId, f.coordinator.initialState.sessionId)
+        assertNull(f.coordinator.initialState.failure)
+        assertEquals(1, f.events.failures.size)
+        f.finish()
+    }
+
+    @Test fun `candidate upstream failure preserves HTTP cause and former session`() = runTest {
+        val f = SessionFixture(StandardTestDispatcher(testScheduler))
+        val old = f.coordinator.load(request("one"))
+        f.next = FakeSessionEngine().apply {
+            onActivate = { emit(YlEngineEvent.Failed(YlFailureKind.NETWORK_FAILED, YlHttpStatusException(503))) }
+        }
+        val error = assertFailsWith<YlBoundaryException> { f.coordinator.load(request("two")) }
+        assertEquals("network.http_status.503", YlFailureMapper(YlSafeDiagnostics {}).toMessage(error).code)
+        assertEquals(old.sessionId, f.events.states.last().sessionId)
+        assertTrue(f.events.failures.isEmpty())
+        f.finish()
+    }
+
     @Test fun `candidate traffic arrives before commit and old candidate cannot publish after stop`() = runTest {
         val f = SessionFixture(StandardTestDispatcher(testScheduler))
         val held = FakeSessionEngine().apply { preparation = CompletableDeferred() }

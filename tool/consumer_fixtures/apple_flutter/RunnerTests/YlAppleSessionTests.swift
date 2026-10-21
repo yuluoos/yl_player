@@ -1533,7 +1533,10 @@ final class YlObservabilityBoundaryTests: XCTestCase {
     let proxyBody = String(data: YlHlsMediaProxy.badGatewayBody(
       NSError(domain: "https://media.test/private?token=SECRET", code: 7,
         userInfo: [NSLocalizedDescriptionKey: "Authorization: Bearer SECRET"])), encoding: .utf8)
-    XCTAssertEqual(proxyBody, "Playback operation failed.")
+    XCTAssertEqual(proxyBody, "network.request: The media request failed before a usable response was received.")
+    let timedOut = String(data: YlHlsMediaProxy.badGatewayBody(URLError(.timedOut)), encoding: .utf8)!
+    XCTAssertTrue(timedOut.contains("network.read_timeout"))
+    XCTAssertTrue(timedOut.contains("timed out"))
   }
   func testRepeatedSafeCommandMappingPreservesClassificationWithoutRawForwarding() {
     let error = NativePlayerError(category: "cancelled", code: "session.stale", message: "SECRET")

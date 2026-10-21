@@ -411,6 +411,7 @@ public final class YlNetworkByteSource: NSObject, YlByteSource {
   }
 
   public static func transportError(_ error: Error) -> NativePlayerError {
+    if let native = error as? NativePlayerError { return native }
     let chain = boundedNSErrorChain(error)
     if let cancellation = chain.first(where: {
       $0.domain == NSURLErrorDomain && $0.code == NSURLErrorCancelled
@@ -432,13 +433,22 @@ public final class YlNetworkByteSource: NSObject, YlByteSource {
         diagnostic: "transport.\(urlError.code)"
       )
     }
-    let value = error as NSError
-    return NativePlayerError(
-      category: "network",
-      code: "network.http_status",
+    let urlError = chain.first { $0.domain == NSURLErrorDomain }
+    let code: String
+    switch urlError?.code {
+    case NSURLErrorTimedOut: code = "network.read_timeout"
+    case NSURLErrorSecureConnectionFailed, NSURLErrorServerCertificateHasBadDate,
+         NSURLErrorServerCertificateUntrusted, NSURLErrorServerCertificateHasUnknownRoot,
+         NSURLErrorServerCertificateNotYetValid, NSURLErrorClientCertificateRejected,
+         NSURLErrorClientCertificateRequired: code = "network.tls_failed"
+    case NSURLErrorCannotConnectToHost: code = "network.connection_failed"
+    case NSURLErrorNetworkConnectionLost: code = "network.connection_lost"
+    case NSURLErrorNotConnectedToInternet: code = "network.offline"
+    default: code = "network.request"
+    }
+    return NativePlayerError(category: "network", code: code,
       message: "The network media request failed.",
-      diagnostic: "transport.\(value.code)"
-    )
+      diagnostic: urlError.map { "transport.\($0.code)" })
   }
 
   private static func boundedNSErrorChain(_ error: Error, limit: Int = 8) -> [NSError] {
@@ -475,12 +485,8 @@ extension YlNetworkByteSource: URLSessionDataDelegate, URLSessionTaskDelegate {
 
   private func receiveResponse(_ response: HTTPURLResponse, identifier: Int) -> Bool {
     if YlNetworkRequestPolicy.isRetryableStatus(response.statusCode) {
-      let error = NativePlayerError(
-        category: "network",
-        code: "network.http_status",
-        message: "The server returned a retryable HTTP status.",
-        diagnostic: "HTTP \(response.statusCode)"
-      )
+      let error = YlHTTPFailure.error(status: response.statusCode)
+      NSLog("YlPlayer upstream code=%@ reason=%@", error.code, error.message)
       handleAttemptFailure(error, transient: true, taskIdentifier: identifier,
         retryAfter: response.value(forHTTPHeaderField: "Retry-After"))
       return false

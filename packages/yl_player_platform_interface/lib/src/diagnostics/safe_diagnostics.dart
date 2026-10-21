@@ -5,7 +5,39 @@ abstract final class YlSafeDiagnostics {
   static const _fallbackMessage = 'Playback operation failed.';
 
   /// Fixed public guidance for recognized codes, never native error prose.
-  static String messageForCode(String code) => switch (code) {
+  static String? _httpMessage(String code) {
+    final statusText = code.startsWith('network.http_status.')
+        ? code.substring('network.http_status.'.length)
+        : '';
+    final status = int.tryParse(statusText);
+    if (status != null &&
+        status >= 100 &&
+        status <= 599 &&
+        statusText == '$status') {
+      final reason = switch (status) {
+        401 =>
+          'The media server requires authentication. Check access credentials.',
+        403 =>
+          'The media server refused the request. Check access credentials and request configuration.',
+        404 => 'The requested media resource was not found.',
+        408 => 'The media server timed out waiting for the request.',
+        410 => 'The requested media resource is no longer available.',
+        416 => 'The media server rejected the requested byte range.',
+        429 => 'Too many requests. Wait before retrying.',
+        >= 500 =>
+          'The upstream media service is unavailable or failed to complete the request.',
+        >= 300 && < 400 => 'The media redirect could not be followed.',
+        _ => 'The media server returned an unexpected HTTP response.',
+      };
+      return 'HTTP $status: $reason';
+    }
+    return null;
+  }
+
+  static String messageForCode(String code) =>
+      _httpMessage(code) ?? _fixedMessageForCode(code);
+
+  static String _fixedMessageForCode(String code) => switch (code) {
     'airplay.delivery_unavailable' =>
       'Custom AirPlay requires the yl_player_media_delivery plugin.',
     'airplay.unsupported_source' =>
@@ -120,7 +152,7 @@ abstract final class YlSafeDiagnostics {
     YlFailureCodes.networkDnsFailed =>
       'The media host could not be resolved. Check the network connection and source host configuration.',
     YlFailureCodes.networkHttpForbidden =>
-      'The media server refused the request. Check access credentials and request configuration.',
+      'HTTP 403: The media server refused the request. Check access credentials and request configuration.',
     'network.retry_exhausted' =>
       'The configured network retry attempts were exhausted. Check the connection and try again.',
     YlFailureCodes.loadCancelled => 'The operation was cancelled.',
@@ -134,6 +166,25 @@ abstract final class YlSafeDiagnostics {
       'The source cannot satisfy the requested video constraints. Choose compatible limits or another source.',
     YlFailureCodes.policyUnsupported =>
       'The requested playback policy is unsupported. Check the playback configuration.',
+    'network.connect_timeout' =>
+      'The connection to the media server timed out.',
+    'network.read_timeout' => 'The media request timed out while reading.',
+    'network.tls_failed' =>
+      'The secure media connection failed. Check the server certificate and TLS configuration.',
+    'network.connection_failed' =>
+      'The connection to the media server could not be established.',
+    'network.connection_lost' =>
+      'The connection to the media server was interrupted.',
+    'network.offline' =>
+      'The network is unavailable. Check the internet connection.',
+    'network.redirect_limit' =>
+      'The media request exceeded the configured redirect limit.',
+    'network.request' || 'network.failed' =>
+      'The media request failed before a usable response was received.',
+    'network.http_status' =>
+      'The media server returned an unexpected HTTP response; its status is unavailable.',
+    'network.response_invalid' =>
+      'The media server returned an invalid response.',
     _ => _fallbackMessage,
   };
   static const _redactedCredential = '<redacted-credential>';

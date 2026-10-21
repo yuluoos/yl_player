@@ -17,6 +17,48 @@ final _nativeOperations = YlPlayerOperation.values
     .toList();
 
 void main() {
+  test('upstream HTTP status and reason survive the public codec', () {
+    for (final entry in {
+      401: 'authentication',
+      404: 'not found',
+      429: 'Too many',
+      503: 'unavailable',
+    }.entries) {
+      final wire = AppleFailureMessage(
+        category: AppleFailureCategory.network,
+        code: 'network.http_status.${entry.key}',
+        message: 'SECRET upstream body',
+        retryable: false,
+        scope: AppleFailureScope.session,
+        diagnosticId: 'http-test',
+      );
+      final failure = AppleCodec.exception(
+        PlatformException(code: wire.code, details: wire),
+      ).failure;
+      expect(failure.message, contains('HTTP ${entry.key}'));
+      expect(
+        failure.message.toLowerCase(),
+        contains(entry.value.toLowerCase()),
+      );
+      expect(failure.message, isNot(contains('SECRET')));
+    }
+    expect(
+      YlSafeDiagnostics.messageForCode('network.http_status.404.SECRET'),
+      isNot(contains('SECRET')),
+    );
+    for (final code in [
+      'network.dns_failed',
+      'network.read_timeout',
+      'network.tls_failed',
+      'network.connection_failed',
+    ]) {
+      expect(
+        YlSafeDiagnostics.messageForCode(code),
+        isNot('Playback operation failed.'),
+      );
+    }
+  });
+
   test('native capabilities do not advertise Dart-only subtitle commands', () {
     final capabilities = AppleCodec.capabilities(wireCreate().capabilities);
     expect(
@@ -630,7 +672,10 @@ void main() {
     'failure prose is fixed and transport errors never expose native details',
     () {
       final failure = AppleCodec.failure(wireFailure());
-      expect(failure.message, 'Playback operation failed.');
+      expect(
+        failure.message,
+        'The media request failed before a usable response was received.',
+      );
       expect(failure.diagnosticId, 'apple-network-1');
       final unsafe = wireFailure()
         ..code = 'https://media.test/a'

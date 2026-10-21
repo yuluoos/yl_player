@@ -86,7 +86,7 @@ internal sealed interface YlEngineEvent {
     data class Snapshot(val value: YlEngineSnapshot) : YlEngineEvent
     data class Tick(val timeline: AndroidTimelineMessage, val metrics: AndroidMetricsMessage) : YlEngineEvent
     data class FirstFrame(val output: YlOutputIdentity, val occurredAtMs: Long) : YlEngineEvent
-    data class Failed(val kind: YlFailureKind) : YlEngineEvent
+    data class Failed(val kind: YlFailureKind, val cause: Throwable? = null) : YlEngineEvent
     data class Retry(val index: Long, val delayMs: Long, val occurredAtMs: Long) : YlEngineEvent
     data class BackendChanged(val previous: AndroidEngine, val current: AndroidEngine, val occurredAtMs: Long) : YlEngineEvent
 }

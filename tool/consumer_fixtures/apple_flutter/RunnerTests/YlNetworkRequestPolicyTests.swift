@@ -293,8 +293,15 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
       )
     }
     XCTAssertEqual(received.code, "network.http_forbidden")
-    XCTAssertEqual(received.message, "The media server refused the request. Check access credentials and request configuration.")
+    XCTAssertEqual(received.message, "HTTP 403: The media server refused the request. Check access credentials and request configuration.")
     XCTAssertEqual(received.diagnostic, "HTTP 403 network.request")
+    for status in [401, 404, 429, 503] {
+      let failure = error { try policy.validate(response: response(status: status), requestedOffset: 0) }
+      XCTAssertEqual(failure.code, "network.http_status.\(status)")
+      let published = YlAppleSafeDiagnostics.failure(failure, scope: .session)
+      XCTAssertTrue(published.message.contains("HTTP \(status)"))
+      XCTAssertFalse(published.message.contains("secret"))
+    }
   }
   func testReturnOriginAndRetryDoNotRestoreStrippedCredentials() throws {
     let policy = makePolicy(headers: ["aUtHoRiZaTiOn": "private", "User-Agent": "visible"])

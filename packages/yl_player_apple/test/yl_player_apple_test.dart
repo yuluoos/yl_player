@@ -396,7 +396,7 @@ void main() {
               .having(
                 (e) => e.failure.message,
                 'message',
-                'Playback operation failed.',
+                'The media request failed before a usable response was received.',
               )
               .having(
                 (e) => e.failure.diagnosticId,

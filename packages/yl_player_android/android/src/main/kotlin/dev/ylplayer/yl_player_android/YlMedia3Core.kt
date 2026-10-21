@@ -42,6 +42,7 @@ internal class YlMedia3Core(
     // Entire class, including construction, lives on the owned engine application Looper.
     private val acknowledgement = YlMedia3Acknowledgement()
     private var lastFailure: YlFailureKind? = null
+    private var lastFailureCause: Throwable? = null
     private val lifecycle = YlLifecycleCoordinator()
     private val deviceProfile = YlAndroidDeviceProfile.collect(context)
     private val trackSelector = YlFixedVideoTrackSelector(context)
@@ -290,7 +291,7 @@ internal class YlMedia3Core(
         syncRtmpDemand()
         activate()
     }
-    fun ensureHealthy() { lastFailure?.let { throw YlBoundaryException(it) } }
+    fun ensureHealthy() { lastFailure?.let { throw YlBoundaryException(it, lastFailureCause) } }
     private fun attachSurface(surface: Surface) = outputOperation { exoPlayer.setVideoSurface(surface) }
     private fun clearSurface(surface: Surface) = outputOperation { exoPlayer.clearVideoSurface(surface) }
     private fun outputOperation(action: () -> Unit) {
@@ -827,9 +828,10 @@ internal class YlMedia3Core(
         if (rtmp && tryRtmpRecovery(error)) return
         if (tryDecoderRecovery(error)) return
         status = "error"
+        lastFailureCause = error
         lastFailure = mediaFailure(error, decoderPolicy)
         currentError = lastFailure
-        emit(YlEngineEvent.Failed(lastFailure!!))
+        emit(YlEngineEvent.Failed(lastFailure!!, error))
         emitState()
     }
 
@@ -863,7 +865,7 @@ internal class YlMedia3Core(
         if (!rtmpRecovery.canRecover(typed.kind, typed.transient)) return false
         cancelRtmpWork()
         sourceFactory.cancelAll()
-        status = "buffering"; currentError = null; lastFailure = null
+        status = "buffering"; currentError = null; lastFailure = null; lastFailureCause = null
         rtmpPendingFailure = typed
         syncRtmpDemand()
         return true
@@ -927,7 +929,7 @@ internal class YlMedia3Core(
         decoderAttemptStartedAtMs = Long.MAX_VALUE
         decoderName = null; isHardwareDecoding = false
         firstFrameRendered = false; hasBeenReady = false
-        currentError = null; lastFailure = null; status = "opening"
+        currentError = null; lastFailure = null; lastFailureCause = null; status = "opening"
         audioTracks = emptyList()
         dashContentTracks = null
         if (videoSelection.quality == null) videoTracks = emptyList()

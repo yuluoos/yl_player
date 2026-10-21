@@ -53,7 +53,7 @@ internal class YlSessionCoordinator(
     private var pendingIdentity: YlSessionIdentity? = null
     private var candidateEngine: YlPlaybackEngineAdapter? = null
     private var candidateSnapshot: YlEngineSnapshot? = null
-    private var candidateFailure: YlFailureKind? = null
+    private var candidateFailure: YlBoundaryException? = null
     private var stopping = false
     private var candidateFrame: YlEngineEvent.FirstFrame? = null
     private var candidateBackend: YlEngineEvent.BackendChanged? = null
@@ -279,7 +279,7 @@ internal class YlSessionCoordinator(
                     }
                     leases.acquire(participant, activeLease?.takeIf { it.suspended == null }) {
                         engine.prepare()
-                        candidateFailure?.let { throw YlBoundaryException(it) }
+                        candidateFailure?.let { throw it }
                         checkGeneration(token)
                     }
                     AndroidLoadReply(identity.loadRequestId, identity.sessionId, engine.protectedSurface?.wire())
@@ -464,12 +464,12 @@ internal class YlSessionCoordinator(
             // Player volume can change while codec initialization is suspended.
             session.engine.setVolume(effectiveVolume())
             if (restore != null) applyLateSelections(selectionAtRestore)
-            candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw YlBoundaryException(it) }
+            candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw it }
             if (closed || backgrounded || stopping) throw CancellationException()
         }
         override fun commitLease() {
             if (closed || backgrounded || stopping) throw CancellationException()
-            candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw YlBoundaryException(it) }
+            candidateFailure?.takeIf { pendingIdentity == session.identity }?.let { throw it }
             // Linearization: all fallible validation precedes this point. The installed event
             // ingress only enqueues; asynchronous callback failure closes the host, not rollback.
             leaseCommitVersion++
@@ -524,7 +524,7 @@ internal class YlSessionCoordinator(
             when (event) {
                 is YlEngineEvent.Snapshot -> candidateSnapshot = event.value
                 is YlEngineEvent.FirstFrame -> if (event.output == (candidateEngine?.presentationIdentity ?: output.identity)) candidateFrame = event
-                is YlEngineEvent.Failed -> candidateFailure = event.kind
+                is YlEngineEvent.Failed -> candidateFailure = YlBoundaryException(event.kind, event.cause)
                 is YlEngineEvent.Retry -> candidateRetries += event
                 is YlEngineEvent.BackendChanged -> candidateBackend = event
                 else -> Unit
@@ -546,7 +546,7 @@ internal class YlSessionCoordinator(
                 reducer.updateOutput(event.output)
                 reducer.firstFrame(event.output, event.occurredAtMs)
             }
-            is YlEngineEvent.Failed -> { releaseAudio(); reducer.fail(event.kind) }
+            is YlEngineEvent.Failed -> { releaseAudio(); reducer.fail(event.kind, event.cause) }
             is YlEngineEvent.Retry -> reducer.retry(event)
             is YlEngineEvent.BackendChanged -> reducer.engineChanged(event)
         }

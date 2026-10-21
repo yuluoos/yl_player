@@ -1091,7 +1091,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       statusCode: log?.statusCode,
       uri: log?.uri
     )
-    let details = NativePlayerError(
+    // A decoder/container diagnosis must not be replaced by an unrelated
+    // parallel resource failure. Loader state belongs to this item generation.
+    let upstreamFailure = ["network", "source"].contains(category) ? hlsResourceLoader?.upstreamFailure : nil
+    let transportFailure = category == "network" ? error.map { YlNetworkByteSource.transportError($0) } : nil
+    let details = upstreamFailure ?? transportFailure ?? NativePlayerError(
       category: category,
       code: error.map { "avplayer.\($0.code)" } ?? "avplayer.failed",
       message: "AVPlayer playback failed.",

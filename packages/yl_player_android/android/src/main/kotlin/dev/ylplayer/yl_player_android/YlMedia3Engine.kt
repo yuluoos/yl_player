@@ -100,7 +100,7 @@ internal class YlMedia3Engine(
         // Immutable value is captured on the worker; no mutable latest session ID is consulted.
         when (event) {
             is YlEngineEvent.Snapshot -> decoderGate.accept(event.value)
-            is YlEngineEvent.Failed -> decoderGate.fail(event.kind)
+            is YlEngineEvent.Failed -> decoderGate.fail(event.kind, event.cause)
             else -> Unit
         }
         val epoch = core?.mediaEpoch

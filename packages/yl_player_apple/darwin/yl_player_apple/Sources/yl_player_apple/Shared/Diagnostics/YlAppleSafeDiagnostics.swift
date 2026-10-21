@@ -14,10 +14,11 @@ enum YlAppleSafeDiagnostics {
     let pigeon = error as? PigeonError
     let previous = pigeon?.details as? AppleFailureMessage
     let code = native?.code ?? pigeon?.code ?? "platform.failure"
-    let safeCode = publicCodes.contains(code) || YlFairPlayFailure.codes.contains(code) || code.range(of: "^avplayer\\.-?[0-9]{1,20}$", options: .regularExpression) != nil
+    let httpStatus = YlHTTPFailure.status(from: code)
+    let safeCode = httpStatus != nil || publicCodes.contains(code) || YlFairPlayFailure.codes.contains(code) || code.range(of: "^avplayer\\.-?[0-9]{1,20}$", options: .regularExpression) != nil
       ? code : "platform.failure"
     return .init(category: native.map { YlAppleFailureMapper.category($0.category) } ?? previous?.category ?? .internalFailure,
-      code: safeCode, message: publicMessages[safeCode] ?? YlFairPlayFailure.messages[safeCode] ?? "Playback failed for an unknown reason.",
+      code: safeCode, message: httpStatus.map { YlHTTPFailure.message(status: $0) } ?? publicMessages[safeCode] ?? YlFairPlayFailure.messages[safeCode] ?? "Playback failed for an unknown reason.",
       retryable: retryableCodes.contains(safeCode),
       scope: scope, diagnosticId: identifier())
   }
@@ -95,6 +96,7 @@ enum YlAppleSafeDiagnostics {
     "ios.audio_session_failed",
     "network.rtmp_handshake_failed", "network.rtmp_disconnected", "network.rtmp_stream_unavailable", "network.rtmp_tls_failed",
     "container.rtmp_track_layout_changed",
+    "network.tls_failed", "network.connection_failed", "network.connection_lost", "network.offline",
     "network.cancelled",
     "network.configuration",
     "network.connect_timeout",
@@ -148,6 +150,14 @@ enum YlAppleSafeDiagnostics {
     "network.dns_failed", "network.connect_timeout", "network.read_timeout",
   ]
   private static let publicMessages: [String: String] = [
+    "network.tls_failed": "The secure media connection failed. Check the server certificate and TLS configuration.",
+    "network.connection_failed": "The connection to the media server could not be established.",
+    "network.connection_lost": "The connection to the media server was interrupted.",
+    "network.offline": "The network is unavailable. Check the internet connection.",
+    "network.request": "The media request failed before a usable response was received.",
+    "network.http_status": "The media server returned an unexpected HTTP response; its status is unavailable.",
+    "network.response_invalid": "The media server returned an invalid response.",
+    "network.redirect_limit": "The media request exceeded the configured redirect limit.",
     "airplay.delivery_unavailable": "Custom AirPlay requires the yl_player_media_delivery plugin.",
     "airplay.unsupported_source": "AirPlay requires a supported unprotected file, HTTP source or RTMP live stream.",
     "airplay.unsupported_codec": "AirPlay remux requires H.264 video and mono or stereo AAC-LC audio.",

@@ -27,10 +27,29 @@ import okio.BufferedSource
 /** Synchronous custom-AVIO reads/seeks/close belong to the owned demux worker.
  * Cancellation may arrive from the UI caller and must not drain a response body. */
 internal interface YlNativeByteSource : Closeable {
+    val lastFailure: Throwable? get() = null
     fun read(target: ByteBuffer): Int
     fun seek(offset: Long, whence: Int): Long
     fun seekTime(positionUs: Long): Long = -3
     fun cancel()
+}
+
+/** JNI clears Java exceptions while reporting AVIO errors. Retain the bounded
+ * last operation failure so the owned demux worker can publish its real cause. */
+internal class YlFailureRecordingByteSource(private val source: YlNativeByteSource) : YlNativeByteSource by source {
+    @Volatile override var lastFailure: Throwable? = null
+        private set
+    private fun <T> observe(operation: () -> T): T = try {
+        operation()
+    } catch (error: Throwable) {
+        lastFailure = error
+        throw error
+    }
+    override fun read(target: ByteBuffer): Int = observe { source.read(target) }.also {
+        if (it > 0) lastFailure = null
+    }
+    override fun seek(offset: Long, whence: Int): Long = observe { source.seek(offset, whence) }
+    override fun seekTime(positionUs: Long): Long = observe { source.seekTime(positionUs) }
 }
 
 internal object YlNativeByteSourceFactory {
@@ -60,11 +79,11 @@ internal object YlNativeByteSourceFactory {
             createMedia3Configuration(source, options, defaultNativePlayerOptions()).network
         }
         val http = YlManagedHttpClient(credentials, network, onRetry = onRetry, networkBytes = networkBytes)
-        return if (source.format == AndroidMediaFormat.HLS || origin.encodedPath.lowercase().endsWith(".m3u8")) {
+        return YlFailureRecordingByteSource(if (source.format == AndroidMediaFormat.HLS || origin.encodedPath.lowercase().endsWith(".m3u8")) {
             YlHlsByteSource(source.locator, http, credentials)
         } else {
             YlHttpRangeByteSource(source.locator, http, credentials)
-        }
+        })
     }
 
     private fun defaultNativePlayerOptions() = dev.ylplayer.yl_player_android.pigeon.AndroidPlayerOptionsMessage(
@@ -151,6 +170,7 @@ private class YlHttpRangeByteSource(
         val next = calls.newCall(request).execute()
         if (!next.isSuccessful || (position > 0 && next.code != 206)) {
             next.close()
+            if (!next.isSuccessful) throw YlHttpStatusException(next.code)
             throw IOException("HTTP byte source rejected range")
         }
         response = next
@@ -282,7 +302,7 @@ private class YlHlsByteSource(
             range?.let { header("Range", "bytes=${it.offset}-${it.offset + it.length - 1}") }
         }.build(), credentials.isStripped(url))
         return calls.newCall(request).execute().use { response ->
-            if (!response.isSuccessful) throw IOException("HLS resource failed")
+            if (!response.isSuccessful) throw YlHttpStatusException(response.code)
             val body = response.body ?: throw EOFException("HLS resource has no body")
             if (body.contentLength() > MAX_HLS_RESOURCE_BYTES) {
                 throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)

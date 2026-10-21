@@ -53,7 +53,7 @@ void main() {
     'network.dns_failed':
         'The media host could not be resolved. Check the network connection and source host configuration.',
     'network.http_forbidden':
-        'The media server refused the request. Check access credentials and request configuration.',
+        'HTTP 403: The media server refused the request. Check access credentials and request configuration.',
     'network.retry_exhausted':
         'The configured network retry attempts were exhausted. Check the connection and try again.',
     'load.cancelled': 'The operation was cancelled.',

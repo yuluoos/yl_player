@@ -341,7 +341,7 @@ final class YlHlsResourceLoaderTests: XCTestCase {
       wait(for: [finished], timeout: 2)
       XCTAssertEqual(
         request.error?.code,
-        scenario == "http" ? "network.http_status" : "container.hls_manifest_invalid"
+        scenario == "http" ? "network.http_forbidden" : "container.hls_manifest_invalid"
       )
       XCTAssertEqual(request.finishCount, 1)
     }

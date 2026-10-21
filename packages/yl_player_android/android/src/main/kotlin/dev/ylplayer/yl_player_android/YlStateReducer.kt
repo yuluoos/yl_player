@@ -81,11 +81,11 @@ internal class YlStateReducer(
         sentFrame = true
         events?.onFirstFrame(AndroidFirstFrameMessage(id, revision, ++sequence, occurredAtMs))
     }
-    fun fail(kind: YlFailureKind) {
+    fun fail(kind: YlFailureKind, cause: Throwable? = null) {
         val id = state.sessionId ?: return
         if (terminal) return
         terminal = true
-        val failure = failures.toMessage(YlBoundaryException(kind), AndroidFailureScope.SESSION)
+        val failure = failures.toMessage(YlBoundaryException(kind, cause), AndroidFailureScope.SESSION)
         publish(state.copy(status = AndroidPlaybackStatus.FAILED, failure = failure))
         events?.onPlaybackFailed(AndroidPlaybackFailedMessage(id, revision, ++sequence, clockMs(), failure))
     }

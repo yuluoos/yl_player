@@ -10,6 +10,48 @@ import kotlin.test.*
 import java.nio.ByteBuffer
 
 class YlNativeByteSourceCancellationTest {
+    @Test fun failedAvioReadRetainsCauseAcrossSeekAndClearsAfterSuccessfulRead() {
+        var fails = true
+        val source = YlFailureRecordingByteSource(object : YlNativeByteSource {
+            override fun read(target: ByteBuffer): Int {
+                if (fails) throw YlHttpStatusException(403)
+                target.put(1.toByte()); return 1
+            }
+            override fun seek(offset: Long, whence: Int) = -3L
+            override fun cancel() {}
+            override fun close() {}
+        })
+        assertFailsWith<YlHttpStatusException> { source.read(ByteBuffer.allocate(1)) }
+        source.seek(0, 0)
+        assertEquals("network.http_forbidden", YlFailureMapper(YlSafeDiagnostics {}).toMessage(assertNotNull(source.lastFailure)).code)
+        fails = false
+        assertEquals(1, source.read(ByteBuffer.allocate(1)))
+        assertNull(source.lastFailure)
+        source.close()
+    }
+
+    @Test fun realRangeAndHlsSourcesRetainUpstreamStatusForAvio() {
+        for (className in listOf("YlHttpRangeByteSource", "YlHlsByteSource")) {
+            okhttp3.mockwebserver.MockWebServer().use { server ->
+                server.enqueue(okhttp3.mockwebserver.MockResponse().setResponseCode(404).setBody("secret"))
+                val url = server.url("/media").newBuilder().host("127.0.0.1").build()
+                val credentials = YlOriginCredentialPolicy(url, emptyMap(), emptyMap())
+                val calls = YlManagedHttpClient(credentials, null)
+                val type = Class.forName("dev.ylplayer.yl_player_android.$className")
+                val raw = type.declaredConstructors.single().apply { isAccessible = true }
+                    .newInstance(url.toString(), calls, credentials) as YlNativeByteSource
+                val source = YlFailureRecordingByteSource(raw)
+                try {
+                    assertFailsWith<YlHttpStatusException> { source.read(ByteBuffer.allocate(1)) }
+                    val failure = YlFailureMapper(YlSafeDiagnostics {}).toMessage(assertNotNull(source.lastFailure))
+                    assertEquals("network.http_status.404", failure.code)
+                    assertTrue(failure.message.contains("not found"))
+                    assertFalse(failure.message.contains("secret"))
+                } finally { source.close() }
+            }
+        }
+    }
+
     @Test fun cancellationDoesNotCloseTheResponseOnTheCallingThread() {
         val url="http://127.0.0.1/media.flv".toHttpUrl()
         val credentials=YlOriginCredentialPolicy(url,emptyMap(),emptyMap())

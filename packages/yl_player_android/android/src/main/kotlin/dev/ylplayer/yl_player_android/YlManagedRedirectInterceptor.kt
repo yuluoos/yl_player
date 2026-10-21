@@ -11,7 +11,7 @@ internal class YlManagedRedirectInterceptor(private val maxRedirects: Int, priva
         val location = response.header("Location") ?: return null
         val target = response.request.url.resolve(location) ?: throw ProtocolException("Invalid redirect")
         if (target.scheme !in listOf("http", "https")) throw ProtocolException("Invalid redirect")
-        if (followed >= maxRedirects) throw ProtocolException("Redirect limit")
+        if (followed >= maxRedirects) throw YlRedirectException(response.code)
         credentials.inherit(response.request.url, target)
         val builder = response.request.newBuilder().url(target)
         if (response.code in listOf(300,301,302,303) && response.request.method !in listOf("GET", "HEAD")) {
