@@ -61,7 +61,7 @@ internal class YlPlayerRegistry(
             )
             val reply = AndroidCreateReply(
                 schemaMajor = 7, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
-                implementationName = "yl_player_android", implementationVersion = "0.3.0-dev.3",
+                implementationName = "yl_player_android", implementationVersion = "0.3.0-dev.4",
                 capabilities = session.capabilities, initialState = session.initialState, drmSupport = drmSupport,
             )
             host.install()

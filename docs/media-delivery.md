@@ -21,8 +21,8 @@ HLS 转封装和本机 HTTP 交付已经迁入可选插件 `yl_player_media_deli
 
 ```yaml
 dependencies:
-  yl_player: ^0.3.0-dev.3
-  yl_player_media_delivery: ^0.3.0-dev.3
+  yl_player: ^0.3.0-dev.4
+  yl_player_media_delivery: ^0.3.0-dev.4
 ```
 
 完成依赖解析后重新构建宿主，Flutter 会注册原生交付服务。原有

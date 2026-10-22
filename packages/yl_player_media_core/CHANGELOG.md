@@ -1,3 +1,8 @@
+## 0.3.0-dev.4
+
+- Synchronize package versions and internal dependencies at 0.3.0-dev.4.
+- Preserve upstream HTTP status and typed native network failure details.
+
 ## 0.3.0-dev.3
 
 - Synchronize package versions and internal dependencies at 0.3.0-dev.3.

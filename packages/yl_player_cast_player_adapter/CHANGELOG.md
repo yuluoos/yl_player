@@ -1,3 +1,7 @@
+## 0.3.0-dev.4
+
+- Synchronize package versions and internal dependencies at 0.3.0-dev.4.
+
 ## 0.3.0-dev.3
 
 - Synchronize player, cast, and platform contract dependencies at 0.3.0-dev.3.

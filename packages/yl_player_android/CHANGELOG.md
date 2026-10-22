@@ -1,3 +1,9 @@
+## 0.3.0-dev.4
+
+- Synchronize package versions and internal dependencies at 0.3.0-dev.4.
+- Preserve upstream HTTP status and structured playback failure causes across
+  Media3 and managed/native fallback paths.
+
 ## 0.3.0-dev.3
 
 - Synchronize the platform contract dependency at 0.3.0-dev.3.

@@ -1,3 +1,9 @@
+## 0.3.0-dev.4
+
+- Synchronize package versions and internal dependencies at 0.3.0-dev.4.
+- Adopt the synchronized platform packages with improved upstream failure
+  diagnostics and Apple HEVC playback scheduling.
+
 ## 0.3.0-dev.3
 
 - Synchronize all player packages and internal dependencies at 0.3.0-dev.3.

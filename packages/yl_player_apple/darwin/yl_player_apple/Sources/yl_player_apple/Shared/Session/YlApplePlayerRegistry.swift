@@ -103,7 +103,7 @@ final class YlApplePlayerRegistry: ApplePlayerFactoryHostApi {
       return AppleCreateReply(schemaMajor: 7, spiMajor: 2, channelSuffix: suffix,
         textureId: services.textureOutput.textureId,
         platform: services.platform == .ios ? .ios : .macos,
-        implementationName: "yl_player_apple", implementationVersion: "0.3.0-dev.3",
+        implementationName: "yl_player_apple", implementationVersion: "0.3.0-dev.4",
         capabilities: Self.capabilities(YlBackendStateEncoder.deviceCapabilities, platform: services.platform),
         initialState: host.initialState,
         nativeViewType: (services.textureOutput as? YlNativeVideoSurfaceOutput)?.nativeViewType,

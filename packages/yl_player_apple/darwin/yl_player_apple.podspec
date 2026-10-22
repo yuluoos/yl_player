@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'yl_player_apple'
-  s.version          = '0.3.0-dev.3'
+  s.version          = '0.3.0-dev.4'
   s.summary          = 'Shared iOS and macOS implementation for yl_player.'
   s.description      = <<-DESC
 Shared Apple implementation for the yl_player Flutter playback kernel.

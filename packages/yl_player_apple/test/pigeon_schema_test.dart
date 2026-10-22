@@ -149,7 +149,7 @@ void main() {
       textureId: 42,
       platform: platform,
       implementationName: 'yl_player_apple',
-      implementationVersion: '0.3.0-dev.3',
+      implementationVersion: '0.3.0-dev.4',
       capabilities: capabilities,
       initialState: state,
       nativeViewType: platform == ApplePlatform.ios

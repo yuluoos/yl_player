@@ -1,3 +1,10 @@
+## 0.3.0-dev.4
+
+- Synchronize package versions and internal dependencies at 0.3.0-dev.4.
+- Prevent HEVC stalls and premature frame drops with bounded reorder headroom
+  and a larger iOS audio window; request 60 Hz display callbacks.
+- Preserve upstream HTTP status and playback failure causes in safe diagnostics.
+
 ## 0.3.0-dev.3
 
 - Synchronize package versions and internal dependencies at 0.3.0-dev.3.

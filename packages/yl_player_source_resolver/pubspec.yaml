@@ -1,6 +1,6 @@
 name: yl_player_source_resolver
 description: Optional bounded QuickJS source resolver for explicitly resolved player inputs.
-version: 0.3.0-dev.3
+version: 0.3.0-dev.4
 resolution: workspace
 homepage: https://pub.dev/packages/yl_player_source_resolver
 repository: https://github.com/yuluoos/yl_player
@@ -17,7 +17,7 @@ dependencies:
   hooks: ^2.0.2
   code_assets: ^1.2.1
   native_toolchain_c: ^0.19.2
-  yl_player_platform_interface: ^0.3.0-dev.3
+  yl_player_platform_interface: ^0.3.0-dev.4
 dev_dependencies:
   pointycastle: 3.9.1
   crypto: ^3.0.7
