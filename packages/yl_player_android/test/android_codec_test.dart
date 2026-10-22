@@ -17,14 +17,17 @@ final _nativeOperations = YlPlayerOperation.values
     .toList();
 
 void main() {
-  test('upstream status remains visible through the Android public boundary', () {
-    for (final status in [401, 404, 429, 503]) {
-      final wire = wireFailure()..code = 'network.http_status.$status';
-      final failure = AndroidCodec.failure(wire);
-      expect(failure.message, contains('HTTP $status'));
-      expect(failure.message, isNot(contains('secret')));
-    }
-  });
+  test(
+    'upstream status remains visible through the Android public boundary',
+    () {
+      for (final status in [401, 404, 429, 503]) {
+        final wire = wireFailure()..code = 'network.http_status.$status';
+        final failure = AndroidCodec.failure(wire);
+        expect(failure.message, contains('HTTP $status'));
+        expect(failure.message, isNot(contains('secret')));
+      }
+    },
+  );
 
   test('native capabilities do not advertise Dart-only subtitle commands', () {
     final capabilities = AndroidCodec.capabilities(wireCreate().capabilities);
