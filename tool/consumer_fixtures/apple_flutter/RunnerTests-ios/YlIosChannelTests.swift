@@ -15,6 +15,29 @@ final class YlIosChannelTests: XCTestCase {
   }
 
   @MainActor
+  func testDisplayDriverKeepsUpWithSixtyFpsVideo() async throws {
+    let registry = NativeRegistry()
+    let services = YlIosPlatformAdapter.makeServices(textures: registry)
+    defer { services.textureOutput.dispose() }
+    let ticks = expectation(description: "Display callbacks for 60 fps video")
+    ticks.expectedFulfillmentCount = 46
+    var times: [CFTimeInterval] = []
+    let driver = services.makeDisplayDriver {
+      guard times.count < 46 else { return }
+      times.append(CACurrentMediaTime())
+      ticks.fulfill()
+    }
+    defer { driver.invalidate() }
+    await fulfillment(of: [ticks], timeout: 4)
+    let intervals = zip(times.dropFirst(), times).map { $0 - $1 }.sorted()
+    guard !intervals.isEmpty else { return XCTFail("No display callbacks") }
+    // Ignore occasional host scheduling delays, but reject a persistent 30 Hz
+    // presentation cadence that discards due frames from 50/60 fps media.
+    XCTAssertLessThan(intervals[intervals.count / 2], 1.0 / 45.0,
+      "The iOS video output must not systematically sample 60 fps media at 30 Hz")
+  }
+
+  @MainActor
   func testNativeVideoViewClearResizeReattachAndDispose() async throws {
     let registry = NativeRegistry()
     let factory = YlIosVideoViewFactory()

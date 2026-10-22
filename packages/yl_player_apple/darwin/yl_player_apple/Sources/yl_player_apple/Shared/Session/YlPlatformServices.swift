@@ -22,7 +22,10 @@ struct YlAppleCompatibility {
   // Preserve frames until their presentation time on both Apple platforms.
   var usesBackpressure: Bool { true }
   var preservesLiveResumeIntent: Bool { platform == .macos }
-  var audioDurationUs: Int64 { platform == .ios ? 500_000 : 1_000_000 }
+  // Audio backpressure also pauses interleaved video reads. A 500 ms window
+  // stalls before the early B pictures in a 16-picture/25 fps HEVC group arrive.
+  // Match macOS headroom; explicit bounded duration/byte budgets still apply.
+  var audioDurationUs: Int64 { 1_000_000 }
   var scalesAudioDuration: Bool { true }
   var batchesAudioInput: Bool { platform == .macos }
   // AVAudioUnitTimePitch rejects interleaved Float32 on iOS (-10868).

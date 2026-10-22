@@ -27,7 +27,10 @@ private final class YlIosDisplayDriver: NSObject, YlDisplayDriving {
     self.onTick = onTick
     super.init()
     let link = CADisplayLink(target: self, selector: #selector(tick))
-    link.preferredFrameRateRange = CAFrameRateRange(minimum: 15, maximum: 60, preferred: 30)
+    // Both AVPlayer extraction and managed frame presentation sample on this
+    // callback. Preferring 30 Hz skips frames from 50/60 fps video even when
+    // decoding and the audio clock keep up.
+    link.preferredFrameRateRange = CAFrameRateRange(minimum: 15, maximum: 60, preferred: 60)
     link.add(to: .main, forMode: .common)
     self.link = link
   }

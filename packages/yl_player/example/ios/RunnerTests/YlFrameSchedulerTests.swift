@@ -40,6 +40,31 @@ final class YlFrameSchedulerTests: XCTestCase {
     )
   }
 
+  func testDefaultQueuePresentsSixteenPictureHEVCReorderGroupWithoutDrops() {
+    let scheduler = YlFrameScheduler(enqueueWaitTimeout: 2)
+    defer { scheduler.dispose() }
+    let completed = DispatchSemaphore(value: 0)
+    DispatchQueue.global().async {
+      for pts in [640_000, 320_000, 160_000, 80_000, 40_000, 120_000, 240_000, 200_000,
+                  280_000, 480_000, 400_000, 360_000, 440_000, 560_000, 520_000, 600_000] {
+        XCTAssertTrue(scheduler.enqueue(self.frame(Int64(pts))))
+      }
+      completed.signal()
+    }
+    for pts in stride(from: 40_000, through: 640_000, by: 40_000) {
+      // Give the callback worker time to refill the queue after presentation.
+      let deadline = Date(timeIntervalSinceNow: 0.5)
+      while !scheduler.pendingPTS.contains(Int64(pts)),
+            Date() < deadline {
+        Thread.sleep(forTimeInterval: 0.001)
+      }
+      XCTAssertEqual(scheduler.frame(at: Int64(pts), generation: 1)?.ptsUs, Int64(pts))
+    }
+    XCTAssertEqual(completed.wait(timeout: .now() + 1), .success)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    XCTAssertTrue(scheduler.pendingPTS.isEmpty)
+  }
+
   func testOrdersFramesAndSelectsNewestDueFrame() {
     let scheduler = YlFrameScheduler()
     scheduler.enqueue(frame(30_000))
@@ -55,7 +80,7 @@ final class YlFrameSchedulerTests: XCTestCase {
   func testBackpressuresUntilPresentationFreesCapacity() {
     let counter = LifetimeCounter()
     let scheduler = YlFrameScheduler(
-      compatibility: .init(platform: .ios), enqueueWaitTimeout: 1
+      compatibility: .init(platform: .ios), maxFrames: 3, enqueueWaitTimeout: 1
     )
     defer { scheduler.dispose() }
     scheduler.enqueue(frame(10_000, counter: counter))
@@ -84,7 +109,7 @@ final class YlFrameSchedulerTests: XCTestCase {
 
   func testIncreasingRateWakesProducerAndAllowsNineQueuedFrames() {
     let scheduler = YlFrameScheduler(
-      compatibility: .init(platform: .ios), enqueueWaitTimeout: 2
+      compatibility: .init(platform: .ios), maxFrames: 3, enqueueWaitTimeout: 2
     )
     defer { scheduler.dispose() }
     for pts in [10_000, 20_000, 30_000] {
@@ -122,7 +147,7 @@ final class YlFrameSchedulerTests: XCTestCase {
   func testReturningToNormalRatePreservesQueuedFramesUntilCapacityDrains() {
     let counter = LifetimeCounter()
     let scheduler = YlFrameScheduler(
-      compatibility: .init(platform: .ios), enqueueWaitTimeout: 2
+      compatibility: .init(platform: .ios), maxFrames: 3, enqueueWaitTimeout: 2
     )
     defer { scheduler.dispose() }
     scheduler.setRate(3)
@@ -159,7 +184,7 @@ final class YlFrameSchedulerTests: XCTestCase {
   func testRejectsWaitingFrameThatBecomesLateBeforeCapacityIsAvailable() {
     let counter = LifetimeCounter()
     let scheduler = YlFrameScheduler(
-      compatibility: .init(platform: .ios), enqueueWaitTimeout: 2
+      compatibility: .init(platform: .ios), maxFrames: 3, enqueueWaitTimeout: 2
     )
     defer { scheduler.dispose() }
     for pts in [10_000, 30_000, 40_000] {

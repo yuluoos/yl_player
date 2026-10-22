@@ -450,6 +450,24 @@ final class YlAudioRendererTests: XCTestCase {
     }
   }
 
+  func testDefaultBudgetReadsPastA640msVideoReorderGroup() throws {
+    let converter = FakeConverter()
+    converter.outputDurationUs = 40_000
+    let budget = try YlFallbackBufferBudget.make(configuration: PlayerConfiguration(map: [:]))
+    let renderer = YlAudioRenderer(bufferBudget: budget, converter: converter, output: FakeOutput())
+    defer { renderer.dispose() }
+    try renderer.configure(stream: stream())
+
+    // Audio admission pauses the interleaved demuxer. It must allow the audio
+    // preceding a 16-picture/25 fps HEVC group before the earlier B frames arrive.
+    for _ in 0..<16 {
+      XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    }
+    XCTAssertEqual(renderer.scheduledDurationUs, 640_000)
+    for _ in 0..<9 { XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled) }
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedDuration)
+  }
+
   func testBalancedDurationAndByteCapsAreHardLimits() throws {
     let converter = FakeConverter()
     let output = FakeOutput()

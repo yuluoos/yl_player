@@ -58,7 +58,9 @@ final class YlFrameScheduler {
 
   init(
     compatibility: YlAppleCompatibility = .current,
-    maxFrames: Int = 3,
+    // Leave room for hierarchical HEVC reference pictures before the earlier
+    // B pictures arrive. This remains bounded, matching the DASH scheduler.
+    maxFrames: Int = 8,
     enqueueWaitTimeout: TimeInterval = 0.25,
     collectDropDiagnostics: Bool = false
   ) {
