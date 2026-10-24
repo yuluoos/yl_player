@@ -58,8 +58,8 @@
       "size": 16851
     },
     "ios-arm64/YlFFmpegBridge.framework/Info.plist": {
-      "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
-      "size": 553
+      "sha256": "0d607ac3ede166cb2d2667d809276f7f03729cfbdf19fb71eb9fc4c6efe4e4c1",
+      "size": 605
     },
     "ios-arm64/YlFFmpegBridge.framework/Modules/module.modulemap": {
       "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
@@ -74,8 +74,8 @@
       "size": 16851
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist": {
-      "sha256": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
-      "size": 553
+      "sha256": "0d607ac3ede166cb2d2667d809276f7f03729cfbdf19fb71eb9fc4c6efe4e4c1",
+      "size": 605
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Modules/module.modulemap": {
       "sha256": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
@@ -128,7 +128,7 @@
     "darwin/native/YlFFmpegBridge/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
     "tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
     "tool/apple_ffmpeg/build_dav1d.sh": "1d543be91e6698ba4aa4827c185d4688226b761fa393417d44913041d0536544",
-    "tool/apple_ffmpeg/build_xcframework.sh": "16ed11c3f8994c7f76f339a53fdd854fd448549a2dfac2b2bb2c6c39e6ec87ce",
+    "tool/apple_ffmpeg/build_xcframework.sh": "ee72d88c8cb4fe759bf63151d3e17b36a453d4431a6de2acccfd650a0d9d0cef",
     "tool/apple_ffmpeg/dav1d.lock": "3db908cd475c4bfb194825c260c65f73c588d82b2a315a5c8bbbc107e84c3db3",
     "tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30",
     "tool/apple_ffmpeg/opus-1.6.1.lock": "d91f5633571220a721741124bf96490a9d88880b7ae5d324a624ac41012e656b",

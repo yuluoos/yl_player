@@ -349,6 +349,8 @@ PYPC
     ln -s Versions/Current/Headers "$framework/Headers"
     ln -s Versions/Current/Modules "$framework/Modules"
     ln -s Versions/Current/Resources "$framework/Resources"
+  else
+    plutil -insert MinimumOSVersion -string "$IOS_DEPLOYMENT_TARGET" "$plist"
   fi
 }
 

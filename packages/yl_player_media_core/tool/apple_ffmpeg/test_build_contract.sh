@@ -52,6 +52,10 @@ for entry in info:
  assert entry.get('SupportedPlatformVariant') == variant
  assert set(entry['SupportedArchitectures']) == archs
  f = artifact/entry['LibraryIdentifier']/entry['LibraryPath']; binary = f/'YlFFmpegBridge'
+ plist = f/('Resources/Info.plist' if platform == 'macos' else 'Info.plist')
+ bundle = plistlib.loads(plist.read_bytes())
+ minimum_key = 'LSMinimumSystemVersion' if platform == 'macos' else 'MinimumOSVersion'
+ assert bundle.get(minimum_key) == minimum, f'{plist}: {minimum_key} must be {minimum}, got {bundle.get(minimum_key)!r}'
  assert set(subprocess.check_output(['lipo','-archs',str(binary)],text=True).split()) == archs
  assert (f/'Headers/YlFFmpegBridge.h').read_bytes() == (source/'include/YlFFmpegBridge.h').read_bytes()
  assert (f/'Modules/module.modulemap').read_bytes() == (source/'module.modulemap').read_bytes()
