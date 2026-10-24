@@ -1,3 +1,7 @@
+## 0.3.0-dev.5
+
+- Synchronize package and internal dependency versions at `0.3.0-dev.5`.
+
 ## 0.3.0-dev.4
 
 - Synchronize package versions and internal dependencies at 0.3.0-dev.4.

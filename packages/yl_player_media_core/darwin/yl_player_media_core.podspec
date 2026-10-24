@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'yl_player_media_core'
-  s.version = '0.3.0-dev.4'
+  s.version = '0.3.0-dev.5'
   s.summary = 'Shared Apple native media input core.'
   s.description = 'Shared media input, cancellation, buffer ownership, and FFmpeg bridge for yl_player plugins.'
   s.homepage = 'https://pub.dev/packages/yl_player_media_core'

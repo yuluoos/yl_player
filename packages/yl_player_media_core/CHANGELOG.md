@@ -1,3 +1,8 @@
+## 0.3.0-dev.5
+
+- Add the minimum iOS version to the device and simulator FFmpeg framework bundle metadata.
+- Verify framework deployment metadata alongside binary deployment targets and update artifact provenance.
+
 ## 0.3.0-dev.4
 
 - Synchronize package versions and internal dependencies at 0.3.0-dev.4.

@@ -960,7 +960,7 @@ void main() {
         p.implementation,
         const YlPlatformImplementationInfo(
           name: 'yl_player_apple',
-          version: '0.3.0-dev.4',
+          version: '0.3.0-dev.5',
           spiMajor: 2,
         ),
       );

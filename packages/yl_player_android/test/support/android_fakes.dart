@@ -53,7 +53,7 @@ AndroidCreateReply wireCreate({String suffix = 'instance-1'}) =>
       channelSuffix: suffix,
       textureId: 42,
       implementationName: 'yl_player_android',
-      implementationVersion: '0.3.0-dev.4',
+      implementationVersion: '0.3.0-dev.5',
       capabilities: AndroidCapabilitiesMessage(
         deviceProfile: 'android',
         availableEngines: [AndroidEngine.media3],

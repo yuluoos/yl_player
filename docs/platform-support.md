@@ -1,7 +1,7 @@
 # yl_player v0.2 platform support
 
 The endorsed implementations target Android API 24+, iOS 15+, and macOS 12+.
-The tables describe route and policy decisions in `0.3.0-dev.4`; “supported”
+The tables describe route and policy decisions in `0.3.0-dev.5`; “supported”
 means the implementation has an enforcement path, not that every device,
 codec/profile, server, or media file will play. Run `player.assess` for the
 actual source and requirements before Load.

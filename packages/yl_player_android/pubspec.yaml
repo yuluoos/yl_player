@@ -1,6 +1,6 @@
 name: yl_player_android
 description: Endorsed Android implementation package for the hardware-first yl_player Flutter playback kernel.
-version: 0.3.0-dev.4
+version: 0.3.0-dev.5
 resolution: workspace
 homepage: https://pub.dev/packages/yl_player
 repository: https://github.com/yuluoos/yl_player
@@ -17,7 +17,7 @@ dependencies:
   flutter:
     sdk: flutter
   meta: ^1.16.0
-  yl_player_platform_interface: ^0.3.0-dev.4
+  yl_player_platform_interface: ^0.3.0-dev.5
 
 dev_dependencies:
   flutter_lints: ^6.0.0
