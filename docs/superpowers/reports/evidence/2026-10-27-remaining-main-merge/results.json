@@ -1,0 +1,115 @@
+[
+  {
+    "name": "network-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_network",
+      "-p",
+      "test_*.py"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 2.687
+  },
+  {
+    "name": "inventory-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_release_readiness.py"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 1.04
+  },
+  {
+    "name": "native-fixture-parity",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+      "--current-only"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 0.166
+  },
+  {
+    "name": "public-surface",
+    "command": [
+      "sh",
+      "tool/check_public_surface.sh"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 0.206
+  },
+  {
+    "name": "thresholds",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 0.061
+  },
+  {
+    "name": "thresholds-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py",
+      "--require-ready"
+    ],
+    "exitCode": 1,
+    "expectedExitCode": 1,
+    "seconds": 0.059
+  },
+  {
+    "name": "release",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 0.282
+  },
+  {
+    "name": "release-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "exitCode": 1,
+    "expectedExitCode": 1,
+    "seconds": 0.196
+  },
+  {
+    "name": "diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0,
+    "expectedExitCode": 0,
+    "seconds": 0.066
+  }
+]

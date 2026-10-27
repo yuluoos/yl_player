@@ -654,6 +654,11 @@
       "path": "docs/superpowers/reports/2026-10-26-remaining-acceptance.md",
       "sha256": "28a76a37397cf440998f13c6189dcad9a144ed66576bd13124974fd679939bb1",
       "kind": "report"
+    },
+    "remaining-main-merge-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-remaining-main-merge.md",
+      "sha256": "51177cfea07362d4429fcfe982f3e766ccbd23dea2d420eaa4ff551c21b4a17e",
+      "kind": "report"
     }
   },
   "rows": [
@@ -665,7 +670,8 @@
       "evidence": [
         "p04",
         "p01",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "resolve-observed-android-tv-recovery-no-upshift-and-complete-physical-api24-repeat-matrix"
@@ -679,7 +685,8 @@
         "p04",
         "p01",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "resolve-reproduced-avplayer-recovery-no-upshift-and-run-full-bound-matrix"
@@ -692,7 +699,8 @@
       "evidence": [
         "p04",
         "p01",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -704,7 +712,8 @@
       "verification": "not_run",
       "evidence": [
         "p01",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -716,7 +725,8 @@
       "verification": "not_run",
       "evidence": [
         "p01",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -728,7 +738,8 @@
       "verification": "not_run",
       "evidence": [
         "p01",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -740,7 +751,8 @@
       "verification": "external_missing",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -752,7 +764,8 @@
       "verification": "external_missing",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -764,7 +777,8 @@
       "verification": "external_missing",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -776,7 +790,8 @@
       "verification": "external_missing",
       "evidence": [
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "supply-licensed-media-and-physical-protection-chain"
@@ -788,7 +803,8 @@
       "verification": "external_missing",
       "evidence": [
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "supply-licensed-media-and-physical-protection-chain"
@@ -800,7 +816,8 @@
       "verification": "external_missing",
       "evidence": [
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "supply-licensed-media-and-physical-protection-chain"
@@ -813,7 +830,8 @@
       "evidence": [
         "p07",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -826,7 +844,8 @@
       "evidence": [
         "p07",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -839,7 +858,8 @@
       "evidence": [
         "p07",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -852,7 +872,8 @@
       "evidence": [
         "p07",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -865,7 +886,8 @@
       "evidence": [
         "p07",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -878,7 +900,8 @@
       "evidence": [
         "p07",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -890,7 +913,8 @@
       "verification": "failed",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -902,7 +926,8 @@
       "verification": "failed",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -914,7 +939,8 @@
       "verification": "failed",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -926,7 +952,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-nine-script-media-handoff-and-cleanup"
@@ -938,7 +965,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-nine-script-media-handoff-and-cleanup"
@@ -950,7 +978,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-nine-script-media-handoff-and-cleanup"
@@ -963,7 +992,8 @@
       "evidence": [
         "p04",
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -976,7 +1006,8 @@
       "evidence": [
         "p04",
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -989,7 +1020,8 @@
       "evidence": [
         "p04",
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -1002,7 +1034,8 @@
       "evidence": [
         "p01",
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1015,7 +1048,8 @@
       "evidence": [
         "p01",
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1028,7 +1062,8 @@
       "evidence": [
         "p01",
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1040,7 +1075,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1052,7 +1088,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1064,7 +1101,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1076,7 +1114,8 @@
       "verification": "external_missing",
       "evidence": [
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1088,7 +1127,8 @@
       "verification": "external_missing",
       "evidence": [
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1100,7 +1140,8 @@
       "verification": "not_run",
       "evidence": [
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1112,7 +1153,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-html-empty-refresh-retains-current-channels"
@@ -1124,7 +1166,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-html-empty-refresh-retains-current-channels"
@@ -1136,7 +1179,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-html-empty-refresh-retains-current-channels"
@@ -1149,7 +1193,8 @@
       "evidence": [
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-dns-classification-across-request-boundaries"
@@ -1162,7 +1207,8 @@
       "evidence": [
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-dns-classification-across-request-boundaries"
@@ -1175,7 +1221,8 @@
       "evidence": [
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-dns-classification-across-request-boundaries"
@@ -1188,7 +1235,8 @@
       "evidence": [
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
@@ -1201,7 +1249,8 @@
       "evidence": [
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
@@ -1214,7 +1263,8 @@
       "evidence": [
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
@@ -1226,7 +1276,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-runtime-termination-and-budget-release"
@@ -1238,7 +1289,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-runtime-termination-and-budget-release"
@@ -1250,7 +1302,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-runtime-termination-and-budget-release"
@@ -1262,7 +1315,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-host-and-invalid-result-faults"
@@ -1274,7 +1328,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-host-and-invalid-result-faults"
@@ -1286,7 +1341,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-host-and-invalid-result-faults"
@@ -1299,7 +1355,8 @@
       "evidence": [
         "p05",
         "p04",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "restore-pinned-server-and-run-fault-matrix"
@@ -1312,7 +1369,8 @@
       "evidence": [
         "p05",
         "p04",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "restore-pinned-server-and-run-fault-matrix"
@@ -1325,7 +1383,8 @@
       "evidence": [
         "p05",
         "p04",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "restore-pinned-server-and-run-fault-matrix"
@@ -1337,7 +1396,8 @@
       "verification": "external_missing",
       "evidence": [
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation"
@@ -1349,7 +1409,8 @@
       "verification": "external_missing",
       "evidence": [
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation"
@@ -1361,7 +1422,8 @@
       "verification": "external_missing",
       "evidence": [
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation"
@@ -1373,7 +1435,8 @@
       "verification": "not_run",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-required-hardware-and-resource-rejection"
@@ -1385,7 +1448,8 @@
       "verification": "not_run",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-required-hardware-and-resource-rejection"
@@ -1397,7 +1461,8 @@
       "verification": "not_run",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-required-hardware-and-resource-rejection"
@@ -1409,7 +1474,8 @@
       "verification": "external_missing",
       "evidence": [
         "p07",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-valid-unsupported-dolby-against-original-input"
@@ -1421,7 +1487,8 @@
       "verification": "external_missing",
       "evidence": [
         "p07",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-valid-unsupported-dolby-against-original-input"
@@ -1433,7 +1500,8 @@
       "verification": "external_missing",
       "evidence": [
         "p07",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-valid-unsupported-dolby-against-original-input"
@@ -1445,7 +1513,8 @@
       "verification": "not_run",
       "evidence": [
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-subtitle-only-failure-and-video-continuity"
@@ -1457,7 +1526,8 @@
       "verification": "not_run",
       "evidence": [
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-subtitle-only-failure-and-video-continuity"
@@ -1469,7 +1539,8 @@
       "verification": "not_run",
       "evidence": [
         "p02",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-subtitle-only-failure-and-video-continuity"
@@ -1481,7 +1552,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -1493,7 +1565,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -1505,7 +1578,8 @@
       "verification": "not_run",
       "evidence": [
         "p05",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -1519,7 +1593,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -1533,7 +1608,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -1547,7 +1623,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -1561,7 +1638,8 @@
         "p01",
         "p04",
         "platform",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "close-current-consumer-and-adapter-audit"
@@ -1575,7 +1653,8 @@
         "p01",
         "p04",
         "platform",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "close-current-consumer-and-adapter-audit"
@@ -1589,7 +1668,8 @@
         "p01",
         "p04",
         "platform",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "close-current-consumer-and-adapter-audit"
@@ -1601,7 +1681,8 @@
       "verification": "external_missing",
       "evidence": [
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -1613,7 +1694,8 @@
       "verification": "external_missing",
       "evidence": [
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -1625,7 +1707,8 @@
       "verification": "external_missing",
       "evidence": [
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -1639,7 +1722,8 @@
         "p03",
         "p04",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -1653,7 +1737,8 @@
         "p03",
         "p04",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -1667,7 +1752,8 @@
         "p03",
         "p04",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -1679,7 +1765,8 @@
       "verification": "not_run",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -1691,7 +1778,8 @@
       "verification": "not_run",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -1703,7 +1791,8 @@
       "verification": "not_run",
       "evidence": [
         "p03",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -1717,7 +1806,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-current-error-matrix-and-redaction-audit"
@@ -1731,7 +1821,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-current-error-matrix-and-redaction-audit"
@@ -1745,7 +1836,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-current-error-matrix-and-redaction-audit"
@@ -1759,7 +1851,8 @@
         "p05",
         "p06",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -1773,7 +1866,8 @@
         "p05",
         "p06",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -1787,7 +1881,8 @@
         "p05",
         "p06",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -1801,7 +1896,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
@@ -1815,7 +1911,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
@@ -1829,7 +1926,8 @@
         "p01",
         "p05",
         "p06",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
@@ -1842,7 +1940,8 @@
       "evidence": [
         "platform",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
@@ -1855,7 +1954,8 @@
       "evidence": [
         "platform",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
@@ -1868,7 +1968,8 @@
       "evidence": [
         "platform",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
@@ -1882,7 +1983,8 @@
         "p02",
         "p06",
         "p07",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"
@@ -1896,7 +1998,8 @@
         "p02",
         "p06",
         "p07",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"
@@ -1910,7 +2013,8 @@
         "p02",
         "p06",
         "p07",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"
@@ -1923,7 +2027,8 @@
       "evidence": [
         "p08",
         "remaining-engineering",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"
@@ -1938,7 +2043,8 @@
         "p04",
         "p05",
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy"
@@ -1950,7 +2056,8 @@
       "verification": "not_run",
       "evidence": [
         "p08",
-        "remaining-acceptance-20261026"
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027"
       ],
       "acceptance": null,
       "nextAction": "record-final-source-bound-remote-ci-results"
