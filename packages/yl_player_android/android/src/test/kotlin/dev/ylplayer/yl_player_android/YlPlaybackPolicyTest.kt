@@ -143,7 +143,7 @@ class YlPlaybackPolicyTest {
         assertEquals(YlMemoryAction.NONE, YlPlaybackPolicy.memoryAction(YlMemorySignal.NORMAL))
         assertEquals(YlMemoryAction.SHRINK, YlPlaybackPolicy.memoryAction(YlMemorySignal.RUNNING_MODERATE))
         assertEquals(YlMemoryAction.SHRINK, YlPlaybackPolicy.memoryAction(YlMemorySignal.RUNNING_LOW))
-        assertEquals(YlMemoryAction.RELEASE, YlPlaybackPolicy.memoryAction(YlMemorySignal.RUNNING_CRITICAL))
+        assertEquals(YlMemoryAction.SHRINK, YlPlaybackPolicy.memoryAction(YlMemorySignal.RUNNING_CRITICAL))
         assertEquals(YlMemoryAction.RELEASE, YlPlaybackPolicy.memoryAction(YlMemorySignal.UI_HIDDEN))
         assertEquals(YlMemoryAction.RESTORE, YlPlaybackPolicy.memoryAction(YlMemorySignal.FOREGROUND))
     }

@@ -17,7 +17,7 @@ internal class YlNativeFallbackEngine(
     private val playerOptions: AndroidPlayerOptionsMessage,
     dispatcher: CoroutineDispatcher = Dispatchers.Main,
     softwareServicesOverride: YlSoftwareDecodeServices? = null,
-    private val findHardwareDecoder: (YlNativeStreamInfo) -> String? = YlHardwareCodecProbe::findVideoDecoder,
+    private val findHardwareDecoder: (YlNativeStreamInfo) -> String? = { YlHardwareCodecProbe.findVideoDecoder(it, options.decoderPolicyOverride ?: playerOptions.decoderPolicy) },
     // Internal observation seams sample real output; production has no observer.
     private val observePcm: ((YlNativePcmChunk) -> Unit)? = null,
     private val observeVideo: ((Long) -> Unit)? = null,
@@ -138,7 +138,7 @@ internal class YlNativeFallbackEngine(
             val configured = native.configureHardwareVideo(stream.index)
             if (configured) {
                 hardwareVideo = runCatching {
-                    YlHardwareVideoDecoder(stream, surface, checkNotNull(hardwareName), native.hardwareCodecConfig(), cancelled = { closed }, observePresented = observeVideo)
+                    YlHardwareVideoDecoder(stream, surface, checkNotNull(hardwareName), native.hardwareCodecConfig(), cancelled = { closed }, observePresented = observeVideo, decoderPolicy = decoderPolicy)
                 }.getOrNull()
             }
             if (hardwareVideo == null) {
@@ -148,7 +148,7 @@ internal class YlNativeFallbackEngine(
                 videoPath = YlNativeVideoPath.SOFTWARE
                 hardwareName = null
             } else {
-                observedDecoderMode = AndroidDecoderMode.HARDWARE
+                observedDecoderMode = hardwareVideo?.decoderMode ?: AndroidDecoderMode.UNKNOWN
                 observedDecoderIdentity = hardwareVideo?.decoderIdentity
             }
         }

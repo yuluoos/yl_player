@@ -6,6 +6,8 @@ import io.flutter.view.TextureRegistry
 internal class YlVideoOutput(
     private val texture: TextureRegistry.SurfaceTextureEntry,
     private val ownsTexture: Boolean = true,
+    val nativeView: YlNativeViewBinding? = null,
+    private val releaseNativeView: () -> Unit = {},
 ) : YlSessionVideoOutput {
     private val tracker = YlSurfaceGeneration()
     private var surface: Surface? = null
@@ -13,6 +15,11 @@ internal class YlVideoOutput(
     private var disposed = false
 
     override val identity: YlOutputIdentity get() = YlOutputIdentity(tracker.generation, true)
+
+    fun advanceNativeGeneration(): YlOutputIdentity {
+        tracker.rebuild()
+        return identity
+    }
 
     /** The Surface receives Media3's rendered dimensions, before logical PAR/View transforms. */
     fun updateGeometry(geometry: dev.ylplayer.yl_player_android.pigeon.AndroidVideoGeometryMessage?) {
@@ -101,6 +108,7 @@ internal class YlVideoOutput(
         // Unacknowledged replacements remain retained until the session has safely closed.
         replacedSurfaces.values.forEach { it.release() }
         replacedSurfaces.clear()
+        releaseNativeView()
         if (ownsTexture) texture.release()
     }
 }

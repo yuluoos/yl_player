@@ -29,6 +29,7 @@ internal class YlMedia3Engine(
     private val renderersFactory: ((Context, YlVideoOutputObserver) -> YlOutputRenderersFactory)? = null,
     private val networkBytes: YlNetworkByteCounter? = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null,
     private val surfaceForOutput: ((YlVideoOutput) -> android.view.Surface)? = null,
+    private val nativeOutputAvailable: Boolean = false,
 ) : YlPlaybackEngineAdapter {
     init {
         require(protectedPlayback == null || (renderersFactory == null && surfaceForOutput == null)) {
@@ -40,6 +41,23 @@ internal class YlMedia3Engine(
     private var callback: ((YlSessionIdentity, YlEngineEvent) -> Unit)? = null
     private var publicOutput: YlVideoOutput? = null
     private var closed = false
+    private val nativePort = object : YlNativeOutputPort {
+        override suspend fun attach(surface: android.view.Surface, current: () -> Boolean) {
+            val output = publicOutput ?: return
+            if (closed || !current()) return
+            val generation = output.advanceNativeGeneration()
+            onWorker { if (!closed && current()) requireCore().switchNativeOutput(surface, generation) }
+        }
+        override fun detachBeforeDestroy() {
+            runBlocking { onWorker {
+                if (closed) { check(core?.dispose() != false) }
+                else core?.parkNativeOutput()
+            } }
+        }
+        override fun failed(error: Throwable) {
+            if (!closed) callback?.invoke(identity, YlEngineEvent.Failed(YlFailureKind.PLATFORM_FAILURE, error))
+        }
+    }
     private val protectedOutput = protectedPlayback?.let { route ->
         if (route.identity.sessionId != identity.sessionId || source.format != AndroidMediaFormat.DASH) throw YlBoundaryException(YlFailureKind.DRM_CONFIG_INVALID)
         route.registry.register(route.identity, object : YlProtectedOutputPort {
@@ -90,7 +108,7 @@ internal class YlMedia3Engine(
             val candidate = YlCandidateVideoOutput(context, protectedPlayback != null).also { privateOutput = it }
             protectedDrm = protectedPlayback?.let { route -> YlMedia3DrmSessionManager(route.identity, route.cbcs, route.timeoutMs, route.exchange) }
             core = YlMedia3Core(context, identity, source, options, createMedia3Configuration(source, options, playerOptions),
-                owner.handler, YlEngineVideoOutput(candidate), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm, networkBytes = networkBytes, renderersFactoryOverride = renderersFactory)
+                owner.handler, YlEngineVideoOutput(candidate, retainCandidate = nativeOutputAvailable), ::receive, rtmpRecovery, decoderGate::resetForEpoch, protectedDrm = protectedDrm, networkBytes = networkBytes, renderersFactoryOverride = renderersFactory)
             requireCore().initialize()
             requireCore().prepare()
         }
@@ -106,6 +124,7 @@ internal class YlMedia3Engine(
         main.launch {
             if (!closed && (!YlRtmpSourcePolicy.isRtmp(source) || core?.mediaEpoch == epoch)) {
                 if (event is YlEngineEvent.Snapshot) { publicOutput?.updateGeometry(event.value.geometry); protectedOutput?.updateGeometry(event.value.geometry) }
+                if (event is YlEngineEvent.FirstFrame && event.output == publicOutput?.identity) publicOutput?.nativeView?.frame(nativePort)
                 if (event is YlEngineEvent.FirstFrame && protectedOutput != null) {
                     protectedOutput.frame(event.output) { if (!closed) callback?.invoke(identity, event) }
                 } else callback?.invoke(identity, event)
@@ -127,9 +146,13 @@ internal class YlMedia3Engine(
         val surface = surfaceForOutput?.invoke(video) ?: video.borrowSurface() // Main-owned texture access.
         val outputIdentity = video.identity
         publicOutput = video
+        // A host may mount its view only after load/FirstFrame. Keep that existing
+        // texture startup contract, then negotiate the holder when it is mounted.
         onWorker { requireCore().switchOutput(surface, outputIdentity) }
+        video.nativeView?.bind(nativePort)
     }
     override suspend fun quiesce(): YlEngineRestorePoint {
+        publicOutput?.nativeView?.unbind(nativePort)
         protectedOutput?.suspendPresentation()
         return onWorker { requireCore().snapshotRestorePoint().also { requireCore().deactivate() } }
     }
@@ -169,6 +192,7 @@ internal class YlMedia3Engine(
     }
     override suspend fun onConfigurationChanged() {
         val output = publicOutput ?: return
+        if (output.nativeView != null) return
         replacePublicVideoOutput(output,
             canRebuild = { onWorker { requireCore().canRebuildOutput() } },
             detach = { onWorker { requireCore().detachOutput() } },
@@ -189,6 +213,7 @@ internal class YlMedia3Engine(
                     else engine.dispose()
                 }
                 if (safe) {
+                    publicOutput?.nativeView?.unbind(nativePort)
                     worker.await().thread.quitSafely()
                     publicOutput = null
                     result.complete(Unit)
@@ -240,6 +265,7 @@ internal class YlMedia3SessionFactory(
     private val context: Context,
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val protectedViews: YlProtectedViewRegistry? = null,
+    private val nativeViews: YlNativeViewRegistry? = null,
     // Optional internal observation factory; recovery policy and protected routing are unchanged.
     private val createFallback: ((YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter)? = null,
     private val createEngine: ((YlSessionIdentity, AndroidSourceMessage, AndroidLoadOptionsMessage, AndroidPlayerOptionsMessage) -> YlPlaybackEngineAdapter)? = null,
@@ -249,7 +275,10 @@ internal class YlMedia3SessionFactory(
         YlBoundaryValidation.player(options)
         val playerId = ++nextPlayerId
         return { texture ->
-            YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false),
+            val native = if (nativeViews != null && android.os.Build.VERSION.SDK_INT in 24..28 &&
+                (context.resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_TYPE_MASK) == android.content.res.Configuration.UI_MODE_TYPE_TELEVISION) nativeViews?.register(texture.id()) else null
+            YlSessionCoordinator(playerId, options, YlVideoOutput(texture, ownsTexture = false, nativeView = native,
+                releaseNativeView = { nativeViews?.remove(texture.id()) }),
                 object : YlPlaybackEngineFactory {
                   override fun createProtected(identity: YlSessionIdentity, source: AndroidSourceMessage, loadOptions: AndroidLoadOptionsMessage,
                       playback: YlProtectedPlayback): YlPlaybackEngineAdapter =
@@ -258,7 +287,7 @@ internal class YlMedia3SessionFactory(
 
                     val networkBytes = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null
                     val primary = createEngine?.invoke(identity, source, loadOptions, options)
-                        ?: YlMedia3Engine(context, identity, source, loadOptions, options, dispatcher, networkBytes = networkBytes)
+                        ?: YlMedia3Engine(context, identity, source, loadOptions, options, dispatcher, networkBytes = networkBytes, nativeOutputAvailable = native != null)
                     return YlManagedAndroidEngine(identity, primary, {
                         createFallback?.invoke(identity, source, loadOptions, options)
                             ?: YlNativeFallbackEngine(context, identity, source, loadOptions, options, dispatcher, networkBytes = networkBytes)

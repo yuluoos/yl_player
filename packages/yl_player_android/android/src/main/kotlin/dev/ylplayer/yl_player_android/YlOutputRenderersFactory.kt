@@ -57,7 +57,7 @@ internal class YlVideoOutputObserver(
         dashVideoFamily?.verifyOutput(format, mediaFormat?.takeIf { it.containsKey(MediaFormat.KEY_COLOR_TRANSFER) }
             ?.getInteger(MediaFormat.KEY_COLOR_TRANSFER))
         // Same calculation as 1.11 MediaCodecVideoRenderer.onOutputFormatChanged. The Core
-        // does not enable tunneling or a VideoSink; MediaFormat describes the decoded crop.
+        // does not enable a VideoSink; MediaFormat describes the decoded crop.
         var width = format.width
         var height = format.height
         if (mediaFormat != null) {
@@ -87,8 +87,9 @@ internal class YlVideoOutputObserver(
 }
 
 /** Preserves the existing factory's audio/text/etc and the pinned video Builder defaults.
- * Core uses extensions OFF, no prewarming/VideoSink/tunneling, and only configures decoder policy. */
+ * Core uses extensions OFF, no prewarming/VideoSink, and only configures decoder policy. */
 internal open class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
+    var allowEac3SoftwareAudio = false
     override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): androidx.media3.exoplayer.audio.AudioSink? {
         val sink = super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams) ?: return null
         return if (observer.dashVideoFamily != null) YlDashPcmAudioSink(sink) else sink
@@ -99,6 +100,7 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
         eventListener: androidx.media3.exoplayer.audio.AudioRendererEventListener, out: ArrayList<Renderer>) {
         if (audioSink !is YlDashPcmAudioSink) {
             super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out)
+            if (allowEac3SoftwareAudio) out.add(YlEac3AudioRenderer(eventHandler, eventListener, audioSink))
             return
         }
         check(extensionRendererMode == EXTENSION_RENDERER_MODE_OFF)
@@ -136,6 +138,13 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
 }
 
 internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver) : MediaCodecVideoRenderer(builder) {
+    override fun codecNeedsSetOutputSurfaceWorkaround(codecName: String): Boolean =
+        super.codecNeedsSetOutputSurfaceWorkaround(codecName) ||
+            (android.os.Build.VERSION.SDK_INT < 29 && codecName == "OMX.MS.HEVC.Decoder")
+    override fun onProcessedTunneledBuffer(presentationTimeUs: Long) {
+        super.onProcessedTunneledBuffer(presentationTimeUs)
+        observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
+    }
     override fun getDecoderInfos(selector: MediaCodecSelector, format: Format, requiresSecureDecoder: Boolean): List<androidx.media3.exoplayer.mediacodec.MediaCodecInfo> {
         val candidates = super.getDecoderInfos(selector, format, requiresSecureDecoder)
         // Media3 may offer HEVC/AVC base-layer fallback for Dolby. DASH programme

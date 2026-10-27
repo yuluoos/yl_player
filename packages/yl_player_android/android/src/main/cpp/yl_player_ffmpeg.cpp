@@ -911,3 +911,99 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeSoftwareBudgetExhaust
   auto* session = from(handle);
   return session && session->software_allocator.account && session->software_allocator.account->exhausted.load();
 }
+
+// Packet-only E-AC-3 adapter for Media3. No demuxer, network or video ownership.
+// Each decoder is confined to SimpleDecoder's worker; release joins it first.
+namespace {
+struct Eac3Decoder {
+  AVCodecContext* codec = nullptr;
+  SwrContext* resampler = nullptr;
+  AVChannelLayout input_layout{};
+  int input_format = AV_SAMPLE_FMT_NONE;
+  int rate = 0;
+  ~Eac3Decoder() {
+    swr_free(&resampler);
+    av_channel_layout_uninit(&input_layout);
+    avcodec_free_context(&codec);
+  }
+};
+}
+
+extern "C" JNIEXPORT jlong JNICALL
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCreateEac3(
+    JNIEnv*, jobject, jint rate, jint channels) {
+  if ((rate != 32000 && rate != 44100 && rate != 48000) || channels < 1 || channels > 8) return 0;
+  const AVCodec* codec = avcodec_find_decoder(AV_CODEC_ID_EAC3);
+  if (!codec || (codec->capabilities & AV_CODEC_CAP_DELAY)) return 0;
+  auto state = std::unique_ptr<Eac3Decoder>(new (std::nothrow) Eac3Decoder());
+  if (!state) return 0;
+  state->codec = avcodec_alloc_context3(codec);
+  if (!state->codec) return 0;
+  state->rate = rate;
+  state->codec->sample_rate = rate;
+  state->codec->thread_count = 1;
+  av_channel_layout_default(&state->codec->ch_layout, channels);
+  // Media3 handles container encoder delay and seek preroll; retain every sample.
+  state->codec->flags2 |= AV_CODEC_FLAG2_SKIP_MANUAL;
+  if (avcodec_open2(state->codec, codec, nullptr) < 0) return 0;
+  return reinterpret_cast<jlong>(state.release());
+}
+
+extern "C" JNIEXPORT jbyteArray JNICALL
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeEac3(
+    JNIEnv* env, jobject, jlong handle, jbyteArray data, jboolean reset) {
+  auto* state = reinterpret_cast<Eac3Decoder*>(handle);
+  if (!state || !data) return nullptr;
+  const jsize size = env->GetArrayLength(data);
+  if (size <= 0 || size > 1024 * 1024) return nullptr;
+  if (reset) {
+    avcodec_flush_buffers(state->codec);
+    swr_free(&state->resampler);
+    av_channel_layout_uninit(&state->input_layout);
+    state->input_format = AV_SAMPLE_FMT_NONE;
+  }
+  AVPacket* packet = av_packet_alloc();
+  if (!packet || av_new_packet(packet, size) < 0) { av_packet_free(&packet); return nullptr; }
+  env->GetByteArrayRegion(data, 0, size, reinterpret_cast<jbyte*>(packet->data));
+  if (env->ExceptionCheck()) { av_packet_free(&packet); return nullptr; }
+  const int sent = avcodec_send_packet(state->codec, packet);
+  av_packet_free(&packet);
+  if (sent < 0) return nullptr;
+  AVFrame* frame = av_frame_alloc();
+  if (!frame) return nullptr;
+  std::vector<uint8_t> pcm;
+  bool ok = true;
+  while (true) {
+    const int received = avcodec_receive_frame(state->codec, frame);
+    if (received == AVERROR(EAGAIN) || received == AVERROR_EOF) break;
+    if (received < 0 || frame->sample_rate != state->rate || frame->ch_layout.nb_channels < 1 ||
+        frame->ch_layout.nb_channels > 8 || frame->nb_samples <= 0 || frame->nb_samples > 6144) { ok = false; break; }
+    if (!state->resampler) {
+      AVChannelLayout stereo = AV_CHANNEL_LAYOUT_STEREO;
+      if (swr_alloc_set_opts2(&state->resampler, &stereo, AV_SAMPLE_FMT_S16, state->rate,
+          &frame->ch_layout, static_cast<AVSampleFormat>(frame->format), state->rate, 0, nullptr) < 0 ||
+          !state->resampler || swr_init(state->resampler) < 0 ||
+          av_channel_layout_copy(&state->input_layout, &frame->ch_layout) < 0) { ok = false; break; }
+      state->input_format = frame->format;
+    }
+    if (av_channel_layout_compare(&state->input_layout, &frame->ch_layout) != 0 ||
+        state->input_format != frame->format) { ok = false; break; }
+    const int samples = swr_get_out_samples(state->resampler, frame->nb_samples);
+    const size_t old = pcm.size();
+    if (samples < 0 || samples > 65536 || old + static_cast<size_t>(samples) * 4 > 256 * 1024) { ok = false; break; }
+    pcm.resize(old + static_cast<size_t>(samples) * 4);
+    uint8_t* target[] = {pcm.data() + old};
+    const int count = swr_convert(state->resampler, target, samples,
+        const_cast<const uint8_t**>(frame->extended_data), frame->nb_samples);
+    if (count < 0) { ok = false; break; }
+    pcm.resize(old + static_cast<size_t>(count) * 4);
+    av_frame_unref(frame);
+  }
+  av_frame_free(&frame);
+  return ok ? bytes(env, pcm.data(), pcm.size()) : nullptr;
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCloseEac3(JNIEnv*, jobject, jlong handle) {
+  delete reinterpret_cast<Eac3Decoder*>(handle);
+}

@@ -109,6 +109,7 @@ class AndroidCreateReply {
   AndroidCapabilitiesMessage capabilities;
   AndroidStateMessage initialState;
   AndroidDrmSupportMessage? drmSupport;
+  String? nativeVideoSurfaceViewType;
 }
 
 class AndroidCapabilitiesMessage {

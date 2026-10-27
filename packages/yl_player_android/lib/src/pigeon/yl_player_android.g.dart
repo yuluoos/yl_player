@@ -349,6 +349,7 @@ class AndroidCreateReply {
     required this.capabilities,
     required this.initialState,
     this.drmSupport,
+    this.nativeVideoSurfaceViewType,
   });
 
   int schemaMajor;
@@ -369,6 +370,8 @@ class AndroidCreateReply {
 
   AndroidDrmSupportMessage? drmSupport;
 
+  String? nativeVideoSurfaceViewType;
+
   List<Object?> _toList() {
     return <Object?>[
       schemaMajor,
@@ -380,6 +383,7 @@ class AndroidCreateReply {
       capabilities,
       initialState,
       drmSupport,
+      nativeVideoSurfaceViewType,
     ];
   }
 
@@ -398,6 +402,7 @@ class AndroidCreateReply {
       capabilities: result[6]! as AndroidCapabilitiesMessage,
       initialState: result[7]! as AndroidStateMessage,
       drmSupport: result[8] as AndroidDrmSupportMessage?,
+      nativeVideoSurfaceViewType: result[9] as String?,
     );
   }
 
@@ -410,7 +415,7 @@ class AndroidCreateReply {
     if (identical(this, other)) {
       return true;
     }
-    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState) && _deepEquals(drmSupport, other.drmSupport);
+    return _deepEquals(schemaMajor, other.schemaMajor) && _deepEquals(spiMajor, other.spiMajor) && _deepEquals(channelSuffix, other.channelSuffix) && _deepEquals(textureId, other.textureId) && _deepEquals(implementationName, other.implementationName) && _deepEquals(implementationVersion, other.implementationVersion) && _deepEquals(capabilities, other.capabilities) && _deepEquals(initialState, other.initialState) && _deepEquals(drmSupport, other.drmSupport) && _deepEquals(nativeVideoSurfaceViewType, other.nativeVideoSurfaceViewType);
   }
 
   @override
@@ -419,7 +424,7 @@ class AndroidCreateReply {
 
   @override
   String toString() {
-    return 'AndroidCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState, drmSupport: $drmSupport)';
+    return 'AndroidCreateReply(schemaMajor: $schemaMajor, spiMajor: $spiMajor, channelSuffix: $channelSuffix, textureId: $textureId, implementationName: $implementationName, implementationVersion: $implementationVersion, capabilities: $capabilities, initialState: $initialState, drmSupport: $drmSupport, nativeVideoSurfaceViewType: $nativeVideoSurfaceViewType)';
   }
 }
 

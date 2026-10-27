@@ -19,7 +19,8 @@ final class AndroidPlayer
         YlVideoTrackSelectionPlatformPlayer,
         YlPlatformDrmSourceSupport,
         YlPlatformDrmLicenseTransport,
-        YlPlatformProtectedVideoSurfaceProvider {
+        YlPlatformProtectedVideoSurfaceProvider,
+        YlPlatformNativeVideoSurfaceProvider {
   AndroidPlayer._(
     this._transport,
     this._suffix,
@@ -116,6 +117,16 @@ final class AndroidPlayer
           messageChannelSuffix: reply.channelSuffix,
         );
       }
+      final nativeView = reply.nativeVideoSurfaceViewType;
+      if (nativeView != null) {
+        if (nativeView != 'yl_player_android/native_video') {
+          throw AndroidCodec.problem(YlFailureCodes.protocolMismatch);
+        }
+        player._nativeSurface = YlNativeVideoSurface(
+          viewType: nativeView,
+          platform: TargetPlatform.android,
+        );
+      }
       player._currentRequestId = reply.initialState.loadRequestId;
       setupCallbacks(reply.channelSuffix, player._callbacks);
       await player
@@ -145,6 +156,10 @@ final class AndroidPlayer
     }
   }
 
+  YlNativeVideoSurface? _nativeSurface;
+  @override
+  YlNativeVideoSurface? get nativeVideoSurface =>
+      state.engine == YlPlaybackEngine.managedFallback ? null : _nativeSurface;
   AndroidDrmChannel? _drm;
   (YlPlayerEvent, int)? _protectedFrame;
   @override

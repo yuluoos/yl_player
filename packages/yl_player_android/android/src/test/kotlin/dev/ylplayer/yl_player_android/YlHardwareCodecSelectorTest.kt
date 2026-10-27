@@ -174,6 +174,19 @@ class YlHardwareCodecSelectorTest {
     }
 
     @Test
+    fun `32 bit television keeps constrained buffers without rejecting hardware supported 4K`() {
+        val signals = YlDeviceSignals(1536L * 1024 * 1024, 256, false, 28)
+        val tier = YlPlaybackPolicy.classifyDevice(signals)
+        val profile = YlAndroidDeviceProfile(signals, tier, 1920, 1080, 60.0, isTelevision = true)
+        assertEquals(YlDeviceTier.CONSTRAINED, profile.tier)
+        assertEquals(YlVideoEnvelope(null, null, 60.0), profile.videoEnvelope)
+        assertEquals(YlVideoEnvelope(1920, 1080, 60.0),
+            profile.videoEnvelope.intersect(1920, 1080))
+        assertEquals(YlVideoEnvelope(1920, 1080, 30.0),
+            profile.copy(isTelevision = false).videoEnvelope)
+    }
+
+    @Test
     fun `portrait display does not reject landscape video by encoded width`() {
         val envelope = displayEnvelope(YlDeviceTier.STANDARD, 1080, 2400, 60.0)
         assertTrue(1920 <= (envelope.maxWidth ?: Int.MAX_VALUE))

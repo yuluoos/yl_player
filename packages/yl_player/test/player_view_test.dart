@@ -36,6 +36,41 @@ void main() {
   });
 
   testWidgets(
+    'Android native output mounts before geometry and keeps its holder when frames arrive',
+    (tester) async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      final backend = _NativePlatformPlayer(platform: TargetPlatform.android);
+      final controller = await _createCommittedController(
+        backend,
+        sessionId: _s1,
+      );
+      await _pumpView(
+        tester,
+        YlPlayerView(
+          controller: controller,
+          placeholder: const Text('waiting'),
+        ),
+      );
+      await tester.pump();
+      expect(find.byType(AndroidViewSurface), findsOneWidget);
+      expect(find.byType(Texture), findsNothing);
+      expect(find.byType(Opacity), findsNothing);
+      final create = nativeCalls.singleWhere((call) => call.method == 'create');
+      expect((create.arguments as Map)['hybrid'], isTrue);
+      _publishGeometry(backend, _wideGeometry);
+      backend.emitFirstFrame(_s1);
+      await tester.pump();
+      expect(nativeCalls.where((call) => call.method == 'create').length, 1);
+      expect(find.text('waiting'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pump();
+      expect(nativeCalls.where((call) => call.method == 'dispose').length, 1);
+      await tester.runAsync(controller.dispose);
+      debugDefaultTargetPlatformOverride = null;
+    },
+  );
+
+  testWidgets(
     'protected Android mounts explicit hybrid before first frame without texture or opacity',
     (tester) async {
       debugDefaultTargetPlatformOverride = TargetPlatform.android;

@@ -123,6 +123,10 @@ internal class YlFfmpegSession private constructor(
 internal object YlFfmpegBridge {
     val available: Boolean = runCatching { System.loadLibrary("yl_player_ffmpeg") }.isSuccess
 
+    external fun nativeCreateEac3(sampleRate: Int, channels: Int): Long
+    external fun nativeDecodeEac3(handle: Long, data: ByteArray, reset: Boolean): ByteArray?
+    external fun nativeCloseEac3(handle: Long)
+
     external fun nativeOpen(source: YlNativeByteSource): Long
     external fun nativeStreamCount(handle: Long): Int
     external fun nativeDurationUs(handle: Long): Long

@@ -33,7 +33,7 @@ internal class YlCandidateVideoOutput(context: Context, override val isProtected
 }
 
 /** Worker-side borrow bookkeeping. A failed/timeout detach leaves both resources retained. */
-internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) {
+internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput, private val retainCandidate: Boolean = false) {
     val isProtected get() = candidate.isProtected
     private var surface: Surface? = candidate.surface
     private var identity = candidate.identity
@@ -79,10 +79,15 @@ internal class YlEngineVideoOutput(private val candidate: YlPrivateVideoOutput) 
         this.identity = identity
         inspection?.releaseAfterAcknowledgedDetach()
         inspection = null
-        if (candidateAttached && !candidate.isProtected) {
+        if (candidateAttached && !candidate.isProtected && !retainCandidate) {
             candidateAttached = false
             candidate.releaseAfterAcknowledgedDetach()
         }
+    }
+    fun parkNative(acknowledgedAttach: (Surface) -> Unit) {
+        check(retainCandidate && !candidate.isProtected)
+        acknowledgedAttach(candidate.surface)
+        surface = candidate.surface; renderSurface = candidate.surface; identity = candidate.identity
     }
     fun parkProtected(acknowledgedAttach: (Surface) -> Unit) {
         check(candidate.isProtected)

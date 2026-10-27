@@ -5,7 +5,7 @@ import 'pigeon/yl_player_android.g.dart';
 
 /// The schema boundary. Generated values never escape this package.
 abstract final class AndroidCodec {
-  static const schemaMajor = 7;
+  static const schemaMajor = 8;
   static const _maxDurationMs = 9223372036854775;
   static final _metadata = RegExp(r'^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$');
 

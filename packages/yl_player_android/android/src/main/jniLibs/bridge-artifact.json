@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "inputs": {
-    "android/src/main/cpp/yl_player_ffmpeg.cpp": "7253f888801268de1d0bdfa3823680601112ecbb3247bd74cd48d0e196911007",
+    "android/src/main/cpp/yl_player_ffmpeg.cpp": "534694dfd5f43f031ba188958e495b2c45e31b6e4568750b86a0b0049edc794c",
     "android/src/main/cpp/YlSoftwareVideoBudget.inc": "61d0e05273a202123062b378d5e5eac2c53c81fb199010ff6015722230e9ce41",
     "tool/android_ffmpeg/build_shared_libraries.sh": "49788a07bb50d5a88d37ca349c437dfcdf97d3d666d3e580b764e210824c5a0b",
     "tool/android_ffmpeg/ffmpeg-9.0.1.lock": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1"
@@ -9,13 +9,16 @@
   "configureContractSha256": "07bfe96894802b010190443570aec8dfa95df1a65e79766dab643301c9d527a0",
   "libraries": {
     "arm64-v8a": {
-      "sha256": "ade6746bb2c4f9bb4b561cbfc821093fd11d1a2f4da5655a5a756de978cebe1c",
+      "sha256": "b1035d561cfeb24813372141773bc1c9bd6d66280af87689a16e32806880acde",
       "minApi": 24,
       "jniExports": [
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCloseEac3",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureHardwareVideo",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareAudio",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareVideoV2",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCreateEac3",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeEac3",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareAudio",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareVideo",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDurationUs",
@@ -37,13 +40,16 @@
       ]
     },
     "armeabi-v7a": {
-      "sha256": "df5fc2fad6801e18496dc25474f2df06f47b36464ecd3128c3f6c38df85b993b",
+      "sha256": "63d2e7a018cc08a6ea9caea926453d87bbad318c7fd92816f204e3b077c86621",
       "minApi": 24,
       "jniExports": [
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCloseEac3",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureHardwareVideo",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareAudio",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareVideoV2",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCreateEac3",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeEac3",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareAudio",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareVideo",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDurationUs",
@@ -65,13 +71,16 @@
       ]
     },
     "x86_64": {
-      "sha256": "b59c1a87defef52275ba93b5f24a4bce1b7e42c839e6315a5d5ae1d935ee2427",
+      "sha256": "3eaa02009e2402abfdc7c32cb0e6340b0a31516af262143cd86a05cc82188d57",
       "minApi": 24,
       "jniExports": [
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCloseEac3",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureHardwareVideo",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareAudio",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareVideoV2",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeCreateEac3",
+        "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeEac3",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareAudio",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareVideo",
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDurationUs",

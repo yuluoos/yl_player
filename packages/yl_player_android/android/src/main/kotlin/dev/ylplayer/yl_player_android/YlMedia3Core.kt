@@ -184,6 +184,8 @@ internal class YlMedia3Core(
         check(protectedDrm == null || renderersFactoryOverride == null)
         val renderersFactory = (renderersFactoryOverride?.invoke(context, outputObserver)
             ?: YlOutputRenderersFactory(context, outputObserver))
+            .also { it.allowEac3SoftwareAudio = protectedDrm == null && dashVideoFamily == null &&
+                deviceProfile.isTelevision && deviceProfile.signals.apiLevel in 24..28 }
             .setEnableDecoderFallback(protectedDrm == null)
             .setMediaCodecSelector(protectedSelector ?: YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
@@ -252,8 +254,25 @@ internal class YlMedia3Core(
         if (active) { resumeAtLiveEdge = false; exoPlayer.seekToDefaultPosition() }
         else { resumeAtLiveEdge = true; emitState() }
     }
-    fun setPlaybackSpeed(speed: Double) { requestedPlaybackSpeed = speed.toFloat(); exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed) }
+    fun setPlaybackSpeed(speed: Double) { requestedPlaybackSpeed = speed.toFloat(); updateTunneling(); exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed) }
     fun setVolume(volume: Double) { exoPlayer.volume = volume.toFloat() }
+    private var nativePresentation = false
+    private var tunnelingEnabled = false
+    private fun updateTunneling() {
+        val enabled = nativePresentation && requestedPlaybackSpeed == 1f && dashVideoFamily == null && protectedDrm == null
+        if (tunnelingEnabled == enabled) return
+        trackSelector.parameters = trackSelector.buildUponParameters().setTunnelingEnabled(enabled).build()
+        tunnelingEnabled = enabled
+    }
+    fun switchNativeOutput(surface: Surface, output: YlOutputIdentity) {
+        switchOutput(surface, output)
+        nativePresentation = true; updateTunneling()
+    }
+    fun parkNativeOutput() {
+        if (disposed) return
+        nativePresentation = false; updateTunneling()
+        videoOutput.parkNative(::attachSurface)
+    }
     fun switchOutput(surface: Surface, output: YlOutputIdentity) {
         if (protectedDrm != null) throw YlBoundaryException(YlFailureKind.DRM_PROTECTION_INSUFFICIENT)
         videoOutput.switchTo(surface, output, ::attachSurface); ensureHealthy()

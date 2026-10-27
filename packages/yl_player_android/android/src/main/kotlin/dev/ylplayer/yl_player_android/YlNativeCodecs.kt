@@ -1,5 +1,7 @@
 package dev.ylplayer.yl_player_android
 
+import dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode
+import dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
@@ -14,23 +16,32 @@ import java.nio.ByteBuffer
 import kotlin.math.max
 
 internal object YlHardwareCodecProbe {
-    fun findVideoDecoder(stream: YlNativeStreamInfo): String? {
+    fun findVideoDecoder(stream: YlNativeStreamInfo,
+        policy: AndroidDecoderPolicy = AndroidDecoderPolicy.HARDWARE_REQUIRED,
+        apiLevel: Int = Build.VERSION.SDK_INT,
+        codecInfos: () -> Array<MediaCodecInfo> = { MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos },
+    ): String? {
         val mime = stream.codec.mimeType ?: return null
         val format = MediaFormat.createVideoFormat(mime, stream.width, stream.height).apply {
             if (stream.frameRate > 0) setFloat(MediaFormat.KEY_FRAME_RATE, stream.frameRate.toFloat())
         }
-        return MediaCodecList(MediaCodecList.REGULAR_CODECS).codecInfos.firstOrNull { info ->
+        return codecInfos().firstOrNull { info ->
             !info.isEncoder && info.supportedTypes.any { it.equals(mime, ignoreCase = true) } &&
-                isHardware(info) && runCatching {
+                evidence(info, apiLevel).allowsPlayback(policy, info.name) && runCatching {
                     val capabilities = info.getCapabilitiesForType(mime)
                     capabilities.isFormatSupported(format) && supportsProfile(capabilities, stream)
                 }.getOrDefault(false)
         }?.name
     }
 
-    // A vendor-looking name is not proof on older Android releases.
-    private fun isHardware(info: MediaCodecInfo): Boolean = Build.VERSION.SDK_INT >= 29 &&
-        info.isHardwareAccelerated && !info.isSoftwareOnly
+    // Selection permission and positive hardware evidence are separate on API < 29.
+    internal fun evidence(info: MediaCodecInfo, apiLevel: Int = Build.VERSION.SDK_INT) =
+        YlDecoderEvidenceProvider(apiLevel, listOf(YlCodecDescriptor(
+            info.name,
+            apiLevel >= 29 && info.isHardwareAccelerated,
+            apiLevel >= 29 && info.isSoftwareOnly,
+            if (apiLevel >= 29) info.canonicalName else info.name,
+        )))
 
     private fun supportsProfile(capabilities: MediaCodecInfo.CodecCapabilities, stream: YlNativeStreamInfo): Boolean {
         val profile = when (stream.codec) {
@@ -100,6 +111,7 @@ internal class YlHardwareVideoDecoder(
     codecConfig: ByteArray,
     private val cancelled: () -> Boolean = { false },
     private val observePresented: ((Long) -> Unit)? = null,
+    private val decoderPolicy: AndroidDecoderPolicy = AndroidDecoderPolicy.HARDWARE_REQUIRED,
 ) : AutoCloseable {
     private val codec = MediaCodec.createByCodecName(codecName)
     private val info = MediaCodec.BufferInfo()
@@ -110,10 +122,13 @@ internal class YlHardwareVideoDecoder(
     private var reachedEos = false
     /** Identity of the initialized codec, rather than its discovery candidate. */
     val decoderIdentity: String get() = codec.name
+    var decoderMode = AndroidDecoderMode.UNKNOWN
+        private set
     init {
       try {
         val actual = codec.codecInfo
-        if (Build.VERSION.SDK_INT < 29 || !actual.isHardwareAccelerated || actual.isSoftwareOnly) {
+        val evidence = YlHardwareCodecProbe.evidence(actual)
+        if (actual.isEncoder || !evidence.allowsPlayback(decoderPolicy, codec.name)) {
             throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         }
         val format = MediaFormat.createVideoFormat(checkNotNull(stream.codec.mimeType), stream.width, stream.height)
@@ -131,6 +146,7 @@ internal class YlHardwareVideoDecoder(
         }
         codec.configure(format, surface, null, 0)
         codec.start()
+        decoderMode = evidence.mode(codec.name)
       } catch (error: Throwable) {
         codec.release()
         throw error

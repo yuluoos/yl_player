@@ -15,6 +15,7 @@ internal class YlPlayerRegistry(
     private val failures: YlFailureMapper = YlFailureMapper(),
     private val dispatcher: CoroutineDispatcher = Dispatchers.Main,
     private val protectedViews: YlProtectedViewRegistry? = null,
+    private val nativeViews: YlNativeViewRegistry? = null,
     private val checkMainThread: () -> Unit = {
         check(Looper.myLooper() == Looper.getMainLooper()) { "Main looper required" }
     },
@@ -35,7 +36,7 @@ internal class YlPlayerRegistry(
         try {
             checkMainThread()
             if (detached) throw YlBoundaryException(YlFailureKind.PLAYER_DISPOSED)
-            if (request.schemaMajor != 7L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
+            if (request.schemaMajor != 8L) throw YlBoundaryException(YlFailureKind.PLATFORM_INCOMPATIBLE)
             YlBoundaryValidation.player(request.options)
             val createSession = sessionFactory.prepare(request.options)
             val suffix = "p${nextId++}-${UUID.randomUUID()}"
@@ -60,9 +61,10 @@ internal class YlPlayerRegistry(
                 },
             )
             val reply = AndroidCreateReply(
-                schemaMajor = 7, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
+                schemaMajor = 8, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
                 implementationName = "yl_player_android", implementationVersion = "0.3.0-dev.5",
                 capabilities = session.capabilities, initialState = session.initialState, drmSupport = drmSupport,
+                nativeVideoSurfaceViewType = if (nativeViews?.get(texture.id()) != null) YlNativeViewFactory.TYPE else null,
             )
             host.install()
             players[suffix] = host

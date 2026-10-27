@@ -525,7 +525,8 @@ data class AndroidCreateReply (
   val implementationVersion: String,
   val capabilities: AndroidCapabilitiesMessage,
   val initialState: AndroidStateMessage,
-  val drmSupport: AndroidDrmSupportMessage? = null
+  val drmSupport: AndroidDrmSupportMessage? = null,
+  val nativeVideoSurfaceViewType: String? = null
 )
  {
   companion object {
@@ -539,7 +540,8 @@ data class AndroidCreateReply (
       val capabilities = pigeonVar_list[6] as AndroidCapabilitiesMessage
       val initialState = pigeonVar_list[7] as AndroidStateMessage
       val drmSupport = pigeonVar_list[8] as AndroidDrmSupportMessage?
-      return AndroidCreateReply(schemaMajor, spiMajor, channelSuffix, textureId, implementationName, implementationVersion, capabilities, initialState, drmSupport)
+      val nativeVideoSurfaceViewType = pigeonVar_list[9] as String?
+      return AndroidCreateReply(schemaMajor, spiMajor, channelSuffix, textureId, implementationName, implementationVersion, capabilities, initialState, drmSupport, nativeVideoSurfaceViewType)
     }
   }
   fun toList(): List<Any?> {
@@ -553,6 +555,7 @@ data class AndroidCreateReply (
       capabilities,
       initialState,
       drmSupport,
+      nativeVideoSurfaceViewType,
     )
   }
   override fun equals(other: Any?): Boolean {
@@ -563,7 +566,7 @@ data class AndroidCreateReply (
       return true
     }
     val other = other as AndroidCreateReply
-    return YlPlayerAndroidPigeonUtils.deepEquals(this.schemaMajor, other.schemaMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.spiMajor, other.spiMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.channelSuffix, other.channelSuffix) && YlPlayerAndroidPigeonUtils.deepEquals(this.textureId, other.textureId) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationName, other.implementationName) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationVersion, other.implementationVersion) && YlPlayerAndroidPigeonUtils.deepEquals(this.capabilities, other.capabilities) && YlPlayerAndroidPigeonUtils.deepEquals(this.initialState, other.initialState) && YlPlayerAndroidPigeonUtils.deepEquals(this.drmSupport, other.drmSupport)
+    return YlPlayerAndroidPigeonUtils.deepEquals(this.schemaMajor, other.schemaMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.spiMajor, other.spiMajor) && YlPlayerAndroidPigeonUtils.deepEquals(this.channelSuffix, other.channelSuffix) && YlPlayerAndroidPigeonUtils.deepEquals(this.textureId, other.textureId) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationName, other.implementationName) && YlPlayerAndroidPigeonUtils.deepEquals(this.implementationVersion, other.implementationVersion) && YlPlayerAndroidPigeonUtils.deepEquals(this.capabilities, other.capabilities) && YlPlayerAndroidPigeonUtils.deepEquals(this.initialState, other.initialState) && YlPlayerAndroidPigeonUtils.deepEquals(this.drmSupport, other.drmSupport) && YlPlayerAndroidPigeonUtils.deepEquals(this.nativeVideoSurfaceViewType, other.nativeVideoSurfaceViewType)
   }
 
   override fun hashCode(): Int {
@@ -577,10 +580,11 @@ data class AndroidCreateReply (
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.capabilities)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.initialState)
     result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.drmSupport)
+    result = 31 * result + YlPlayerAndroidPigeonUtils.deepHash(this.nativeVideoSurfaceViewType)
     return result
   }
   override fun toString(): String {
-    return "AndroidCreateReply(schemaMajor=$schemaMajor, spiMajor=$spiMajor, channelSuffix=$channelSuffix, textureId=$textureId, implementationName=$implementationName, implementationVersion=$implementationVersion, capabilities=$capabilities, initialState=$initialState, drmSupport=$drmSupport)"
+    return "AndroidCreateReply(schemaMajor=$schemaMajor, spiMajor=$spiMajor, channelSuffix=$channelSuffix, textureId=$textureId, implementationName=$implementationName, implementationVersion=$implementationVersion, capabilities=$capabilities, initialState=$initialState, drmSupport=$drmSupport, nativeVideoSurfaceViewType=$nativeVideoSurfaceViewType)"
   }
 }
 

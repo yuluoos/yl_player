@@ -129,8 +129,8 @@ internal object YlPlaybackPolicy {
         YlMemorySignal.NORMAL -> YlMemoryAction.NONE
         YlMemorySignal.RUNNING_MODERATE,
         YlMemorySignal.RUNNING_LOW,
-        -> YlMemoryAction.SHRINK
         YlMemorySignal.RUNNING_CRITICAL,
+        -> YlMemoryAction.SHRINK
         YlMemorySignal.UI_HIDDEN,
         -> YlMemoryAction.RELEASE
         YlMemorySignal.FOREGROUND -> YlMemoryAction.RESTORE

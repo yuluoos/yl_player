@@ -9,6 +9,25 @@ import io.flutter.view.TextureRegistry
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class YlCandidateVideoOutputTest {
+    @Test fun `native holder replacements fence old frames and keep parking surface until release`() {
+        val candidate = FakePrivateOutput()
+        val engine = YlEngineVideoOutput(candidate, retainCandidate = true)
+        val output = YlVideoOutput(mock(TextureRegistry.SurfaceTextureEntry::class.java), ownsTexture = false)
+        val first = mock(Surface::class.java); val next = mock(Surface::class.java)
+        val firstIdentity = output.advanceNativeGeneration()
+        engine.switchTo(first, firstIdentity) {}
+        val nextIdentity = output.advanceNativeGeneration()
+        assertNotEquals(firstIdentity, nextIdentity)
+        engine.switchTo(next, nextIdentity) {}
+        assertNull(engine.firstFrameEvent(first, 1))
+        assertEquals(nextIdentity, engine.firstFrameEvent(next, 2)?.output)
+        assertEquals(0, candidate.releases)
+        engine.parkNative { assertSame(candidate.surface, it) }
+        assertNull(engine.firstFrameEvent(next, 3))
+        engine.dispose {}
+        assertEquals(1, candidate.releases)
+    }
+
     @Test fun `configuration replacement during strict inspection cannot publish the new public surface`() {
         val output = YlEngineVideoOutput(FakePrivateOutput())
         val previous = mock(Surface::class.java)

@@ -200,7 +200,11 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
             override val surface = mock(android.view.Surface::class.java)
             override fun releaseAfterAcknowledgedDetach() = Unit
         }
-        val core = YlMedia3Core(mock(Context::class.java), YlSessionIdentity("test", "load"), coreSource, request("load").options,
+        val context = mock(Context::class.java)
+        val resources = mock(android.content.res.Resources::class.java)
+        `when`(context.resources).thenReturn(resources)
+        `when`(resources.configuration).thenReturn(mock(android.content.res.Configuration::class.java))
+        val core = YlMedia3Core(context, YlSessionIdentity("test", "load"), coreSource, request("load").options,
             createMedia3Configuration(coreSource, request("load").options, sessionOptions.copy(audioPolicy = policy)),
             coreHandler, YlEngineVideoOutput(privateOutput), events::add, protectedDrm = protectedDrm)
         core.initialize()

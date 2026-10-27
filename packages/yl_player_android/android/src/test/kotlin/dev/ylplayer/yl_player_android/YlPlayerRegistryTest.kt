@@ -118,6 +118,7 @@ class YlPlayerRegistryTest {
         val binding = mock(FlutterPlugin.FlutterPluginBinding::class.java)
         `when`(binding.platformViewRegistry).thenReturn(mock(io.flutter.plugin.platform.PlatformViewRegistry::class.java))
         `when`(binding.platformViewRegistry.registerViewFactory(eq(YlProtectedViewFactory.TYPE), any())).thenReturn(true)
+        `when`(binding.platformViewRegistry.registerViewFactory(eq(YlNativeViewFactory.TYPE), any())).thenReturn(true)
         `when`(binding.applicationContext).thenReturn(app)
         `when`(binding.binaryMessenger).thenReturn(fixture.messenger)
         `when`(binding.textureRegistry).thenReturn(fixture.textures)
@@ -197,7 +198,7 @@ class YlPlayerRegistryTest {
         val fixture = RegistryFixture(StandardTestDispatcher(testScheduler))
         val first = fixture.registry.create(createRequest())
         val second = fixture.registry.create(createRequest())
-        assertEquals(7L, first.schemaMajor)
+        assertEquals(8L, first.schemaMajor)
         assertEquals(2L, first.spiMajor)
         assertEquals(41L, first.textureId)
         assertTrue(first.channelSuffix.matches(Regex("p1-[a-zA-Z0-9-]+")))
@@ -499,7 +500,7 @@ class YlPlayerRegistryTest {
     }
 }
 
-internal fun createRequest() = AndroidCreateRequest(7, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
+internal fun createRequest() = AndroidCreateRequest(8, AndroidPlayerOptionsMessage(AndroidDecoderPolicy.SYSTEM_DEFAULT, AndroidAudioPolicy.APP_MANAGED, 250))
 
 internal class RegistryFixture(dispatcher: CoroutineDispatcher, factory: YlPlayerSessionFactory? = null) {
     val messenger = mock(BinaryMessenger::class.java)

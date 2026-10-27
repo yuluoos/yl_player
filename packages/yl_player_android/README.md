@@ -2,7 +2,20 @@
 
 Endorsed Android implementation for `yl_player` 0.2. Applications should depend
 on `yl_player`; Flutter registers this package automatically. It targets Android
-7.0/API 24 or later and uses Media3 1.11.0. Clear media uses a Flutter texture.
+7.0/API 24 or later and uses Media3 1.11.0. Android 7–9 televisions negotiate
+an optional clear-video SurfaceView through the existing native-surface SPI.
+It uses explicit hybrid composition beneath Flutter controls/subtitles. Media3
+requests supported audio/video tunneling at normal speed on this output; other
+speeds disable tunneling. Texture startup remains available before the view is
+mounted, and the managed fallback continues to use its texture. Other devices
+retain texture presentation. This uses internal Android schema 8: rebuild the
+Dart and native packages together.
+On these legacy TVs, clear non-DASH E-AC-3 audio can use the existing FFmpeg
+codec through a bounded Media3 audio renderer when the system renderer does
+not support it. Video stays in Media3, retaining its clock and supported
+tunneling. Output is stereo PCM16; source video resolution is unchanged.
+Encrypted, JOC, unsupported sample rates and unknown channel counts are not
+admitted by this adapter. Rebuild all JNI ABIs with the matching source manifest.
 
 Media3 remains the primary route. When its extractor cannot expose video or its
 decoder cannot initialize, the package makes one managed fallback attempt:
@@ -38,9 +51,10 @@ goals.
 Decoder policies are honored per Player with an optional per-Load override.
 All policies try positively identified hardware first. Hardware-required never
 uses software. Default/preferred can use the separately admitted owned fallback;
-opaque MediaCodec software and unknown hardware evidence are not admitted.
-Positive platform hardware metadata requires API29+; API24 remains the binary
-minimum, not a promise of verified video decoding on every older device. A capability snapshot is conservative and
+opaque MediaCodec software is not admitted. On API24–28, hardware-preferred
+also permits recognized vendor decoder names, while reporting their evidence as
+unknown. Hardware-required still needs positive platform evidence from API29+.
+API24 remains the binary minimum, not a promise that every older decoder works. A capability snapshot is conservative and
 does not prove that a codec will initialize for arbitrary media.
 
 Plugin-managed audio uses one focus owner and preserves current playback intent

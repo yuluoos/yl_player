@@ -2,6 +2,7 @@ package dev.ylplayer.yl_player_android
 
 import android.app.ActivityManager
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Process
 import android.util.DisplayMetrics
@@ -13,9 +14,13 @@ internal data class YlAndroidDeviceProfile(
     val displayWidth: Int?,
     val displayHeight: Int?,
     val displayRefreshRate: Double?,
+    val isTelevision: Boolean = false,
 ) {
     val videoEnvelope: YlVideoEnvelope
-        get() = videoEnvelope(tier, displayRefreshRate)
+        // A TV's process/memory tier controls buffering, not its hardware video size.
+        // Media3 still rejects formats beyond the selected decoder's capabilities.
+        get() = if (isTelevision) YlVideoEnvelope(null, null, displayRefreshRate)
+            else videoEnvelope(tier, displayRefreshRate)
 
     companion object {
         @Suppress("DEPRECATION")
@@ -41,6 +46,8 @@ internal data class YlAndroidDeviceProfile(
                 displayWidth = metrics?.widthPixels?.takeIf { it > 0 },
                 displayHeight = metrics?.heightPixels?.takeIf { it > 0 },
                 displayRefreshRate = display?.refreshRate?.toDouble()?.takeIf { it > 0.0 },
+                isTelevision = (context.resources.configuration.uiMode and
+                    Configuration.UI_MODE_TYPE_MASK) == Configuration.UI_MODE_TYPE_TELEVISION,
             )
         }
     }

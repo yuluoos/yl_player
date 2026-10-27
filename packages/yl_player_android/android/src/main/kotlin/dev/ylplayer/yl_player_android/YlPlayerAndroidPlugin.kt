@@ -14,16 +14,25 @@ class YlPlayerAndroidPlugin :
     Application.ActivityLifecycleCallbacks {
     private var application: Application? = null
     private var protectedViews: YlProtectedViewRegistry? = null
+    private var nativeViews: YlNativeViewRegistry? = null
     private var registry: YlPlayerRegistry? = null
     private var startedActivities = 0
     private val failures = YlFailureMapper()
 
     override fun onAttachedToEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        val native = YlNativeViewRegistry().also { nativeViews = it }
         val views = YlProtectedViewRegistry().also { protectedViews = it }
-        val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlMedia3SessionFactory(binding.applicationContext, protectedViews = views), failures, protectedViews = views)
+        val owner = YlPlayerRegistry(binding.binaryMessenger, binding.textureRegistry, YlMedia3SessionFactory(binding.applicationContext, protectedViews = views, nativeViews = native), failures, protectedViews = views, nativeViews = native)
         registry = owner
         try {
             val platformViews = binding.platformViewRegistry
+            val nativeFactory = nativeFactories[platformViews]
+            if (nativeFactory != null) nativeFactory.bind(native)
+            else {
+                val factory = YlNativeViewFactory(native)
+                check(platformViews.registerViewFactory(YlNativeViewFactory.TYPE, factory))
+                nativeFactories[platformViews] = factory
+            }
             val registered = protectedFactories[platformViews]
             if (registered != null) registered.bind(views)
             else {
@@ -57,6 +66,7 @@ class YlPlayerAndroidPlugin :
     private companion object {
         // Flutter owns registrations for the engine lifetime, which can exceed a plugin instance.
         // Values do not reference the registry key; a collected engine is not retained here.
+        val nativeFactories = java.util.WeakHashMap<io.flutter.plugin.platform.PlatformViewRegistry, YlNativeViewFactory>()
         val protectedFactories = java.util.WeakHashMap<io.flutter.plugin.platform.PlatformViewRegistry, YlProtectedViewFactory>()
     }
 

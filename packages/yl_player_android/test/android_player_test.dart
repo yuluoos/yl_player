@@ -10,6 +10,36 @@ Matcher failsWith(String code) => throwsA(
 );
 void main() {
   test(
+    'native TV output is explicitly negotiated and managed fallback keeps texture rendering',
+    () async {
+      final reply = wireCreate()
+        ..nativeVideoSurfaceViewType = 'yl_player_android/native_video';
+      final transport = FakeTransport();
+      final player = await createFake(transport, reply: reply);
+      addTearDown(player.dispose);
+      expect(
+        player.nativeVideoSurface?.viewType,
+        'yl_player_android/native_video',
+      );
+      await commit(transport, player);
+      final state = wireState(session: 's1', revision: 5, sequence: 11)
+        ..engine = AndroidEngine.managedFallback;
+      transport.callbacks?.onState(state);
+      expect(player.nativeVideoSurface, isNull);
+    },
+  );
+  test('unknown native view negotiation releases the player', () async {
+    final transport = FakeTransport();
+    final reply = wireCreate()
+      ..nativeVideoSurfaceViewType = 'unregistered/view';
+    await expectLater(
+      createFake(transport, reply: reply),
+      failsWith(YlFailureCodes.protocolMismatch),
+    );
+    expect(transport.calls, contains('dispose'));
+  });
+
+  test(
     'network traffic is observable while opening and fenced on replacement and stop',
     () async {
       final t = FakeTransport();

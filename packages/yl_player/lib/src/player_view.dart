@@ -118,7 +118,43 @@ final class YlPlayerView extends StatelessWidget {
                 native.platform == TargetPlatform.macOS);
         final presented = controller.isCurrentFramePresented;
         final Widget content;
-        if (textureId == null || geometry == null) {
+        if (textureId != null &&
+            native?.platform == TargetPlatform.android &&
+            !kIsWeb &&
+            defaultTargetPlatform == TargetPlatform.android) {
+          content = Stack(
+            fit: StackFit.expand,
+            children: [
+              LayoutBuilder(
+                builder: (context, constraints) => FittedBox(
+                  fit: fit,
+                  alignment: alignment,
+                  child: RotatedBox(
+                    quarterTurns: (geometry?.rotationDegrees ?? 0) ~/ 90,
+                    child: SizedBox(
+                      width: geometry == null
+                          ? constraints.maxWidth
+                          : geometry.displaySize.width *
+                                geometry.pixelAspectRatio,
+                      height:
+                          geometry?.displaySize.height ?? constraints.maxHeight,
+                      child: _AndroidNativeVideoView(
+                        key: ValueKey((
+                          controller,
+                          textureId,
+                          native?.viewType,
+                        )),
+                        textureId: textureId,
+                        viewType: native?.viewType ?? '',
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              if (!presented) _placeholder(),
+            ],
+          );
+        } else if (textureId == null || geometry == null) {
           content = _placeholder();
         } else if (useNative) {
           // Keep the layer attached before FirstFrame and across session
@@ -288,4 +324,36 @@ class _ProtectedVideoViewState extends State<_ProtectedVideoView> {
     }
     super.dispose();
   }
+}
+
+/// Hybrid composition is required for TV hardware sideband output.
+class _AndroidNativeVideoView extends StatelessWidget {
+  const _AndroidNativeVideoView({
+    super.key,
+    required this.textureId,
+    required this.viewType,
+  });
+  final int textureId;
+  final String viewType;
+  @override
+  Widget build(BuildContext context) => PlatformViewLink(
+    viewType: viewType,
+    surfaceFactory: (context, controller) => AndroidViewSurface(
+      controller: controller as AndroidViewController,
+      hitTestBehavior: PlatformViewHitTestBehavior.transparent,
+      gestureRecognizers: const <Factory<OneSequenceGestureRecognizer>>{},
+    ),
+    onCreatePlatformView: (params) {
+      final controller = PlatformViewsService.initExpensiveAndroidView(
+        id: params.id,
+        viewType: viewType,
+        layoutDirection: Directionality.of(context),
+        creationParams: <String, Object>{'textureId': textureId},
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+      controller.addOnPlatformViewCreatedListener(params.onPlatformViewCreated);
+      unawaited(controller.create());
+      return controller;
+    },
+  );
 }
