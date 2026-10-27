@@ -12,6 +12,7 @@ import subprocess
 import threading
 import time
 import uuid
+from xml.parsers.expat import ExpatError
 from network_profile import load_profiles, make_server
 from prepare_fixture import create
 
@@ -92,9 +93,29 @@ def observe_owned(out, token, executable):
         not isinstance(path, str) or Path(path).name != executable or '.app/' not in path):
         raise ValueError('invalid process proof')
     identity = process_identity(pid)
-    if identity and not identity.endswith(' ' + path):
-        raise ValueError('process proof executable mismatch')
+    if identity:
+        # macOS reports the canonical /private/tmp path in ps while the native
+        # host may launch through /tmp. Preserve the full start-time identity
+        # for cleanup, but compare the executable's resolved path here.
+        fields = identity.split(maxsplit=5)
+        if (len(fields) != 6 or
+                Path(fields[5]).resolve(strict=True) != Path(path).resolve(strict=True)):
+            raise ValueError('process proof executable mismatch')
     return (pid, identity) if identity else None
+
+
+def wait_for_native(process, command, observe, timeout=240):
+    deadline = time.monotonic() + timeout
+    while (code := process.poll()) is None:
+        observe()
+        if time.monotonic() >= deadline:
+            raise subprocess.TimeoutExpired(command, timeout)
+        time.sleep(.25)
+    # A child can exit during sleep, or the parent can resume after its deadline.
+    # Observing exit 0 at that point is not evidence of timely completion.
+    if time.monotonic() >= deadline:
+        raise subprocess.TimeoutExpired(command, timeout)
+    return code
 
 
 def run(args):
@@ -102,33 +123,34 @@ def run(args):
     receipt=dict(diagnosticOnly=True,capabilityAccepted=False,errors=[],exitCode=None)
     server=None;thread=None;process=None;log=None;output=None;owned=None
     token=uuid.uuid4().hex
-    products=args.products.resolve(strict=True)
-    manifests=list(products.glob('*.xctestrun'))
-    if len(manifests)!=1:raise ValueError('expected one built test manifest')
-    def absolute(value):
-        if isinstance(value,str):return value.replace('__TESTROOT__',str(products))
-        if isinstance(value,list):return [absolute(x) for x in value]
-        if isinstance(value,dict):return {k:absolute(v) for k,v in value.items()}
-        return value
-    config=absolute(plistlib.loads(manifests[0].read_bytes()))
-    target=config['RunnerTests']
-    app=Path(target['TestHostPath'])
-    if app.suffix!='.app':
-        app=app.parent
-        if app.name=='MacOS':app=app.parent.parent
-    info=app/('Contents/Info.plist' if (app/'Contents').is_dir() else 'Info.plist')
-    executable=plistlib.loads(info.read_bytes())['CFBundleExecutable']
+    before=None;products=None
     def hashes():
         paths=[p for p in products.rglob('*') if p.is_file() and ('.app/' in str(p) or p.suffix=='.xctestrun')]
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
-    before=hashes();receipt['binaryHashes']=before
-    receipt['fixture']=create(out/'fixture')
-    profile=load_profiles(args.profiles)[args.profile];receipt['profileSha256']=profile.sha256
-    destination='platform=macOS,arch=arm64'
-    if args.device:
-        if not re.fullmatch('[0-9A-Fa-f-]{36}',args.device):raise ValueError('invalid simulator identifier')
-        destination='platform=iOS Simulator,id='+args.device
     try:
+        products=args.products.resolve(strict=True)
+        manifests=list(products.glob('*.xctestrun'))
+        if len(manifests)!=1:raise ValueError('expected one built test manifest')
+        def absolute(value):
+            if isinstance(value,str):return value.replace('__TESTROOT__',str(products))
+            if isinstance(value,list):return [absolute(x) for x in value]
+            if isinstance(value,dict):return {k:absolute(v) for k,v in value.items()}
+            return value
+        config=absolute(plistlib.loads(manifests[0].read_bytes()))
+        target=config['RunnerTests']
+        app=Path(target['TestHostPath'])
+        if app.suffix!='.app':
+            app=app.parent
+            if app.name=='MacOS':app=app.parent.parent
+        info=app/('Contents/Info.plist' if (app/'Contents').is_dir() else 'Info.plist')
+        executable=plistlib.loads(info.read_bytes())['CFBundleExecutable']
+        before=hashes();receipt['binaryHashes']=before
+        receipt['fixture']=create(out/'fixture')
+        profile=load_profiles(args.profiles)[args.profile];receipt['profileSha256']=profile.sha256
+        destination='platform=macOS,arch=arm64'
+        if args.device:
+            if not re.fullmatch('[0-9A-Fa-f-]{36}',args.device):raise ValueError('invalid simulator identifier')
+            destination='platform=iOS Simulator,id='+args.device
         log=(out/'requests.jsonl').open('w');output=(out/'xcode.log').open('w')
         server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog')
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
@@ -140,20 +162,20 @@ def run(args):
             '-parallel-testing-enabled','NO','-resultBundlePath',str(out)+'.xcresult']
         process=subprocess.Popen(command,stdout=output,stderr=subprocess.STDOUT,start_new_session=True)
         try:
-            deadline=time.monotonic()+240
-            while process.poll() is None:
+            def observe():
+                nonlocal owned
                 if owned is None:owned=observe_owned(out,token,executable)
-                if time.monotonic()>=deadline:raise subprocess.TimeoutExpired(command,240)
-                time.sleep(.25)
-            receipt['exitCode']=process.returncode
+            receipt['exitCode']=wait_for_native(process, command, observe)
         except subprocess.TimeoutExpired:
             receipt['errors'].append('native deadline')
-            os.killpg(process.pid,signal.SIGTERM)
-            try:process.wait(timeout=10)
-            except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=10)
+            if process.poll() is None:
+                os.killpg(process.pid,signal.SIGTERM)
+                try:process.wait(timeout=10)
+                except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=10)
         rows=read_rows(out/'rows.jsonl')
         receipt['observation']=summarize(rows)
-    except (OSError,ValueError,KeyError,TypeError,subprocess.SubprocessError) as error:
+    except (OSError,ValueError,KeyError,TypeError,plistlib.InvalidFileException,ExpatError,
+            subprocess.SubprocessError) as error:
         receipt['errors'].append(type(error).__name__)
     finally:
         if process is not None and process.poll() is None:
@@ -168,12 +190,18 @@ def run(args):
             receipt['ownedProcessExited']=cleanup_owned(owned)
         except (OSError,RuntimeError,subprocess.SubprocessError):
             receipt['ownedProcessExited']=False
-        if not receipt['ownedProcessExited']:receipt['errors'].append('owned process cleanup unverified')
+        if process is not None and not receipt['ownedProcessExited']:
+            receipt['errors'].append('owned process cleanup unverified')
         if server:server.shutdown();server.server_close()
         if thread:thread.join(timeout=5)
         if log:log.close()
         if output:output.close()
-        receipt['binaryIdentityUnchanged']=before==hashes()
+        receipt['binaryIdentityUnchanged']=False
+        if before is not None:
+            try:
+                receipt['binaryIdentityUnchanged']=before==hashes()
+            except OSError:
+                receipt['errors'].append('binary identity recheck failed')
         receipt['passed']=receipt['exitCode']==0 and not receipt['errors'] and receipt['binaryIdentityUnchanged']
         (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt

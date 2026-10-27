@@ -290,14 +290,19 @@ final class YlApplePublicationTests: XCTestCase {
     try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
     try backend.activate()
     try await AppleHostCharacterizations.waitFor({ av.currentItem?.status == .readyToPlay && av.rate > 0 }, timeout: 10)
-    try await Task.sleep(nanoseconds: 100_000_000)
     let oldTick = try XCTUnwrap(ticks.last)
     backend.bindCallbacks { currentEvents.append($0) }
-    let before = registry.notifications
-    oldTick()
-    XCTAssertEqual(registry.notifications, before, "Held old callback must not borrow the new binding")
     let newTick = try XCTUnwrap(ticks.last)
-    newTick()
+    // readyToPlay does not guarantee a decoded pixel buffer on the next tick.
+    // Drive both callbacks until real output arrives, checking the retired
+    // binding before each current tick so it cannot consume the pending frame.
+    try await AppleHostCharacterizations.waitFor({
+      let before = registry.notifications
+      oldTick()
+      XCTAssertEqual(registry.notifications, before, "Held old callback must not borrow the new binding")
+      newTick()
+      return registry.positivePublicFrames > 0
+    }, timeout: 10)
     XCTAssertGreaterThan(registry.positivePublicFrames, 0, "A real decoded frame must be available to the new binding")
     let oldCount = oldEvents.count
     backend.stop()

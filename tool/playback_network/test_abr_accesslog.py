@@ -1,7 +1,15 @@
 import copy
+import json
+from pathlib import Path
+import plistlib
+import shutil
+import subprocess
+import sys
+import tempfile
 import unittest
-from unittest.mock import patch
-from abr_accesslog import cleanup_owned
+from unittest.mock import Mock, patch
+import abr_accesslog
+from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
@@ -31,8 +39,6 @@ class AccessLogTests(unittest.TestCase):
         for rows in variants:
             with self.subTest(rows=rows),self.assertRaises(ValueError):summarize(rows)
 
-if __name__=='__main__':unittest.main()
-
 class CleanupTests(unittest.TestCase):
     def test_missing_and_changed_identity_never_signals(self):
         for current in ('', 'different executable/start time'):
@@ -44,3 +50,89 @@ class CleanupTests(unittest.TestCase):
         with patch('abr_accesslog.process_identity', side_effect=['original', '']), patch('abr_accesslog.os.kill') as kill:
             self.assertTrue(cleanup_owned((123, 'original')))
             kill.assert_called_once()
+
+
+class FailureReceiptTests(unittest.TestCase):
+    def test_preflight_failures_keep_a_failed_receipt_without_running_a_host(self):
+        # Losing failures before launch makes the recorded experiment denominator wrong.
+        for kind in ('missing-products', 'missing-manifest', 'invalid-manifest', 'truncated-xml', 'missing-host'):
+            with self.subTest(kind=kind), tempfile.TemporaryDirectory() as directory:
+                root = Path(directory)
+                products, output = root / 'products', root / 'observation'
+                if kind != 'missing-products':
+                    products.mkdir()
+                if kind == 'invalid-manifest':
+                    (products / 'probe.xctestrun').write_bytes(b'not a plist')
+                elif kind == 'truncated-xml':
+                    (products / 'probe.xctestrun').write_bytes(b'<?xml version="1.0"?><plist><dict>')
+                elif kind == 'missing-host':
+                    (products / 'probe.xctestrun').write_bytes(plistlib.dumps({'RunnerTests': {}}))
+                result = subprocess.run([sys.executable, str(Path(__file__).with_name('abr_accesslog.py')),
+                    '--products', str(products), '--directory', str(output)],
+                    capture_output=True, text=True, timeout=10)
+                self.assertEqual(result.returncode, 1)
+                self.assertTrue((output / 'receipt.json').exists(), 'preflight failure disappeared')
+                receipt = json.loads((output / 'receipt.json').read_text())
+                self.assertFalse(receipt['passed'])
+                self.assertFalse(receipt['capabilityAccepted'])
+                self.assertFalse(receipt['binaryIdentityUnchanged'])
+                self.assertIsNone(receipt['exitCode'])
+                self.assertTrue(receipt['errors'])
+                self.assertNotIn(str(root), result.stdout + result.stderr)
+                self.assertNotIn('Traceback', result.stderr)
+
+
+class ProcessProofTests(unittest.TestCase):
+    @unittest.skipUnless(sys.platform == 'darwin', 'macOS native host process proof')
+    def test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            app = root / 'host.app'
+            app.mkdir()
+            executable = app / 'owned-sleep'
+            shutil.copy('/bin/sleep', executable)
+            # Use a real process so ps's actual executable representation is tested.
+            child = subprocess.Popen([str(executable), '20'])
+            try:
+                proof = dict(pid=child.pid, token='owned-token')
+                # Keep the same bundle-shaped pathname as the native proof contract.
+                nested = root / 'alias.app'
+                nested.symlink_to(app, target_is_directory=True)
+                proof['executable'] = str(nested / 'owned-sleep')
+                (root / 'process.json').write_text(json.dumps(proof))
+                observed = observe_owned(root, 'owned-token', 'owned-sleep')
+                self.assertIsNotNone(observed)
+                self.assertEqual(observed[0], child.pid)
+                other = root / 'other.app'
+                other.mkdir()
+                shutil.copy('/bin/sleep', other / 'owned-sleep')
+                proof['executable'] = str(root / 'other.app' / 'owned-sleep')
+                (root / 'process.json').write_text(json.dumps(proof))
+                with self.assertRaises(ValueError):
+                    observe_owned(root, 'owned-token', 'owned-sleep')
+            finally:
+                child.terminate()
+                child.wait(timeout=5)
+
+
+class NativeDeadlineTests(unittest.TestCase):
+    def test_exit_after_final_sleep_cannot_be_accepted_past_deadline(self):
+        wait = getattr(abr_accesslog, 'wait_for_native', None)
+        self.assertIsNotNone(wait, 'native exit must be checked against the deadline')
+        process = Mock()
+        process.poll.side_effect = [None, 0]
+        with patch('abr_accesslog.time.monotonic', side_effect=[0, 239.9, 240.1]), \
+                patch('abr_accesslog.time.sleep'), self.assertRaises(subprocess.TimeoutExpired):
+            wait(process, ['owned-native-command'], lambda: None)
+
+    def test_timely_exit_preserves_actual_failure_code(self):
+        wait = getattr(abr_accesslog, 'wait_for_native', None)
+        self.assertIsNotNone(wait)
+        process = Mock()
+        process.poll.side_effect = [None, 65]
+        with patch('abr_accesslog.time.monotonic', side_effect=[0, 1, 2]), \
+                patch('abr_accesslog.time.sleep'):
+            self.assertEqual(wait(process, ['owned-native-command'], lambda: None), 65)
+
+
+if __name__=='__main__':unittest.main()

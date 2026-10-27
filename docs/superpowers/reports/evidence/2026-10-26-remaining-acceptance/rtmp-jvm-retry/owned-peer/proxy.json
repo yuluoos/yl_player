@@ -1,0 +1,58 @@
+{
+  "accepted": 0,
+  "closed": 0,
+  "active": 0,
+  "heldBytes": 0,
+  "errors": [],
+  "history": [],
+  "peakHeldBytes": 0,
+  "outcome": {
+    "kind": "success",
+    "commandExitCode": 0
+  },
+  "cleanup": {
+    "complete": true,
+    "processGroups": [
+      {
+        "pgid": 98757,
+        "termSent": false,
+        "killSent": false,
+        "complete": true,
+        "groupRemaining": false,
+        "leaderReturnCode": 0
+      },
+      {
+        "pgid": 98753,
+        "termSent": true,
+        "killSent": false,
+        "complete": true,
+        "groupRemaining": false,
+        "leaderReturnCode": 255
+      },
+      {
+        "pgid": 98752,
+        "termSent": true,
+        "killSent": false,
+        "complete": true,
+        "groupRemaining": false,
+        "leaderReturnCode": 255
+      },
+      {
+        "pgid": 98749,
+        "termSent": true,
+        "killSent": false,
+        "complete": true,
+        "groupRemaining": false,
+        "leaderReturnCode": -15
+      }
+    ],
+    "proxy": {
+      "complete": true,
+      "pendingTasks": 0,
+      "activeReaders": 0,
+      "activeControls": 0
+    },
+    "listenersClosed": true
+  },
+  "observedCommandReturnCode": 0
+}

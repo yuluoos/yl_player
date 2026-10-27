@@ -1,0 +1,35 @@
+[
+  {
+    "name": "ios-public-retry",
+    "command": [
+      "python3",
+      "-u",
+      "/private/tmp/yl-remaining-20261026-public-abr-ios-retry.py",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player"
+    ],
+    "exitCode": 0,
+    "seconds": 344.515
+  },
+  {
+    "name": "native-focused",
+    "command": [
+      "python3",
+      "-u",
+      "/private/tmp/yl-remaining-20261026-focused.py",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player"
+    ],
+    "exitCode": 0,
+    "seconds": 104.102
+  },
+  {
+    "name": "android-public",
+    "command": [
+      "python3",
+      "-u",
+      "/private/tmp/yl-remaining-20261026-public-abr-android.py",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player"
+    ],
+    "exitCode": 0,
+    "seconds": 251.97
+  }
+]

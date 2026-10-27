@@ -1,0 +1,291 @@
+{
+  "previousSourceHash": "69f6e5fc191dc55021a1f96b8a2398f8441eee84deeca9ca57521e1819053b60",
+  "currentSourceHash": "77fdcdc820e805edfbea670ac670c9181bb69defc7171b65a24716cab37dc37c",
+  "files": [
+    {
+      "path": "packages/yl_player/CHANGELOG.md",
+      "before": "6b73f2a460193f3707d8952c4e165c7afe5f3490705c3addd977926bde1d00ea",
+      "after": "0c0d8d015f623fe9c42fed511fcb380b5a37b4024a3eb69f29749518b84358f8"
+    },
+    {
+      "path": "packages/yl_player/pubspec.yaml",
+      "before": "4bdcb7708f56f88585d3d4c936a4373b991901497cec5f723bccf545c5710f7d",
+      "after": "d4dac8870ac5d16601070e522df3ecc804657c5bd0f38e260a861a40e6f45fee"
+    },
+    {
+      "path": "packages/yl_player_android/CHANGELOG.md",
+      "before": "7a0d7e7b91fd2d4451aed94ba8d76dca59fa6bc3b4e7292fe0915cb38be7a578",
+      "after": "a9f8110b8b6982dfa70e6f16fad78fc97ae14ee60ae0d80b9a56f995e74deca2"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidMemoryPolicy.kt",
+      "before": null,
+      "after": "a245198c08cdc5365dc87eebdb772f59f7f6c3ce65bf54859ecf1218ca7176b0"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFailureMapper.kt",
+      "before": "96791be340ba597bda77b85a2064f8d83fbc5de5b8c0e2608eb452b03ad76184",
+      "after": "a7021270c92117e2aa64a0f5578565f9a887377e6090f1cd3f3fddf61903aea2"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFfmpegBridge.kt",
+      "before": "6de7b0e4d6ac3afe9275f4a12bb515fe707e6e6b6213e5be446b4fa1a041e306",
+      "after": "07f3b5b6a2f0e5f5fa432fdb9439bd8272603792fccd46e10d9d7b8a046f0c23"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt",
+      "before": "66171a7c5f62575456111b739958d84df2ef96ca9671b825d1d5029a0174c060",
+      "after": "ba8cea7f11ee885c123247a74e940d7623f9b394f40f2ee5cf219da2b864a02e"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlManagedAndroidEngine.kt",
+      "before": "3a7fa68a0017f2a720f678601e91718a9e6dcbac42c95dc128cdb341066005f2",
+      "after": "76e0786084d52bad63174efc1523dbbaac198988d317e21be116829d40e88c03"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlManagedHttpClient.kt",
+      "before": "b8157932f6326e501e815f67c3feea62769458120cc6cad75dce6c93dee20d27",
+      "after": "3a9d500602035402f164863ab7f789a909b117427c072f9dcdb50a7e95a53a0a"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlManagedRedirectInterceptor.kt",
+      "before": "5d1d0ec1320dcf054c0ddcef667030edde3b2be9615db5fb23f6097885ca2286",
+      "after": "ed4a2498b5883459c8ef04d9f340710a328726081f6b32d4aa0bed3fdbe86eb3"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt",
+      "before": "32e1fd64b7ffe0312bbbd9899e047a9100a1deabf0b0573ca5dada79df7d42e7",
+      "after": "3c669c287d27f4b6a589500afd83588f0ac2bcde5b496635e97246d394184973"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt",
+      "before": "4a586dbe41c832c0e2e9de1735dc1ba07a2ed9b42f31392412addd15a35c985e",
+      "after": "89bbc86d3cd981c4d30b643fd7c63a2abe80e4716ffa93cb795ceb317fd854cb"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeByteSource.kt",
+      "before": "3b851efc43650aca07b351902905d0793a4539b84add955c2c42d2105b1145a7",
+      "after": "6febab1f3b7da3b436bac845b2c8e6c7afc09cc7a40b7014133902ab46c52a88"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeFallbackEngine.kt",
+      "before": "3f852c5f32a8bf582d5d1ec2f00fa8511f08c83bcd5f349ebdd51b2b631f6e23",
+      "after": "3a510a5489adb191d33be7f1551e90507661cf4090265345f610f30f0511244a"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistry.kt",
+      "before": "d2e087b047694e63563a0db5dcd3c5097100d4df0739c52fa2e681645aeafbf9",
+      "after": "22716d89746ad11d99ab72ffcf0a0a5bfe0617ff8339717f16ca13d6dee6f22d"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSafeDiagnostics.kt",
+      "before": "02ba7a4ac1a5b76c1a7521f76a190ad3e6d23649fd6a41f14722a53aa088da0f",
+      "after": "1acb3800789c3b0578d034f5494edaae95a877919482357267c035dcaef660ee"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionCoordinator.kt",
+      "before": "cea45efe6096f94542749b54125d8844fc99de54f0a383e794d3fee45375f814",
+      "after": "e940b97302d6d548ed9d6707edfa5b3b6105e07b6d36a9164b58f8616dc58690"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSessionModels.kt",
+      "before": "aee7bfdb82cb48b6833dee6186291017aa78d1462a9a2843428d791ec1180101",
+      "after": "2402dd7c593e2950e77f13371d8a8c375e37e6197e4d8edf39641036bc74ad7c"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlStateReducer.kt",
+      "before": "5bceb47f4353c67eecd9978f63faa8acb5b6dd049dc86dcb142dd05afc724054",
+      "after": "ce312728eb07ecc4924243bd38dbbe31c2ac45bde65916540b8c701f47d37ca2"
+    },
+    {
+      "path": "packages/yl_player_android/pubspec.yaml",
+      "before": "cc66df96429c8f0e85c61f02e7caf03a4e507ecf60586be9946a87a2d21920a7",
+      "after": "0acb5623d2ffb52786e9820c5ba458075cd17377f6a125a9a7dbef12f11efe95"
+    },
+    {
+      "path": "packages/yl_player_apple/CHANGELOG.md",
+      "before": "ddfce57ca6b68748c96e0b861ca3920b65eaa996f53753245f0b365fd84c3687",
+      "after": "e133502f15963ce1de32640a8911210702a76927ae503e26eb1848aa8abfb49b"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple.podspec",
+      "before": "d8209387bcbfeb3c982e575c760a142cf456c24bd842596c6a362164f9d378a1",
+      "after": "67bbc372539a1cfaf9078d7a63563b31009107b54b3424585606af4046abe626"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+      "before": "d1ce9806ddc3d8dad9f34bebae14f95083e2d516c081a7e8531e474f0dc598d5",
+      "after": "008b48ab77209a02c8965dbed7691229f3c1d70b2fc73e8159dd7a056a2e2c0c"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift",
+      "before": "b46343d759933210e552e24d68935577d9cc7cfd43dc96034c03546c221db4d8",
+      "after": "6800348a367cec2c36651f3068910effc11fa36134d40d16fbbe97d228eb8102"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift",
+      "before": "a34ae0e8d6af1cb367beba1205a01b5d46be1669635d7947a55bf5de0002537b",
+      "after": "6a77042ee2c59321d22f5793062213adbd14efbc89c6b624d57eea7d3cb8ae6e"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift",
+      "before": "9afb2245033298c331e2eedbe40410e57b888f43d26387687144a291f9526353",
+      "after": "1720a5acdf4369b646dc747c1742fd905540a5ce52591f78ca93719388d724a5"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift",
+      "before": "7cbf5cba1be008d8bd58181b9f659f5900e381f18e97db310c1f3d8287446753",
+      "after": "61f66df1bef2734d58bf86c52c7b1df63b081d85bb53b48650bca89714993691"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerRegistry.swift",
+      "before": "d0f9575d184691cc4b270d8bc1a044eaa0d6f3561dcd52d357417de41c3abb06",
+      "after": "832f38db6c1fa7ae415cd9921a12f70a4b67ec1991bd5f05ca56870a7343d042"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlatformServices.swift",
+      "before": "66a678cc7f2bb7cde9978e31d890b0ee46d0cac78f96d26216dd739b71e21504",
+      "after": "de88244c04bfe226b0f29843b8dae8efc946bc3f0d4e0595a7d95e7205967c48"
+    },
+    {
+      "path": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/iOS/YlIosPlatformAdapter.swift",
+      "before": "1c26670b77feb2006ea51caeffa706c2c983a93f8b23282f32690519d04af01a",
+      "after": "f52d22ed7afb5365f72c5a5a2b2ad1a1236037bb620705c87e19d760784fff03"
+    },
+    {
+      "path": "packages/yl_player_apple/pubspec.yaml",
+      "before": "6bc61a3e1995a7a946f8bd93bc53eabc470f5eb26711be8f1399d57666796929",
+      "after": "d0c8d9d9dd2ee57c512958d18e7a2981f1efb89f669d9919b30852380e9d5db5"
+    },
+    {
+      "path": "packages/yl_player_cast/CHANGELOG.md",
+      "before": "182dbe73a43e301766b6a96f4018ce0a1e5649cf12e085178fe08f7ad4cdf396",
+      "after": "2965ce79ab17f3e29983c6c0a4a8ee54bf8e68de8ef0ff997e0d1e12d8094327"
+    },
+    {
+      "path": "packages/yl_player_cast/pubspec.yaml",
+      "before": "4a0ce00726cb525fa652cd3ce7fdef3a6d3caf6fd0b38d2dab6b440bda56dd7f",
+      "after": "5cb26bec8bbf60126a29cea43000d32e7b27a3b17ba3a869d2eb1b2b4144bd4f"
+    },
+    {
+      "path": "packages/yl_player_cast/tool/check_standalone_dependencies.py",
+      "before": "c318a245d373e37b55a27e93872ce92a5adfb04e66d0d43867fdb8f4c2734d72",
+      "after": "107ef97db6f24fca9587403bb1c7ac0d5816ac115ae1741afa2e7d749a0ab833"
+    },
+    {
+      "path": "packages/yl_player_cast_player_adapter/CHANGELOG.md",
+      "before": "d1ecdcfdaffff95be2100c0e2f7efc5404f0f98e0516dc06bbcf9eb53582e9de",
+      "after": "b3f9841170a1e0a6a4839b0a8a022abba619af9425e68a5f0c1dc7701c0e00f0"
+    },
+    {
+      "path": "packages/yl_player_cast_player_adapter/pubspec.yaml",
+      "before": "7e8d262d2bc1dbae0340df34c1ddd57c260304adae5840edba655f6b84869073",
+      "after": "eb8492add58e48574859ecbba97a272f57a364a9eb9137b962886a27391e5e34"
+    },
+    {
+      "path": "packages/yl_player_media_core/CHANGELOG.md",
+      "before": "eef8df957b61f9a74bb9605e667004c6ffdb4bd6eb39bedbfbdafa7a9dcdd484",
+      "after": "5deb66dd14624f67ec78b4c9f7997a2b817d86696a33d57ca4c1231816e6c7b6"
+    },
+    {
+      "path": "packages/yl_player_media_core/darwin/yl_player_media_core.podspec",
+      "before": "72adf844395cf5b49d13af14da89fe1701937060e0b2fa16edd6c56cfbc031b6",
+      "after": "54ad6758ae79a4bccea737d7b9cf5c5470aee656117cb4b350370a26cbd75bc3"
+    },
+    {
+      "path": "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/Info.plist",
+      "before": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
+      "after": "0d607ac3ede166cb2d2667d809276f7f03729cfbdf19fb71eb9fc4c6efe4e4c1"
+    },
+    {
+      "path": "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist",
+      "before": "ab25c77849b32b60fd3747baab898a1cc4a65e9717f19f98080f74641610bb2f",
+      "after": "0d607ac3ede166cb2d2667d809276f7f03729cfbdf19fb71eb9fc4c6efe4e4c1"
+    },
+    {
+      "path": "packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Dependencies/NativePlayerError.swift",
+      "before": "24fa52112901ea74dc0808c7087d243a468a15ce35a62087ca611979ab016957",
+      "after": "3200aa5f7d8b2f95a3d7694f4d097d4749c1d8c3bb883797e71bad200ee9bad4"
+    },
+    {
+      "path": "packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlNetworkByteSource.swift",
+      "before": "84a032888e2727b8cd7e7638b41eb183b2c38e7ffb479fcd31efac134ca600e4",
+      "after": "a19009768d3afe1fd2f87bda8a4a5d8289da16d28c670802fd26a9e4bb243691"
+    },
+    {
+      "path": "packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlNetworkRequestPolicy.swift",
+      "before": "6071081fe6625d4944d77ef7c2b36d82f2b84ebb9fae12cb7c65d3a52220f6cb",
+      "after": "e440784a6ba63aee8ed3f03e55312f1991ca60f384fd8a4e9528b666480eb113"
+    },
+    {
+      "path": "packages/yl_player_media_core/pubspec.yaml",
+      "before": "fc9247cae0e62562280ed41e792f3864361e944f191afaebf65729a422a71c3d",
+      "after": "5e5aefbffa9d5f4b13e9bc6acd4daefbd256feb1694f5e618a9c29ca03563397"
+    },
+    {
+      "path": "packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock",
+      "before": "87c426016bacbf4325678a8f22d9638127198ee78773e2f388345325427689e9",
+      "after": "8cfab46fc97f3c320515406b20802cd4dcae56514252c361316c1bc1bde2ffce"
+    },
+    {
+      "path": "packages/yl_player_media_core/tool/apple_ffmpeg/build_xcframework.sh",
+      "before": "16ed11c3f8994c7f76f339a53fdd854fd448549a2dfac2b2bb2c6c39e6ec87ce",
+      "after": "ee72d88c8cb4fe759bf63151d3e17b36a453d4431a6de2acccfd650a0d9d0cef"
+    },
+    {
+      "path": "packages/yl_player_media_core/tool/apple_ffmpeg/test_build_contract.sh",
+      "before": "93f436fda19fd1a60787f9fa8b84e97fe6418c2aee2c4c3a77db125b2c4fd636",
+      "after": "c73e2f1d3735fb4fc0d1f92f35442c348edce22d114b5564d33f4c8715cb7556"
+    },
+    {
+      "path": "packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py",
+      "before": "6290809ea0c283d683474b82acb1bf4a0eba57a946c5899d6c76fbdfc9d9227b",
+      "after": "efa420fd3003bdc5e47928db80d2fb1caf0a4f743b08b3755df4f13872101b3a"
+    },
+    {
+      "path": "packages/yl_player_media_delivery/CHANGELOG.md",
+      "before": "710a7e1df3a6c60f2743ead197495b2bfe17153c3fd63a081d32884fc6a629bd",
+      "after": "69544ebe274d74d0090cd7694d158b12cf513280d792eb5f6929c9fece8542fc"
+    },
+    {
+      "path": "packages/yl_player_media_delivery/darwin/yl_player_media_delivery.podspec",
+      "before": "ce676fb11c898c8ef7c23cc83be2b6428c2dc3e2c86a1b21763bf33da4c381fa",
+      "after": "23b98eebd00a38c791a68f90a3beb9614d790dc9553b46443447614d5ac1952b"
+    },
+    {
+      "path": "packages/yl_player_media_delivery/pubspec.yaml",
+      "before": "e09464c5090bf9976f9144f72c367aa2ef66218be5339c4931e7959c0d91849e",
+      "after": "83c3a1c77533c24da9b12c8dd7b78da98e6d74048c9d49e3fe62866f9a88f9f0"
+    },
+    {
+      "path": "packages/yl_player_platform_interface/CHANGELOG.md",
+      "before": "1311d9aacb6feebd36879aa3dcf015dea21306663712f25d8c384aad2fac3e88",
+      "after": "5f678100def3bd1af6191f1f3bb7635a1911a555c76f32ff7ffdff585f63516f"
+    },
+    {
+      "path": "packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart",
+      "before": "3fb29ce5041f2d40f3a8f53f27446fa3db2d6e6e272b2cb24a951c2754a27047",
+      "after": "d84342192c1b20b288c386a79f0e49a232e4ca20649622d9566c4b79eeb2c5d9"
+    },
+    {
+      "path": "packages/yl_player_platform_interface/pubspec.yaml",
+      "before": "b3ee9a082b9d49d67c822b5e8fd2f56559eab982f68418f5197c9a23a55c7de8",
+      "after": "fd4570dd342ba765aa659a722204d3108d8d99cea6b6ada4317b852a876d9508"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/CHANGELOG.md",
+      "before": "b0af500e919467386eb53fd33d6e4009f3c826131885056f03eab1606d23d200",
+      "after": "0b1704aa0ae4bb9f86d80afa84ab78ee09e5e38e81e3f30b36f7031739804016"
+    },
+    {
+      "path": "packages/yl_player_source_resolver/pubspec.yaml",
+      "before": "d0d788626bacd5448b2c05b5a2c294bbc92eedb2c2abb3810feb8eb4f9667380",
+      "after": "9e298bc05186ef2d00b35904180a68b1ab8251072273fce76e303efea1547757"
+    },
+    {
+      "path": "pubspec.yaml",
+      "before": "4800cd8c8991eb32b3bec9b5a9d7f9aca248b38ba870ff02c6de716c81ae2278",
+      "after": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
+    }
+  ]
+}

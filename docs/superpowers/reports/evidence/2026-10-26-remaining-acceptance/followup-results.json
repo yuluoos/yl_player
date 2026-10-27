@@ -1,0 +1,22 @@
+[
+  {
+    "name": "public-abr",
+    "command": [
+      "python3",
+      "-u",
+      "/private/tmp/yl-remaining-20261026-public-abr.py",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player"
+    ],
+    "exitCode": 0,
+    "seconds": 277.118
+  },
+  {
+    "name": "consumers",
+    "command": [
+      "sh",
+      "tool/check_consumers.sh"
+    ],
+    "exitCode": 0,
+    "seconds": 764.153
+  }
+]

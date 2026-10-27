@@ -1,0 +1,46 @@
+{
+  "reviewer": "/root/final_review",
+  "mode": "one independent comprehensive review plus scoped followups",
+  "initialFindings": [
+    {
+      "severity": "Important",
+      "finding": "Late native process exit can bypass deadline",
+      "resolution": "Final monotonic deadline check, regression reproduces prior loop; scoped network suite 80/80 passed."
+    },
+    {
+      "severity": "Minor regraded Important by implementer",
+      "finding": "Malformed XML manifest leaves unclassified failure receipt",
+      "resolution": "Catch ExpatError and assert classified receipt with no traceback in real CLI subcase."
+    }
+  ],
+  "followup": "Both findings closed; no new regression identified.",
+  "nativeTestDeltaReview": {
+    "files": 6,
+    "findings": [],
+    "conclusion": "Explicit capacity 3 preserves overflow/order/drop assertions; production default 8 and independent HEVC default-queue test preserved; HTTP 416 expectation matches current exact diagnostic.",
+    "runtimeScope": "Read-only review; final new-build targeted native execution required."
+  },
+  "limits": [
+    "Does not certify physical device output, private system root causes, full capability admission or release readiness.",
+    "Final native matrix and final report were not completed at initial review time."
+  ],
+  "lastNativeDeltaReview": {
+    "files": 4,
+    "findings": [],
+    "conclusion": "macOS backpressure explicitly fixes capacity at 3 with unchanged 50ms blocking assertion and queue order; iOS preflight expects exact HTTP 401 while preserving prior activeID==7. No production change or new skip.",
+    "runtimeScope": "New-build focused verification still required."
+  },
+  "postReviewRuntimeEvidence": {
+    "macosFocused": {
+      "passed": 4,
+      "failed": 0,
+      "identityCheckExit": 0
+    },
+    "iosFocused": {
+      "passed": 5,
+      "failed": 0,
+      "identityCheckExit": 0
+    },
+    "note": "Runtime verification by implementer after read-only review; original full-suite failures preserved."
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "devices": [
+    {
+      "architecture": "arm64",
+      "deviceId": "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "deviceName": "iPhone 18 Pro Max",
+      "modelName": "iPhone 18 Pro Max",
+      "osBuildNumber": "24A434",
+      "osVersion": "27.0",
+      "platform": "iOS Simulator"
+    }
+  ],
+  "testNodes": [
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [
+                {
+                  "duration": "0.0079s",
+                  "durationInSeconds": 0.007869958877563477,
+                  "name": "testIosOverflowPreservesTheNextFramesForPresentation()",
+                  "nodeIdentifier": "YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation()",
+                  "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation",
+                  "nodeType": "Test Case",
+                  "result": "Passed"
+                },
+                {
+                  "duration": "0.00075s",
+                  "durationInSeconds": 0.0007549524307250977,
+                  "name": "testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+                  "nodeIdentifier": "YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+                  "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder",
+                  "nodeType": "Test Case",
+                  "result": "Passed"
+                }
+              ],
+              "name": "YlAppleCompatibilityTests",
+              "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleCompatibilityTests",
+              "nodeType": "Test Suite",
+              "result": "Passed"
+            },
+            {
+              "children": [
+                {
+                  "duration": "0.11s",
+                  "durationInSeconds": 0.10645604133605957,
+                  "name": "testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+                  "nodeIdentifier": "YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+                  "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies",
+                  "nodeType": "Test Case",
+                  "result": "Passed"
+                }
+              ],
+              "name": "YlDashResourceLoaderTests",
+              "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType": "Test Suite",
+              "result": "Passed"
+            },
+            {
+              "children": [
+                {
+                  "duration": "0.0063s",
+                  "durationInSeconds": 0.006291985511779785,
+                  "name": "testDefaultQueuePresentsSixteenPictureHEVCReorderGroupWithoutDrops()",
+                  "nodeIdentifier": "YlFrameSchedulerTests/testDefaultQueuePresentsSixteenPictureHEVCReorderGroupWithoutDrops()",
+                  "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlFrameSchedulerTests/testDefaultQueuePresentsSixteenPictureHEVCReorderGroupWithoutDrops",
+                  "nodeType": "Test Case",
+                  "result": "Passed"
+                }
+              ],
+              "name": "YlFrameSchedulerTests",
+              "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlFrameSchedulerTests",
+              "nodeType": "Test Suite",
+              "result": "Passed"
+            },
+            {
+              "children": [
+                {
+                  "duration": "0.021s",
+                  "durationInSeconds": 0.02086007595062256,
+                  "name": "testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate()",
+                  "nodeIdentifier": "YlOpenCoordinatorTests/testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate()",
+                  "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlOpenCoordinatorTests/testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate",
+                  "nodeType": "Test Case",
+                  "result": "Passed"
+                }
+              ],
+              "name": "YlOpenCoordinatorTests",
+              "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlOpenCoordinatorTests",
+              "nodeType": "Test Suite",
+              "result": "Passed"
+            }
+          ],
+          "name": "RunnerTests",
+          "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType": "Unit test bundle",
+          "result": "Passed"
+        }
+      ],
+      "name": "Runner",
+      "nodeType": "Test Plan",
+      "result": "Passed"
+    }
+  ],
+  "testPlanConfigurations": [
+    {
+      "configurationId": "1",
+      "configurationName": "Test Scheme Action"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "runId": "remaining-20261026-retry-ios-caps",
+  "mode": "caps",
+  "captureComplete": true,
+  "downshiftLatencyUs": null,
+  "upshiftLatencyUs": null,
+  "weakLowRequestLatencyUs": 699371,
+  "recoveryHighRequestLatencyUs": null,
+  "adaptationObserved": false,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 0,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": null,
+  "rebufferDurationUsDelta": null,
+  "requestBodyBytesWritten": 1400980,
+  "requestFailures": 0,
+  "requestCount": 113,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 1348257,
+  "networkPhaseBytes": [
+    648589,
+    481989,
+    251607
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

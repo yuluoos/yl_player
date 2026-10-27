@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "runId": "remaining-20261026-macos-caps",
+  "mode": "caps",
+  "captureComplete": true,
+  "downshiftLatencyUs": null,
+  "upshiftLatencyUs": null,
+  "weakLowRequestLatencyUs": 656604,
+  "recoveryHighRequestLatencyUs": null,
+  "adaptationObserved": false,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 0,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": null,
+  "rebufferDurationUsDelta": null,
+  "requestBodyBytesWritten": 1400980,
+  "requestFailures": 0,
+  "requestCount": 113,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 512119,
+  "networkPhaseBytes": [
+    690721,
+    477333,
+    214131
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

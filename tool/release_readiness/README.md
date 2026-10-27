@@ -18,7 +18,7 @@ python3 -B -m unittest discover -s tool/playback_benchmark -p test_release_readi
 各组独立的implementation和verification及下一步动作。报告存在、编译成功、
 历史单项通过、模拟器成功均不能自动把整组改为passed。当前所有完整组仍开放；
 历史通过留在报告，`not_run`意为**尚未完成当前整组共同验收**，不抹去已执行子项。
-`failed`保留已知必需项失败（P03格式、macOS字幕联合、消费者）；`external_missing`
+`failed`保留已知必需项失败，具体组及最新后续动作以台账为准；`external_missing`
 列授权/原始参考/物理链/最低OS/Intel/正式性能目标等缺项。具体问题见对应报告。
 实现状态implemented也不意味着性能或设备验证完成。
 

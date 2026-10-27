@@ -1,0 +1,27 @@
+{
+  "expected": [
+    "YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation()",
+    "YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+    "YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+    "YlFrameSchedulerTests/testDefaultQueuePresentsSixteenPictureHEVCReorderGroupWithoutDrops()",
+    "YlOpenCoordinatorTests/testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate()"
+  ],
+  "observed": [
+    "YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation()",
+    "YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+    "YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+    "YlFrameSchedulerTests/testDefaultQueuePresentsSixteenPictureHEVCReorderGroupWithoutDrops()",
+    "YlOpenCoordinatorTests/testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate()"
+  ],
+  "skipped": [],
+  "summary": {
+    "totalTestCount": 5,
+    "passedTests": 5,
+    "skippedTests": 0,
+    "failedTests": 0
+  },
+  "result_bundle": "/private/tmp/yl-remaining-20261026-focused/ios.xcresult",
+  "platform": "ios",
+  "coverage": "focused selection",
+  "skip_evidence": {}
+}

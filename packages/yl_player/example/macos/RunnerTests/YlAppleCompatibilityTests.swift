@@ -9,7 +9,7 @@ final class YlAppleCompatibilityTests: XCTestCase {
   }
 
   func testIosOverflowPreservesTheNextFramesForPresentation() {
-    let scheduler = YlFrameScheduler(compatibility: .init(platform: .ios), enqueueWaitTimeout: 0)
+    let scheduler = YlFrameScheduler(compatibility: .init(platform: .ios), maxFrames: 3, enqueueWaitTimeout: 0)
     for pts in [10_000, 20_000, 30_000] { XCTAssertTrue(scheduler.enqueue(frame(Int64(pts)))) }
     XCTAssertFalse(scheduler.enqueue(frame(40_000)))
     XCTAssertEqual(scheduler.pendingPTS, [10_000, 20_000, 30_000])
@@ -19,7 +19,7 @@ final class YlAppleCompatibilityTests: XCTestCase {
   }
 
   func testMacosOverflowRejectsNewestAndPreservesQueuedOrder() {
-    let scheduler = YlFrameScheduler(compatibility: .init(platform: .macos), enqueueWaitTimeout: 0)
+    let scheduler = YlFrameScheduler(compatibility: .init(platform: .macos), maxFrames: 3, enqueueWaitTimeout: 0)
     for pts in [10_000, 20_000, 30_000] { XCTAssertTrue(scheduler.enqueue(frame(Int64(pts)))) }
     XCTAssertFalse(scheduler.enqueue(frame(40_000)))
     XCTAssertEqual(scheduler.pendingPTS, [10_000, 20_000, 30_000])

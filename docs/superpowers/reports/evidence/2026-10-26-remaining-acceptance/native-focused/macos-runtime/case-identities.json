@@ -1,0 +1,25 @@
+{
+  "expected": [
+    "YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation()",
+    "YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+    "YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+    "YlMacosPresentationTests/testFrameSchedulerBackpressuresUntilPresentationFreesCapacity()"
+  ],
+  "observed": [
+    "YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation()",
+    "YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+    "YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+    "YlMacosPresentationTests/testFrameSchedulerBackpressuresUntilPresentationFreesCapacity()"
+  ],
+  "skipped": [],
+  "summary": {
+    "totalTestCount": 4,
+    "passedTests": 4,
+    "skippedTests": 0,
+    "failedTests": 0
+  },
+  "result_bundle": "/private/tmp/yl-remaining-20261026-focused/macos.xcresult",
+  "platform": "macos",
+  "coverage": "focused selection",
+  "skip_evidence": {}
+}

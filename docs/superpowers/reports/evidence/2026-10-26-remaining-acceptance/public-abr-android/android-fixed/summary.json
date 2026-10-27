@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "runId": "remaining-20261026-android-fixed",
+  "mode": "fixed",
+  "captureComplete": true,
+  "downshiftLatencyUs": null,
+  "upshiftLatencyUs": null,
+  "weakLowRequestLatencyUs": null,
+  "recoveryHighRequestLatencyUs": 66278,
+  "adaptationObserved": false,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 0,
+  "fixedHighObserved": true,
+  "rebufferCountDelta": 1,
+  "rebufferDurationUsDelta": 202000,
+  "requestBodyBytesWritten": 2447965,
+  "requestFailures": 0,
+  "requestCount": 116,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 402110,
+  "networkPhaseBytes": [
+    1486192,
+    548491,
+    394487
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

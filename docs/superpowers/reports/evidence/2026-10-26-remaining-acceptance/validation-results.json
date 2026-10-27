@@ -1,0 +1,121 @@
+[
+  {
+    "name": "foundation",
+    "command": [
+      "sh",
+      "tool/check_foundation.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 1,
+    "seconds": 346.619
+  },
+  {
+    "name": "android-jvm",
+    "command": [
+      "./gradlew",
+      ":yl_player_android:testDebugUnitTest",
+      "--console=plain"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player_android/example/android",
+    "exitCode": 0,
+    "seconds": 47.751
+  },
+  {
+    "name": "macos-native",
+    "command": [
+      "python3",
+      "-B",
+      "tool/run_with_display_awake.py",
+      "xcodebuild",
+      "test-without-building",
+      "-quiet",
+      "-xctestrun",
+      "/private/tmp/yl-remaining-20261026-macos/Build/Products/Runner_macosx27.0-arm64.xctestrun",
+      "-destination",
+      "platform=macOS,arch=arm64",
+      "-parallel-testing-enabled",
+      "NO",
+      "-test-timeouts-enabled",
+      "YES",
+      "-default-test-execution-time-allowance",
+      "180",
+      "-maximum-test-execution-time-allowance",
+      "180",
+      "-resultBundlePath",
+      "/private/tmp/yl-remaining-20261026-validation/macos.xcresult"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 65,
+    "seconds": 993.911
+  },
+  {
+    "name": "macos-identities",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+      "--result-bundle",
+      "/private/tmp/yl-remaining-20261026-validation/macos.xcresult",
+      "--platform",
+      "macos",
+      "--output",
+      "/private/tmp/yl-remaining-20261026-validation/macos-runtime"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 1,
+    "seconds": 0.79
+  },
+  {
+    "name": "ios-native",
+    "command": [
+      "xcodebuild",
+      "test-without-building",
+      "-quiet",
+      "-xctestrun",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products/Runner_iphonesimulator27.1-arm64.xctestrun",
+      "-destination",
+      "platform=iOS Simulator,id=B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "-parallel-testing-enabled",
+      "NO",
+      "-test-timeouts-enabled",
+      "YES",
+      "-default-test-execution-time-allowance",
+      "180",
+      "-maximum-test-execution-time-allowance",
+      "180",
+      "-resultBundlePath",
+      "/private/tmp/yl-remaining-20261026-validation/ios.xcresult"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 65,
+    "seconds": 293.89
+  },
+  {
+    "name": "ios-identities",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+      "--result-bundle",
+      "/private/tmp/yl-remaining-20261026-validation/ios.xcresult",
+      "--platform",
+      "ios",
+      "--output",
+      "/private/tmp/yl-remaining-20261026-validation/ios-runtime"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 1,
+    "seconds": 2.442
+  },
+  {
+    "name": "p08-extra",
+    "command": [
+      "sh",
+      "tool/check_p08.sh",
+      "--validate"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 87.931
+  }
+]

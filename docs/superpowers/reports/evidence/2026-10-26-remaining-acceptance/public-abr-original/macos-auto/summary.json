@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "runId": "remaining-20261026-macos-auto",
+  "mode": "auto",
+  "captureComplete": true,
+  "downshiftLatencyUs": {
+    "min": 14978734,
+    "max": 15026287
+  },
+  "upshiftLatencyUs": {
+    "min": 15387056,
+    "max": 15434609
+  },
+  "weakLowRequestLatencyUs": 11828171,
+  "recoveryHighRequestLatencyUs": 5303037,
+  "adaptationObserved": true,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 3,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": null,
+  "rebufferDurationUsDelta": null,
+  "requestBodyBytesWritten": 2299247,
+  "requestFailures": 3,
+  "requestCount": 127,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 593663,
+  "networkPhaseBytes": [
+    1184107,
+    534943,
+    561402
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

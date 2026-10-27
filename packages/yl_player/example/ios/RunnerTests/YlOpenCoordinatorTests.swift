@@ -260,7 +260,7 @@ final class YlOpenCoordinatorTests: XCTestCase {
           completed.fulfill()
           return
         }
-        XCTAssertEqual(error.code, "network.http_status")
+        XCTAssertEqual(error.code, "network.http_status.401")
         completed.fulfill()
       }
     )

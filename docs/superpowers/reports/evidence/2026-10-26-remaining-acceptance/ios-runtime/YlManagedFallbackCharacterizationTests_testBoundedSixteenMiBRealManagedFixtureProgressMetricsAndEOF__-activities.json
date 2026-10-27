@@ -1,0 +1,46 @@
+{
+  "testIdentifier": "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+  "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF",
+  "testName": "testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()",
+  "testRuns": [
+    {
+      "activities": [
+        {
+          "activityType": "com.apple.dt.xctest.activity-type.attachmentContainer",
+          "attachments": [
+            {
+              "lifetime": "keepAlways",
+              "name": "Task4-video-capability_0_CF2C7E07-5879-4EFE-8F24-7B6AF459A499.txt",
+              "payloadId": "0~e0vCvIorcm-BAAnMQsB8tIjDJ-DFyL_Gp1N0y3F-PLZ4_LTnFnjiWi0ee0bcBzl5GUKGxSS3PRb2LX5yHAvjiQ==",
+              "timestamp": 1793082262.665,
+              "uuid": "DA623447-7957-4674-A718-0F0D7689B4AE"
+            }
+          ],
+          "childActivities": [
+            {
+              "isAssociatedWithFailure": false,
+              "startTime": 1793082262.665,
+              "title": "Task4-video-capability"
+            }
+          ],
+          "isAssociatedWithFailure": false,
+          "startTime": 1793082262.665,
+          "title": "Added attachment named 'Task4-video-capability'"
+        }
+      ],
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+        "deviceName": "iPhone 18 Pro Max",
+        "modelName": "iPhone 18 Pro Max",
+        "osBuildNumber": "24A434",
+        "osVersion": "27.0",
+        "platform": "iOS Simulator"
+      },
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ]
+}

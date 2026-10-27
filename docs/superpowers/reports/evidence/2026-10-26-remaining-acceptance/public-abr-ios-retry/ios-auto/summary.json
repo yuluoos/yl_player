@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "runId": "remaining-20261026-retry-ios-auto",
+  "mode": "auto",
+  "captureComplete": true,
+  "downshiftLatencyUs": {
+    "min": 9332765,
+    "max": 9377791
+  },
+  "upshiftLatencyUs": null,
+  "weakLowRequestLatencyUs": 2394033,
+  "recoveryHighRequestLatencyUs": null,
+  "adaptationObserved": false,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 2,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": null,
+  "rebufferDurationUsDelta": null,
+  "requestBodyBytesWritten": 1952211,
+  "requestFailures": 1,
+  "requestCount": 121,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 935513,
+  "networkPhaseBytes": [
+    1107416,
+    490796,
+    335204
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

@@ -1018,7 +1018,7 @@ final class YlMacosPresentationTests: XCTestCase {
 
 
   func testFrameSchedulerBackpressuresUntilPresentationFreesCapacity() {
-    let scheduler = YlFrameScheduler()
+    let scheduler = YlFrameScheduler(maxFrames: 3)
     for ptsUs in [10_000, 20_000, 30_000] {
       XCTAssertTrue(scheduler.enqueue(YlFrameEnvelope(
         payload: NSObject(),

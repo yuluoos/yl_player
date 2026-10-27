@@ -1,0 +1,431 @@
+{
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+        "deviceName": "iPhone 18 Pro Max",
+        "modelName": "iPhone 18 Pro Max",
+        "osBuildNumber": "24A434",
+        "osVersion": "27.0",
+        "platform": "iOS Simulator"
+      },
+      "expectedFailures": 0,
+      "failedTests": 37,
+      "passedTests": 778,
+      "skippedTests": 1,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription": "Runner \u00b7 Built with macOS 27.0.1",
+  "expectedFailures": 0,
+  "failedTests": 37,
+  "finishTime": 1793082417.184,
+  "passedTests": 778,
+  "result": "Failed",
+  "runtimeWarnings": [
+    {
+      "issueType": "Runtime Warning",
+      "message": "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "    AVAudioSession_iOS.mm:978   This method can lead to UI unresponsiveness if called on the main thread. Consider using the asynchronous activate/deactivate API instead for calls from the main thread.",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "[Internal] Thread running at User-interactive quality-of-service class waiting on a thread without a QoS class specified (base priority 31). Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    },
+    {
+      "issueType": "Runtime Warning",
+      "message": "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL": "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    }
+  ],
+  "skippedTests": 1,
+  "startTime": 1793082130.081,
+  "statistics": [],
+  "testFailures": [
+    {
+      "failureText": "failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName": "RunnerTests",
+      "testIdentifier": 146,
+      "testIdentifierString": "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+      "testName": "testAC3SurroundActualPixelsSixChannelPCMAndSeek()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 535,
+      "testIdentifierString": "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
+      "testName": "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 147,
+      "testIdentifierString": "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail",
+      "testName": "testCodecTrackSwitchPreservesTargetSamplesAndTail()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 150,
+      "testIdentifierString": "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+      "testName": "testDTSActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 151,
+      "testIdentifierString": "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+      "testName": "testEAC3ActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 46,
+      "testIdentifierString": "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+      "testName": "testFailedReplacementThenReactivationPreservesAcceptedSessionControls()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 152,
+      "testIdentifierString": "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+      "testName": "testFLACActualPixelsPCMAndSeek()"
+    },
+    {
+      "failureText": "XCTAssertEqual failed: (\"network.http_status.401\") is not equal to (\"network.http_status\")",
+      "targetName": "RunnerTests",
+      "testIdentifier": 675,
+      "testIdentifierString": "YlOpenCoordinatorTests/testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlOpenCoordinatorTests/testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate",
+      "testName": "testHeaderedHlsPreflightFailureDoesNotReplaceActiveCandidate()"
+    },
+    {
+      "failureText": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 456,
+      "testIdentifierString": "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat",
+      "testName": "testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()"
+    },
+    {
+      "failureText": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 457,
+      "testIdentifierString": "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat",
+      "testName": "testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()"
+    },
+    {
+      "failureText": "XCTAssertEqual failed: (\"Optional(\"network.http_status.416\")\") is not equal to (\"Optional(\"network.http_status\")\")",
+      "targetName": "RunnerTests",
+      "testIdentifier": 273,
+      "testIdentifierString": "YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies",
+      "testName": "testIndexedPreflightRejectsWrongRangesWholeFilesAndTruncatedBodies()"
+    },
+    {
+      "failureText": "XCTAssertFalse failed",
+      "targetName": "RunnerTests",
+      "testIdentifier": 30,
+      "testIdentifierString": "YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleCompatibilityTests/testIosOverflowPreservesTheNextFramesForPresentation",
+      "testName": "testIosOverflowPreservesTheNextFramesForPresentation()"
+    },
+    {
+      "failureText": "XCTAssertFalse failed",
+      "targetName": "RunnerTests",
+      "testIdentifier": 31,
+      "testIdentifierString": "YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleCompatibilityTests/testMacosOverflowRejectsNewestAndPreservesQueuedOrder",
+      "testName": "testMacosOverflowRejectsNewestAndPreservesQueuedOrder()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 394,
+      "testIdentifierString": "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF",
+      "testName": "testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()"
+    },
+    {
+      "failureText": "failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName": "RunnerTests",
+      "testIdentifier": 153,
+      "testIdentifierString": "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+      "testName": "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()"
+    },
+    {
+      "failureText": "failed - absolute-base: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName": "RunnerTests",
+      "testIdentifier": 310,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges",
+      "testName": "testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 311,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek",
+      "testName": "testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 312,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition",
+      "testName": "testProgramAudioIdentitySurvivesCatalogAddition()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 313,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime",
+      "testName": "testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 314,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock",
+      "testName": "testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 315,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods",
+      "testName": "testProgramBackendIndependentPTOAndNaturalPeriods()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 316,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond",
+      "testName": "testProgramBackendPlaysAndClipsActualHalfSecond()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 317,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput",
+      "testName": "testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 318,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload",
+      "testName": "testProgramCompletedPlayHonorsCommandCancellationDuringReload()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 319,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels",
+      "testName": "testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 320,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration",
+      "testName": "testProgramFailedCandidatePreservesVideoFamilyForRestoration()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 321,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack",
+      "testName": "testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 322,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramNativeJointBaseline",
+      "testName": "testProgramNativeJointBaseline()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 323,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative",
+      "testName": "testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 324,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples",
+      "testName": "testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()"
+    },
+    {
+      "failureText": "failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+      "targetName": "RunnerTests",
+      "testIdentifier": 155,
+      "testIdentifierString": "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+      "testName": "testProgramStreamActualPixelsPCMAndBidirectionalSeek()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 325,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment",
+      "testName": "testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()"
+    },
+    {
+      "failureText": "failed - Load mode 0: decoder.unavailable",
+      "targetName": "RunnerTests",
+      "testIdentifier": 326,
+      "testIdentifierString": "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy",
+      "testName": "testPublicProgramLoadCommandsAndManagedPolicy()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 398,
+      "testIdentifierString": "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable",
+      "testName": "testRejectedQualityConstraintKeepsActiveFallbackUsable()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 157,
+      "testIdentifierString": "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs",
+      "testName": "testStrictOpusVorbisManagedBoundedHardwareActualOutputs()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 158,
+      "testIdentifierString": "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs",
+      "testName": "testStrictProgressiveManagedBoundedHardwareActualOutputs()"
+    },
+    {
+      "failureText": "failed: caught error: \"Playback operation failed.\"",
+      "targetName": "RunnerTests",
+      "testIdentifier": 159,
+      "testIdentifierString": "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs",
+      "testName": "testStrictVP9ManagedBoundedHardwareActualOutputs()"
+    }
+  ],
+  "title": "Test - Runner",
+  "topInsights": [
+    {
+      "category": "Common Failures",
+      "impact": "72% of failures",
+      "text": "27 runs of 27 tests failed with failed: caught error: \"Playback operation failed.\""
+    },
+    {
+      "category": "Common Failures",
+      "impact": "8% of failures",
+      "text": "3 runs of 3 tests failed with failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\""
+    },
+    {
+      "category": "Common Failures",
+      "impact": "5% of failures",
+      "text": "2 runs of 2 tests failed with XCTAssertEqual failed: (\"[10000, 20000, 30000, 40000]\") is not equal to (\"[10000, 20000, 30000]\")"
+    }
+  ],
+  "totalTestCount": 816
+}

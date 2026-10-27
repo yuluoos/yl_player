@@ -176,7 +176,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         else { request.respond(body, status: status, headers: ["Content-Range": range]) }
       }
       XCTAssertThrowsError(try prepare(config)) { error in
-        XCTAssertEqual((error as? NativePlayerError)?.code, status == 416 ? "network.http_status" : "network.range_invalid")
+        XCTAssertEqual((error as? NativePlayerError)?.code, status == 416 ? "network.http_status.416" : "network.range_invalid")
       }
     }
   }

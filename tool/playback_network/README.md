@@ -201,3 +201,11 @@ AVPlayer's reported bitrate; it does not reveal the private ABR decision
 algorithm, establish a recovery deadline, or certify CAP-ABR/physical output.
 Native completion requires programme completion and disposal. Full public
 Flutter auto/caps/fixed acceptance remains a separate entry.
+
+Once the fresh output directory is created, setup failures (including missing
+products, invalid test manifests and missing host metadata) also leave a failed
+`receipt.json`. They are part of the attempt history, not omitted trials.
+Executable identity compares resolved paths so `/tmp` and `/private/tmp` aliases
+identify the same host. Cleanup still requires the exact captured PID, start
+time and process identity; a different executable path is rejected. An absent
+or unverified launched host never becomes a successful cleanup claim.

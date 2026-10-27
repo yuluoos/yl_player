@@ -1,0 +1,16 @@
+[
+  "/Users/yy2021_8689/flutter/bin/flutter",
+  "test",
+  "--no-pub",
+  "integration_test/abr_network_profile_test.dart",
+  "-d",
+  "emulator-5580",
+  "--reporter",
+  "expanded",
+  "--dart-define=YL_ABR_RUN=remaining-20261026-android-caps",
+  "--dart-define=YL_ABR_MODE=caps",
+  "--dart-define=YL_ABR_URL=http://127.0.0.1:52719/manifest.mpd",
+  "--dart-define=YL_ABR_PROFILE=down-and-recover-v1",
+  "--dart-define=YL_ABR_PROFILE_SHA256=4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+  "--dart-define=YL_ABR_MEDIA_SHA256=ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb"
+]
