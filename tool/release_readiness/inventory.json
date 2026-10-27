@@ -664,6 +664,11 @@
       "path": "docs/superpowers/reports/2026-10-27-abr-recovery.md",
       "sha256": "a17d72308c5c34eb18ef6923ed77abb0e09a3086016ef2891a8d4fb301a325d2",
       "kind": "report"
+    },
+    "abr-penalty-recovery-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-abr-penalty-recovery.md",
+      "sha256": "3a384347fd298b796703c6e6defdab61f52877e8a2f516cbfe0fcc818d428d7b",
+      "kind": "report"
     }
   },
   "rows": [
@@ -693,10 +698,11 @@
         "remaining-engineering",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "abr-recovery-20261027"
+        "abr-recovery-20261027",
+        "abr-penalty-recovery-20261027"
       ],
       "acceptance": null,
-      "nextAction": "resolve-native-download-timer-high-variant-penalty-recovery-with-supported-strategy-and-cross-os-physical-proof"
+      "nextAction": "qualify-reload-recovery-safe-trigger-backoff-continuity-caps-fixed-drm-and-cross-os-physical-proof"
     },
     {
       "requirement": "CAP-ABR",

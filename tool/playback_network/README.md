@@ -220,6 +220,24 @@ CLI delay, since launch/decoder/scheduling timing still varies. Never silently
 use a delayed run in place of a frozen baseline or infer causality from unmatched
 weak-phase entry states.
 
+`--recovery-action seek-current` or `--recovery-action reload-source` is an
+explicit managed-only 120-second experiment. After 35 seconds, and only after
+high-to-low output with a recorded CoreMedia -12889 error while still low, the
+probe performs one exact seek to the current position or prepares the same source
+and invokes the existing `replaceActiveDash` transaction. This fixture-specific
+trigger is not a production recovery policy or a public penalty-box API.
+The pre-operation record is written before awaiting work; the final attempt
+records time, position, completion and whether the item changed. Reload completion
+means installation returned, not seek landing or seamless output. Error/access
+log counters restart with a new item; preceding rows remain intact. Sampling
+pauses during the operation, so gaps cannot measure black-screen duration.
+The collector binds the action to every row and rejects missing/failed attempts.
+Intervened rows cannot be summarized without an explicit expected action.
+`highOutputAfterInterventionObserved` refers only to the owned 640-pixel fixture;
+neither this observation nor a successful capture admits CAP-ABR. Default `none`
+keeps the original no-intervention behavior. Direct HLS and 40-second intervention
+requests are rejected rather than silently changing the experiment.
+
 Logs contain playback/geometry/bitrate/transfer counters, buffer ranges/flags,
 `downloadOverdue`, and the most recent 32 error-log events (total count retained).
 Error comments are bounded and URL-redacted; access-log URLs and server addresses

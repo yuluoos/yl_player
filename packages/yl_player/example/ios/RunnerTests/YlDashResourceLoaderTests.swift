@@ -70,6 +70,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertTrue([40, 120].contains(programmeSeconds))
     let startupDelayMs = try XCTUnwrap(Int(env["YL_ABR_PROBE_STARTUP_DELAY_MS"] ?? "0"))
     XCTAssertTrue((0...2000).contains(startupDelayMs))
+    let recoveryAction = env["YL_ABR_PROBE_RECOVERY_ACTION"] ?? "none"
+    guard ["none", "seek-current", "reload-source"].contains(recoveryAction),
+          recoveryAction == "none" || (!direct && programmeSeconds == 120) else {
+      XCTFail("Invalid recovery diagnostic"); return
+    }
     // Preserve the historical managed probe's preparation-before-player order.
     let prepared: YlPreparedHlsAsset?
     if direct {
@@ -126,6 +131,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var completed = false
     var frameCount = 0
     var clockAlignment: [String: Double]?
+    var sawHigh = false
+    var sawDownshift = false
+    var recoveryAttempt: [String: Any]?
     while ProcessInfo.processInfo.systemUptime - started < 140 {
       tick?(); _ = backend?.copyPixelBuffer()
       if let pixels = directOutput, pixels.hasNewPixelBuffer(forItemTime: player.currentTime()),
@@ -135,6 +143,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
       frameCount += output.frames.count
       output.frames.removeAll(keepingCapacity: true)
       let item = try XCTUnwrap(player.currentItem)
+      if item.presentationSize.width == 640 { sawHigh = true }
+      if sawHigh && item.presentationSize.width == 320 { sawDownshift = true }
       func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
       if clockAlignment == nil, item.presentationSize.width > 0 {
         var request = URLRequest(url: url); request.httpMethod = "HEAD"
@@ -168,12 +178,46 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "likelyToKeepUp": item.isPlaybackLikelyToKeepUp, "timeControlStatus": player.timeControlStatus.rawValue,
         "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
+        "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
         "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
       if direct ? directCompleted : states.last?.status == "completed" { completed = true; break }
       XCTAssertNotEqual(item.status, .failed)
       if item.status == .failed { break }
+      // Explicit experiment only: never install a wall-clock/error-code retry
+      // in production. Preserve pre-operation rows even if preparation fails.
+      if recoveryAction != "none", recoveryAttempt == nil, sawDownshift,
+         item.presentationSize.width == 320,
+         ProcessInfo.processInfo.systemUptime - started >= 35,
+         item.errorLog()?.events.contains(where: { $0.errorDomain == "CoreMediaErrorDomain" && $0.errorStatusCode == -12889 }) == true {
+        let before = CMTimeGetSeconds(player.currentTime())
+        var attempt: [String: Any] = ["action": recoveryAction,
+          "elapsed": ProcessInfo.processInfo.systemUptime - started,
+          "positionBefore": before, "completed": false, "itemChanged": false]
+        // Write before awaiting so failures cannot erase the attempted action.
+        try JSONSerialization.data(withJSONObject: attempt, options: [.sortedKeys])
+          .write(to: directory.appendingPathComponent("recovery-attempt.json"), options: .atomic)
+        if recoveryAction == "seek-current" {
+          let finished = await player.seek(to: player.currentTime(), toleranceBefore: .zero, toleranceAfter: .zero)
+          attempt["completed"] = finished
+          attempt["itemChanged"] = player.currentItem !== item
+        } else {
+          let replacement = try await Task.detached {
+            try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
+              configuration: .init(map: [:]), cancellationToken: .init())
+          }.value
+          let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
+          try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
+          attempt["completed"] = true // installation only; landing/output checked in later rows
+          attempt["itemChanged"] = player.currentItem !== item
+        }
+        attempt["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+        attempt["positionAfterCall"] = finite(CMTimeGetSeconds(player.currentTime()))
+        recoveryAttempt = attempt
+        try JSONSerialization.data(withJSONObject: attempt, options: [.sortedKeys])
+          .write(to: directory.appendingPathComponent("recovery-attempt.json"), options: .atomic)
+      }
       try await Task.sleep(nanoseconds: 250_000_000)
     }
     XCTAssertTrue(completed)

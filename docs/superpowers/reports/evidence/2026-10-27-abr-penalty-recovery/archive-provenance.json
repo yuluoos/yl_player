@@ -1,0 +1,599 @@
+{
+  "omitted": "Generated .m4s/.mp4 media only, bound by inventories to unchanged repository media. Full original xcresult bundles separately archived.",
+  "files": [
+    {
+      "source": "/private/tmp/yl-penalty-20261027/analysis.json",
+      "archive": "runs/analysis.json",
+      "rawSha256": "df7a3f53c22de4c213913d10087327de405b1b8a1177ca623f15df0d3c51c740",
+      "rawBytes": 5360
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/fixture/SHA256SUMS",
+      "archive": "runs/baseline/fixture/SHA256SUMS",
+      "rawSha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0",
+      "rawBytes": 49211
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/fixture/manifest.mpd",
+      "archive": "runs/baseline/fixture/manifest.mpd",
+      "rawSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+      "rawBytes": 56121
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/probe.xctestrun",
+      "archive": "runs/baseline/probe.xctestrun",
+      "rawSha256": "20cd36f76c084ae4f5b3ce75ec1eee215d60485a1e9207833db6a190fa4ff0d3",
+      "rawBytes": 5273
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/process.json",
+      "archive": "runs/baseline/process.json",
+      "rawSha256": "284a6f3044911a0468ce6f7fe5b0c5685c8c2e3f442094246b07a9820fb90a38",
+      "rawBytes": 271
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/receipt.json",
+      "archive": "runs/baseline/receipt.json",
+      "rawSha256": "c68cca178b1726641d175c2e6ea26cbbb988ab32a43ffc27405835f84d09f31a",
+      "rawBytes": 57237
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/requests.jsonl",
+      "archive": "runs/baseline/requests.jsonl",
+      "rawSha256": "e947826a04ef1cc9287c79c568ba36712fe2a36f5853fda7696ea36674321057",
+      "rawBytes": 209596
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/rows.jsonl",
+      "archive": "runs/baseline/rows.jsonl.gz",
+      "rawSha256": "beeda8a07bc1292b79be1945af40b3afe681aa99af15622629afee36fe179960",
+      "rawBytes": 614779
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline/xcode.log",
+      "archive": "runs/baseline/xcode.log.gz",
+      "rawSha256": "f4f7ce1ce2819eb2728de106ea41abc18af228c1a1941f9fc8b1c240e392f81e",
+      "rawBytes": 1128
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline-system-log-command.json",
+      "archive": "runs/baseline-system-log-command.json",
+      "rawSha256": "75c42a1948f4df81fa2af935ee36ec51957b6e95e95bae8be1d83a3544e6aa5f",
+      "rawBytes": 444
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline-system-log.json",
+      "archive": "runs/baseline-system-log.json",
+      "rawSha256": "647b023c67a80464f1653d215bd7aa8f79a1a6bbfbdda370c22c05553f30c421",
+      "rawBytes": 6404
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/baseline.log",
+      "archive": "runs/baseline.log.gz",
+      "rawSha256": "8af9f3d4cf6b27e185a9b36a2c5a4c29aaa572e097b0004adcdbe038431c97a7",
+      "rawBytes": 1212
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/fixture/SHA256SUMS",
+      "archive": "runs/reload/fixture/SHA256SUMS",
+      "rawSha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0",
+      "rawBytes": 49211
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/fixture/manifest.mpd",
+      "archive": "runs/reload/fixture/manifest.mpd",
+      "rawSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+      "rawBytes": 56121
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/probe.xctestrun",
+      "archive": "runs/reload/probe.xctestrun",
+      "rawSha256": "7d9f0894dbd2c0a42b63a4e515c2b3b3342aa4c8035565f0fe0a43d62f737efb",
+      "rawBytes": 5280
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/process.json",
+      "archive": "runs/reload/process.json",
+      "rawSha256": "53860d9dc4bb47031c5348f0d3f0a5b00e6b5867edb066b79c164fb30bcd2859",
+      "rawBytes": 271
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/receipt.json",
+      "archive": "runs/reload/receipt.json",
+      "rawSha256": "3fab0985cc0776840b57e13620984c8cd000d3fbf754efa85ffd9a5b8f7002e6",
+      "rawBytes": 57255
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/recovery-attempt.json",
+      "archive": "runs/reload/recovery-attempt.json",
+      "rawSha256": "61374a089fd4b03d393e283a05df54048bf8a3c8fe036a03e55cd1d3cfd4b628",
+      "rawBytes": 183
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/requests.jsonl",
+      "archive": "runs/reload/requests.jsonl",
+      "rawSha256": "704c3040a8fca9fe4bceaed94b6f27839d8791dc00c5789ed1774038e9950ada",
+      "rawBytes": 231776
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/rows.jsonl",
+      "archive": "runs/reload/rows.jsonl.gz",
+      "rawSha256": "5a5d50f9c35f8a4859b265b6b4a63d4929773e0800852845e0dcd0d21395be41",
+      "rawBytes": 564276
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload/xcode.log",
+      "archive": "runs/reload/xcode.log.gz",
+      "rawSha256": "7e0279f8409b9a115a2937fadfc6cd2c1a46167be26f6ad19a9dae09b0fc8081",
+      "rawBytes": 1126
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/fixture/SHA256SUMS",
+      "archive": "runs/reload-repeat/fixture/SHA256SUMS",
+      "rawSha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0",
+      "rawBytes": 49211
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/fixture/manifest.mpd",
+      "archive": "runs/reload-repeat/fixture/manifest.mpd",
+      "rawSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+      "rawBytes": 56121
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/probe.xctestrun",
+      "archive": "runs/reload-repeat/probe.xctestrun",
+      "rawSha256": "0d172453ec5c0c50ac414372795e086c3c5813eed66a3b8e2cfd1776532c5814",
+      "rawBytes": 5287
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/process.json",
+      "archive": "runs/reload-repeat/process.json",
+      "rawSha256": "932d758401f70ef22b4ff3c4e5abe6eae2975b18a6576f03512a580f095542ad",
+      "rawBytes": 271
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/receipt.json",
+      "archive": "runs/reload-repeat/receipt.json",
+      "rawSha256": "eba0f46c4c3d16a6cfe08e6ab09052842cbcf10c6658fe9ee099105b3ea276c3",
+      "rawBytes": 57304
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/recovery-attempt.json",
+      "archive": "runs/reload-repeat/recovery-attempt.json",
+      "rawSha256": "1a4186018f6443802f332ca2eca63f570fb6c4a6bc82998eb9034b6b36a4d14e",
+      "rawBytes": 183
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/requests.jsonl",
+      "archive": "runs/reload-repeat/requests.jsonl",
+      "rawSha256": "b2ea6166d748b3b73ced1d9c59b2503b2934a642335b5415cbadd0f47ce022cb",
+      "rawBytes": 231809
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/rows.jsonl",
+      "archive": "runs/reload-repeat/rows.jsonl.gz",
+      "rawSha256": "7ef009474123272ae22fb6f43aff88b1e273fbe8df904102a0b87e3d26362004",
+      "rawBytes": 564224
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat/xcode.log",
+      "archive": "runs/reload-repeat/xcode.log.gz",
+      "rawSha256": "952697daa4efb3823d52f17577a641caee146b30b0f7a65ac51c06463fe52bd9",
+      "rawBytes": 1133
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat-system-log-command.json",
+      "archive": "runs/reload-repeat-system-log-command.json",
+      "rawSha256": "cbc955eecd19898c43fe3dfc944b6e9504060322b7849668349e667a51e7afce",
+      "rawBytes": 444
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat-system-log.json",
+      "archive": "runs/reload-repeat-system-log.json",
+      "rawSha256": "ee266a018c178c6b1ffe80f19745a4c20e4131f81874a7e6aeb0e443d4fc562d",
+      "rawBytes": 6404
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-repeat.log",
+      "archive": "runs/reload-repeat.log.gz",
+      "rawSha256": "f39d0f522eef79113bf39b4fc34244d369c248cb9d66a148c605e544a9265199",
+      "rawBytes": 1279
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-system-log-command.json",
+      "archive": "runs/reload-system-log-command.json",
+      "rawSha256": "0ec584f28c048100fa868559d03009dad9df5cc441f973f9fba7196f5c849875",
+      "rawBytes": 444
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload-system-log.json",
+      "archive": "runs/reload-system-log.json",
+      "rawSha256": "0d877242003c66ba4f0d6a0206804caca4aeec6ac3818c46bfb282744464d925",
+      "rawBytes": 6404
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/reload.log",
+      "archive": "runs/reload.log.gz",
+      "rawSha256": "a4fc2a6e7890cc6b615156477fb9e5786611efe202d886becc44b0e08aa0e08e",
+      "rawBytes": 1230
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/repeat-results.json",
+      "archive": "runs/repeat-results.json",
+      "rawSha256": "fe2c6b8b710a7b5ff1f55eb878ca7fb16445434c94b6220775eeb31eec4d5c87",
+      "rawBytes": 508
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/repeat-source-identity.json",
+      "archive": "runs/repeat-source-identity.json",
+      "rawSha256": "c662e37dc474968894acf2c51fc4475483bc2f63482e75b297cd3e2116af53fb",
+      "rawBytes": 645
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/results.json",
+      "archive": "runs/results.json",
+      "rawSha256": "7e8839cd823b0378fe74b3540cc677bbdb084693805c2c5477a5f75c055b181a",
+      "rawBytes": 1468
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/fixture/SHA256SUMS",
+      "archive": "runs/seek/fixture/SHA256SUMS",
+      "rawSha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0",
+      "rawBytes": 49211
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/fixture/manifest.mpd",
+      "archive": "runs/seek/fixture/manifest.mpd",
+      "rawSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+      "rawBytes": 56121
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/probe.xctestrun",
+      "archive": "runs/seek/probe.xctestrun",
+      "rawSha256": "2bc410918de7bab6e02fc44c86c9171280b152f61a2137692df17b32d1ba1f59",
+      "rawBytes": 5277
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/process.json",
+      "archive": "runs/seek/process.json",
+      "rawSha256": "4a9818188e72dac024ab587e969397f4229713c91a5f624086184bc53316ee1c",
+      "rawBytes": 271
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/receipt.json",
+      "archive": "runs/seek/receipt.json",
+      "rawSha256": "16e9e8b32d1f137cd7841cdc2565b995e04f85d86e92fbb8f273c9d6ac71d268",
+      "rawBytes": 57244
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/recovery-attempt.json",
+      "archive": "runs/seek/recovery-attempt.json",
+      "rawSha256": "7fa24bd0de69c16b4d5588403425aa6cc5dd8e4753f3699b509c65fb2f944636",
+      "rawBytes": 200
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/requests.jsonl",
+      "archive": "runs/seek/requests.jsonl",
+      "rawSha256": "5f38670a495d37139fef7614550bec1184fdb6e710da1bb429fb38610621226d",
+      "rawBytes": 209569
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/rows.jsonl",
+      "archive": "runs/seek/rows.jsonl.gz",
+      "rawSha256": "092653e141fd9a466be3b3f93d603c7f102d8753f68f5356a157d7eb46ae9d06",
+      "rawBytes": 683831
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek/xcode.log",
+      "archive": "runs/seek/xcode.log.gz",
+      "rawSha256": "c0200695c0d8c08c52e65cd678b3b1a4adc663455920709e417776811ab7867d",
+      "rawBytes": 1124
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek-system-log-command.json",
+      "archive": "runs/seek-system-log-command.json",
+      "rawSha256": "aa867f7aedf17b50049e782f6a420a9d5d5dcdf7697ff3e411ef9dae1990552a",
+      "rawBytes": 444
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek-system-log.json",
+      "archive": "runs/seek-system-log.json",
+      "rawSha256": "fc47292ec1431070d0ff84d35649ea6e09aa1d547980416e099e0ce12035c27a",
+      "rawBytes": 7990
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/seek.log",
+      "archive": "runs/seek.log.gz",
+      "rawSha256": "db23c99e2e1b3e64ec1a118d5ac0c3254f078bbb19003ceaaae7564bfe883374",
+      "rawBytes": 1219
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/source-identity.json",
+      "archive": "runs/source-identity.json",
+      "rawSha256": "131b89ee57ab267a7b602082146c7bfd3c455128b55e654c29b8867080ff3b70",
+      "rawBytes": 645
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/source-initial/diff.patch",
+      "archive": "runs/source-initial/diff.patch.gz",
+      "rawSha256": "3144e749c1f7003cda3d0b45dd8fad090d656880b170be37191fbb68df2d9fc4",
+      "rawBytes": 24618
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/source-initial/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+      "archive": "runs/source-initial/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+      "rawSha256": "fb70beecb37f52f76dcb1a40b1e46eb42f33e069b87411e416220a8518ac309a",
+      "rawBytes": 203839
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/source-initial/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
+      "archive": "runs/source-initial/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
+      "rawSha256": "9a010b5a10f2008e4e9e3b2990e8e9e7c7b820b401f37149d05f2eca3a9eb020",
+      "rawBytes": 203801
+    },
+    {
+      "source": "/private/tmp/yl-penalty-20261027/source-initial/tool/playback_network/abr_accesslog.py",
+      "archive": "runs/source-initial/tool/playback_network/abr_accesslog.py",
+      "rawSha256": "9c09a74a7898326b474a1f07ce393afc8f243cb917028374b1856fd240bdf91f",
+      "rawBytes": 14640
+    },
+    {
+      "source": "/private/tmp/yl-penalty-benchmark-final.exit",
+      "archive": "checks/yl-penalty-benchmark-final.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-analyze.py",
+      "archive": "scripts/yl-penalty-analyze.py",
+      "rawSha256": "099468b9b4f92d421637d36e22bbccf9a8360199fc83af6f8b5ef049b47ee08e",
+      "rawBytes": 1674
+    },
+    {
+      "source": "/private/tmp/yl-penalty-unbound-red.log",
+      "archive": "checks/yl-penalty-unbound-red.log.gz",
+      "rawSha256": "0383013c5e3e0037e569de306d37a5fb6b6b79a6cbe405d5d44e532b5a9a0fb8",
+      "rawBytes": 3033
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-ready.exit.initial-invalid",
+      "archive": "checks/yl-penalty-ledger-ready.exit.initial-invalid",
+      "rawSha256": "53c234e5e8472b6ac51c1ae1cab3fe06fad053beb8ebfd8977b010655bfdd3c3",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-tests.log",
+      "archive": "checks/yl-penalty-ledger-tests.log.gz",
+      "rawSha256": "8788c531a78f45f5d93a39f2e5ccdc6bfe870850695ea071f02cdd885a4283a4",
+      "rawBytes": 114
+    },
+    {
+      "source": "/private/tmp/yl-penalty-repeat.py",
+      "archive": "scripts/yl-penalty-repeat.py",
+      "rawSha256": "51f348f12c5233cae85d2313fd9337d60fd1e2df3593c9f74b9ba9f5ce18cd76",
+      "rawBytes": 2032
+    },
+    {
+      "source": "/private/tmp/yl-penalty-network-verified.exit",
+      "archive": "checks/yl-penalty-network-verified.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-final-build.exit",
+      "archive": "checks/yl-penalty-macos-final-build.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-final.json.initial-invalid",
+      "archive": "checks/yl-penalty-ledger-final.json.initial-invalid",
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rawBytes": 0
+    },
+    {
+      "source": "/private/tmp/yl-penalty-red.log",
+      "archive": "checks/yl-penalty-red.log.gz",
+      "rawSha256": "58dfd0cd69f630415cc0539cddcf3276b777a7683d977e49f690c0ddf27d83c1",
+      "rawBytes": 3044
+    },
+    {
+      "source": "/private/tmp/yl-penalty-network-final.log",
+      "archive": "checks/yl-penalty-network-final.log.gz",
+      "rawSha256": "53dad8ef1d709bb79d7910d7fdc4e643e765112727e87bbf1e4fd57407881fe2",
+      "rawBytes": 188
+    },
+    {
+      "source": "/private/tmp/yl-penalty-archive.py",
+      "archive": "scripts/yl-penalty-archive.py",
+      "rawSha256": "4da4a27b43f8c81ba32084d2a1e5dfd029db01bd716f7b69dc143b88f38c4e6b",
+      "rawBytes": 1974
+    },
+    {
+      "source": "/private/tmp/yl-penalty-mirror-final.log",
+      "archive": "checks/yl-penalty-mirror-final.log.gz",
+      "rawSha256": "5f3a3152fe655d1bfb44ee43ea44c8b456ec406cd7ab37a8eee817542a23b338",
+      "rawBytes": 57
+    },
+    {
+      "source": "/private/tmp/yl-penalty-network-verified.log",
+      "archive": "checks/yl-penalty-network-verified.log.gz",
+      "rawSha256": "fcbecb4257d0ad5fcca69e60f59c1484da046bea94f8604171e0b6dd86c687a1",
+      "rawBytes": 188
+    },
+    {
+      "source": "/private/tmp/yl-penalty-attribution-red.log",
+      "archive": "checks/yl-penalty-attribution-red.log.gz",
+      "rawSha256": "cdccca1fb4eee7a84a8fe9888718093a4623e7701ec5c280493110e603fbff68",
+      "rawBytes": 3832
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-contracts.log",
+      "archive": "checks/yl-penalty-macos-contracts.log.gz",
+      "rawSha256": "353efdec8443c059e1bcbe89b3e6eeb21ed002b4a749f0343a9bd5c69bb87514",
+      "rawBytes": 460
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ios-build.exit",
+      "archive": "checks/yl-penalty-ios-build.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-contracts.exit",
+      "archive": "checks/yl-penalty-macos-contracts.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-final-build.log",
+      "archive": "checks/yl-penalty-macos-final-build.log.gz",
+      "rawSha256": "0ef45c4f206f6c61503fad6c740eb5723f8c86863b56ba328c9acb2b9a0c91f6",
+      "rawBytes": 11278
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-initial-invalid.txt",
+      "archive": "checks/yl-penalty-ledger-initial-invalid.txt",
+      "rawSha256": "a9714d440ac5acfcf13042f7e99a6754cf2251f121241a10cabfea132f054b77",
+      "rawBytes": 204
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ios-build.log",
+      "archive": "checks/yl-penalty-ios-build.log.gz",
+      "rawSha256": "56f1a0e5bfb550595f1f38a4132ee1eb7ede3d1546ce4f3147448a991020a110",
+      "rawBytes": 11452
+    },
+    {
+      "source": "/private/tmp/yl-penalty-benchmark-final.log",
+      "archive": "checks/yl-penalty-benchmark-final.log.gz",
+      "rawSha256": "78e779536895bd9ebfe511c3cf32355bef2ff0303c82a528d58e08b5bc3bf91c",
+      "rawBytes": 8921
+    },
+    {
+      "source": "/private/tmp/yl-penalty-runs.py",
+      "archive": "scripts/yl-penalty-runs.py",
+      "rawSha256": "1722f4f16a9c04aece5bf40e8ffe723e1d125be670108cd91037aa87c9461df7",
+      "rawBytes": 2056
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-contracts-summary.json",
+      "archive": "checks/yl-penalty-macos-contracts-summary.json",
+      "rawSha256": "2fd51076a040d37b0f3620c1ec515e024c83e77c2e2bd1c8add0816f7798192f",
+      "rawBytes": 969
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-build.log",
+      "archive": "checks/yl-penalty-macos-build.log.gz",
+      "rawSha256": "c473c233b16d84ab077bf9df903f6aa2998ec9cfb4d7658f790d8658153b8427",
+      "rawBytes": 11120
+    },
+    {
+      "source": "/private/tmp/yl-penalty-unit-green.log",
+      "archive": "checks/yl-penalty-unit-green.log.gz",
+      "rawSha256": "05ddb94c90453d46d8bf4f11c45211cabf23c1fd99a2021b7abd09fe053b9637",
+      "rawBytes": 111
+    },
+    {
+      "source": "/private/tmp/yl-penalty-threshold-ready.json",
+      "archive": "checks/yl-penalty-threshold-ready.json",
+      "rawSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+      "rawBytes": 704
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-final.json",
+      "archive": "checks/yl-penalty-ledger-final.json",
+      "rawSha256": "d10afa8a7f247bb3044d0ba7a97c133eeb43fc9ece336e3ac2ffda25f5991649",
+      "rawBytes": 40285
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-ready.json",
+      "archive": "checks/yl-penalty-ledger-ready.json",
+      "rawSha256": "d10afa8a7f247bb3044d0ba7a97c133eeb43fc9ece336e3ac2ffda25f5991649",
+      "rawBytes": 40285
+    },
+    {
+      "source": "/private/tmp/yl-penalty-threshold-ready.exit",
+      "archive": "checks/yl-penalty-threshold-ready.exit",
+      "rawSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-mirror-final.exit",
+      "archive": "checks/yl-penalty-mirror-final.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ios-final-build.log",
+      "archive": "checks/yl-penalty-ios-final-build.log.gz",
+      "rawSha256": "c1d2dd78a016cc556af62c657e3ad8d14173c7c8fe830374df72940fa37e49e5",
+      "rawBytes": 11294
+    },
+    {
+      "source": "/private/tmp/yl-penalty-macos-build.exit",
+      "archive": "checks/yl-penalty-macos-build.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ios-final-build.exit",
+      "archive": "checks/yl-penalty-ios-final-build.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-ready.exit",
+      "archive": "checks/yl-penalty-ledger-ready.exit",
+      "rawSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-network-final.exit",
+      "archive": "checks/yl-penalty-network-final.exit",
+      "rawSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "rawBytes": 2
+    },
+    {
+      "source": "/private/tmp/yl-penalty-ledger-ready.json.initial-invalid",
+      "archive": "checks/yl-penalty-ledger-ready.json.initial-invalid",
+      "rawSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "rawBytes": 0
+    },
+    {
+      "source": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+      "archive": "source-final/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+      "rawSha256": "7b5aa9b038d9ca68cdf736c6cf9a62333880bd911c06af62e83c56665bf732ad",
+      "rawBytes": 203884
+    },
+    {
+      "source": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+      "archive": "source-final/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+      "rawSha256": "7b5aa9b038d9ca68cdf736c6cf9a62333880bd911c06af62e83c56665bf732ad",
+      "rawBytes": 203884
+    },
+    {
+      "source": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
+      "archive": "source-final/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
+      "rawSha256": "671053201d798d139bf66c8f18ee3259f7cd13eac7035d83c11f847dafdcdc79",
+      "rawBytes": 203846
+    },
+    {
+      "source": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/README.md",
+      "archive": "source-final/tool/playback_network/README.md",
+      "rawSha256": "20d525a2ef509fbc3398faf4a757c1ffcea1a1095b9fbd67bc787e1df16d41d9",
+      "rawBytes": 15937
+    },
+    {
+      "source": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py",
+      "archive": "source-final/tool/playback_network/abr_accesslog.py",
+      "rawSha256": "7bbd42c5691d542de757cc407ceaabc7c483888a7cefb6be2c5954d536dd1bf4",
+      "rawBytes": 15116
+    },
+    {
+      "source": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/test_abr_accesslog.py",
+      "archive": "source-final/tool/playback_network/test_abr_accesslog.py",
+      "rawSha256": "aa1eb6ff2b9380263d87fc3a91b679785f780e0c5ae1bbe5a06e2ee33581621d",
+      "rawBytes": 11963
+    }
+  ]
+}

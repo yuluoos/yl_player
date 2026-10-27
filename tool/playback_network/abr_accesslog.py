@@ -17,11 +17,33 @@ from network_profile import load_profiles, make_server
 from prepare_fixture import create
 
 
-def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0):
+def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0,
+              expected_recovery_action=None):
     def require(value):
         if not value: raise ValueError('incomplete or invalid ABR observation')
     require(isinstance(rows,list) and 2<=len(rows)<=1000)
     require(all(isinstance(row, dict) for row in rows))
+    intervention = None
+    if expected_recovery_action is None:
+        require(all(row.get('recoveryAction') in (None, 'none') and
+                    row.get('recoveryAttempt') is None for row in rows))
+    if expected_recovery_action is not None:
+        require(expected_recovery_action in ('none', 'seek-current', 'reload-source'))
+        require(all(row.get('recoveryAction') == expected_recovery_action for row in rows))
+        attempts = [row.get('recoveryAttempt') for row in rows if row.get('recoveryAttempt') is not None]
+        if expected_recovery_action == 'none':
+            require(not attempts)
+        else:
+            require(bool(attempts) and all(attempt == attempts[0] for attempt in attempts))
+            attempt = attempts[0]
+            require(isinstance(attempt, dict) and attempt.get('action') == expected_recovery_action)
+            require(rows[-1].get('recoveryAttempt') == attempt)
+            require(attempt.get('completed') is True)
+            require(attempt.get('itemChanged') is (expected_recovery_action == 'reload-source'))
+            for key in ('elapsed', 'positionBefore'):
+                require(type(attempt.get(key)) in (int, float) and math.isfinite(attempt[key]) and attempt[key] >= 0)
+            require(rows[0]['elapsed'] <= attempt['elapsed'] <= rows[-1]['elapsed'])
+            intervention = attempt
     if expected_duration_seconds is not None or expected_transport is not None:
         require(type(expected_duration_seconds) is int and expected_duration_seconds in (40, 120))
         require(expected_transport in ('managed-dash', 'direct-hls-control'))
@@ -50,6 +72,9 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
         if b<a:down=True
         elif down and b>a:recovered=True
     return dict(schemaVersion=1,geometryWidths=widths,downshiftObserved=down,
+        recoveryInterventionApplied=expected_recovery_action not in (None, 'none'),
+        highOutputAfterInterventionObserved=(any(row['elapsed'] > intervention['elapsed'] and
+            row['width'] == 640 for row in rows) if intervention else None),
         upshiftAfterDownshiftObserved=recovered,lastObservedBitrate=observed,
         lastIndicatedBitrate=last.get('indicatedBitrate'),framesPublished=rows[-1]['framesPublished'],
         diagnosticOnly=True,internalABRDecisionVerified=False,capabilityAccepted=False,
@@ -143,6 +168,12 @@ def run(args):
         duration_seconds = getattr(args, 'duration_seconds', 40)
         direct = getattr(args, 'direct_hls_control', False)
         startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
+        recovery_action = getattr(args, 'recovery_action', 'none')
+        if recovery_action not in ('none', 'seek-current', 'reload-source') or (direct and recovery_action != 'none'):
+            raise ValueError('invalid managed recovery diagnostic')
+        if recovery_action != 'none' and duration_seconds != 120:
+            raise ValueError('recovery diagnostic requires 120 seconds')
+        receipt['recoveryAction'] = recovery_action
         if type(startup_delay_ms) is not int or not 0 <= startup_delay_ms <= 2000:
             raise ValueError('invalid diagnostic startup delay')
         receipt['transport'] = 'direct-hls-control' if direct else 'managed-dash'
@@ -177,6 +208,7 @@ def run(args):
         target.setdefault('EnvironmentVariables',{}).update(
             YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://127.0.0.1:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
+            YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
         command=['xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),
@@ -196,7 +228,8 @@ def run(args):
                 except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=10)
         rows=read_rows(out/'rows.jsonl')
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
-                                         expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms)
+                                         expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
+                                         expected_recovery_action=recovery_action)
     except (OSError,ValueError,KeyError,TypeError,plistlib.InvalidFileException,ExpatError,
             subprocess.SubprocessError) as error:
         receipt['errors'].append(type(error).__name__)
@@ -238,6 +271,8 @@ def main():
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)
     p.add_argument('--startup-delay-ms',type=int,default=0,
                    help='0..2000ms diagnostic delay after arming/preparing; never changes the frozen profile')
+    p.add_argument('--recovery-action', choices=('none', 'seek-current', 'reload-source'), default='none',
+                   help='one managed 120s diagnostic intervention; never natural ABR acceptance')
     p.add_argument('--direct-hls-control',action='store_true',
                    help='system-only direct HLS control; not a production DASH acceptance run')
     p.add_argument('--profile',default='down-and-recover-v1');a=p.parse_args()

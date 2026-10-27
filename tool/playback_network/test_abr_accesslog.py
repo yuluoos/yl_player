@@ -14,6 +14,39 @@ from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_recovery_intervention_is_bound_and_not_natural_adaptation(self):
+        rows = self.rows()
+        for row in rows:
+            row.update(recoveryAction='reload-source', recoveryAttempt=None)
+        rows[-1].update(width=640, recoveryAttempt=dict(action='reload-source',
+            elapsed=2.5, positionBefore=2.0, itemChanged=True, completed=True))
+        result = summarize(rows, expected_recovery_action='reload-source')
+        self.assertTrue(result['upshiftAfterDownshiftObserved'])
+        self.assertTrue(result['recoveryInterventionApplied'])
+        self.assertTrue(result['highOutputAfterInterventionObserved'])
+        self.assertFalse(result['capabilityAccepted'])
+        with self.assertRaises(ValueError): summarize(rows)
+        for change in ('missing-action', 'wrong-action', 'missing-attempt', 'incomplete', 'unchanged-item'):
+            bad = copy.deepcopy(rows)
+            if change == 'missing-action': bad[0].pop('recoveryAction')
+            if change == 'wrong-action': bad[-1]['recoveryAction'] = 'seek-current'
+            if change == 'missing-attempt': bad[-1]['recoveryAttempt'] = None
+            if change == 'incomplete': bad[-1]['recoveryAttempt']['completed'] = False
+            if change == 'unchanged-item': bad[-1]['recoveryAttempt']['itemChanged'] = False
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                summarize(bad, expected_recovery_action='reload-source')
+
+    def test_high_before_operation_and_missing_final_attempt_cannot_claim_recovery(self):
+        rows = self.rows()
+        attempt = dict(action='seek-current', elapsed=2.5, positionBefore=2,
+                       itemChanged=False, completed=True)
+        for row in rows: row.update(recoveryAction='seek-current', recoveryAttempt=None)
+        rows[-1]['recoveryAttempt'] = attempt
+        result = summarize(rows, expected_recovery_action='seek-current')
+        self.assertFalse(result['highOutputAfterInterventionObserved'])
+        rows[2]['recoveryAttempt'] = attempt; rows[-1]['recoveryAttempt'] = None
+        with self.assertRaises(ValueError): summarize(rows, expected_recovery_action='seek-current')
+
     def test_control_receipt_requires_native_transport_duration_and_full_completion(self):
         rows = self.rows()
         for index, row in enumerate(rows):
