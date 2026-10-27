@@ -1,7 +1,6 @@
 package dev.ylplayer.yl_player_android
 
 import android.content.Context
-import android.content.ComponentCallbacks2
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
@@ -162,10 +161,10 @@ internal class YlMedia3Engine(
     override suspend fun stop() { protectedOutput?.suspendPresentation(); onWorker { requireCore().stop() } }
     override suspend fun onForeground() { onWorker { requireCore().restoreAfterForeground() }; protectedOutput?.resumePresentation() }
     override suspend fun onBackground() { protectedOutput?.suspendPresentation(); onWorker { requireCore().releaseForLifecycle() } }
-    @Suppress("DEPRECATION")
     override suspend fun onTrimMemory(level: Int) = onWorker {
-        if (level >= ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN) core?.releaseForLifecycle()
-        else if (level >= ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW) core?.handleRunningLowMemory()
+        handleAndroidTrimMemory(level,
+            shrink = { core?.handleRunningLowMemory() },
+            release = { core?.releaseForLifecycle() })
         Unit
     }
     override suspend fun onConfigurationChanged() {
