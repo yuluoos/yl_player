@@ -73,6 +73,7 @@ final class AbrNetworkSeries {
         'selectedWidth': track?.width,
         'selectedHeight': track?.height,
         'selectedBitrate': track?.bitrate,
+        'estimatedBitrate': state.metrics.estimatedBitrate,
         'rebufferCount': state.metrics.rebufferCount,
         'rebufferUs': state.metrics.rebufferDuration?.inMicroseconds,
         'droppedFrames': state.metrics.droppedVideoFrames,

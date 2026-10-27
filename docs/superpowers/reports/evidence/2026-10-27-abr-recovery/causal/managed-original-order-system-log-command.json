@@ -1,0 +1,18 @@
+{
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+    "log",
+    "show",
+    "--last",
+    "15m",
+    "--style",
+    "json",
+    "--predicate",
+    "processIdentifier == 50665 AND (eventMessage CONTAINS \"12889\" OR eventMessage CONTAINS \"penalty\" OR eventMessage CONTAINS \"overdue\" OR eventMessage CONTAINS \"timeout\")"
+  ],
+  "exitCode": 0,
+  "stderr": "getpwuid_r did not find a match for uid 501\n"
+}

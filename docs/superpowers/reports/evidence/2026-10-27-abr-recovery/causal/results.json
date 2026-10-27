@@ -1,0 +1,43 @@
+[
+  {
+    "name": "managed-original-order",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-abr-recovery-20261027-causal/managed-original-order",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--startup-delay-ms",
+      "0"
+    ],
+    "exitCode": 0,
+    "seconds": 135.2266102499998
+  },
+  {
+    "name": "direct-delayed",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-abr-recovery-20261027-causal/direct-delayed",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--startup-delay-ms",
+      "1000",
+      "--direct-hls-control"
+    ],
+    "exitCode": 0,
+    "seconds": 132.07190958299907
+  }
+]

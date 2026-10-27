@@ -335,6 +335,7 @@ class Handler(BaseHTTPRequestHandler):
             if body is not None:
                 self.send_header('X-Yl-Asset-Sha256', row['assetSha256'])
             self.send_header('Content-Type', 'application/dash+xml' if name.endswith('.mpd')
+                             else 'application/vnd.apple.mpegurl' if name.endswith('.m3u8')
                              else 'application/octet-stream')
             if status == 206:
                 self.send_header('Content-Range', f'bytes {start}-{end - 1}/{len(body)}')

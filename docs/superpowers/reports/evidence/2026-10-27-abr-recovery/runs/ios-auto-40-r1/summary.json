@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "runId": "recovery-20261027-ios-auto-40-r1",
+  "mode": "auto",
+  "captureComplete": true,
+  "programmeDurationSeconds": 40,
+  "lastVideoRequestEndMs": 30461.834083,
+  "videoRequestTailAfterRecoveryMs": 5461.834083000002,
+  "downshiftLatencyUs": {
+    "min": 9440782,
+    "max": 9487055
+  },
+  "upshiftLatencyUs": null,
+  "weakLowRequestLatencyUs": 2529005,
+  "recoveryHighRequestLatencyUs": null,
+  "adaptationObserved": false,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 2,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": null,
+  "rebufferDurationUsDelta": null,
+  "requestBodyBytesWritten": 1954259,
+  "requestFailures": 1,
+  "requestCount": 121,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 1074234,
+  "networkPhaseBytes": [
+    1107416,
+    502060,
+    325988
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

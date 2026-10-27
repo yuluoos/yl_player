@@ -54,6 +54,16 @@ after firstFrame, with one earlier post-Load observation, up to 180 s from Load
 and 1024 records. It must reach natural completion at >=39.5 s; early EOF,
 timeouts, failures and disposal failure are retained in the final record.
 
+An explicitly separate EOF/prebuffer diagnostic may use the preparer's
+`--duration-seconds 120` and `--dart-define=YL_ABR_PROGRAMME_SECONDS=120` together.
+Only 40 and 120 seconds are supported. Preserve the distinct fixture receipt
+and manifest hash, and do not mix either duration's runs or SLOs. New captures
+record `programmeDurationSeconds`; old captures default to the frozen 40 seconds.
+Both the runner and summarizer require the declared programme to finish within
+0.5 seconds of its end (119.5 seconds for the diagnostic). The 180-second bounded
+observation and all quality policies remain unchanged. No duration qualifies a
+performance baseline or physical output by itself.
+
 The fixed track command's ACK is recorded but does not prove its output settled;
 automatic mode observed after that ACK is flagged separately. Geometry downgrade
 checking begins after the first observed fixed 640×360 frame.
@@ -94,6 +104,9 @@ times, process outcome and cleanup. It checks caps against both known high-track
 requests and public geometry/selected-track fields. Fixed output downgrade and
 unexpected return to auto are separate findings. Unknown native metrics remain
 null; counter resets or missing samples invalidate a counter delta.
+Samples also retain the public `estimatedBitrate` when available. It is a native
+metric, not a direct measurement of this fixture's throughput or the private
+selector's decision threshold. Missing estimates remain null.
 
 `mediaRequestReachedRecovery` only says a media request with written bytes ended
 at/after the 25 s recovery boundary. It does not measure bytes sent in that phase,
@@ -101,6 +114,14 @@ prove the player adapted, or require that requests spanned all earlier phases.
 If media preloaded before the weak interval, the capture cannot quantify that
 ABR response even if playback completes. Preserve this result; do not count it
 as a successful weak-network trial.
+
+`lastVideoRequestEndMs` is the latest completion time of a successful nonempty
+video **chunk** GET, excluding init and audio requests.
+`videoRequestTailAfterRecoveryMs` is its nonnegative distance from 25 seconds
+(null if there was no such chunk). This is an endpoint span, not continuous
+download time, byte-phase coverage, estimator convergence, or a minimum SLO.
+It exposes cases where prebuffering/EOF leaves little new video after recovery;
+no upshift remains unobserved, even if a longer, separately hashed run recovers.
 
 Player times are Load-relative, HTTP times are first-GET-relative. After firstFrame,
 the client brackets an identity-checked HEAD with its monotonic clock and records

@@ -1,0 +1,69 @@
+{
+  "baselineCommit": "71018fd5a2803ba9f735f157c630a61991413f7d",
+  "mainCommit": "71018fd5a2803ba9f735f157c630a61991413f7d",
+  "checks": [
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exitCode": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exitCode": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py"
+      ],
+      "exitCode": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py",
+        "--require-ready"
+      ],
+      "exitCode": 1,
+      "expected": 1
+    }
+  ],
+  "previousEvidence": [
+    {
+      "directory": "2026-10-26-remaining-acceptance",
+      "verifiedFiles": 495
+    },
+    {
+      "directory": "2026-10-27-remaining-main-merge",
+      "verifiedFiles": 31
+    }
+  ],
+  "originalArchivedFilesVerified": 195,
+  "causalSourceIdentityMatches": true,
+  "sourceMatches": true,
+  "releaseReady": false,
+  "currentSourceHash": "77fdcdc820e805edfbea670ac670c9181bb69defc7171b65a24716cab37dc37c",
+  "note": "Final SHA256SUMS is generated after this record; report and ledger remain outside it to avoid self-reference. All original failures retained. No release actions."
+}

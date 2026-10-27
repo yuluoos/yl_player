@@ -1,0 +1,742 @@
+[
+  {
+    "run": "android-auto-120-r1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "recovery-20261027-android-auto-120-r1",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 120,
+      "lastVideoRequestEndMs": 105320.511791,
+      "videoRequestTailAfterRecoveryMs": 80320.511791,
+      "downshiftLatencyUs": {
+        "min": 18100764,
+        "max": 18161040
+      },
+      "upshiftLatencyUs": {
+        "min": 16144260,
+        "max": 16204536
+      },
+      "weakLowRequestLatencyUs": 5266763,
+      "recoveryHighRequestLatencyUs": 995802,
+      "adaptationObserved": true,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 6802973,
+      "requestFailures": 0,
+      "requestCount": 335,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 356115,
+      "networkPhaseBytes": [
+        1414467,
+        472380,
+        4860005
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometryTransitions": [
+      {
+        "elapsedUs": 1137613,
+        "positionUs": 0,
+        "bufferedPositionUs": 1000000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": 2400000,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      },
+      {
+        "elapsedUs": 28342745,
+        "positionUs": 27001000,
+        "bufferedPositionUs": 41983000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": 2788461,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      },
+      {
+        "elapsedUs": 41386241,
+        "positionUs": 40149000,
+        "bufferedPositionUs": 55375000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": 2795395,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      }
+    ],
+    "publicEstimatedBitrate": {
+      "min": 318345,
+      "max": 3315388,
+      "last": 3237096
+    },
+    "firstFullBufferSample": {
+      "runId": "recovery-20261027-android-auto-120-r1",
+      "elapsedUs": 106590391,
+      "positionUs": 105239000,
+      "bufferedPositionUs": 120000000,
+      "status": "playing",
+      "automatic": true,
+      "selectionReason": "initial",
+      "width": 640.0,
+      "height": 360.0,
+      "selectedWidth": null,
+      "selectedHeight": null,
+      "selectedBitrate": null,
+      "estimatedBitrate": 3237096,
+      "rebufferCount": 0,
+      "rebufferUs": 0,
+      "droppedFrames": 0,
+      "audioSelected": true,
+      "engine": "media3",
+      "decoder": "hardware",
+      "failed": false
+    },
+    "requestFailures": []
+  },
+  {
+    "run": "android-auto-120-r2",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "recovery-20261027-android-auto-120-r2",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 120,
+      "lastVideoRequestEndMs": 105132.825,
+      "videoRequestTailAfterRecoveryMs": 80132.825,
+      "downshiftLatencyUs": {
+        "min": 18023581,
+        "max": 18087457
+      },
+      "upshiftLatencyUs": {
+        "min": 16912581,
+        "max": 16976457
+      },
+      "weakLowRequestLatencyUs": 4924321,
+      "recoveryHighRequestLatencyUs": 1969099,
+      "adaptationObserved": true,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 6791165,
+      "requestFailures": 0,
+      "requestCount": 335,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 280511,
+      "networkPhaseBytes": [
+        1414467,
+        497866,
+        4822711
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometryTransitions": [
+      {
+        "elapsedUs": 1199436,
+        "positionUs": 0,
+        "bufferedPositionUs": 1000000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": 2400000,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      },
+      {
+        "elapsedUs": 28353293,
+        "positionUs": 27004000,
+        "bufferedPositionUs": 41983000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": 3212762,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      },
+      {
+        "elapsedUs": 42242293,
+        "positionUs": 40933000,
+        "bufferedPositionUs": 55989000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": 3237096,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      }
+    ],
+    "publicEstimatedBitrate": {
+      "min": 347734,
+      "max": 3287805,
+      "last": 3248702
+    },
+    "firstFullBufferSample": {
+      "runId": "recovery-20261027-android-auto-120-r2",
+      "elapsedUs": 106480600,
+      "positionUs": 105113000,
+      "bufferedPositionUs": 120000000,
+      "status": "playing",
+      "automatic": true,
+      "selectionReason": "initial",
+      "width": 640.0,
+      "height": 360.0,
+      "selectedWidth": null,
+      "selectedHeight": null,
+      "selectedBitrate": null,
+      "estimatedBitrate": 3248702,
+      "rebufferCount": 0,
+      "rebufferUs": 0,
+      "droppedFrames": 0,
+      "audioSelected": true,
+      "engine": "media3",
+      "decoder": "hardware",
+      "failed": false
+    },
+    "requestFailures": []
+  },
+  {
+    "run": "android-auto-40-r1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "recovery-20261027-android-auto-40-r1",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 25674.710333,
+      "videoRequestTailAfterRecoveryMs": 674.7103329999991,
+      "downshiftLatencyUs": {
+        "min": 18138184,
+        "max": 18194864
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 5363340,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 1,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 2050757,
+      "requestFailures": 0,
+      "requestCount": 115,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 285387,
+      "networkPhaseBytes": [
+        1414096,
+        468655,
+        149211
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometryTransitions": [
+      {
+        "elapsedUs": 1274878,
+        "positionUs": 0,
+        "bufferedPositionUs": 1000000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": 2400000,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      },
+      {
+        "elapsedUs": 28506273,
+        "positionUs": 27168000,
+        "bufferedPositionUs": 40000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": 2656615,
+        "rebufferCount": 0,
+        "droppedFrames": 0
+      }
+    ],
+    "publicEstimatedBitrate": {
+      "min": 312666,
+      "max": 2830000,
+      "last": 2656615
+    },
+    "firstFullBufferSample": {
+      "runId": "recovery-20261027-android-auto-40-r1",
+      "elapsedUs": 26483506,
+      "positionUs": 25138000,
+      "bufferedPositionUs": 40000000,
+      "status": "playing",
+      "automatic": true,
+      "selectionReason": "initial",
+      "width": 640.0,
+      "height": 360.0,
+      "selectedWidth": null,
+      "selectedHeight": null,
+      "selectedBitrate": null,
+      "estimatedBitrate": 2656615,
+      "rebufferCount": 0,
+      "rebufferUs": 0,
+      "droppedFrames": 0,
+      "audioSelected": true,
+      "engine": "media3",
+      "decoder": "hardware",
+      "failed": false
+    },
+    "requestFailures": []
+  },
+  {
+    "run": "ios-auto-120-r1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "recovery-20261027-ios-auto-120-r1",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 120,
+      "lastVideoRequestEndMs": 110540.32375,
+      "videoRequestTailAfterRecoveryMs": 85540.32375,
+      "downshiftLatencyUs": {
+        "min": 9619035,
+        "max": 9665488
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 2645158,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 4746739,
+      "requestFailures": 1,
+      "requestCount": 341,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 997462,
+      "networkPhaseBytes": [
+        1107416,
+        471340,
+        3111862
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometryTransitions": [
+      {
+        "elapsedUs": 1566982,
+        "positionUs": 0,
+        "bufferedPositionUs": 2000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      },
+      {
+        "elapsedUs": 5619966,
+        "positionUs": 4011000,
+        "bufferedPositionUs": 14000000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      },
+      {
+        "elapsedUs": 19796558,
+        "positionUs": 18010000,
+        "bufferedPositionUs": 23000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      }
+    ],
+    "publicEstimatedBitrate": {
+      "min": null,
+      "max": null,
+      "last": null
+    },
+    "firstFullBufferSample": {
+      "runId": "recovery-20261027-ios-auto-120-r1",
+      "elapsedUs": 110941501,
+      "positionUs": 109250000,
+      "bufferedPositionUs": 120000000,
+      "status": "playing",
+      "automatic": true,
+      "selectionReason": "initial",
+      "width": 320.0,
+      "height": 180.0,
+      "selectedWidth": null,
+      "selectedHeight": null,
+      "selectedBitrate": null,
+      "estimatedBitrate": null,
+      "rebufferCount": 0,
+      "rebufferUs": 0,
+      "droppedFrames": null,
+      "audioSelected": true,
+      "engine": "avPlayer",
+      "decoder": "unknown",
+      "failed": false
+    },
+    "requestFailures": [
+      {
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "assetSha256": "0644678cc0b4e2357813c4d10f4eeecdcedb164074ae4043ee0d05a0dbe95d08",
+        "bodyBytesWritten": 53248,
+        "endMs": 12467.343042,
+        "method": "GET",
+        "outcome": "client_io_error",
+        "phaseBoundariesMs": [
+          0,
+          10000,
+          25000
+        ],
+        "phaseBytesWritten": [
+          0,
+          53248,
+          0
+        ],
+        "profile": "down-and-recover-v1",
+        "profileSha256": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "rangeEndExclusive": 68293,
+        "rangeStart": 0,
+        "requestId": 62,
+        "runId": "recovery-20261027-ios-auto-120-r1",
+        "schemaVersion": 1,
+        "startMs": 10381.020334,
+        "status": 200,
+        "timelineMode": "first-get",
+        "timelineState": "active"
+      }
+    ]
+  },
+  {
+    "run": "ios-auto-120-r2",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "recovery-20261027-ios-auto-120-r2",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 120,
+      "lastVideoRequestEndMs": 110636.511917,
+      "videoRequestTailAfterRecoveryMs": 85636.511917,
+      "downshiftLatencyUs": {
+        "min": 9698282,
+        "max": 9743817
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 2732285,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 4746739,
+      "requestFailures": 1,
+      "requestCount": 341,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 1022111,
+      "networkPhaseBytes": [
+        1107416,
+        471340,
+        3111862
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometryTransitions": [
+      {
+        "elapsedUs": 1709870,
+        "positionUs": 0,
+        "bufferedPositionUs": 2000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      },
+      {
+        "elapsedUs": 5761336,
+        "positionUs": 4024000,
+        "bufferedPositionUs": 14000000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      },
+      {
+        "elapsedUs": 19946001,
+        "positionUs": 18008000,
+        "bufferedPositionUs": 23000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      }
+    ],
+    "publicEstimatedBitrate": {
+      "min": null,
+      "max": null,
+      "last": null
+    },
+    "firstFullBufferSample": {
+      "runId": "recovery-20261027-ios-auto-120-r2",
+      "elapsedUs": 111054157,
+      "positionUs": 109330000,
+      "bufferedPositionUs": 120000000,
+      "status": "playing",
+      "automatic": true,
+      "selectionReason": "initial",
+      "width": 320.0,
+      "height": 180.0,
+      "selectedWidth": null,
+      "selectedHeight": null,
+      "selectedBitrate": null,
+      "estimatedBitrate": null,
+      "rebufferCount": 0,
+      "rebufferUs": 0,
+      "droppedFrames": null,
+      "audioSelected": true,
+      "engine": "avPlayer",
+      "decoder": "unknown",
+      "failed": false
+    },
+    "requestFailures": [
+      {
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "assetSha256": "0644678cc0b4e2357813c4d10f4eeecdcedb164074ae4043ee0d05a0dbe95d08",
+        "bodyBytesWritten": 53248,
+        "endMs": 12559.433834,
+        "method": "GET",
+        "outcome": "client_io_error",
+        "phaseBoundariesMs": [
+          0,
+          10000,
+          25000
+        ],
+        "phaseBytesWritten": [
+          0,
+          53248,
+          0
+        ],
+        "profile": "down-and-recover-v1",
+        "profileSha256": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "rangeEndExclusive": 68293,
+        "rangeStart": 0,
+        "requestId": 62,
+        "runId": "recovery-20261027-ios-auto-120-r2",
+        "schemaVersion": 1,
+        "startMs": 10474.934959,
+        "status": 200,
+        "timelineMode": "first-get",
+        "timelineState": "active"
+      }
+    ]
+  },
+  {
+    "run": "ios-auto-40-r1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "recovery-20261027-ios-auto-40-r1",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 30461.834083,
+      "videoRequestTailAfterRecoveryMs": 5461.834083000002,
+      "downshiftLatencyUs": {
+        "min": 9440782,
+        "max": 9487055
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 2529005,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 1954259,
+      "requestFailures": 1,
+      "requestCount": 121,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 1074234,
+      "networkPhaseBytes": [
+        1107416,
+        502060,
+        325988
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometryTransitions": [
+      {
+        "elapsedUs": 1407218,
+        "positionUs": 0,
+        "bufferedPositionUs": 2000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      },
+      {
+        "elapsedUs": 5443317,
+        "positionUs": 4011000,
+        "bufferedPositionUs": 14000000,
+        "width": 640.0,
+        "height": 360.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      },
+      {
+        "elapsedUs": 19571425,
+        "positionUs": 18003000,
+        "bufferedPositionUs": 24000000,
+        "width": 320.0,
+        "height": 180.0,
+        "estimatedBitrate": null,
+        "rebufferCount": 0,
+        "droppedFrames": null
+      }
+    ],
+    "publicEstimatedBitrate": {
+      "min": null,
+      "max": null,
+      "last": null
+    },
+    "firstFullBufferSample": {
+      "runId": "recovery-20261027-ios-auto-40-r1",
+      "elapsedUs": 30714916,
+      "positionUs": 29250000,
+      "bufferedPositionUs": 40000000,
+      "status": "playing",
+      "automatic": true,
+      "selectionReason": "initial",
+      "width": 320.0,
+      "height": 180.0,
+      "selectedWidth": null,
+      "selectedHeight": null,
+      "selectedBitrate": null,
+      "estimatedBitrate": null,
+      "rebufferCount": 0,
+      "rebufferUs": 0,
+      "droppedFrames": null,
+      "audioSelected": true,
+      "engine": "avPlayer",
+      "decoder": "unknown",
+      "failed": false
+    },
+    "requestFailures": [
+      {
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "assetSha256": "0644678cc0b4e2357813c4d10f4eeecdcedb164074ae4043ee0d05a0dbe95d08",
+        "bodyBytesWritten": 62464,
+        "endMs": 12356.865458,
+        "method": "GET",
+        "outcome": "client_io_error",
+        "phaseBoundariesMs": [
+          0,
+          10000,
+          25000
+        ],
+        "phaseBytesWritten": [
+          0,
+          62464,
+          0
+        ],
+        "profile": "down-and-recover-v1",
+        "profileSha256": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "rangeEndExclusive": 68293,
+        "rangeStart": 0,
+        "requestId": 62,
+        "runId": "recovery-20261027-ios-auto-40-r1",
+        "schemaVersion": 1,
+        "startMs": 10282.292625,
+        "status": 200,
+        "timelineMode": "first-get",
+        "timelineState": "active"
+      }
+    ]
+  }
+]

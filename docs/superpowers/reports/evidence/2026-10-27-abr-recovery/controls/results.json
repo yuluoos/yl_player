@@ -1,0 +1,92 @@
+[
+  {
+    "name": "direct-original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-abr-recovery-20261027-controls/direct-original",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--profiles",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/profiles.json",
+      "--profile",
+      "down-and-recover-v1",
+      "--direct-hls-control"
+    ],
+    "exitCode": 0,
+    "seconds": 151.01744866599984
+  },
+  {
+    "name": "managed-original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-abr-recovery-20261027-controls/managed-original",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--profiles",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/profiles.json",
+      "--profile",
+      "down-and-recover-v1"
+    ],
+    "exitCode": 0,
+    "seconds": 129.23842304199934
+  },
+  {
+    "name": "managed-headroom",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-abr-recovery-20261027-controls/managed-headroom",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--profiles",
+      "/private/tmp/yl-abr-recovery-20261027-native/headroom-profile.json",
+      "--profile",
+      "recovery-headroom-diagnostic-v1"
+    ],
+    "exitCode": 0,
+    "seconds": 131.8462965840008
+  },
+  {
+    "name": "direct-headroom",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-abr-recovery-20261027-controls/direct-headroom",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--profiles",
+      "/private/tmp/yl-abr-recovery-20261027-native/headroom-profile.json",
+      "--profile",
+      "recovery-headroom-diagnostic-v1",
+      "--direct-hls-control"
+    ],
+    "exitCode": 0,
+    "seconds": 129.77200124999945
+  }
+]

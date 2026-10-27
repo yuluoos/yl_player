@@ -7,12 +7,29 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from types import SimpleNamespace
 from unittest.mock import Mock, patch
 import abr_accesslog
 from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_control_receipt_requires_native_transport_duration_and_full_completion(self):
+        rows = self.rows()
+        for index, row in enumerate(rows):
+            row.update(elapsed=index * 40 + 1, position=index * 40,
+                       transport='direct-hls-control', programmeDurationSeconds=120, startupDelayMs=0)
+        self.assertFalse(summarize(rows, expected_duration_seconds=120,
+                                   expected_transport='direct-hls-control')['capabilityAccepted'])
+        for key, value in [('transport', 'managed-dash'), ('transport', None),
+                           ('programmeDurationSeconds', 40), ('programmeDurationSeconds', 120.0),
+                           ('startupDelayMs', 1000), ('startupDelayMs', None), ('position', 40)]:
+            bad = copy.deepcopy(rows); bad[-1][key] = value
+            with self.subTest(key=key, value=value), self.assertRaises(ValueError):
+                summarize(bad, expected_duration_seconds=120, expected_transport='direct-hls-control')
+        with self.assertRaises(ValueError):
+            summarize([None, None], expected_duration_seconds=120, expected_transport='direct-hls-control')
+
     def rows(self):
         return [dict(elapsed=i,position=i,rate=0 if i==3 else 1,status=1,width=w,height=180,
                      peak=0,forwardBuffer=10,completed=i==3,framesPublished=i,
@@ -53,6 +70,26 @@ class CleanupTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
+    def test_direct_control_duration_and_identity_survive_failure_before_launch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); products = root / 'products'
+            app = products / 'Fixture.app'; app.mkdir(parents=True)
+            (app / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleExecutable': 'Fixture'}))
+            (app / 'Fixture').write_bytes(b'not launched')
+            (products / 'probe.xctestrun').write_bytes(plistlib.dumps({
+                'RunnerTests': {'TestHostPath': '__TESTROOT__/Fixture.app/Fixture'}}))
+            args = SimpleNamespace(products=products, directory=root / 'out', device=None,
+                duration_seconds=120, direct_hls_control=True,
+                profiles=Path(__file__).with_name('profiles.json'), profile='down-and-recover-v1')
+            # Abort at the server boundary, after real preparation; no fake native success.
+            with patch('abr_accesslog.make_server', side_effect=ValueError('stop before launch')):
+                receipt = abr_accesslog.run(args)
+            self.assertEqual(receipt['fixture']['durationSeconds'], 120)
+            self.assertEqual(receipt['transport'], 'direct-hls-control')
+            self.assertTrue((root / 'out/fixture/direct-master.m3u8').is_file())
+            self.assertFalse(receipt['passed'])
+            self.assertIsNone(receipt['exitCode'])
+
     def test_preflight_failures_keep_a_failed_receipt_without_running_a_host(self):
         # Losing failures before launch makes the recorded experiment denominator wrong.
         for kind in ('missing-products', 'missing-manifest', 'invalid-manifest', 'truncated-xml', 'missing-host'):

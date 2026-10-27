@@ -1,0 +1,12 @@
+[
+  "/opt/homebrew/share/android-commandlinetools/emulator/emulator",
+  "-avd",
+  "TV_64bit_1_5G_32G",
+  "-port",
+  "5580",
+  "-read-only",
+  "-no-snapshot",
+  "-no-window",
+  "-no-audio",
+  "-no-boot-anim"
+]

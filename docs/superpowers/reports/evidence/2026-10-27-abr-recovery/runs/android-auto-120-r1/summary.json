@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "runId": "recovery-20261027-android-auto-120-r1",
+  "mode": "auto",
+  "captureComplete": true,
+  "programmeDurationSeconds": 120,
+  "lastVideoRequestEndMs": 105320.511791,
+  "videoRequestTailAfterRecoveryMs": 80320.511791,
+  "downshiftLatencyUs": {
+    "min": 18100764,
+    "max": 18161040
+  },
+  "upshiftLatencyUs": {
+    "min": 16144260,
+    "max": 16204536
+  },
+  "weakLowRequestLatencyUs": 5266763,
+  "recoveryHighRequestLatencyUs": 995802,
+  "adaptationObserved": true,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 2,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": 0,
+  "rebufferDurationUsDelta": 0,
+  "requestBodyBytesWritten": 6802973,
+  "requestFailures": 0,
+  "requestCount": 335,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 356115,
+  "networkPhaseBytes": [
+    1414467,
+    472380,
+    4860005
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

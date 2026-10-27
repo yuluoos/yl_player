@@ -659,6 +659,11 @@
       "path": "docs/superpowers/reports/2026-10-27-remaining-main-merge.md",
       "sha256": "51177cfea07362d4429fcfe982f3e766ccbd23dea2d420eaa4ff551c21b4a17e",
       "kind": "report"
+    },
+    "abr-recovery-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-abr-recovery.md",
+      "sha256": "a17d72308c5c34eb18ef6923ed77abb0e09a3086016ef2891a8d4fb301a325d2",
+      "kind": "report"
     }
   },
   "rows": [
@@ -671,10 +676,11 @@
         "p04",
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "abr-recovery-20261027"
       ],
       "acceptance": null,
-      "nextAction": "resolve-observed-android-tv-recovery-no-upshift-and-complete-physical-api24-repeat-matrix"
+      "nextAction": "qualify-extended-recovery-observation-on-physical-api24-and-complete-auto-caps-fixed-repeat-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -686,10 +692,11 @@
         "p01",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "abr-recovery-20261027"
       ],
       "acceptance": null,
-      "nextAction": "resolve-reproduced-avplayer-recovery-no-upshift-and-run-full-bound-matrix"
+      "nextAction": "resolve-native-download-timer-high-variant-penalty-recovery-with-supported-strategy-and-cross-os-physical-proof"
     },
     {
       "requirement": "CAP-ABR",

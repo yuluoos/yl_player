@@ -11,6 +11,56 @@ except ModuleNotFoundError:
 
 
 class FixtureTests(unittest.TestCase):
+    def test_direct_hls_control_preserves_media_and_declared_renditions(self):
+        with tempfile.TemporaryDirectory() as work:
+            output = Path(work) / 'control'
+            receipt = prepare.create(output, duration_seconds=120, direct_hls_control=True)
+            assets = prepare.load_assets(output)
+            self.assertEqual(receipt['assetCount'], 485)
+            self.assertEqual(receipt['manifestSha256'],
+                             '1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6')
+            master = assets['direct-master.m3u8'].decode()
+            self.assertIn('BANDWIDTH=414000', master)
+            self.assertIn('BANDWIDTH=764000', master)
+            for rendition, segment_count in [(0, 120), (1, 120), (2, 150)]:
+                playlist = assets[f'direct-{rendition}.m3u8'].decode()
+                self.assertEqual(playlist.count('#EXT-X-DISCONTINUITY\n'), 29)
+                self.assertEqual(playlist.count('#EXTINF:'), segment_count)
+                self.assertEqual(playlist.count('#EXT-X-MAP:'), 30)
+                self.assertTrue(playlist.endswith('#EXT-X-ENDLIST\n'))
+                durations = [float(line.split(':')[1].rstrip(','))
+                             for line in playlist.splitlines() if line.startswith('#EXTINF:')]
+                self.assertAlmostEqual(sum(durations), 120, places=4)
+                for line in playlist.splitlines():
+                    if line and not line.startswith('#'):
+                        self.assertIn(line, assets)
+            self.assertEqual(assets['network-period-29/chunk-1-00001.m4s'],
+                             (prepare.SOURCE / 'period1/chunk-1-00001.m4s').read_bytes())
+            for name, body in assets.items():
+                if name.endswith('.m3u8'):
+                    self.assertNotIn(b'http:', body)
+                    self.assertNotIn(b'ylhls:', body)
+
+    def test_extended_diagnostic_is_explicit_bounded_and_preserves_frozen_default(self):
+        with tempfile.TemporaryDirectory() as work:
+            default = prepare.create(Path(work) / 'default')
+            self.assertEqual(default['manifestSha256'],
+                             'ee00dce275ab3361397bc369a9e3af759efbf6226b5b350d258d0cb34501debb')
+            output = Path(work) / 'extended'
+            receipt = prepare.create(output, duration_seconds=120)
+            self.assertEqual(receipt['durationSeconds'], 120)
+            self.assertEqual(receipt['periodCount'], 30)
+            root = ET.parse(output / 'manifest.mpd').getroot()
+            self.assertEqual(root.get('mediaPresentationDuration'), 'PT120S')
+            self.assertEqual(len(root.findall(f'{{{prepare.NS}}}Period')), 30)
+            self.assertNotEqual(receipt['manifestSha256'], default['manifestSha256'])
+            self.assertEqual((output / 'network-period-29/chunk-1-00001.m4s').read_bytes(),
+                             (prepare.SOURCE / 'period1/chunk-1-00001.m4s').read_bytes())
+            for invalid in (True, 0, 39, 41, 121, '120', 120.0):
+                with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                    prepare.create(Path(work) / 'invalid', duration_seconds=invalid)
+            self.assertFalse((Path(work) / 'invalid').exists())
+
     def test_long_programme_preserves_media_addresses_and_has_unique_periods(self):
         self.assertIsNotNone(prepare, 'long owned programme is not implemented')
         with tempfile.TemporaryDirectory() as work:

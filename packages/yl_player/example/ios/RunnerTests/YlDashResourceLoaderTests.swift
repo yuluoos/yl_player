@@ -65,56 +65,120 @@ final class YlDashResourceLoaderTests: XCTestCase {
       "executable": ProcessInfo.processInfo.arguments[0], "token": try XCTUnwrap(env["YL_ABR_PROBE_TOKEN"])]
     try JSONSerialization.data(withJSONObject: processProof, options: [.sortedKeys])
       .write(to: directory.appendingPathComponent("process.json"), options: .atomic)
-    let prepared = try await Task.detached {
-      try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
-        configuration: .init(map: [:]), cancellationToken: .init())
-    }.value
+    let direct = env["YL_ABR_PROBE_DIRECT_HLS"] == "1"
+    let programmeSeconds = try XCTUnwrap(Int(env["YL_ABR_PROBE_SECONDS"] ?? "40"))
+    XCTAssertTrue([40, 120].contains(programmeSeconds))
+    let startupDelayMs = try XCTUnwrap(Int(env["YL_ABR_PROBE_STARTUP_DELAY_MS"] ?? "0"))
+    XCTAssertTrue((0...2000).contains(startupDelayMs))
+    // Preserve the historical managed probe's preparation-before-player order.
+    let prepared: YlPreparedHlsAsset?
+    if direct {
+      prepared = nil
+      if startupDelayMs > 0 {
+        // Explicitly arm the same first-GET clock before the diagnostic delay.
+        let (_, response) = try await URLSession.shared.data(from: url)
+        XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 200)
+      }
+    } else {
+      prepared = try await Task.detached {
+        try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
+          configuration: .init(map: [:]), cancellationToken: .init())
+      }.value
+    }
+    if startupDelayMs > 0 { try await Task.sleep(nanoseconds: UInt64(startupDelayMs) * 1_000_000) }
     let player = AVPlayer()
     let output = AppleTestTexture()
     var tick: (() -> Void)?
     var states: [YlNativeState] = []
-    let backend = YlAvPlayerBackend(playerId: 991,
-      services: .init(platform: .current, textureOutput: output,
-        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
-      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
-      emit: { if case .state(let state) = $0.event { states = [state] } })
-    defer { backend.dispose() }
-    let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
-    try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
-    try backend.activate()
-    try backend.play()
+    var backend: YlAvPlayerBackend?
+    var directOutput: AVPlayerItemVideoOutput?
+    var directCompleted = false
+    var endTask: Task<Void, Never>?
+    if direct {
+      // System-only control: same owned media/timelines/constraints; bypass the
+      // project's manifest loader, loopback media proxy and backend policies.
+      let item = AVPlayerItem(url: url.deletingLastPathComponent().appendingPathComponent("direct-master.m3u8"))
+      item.preferredForwardBufferDuration = 10
+      item.preferredPeakBitRate = 0
+      let pixels = AVPlayerItemVideoOutput(pixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
+      item.add(pixels); directOutput = pixels
+      let ended = NotificationCenter.default.notifications(named: .AVPlayerItemDidPlayToEndTime, object: item)
+      endTask = Task { @MainActor in
+        for await _ in ended { directCompleted = true; break }
+      }
+      player.replaceCurrentItem(with: item); player.play()
+    } else {
+      let value = YlAvPlayerBackend(playerId: 991,
+        services: .init(platform: .current, textureOutput: output,
+          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+        emit: { if case .state(let state) = $0.event { states = [state] } })
+      backend = value
+      let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
+      try value.stagePreparedHls(source: source, prepared: XCTUnwrap(prepared), resume: false)
+      try value.activate(); try value.play()
+    }
+    defer { endTask?.cancel(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
     _ = FileManager.default.createFile(atPath: directory.appendingPathComponent("rows.jsonl").path, contents: nil)
     let file = try FileHandle(forWritingTo: directory.appendingPathComponent("rows.jsonl"))
     defer { try? file.close() }
     let started = ProcessInfo.processInfo.systemUptime
     var completed = false
     var frameCount = 0
+    var clockAlignment: [String: Double]?
     while ProcessInfo.processInfo.systemUptime - started < 140 {
-      tick?(); _ = backend.copyPixelBuffer()
+      tick?(); _ = backend?.copyPixelBuffer()
+      if let pixels = directOutput, pixels.hasNewPixelBuffer(forItemTime: player.currentTime()),
+         pixels.copyPixelBuffer(forItemTime: player.currentTime(), itemTimeForDisplay: nil) != nil {
+        frameCount += 1
+      }
       frameCount += output.frames.count
       output.frames.removeAll(keepingCapacity: true)
       let item = try XCTUnwrap(player.currentItem)
       func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
+      if clockAlignment == nil, item.presentationSize.width > 0 {
+        var request = URLRequest(url: url); request.httpMethod = "HEAD"
+        let before = (ProcessInfo.processInfo.systemUptime - started) * 1_000_000
+        let (_, response) = try await URLSession.shared.data(for: request)
+        let after = (ProcessInfo.processInfo.systemUptime - started) * 1_000_000
+        let http = try XCTUnwrap(response as? HTTPURLResponse)
+        XCTAssertEqual(http.value(forHTTPHeaderField: "X-Yl-Run-Id"), "abr-accesslog")
+        XCTAssertEqual(http.value(forHTTPHeaderField: "X-Yl-Profile-Sha256"), env["YL_ABR_PROBE_PROFILE_SHA256"])
+        let server = try XCTUnwrap(Double(http.value(forHTTPHeaderField: "X-Yl-Elapsed-Us") ?? ""))
+        clockAlignment = ["beforeUs": before, "afterUs": after, "serverUs": server]
+      }
+      let errors: [[String: Any]] = (item.errorLog()?.events ?? []).suffix(32).map {
+        let comment = String(($0.errorComment ?? "").prefix(512)).replacingOccurrences(
+          of: #"[A-Za-z][A-Za-z0-9+.-]*://[^\s]+"#, with: "<url>", options: .regularExpression)
+        return ["domain": $0.errorDomain, "code": $0.errorStatusCode, "comment": comment]
+      }
       let logs: [[String: Any]] = (item.accessLog()?.events ?? []).map {
         ["observedBitrate": finite($0.observedBitrate), "indicatedBitrate": finite($0.indicatedBitrate),
          "switchBitrate": finite($0.switchBitrate), "transferDuration": finite($0.transferDuration),
          "bytes": $0.numberOfBytesTransferred, "requests": $0.numberOfMediaRequests,
-         "segmentsDuration": finite($0.segmentsDownloadedDuration), "stalls": $0.numberOfStalls]
+         "segmentsDuration": finite($0.segmentsDownloadedDuration), "stalls": $0.numberOfStalls, "downloadOverdue": $0.downloadOverdue]
       }
       let row: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
         "position": finite(CMTimeGetSeconds(player.currentTime())), "rate": player.rate,
         "status": item.status.rawValue, "width": item.presentationSize.width,
         "height": item.presentationSize.height, "peak": item.preferredPeakBitRate,
         "forwardBuffer": item.preferredForwardBufferDuration, "logs": logs,
-        "completed": states.last?.status == "completed", "framesPublished": frameCount]
+        "errors": errors, "errorLogEventCount": item.errorLog()?.events.count ?? 0,
+        "bufferEmpty": item.isPlaybackBufferEmpty, "bufferFull": item.isPlaybackBufferFull,
+        "likelyToKeepUp": item.isPlaybackLikelyToKeepUp, "timeControlStatus": player.timeControlStatus.rawValue,
+        "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
+        "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
+        "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
+        "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
-      if states.last?.status == "completed" { completed = true; break }
+      if direct ? directCompleted : states.last?.status == "completed" { completed = true; break }
       XCTAssertNotEqual(item.status, .failed)
       if item.status == .failed { break }
       try await Task.sleep(nanoseconds: 250_000_000)
     }
     XCTAssertTrue(completed)
-    backend.dispose()
+    XCTAssertGreaterThanOrEqual(CMTimeGetSeconds(player.currentTime()), Double(programmeSeconds) - 0.5)
+    backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil)
     XCTAssertNil(player.currentItem)
   }
 

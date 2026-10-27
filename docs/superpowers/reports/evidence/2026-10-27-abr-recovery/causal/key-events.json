@@ -1,0 +1,83 @@
+{
+  "runnerDwarfdump": "UUID: 40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D (arm64) /private/tmp/yl-remaining-20261026-ios/Build/Products/Debug-iphonesimulator/Runner.app/Runner\n",
+  "pathCaveat": "process.json executable container and system log processImagePath differ. PID, time, simulator and Mach-O UUID match; do not claim identical paths.",
+  "interpretation": "AV internal download timer reports received 0 media bytes around 2 seconds, then high alternate enters penalty box. Does not mean zero wire bytes. No upshift observed through programme end; penalty exit policy not determined.",
+  "runs": [
+    {
+      "run": "managed-original-order",
+      "process": {
+        "executable": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/66200AB9-6988-435F-983B-3F22D59F1DB6/Runner.app/Runner",
+        "pid": 50665,
+        "token": "ed6cde4689f54057ba81b87ecec38fcf"
+      },
+      "events": [
+        {
+          "timestamp": "2026-10-27 02:33:15.681673-0700",
+          "processID": 50665,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> MediaHandleDownloadTimer: 0x11d551000:0:0: : bw 0 kbps required 764 dur 1 gotHeader 1 received 0 bytes in 2.00189 seconds latency 244 ms"
+        },
+        {
+          "timestamp": "2026-10-27 02:33:15.683617-0700",
+          "processID": 50665,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> MoveAlternateToPenaltyBox: 0x11d551000: alternate <FigAlternate( 1):[0x11d489180] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box"
+        },
+        {
+          "timestamp": "2026-10-27 02:33:15.698625-0700",
+          "processID": 50665,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> segPumpAppendErrorLogEntry: 0x11d551000:0: adding -12889 CoreMediaErrorDomain The operation couldn\u2019t be completed. (CoreMediaErrorDomain error -12889.) to error log"
+        },
+        {
+          "timestamp": "2026-10-27 02:33:15.698940-0700",
+          "processID": 50665,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> segPumpHandleCommonNetworkError: 0x11d551000:0: handled the error Error Domain=CoreMediaErrorDomain Code=-12889 \"(null)\" (-12889) with err 0 and errorSeverity 2 using action stream facing recoverable error, may need to be moved to penaltybox with flags 32"
+        }
+      ]
+    },
+    {
+      "run": "direct-delayed",
+      "process": {
+        "executable": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/DDAD6845-CDD4-4320-88EA-DEFB28277632/Runner.app/Runner",
+        "pid": 51283,
+        "token": "c6aa8556e0b44642994353e96de15608"
+      },
+      "events": [
+        {
+          "timestamp": "2026-10-27 02:35:27.287304-0700",
+          "processID": 51283,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> MediaHandleDownloadTimer: 0x11d8a6800:0:0: : bw 0 kbps required 764 dur 1 gotHeader 1 received 0 bytes in 2.00073 seconds latency 245 ms"
+        },
+        {
+          "timestamp": "2026-10-27 02:35:27.288340-0700",
+          "processID": 51283,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> MoveAlternateToPenaltyBox: 0x11d8a6800: alternate <FigAlternate( 1):[0x11d88e800] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box"
+        },
+        {
+          "timestamp": "2026-10-27 02:35:27.302968-0700",
+          "processID": 51283,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> segPumpAppendErrorLogEntry: 0x11d8a6800:0: adding -12889 CoreMediaErrorDomain The operation couldn\u2019t be completed. (CoreMediaErrorDomain error -12889.) to error log"
+        },
+        {
+          "timestamp": "2026-10-27 02:35:27.303167-0700",
+          "processID": 51283,
+          "processImageUUID": "40FC0D42-E85A-3F12-8A1B-FE3EA48FEE7D",
+          "processImagePath": "/Users/yy2021_8689/Library/Developer/CoreSimulator/Devices/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8/data/Containers/Bundle/Application/6E08E14C-6143-464B-9FD1-DF8F6AFD9408/Runner.app/Runner",
+          "eventMessage": "<SEGPUMP> segPumpHandleCommonNetworkError: 0x11d8a6800:0: handled the error Error Domain=CoreMediaErrorDomain Code=-12889 \"(null)\" (-12889) with err 0 and errorSeverity 2 using action stream facing recoverable error, may need to be moved to penaltybox with flags 32"
+        }
+      ]
+    }
+  ]
+}

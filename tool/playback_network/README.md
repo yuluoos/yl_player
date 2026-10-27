@@ -8,6 +8,13 @@ The preparer repeats these ten Periods for a 40-second programme, preserving
 media bytes and assigning each Period unique URLs to avoid reusing cached media.
 Encoder/MPD bandwidth declarations are not observed transfer rates.
 
+For EOF/prebuffer recovery diagnostics only, `prepare_fixture.py --duration-seconds
+120 --output NEW_DIRECTORY` generates 30 Periods with a distinct manifest/inventory
+identity. Pass `--dart-define=YL_ABR_PROGRAMME_SECONDS=120` to the public capture.
+The default remains the byte-identical 40-second programme. Keep durations in
+separate experiments; a longer diagnostic cannot replace a frozen baseline or
+turn an earlier missing upshift into a pass. See the [capture protocol](capture-protocol.md).
+
 From the repository root:
 
 ```sh
@@ -194,12 +201,38 @@ observation rows. The normal profile is unchanged. An explicitly supplied
 `--profiles` file and `--profile` may define a separately identified diagnostic
 intervention; it must not replace the frozen baseline.
 
-Logs contain only scalar playback/geometry/bitrate/transfer counters, never
-access-log URLs or server addresses. The test discards published test pixel
+`--duration-seconds 120` selects the separate longer diagnostic. The optional
+`--direct-hls-control` uses AVPlayer directly with independently generated HTTP
+HLS playlists referencing the same media and MPD segment timelines. It bypasses
+the project's DASH loader/proxy/backend and is never production-path acceptance.
+Its master declares the same 414000/764000 aggregate rates, resolutions and
+codecs; media bytes are unchanged, and its extra playlists have their own frozen
+inventory identity. The managed probe keeps its preparation-before-AVPlayer
+initialization order. A previously built host must confirm transport and duration
+in every native row, or the collector rejects the attempt.
+
+For an explicitly labeled timing intervention, `--startup-delay-ms 1000` waits
+after managed preparation. Direct mode first GETs the owned MPD to arm the same
+server clock, then waits before starting AVPlayer. Only 0..2000 ms is accepted;
+default zero preserves normal startup. The native rows and receipt bind the delay.
+Compare the actual segment start times at the 10-second boundary, not just the
+CLI delay, since launch/decoder/scheduling timing still varies. Never silently
+use a delayed run in place of a frozen baseline or infer causality from unmatched
+weak-phase entry states.
+
+Logs contain playback/geometry/bitrate/transfer counters, buffer ranges/flags,
+`downloadOverdue`, and the most recent 32 error-log events (total count retained).
+Error comments are bounded and URL-redacted; access-log URLs and server addresses
+are not recorded. A profile-identity-checked HEAD brackets the server clock after
+the first geometry appears. Earlier rows have no clock alignment.
+The test discards published test pixel
 buffers every poll. The output records actual down/up geometry changes and
 AVPlayer's reported bitrate; it does not reveal the private ABR decision
 algorithm, establish a recovery deadline, or certify CAP-ABR/physical output.
-Native completion requires programme completion and disposal. Full public
+`observedBitrate` is an empirical downloaded-media metric, not instantaneous
+recovery capacity; negative `indicatedBitrate` means unknown, not proof that a
+variant was excluded. Native completion requires the declared programme end
+(within 0.5 s), disposal and matching transport/duration/delay. Full public
 Flutter auto/caps/fixed acceptance remains a separate entry.
 
 Once the fresh output directory is created, setup failures (including missing

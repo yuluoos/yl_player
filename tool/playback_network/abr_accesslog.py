@@ -17,10 +17,22 @@ from network_profile import load_profiles, make_server
 from prepare_fixture import create
 
 
-def summarize(rows):
+def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0):
     def require(value):
         if not value: raise ValueError('incomplete or invalid ABR observation')
     require(isinstance(rows,list) and 2<=len(rows)<=1000)
+    require(all(isinstance(row, dict) for row in rows))
+    if expected_duration_seconds is not None or expected_transport is not None:
+        require(type(expected_duration_seconds) is int and expected_duration_seconds in (40, 120))
+        require(expected_transport in ('managed-dash', 'direct-hls-control'))
+        require(type(expected_startup_delay_ms) is int and 0 <= expected_startup_delay_ms <= 2000)
+        require(all(type(row.get('programmeDurationSeconds')) is int and
+                    row.get('programmeDurationSeconds') == expected_duration_seconds and
+                    type(row.get('startupDelayMs')) is int and row['startupDelayMs'] == expected_startup_delay_ms and
+                    row.get('transport') == expected_transport for row in rows))
+        position = rows[-1].get('position')
+        require(type(position) in (int, float) and math.isfinite(position) and
+                position >= expected_duration_seconds - .5)
     widths=[];previous=-1
     for row in rows:
         elapsed=row['elapsed']
@@ -128,6 +140,13 @@ def run(args):
         paths=[p for p in products.rglob('*') if p.is_file() and ('.app/' in str(p) or p.suffix=='.xctestrun')]
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     try:
+        duration_seconds = getattr(args, 'duration_seconds', 40)
+        direct = getattr(args, 'direct_hls_control', False)
+        startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
+        if type(startup_delay_ms) is not int or not 0 <= startup_delay_ms <= 2000:
+            raise ValueError('invalid diagnostic startup delay')
+        receipt['transport'] = 'direct-hls-control' if direct else 'managed-dash'
+        receipt['startupDelayMs'] = startup_delay_ms
         products=args.products.resolve(strict=True)
         manifests=list(products.glob('*.xctestrun'))
         if len(manifests)!=1:raise ValueError('expected one built test manifest')
@@ -145,7 +164,8 @@ def run(args):
         info=app/('Contents/Info.plist' if (app/'Contents').is_dir() else 'Info.plist')
         executable=plistlib.loads(info.read_bytes())['CFBundleExecutable']
         before=hashes();receipt['binaryHashes']=before
-        receipt['fixture']=create(out/'fixture')
+        receipt['fixture']=create(out/'fixture', duration_seconds=duration_seconds,
+                                  direct_hls_control=direct)
         profile=load_profiles(args.profiles)[args.profile];receipt['profileSha256']=profile.sha256
         destination='platform=macOS,arch=arm64'
         if args.device:
@@ -155,7 +175,9 @@ def run(args):
         server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog')
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
         target.setdefault('EnvironmentVariables',{}).update(
-            YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://127.0.0.1:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out))
+            YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://127.0.0.1:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
+            YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
+            YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
         command=['xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),
             '-destination',destination,'-only-testing:RunnerTests/YlDashResourceLoaderTests/testActualOwnedDashAdaptiveObservation',
@@ -173,7 +195,8 @@ def run(args):
                 try:process.wait(timeout=10)
                 except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=10)
         rows=read_rows(out/'rows.jsonl')
-        receipt['observation']=summarize(rows)
+        receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
+                                         expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms)
     except (OSError,ValueError,KeyError,TypeError,plistlib.InvalidFileException,ExpatError,
             subprocess.SubprocessError) as error:
         receipt['errors'].append(type(error).__name__)
@@ -212,6 +235,11 @@ def main():
     p.add_argument('--products',type=Path,required=True);p.add_argument('--directory',type=Path,required=True)
     p.add_argument('--device',help='Explicit iOS Simulator UUID; omit for native arm64 macOS')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
+    p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)
+    p.add_argument('--startup-delay-ms',type=int,default=0,
+                   help='0..2000ms diagnostic delay after arming/preparing; never changes the frozen profile')
+    p.add_argument('--direct-hls-control',action='store_true',
+                   help='system-only direct HLS control; not a production DASH acceptance run')
     p.add_argument('--profile',default='down-and-recover-v1');a=p.parse_args()
     result=run(a);print(json.dumps({k:v for k,v in result.items() if k!='binaryHashes'},indent=2))
     return 0 if result['passed'] else 1

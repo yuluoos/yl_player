@@ -1,0 +1,104 @@
+[
+  {
+    "name": "benchmark-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_*.py"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 32.4
+  },
+  {
+    "name": "example-tests",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "test",
+      "--no-pub",
+      "test",
+      "--reporter",
+      "expanded"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 0,
+    "seconds": 7.94
+  },
+  {
+    "name": "analyze",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "analyze",
+      "--no-pub"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 9.988
+  },
+  {
+    "name": "format",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/dart",
+      "format",
+      "--output=none",
+      "--set-exit-if-changed",
+      "packages/yl_player/example/integration_test/abr_network_profile_test.dart",
+      "packages/yl_player/example/integration_test/support/abr_network_series.dart",
+      "packages/yl_player/example/test/abr_network_series_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 0.894
+  },
+  {
+    "name": "public-surface",
+    "command": [
+      "sh",
+      "tool/check_public_surface.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 0.269
+  },
+  {
+    "name": "source-parity",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/source_parity.py",
+      "--verify-identical"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 0.143
+  },
+  {
+    "name": "thresholds",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 0,
+    "seconds": 0.081
+  },
+  {
+    "name": "threshold-ready",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py",
+      "--require-ready"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player",
+    "exitCode": 1,
+    "seconds": 0.09
+  }
+]

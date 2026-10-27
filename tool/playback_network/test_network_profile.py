@@ -169,6 +169,16 @@ class ServerTests(unittest.TestCase):
         self.assertEqual([r['bodyBytesWritten'] for r in records], [300, 10, 0])
         self.assertTrue(all(r['outcome'] == 'complete' for r in records))
 
+    def test_direct_hls_control_is_served_with_playlist_mime_type(self):
+        body = b'#EXTM3U\n#EXT-X-ENDLIST\n'
+        (self.root / 'direct.m3u8').write_bytes(body)
+        with (self.root / 'SHA256SUMS').open('a') as inventory:
+            inventory.write(hashlib.sha256(body).hexdigest() + '  ./direct.m3u8\n')
+        self.start()
+        status, headers, received = self.request('/direct.m3u8')
+        self.assertEqual((status, received), (200, body))
+        self.assertEqual(headers['Content-Type'], 'application/vnd.apple.mpegurl')
+
     def test_trace_accounts_successful_writes_in_each_profile_phase(self):
         self.start([step(rate=1000), step(100, 1000)], clock=Clock())
         self.assertEqual(self.request()[2], self.payload)
