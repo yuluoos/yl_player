@@ -37,6 +37,33 @@ class YlHardwareCodecSelectorTest {
         assertEquals(listOf(named), YlPolicyCodecSelector(strict, delegate, YlDecoderEvidenceProvider(29, records)).getDecoderInfos("video/avc", false, false))
         assertEquals(listOf(named), YlPolicyCodecSelector(strict, delegate, YlDecoderEvidenceProvider(28, records)).getDecoderInfos("audio/aac", false, false))
     }
+    @Test fun `hardware preferred can play legacy vendor codecs without claiming hardware evidence`() {
+        val vendor = androidx.media3.exoplayer.mediacodec.MediaCodecInfo.newInstance(
+            "OMX.MTK.VIDEO.DECODER.AVC", "video/avc", "video/avc", null, true, false, true, false, false)
+        val softwareNames = listOf("OMX.google.h264.decoder", "c2.android.avc.decoder",
+            "c2.google.avc.decoder", "OMX.qcom.video.decoder.hevcswvdec", "OMX.PV.avc.decoder")
+        val software = softwareNames.map { name ->
+            androidx.media3.exoplayer.mediacodec.MediaCodecInfo.newInstance(
+                name, "video/avc", "video/avc", null, false, true, false, false, false)
+        }
+        val delegate = androidx.media3.exoplayer.mediacodec.MediaCodecSelector { _, _, _ -> software + vendor }
+        for (api in 24..28) {
+            val evidence = YlDecoderEvidenceProvider(api, emptyList())
+            for (policy in dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.entries) {
+                val expected = if (policy == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED) listOf(vendor) else emptyList()
+                assertEquals(expected, YlPolicyCodecSelector(policy, delegate, evidence).getDecoderInfos("video/avc", false, false), "API $api / $policy")
+            }
+            assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.UNKNOWN, evidence.mode(vendor.name))
+            assertFalse(evidence.satisfiesRequired(true, vendor.name))
+            val preferred = dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED
+            assertTrue(evidence.allowsPlayback(preferred, vendor.name))
+            softwareNames.forEach { assertFalse(evidence.allowsPlayback(preferred, it), it) }
+        }
+        // Missing metadata on a newer system must not enable the legacy exception.
+        val preferred = dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED
+        assertTrue(YlPolicyCodecSelector(preferred, delegate, YlDecoderEvidenceProvider(29, emptyList())).getDecoderInfos("video/avc", false, false).isEmpty())
+    }
+
     @Test fun `positive evidence belongs to initialized codec and unavailable on API28 names`() {
         val records = listOf(YlCodecDescriptor("OMX.vendor", true, false), YlCodecDescriptor("software", false, true))
         assertEquals(dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.UNKNOWN, YlDecoderEvidenceProvider(28, records).mode("OMX.vendor"))

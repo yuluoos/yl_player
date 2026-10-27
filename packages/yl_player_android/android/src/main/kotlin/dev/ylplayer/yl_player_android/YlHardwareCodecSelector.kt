@@ -43,6 +43,9 @@ internal fun isHardwareCodecName(decoderName: String): Boolean {
     if (
         name.startsWith("omx.google.") ||
         name.startsWith("c2.android.") ||
+        name.startsWith("c2.google.") ||
+        name.startsWith("omx.pv.") ||
+        name == "omx.qcom.video.decoder.hevcswvdec" ||
         name.contains("software") ||
         name.contains(".sw.") ||
         name.contains("ffmpeg")
@@ -108,10 +111,10 @@ internal class YlPolicyCodecSelector(
     override fun getDecoderInfos(mimeType: String, requiresSecureDecoder: Boolean, requiresTunnelingDecoder: Boolean): List<MediaCodecInfo> {
         val codecs = delegate.getDecoderInfos(mimeType, requiresSecureDecoder, requiresTunnelingDecoder)
         if (!MimeTypes.isVideo(mimeType)) return codecs
-        // MediaCodec does not expose an owned reference-surface allocator. Until
-        // that backend has an enforceable measured budget, only proven hardware
-        // may be offered. Owned FFmpeg software is admitted separately.
-        return codecs.filter { evidence.mode(it.name) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE }
+        // Legacy vendor candidates are allowed only for hardwarePreferred. This
+        // selection preference never upgrades their public decoder evidence.
+        // Unbudgeted MediaCodec software remains excluded under every policy.
+        return codecs.filter { !it.softwareOnly && evidence.allowsPlayback(policy, it.name) }
     }
 }
 
@@ -133,6 +136,12 @@ internal class YlDecoderEvidenceProvider(val apiLevel: Int, private val records:
             matched.all { it.hardwareAccelerated && !it.softwareOnly } -> dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE
             else -> unknown
         }
+    }
+    fun allowsPlayback(policy: dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy, initializedName: String?): Boolean {
+        if (mode(initializedName) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE) return true
+        return apiLevel < 29 &&
+            policy == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy.HARDWARE_PREFERRED &&
+            initializedName != null && isHardwareCodecName(initializedName)
     }
     fun satisfiesRequired(hasVideo: Boolean, initializedName: String?) = !hasVideo || mode(initializedName) == dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode.HARDWARE
     companion object {

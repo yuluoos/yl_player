@@ -1104,7 +1104,7 @@ internal class YlMedia3Core(
         this.decoderName = decoderName
         isHardwareDecoding = decoderEvidence.mode(decoderName) == AndroidDecoderMode.HARDWARE
         run {
-            if (!isHardwareDecoding) {
+            if (!decoderEvidence.allowsPlayback(decoderPolicy, decoderName)) {
                 status = "error"; lastFailure = YlFailureKind.DECODER_UNAVAILABLE; currentError = lastFailure
                 exoPlayer.pause()
                 emit(YlEngineEvent.Failed(YlFailureKind.DECODER_UNAVAILABLE))
