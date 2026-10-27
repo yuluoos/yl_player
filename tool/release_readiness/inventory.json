@@ -669,6 +669,11 @@
       "path": "docs/superpowers/reports/2026-10-27-abr-penalty-recovery.md",
       "sha256": "3a384347fd298b796703c6e6defdab61f52877e8a2f516cbfe0fcc818d428d7b",
       "kind": "report"
+    },
+    "abr-auto-recovery-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-abr-auto-recovery.md",
+      "sha256": "ea47bea831935a29ec2ccaf9076fdf5bb116dde56c4ed41b01d77fe09491bda4",
+      "kind": "report"
     }
   },
   "rows": [
@@ -699,10 +704,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "abr-recovery-20261027",
-        "abr-penalty-recovery-20261027"
+        "abr-penalty-recovery-20261027",
+        "abr-auto-recovery-20261027"
       ],
       "acceptance": null,
-      "nextAction": "qualify-reload-recovery-safe-trigger-backoff-continuity-caps-fixed-drm-and-cross-os-physical-proof"
+      "nextAction": "qualify-auto-reload-session-intents-shared-request-budget-frame-gaps-av-sync-and-full-device-mode-matrix"
     },
     {
       "requirement": "CAP-ABR",

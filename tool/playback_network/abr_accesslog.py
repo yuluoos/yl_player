@@ -18,7 +18,7 @@ from prepare_fixture import create
 
 
 def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0,
-              expected_recovery_action=None):
+              expected_recovery_action=None, expected_auto_scenario='normal'):
     def require(value):
         if not value: raise ValueError('incomplete or invalid ABR observation')
     require(isinstance(rows,list) and 2<=len(rows)<=1000)
@@ -28,10 +28,36 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
         require(all(row.get('recoveryAction') in (None, 'none') and
                     row.get('recoveryAttempt') is None for row in rows))
     if expected_recovery_action is not None:
-        require(expected_recovery_action in ('none', 'seek-current', 'reload-source'))
+        require(expected_recovery_action in ('none', 'seek-current', 'reload-source', 'auto-reload'))
         require(all(row.get('recoveryAction') == expected_recovery_action for row in rows))
+        require(expected_auto_scenario in ('normal', 'pause-first'))
+        require(all(row.get('autoScenario') == expected_auto_scenario for row in rows))
+        require(all(type(row.get('frameSamplingVersion')) is int and row['frameSamplingVersion'] == 2 for row in rows))
         attempts = [row.get('recoveryAttempt') for row in rows if row.get('recoveryAttempt') is not None]
-        if expected_recovery_action == 'none':
+        if expected_recovery_action == 'auto-reload':
+            require(not attempts)
+            previous = 0
+            final = rows[-1].get('automaticEvents')
+            require(isinstance(final, list) and len(final) <= 2)
+            for row in rows:
+                budget = row.get('automaticAttempts')
+                require(type(budget) is int and previous <= budget <= 2)
+                previous = budget
+                events = row.get('automaticEvents')
+                require(isinstance(events, list) and events == final[:len(events)] and len(events) <= budget)
+            previous_attempt = 0
+            for event in final:
+                require(isinstance(event, dict) and type(event.get('attempt')) is int and
+                        previous_attempt < event['attempt'] <= previous)
+                previous_attempt = event['attempt']
+                require(event.get('outcome') in ('installed', 'cancelled', 'preparationFailed'))
+                for key in ('elapsed', 'elapsedAfter', 'due', 'positionBefore'):
+                    require(type(event.get(key)) in (int, float) and math.isfinite(event[key]) and event[key] >= 0)
+                require(event['due'] <= event['elapsed'] <= event['elapsedAfter'] <= rows[-1]['elapsed'])
+                if event['outcome'] == 'installed':
+                    require(event.get('itemChanged') is True)
+                    if intervention is None: intervention = event
+        elif expected_recovery_action == 'none':
             require(not attempts)
         else:
             require(bool(attempts) and all(attempt == attempts[0] for attempt in attempts))
@@ -72,13 +98,37 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
         if b<a:down=True
         elif down and b>a:recovered=True
     return dict(schemaVersion=1,geometryWidths=widths,downshiftObserved=down,
-        recoveryInterventionApplied=expected_recovery_action not in (None, 'none'),
+        recoveryInterventionApplied=intervention is not None,
         highOutputAfterInterventionObserved=(any(row['elapsed'] > intervention['elapsed'] and
             row['width'] == 640 for row in rows) if intervention else None),
         upshiftAfterDownshiftObserved=recovered,lastObservedBitrate=observed,
         lastIndicatedBitrate=last.get('indicatedBitrate'),framesPublished=rows[-1]['framesPublished'],
         diagnosticOnly=True,internalABRDecisionVerified=False,capabilityAccepted=False,
         physicalOutputVerified=False)
+
+
+def summarize_frames(rows, *, expected_frames):
+    def require(value):
+        if not value: raise ValueError('invalid frame publication observation')
+    require(type(expected_frames) is int and expected_frames > 0 and 2 <= len(rows) <= 15000)
+    previous_time = -1; generation = 0; total = 0; published = []; pump_gaps = []
+    for row in rows:
+        require(isinstance(row, dict))
+        elapsed = row.get('elapsed'); position = row.get('position')
+        require(type(elapsed) in (int, float) and math.isfinite(elapsed) and elapsed > previous_time)
+        require(type(position) in (int, float) and math.isfinite(position) and position >= 0)
+        require(type(row.get('generation')) is int and generation <= row['generation'])
+        generation = row['generation']
+        count = row.get('frames'); require(type(count) is int and 0 <= count <= 2)
+        require(type(row.get('width')) is int and (row['width'] in (320, 640) if count else row['width'] == 0))
+        if previous_time >= 0: pump_gaps.append((elapsed - previous_time) * 1000)
+        previous_time = elapsed; total += count
+        if count: published.append(elapsed)
+    require(total == expected_frames)
+    return dict(frameSamplingVersion=2, sampleCount=len(rows), publishedFrames=total,
+        maximumPumpGapMs=max(pump_gaps),
+        maximumPublishedFrameGapMs=max(((b-a)*1000 for a,b in zip(published,published[1:])), default=None),
+        continuityAccepted=False, audioSynchronizationVerified=False, physicalOutputVerified=False)
 
 
 def read_rows(path):
@@ -169,7 +219,11 @@ def run(args):
         direct = getattr(args, 'direct_hls_control', False)
         startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
         recovery_action = getattr(args, 'recovery_action', 'none')
-        if recovery_action not in ('none', 'seek-current', 'reload-source') or (direct and recovery_action != 'none'):
+        auto_scenario = getattr(args, 'auto_scenario', 'normal')
+        if auto_scenario not in ('normal', 'pause-first') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
+            raise ValueError('invalid automatic recovery scenario')
+        receipt['autoScenario'] = auto_scenario
+        if recovery_action not in ('none', 'seek-current', 'reload-source', 'auto-reload') or (direct and recovery_action != 'none'):
             raise ValueError('invalid managed recovery diagnostic')
         if recovery_action != 'none' and duration_seconds != 120:
             raise ValueError('recovery diagnostic requires 120 seconds')
@@ -209,6 +263,7 @@ def run(args):
             YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://127.0.0.1:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
+            YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
         command=['xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),
@@ -229,7 +284,9 @@ def run(args):
         rows=read_rows(out/'rows.jsonl')
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
-                                         expected_recovery_action=recovery_action)
+                                         expected_recovery_action=recovery_action, expected_auto_scenario=auto_scenario)
+        receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
+            expected_frames=rows[-1]['framesPublished'])
     except (OSError,ValueError,KeyError,TypeError,plistlib.InvalidFileException,ExpatError,
             subprocess.SubprocessError) as error:
         receipt['errors'].append(type(error).__name__)
@@ -271,8 +328,9 @@ def main():
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)
     p.add_argument('--startup-delay-ms',type=int,default=0,
                    help='0..2000ms diagnostic delay after arming/preparing; never changes the frozen profile')
-    p.add_argument('--recovery-action', choices=('none', 'seek-current', 'reload-source'), default='none',
+    p.add_argument('--recovery-action', choices=('none', 'seek-current', 'reload-source', 'auto-reload'), default='none',
                    help='one managed 120s diagnostic intervention; never natural ABR acceptance')
+    p.add_argument('--auto-scenario', choices=('normal', 'pause-first'), default='normal')
     p.add_argument('--direct-hls-control',action='store_true',
                    help='system-only direct HLS control; not a production DASH acceptance run')
     p.add_argument('--profile',default='down-and-recover-v1');a=p.parse_args()

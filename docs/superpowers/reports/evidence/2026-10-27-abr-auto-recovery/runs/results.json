@@ -1,0 +1,90 @@
+[
+  {
+    "name": "baseline",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-auto-20261027/baseline",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "none",
+      "--auto-scenario",
+      "normal"
+    ],
+    "exitCode": 0,
+    "seconds": 134.76358429200263
+  },
+  {
+    "name": "auto",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-auto-20261027/auto",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "auto-reload",
+      "--auto-scenario",
+      "normal"
+    ],
+    "exitCode": 0,
+    "seconds": 133.16805237500012
+  },
+  {
+    "name": "auto-repeat",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-auto-20261027/auto-repeat",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "auto-reload",
+      "--auto-scenario",
+      "normal"
+    ],
+    "exitCode": 0,
+    "seconds": 129.08136391699736
+  },
+  {
+    "name": "auto-pause",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-auto-20261027/auto-pause",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "auto-reload",
+      "--auto-scenario",
+      "pause-first"
+    ],
+    "exitCode": 0,
+    "seconds": 134.03675712499899
+  }
+]

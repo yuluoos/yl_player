@@ -238,6 +238,39 @@ neither this observation nor a successful capture admits CAP-ABR. Default `none`
 keeps the original no-intervention behavior. Direct HLS and 40-second intervention
 requests are rejected rather than silently changing the experiment.
 
+`--recovery-action auto-reload` evaluates an experimental policy in the test
+host, not in the production backend. It is limited to the owned clear static
+DASH fixture, unconstrained auto playback. It requires previous high output,
+current low output, download-overdue history, at least 5 seconds continuously
+buffered from the current position (future ranges across gaps do not count) and
+20 seconds remaining, plus two consecutive 8-second windows with at least three
+new requests and transfer-byte/time deltas above 1.25 times the declared high
+rate. These are candidate decision parameters, not new acceptance thresholds or
+proof of available network capacity. The policy has no private penalty-box API.
+
+The source budget is two reservations, with 500/1000 ms backoff; cancellation,
+failure, successful frames and new item generations never refund it. Preparation
+rechecks ticket age, generation, item identity and current eligibility before
+installation. `--auto-scenario pause-first` explicitly pauses after the first
+ticket is issued and resumes two seconds later, exercising cancellation and
+retained budget. It is separately identified in every row and the receipt.
+The scenario explicitly invalidates the ticket on pause, so an early resume
+cannot revive it. A production dispatcher would have to connect this invalidation
+to every relevant intent change; that integration is not present here.
+Broader seek/constraint/DRM/network races still need production qualification;
+the host has no automatic-recovery product hook.
+
+Frame sampling version 2 uses an independent approximately 16 ms main-actor
+pump during asynchronous preparation. `frame-samples.jsonl` records actual
+published buffers, item generations, player position/rate and pump timing.
+The old duplicate raster read is removed; the display callback consumes its
+retained buffer. The collector checks sample ordering and frame totals, and
+reports maximum publication/pump gaps without asserting continuity or audio
+synchronization. Main-thread blocking can still prevent sampling; these are
+application publication observations, not physical screen/audio measurements.
+Old 250 ms capture files remain historical evidence and do not meet this host
+identity contract. Failed/no-op automatic runs do not invent a recovery.
+
 Logs contain playback/geometry/bitrate/transfer counters, buffer ranges/flags,
 `downloadOverdue`, and the most recent 32 error-log events (total count retained).
 Error comments are bounded and URL-redacted; access-log URLs and server addresses

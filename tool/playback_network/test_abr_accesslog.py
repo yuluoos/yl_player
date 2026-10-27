@@ -14,6 +14,31 @@ from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_auto_budget_receipt_does_not_require_or_invent_a_recovery(self):
+        rows = self.rows()
+        for row in rows: row.update(recoveryAction='auto-reload', automaticAttempts=0, automaticEvents=[])
+        result = summarize(rows, expected_recovery_action='auto-reload')
+        self.assertFalse(result['recoveryInterventionApplied'])
+        event = dict(attempt=1, elapsed=2.1, elapsedAfter=2.2, due=2.0,
+                     generation=0, positionBefore=2, outcome='installed', itemChanged=True)
+        rows[-1].update(automaticAttempts=1, automaticEvents=[event], width=640)
+        self.assertTrue(summarize(rows, expected_recovery_action='auto-reload')['recoveryInterventionApplied'])
+        with self.assertRaises(ValueError):
+            summarize(rows, expected_recovery_action='auto-reload', expected_auto_scenario='pause-first')
+        for key, value in [('automaticAttempts', 3), ('automaticEvents', [dict(event, itemChanged=False)]),
+                           ('automaticEvents', [dict(event, outcome='preparing')])]:
+            bad = copy.deepcopy(rows); bad[-1][key] = value
+            with self.assertRaises(ValueError): summarize(bad, expected_recovery_action='auto-reload')
+
+    def test_independent_frame_samples_measure_publication_not_audio_acceptance(self):
+        rows = [dict(elapsed=0, generation=0, frames=1, width=320, position=0),
+                dict(elapsed=.02, generation=1, frames=0, width=0, position=0),
+                dict(elapsed=.1, generation=1, frames=1, width=640, position=.05)]
+        result = abr_accesslog.summarize_frames(rows, expected_frames=2)
+        self.assertAlmostEqual(result['maximumPublishedFrameGapMs'], 100)
+        self.assertAlmostEqual(result['maximumPumpGapMs'], 80)
+        self.assertFalse(result['continuityAccepted'])
+        with self.assertRaises(ValueError): abr_accesslog.summarize_frames(rows, expected_frames=3)
     def test_recovery_intervention_is_bound_and_not_natural_adaptation(self):
         rows = self.rows()
         for row in rows:
@@ -65,7 +90,7 @@ class AccessLogTests(unittest.TestCase):
 
     def rows(self):
         return [dict(elapsed=i,position=i,rate=0 if i==3 else 1,status=1,width=w,height=180,
-                     peak=0,forwardBuffer=10,completed=i==3,framesPublished=i,
+                     peak=0,forwardBuffer=10,completed=i==3,framesPublished=i,frameSamplingVersion=2,autoScenario='normal',
                      logs=[dict(observedBitrate=600000,indicatedBitrate=414000)])
                 for i,w in enumerate((320,640,320,320))]
 

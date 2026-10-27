@@ -52,7 +52,130 @@ private final class DashLoadingRequest: YlHlsLoadingRequest {
   func finishLoading(with error: NativePlayerError) { self.error = error; finishCount += 1 }
 }
 
+// Experimental policy for the owned 320/640 fixture only. No production hook.
+private struct AbrDiagnosticRecoveryPolicy {
+  struct Sample {
+    let time: Double, generation: Int, allowed: Bool, width: Int
+    let position: Double, remaining: Double, bufferAhead: Double
+    let bytes: Int64, transfer: Double, requests: Int, overdue: Int
+  }
+  struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double }
+  private(set) var attempts = 0
+  private var generation: Int?
+  private var sawHigh = false
+  private var anchor: Sample?
+  private var windows = 0
+  private var last: Sample?
+  private var pending: Ticket?
+  private var inFlight: Ticket?
+  static func contiguousAhead(position: Double, ranges: [(Double, Double)]) -> Double {
+    guard position.isFinite, position >= 0 else { return 0 }
+    var end = position
+    for range in ranges.filter({ $0.0.isFinite && $0.1.isFinite && $0.1 >= $0.0 }).sorted(by: { $0.0 < $1.0 }) {
+      if range.1 < position { continue }
+      if range.0 > end { break }
+      end = max(end, range.1)
+    }
+    return max(0, end - position)
+  }
+  mutating func invalidateIntent() {
+    pending = nil; inFlight = nil; anchor = nil; windows = 0; last = nil
+  }
+  private func eligible(_ s: Sample) -> Bool {
+    s.allowed && s.time.isFinite && s.position.isFinite && s.remaining.isFinite &&
+      s.bufferAhead.isFinite && s.transfer.isFinite && s.time >= 0 && s.position >= 0 &&
+      s.transfer >= 0 && s.bytes >= 0 && s.requests >= 0 && s.remaining >= 20 && s.bufferAhead >= 5
+  }
+  mutating func observe(_ s: Sample) -> Ticket? {
+    if generation != s.generation {
+      generation = s.generation; sawHigh = false; anchor = nil; windows = 0
+      pending = nil; inFlight = nil; last = nil
+    }
+    guard eligible(s), last.map({ s.time > $0.time && s.position >= $0.position }) ?? true else {
+      anchor = nil; windows = 0; pending = nil; inFlight = nil; last = nil; return nil
+    }
+    last = s
+    if s.width == 640 { sawHigh = true; anchor = nil; windows = 0; pending = nil; return nil }
+    guard sawHigh, s.width == 320, s.overdue > 0 else { anchor = nil; windows = 0; pending = nil; return nil }
+    if let pending {
+      guard s.time >= pending.due else { return nil }
+      self.pending = nil; inFlight = pending; return pending
+    }
+    guard inFlight == nil, attempts < 2 else { return nil }
+    guard let start = anchor else { anchor = s; return nil }
+    guard s.bytes >= start.bytes, s.transfer >= start.transfer, s.requests >= start.requests else {
+      anchor = s; windows = 0; return nil
+    }
+    guard s.time - start.time >= 8 else { return nil }
+    anchor = s
+    let duration = s.transfer - start.transfer
+    let bitrate = duration > 0 ? Double(s.bytes - start.bytes) * 8 / duration : 0
+    guard s.position > start.position, s.requests - start.requests >= 3,
+          bitrate.isFinite, bitrate >= 764_000 * 1.25 else { windows = 0; return nil }
+    windows += 1
+    guard windows >= 2 else { return nil }
+    attempts += 1; windows = 0; anchor = nil
+    pending = Ticket(id: UUID(), generation: s.generation, attempt: attempts,
+      due: s.time + (attempts == 1 ? 0.5 : 1.0))
+    return nil
+  }
+  func authorizes(_ ticket: Ticket, _ s: Sample) -> Bool {
+    eligible(s) && s.width == 320 && s.generation == ticket.generation &&
+      inFlight?.id == ticket.id && s.time >= ticket.due && s.time <= ticket.due + 5
+  }
+  mutating func finish(_ ticket: Ticket) {
+    guard inFlight?.id == ticket.id else { return }
+    inFlight = nil; anchor = nil; windows = 0
+  }
+}
+
 final class YlDashResourceLoaderTests: XCTestCase {
+  func testAutomaticRecoveryCandidateBudgetAndSafety() {
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(20, 25)]), 0)
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(0, 12), (20, 25)]), 2)
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(12, 18), (0, 12)]), 8)
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: .nan, ranges: [(0, 20)]), 0)
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, generation: Int = 0, allowed: Bool = true, width: Int = 320,
+                bytes: Int64? = nil) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: generation, allowed: allowed, width: width,
+        position: time, remaining: 120 - time, bufferAhead: 10,
+        bytes: bytes ?? Int64(time * 200_000), transfer: time, requests: Int(time * 4), overdue: 1)
+    }
+    XCTAssertNil(policy.observe(sample(0, width: 640)))
+    XCTAssertNil(policy.observe(sample(1)))
+    XCTAssertNil(policy.observe(sample(9)))
+    XCTAssertNil(policy.observe(sample(17))) // reserve, not execute
+    XCTAssertEqual(policy.attempts, 1)
+    XCTAssertNil(policy.observe(sample(17.49)))
+    let first = policy.observe(sample(17.5))!
+    XCTAssertTrue(policy.authorizes(first, sample(17.6)))
+    XCTAssertFalse(policy.authorizes(first, sample(17.6, allowed: false)))
+    XCTAssertFalse(policy.authorizes(first, sample(17.6, generation: 1)))
+    policy.invalidateIntent()
+    XCTAssertFalse(policy.authorizes(first, sample(17.7)), "Resume cannot resurrect a cancelled ticket")
+    policy.finish(first)
+    XCTAssertNil(policy.observe(sample(18, generation: 1, width: 640)))
+    XCTAssertNil(policy.observe(sample(19, generation: 1)))
+    XCTAssertNil(policy.observe(sample(27, generation: 1)))
+    XCTAssertNil(policy.observe(sample(35, generation: 1)))
+    XCTAssertEqual(policy.attempts, 2)
+    XCTAssertNil(policy.observe(sample(35.99, generation: 1)))
+    let second = policy.observe(sample(36, generation: 1))!
+    policy.finish(second)
+    for time in 37...90 { XCTAssertNil(policy.observe(sample(Double(time), generation: 1))) }
+    XCTAssertEqual(policy.attempts, 2, "Successful frames/new item never refund source budget")
+    var cancelled = AbrDiagnosticRecoveryPolicy()
+    _ = cancelled.observe(sample(0, width: 640)); _ = cancelled.observe(sample(1))
+    _ = cancelled.observe(sample(9)); _ = cancelled.observe(sample(17))
+    XCTAssertNil(cancelled.observe(sample(17.5, allowed: false)))
+    XCTAssertEqual(cancelled.attempts, 1, "Paused/cancelled reservation remains charged")
+    var weak = AbrDiagnosticRecoveryPolicy()
+    _ = weak.observe(sample(0, width: 640))
+    for time in 1...80 { XCTAssertNil(weak.observe(sample(Double(time), bytes: Int64(time * 20_000)))) }
+    XCTAssertEqual(weak.attempts, 0)
+  }
+
   @MainActor
   func testActualOwnedDashAdaptiveObservation() async throws {
     let env = ProcessInfo.processInfo.environment
@@ -70,7 +193,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let startupDelayMs = try XCTUnwrap(Int(env["YL_ABR_PROBE_STARTUP_DELAY_MS"] ?? "0"))
     XCTAssertTrue((0...2000).contains(startupDelayMs))
     let recoveryAction = env["YL_ABR_PROBE_RECOVERY_ACTION"] ?? "none"
-    guard ["none", "seek-current", "reload-source"].contains(recoveryAction),
+    let autoScenario = env["YL_ABR_PROBE_AUTO_SCENARIO"] ?? "normal"
+    guard ["normal", "pause-first"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
+      XCTFail("Invalid automatic recovery scenario"); return
+    }
+    guard ["none", "seek-current", "reload-source", "auto-reload"].contains(recoveryAction),
           recoveryAction == "none" || (!direct && programmeSeconds == 120) else {
       XCTFail("Invalid recovery diagnostic"); return
     }
@@ -129,18 +256,63 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let started = ProcessInfo.processInfo.systemUptime
     var completed = false
     var frameCount = 0
+    var frameGeneration = 0
+    var frameItem = player.currentItem
+    let frameURL = directory.appendingPathComponent("frame-samples.jsonl")
+    _ = FileManager.default.createFile(atPath: frameURL.path, contents: nil)
+    let frameFile = try FileHandle(forWritingTo: frameURL)
+    defer { try? frameFile.close() }
+    var frameWriteFailed = false
+    let framePump = Task { @MainActor in
+      while !Task.isCancelled {
+        if player.currentItem !== frameItem { frameGeneration += 1; frameItem = player.currentItem }
+        tick?() // displayLinkTick owns and consumes its retained raster buffer.
+        var width = output.frames.last.map { CVPixelBufferGetWidth($0) } ?? 0
+        var count = output.frames.count
+        output.frames.removeAll(keepingCapacity: true)
+        if let pixels = directOutput, pixels.hasNewPixelBuffer(forItemTime: player.currentTime()),
+           let buffer = pixels.copyPixelBuffer(forItemTime: player.currentTime(), itemTimeForDisplay: nil) {
+          width = CVPixelBufferGetWidth(buffer); count += 1
+        }
+        frameCount += count
+        let position = CMTimeGetSeconds(player.currentTime())
+        let sample: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
+          "generation": frameGeneration, "frames": count, "width": width,
+          "position": position.isFinite ? position : 0, "rate": player.rate,
+          "timeControlStatus": player.timeControlStatus.rawValue]
+        do { try frameFile.write(contentsOf: JSONSerialization.data(withJSONObject: sample, options: [.sortedKeys]) + Data([10])) }
+        catch { frameWriteFailed = true; return }
+        try? await Task.sleep(nanoseconds: 16_000_000)
+      }
+    }
+    defer { framePump.cancel() }
     var clockAlignment: [String: Double]?
     var sawHigh = false
     var sawDownshift = false
     var recoveryAttempt: [String: Any]?
+    var automaticPolicy = AbrDiagnosticRecoveryPolicy()
+    var automaticEvents: [[String: Any]] = []
+    var resumeTask: Task<Void, Never>?
+    defer { resumeTask?.cancel() }
+    func automaticSample() -> AbrDiagnosticRecoveryPolicy.Sample {
+      let item = player.currentItem
+      let position = CMTimeGetSeconds(player.currentTime())
+      let logs = item?.accessLog()?.events ?? []
+      let buffered = AbrDiagnosticRecoveryPolicy.contiguousAhead(position: position,
+        ranges: (item?.loadedTimeRanges ?? []).map {
+          (CMTimeGetSeconds($0.timeRangeValue.start), CMTimeGetSeconds(CMTimeRangeGetEnd($0.timeRangeValue)))
+        })
+      return .init(time: ProcessInfo.processInfo.systemUptime - started, generation: frameGeneration,
+        allowed: backend != nil && item?.status == .readyToPlay && player.rate > 0 &&
+          item?.preferredPeakBitRate == 0 && item?.isPlaybackLikelyToKeepUp == true,
+        width: Int(item?.presentationSize.width ?? 0), position: position,
+        remaining: Double(programmeSeconds) - position, bufferAhead: buffered,
+        bytes: logs.reduce(0) { $0 + $1.numberOfBytesTransferred },
+        transfer: logs.reduce(0) { $0 + $1.transferDuration },
+        requests: logs.reduce(0) { $0 + $1.numberOfMediaRequests },
+        overdue: logs.reduce(0) { $0 + $1.downloadOverdue })
+    }
     while ProcessInfo.processInfo.systemUptime - started < 140 {
-      tick?(); _ = backend?.copyPixelBuffer()
-      if let pixels = directOutput, pixels.hasNewPixelBuffer(forItemTime: player.currentTime()),
-         pixels.copyPixelBuffer(forItemTime: player.currentTime(), itemTimeForDisplay: nil) != nil {
-        frameCount += 1
-      }
-      frameCount += output.frames.count
-      output.frames.removeAll(keepingCapacity: true)
       let item = try XCTUnwrap(player.currentItem)
       if item.presentationSize.width == 640 { sawHigh = true }
       if sawHigh && item.presentationSize.width == 320 { sawDownshift = true }
@@ -178,6 +350,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
+        "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
+        "autoScenario": autoScenario,
         "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
@@ -186,7 +360,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
       if item.status == .failed { break }
       // Explicit experiment only: never install a wall-clock/error-code retry
       // in production. Preserve pre-operation rows even if preparation fails.
-      if recoveryAction != "none", recoveryAttempt == nil, sawDownshift,
+      if ["seek-current", "reload-source"].contains(recoveryAction), recoveryAttempt == nil, sawDownshift,
          item.presentationSize.width == 320,
          ProcessInfo.processInfo.systemUptime - started >= 35,
          item.errorLog()?.events.contains(where: { $0.errorDomain == "CoreMediaErrorDomain" && $0.errorStatusCode == -12889 }) == true {
@@ -217,9 +391,43 @@ final class YlDashResourceLoaderTests: XCTestCase {
         try JSONSerialization.data(withJSONObject: attempt, options: [.sortedKeys])
           .write(to: directory.appendingPathComponent("recovery-attempt.json"), options: .atomic)
       }
+      if recoveryAction == "auto-reload", let ticket = automaticPolicy.observe(automaticSample()) {
+        let before = automaticSample()
+        var event: [String: Any] = ["attempt": ticket.attempt, "elapsed": before.time,
+          "due": ticket.due, "generation": ticket.generation, "positionBefore": before.position,
+          "outcome": "preparing"]
+        automaticEvents.append(event)
+        let eventsURL = directory.appendingPathComponent("automatic-events.json")
+        try JSONSerialization.data(withJSONObject: automaticEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
+        if autoScenario == "pause-first", ticket.attempt == 1 {
+          try backend?.pause()
+          automaticPolicy.invalidateIntent() // Resume cannot revive this ticket.
+          resumeTask = Task { @MainActor in
+            do { try await Task.sleep(nanoseconds: 2_000_000_000); try backend?.play() }
+            catch { /* Cancellation never restarts disposed output. */ }
+          }
+        }
+        do {
+          let replacement = try await Task.detached {
+            try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
+              configuration: .init(map: [:]), cancellationToken: .init())
+          }.value
+          if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
+            let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
+            try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
+            event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
+          } else { replacement.discard(); event["outcome"] = "cancelled" }
+        } catch { event["outcome"] = "preparationFailed" } // bounded retry, original error rows retained
+        event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+        automaticEvents[automaticEvents.count - 1] = event
+        automaticPolicy.finish(ticket)
+        try JSONSerialization.data(withJSONObject: automaticEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
+      }
       try await Task.sleep(nanoseconds: 250_000_000)
     }
     XCTAssertTrue(completed)
+    framePump.cancel(); await framePump.value
+    XCTAssertFalse(frameWriteFailed)
     XCTAssertGreaterThanOrEqual(CMTimeGetSeconds(player.currentTime()), Double(programmeSeconds) - 0.5)
     backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil)
     XCTAssertNil(player.currentItem)

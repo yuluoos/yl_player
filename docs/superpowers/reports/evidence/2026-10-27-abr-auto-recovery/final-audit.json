@@ -1,0 +1,72 @@
+{
+  "baselineCommit": "5c104728106eb0b2cc6929848a3abb053f4388af",
+  "previousEvidence": [
+    {
+      "name": "2026-10-26-remaining-acceptance",
+      "verifiedFiles": 495
+    },
+    {
+      "name": "2026-10-27-remaining-main-merge",
+      "verifiedFiles": 31
+    },
+    {
+      "name": "2026-10-27-abr-recovery",
+      "verifiedFiles": 242
+    },
+    {
+      "name": "2026-10-27-abr-penalty-recovery",
+      "verifiedFiles": 112
+    }
+  ],
+  "originalFilesVerified": 119,
+  "phaseSourceIdentitiesVerified": true,
+  "nativeRuns": 5,
+  "sourceMatches": true,
+  "releaseReady": false,
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exitCode": 1
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py"
+      ],
+      "exitCode": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py",
+        "--require-ready"
+      ],
+      "exitCode": 1
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+        "--current-only"
+      ],
+      "exitCode": 0
+    }
+  ],
+  "scope": "Diagnostic candidate, not production auto recovery; publication gaps and A/V/physical qualifications retained."
+}
