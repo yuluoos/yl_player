@@ -1,0 +1,8 @@
+最终记录独立复核 /root/public_policy_review：通过。
+iPhone205/205、macOS180/180通过；两轮EOF但仅320，passed=false，未升级验收。
+seek1967帧PTS完整，最小38.041667秒符合目标38.057秒原50ms容差。
+生产改动限定为只读版本暴露与默认工厂注入，22项源码绑定匹配。
+102行状态未变，releaseReady=false；发布和性能require-ready均退出1。
+归档时260项清单、10个完整xcresult、242项原始来源记录核对一致。
+未完成项与失败边界准确；复核者未改文件或重跑测试。
+本记录加入后重算归档清单，之前260为加入final-verification及本记录前的清单条目数。

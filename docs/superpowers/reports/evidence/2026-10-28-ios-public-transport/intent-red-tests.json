@@ -1,0 +1,87 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertFalse failed - An acknowledged forward seek keeps the item but revokes its old ticket",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 704
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertFalse failed - Pause/resume or a second seek cannot revive old authority",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 706
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1\") is not equal to (\"2\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 709
+                      }
+                    },
+                    {
+                      "name" : "XCTUnwrap failed: expected non-nil value of type \"Ticket\"",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 711
+                      }
+                    }
+                  ],
+                  "duration" : "0.19s",
+                  "durationInSeconds" : 0.18794798851013184,
+                  "name" : "testRecoveryTicketRejectsAcknowledgedIntentRevisionWithoutItemChange()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRecoveryTicketRejectsAcknowledgedIntentRevisionWithoutItemChange()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRecoveryTicketRejectsAcknowledgedIntentRevisionWithoutItemChange",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

@@ -282,9 +282,9 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlMetricsCollector.swift": "54b7ecd725b85fbb9a4d5f1d12c13dd34479ffbd0c7fbd06c9454beaa2885bd1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlVideoGeometryResolver.swift": "88fe1b980885b5b24361320bcae82efe0009b63b59c86e644af3687c1a7d2813",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlLiveReconnectController.swift": "c12d8748fa708fe2a5367a842cc9e9b6efa8fd1def9ecc1923909b86cb4f2985",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "639d04960ba3d8b0221b57c9713d8d1d58f48fdb5f5c988e279ca070e941d785",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "63b08103e4795636786f66208471ece50bba5996da41011919672bca0b04b611",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerRegistry.swift": "832f38db6c1fa7ae415cd9921a12f70a4b67ec1991bd5f05ca56870a7343d042",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "c34e327b43b9ba5ecd46728579043c95ce8d8732c9b560bcdf73c8dc8f42e1f0",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "7a97aabd250a3d795f05ae727d34314b581fa5598b45de29791452d57f7c0bf4",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift": "ca9916cd2abf206d93cea261f265c225bb91b789c60287294f9647605ca013b4",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleStateReducer.swift": "c052ec2f6464b9548f48b6a738b8b9bbb5287a4f2b83ee10f3ceeb94bec68bad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift": "6d5d8bed04bc376d4df93c2b89d7a134860c1c6adfce70a317d93f6a208ea8c0",
@@ -597,7 +597,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "41b62a909e274818876d5b08c0999f476d0874ef131ea2a3db5bea86830441c2"
+    "sha256": "08c8e57789fd1a4fbd68ceb8a5f5636163cc39718a60dfc648420eb50ce62f42"
   },
   "evidence": {
     "p01": {
@@ -729,6 +729,11 @@
       "path": "docs/superpowers/reports/2026-10-28-ios-public-race.md",
       "sha256": "e86105928ae1e7c1deeb7ef0b641593b130cc2e0a2a014b0b79d2a4b29464d16",
       "kind": "report"
+    },
+    "ios-public-transport-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-ios-public-transport.md",
+      "sha256": "ad4e16586b48a144ccda273337356aed7007208bac6fe273a6dad4b31a2dab4a",
+      "kind": "report"
     }
   },
   "rows": [
@@ -771,10 +776,11 @@
         "ios-preparation-intent-20261028",
         "ios-policy-intent-20261028",
         "ios-public-policy-20261028",
-        "ios-public-race-20261028"
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-public-pause-seek-credential-races-original-auto-recovery-frame-gap-and-physical-output"
+      "nextAction": "qualify-public-transport-high-output-credential-races-original-auto-recovery-frame-gap-and-physical-output"
     },
     {
       "requirement": "CAP-ABR",
@@ -795,7 +801,8 @@
         "ios-preparation-intent-20261028",
         "ios-policy-intent-20261028",
         "ios-public-policy-20261028",
-        "ios-public-race-20261028"
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -832,7 +839,8 @@
         "ios-preparation-intent-20261028",
         "ios-policy-intent-20261028",
         "ios-public-policy-20261028",
-        "ios-public-race-20261028"
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -849,7 +857,8 @@
         "abr-frame-retention-20261027",
         "ios-device-recovery-causes-20261027",
         "ios-public-policy-20261028",
-        "ios-public-race-20261028"
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

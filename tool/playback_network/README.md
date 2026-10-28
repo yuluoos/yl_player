@@ -501,3 +501,31 @@ The candidate deadline is monitored while the public command waits. Candidate
 cleanup records are fixed before joining the independent command task; expiry
 does not cancel the user command. Race acceptance additionally requires command
 completion and candidate cleanup within the original preparation/ticket deadline.
+
+### Public pause/seek preparation races
+
+`--public-policy-race` also accepts `pause-during-preparation` and
+`seek-during-preparation` with the same 120s/auto-reload/asset-preroll requirements.
+The diagnostic ticket now captures the host's acknowledged transport revision,
+read from the coordinator's existing restoration-intent counter. A successful
+pause or seek invalidates old authority even when the AVPlayer item is unchanged;
+failed admission does not change this counter. This is an internal read-only
+view, not a Pigeon API or an enabled production recovery policy.
+
+Pause holds for two seconds and requires stable position, paused state, zero rate
+and false playback intent before an explicit public `play`. Seek moves forward
+1000ms and requires subsequent published-buffer presentation times at or beyond
+the target (the existing 50ms tolerance). The test-only video-output factory
+records AVPlayerItemVideoOutput `itemTimeForDisplay`, associates it with each
+actually published buffer, and emits `framePresentationTimes`; player clock
+position alone is insufficient. Missing, stale or mismatched timestamp counts
+fail validation. Both paths
+require new frames/progress after the command, original preparation deadlines,
+retained same-source attempt budget, later 640-wide output, and no stale candidate
+installation. Main and policy samples must have monotonic UInt64 intent revisions;
+every event ticket binds to its issuing decision, and command-before/after
+revisions must match both streams. A revision change resets qualification
+windows and pending authority without refunding attempts. Later
+naturally reserved tickets remain subject to the original two-attempt budget;
+this diagnostic does not install public-host recovery candidates. Credential,
+physical-output and full production recovery acceptance remain separate.

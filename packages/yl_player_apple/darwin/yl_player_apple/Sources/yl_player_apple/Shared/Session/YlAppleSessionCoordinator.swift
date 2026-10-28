@@ -63,6 +63,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private(set) var lastQualityConstraint = YlAppleVideoConstraints.unconstrained
   private var synchronousIntentRevision: UInt64 = 0
   private var restorationIntentRevision: UInt64 = 0
+  /// Monotonic authority for acknowledged transport/track intents within this owner.
+  var acknowledgedTransportRevision: UInt64 { restorationIntentRevision }
   private var pendingSeekIntent: (revision: UInt64, positionMs: Int64)?
   private var pendingPauseIntent: UInt64?
   private var lastVolume: Float = 1
@@ -101,6 +103,7 @@ final class YlAppleSessionCoordinator: NSObject {
        configuration: PlayerConfiguration, textureOwner: YlAppleTextureOwner, avPlayer: AVPlayer = AVPlayer(),
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)? = nil,
+       makeAvPlayerVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
@@ -127,7 +130,7 @@ final class YlAppleSessionCoordinator: NSObject {
     self.configuration = configuration
     self.emit = emit
     let avBackend = YlAvPlayerBackend(playerId: playerId, services: services.borrowing(avTexture),
-      configuration: configuration, player: avPlayer, emit: { _ in })
+      configuration: configuration, player: avPlayer, makeVideoOutput: makeAvPlayerVideoOutput, emit: { _ in })
     self.avBackend = avBackend
     self.slot = YlBackendSlot(initial: avBackend, compatibility: slotCompatibility ?? services.compatibility)
     super.init()

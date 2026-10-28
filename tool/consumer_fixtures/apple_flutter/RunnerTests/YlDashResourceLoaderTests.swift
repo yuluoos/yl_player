@@ -67,11 +67,13 @@ private struct AbrDiagnosticRecoveryPolicy {
     let time: Double, generation: Int, allowed: Bool, width: Int
     let position: Double, remaining: Double, bufferAhead: Double
     let bytes: Int64, transfer: Double, requests: Int, overdue: Int
+    var intentRevision: UInt64 = 0
   }
-  struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double }
+  struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double; let intentRevision: UInt64 }
   private(set) var attempts = 0
   private(set) var decision: [String: Any] = [:]
   private var generation: Int?
+  private var intentRevision: UInt64?
   private var sawHigh = false
   private var anchor: Sample?
   private var windows = 0
@@ -102,7 +104,7 @@ private struct AbrDiagnosticRecoveryPolicy {
     var windowRequests: Int?
     func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
     defer {
-      decision = ["elapsed": finite(s.time), "generation": s.generation, "allowed": s.allowed,
+      decision = ["elapsed": finite(s.time), "generation": s.generation, "intentRevision": s.intentRevision, "allowed": s.allowed,
         "width": s.width, "position": finite(s.position), "remaining": finite(s.remaining),
         "bufferAhead": finite(s.bufferAhead), "bytes": s.bytes, "transfer": finite(s.transfer),
         "requests": s.requests, "overdue": s.overdue, "reason": reason, "attempts": attempts,
@@ -115,6 +117,7 @@ private struct AbrDiagnosticRecoveryPolicy {
       generation = s.generation; sawHigh = false; anchor = nil; windows = 0
       pending = nil; inFlight = nil; last = nil
     }
+    if intentRevision != s.intentRevision { intentRevision = s.intentRevision; invalidateIntent() }
     guard eligible(s), last.map({ s.time > $0.time && s.position >= $0.position }) ?? true else {
       if !s.allowed { reason = "playbackIneligible" }
       else if s.bufferAhead.isFinite && s.bufferAhead < 5 { reason = "insufficientBuffer" }
@@ -150,11 +153,11 @@ private struct AbrDiagnosticRecoveryPolicy {
     reason = "reserved"
     attempts += 1; windows = 0; anchor = nil
     pending = Ticket(id: UUID(), generation: s.generation, attempt: attempts,
-      due: s.time + (attempts == 1 ? 0.5 : 1.0))
+      due: s.time + (attempts == 1 ? 0.5 : 1.0), intentRevision: s.intentRevision)
     return nil
   }
   func authorizes(_ ticket: Ticket, _ s: Sample) -> Bool {
-    eligible(s) && s.width == 320 && s.generation == ticket.generation &&
+    eligible(s) && s.width == 320 && s.generation == ticket.generation && s.intentRevision == ticket.intentRevision &&
       inFlight?.id == ticket.id && s.time >= ticket.due && s.time <= ticket.due + 5
   }
   mutating func finish(_ ticket: Ticket) {
@@ -688,6 +691,46 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertFalse(permits("http://127.0.0.1/manifest.mpd"))
   }
 
+  @MainActor func testPublicTransportRevisionOnlyAdvancesForAcknowledgedCommands() async throws {
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    let loaded = try await fixture.host.load(request: AppleHostFixture.request("intent-revision"))
+    let initial = fixture.host.acknowledgedTransportRevision
+    XCTAssertThrowsError(try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: -1)))
+    XCTAssertThrowsError(try fixture.host.pause(command: .init(sessionId: "retired")))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial)
+    try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 1000))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 1)
+    try fixture.host.pause(command: .init(sessionId: loaded.sessionId))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 2)
+    try fixture.host.setVolume(volume: 0.5)
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 2)
+    try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 0))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 3, "Returning to the old position cannot revive old authority")
+  }
+
+  func testRecoveryTicketRejectsAcknowledgedIntentRevisionWithoutItemChange() throws {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320, revision: UInt64 = 0) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: true, width: width,
+        position: time, remaining: 120 - time, bufferAhead: 10,
+        bytes: Int64(time * 200_000), transfer: time, requests: Int(time * 4), overdue: 1,
+        intentRevision: revision)
+    }
+    for (time, width) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(time,width:width)) }
+    let ticket = try XCTUnwrap(policy.observe(sample(17.5)))
+    XCTAssertTrue(policy.authorizes(ticket, sample(17.6)))
+    XCTAssertFalse(policy.authorizes(ticket, sample(17.6, revision: 1)), "An acknowledged forward seek keeps the item but revokes its old ticket")
+    _ = policy.observe(sample(18, revision: 1))
+    XCTAssertFalse(policy.authorizes(ticket, sample(18.1, revision: 2)), "Pause/resume or a second seek cannot revive old authority")
+    XCTAssertEqual(policy.attempts, 1, "Changing accepted intent never refunds source budget")
+    _ = policy.observe(sample(26, revision: 1)); _ = policy.observe(sample(34, revision: 1))
+    XCTAssertEqual(policy.attempts, 2)
+    XCTAssertNil(policy.observe(sample(34.99, revision: 1)))
+    let next = try XCTUnwrap(policy.observe(sample(35, revision: 1)))
+    XCTAssertEqual(next.attempt, 2)
+    XCTAssertTrue(policy.authorizes(next, sample(35.1, revision: 1)))
+  }
+
   func testAutomaticRecoveryCandidateBudgetAndSafety() {
     XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(20, 25)]), 0)
     XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(0, 12), (20, 25)]), 2)
@@ -837,7 +880,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let publicPolicyRace = env["YL_ABR_PROBE_PUBLIC_POLICY_RACE"] == "1"
     guard !publicPolicyRace || (!publicPolicyCycle && !direct && programmeSeconds == 120
       && recoveryAction == "auto-reload" && candidatePreparation == "asset-preroll" && startupDelayMs == 0
-      && ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario)) else {
+      && ["caps-during-preparation", "fixed-during-preparation", "pause-during-preparation", "seek-during-preparation"].contains(autoScenario)) else {
       XCTFail("Public policy race requires managed caps/fixed preroll diagnostic"); return
     }
     // Preserve the historical managed probe's preparation-before-player order.
@@ -865,6 +908,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let player = AVPlayer()
     var warmedItem: AVPlayerItem?
     let output = AppleTestTexture()
+    let presentationTimes = AbrPublishedFrameTimes()
     var tick: (() -> Void)?
     var states: [YlNativeState] = []
     var backendFailure: String?
@@ -883,7 +927,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
       let host = YlApplePlayerHost(playerId: 991, suffix: "abr-public-policy",
         options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
         services: .init(platform: .current, textureOutput: output,
-          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player)
+          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player,
+        makeAvPlayerVideoOutput: { AbrTimestampVideoOutput(attributes: $0, times: presentationTimes) })
       publicHost = host
       try host.attach()
       do {
@@ -991,6 +1036,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
         tick?() // displayLinkTick owns and consumes its retained raster buffer.
         var width = output.frames.last.map { CVPixelBufferGetWidth($0) } ?? 0
         var count = output.frames.count
+        let framePresentationTimes: [Any] = output.frames.map {
+          presentationTimes.take($0).map { $0 as Any } ?? NSNull()
+        }
         output.frames.removeAll(keepingCapacity: true)
         if let pixels = directOutput, pixels.hasNewPixelBuffer(forItemTime: player.currentTime()),
            let buffer = pixels.copyPixelBuffer(forItemTime: player.currentTime(), itemTimeForDisplay: nil) {
@@ -1000,6 +1048,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         let position = CMTimeGetSeconds(player.currentTime())
         let sample: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
           "generation": frameGeneration, "frames": count, "width": width, "textureClears": output.clears,
+          "framePresentationTimes": framePresentationTimes,
           "position": position.isFinite ? position : 0, "rate": player.rate,
           "timeControlStatus": player.timeControlStatus.rawValue,
           "itemStatus": player.currentItem?.status.rawValue ?? -1,
@@ -1017,6 +1066,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var automaticPolicy = AbrDiagnosticRecoveryPolicy()
     var automaticEvents: [[String: Any]] = []
     var resumeTask: Task<Void, Never>?
+    var publicResume: [String: Any]?
     defer { resumeTask?.cancel() }
     func automaticSample() -> AbrDiagnosticRecoveryPolicy.Sample {
       let item = player.currentItem
@@ -1036,7 +1086,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
         bytes: logs.reduce(0) { $0 + $1.numberOfBytesTransferred },
         transfer: logs.reduce(0) { $0 + $1.transferDuration },
         requests: logs.reduce(0) { $0 + $1.numberOfMediaRequests },
-        overdue: logs.reduce(0) { $0 + $1.downloadOverdue })
+        overdue: logs.reduce(0) { $0 + $1.downloadOverdue },
+        intentRevision: publicHost?.acknowledgedTransportRevision ?? 0)
     }
     while ProcessInfo.processInfo.systemUptime - started < 140 {
       let item = try XCTUnwrap(player.currentItem)
@@ -1085,6 +1136,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
         "publicPolicyCycle": publicPolicyCycle, "publicPolicyRace": publicPolicyRace, "policyPhase": policyPhase,
+        "publicIntentRevision": publicHost?.acknowledgedTransportRevision as Any? ?? NSNull(),
+        "publicPlaybackIntent": publicHost?.playbackIntent as Any? ?? NSNull(),
+        "publicResume": publicResume as Any? ?? NSNull(),
         "sessionId": publicHost?.sessionId as Any? ?? NSNull(),
         "acceptedMaximumWidth": publicHost?.acceptedVideoConstraints.maxWidth as Any? ?? NSNull(),
         "acceptedMaximumHeight": publicHost?.acceptedVideoConstraints.maxHeight as Any? ?? NSNull(),
@@ -1179,7 +1233,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
       if let ticket = recoveryTicket {
         let before = automaticSample()
         var event: [String: Any] = ["attempt": ticket.attempt, "elapsed": before.time,
-          "due": ticket.due, "generation": ticket.generation, "positionBefore": before.position,
+          "due": ticket.due, "generation": ticket.generation, "ticketIntentRevision": ticket.intentRevision, "positionBefore": before.position,
           "outcome": "preparing", "textureClearsBefore": output.clears]
         automaticEvents.append(event)
         let eventsURL = directory.appendingPathComponent("automatic-events.json")
@@ -1275,13 +1329,37 @@ final class YlDashResourceLoaderTests: XCTestCase {
                   event["publicCommandApplied"] = false
                   do {
                     let host = try XCTUnwrap(publicHost), sessionId = try XCTUnwrap(publicSessionId)
-                    if autoScenario == "caps-during-preparation" {
+                    event["publicCommandIntentBefore"] = host.acknowledgedTransportRevision
+                    let commandPosition = CMTimeGetSeconds(player.currentTime())
+                    event["publicCommandPositionBefore"] = finite(commandPosition)
+                    if autoScenario == "pause-during-preparation" {
+                      try host.pause(command: .init(sessionId: sessionId))
+                      event["publicPausePosition"] = finite(CMTimeGetSeconds(player.currentTime()))
+                      let pausedElapsed = ProcessInfo.processInfo.systemUptime - started
+                      resumeTask = Task { @MainActor in
+                        do {
+                          try await Task.sleep(nanoseconds: 2_000_000_000)
+                          let begin = ProcessInfo.processInfo.systemUptime - started
+                          try await host.play(command: .init(sessionId: sessionId))
+                          publicResume = ["applied": true, "startedElapsed": begin,
+                            "completedElapsed": ProcessInfo.processInfo.systemUptime - started,
+                            "pausedElapsed": pausedElapsed, "sessionId": host.sessionId as Any? ?? NSNull(),
+                            "itemUnchanged": player.currentItem === item,
+                            "oldTicketAuthorized": automaticPolicy.authorizes(ticket, automaticSample())]
+                        } catch { publicResume = ["applied": false] }
+                      }
+                    } else if autoScenario == "seek-during-preparation" {
+                      let target = Int64(commandPosition * 1000) + 1000
+                      event["publicSeekTargetMs"] = target
+                      try host.seekTo(command: .init(sessionId: sessionId, positionMs: target))
+                    } else if autoScenario == "caps-during-preparation" {
                       try await host.setVideoConstraints(command: .init(sessionId: sessionId,
                         constraints: .init(maxWidth: 320)))
                     } else {
                       try await host.selectVideoTrack(command: .init(sessionId: sessionId,
                         trackId: "dash-video-w320-h180-b350000"))
                     }
+                    event["publicCommandIntentAfter"] = host.acknowledgedTransportRevision
                     event["publicCommandApplied"] = true
                     event["publicCommandSessionId"] = host.sessionId
                     event["publicCommandItemChanged"] = player.currentItem !== item
@@ -1303,7 +1381,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
                     event["policyMaximumHeight"] = player.currentItem?.preferredMaximumResolution.height ?? -1
                   } catch { event["policyChangeApplied"] = false }
                 }
-                if autoScenario == "seek-during-preparation", ticket.attempt == 1 {
+                if !publicPolicyRace, autoScenario == "seek-during-preparation", ticket.attempt == 1 {
                   automaticPolicy.invalidateIntent()
                   let target = Int64(CMTimeGetSeconds(player.currentTime()) * 1_000) + 1_000
                   event["preparationSeekTargetMs"] = target
@@ -1313,7 +1391,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
                     event["preparationSeekElapsed"] = ProcessInfo.processInfo.systemUptime - started
                   } catch { event["preparationSeekApplied"] = false }
                 }
-                if autoScenario == "pause-during-preparation", ticket.attempt == 1 {
+                if !publicPolicyRace, autoScenario == "pause-during-preparation", ticket.attempt == 1 {
                   try? backend?.pause(); automaticPolicy.invalidateIntent()
                   event["preparationPauseApplied"] = true
                   event["preparationPauseElapsed"] = ProcessInfo.processInfo.systemUptime - started
@@ -4568,5 +4646,40 @@ extension YlDashSampleSourceNativeTests {
     backend.emitState()
     XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 650000)
     XCTAssertEqual(harness.states.last?.audioTracks.filter(\.isSelected).count, 1)
+  }
+}
+
+// Test-only timestamps from AVPlayerItemVideoOutput, bound to buffers actually
+// published by the backend. Player.currentTime() is not frame presentation time.
+private final class AbrPublishedFrameTimes: @unchecked Sendable {
+  private let lock = NSLock()
+  private var values: [ObjectIdentifier: (CVPixelBuffer, Double)] = [:]
+  func record(_ buffer: CVPixelBuffer, time: CMTime) {
+    lock.lock(); defer { lock.unlock() }
+    if values.count >= 64 { values.removeAll(keepingCapacity: true) }
+    let key = ObjectIdentifier(buffer)
+    let seconds = CMTimeGetSeconds(time)
+    values.removeValue(forKey: key)
+    if time.isValid && seconds.isFinite && seconds >= 0 { values[key] = (buffer, seconds) }
+  }
+  func take(_ buffer: CVPixelBuffer) -> Double? {
+    lock.lock(); defer { lock.unlock() }
+    return values.removeValue(forKey: ObjectIdentifier(buffer))?.1
+  }
+}
+
+private final class AbrTimestampVideoOutput: AVPlayerItemVideoOutput, @unchecked Sendable {
+  private let times: AbrPublishedFrameTimes
+  init(attributes: [String: Any], times: AbrPublishedFrameTimes) {
+    self.times = times
+    super.init(pixelBufferAttributes: attributes)
+  }
+  override func copyPixelBuffer(forItemTime itemTime: CMTime,
+    itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? {
+    var displayTime = CMTime.invalid
+    let buffer = super.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: &displayTime)
+    outItemTimeForDisplay?.pointee = displayTime
+    if let buffer { times.record(buffer, time: displayTime) }
+    return buffer
   }
 }
