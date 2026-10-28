@@ -739,6 +739,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-28-ios-credential-race.md",
       "sha256": "1c31cebc2e20fbafce1aa9d4b10dd5e961f414c8b6c5b81a0e8fc7feb2865d18"
+    },
+    "ios-load-lifecycle-20261028": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-28-ios-load-lifecycle.md",
+      "sha256": "c97c0626eee9e709ce6d8ccc724619723e325b873a75da3979912be54c2cb52c"
     }
   },
   "rows": [
@@ -782,10 +787,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-credential-race-20261028"
+        "ios-load-lifecycle-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-public-credential-lifecycle-and-network-cancellation-high-output-original-auto-recovery-and-physical-output"
+      "nextAction": "qualify-dart-credential-races-postcommit-failure-high-output-original-auto-recovery-and-physical-output"
     },
     {
       "requirement": "CAP-ABR",
@@ -808,7 +813,8 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-credential-race-20261028"
+        "ios-credential-race-20261028",
+        "ios-load-lifecycle-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -847,7 +853,8 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-credential-race-20261028"
+        "ios-credential-race-20261028",
+        "ios-load-lifecycle-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -866,7 +873,8 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-credential-race-20261028"
+        "ios-credential-race-20261028",
+        "ios-load-lifecycle-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

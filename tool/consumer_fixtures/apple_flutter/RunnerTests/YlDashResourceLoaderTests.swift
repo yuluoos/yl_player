@@ -3420,6 +3420,165 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertNoThrow(try ledger.makeScope(maxBytes: 1024))
   }
 
+  @MainActor func testPublicLoadCredentialHistorySurvivesRollbackAndResetsOnlyOnCommit() async throws {
+    let server = try DashHTTPServer(), other = try DashHTTPServer(), data = mpd
+    defer { server.close(); other.close() }
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200,[:],data) }
+      if request.path == "/bad.mpd" { return (200,[:],Data("<MPD type=\"dynamic\"/>".utf8)) }
+      if request.path == "/seg-1.m4s" && request.headers["range"] == "bytes=1-2" { return (302,["Location":other.url("/hop").absoluteString],Data()) }
+      return (200,[:],Data([1,2,3]))
+    }
+    other.handler = { _ in (302,["Location":server.url("/returned").absoluteString],Data()) }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    func request(_ id:String,_ token:String,_ path:String = "/movie.mpd") -> AppleLoadRequest {
+      var request = AppleHostFixture.request(id,url:server.url(path).absoluteString,format:.dash)
+      request.source.request = .init(headers:["X-Client":"ordinary"],credentials:["Authorization":token,"Cookie":token,"X-Session":token])
+      return request
+    }
+    func loader() throws -> YlHlsResourceLoader {
+      try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    }
+    func segment(_ loader:YlHlsResourceLoader) throws -> URL {
+      let root = read(loader,try loader.encodedAssetURL())
+      let video = read(loader,try child(root.received))
+      return try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("http:") }.flatMap { URL(string:String($0)) })
+    }
+    func fetch(_ url:URL) async throws -> URLResponse {
+      // Distinguish the controlled redirect from AVPlayer's own read-ahead.
+      var request = URLRequest(url:url); request.setValue("bytes=1-2",forHTTPHeaderField:"Range")
+      return try await URLSession.shared.data(for:request).1
+    }
+    let first = try await fixture.host.load(request:request("first","first-fixture"))
+    let oldItem = try XCTUnwrap(fixture.av.currentItem), oldLoader = try loader()
+    let oldURL = try segment(oldLoader)
+    let response = try await fetch(oldURL)
+    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,200)
+    XCTAssertTrue(oldLoader.credentialContext.isStripped(server.url("/seg-1.m4s").absoluteString))
+    let oldRevision = oldLoader.credentialContext.revision
+    do { _ = try await fixture.host.load(request:request("failed","failed-fixture","/bad.mpd")); XCTFail("Malformed candidate committed") }
+    catch let error as PigeonError { XCTAssertEqual(error.code,"container.dash_dynamic_unsupported") }
+    XCTAssertEqual(fixture.host.sessionId,first.sessionId); XCTAssertTrue(fixture.av.currentItem === oldItem)
+    XCTAssertTrue(try loader() === oldLoader)
+    _ = try await fetch(oldURL)
+    let afterRollback = try XCTUnwrap(server.requests.last { $0.path == "/seg-1.m4s" && $0.headers["range"] == "bytes=1-2" })
+    XCTAssertNil(afterRollback.headers["authorization"]); XCTAssertNil(afterRollback.headers["cookie"])
+    XCTAssertNil(afterRollback.headers["x-session"]); XCTAssertEqual(afterRollback.headers["x-client"],"ordinary")
+    let second = try await fixture.host.load(request:request("second","second-fixture"))
+    let newLoader = try loader()
+    XCTAssertNotEqual(first.sessionId,second.sessionId)
+    XCTAssertFalse(newLoader.credentialContext === oldLoader.credentialContext)
+    XCTAssertEqual(newLoader.credentialContext.revision,0)
+    _ = try await fetch(segment(newLoader))
+    let afterCommit = try XCTUnwrap(server.requests.last { $0.path == "/seg-1.m4s" && $0.headers["range"] == "bytes=1-2" })
+    XCTAssertEqual(afterCommit.headers["authorization"],"second-fixture")
+    XCTAssertEqual(afterCommit.headers["cookie"],"second-fixture"); XCTAssertEqual(afterCommit.headers["x-session"],"second-fixture")
+    XCTAssertEqual(oldLoader.credentialContext.revision,oldRevision)
+    XCTAssertEqual(oldLoader.diagnosticProxySnapshot["cancelled"],1)
+    for r in other.requests + server.requests.filter({ $0.path == "/returned" }) {
+      XCTAssertNil(r.headers["authorization"]); XCTAssertNil(r.headers["cookie"]); XCTAssertNil(r.headers["x-session"])
+    }
+  }
+
+  @MainActor func testHeldBodyServerHandlesSplitHeadersAndContinuesUntilPeerEOF() async throws {
+    let server = try DashHeldBodyServer(manifest:mpd,body:Data(repeating:1,count:128),redirect:URL(string:"http://127.0.0.1:1/revoke")!)
+    defer { server.close() }
+    let connection = NWConnection(host:"127.0.0.1",port:NWEndpoint.Port(rawValue:UInt16(server.url("/").port!))!,using:.tcp)
+    defer { connection.cancel() }
+    let ready = expectation(description:"client ready"), received = expectation(description:"partial response")
+    let headerComplete = AbrPrerollCompletion()
+    connection.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+    connection.start(queue:DispatchQueue.global()); await fulfillment(of:[ready],timeout:2)
+    connection.receive(minimumIncompleteLength:1,maximumLength:4096) { data,_,_,error in
+      XCTAssertNil(error); XCTAssertNotNil(data)
+      XCTAssertEqual(headerComplete.result,true,"Server must not dispatch an incomplete request header")
+      received.fulfill()
+    }
+    connection.send(content:Data("GET /ini".utf8),completion:.contentProcessed { _ in })
+    try await Task.sleep(nanoseconds:100_000_000)
+    headerComplete.finish(true)
+    connection.send(content:Data("t.mp4 HTTP/1.1\r\nHost: owned\r\nX-Fixture-Hold: 1\r\n\r\n".utf8),completion:.contentProcessed { _ in })
+    await fulfillment(of:[received],timeout:2)
+    connection.send(content:Data("trailing-client-bytes".utf8),completion:.contentProcessed { _ in })
+    try await Task.sleep(nanoseconds:100_000_000)
+    connection.cancel()
+    try await AppleHostCharacterizations.waitFor({ server.peerClosed==1 },timeout:2)
+    XCTAssertEqual(server.heldCount,1)
+  }
+
+  @MainActor func testSameDashCandidateRevocationCancelsPartiallyReceivedUpstream() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url:frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/dash_timeline/avc/init-0.m4s")
+    let other = try DashHTTPServer(); other.handler = { _ in (200,[:],Data([1,2,3])) }
+    let segmentBytes = try Data(contentsOf:media.deletingLastPathComponent().appendingPathComponent("chunk-0-00001.m4s"))
+    let initBytes = try Data(contentsOf:media)
+    let server = try DashHeldBodyServer(manifest:mpd,body:initBytes,redirect:other.url("/revoked"),
+      normalBodies:["/init.mp4":initBytes,"/seg-1.m4s":segmentBytes,"/seg-2.m4s":segmentBytes])
+    defer { server.close(); other.close() }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    var request = AppleHostFixture.request("committed",url:server.url("/movie.mpd").absoluteString,format:.dash)
+    request.source.request = .init(headers:[:],credentials:["Authorization":"fixture"])
+    let accepted = try await fixture.host.load(request:request)
+    let acceptedItem = try XCTUnwrap(fixture.av.currentItem)
+    let active = try XCTUnwrap((acceptedItem.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    let context = active.credentialContext
+    // Fixture-only header stalls candidate traffic, never the committed item's traffic.
+    let candidate = try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL:server.url("/movie.mpd"),headers:["X-Fixture-Hold":"1"],credentials:["Authorization":"fixture"],credentialContext:context)
+    defer { candidate.discard() }
+    let control = try YlHlsMediaProxy(originURL:server.url("/movie.mpd"),headers:[:],credentials:["Authorization":"fixture"],configuration:.init(map:[:]),credentialContext:context)
+    defer { control.cancelAll() }
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time:Double,width:Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time:time,generation:0,allowed:true,width:width,position:time,remaining:120-time,bufferAhead:10,
+        bytes:Int64(time*200_000),transfer:time,requests:Int(time*4),overdue:1,credentialRevision:context.revision)
+    }
+    for (t,w) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(t,width:w)) }
+    let ticket = try XCTUnwrap(policy.observe(sample(17.5))), epoch = ProcessInfo.processInfo.systemUptime
+    var observedPartial = false, redirected = false, cleanup = 0
+    let revoke = Task { @MainActor in
+      do {
+        try await AppleHostCharacterizations.waitFor({
+          candidate.loader.diagnosticProxySnapshot["receivedBodyBytes",default:0]>0 &&
+          candidate.loader.diagnosticProxySnapshot["activeTasks",default:0]>0
+        },timeout:1.5)
+        let beforeRevoke = candidate.loader.diagnosticProxySnapshot
+        observedPartial = beforeRevoke["receivedBodyBytes",default:0]>0 && beforeRevoke["activeTasks",default:0]>0
+        let evidence = try JSONSerialization.data(withJSONObject:beforeRevoke,options:[.sortedKeys])
+        let attachment = XCTAttachment(data:evidence,uniformTypeIdentifier:"public.json")
+        attachment.name = "candidate-before-revocation"; attachment.lifetime = .keepAlways
+        XCTContext.runActivity(named:"Actual candidate transfer before revocation") { $0.add(attachment) }
+        guard observedPartial else { return }
+        let (_,response) = try await URLSession.shared.data(from:control.proxyURL(for:server.url("/revoke")))
+        redirected = (response as? HTTPURLResponse)?.statusCode == 200
+      } catch { XCTFail("Owned candidate did not reach partial upstream transfer and redirect") }
+    }
+    defer { revoke.cancel() }
+    let result = await AbrDiagnosticPreroll.prepare(candidate.asset,position:.zero,deadlineUptime:epoch+2,
+      allowed:{ policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)) },
+      cancelPending:{ cleanup += 1; candidate.discard() })
+    await revoke.value
+    XCTAssertTrue(observedPartial); XCTAssertTrue(redirected)
+    XCTAssertEqual(result.outcome,"cancelled"); XCTAssertTrue(result.detached); XCTAssertNil(result.item)
+    XCTAssertEqual(cleanup,1); XCTAssertEqual(policy.attempts,1)
+    try await AppleHostCharacterizations.waitFor({
+      let snap = candidate.loader.diagnosticProxySnapshot
+      return snap["activeTasks"]==0 && snap["activeConnections"]==0 && snap["pendingSends"]==0 &&
+        snap["cancelledCompletions",default:0]>0 && snap["upstreamCompletions"]==snap["admittedRequests"] &&
+        server.peerClosed>0 && server.peerClosed==server.heldCount
+    },timeout:2)
+    XCTAssertThrowsError(try candidate.takeLoader())
+    XCTAssertEqual(fixture.host.sessionId,accepted.sessionId); XCTAssertTrue(fixture.av.currentItem === acceptedItem)
+    let root = read(active,try active.encodedAssetURL()); XCTAssertNil(root.error)
+    let video = read(active,try child(root.received))
+    let segmentURL = try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("http:") }.flatMap { URL(string:String($0)) })
+    let (continued,response) = try await URLSession.shared.data(from:segmentURL)
+    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,200); XCTAssertEqual(continued,segmentBytes)
+    XCTAssertEqual(active.diagnosticProxySnapshot["cancelled"],0)
+    XCTAssertFalse(policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)))
+    XCTAssertTrue(other.requests.allSatisfy { $0.headers["authorization"] == nil })
+  }
+
   func testActualMPDRedirectCrossOriginReturnAndProxyRangesNeverRestoreCredentials() throws {
     let data = mpd
     let other = try DashHTTPServer()
@@ -4867,4 +5026,88 @@ private final class AbrTimestampVideoOutput: AVPlayerItemVideoOutput, @unchecked
     if let buffer { times.record(buffer, time: displayTime) }
     return buffer
   }
+}
+
+private final class DashHeldBodyServer {
+  private let listener: NWListener
+  private let lock = NSLock()
+  private var connections: [ObjectIdentifier:NWConnection] = [:]
+  private var heldConnections = Set<ObjectIdentifier>()
+  private var stopped = false, closed = 0, held = 0
+  private let manifest: Data, body: Data, redirect: URL, normalBodies: [String:Data]
+  var heldCount: Int { lock.lock(); defer { lock.unlock() }; return held }
+  var peerClosed: Int { lock.lock(); defer { lock.unlock() }; return closed }
+  func url(_ path:String) -> URL { URL(string:"http://127.0.0.1:\(listener.port!.rawValue)\(path)")! }
+  init(manifest:Data,body:Data,redirect:URL,normalBodies:[String:Data] = [:]) throws {
+    self.manifest = manifest; self.body = body; self.redirect = redirect; self.normalBodies = normalBodies
+    listener = try NWListener(using:.tcp,on:.any)
+    let ready = DispatchSemaphore(value:0)
+    listener.stateUpdateHandler = { if case .ready = $0 { ready.signal() } }
+    listener.newConnectionHandler = { [weak self] connection in
+      guard let self else { connection.cancel(); return }
+      self.lock.lock()
+      guard !self.stopped else { self.lock.unlock(); connection.cancel(); return }
+      self.connections[ObjectIdentifier(connection)] = connection
+      connection.start(queue:DispatchQueue.global())
+      self.lock.unlock()
+      self.receiveHeader(connection,buffer:Data())
+    }
+    listener.start(queue:DispatchQueue(label:"yl.test.held-body"))
+    guard ready.wait(timeout:.now()+3) == .success else { listener.cancel(); throw NSError(domain:"HeldBody",code:1) }
+  }
+  private func finish(_ connection:NWConnection,peer:Bool = false) {
+    lock.lock(); let id = ObjectIdentifier(connection)
+    connections.removeValue(forKey:id)
+    if heldConnections.remove(id) != nil && peer { closed += 1 }
+    lock.unlock(); connection.cancel()
+  }
+  private func receiveHeader(_ connection:NWConnection,buffer:Data) {
+    connection.receive(minimumIncompleteLength:1,maximumLength:4096) { [weak self] bytes,_,complete,error in
+      guard let self else { connection.cancel(); return }
+      var data = buffer; if let bytes { data.append(bytes) }
+      guard data.count<=16384 else { self.finish(connection); return }
+      if let end = data.range(of:Data([13,10,13,10])) {
+        self.respond(connection,header:String(decoding:data[..<end.upperBound],as:UTF8.self))
+      } else if complete || error != nil { self.finish(connection) }
+      else { self.receiveHeader(connection,buffer:data) }
+    }
+  }
+  private func observeEOF(_ connection:NWConnection) {
+    connection.receive(minimumIncompleteLength:1,maximumLength:1024) { [weak self] _,_,complete,error in
+      guard let self else { connection.cancel(); return }
+      if complete || error != nil { self.finish(connection,peer:true) }
+      else { self.observeEOF(connection) }
+    }
+  }
+  private func respond(_ connection:NWConnection,header:String) {
+    let lines = header.components(separatedBy:"\r\n")
+    let path = lines[0].split(separator:" ").dropFirst().first.map(String.init) ?? ""
+    var headers: [String:String] = [:]
+    for line in lines.dropFirst() {
+      if let colon = line.firstIndex(of:":") { headers[String(line[..<colon]).lowercased()] = line[line.index(after:colon)...].trimmingCharacters(in:.whitespaces) }
+    }
+    if path == "/revoke" {
+      connection.send(content:Data("HTTP/1.1 302 Found\r\nContent-Length: 0\r\nLocation: \(redirect.absoluteString)\r\nConnection: close\r\n\r\n".utf8),completion:.contentProcessed { [weak self] _ in self?.finish(connection) })
+      return
+    }
+    let payload = path == "/movie.mpd" ? manifest : (normalBodies[path] ?? body)
+    let hold = path != "/movie.mpd" && (normalBodies.isEmpty || headers["x-fixture-hold"] == "1")
+    lock.lock()
+    guard !stopped, connections[ObjectIdentifier(connection)] != nil else { lock.unlock(); connection.cancel(); return }
+    if hold { held += 1; heldConnections.insert(ObjectIdentifier(connection)) }
+    lock.unlock()
+    let contentType = path == "/movie.mpd" ? "application/dash+xml" : "video/mp4"
+    let response = "HTTP/1.1 200 OK\r\nContent-Type: \(contentType)\r\nContent-Length: \(payload.count)\r\nConnection: close\r\n\r\n"
+    if hold {
+      connection.send(content:Data(response.utf8)+payload.prefix(64),completion:.contentProcessed { _ in })
+      observeEOF(connection)
+    } else {
+      connection.send(content:Data(response.utf8)+payload,completion:.contentProcessed { [weak self] _ in self?.finish(connection) })
+    }
+  }
+  func close() {
+    lock.lock(); stopped = true; let pending = Array(connections.values); connections.removeAll(); lock.unlock()
+    listener.cancel(); pending.forEach { $0.cancel() }
+  }
+  deinit { close() }
 }
