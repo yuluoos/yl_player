@@ -1,0 +1,6 @@
+{
+  "url": "https://developer.apple.com/documentation/bundleresources/information-property-list/nsapptransportsecurity/nsallowslocalnetworking",
+  "retrievedDate": "2026-10-28",
+  "retrievedMarkdownSha256": "a78dee93d5e887dd81307bb96157d8635519d56a8f8815a988da5bd41676cf3e",
+  "finding": "Apple documents NSAllowsLocalNetworking as covering unqualified domains, .local names, and literal IPv4/IPv6 addresses."
+}

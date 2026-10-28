@@ -1,0 +1,73 @@
+[
+  {
+    "name": "network",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_network",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 0,
+    "seconds": 4.319920291000017
+  },
+  {
+    "name": "benchmark",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 0,
+    "seconds": 32.9450875
+  },
+  {
+    "name": "consumer-fixtures",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/consumer_fixtures/apple_flutter",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 0,
+    "seconds": 5.248181584000122
+  },
+  {
+    "name": "mirrors",
+    "command": [
+      "python3",
+      "-B",
+      "tool/consumer_fixtures/apple_flutter/main_example_tests.py"
+    ],
+    "exitCode": 0,
+    "seconds": 2.0582418750000215
+  },
+  {
+    "name": "diff",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0,
+    "seconds": 0.028699416999870664
+  }
+]

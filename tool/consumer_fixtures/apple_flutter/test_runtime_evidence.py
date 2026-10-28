@@ -76,6 +76,17 @@ class RuntimeEvidenceTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, 'Unresolved'):
             gate.platform_source('#if canImport(Unknown)\nfunc testUnknown() {}\n#endif', 'ios')
 
+    def test_negated_known_compilation_conditions_preserve_else_and_reject_unknown(self):
+        text = '#if os(iOS) && !targetEnvironment(simulator)\nphysical\n#else\nother\n#endif'
+        self.assertEqual(gate.platform_source(text, 'ios'), 'other')
+        self.assertEqual(gate.platform_source(text, 'macos'), 'other')
+        text = '#if !os(macOS) && DEBUG\nios\n#else\nmacos\n#endif'
+        self.assertEqual(gate.platform_source(text, 'ios'), 'ios')
+        self.assertEqual(gate.platform_source(text, 'macos'), 'macos')
+        for text in ['#if !canImport(Unknown)\nbad\n#endif', '#if !!DEBUG\nbad\n#endif']:
+            with self.assertRaisesRegex(RuntimeError, 'Unresolved'):
+                gate.platform_source(text, 'ios')
+
     def test_current_pbx_target_sources_are_exact(self):
         for platform in ['ios', 'macos']:
             pbx = (ROOT / f'packages/yl_player/example/{platform}/Runner.xcodeproj/project.pbxproj').read_text()

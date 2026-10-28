@@ -1,0 +1,314 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.0015s",
+                  "durationInSeconds" : 0.0014901161193847656,
+                  "name" : "testArbitraryCredentialNamesRemainClassifiedAcrossReaderReopen()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testArbitraryCredentialNamesRemainClassifiedAcrossReaderReopen()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testArbitraryCredentialNamesRemainClassifiedAcrossReaderReopen",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00084s",
+                  "durationInSeconds" : 0.0008360147476196289,
+                  "name" : "testCredentialsStayStrippedAfterCrossOriginRedirectChain()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testCredentialsStayStrippedAfterCrossOriginRedirectChain()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testCredentialsStayStrippedAfterCrossOriginRedirectChain",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00061s",
+                  "durationInSeconds" : 0.0006120204925537109,
+                  "name" : "testCrossOriginRedirectStripsCredentials()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testCrossOriginRedirectStripsCredentials()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testCrossOriginRedirectStripsCredentials",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0007s",
+                  "durationInSeconds" : 0.0007010698318481445,
+                  "name" : "testExactLength416IsEOF()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testExactLength416IsEOF()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testExactLength416IsEOF",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0011s",
+                  "durationInSeconds" : 0.0011459589004516602,
+                  "name" : "testHttpStatusDiagnosticContainsNoQueryOrCredentials()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testHttpStatusDiagnosticContainsNoQueryOrCredentials()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testHttpStatusDiagnosticContainsNoQueryOrCredentials",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00078s",
+                  "durationInSeconds" : 0.0007759332656860352,
+                  "name" : "testImmutableOriginContextClassifiesCaseInsensitiveCollisionAndAllOriginDimensions()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testImmutableOriginContextClassifiesCaseInsensitiveCollisionAndAllOriginDimensions()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testImmutableOriginContextClassifiesCaseInsensitiveCollisionAndAllOriginDimensions",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00069s",
+                  "durationInSeconds" : 0.0006850957870483398,
+                  "name" : "testInvalidContentRangeAndUnexpected416AreRangeInvalid()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testInvalidContentRangeAndUnexpected416AreRangeInvalid()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testInvalidContentRangeAndUnexpected416AreRangeInvalid",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0012s",
+                  "durationInSeconds" : 0.0012489557266235352,
+                  "name" : "testLocalAddressExceptionsCannotBeBypassedBySchemeOrEquivalentSpelling()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testLocalAddressExceptionsCannotBeBypassedBySchemeOrEquivalentSpelling()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testLocalAddressExceptionsCannotBeBypassedBySchemeOrEquivalentSpelling",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.004s",
+                  "durationInSeconds" : 0.004044055938720703,
+                  "name" : "testManagedBackoffRetryAfterAndClockAreDeterministic()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedBackoffRetryAfterAndClockAreDeterministic()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedBackoffRetryAfterAndClockAreDeterministic",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00063s",
+                  "durationInSeconds" : 0.0006309747695922852,
+                  "name" : "testManagedClockFencesCancelledAndReplacedDeadlines()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedClockFencesCancelledAndReplacedDeadlines()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedClockFencesCancelledAndReplacedDeadlines",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0071s",
+                  "durationInSeconds" : 0.007079958915710449,
+                  "name" : "testManagedFramingBoundsAggregateHeadersAndDetectsPrematureEOF()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedFramingBoundsAggregateHeadersAndDetectsPrematureEOF()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedFramingBoundsAggregateHeadersAndDetectsPrematureEOF",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00094s",
+                  "durationInSeconds" : 0.0009350776672363281,
+                  "name" : "testManagedFramingHandlesFragmentedInformationalFixedChunkedAndCloseBodies()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedFramingHandlesFragmentedInformationalFixedChunkedAndCloseBodies()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedFramingHandlesFragmentedInformationalFixedChunkedAndCloseBodies",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.001s",
+                  "durationInSeconds" : 0.0010089874267578125,
+                  "name" : "testManagedFramingRejectsAmbiguityOverflowInvalidChunkAndUnsupportedEncoding()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedFramingRejectsAmbiguityOverflowInvalidChunkAndUnsupportedEncoding()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedFramingRejectsAmbiguityOverflowInvalidChunkAndUnsupportedEncoding",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00055s",
+                  "durationInSeconds" : 0.0005489587783813477,
+                  "name" : "testManagedIntentRetainsBudgetsAndTerminalFailureAcrossReopen()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedIntentRetainsBudgetsAndTerminalFailureAcrossReopen()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedIntentRetainsBudgetsAndTerminalFailureAcrossReopen",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00099s",
+                  "durationInSeconds" : 0.0009859800338745117,
+                  "name" : "testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0007s",
+                  "durationInSeconds" : 0.0006979703903198242,
+                  "name" : "testManagedRequestSerializationOwnsFramingAndRejectsHeaderInjection()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedRequestSerializationOwnsFramingAndRejectsHeaderInjection()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedRequestSerializationOwnsFramingAndRejectsHeaderInjection",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00067s",
+                  "durationInSeconds" : 0.0006679296493530273,
+                  "name" : "testManagedRetryStatusAllowlistExcludesPermanentServerFailures()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedRetryStatusAllowlistExcludesPermanentServerFailures()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedRetryStatusAllowlistExcludesPermanentServerFailures",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00057s",
+                  "durationInSeconds" : 0.0005710124969482422,
+                  "name" : "testManagedTransientEligibilityExcludesAuthenticationCertificatesCancellationAndNonIdempotentMethods()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedTransientEligibilityExcludesAuthenticationCertificatesCancellationAndNonIdempotentMethods()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedTransientEligibilityExcludesAuthenticationCertificatesCancellationAndNonIdempotentMethods",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0006s",
+                  "durationInSeconds" : 0.0006049871444702148,
+                  "name" : "testManagedTransportRejectsRequiredProxyAndATSRestrictions()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedTransportRejectsRequiredProxyAndATSRestrictions()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedTransportRejectsRequiredProxyAndATSRestrictions",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00065s",
+                  "durationInSeconds" : 0.0006539821624755859,
+                  "name" : "testNonzero200IsRangeNotSupported()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testNonzero200IsRangeNotSupported()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testNonzero200IsRangeNotSupported",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00062s",
+                  "durationInSeconds" : 0.0006150007247924805,
+                  "name" : "testOffsetZero200IsSequentialAndUsesContentLength()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testOffsetZero200IsSequentialAndUsesContentLength()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testOffsetZero200IsSequentialAndUsesContentLength",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00064s",
+                  "durationInSeconds" : 0.0006439685821533203,
+                  "name" : "testRedirectLimitAndSchemeValidationUseSanitizedDiagnostics()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testRedirectLimitAndSchemeValidationUseSanitizedDiagnostics()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testRedirectLimitAndSchemeValidationUseSanitizedDiagnostics",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00055s",
+                  "durationInSeconds" : 0.0005539655685424805,
+                  "name" : "testRequestOwnsRangeAndUsesStrongValidator()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testRequestOwnsRangeAndUsesStrongValidator()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testRequestOwnsRangeAndUsesStrongValidator",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00063s",
+                  "durationInSeconds" : 0.0006340742111206055,
+                  "name" : "testRetryCannotReplenishOriginalResourceRedirectBudget()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testRetryCannotReplenishOriginalResourceRedirectBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testRetryCannotReplenishOriginalResourceRedirectBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00055s",
+                  "durationInSeconds" : 0.0005530118942260742,
+                  "name" : "testReturnOriginAndRetryDoNotRestoreStrippedCredentials()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testReturnOriginAndRetryDoNotRestoreStrippedCredentials()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testReturnOriginAndRetryDoNotRestoreStrippedCredentials",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00051s",
+                  "durationInSeconds" : 0.0005129575729370117,
+                  "name" : "testSameOriginRedirectRetainsCredentialsAndRebuildsRange()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testSameOriginRedirectRetainsCredentialsAndRebuildsRange()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testSameOriginRedirectRetainsCredentialsAndRebuildsRange",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00054s",
+                  "durationInSeconds" : 0.0005409717559814453,
+                  "name" : "testSequentialLiveRequestNeverUsesRangeHeaders()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testSequentialLiveRequestNeverUsesRangeHeaders()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testSequentialLiveRequestNeverUsesRangeHeaders",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00059s",
+                  "durationInSeconds" : 0.000594019889831543,
+                  "name" : "testValid206ParsesContentRangeAndValidators()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testValid206ParsesContentRangeAndValidators()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testValid206ParsesContentRangeAndValidators",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00055s",
+                  "durationInSeconds" : 0.000552058219909668,
+                  "name" : "testWeakETagFallsBackToLastModifiedWhenLengthKnown()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testWeakETagFallsBackToLastModifiedWhenLengthKnown()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testWeakETagFallsBackToLastModifiedWhenLengthKnown",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00064s",
+                  "durationInSeconds" : 0.000641942024230957,
+                  "name" : "testZeroRedirectBudgetRejectsFirstRedirect()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testZeroRedirectBudgetRejectsFirstRedirect()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testZeroRedirectBudgetRejectsFirstRedirect",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlNetworkRequestPolicyTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

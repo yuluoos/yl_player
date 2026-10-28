@@ -179,8 +179,28 @@ public enum YlManagedTransportRestrictions {
     let ats = ats ?? [:]
     guard ats["NSPinnedDomains"] == nil, ats["NSRequiresCertificateTransparency"] as? Bool != true else { throw YlManagedHTTPTransport.unsupported() }
     let host = url.host?.lowercased() ?? ""
+    func literalKey(_ value: String) -> Data? {
+      let address = value.hasPrefix("[") && value.hasSuffix("]") ? String(value.dropFirst().dropLast()) : value
+      if let ipv4 = IPv4Address(address) { return Data([4]) + ipv4.rawValue }
+      guard let ipv6 = IPv6Address(address) else { return nil }
+      let bytes = Array(ipv6.rawValue)
+      // IPv4-mapped spelling must not escape the corresponding IPv4 rule.
+      if bytes.prefix(12) == Array(repeating: UInt8(0), count: 10) + [255, 255] {
+        return Data([4]) + Data(bytes.suffix(4))
+      }
+      return Data([6]) + ipv6.rawValue
+    }
+    let addressKey = literalKey(host)
     let exceptions = ats["NSExceptionDomains"] as? [String: [String: Any]] ?? [:]
-    let domain = exceptions.keys.sorted { $0.count > $1.count }.first {
+    // CIDR semantics are unsupported. Reject before the HTTPS early return,
+    // because these rules can also carry stricter TLS/trust requirements.
+    if addressKey != nil, exceptions.keys.contains(where: { $0.contains("/") }) {
+      throw YlManagedHTTPTransport.unsupported()
+    }
+    let addressRules = exceptions.keys.filter { addressKey != nil && literalKey($0) == addressKey }
+    // Multiple equivalent spellings may disagree; never pick the permissive one.
+    guard addressRules.count <= 1 else { throw YlManagedHTTPTransport.unsupported() }
+    let domain = addressRules.first ?? exceptions.keys.sorted { $0.count > $1.count }.first {
       host == $0.lowercased() || ((exceptions[$0]?["NSIncludesSubdomains"] as? Bool == true) && host.hasSuffix("." + $0.lowercased()))
     }
     let rule = domain.flatMap { exceptions[$0] } ?? [:]
@@ -194,7 +214,8 @@ public enum YlManagedTransportRestrictions {
       guard rule["NSExceptionAllowsInsecureHTTPLoads"] as? Bool == true else { throw YlManagedHTTPTransport.unsupported() }
       return
     }
-    let local = host == "localhost" || host == "127.0.0.1" || host == "[::1]" || host == "::1" || host.hasSuffix(".local") || !host.contains(".")
+    // Local authorization covers parsed addresses, not IP-looking DNS suffixes.
+    let local = addressKey != nil || host == "localhost" || host.hasSuffix(".local") || !host.contains(".")
     if local, ats["NSAllowsLocalNetworking"] as? Bool == true { return }
     // On modern platforms a present scoped exception suppresses the global
     // arbitrary-loads key. Media exemption applies to these media byte routes.

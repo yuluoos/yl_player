@@ -1012,9 +1012,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       case .waitingToPlayAtSpecifiedRate:
         status = "buffering"
       case .paused:
-        status = playRequested ? "buffering" : "ready"
+        // Item readiness can arrive after a route/user pause was acknowledged.
+        // Keep that transport state; only initial nonplaying readiness is "ready".
+        status = playRequested ? "buffering" : (status == "paused" ? "paused" : "ready")
       @unknown default:
-        status = playRequested ? "buffering" : "ready"
+        status = playRequested ? "buffering" : (status == "paused" ? "paused" : "ready")
       }
       if resumeAtLiveEdge {
         try? seekToLiveEdge()

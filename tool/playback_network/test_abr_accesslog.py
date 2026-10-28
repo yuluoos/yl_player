@@ -45,6 +45,58 @@ class AccessLogTests(unittest.TestCase):
             with self.subTest(missing=field), self.assertRaises(ValueError):
                 validate(missing)
 
+    def test_public_policy_cycle_rejects_conflicting_or_short_capture(self):
+        values = dict(public_policy_cycle=True, duration_seconds=120, direct_hls_control=False,
+                      recovery_action='none', auto_scenario='normal', candidate_preparation='manifest-only',
+                      startup_delay_ms=0)
+        self.assertTrue(abr_accesslog.public_policy_cycle(SimpleNamespace(**values)))
+        self.assertFalse(abr_accesslog.public_policy_cycle(SimpleNamespace()))
+        for key, value in [('duration_seconds', 40), ('direct_hls_control', True),
+                           ('recovery_action', 'auto-reload'), ('auto_scenario', 'pause-first'),
+                           ('candidate_preparation', 'asset-preroll'), ('startup_delay_ms', 500),
+                           ('public_policy_cycle', 1)]:
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                abr_accesslog.public_policy_cycle(SimpleNamespace(**dict(values, **{key: value})))
+
+    def test_public_policy_cycle_requires_every_committed_phase_and_actual_frames(self):
+        phases = ['initial-auto', 'caps', 'clear-caps', 'fixed', 'restore-auto']
+        rows = []
+        frames = []
+        for i, phase in enumerate(phases):
+            for j in range(4):
+                elapsed = i * 10 + j
+                fixed = 'dash-video-w320-h180-b350000' if phase == 'fixed' else None
+                rows.append(dict(elapsed=elapsed, publicPolicyCycle=True, policyPhase=phase,
+                    sessionId='same', acceptedMaximumWidth=320 if phase == 'caps' else None,
+                    acceptedMaximumHeight=None, acceptedMaximumBitrate=None,
+                    fixedTrackId=fixed, maximumWidth=320 if phase == 'caps' else 0,
+                    maximumHeight=100000 if phase == 'caps' else 0, peak=0,
+                    hostFailureCount=0, hostStatus='playing'))
+                frames.append(dict(elapsed=elapsed + .1, frames=1, width=320 if phase in ('caps', 'fixed') else 640))
+        events = [dict(phase=phase, elapsed=i*10-.5, elapsedAfter=i*10-.1,
+                       applied=True, itemChanged=True, sessionId='same')
+                  for i, phase in enumerate(phases) if i]
+        result = abr_accesslog.summarize_public_policy(rows, frames, events)
+        self.assertEqual(result['phasesVerified'], phases)
+        self.assertFalse(result['capabilityAccepted'])
+        for kind in ['missing-phase', 'failed-command', 'changed-session', 'wrong-cap',
+                     'wrong-fixed', 'high-under-cap', 'no-restored-high', 'no-frames', 'failure', 'failed-state']:
+            badrows, badframes, badevents = copy.deepcopy((rows, frames, events))
+            if kind == 'missing-phase': badevents.pop()
+            elif kind == 'failed-command': badevents[0]['applied'] = False
+            elif kind == 'changed-session': badrows[-1]['sessionId'] = 'other'
+            elif kind == 'wrong-cap': badrows[5]['acceptedMaximumWidth'] = None
+            elif kind == 'wrong-fixed': badrows[13]['fixedTrackId'] = None
+            elif kind == 'high-under-cap': badframes[6]['width'] = 640
+            elif kind == 'no-restored-high':
+                for frame in badframes[16:]: frame['width'] = 320
+            elif kind == 'no-frames':
+                for frame in badframes[8:12]: frame['frames'] = 0
+            elif kind == 'failed-state': badrows[-1]['hostStatus'] = 'failed'
+            else: badrows[-1]['hostFailureCount'] = 1
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                abr_accesslog.summarize_public_policy(badrows, badframes, badevents)
+
     def test_policy_scenarios_require_preroll_preparation(self):
         for scenario in ['caps-during-preparation', 'fixed-during-preparation']:
             for mode in ['manifest-only', 'asset-metadata', 'asset-preroll']:

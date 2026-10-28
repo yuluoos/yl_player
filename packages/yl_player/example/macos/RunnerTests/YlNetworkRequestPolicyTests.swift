@@ -547,6 +547,54 @@ final class YlNetworkRequestPolicyTests: XCTestCase {
     XCTAssertThrowsError(try YlManagedHTTPTransport.serialize(request))
   }
 
+  func testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions() throws {
+    for host in ["192.168.1.20", "10.0.0.2", "172.16.0.2", "203.0.113.7", "[2001:db8::1]", "[::ffff:192.0.2.1]"] {
+      let url = try XCTUnwrap(URL(string: "http://\(host)/bytes"))
+      XCTAssertNoThrow(try YlManagedTransportRestrictions.validate(url: url,
+        ats: ["NSAllowsLocalNetworking": true], proxySettings: [:]), host)
+      XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: url,
+        ats: ["NSAllowsLocalNetworking": false], proxySettings: [:]), host)
+      XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: url,
+        ats: ["NSAllowsLocalNetworking": true, "NSPinnedDomains": ["media.test": [:]]], proxySettings: [:]), host)
+    }
+    for host in ["192.168.1.20.example.test", "192.168.1.999", "media.test"] {
+      XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: XCTUnwrap(URL(string: "http://\(host)/bytes")),
+        ats: ["NSAllowsLocalNetworking": true], proxySettings: [:]), host)
+    }
+    let literal = try XCTUnwrap(URL(string: "http://192.168.1.20/bytes"))
+    XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: literal,
+      ats: ["NSAllowsLocalNetworking": true, "NSExceptionDomains": ["192.168.1.20": [:]]], proxySettings: [:]))
+    XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: literal,
+      ats: ["NSAllowsLocalNetworking": true, "NSExceptionDomains": ["192.168.1.0/24": [:]]], proxySettings: [:]),
+      "Unsupported CIDR exception semantics must fail closed")
+    XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: literal,
+      ats: ["NSAllowsLocalNetworking": true],
+      proxySettings: ["HTTPEnable": 1, "HTTPProxy": "proxy.test", "HTTPPort": 8080]))
+  }
+
+  func testLocalAddressExceptionsCannotBeBypassedBySchemeOrEquivalentSpelling() throws {
+    for key in ["NSExceptionMinimumTLSVersion", "NSRequiresCertificateTransparency"] {
+      let value: Any = key == "NSRequiresCertificateTransparency" ? true : "TLSv1.3"
+      XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: XCTUnwrap(URL(string: "https://192.168.1.20/bytes")),
+        ats: ["NSAllowsLocalNetworking": true, "NSExceptionDomains": ["192.168.1.0/24": [key: value]]], proxySettings: [:]))
+    }
+    for (host, exception) in [("192.168.001.020", "192.168.1.20"),
+                              ("[::ffff:192.0.2.1]", "0:0:0:0:0:ffff:c000:201"),
+                              ("[2001:db8::1]", "2001:0db8:0:0:0:0:0:1"),
+                              ("[::ffff:192.0.2.1]", "192.0.2.1")] {
+      let url = try XCTUnwrap(URL(string: "http://\(host)/bytes"))
+      XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: url,
+        ats: ["NSAllowsLocalNetworking": true, "NSExceptionDomains": [exception: [:]]], proxySettings: [:]), host)
+      XCTAssertNoThrow(try YlManagedTransportRestrictions.validate(url: url,
+        ats: ["NSAllowsLocalNetworking": false, "NSExceptionDomains": [exception: ["NSExceptionAllowsInsecureHTTPLoads": true]]],
+        proxySettings: [:]), host)
+    }
+    XCTAssertThrowsError(try YlManagedTransportRestrictions.validate(url: XCTUnwrap(URL(string: "http://192.168.1.20/bytes")),
+      ats: ["NSAllowsLocalNetworking": true, "NSExceptionDomains": [
+        "192.168.1.20": ["NSExceptionAllowsInsecureHTTPLoads": true], "192.168.001.020": [:]]], proxySettings: [:]),
+      "Ambiguous aliases with conflicting rules must fail closed")
+  }
+
   func testManagedTransportRejectsRequiredProxyAndATSRestrictions() throws {
     let https = URL(string: "https://media.test/bytes")!
     let http = URL(string: "http://media.test/bytes")!

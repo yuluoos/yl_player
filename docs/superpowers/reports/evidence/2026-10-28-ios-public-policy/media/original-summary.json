@@ -1,0 +1,52 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64e",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "modelName" : "iPhone 16",
+        "osBuildNumber" : "24B119",
+        "osVersion" : "27.2",
+        "platform" : "iOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1793189338.52,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793189329.193,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "failed: caught error: \"yl_player_apple.PigeonError\"",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlDashResourceLoaderTests/testActualOwnedDashAdaptiveObservation()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testActualOwnedDashAdaptiveObservation",
+      "testName" : "testActualOwnedDashAdaptiveObservation()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 1
+}

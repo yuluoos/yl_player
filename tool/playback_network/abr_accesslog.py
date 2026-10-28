@@ -223,6 +223,77 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
         physicalOutputVerified=False)
 
 
+def summarize_public_policy(rows, frames, events):
+    """Require real typed-host policy commits and frame evidence for every phase."""
+    phases = ['initial-auto', 'caps', 'clear-caps', 'fixed', 'restore-auto']
+    def require(value):
+        if not value: raise ValueError('incomplete public host policy evidence')
+    def finite(value):
+        return type(value) in (int, float) and math.isfinite(value) and value >= 0
+    require(isinstance(rows, list) and bool(rows) and isinstance(frames, list))
+    require(isinstance(events, list) and len(events) == 4)
+    session = rows[0].get('sessionId')
+    require(isinstance(session, str) and bool(session))
+    previous = -1
+    for phase, event in zip(phases[1:], events):
+        require(isinstance(event, dict) and event.get('phase') == phase and
+                event.get('applied') is True and event.get('itemChanged') is True and
+                event.get('sessionId') == session and finite(event.get('elapsed')) and
+                finite(event.get('elapsedAfter')) and previous < event['elapsed'] <= event['elapsedAfter'])
+        previous = event['elapsedAfter']
+    require(all(isinstance(row, dict) and row.get('publicPolicyCycle') is True and
+                row.get('sessionId') == session and row.get('hostFailureCount') == 0 and
+                row.get('hostStatus') in ('loading', 'ready', 'playing', 'paused', 'buffering', 'completed') and finite(row.get('elapsed'))
+                for row in rows))
+    require(all(a['elapsed'] < b['elapsed'] for a, b in zip(rows, rows[1:])))
+    require(all(isinstance(frame, dict) and finite(frame.get('elapsed')) and
+                type(frame.get('frames')) is int and frame['frames'] >= 0 and
+                type(frame.get('width')) is int and 0 <= frame['width'] <= 16384 for frame in frames))
+    require(all(a['elapsed'] < b['elapsed'] for a, b in zip(frames, frames[1:])))
+    observed = []
+    for row in rows:
+        phase = row.get('policyPhase')
+        require(phase in phases)
+        if not observed or observed[-1] != phase: observed.append(phase)
+    require(observed == phases)
+    summaries = []
+    for i, phase in enumerate(phases):
+        start = events[i-1]['elapsedAfter'] if i else rows[0]['elapsed']
+        end = events[i]['elapsed'] if i < 4 else rows[-1]['elapsed'] + 1
+        selected = [row for row in rows if row['policyPhase'] == phase]
+        require(len(selected) >= 3 and all(start <= row['elapsed'] <= end for row in selected))
+        expected_id = 'dash-video-w320-h180-b350000' if phase == 'fixed' else None
+        require(all(row.get('fixedTrackId') == expected_id and
+                    'fixedTrackId' in row and 'acceptedMaximumWidth' in row and
+                    row.get('acceptedMaximumWidth') == (320 if phase == 'caps' else None) and
+                    'acceptedMaximumHeight' in row and row['acceptedMaximumHeight'] is None and
+                    'acceptedMaximumBitrate' in row and row['acceptedMaximumBitrate'] is None and
+                    row.get('peak') == 0 and row.get('maximumWidth') == (320 if phase == 'caps' else 0) and
+                    row.get('maximumHeight') == (100000 if phase == 'caps' else 0)
+                    for row in selected))
+        published = [frame for frame in frames if start <= frame['elapsed'] < end and frame['frames'] > 0]
+        require(len(published) >= 3)
+        widths = sorted(set(frame['width'] for frame in published))
+        if phase in ('caps', 'fixed'): require(widths == [320])
+        else: require(640 in widths)
+        summaries.append(dict(phase=phase, rows=len(selected), publishedFrames=sum(f['frames'] for f in published), widths=widths))
+    return dict(phasesVerified=phases, phases=summaries, sameSession=True,
+                capabilityAccepted=False, physicalOutputVerified=False, continuityAccepted=False)
+
+
+def public_policy_cycle(args):
+    enabled = getattr(args, 'public_policy_cycle', False)
+    if type(enabled) is not bool or (enabled and (
+            getattr(args, 'duration_seconds', 40) != 120 or
+            getattr(args, 'direct_hls_control', False) or
+            getattr(args, 'recovery_action', 'none') != 'none' or
+            getattr(args, 'auto_scenario', 'normal') != 'normal' or
+            getattr(args, 'candidate_preparation', 'manifest-only') != 'manifest-only' or
+            getattr(args, 'startup_delay_ms', 0) != 0)):
+        raise ValueError('public policy cycle requires managed 120s with no recovery intervention')
+    return enabled
+
+
 def summarize_frames(rows, *, expected_frames):
     def require(value):
         if not value: raise ValueError('invalid frame publication observation')
@@ -388,6 +459,8 @@ def run(args):
         paths=[p for p in products.rglob('*') if p.is_file() and ('.app/' in str(p) or p.suffix=='.xctestrun')]
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     try:
+        cycle = public_policy_cycle(args)
+        receipt['publicPolicyCycle'] = cycle
         host = getattr(args, 'owned_host', None)
         if physical_device:
             if args.device or not re.fullmatch('[0-9A-Fa-f]{8}-[0-9A-Fa-f]{16}', physical_device) or host is None:
@@ -450,6 +523,7 @@ def run(args):
             YL_ABR_PROBE_DEVICE='1' if physical_device else '0', YL_ABR_PROBE_OWNED_HOST=host if physical_device else '',
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
+            YL_ABR_PROBE_PUBLIC_POLICY_CYCLE='1' if cycle else '0',
             YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
             YL_ABR_PROBE_CANDIDATE_PREPARATION=preparation_mode,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
@@ -482,6 +556,11 @@ def run(args):
         # Keep valid publication evidence even when playback never reaches EOF.
         receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
             expected_frames=rows[-1]['framesPublished'])
+        if cycle:
+            receipt['publicPolicyObservation'] = summarize_public_policy(rows,
+                read_rows(out/'frame-samples.jsonl'), json.loads((out/'public-policy-events.json').read_text()))
+        elif any(row.get('publicPolicyCycle') is True for row in rows):
+            raise ValueError('unexpected public host policy capture')
         validate_candidate_preparation(rows, preparation_mode)
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
@@ -537,6 +616,8 @@ def main():
     p.add_argument('--auto-scenario', choices=('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation'), default='normal')
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
+    p.add_argument('--public-policy-cycle', action='store_true',
+                   help='typed public host auto/caps/clear/fixed/auto media matrix; no recovery intervention')
     p.add_argument('--direct-hls-control',action='store_true',
                    help='system-only direct HLS control; not a production DASH acceptance run')
     p.add_argument('--profile',default='down-and-recover-v1');a=p.parse_args()

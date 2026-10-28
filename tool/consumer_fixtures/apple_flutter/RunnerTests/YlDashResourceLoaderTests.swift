@@ -342,6 +342,44 @@ private enum AbrDiagnosticCaptureURL {
 }
 
 final class YlDashResourceLoaderTests: XCTestCase {
+  @MainActor func testDelayedItemReadinessPreservesAcknowledgedPause() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    let player = AVPlayer(), output = AppleTestTexture()
+    var tick: (() -> Void)?, states = [YlNativeState]()
+    let backend = YlAvPlayerBackend(playerId: 995,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+    try backend.open(.init(uri: media.absoluteString, kind: .file, formatHint: .mp4))
+    try await AppleHostCharacterizations.waitFor { states.last?.status == "ready" }
+    XCTAssertFalse(backend.playbackIntent, "Initial readiness does not request playback")
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return !output.frames.isEmpty }, timeout: 5)
+    try backend.pause()
+    try await AppleHostCharacterizations.waitFor { states.last?.status == "paused" }
+    let item = try XCTUnwrap(player.currentItem)
+    XCTAssertEqual(item.status, .readyToPlay)
+    let paused = CMTimeGetSeconds(player.currentTime())
+    // Deliver an unchanged ready status after the pause, as a queued KVO callback can.
+    item.willChangeValue(forKey: "status")
+    item.didChangeValue(forKey: "status")
+    await withCheckedContinuation { continuation in
+      DispatchQueue.main.async { continuation.resume() }
+    }
+    XCTAssertEqual(states.last?.status, "paused")
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(player.rate, 0)
+    XCTAssertEqual(CMTimeGetSeconds(player.currentTime()), paused, accuracy: 0.05)
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return CMTimeGetSeconds(player.currentTime()) > paused + 0.1 }, timeout: 5)
+    XCTAssertTrue(backend.playbackIntent)
+  }
+
   #if os(iOS)
   @MainActor func testAudioRouteLossPausesIntentWithoutNetworkTimeoutAndRequiresExplicitResume() async throws {
     let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
@@ -746,9 +784,14 @@ final class YlDashResourceLoaderTests: XCTestCase {
     guard !["pause-during-preparation", "seek-during-preparation", "caps-during-preparation", "fixed-during-preparation"].contains(autoScenario) || candidatePreparation == "asset-preroll" else {
       XCTFail("Mid-preparation pause requires preroll"); return
     }
+    let publicPolicyCycle = env["YL_ABR_PROBE_PUBLIC_POLICY_CYCLE"] == "1"
+    guard !publicPolicyCycle || (!direct && programmeSeconds == 120 && recoveryAction == "none"
+      && autoScenario == "normal" && candidatePreparation == "manifest-only" && startupDelayMs == 0) else {
+      XCTFail("Public policy cycle requires managed 120s without diagnostic recovery"); return
+    }
     // Preserve the historical managed probe's preparation-before-player order.
     let prepared: YlPreparedHlsAsset?
-    if direct {
+    if direct || publicPolicyCycle {
       prepared = nil
       if startupDelayMs > 0 {
         // Explicitly arm the same first-GET clock before the diagnostic delay.
@@ -775,11 +818,35 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var states: [YlNativeState] = []
     var backendFailure: String?
     var backend: YlAvPlayerBackend?
+    var publicHost: YlApplePlayerHost?
+    let publicCallbacks = AppleRecordingCallbacks()
+    var publicSessionId: String?
+    var policyPhase = "initial-auto"
+    var publicPolicyEvents: [[String: Any]] = []
     let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
     var directOutput: AVPlayerItemVideoOutput?
     var directCompleted = false
     var endTask: Task<Void, Never>?
-    if direct {
+    defer { endTask?.cancel(); publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
+    if publicPolicyCycle {
+      let host = YlApplePlayerHost(playerId: 991, suffix: "abr-public-policy",
+        options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
+        services: .init(platform: .current, textureOutput: output,
+          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player)
+      publicHost = host
+      try host.attach()
+      do {
+        let loaded = try await host.load(request: AppleHostFixture.request("public-policy-cycle",
+          url: url.absoluteString, format: .dash, autoplay: true))
+        publicSessionId = loaded.sessionId
+      } catch {
+        let code = (error as? PigeonError)?.code ?? "unknown"
+        NSLog("[YL-ABR] publicHostLoadFailure code=%@", code)
+        try JSONSerialization.data(withJSONObject: ["stage": "load", "code": code], options: [.sortedKeys])
+          .write(to: directory.appendingPathComponent("public-policy-failure.json"), options: .atomic)
+        throw error
+      }
+    } else if direct {
       // System-only control: same owned media/timelines/constraints; bypass the
       // project's manifest loader, loopback media proxy and backend policies.
       let item = AVPlayerItem(url: url.deletingLastPathComponent().appendingPathComponent("direct-master.m3u8"))
@@ -815,13 +882,20 @@ final class YlDashResourceLoaderTests: XCTestCase {
       try value.stagePreparedHls(source: source, prepared: XCTUnwrap(prepared), resume: false)
       try value.activate(); try value.play()
     }
-    defer { endTask?.cancel(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
     _ = FileManager.default.createFile(atPath: directory.appendingPathComponent("rows.jsonl").path, contents: nil)
     let file = try FileHandle(forWritingTo: directory.appendingPathComponent("rows.jsonl"))
     defer { try? file.close() }
     let started = ProcessInfo.processInfo.systemUptime
     #if os(iOS)
+    let previousIdleTimer = UIApplication.shared.isIdleTimerDisabled
+    UIApplication.shared.isIdleTimerDisabled = true
+    defer { UIApplication.shared.isIdleTimerDisabled = previousIdleTimer }
     let notificationCenter = NotificationCenter.default
+    let signalsURL = directory.appendingPathComponent("signals.jsonl")
+    _ = FileManager.default.createFile(atPath: signalsURL.path, contents: nil)
+    let signalsFile = try FileHandle(forWritingTo: signalsURL)
+    defer { try? signalsFile.close() }
+    var signalWriteFailed = false
     var signalTokens: [NSObjectProtocol] = []
     for (name, kind) in [(AVAudioSession.routeChangeNotification, "audioRoute"),
                          (AVAudioSession.interruptionNotification, "audioInterruption"),
@@ -829,12 +903,17 @@ final class YlDashResourceLoaderTests: XCTestCase {
                          (UIApplication.didBecomeActiveNotification, "didBecomeActive"),
                          (UIApplication.didEnterBackgroundNotification, "didEnterBackground"),
                          (UIApplication.willEnterForegroundNotification, "willEnterForeground")] {
-      signalTokens.append(notificationCenter.addObserver(forName: name, object: nil, queue: nil) { notification in
+      signalTokens.append(notificationCenter.addObserver(forName: name, object: nil, queue: .main) { notification in
         let reason = (notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? NSNumber)?.intValue ?? -1
         let interruption = (notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber)?.intValue ?? -1
         let options = (notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? NSNumber)?.intValue ?? -1
         NSLog("[YL-ABR] elapsed=%.6f signal=%@ reason=%ld interruption=%ld options=%ld",
           ProcessInfo.processInfo.systemUptime - started, kind, reason, interruption, options)
+        let row: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
+          "signal": kind, "reason": reason, "interruption": interruption, "options": options,
+          "applicationState": UIApplication.shared.applicationState.rawValue]
+        do { try signalsFile.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])) }
+        catch { signalWriteFailed = true }
       })
     }
     defer { signalTokens.forEach(notificationCenter.removeObserver) }
@@ -935,22 +1014,32 @@ final class YlDashResourceLoaderTests: XCTestCase {
          "bytes": $0.numberOfBytesTransferred, "requests": $0.numberOfMediaRequests,
          "segmentsDuration": finite($0.segmentsDownloadedDuration), "stalls": $0.numberOfStalls, "downloadOverdue": $0.downloadOverdue]
       }
+      let publicState = publicHost?.initialState
+      let fixedTrackId = publicState?.videoSelection?.fixedTrackId ?? backend?.videoSelection.fixedTrackId
+      let reachedEnd = publicState.map { $0.status == .completed } ?? (direct ? directCompleted : states.last?.status == "completed")
       let row: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
         "position": finite(CMTimeGetSeconds(player.currentTime())), "rate": player.rate,
         "status": item.status.rawValue, "width": item.presentationSize.width,
         "height": item.presentationSize.height, "peak": item.preferredPeakBitRate,
         "maximumWidth": item.preferredMaximumResolution.width,
         "maximumHeight": item.preferredMaximumResolution.height,
-        "fixedTrackId": backend?.videoSelection.fixedTrackId as Any? ?? NSNull(),
+        "fixedTrackId": fixedTrackId as Any? ?? NSNull(),
         "unconstrainedPolicy": AbrDiagnosticRecoveryEligibility.permitsPolicy(
           peakBitRate: item.preferredPeakBitRate, maximumResolution: item.preferredMaximumResolution,
-          fixedTrackId: backend?.videoSelection.fixedTrackId),
+          fixedTrackId: fixedTrackId),
         "forwardBuffer": item.preferredForwardBufferDuration, "logs": logs,
         "errors": errors, "errorLogEventCount": item.errorLog()?.events.count ?? 0,
         "bufferEmpty": item.isPlaybackBufferEmpty, "bufferFull": item.isPlaybackBufferFull,
         "likelyToKeepUp": item.isPlaybackLikelyToKeepUp, "timeControlStatus": player.timeControlStatus.rawValue,
         "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
+        "publicPolicyCycle": publicPolicyCycle, "policyPhase": policyPhase,
+        "sessionId": publicHost?.sessionId as Any? ?? NSNull(),
+        "acceptedMaximumWidth": publicHost?.acceptedVideoConstraints.maxWidth as Any? ?? NSNull(),
+        "acceptedMaximumHeight": publicHost?.acceptedVideoConstraints.maxHeight as Any? ?? NSNull(),
+        "acceptedMaximumBitrate": publicHost?.acceptedVideoConstraints.maxBitrate as Any? ?? NSNull(),
+        "hostStatus": publicState.map { String(describing: $0.status) } as Any? ?? NSNull(),
+        "hostFailureCount": publicCallbacks.failures.count,
         "candidatePreparation": candidatePreparation,
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
         "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
@@ -959,10 +1048,44 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 1, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
-        "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
+        "completed": reachedEnd, "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
-      if direct ? directCompleted : states.last?.status == "completed" { completed = true; break }
+      if reachedEnd { completed = true; break }
+      if let host = publicHost, let sessionId = publicSessionId {
+        let schedule: [(String, Double)] = [("caps", 8), ("clear-caps", 24), ("fixed", 50), ("restore-auto", 70)]
+        let index = publicPolicyEvents.count
+        if index < schedule.count, ProcessInfo.processInfo.systemUptime - started >= schedule[index].1 {
+          let phase = schedule[index].0
+          var event: [String: Any] = ["phase": phase, "elapsed": ProcessInfo.processInfo.systemUptime - started,
+            "applied": false, "sessionId": sessionId]
+          let beforeItem = player.currentItem
+          publicPolicyEvents.append(event)
+          let eventsURL = directory.appendingPathComponent("public-policy-events.json")
+          func writeEvents() throws {
+            try JSONSerialization.data(withJSONObject: publicPolicyEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
+          }
+          try writeEvents()
+          do {
+            if phase == "caps" || phase == "clear-caps" {
+              try await host.setVideoConstraints(command: .init(sessionId: sessionId,
+                constraints: .init(maxWidth: phase == "caps" ? 320 : nil)))
+            } else {
+              let id = phase == "fixed" ? "dash-video-w320-h180-b350000" : nil
+              try await host.selectVideoTrack(command: .init(sessionId: sessionId, trackId: id))
+            }
+            event["applied"] = true
+            event["itemChanged"] = player.currentItem !== beforeItem
+            event["sessionId"] = host.sessionId
+            event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+            policyPhase = phase
+          } catch {
+            event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+            publicPolicyEvents[index] = event; try writeEvents(); throw error
+          }
+          publicPolicyEvents[index] = event; try writeEvents()
+        }
+      }
       XCTAssertNotEqual(item.status, .failed)
       if item.status == .failed { break }
       // Explicit experiment only: never install a wall-clock/error-code retry
@@ -1161,8 +1284,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertTrue(completed)
     framePump.cancel(); await framePump.value
     XCTAssertFalse(frameWriteFailed)
+    #if os(iOS)
+    XCTAssertFalse(signalWriteFailed)
+    #endif
     XCTAssertGreaterThanOrEqual(CMTimeGetSeconds(player.currentTime()), Double(programmeSeconds) - 0.5)
-    backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil)
+    publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil)
     XCTAssertNil(player.currentItem)
   }
 

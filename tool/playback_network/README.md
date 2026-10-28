@@ -455,3 +455,22 @@ Inspect all later rows and frames for preserved selection and compliant output.
 A new generation in these scenarios comes from the injected user policy, not an
 automatic recovery success. This is backend-path coverage, not the full public
 host auto/caps/fixed matrix or physical continuity acceptance.
+
+### Typed public-host policy cycle
+
+`abr_accesslog.py --public-policy-cycle --duration-seconds 120` runs the existing
+owned capture through `YlApplePlayerHost.load`, `setVideoConstraints`, and
+`selectVideoTrack`: initial auto, 320-width cap at 8 seconds, clear at 24 seconds,
+fixed low track at 50 seconds, and auto at 70 seconds. It requires managed DASH,
+no diagnostic recovery, no preparation experiment, and no startup delay. The
+frozen network profile, media duration, and capture deadlines stay unchanged.
+
+`public-policy-events.json` records each command and actual item/session change.
+The receipt requires all five ordered phases in the same session, accepted
+constraints/selection, at least three samples and three new-frame submissions
+per phase, only 320-wide new frames while capped/fixed, and a 640-wide new frame
+in each unrestricted phase. Missing commands, failed application, host failures,
+or missing frame evidence reject the run even if EOF was reached. The usual
+full frame-gap evidence is retained. This native typed-host matrix does not
+exercise the Dart messenger, automatic recovery competition, physical screen,
+or audio/subtitle continuity; it never marks capability acceptance.

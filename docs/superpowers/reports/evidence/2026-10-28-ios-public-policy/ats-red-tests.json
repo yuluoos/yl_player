@@ -1,0 +1,95 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertNoThrow failed: threw error \"Playback operation failed.\" - 192.168.1.20",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+                        "lineNumber" : 553
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertNoThrow failed: threw error \"Playback operation failed.\" - 10.0.0.2",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+                        "lineNumber" : 553
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertNoThrow failed: threw error \"Playback operation failed.\" - 172.16.0.2",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+                        "lineNumber" : 553
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertNoThrow failed: threw error \"Playback operation failed.\" - 203.0.113.7",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+                        "lineNumber" : 553
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertNoThrow failed: threw error \"Playback operation failed.\" - [::ffff:192.0.2.1]",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+                        "lineNumber" : 553
+                      }
+                    }
+                  ],
+                  "duration" : "0.19s",
+                  "durationInSeconds" : 0.19119703769683838,
+                  "name" : "testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions()",
+                  "nodeIdentifier" : "YlNetworkRequestPolicyTests/testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests/testManagedLocalNetworkingAdmitsLiteralAddressesButRetainsExplicitRestrictions",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "YlNetworkRequestPolicyTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlNetworkRequestPolicyTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

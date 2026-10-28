@@ -1,0 +1,11 @@
+Reviewer: /root/public_policy_review (read-only independent review)
+Final targeted conclusion:
+已发现的两项ATS P1（HTTPS CIDR早退、等价IP拼写绕过）均修复闭合；暂停状态覆盖修复定向复核通过，当前未发现未解决的P1/P2。
+ATS按地址字节匹配等价IP，冲突别名拒绝；CIDR失败关闭覆盖HTTPS。
+延迟ready回调保留已确认暂停，初始ready、新加载及显式恢复播放行为保持正确。
+iOS202/202、macOS177/177均无失败跳过，身份唯一且包含新增回归。
+21项源码身份全部匹配；镜像声明839/883、历史来源校验通过。
+消费者45通过、1历史focused evidence缺失跳过；未隐藏跳过。
+原始失败receipt、相关完整xcresult均保留；102行台账状态未变。
+新增KVO测试有Swift6异步上下文迁移警告，当前Swift5构建通过；无挂起点，非当前运行时失败。
+本次复审时最终媒体和归档仍待完成，后续单独核验记录完整性。

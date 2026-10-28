@@ -1,0 +1,50 @@
+[
+  {
+    "name": "reviewed-original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-public-policy-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-public-policy/media/reviewed-original",
+      "--physical-device",
+      "00008140-000C49CC3493001C",
+      "--owned-host",
+      "192.168.1.20",
+      "--duration-seconds",
+      "120",
+      "--profile",
+      "down-and-recover-v1",
+      "--public-policy-cycle"
+    ],
+    "exitCode": 0,
+    "seconds": 133.73148120799988
+  },
+  {
+    "name": "reviewed-zero-latency",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-public-policy-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-public-policy/media/reviewed-zero-latency",
+      "--physical-device",
+      "00008140-000C49CC3493001C",
+      "--owned-host",
+      "192.168.1.20",
+      "--duration-seconds",
+      "120",
+      "--profile",
+      "stall-headroom-zero-latency-diagnostic-v1",
+      "--public-policy-cycle",
+      "--profiles",
+      "/private/tmp/yl-public-policy/latency-profiles.json"
+    ],
+    "exitCode": 1,
+    "seconds": 57.42802366699971
+  }
+]

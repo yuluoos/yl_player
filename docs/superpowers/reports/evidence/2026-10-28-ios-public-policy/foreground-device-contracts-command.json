@@ -1,0 +1,15 @@
+[
+  "xcodebuild",
+  "test-without-building",
+  "-quiet",
+  "-xctestrun",
+  "/private/tmp/yl-public-policy-ios/Build/Products/Runner_iphoneos27.1-arm64.xctestrun",
+  "-destination",
+  "platform=iOS,id=00008140-000C49CC3493001C",
+  "-parallel-testing-enabled",
+  "NO",
+  "-resultBundlePath",
+  "/private/tmp/yl-public-policy/foreground-device-contracts.xcresult",
+  "-only-testing:RunnerTests/YlDashResourceLoaderTests/testAudioRouteLossPausesIntentWithoutNetworkTimeoutAndRequiresExplicitResume",
+  "-only-testing:RunnerTests/YlDashResourceLoaderTests/testPrerollCandidateCreatesFreshItemAndCancelsAfterRealReadiness"
+]
