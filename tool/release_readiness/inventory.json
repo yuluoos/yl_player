@@ -754,6 +754,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-28-dart-credential-race.md",
       "sha256": "4abd826359bbe069631ba22a2e76d7d17a6c8702026f1110959ec5ca5532885e"
+    },
+    "abr-original-recovery-20261028": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-28-abr-original-recovery.md",
+      "sha256": "fd1e8b5b748d27a374bec744c91f6db36867bd75eb03c644c918ea865054a4b8"
     }
   },
   "rows": [
@@ -797,10 +802,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "dart-credential-race-20261028"
+        "abr-original-recovery-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-other-commit-failures-high-output-original-auto-recovery-and-physical-output"
+      "nextAction": "qualify-production-auto-recovery-other-commit-failures-high-output-stability-and-physical-output"
     },
     {
       "requirement": "CAP-ABR",

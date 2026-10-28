@@ -1,0 +1,498 @@
+{
+  "current": {
+    "original": {
+      "completed": true,
+      "position": 120.023567921,
+      "elapsed": 121.99286425000173,
+      "transitions": [
+        {
+          "elapsed": 0.005109916673973203,
+          "position": 0,
+          "width": 0
+        },
+        {
+          "elapsed": 0.36726395833829883,
+          "position": 0,
+          "width": 320
+        },
+        {
+          "elapsed": 4.468985916668316,
+          "position": 4.019845003,
+          "width": 640
+        },
+        {
+          "elapsed": 23.704375458342838,
+          "position": 23.004169344,
+          "width": 320
+        },
+        {
+          "elapsed": 41.14470079167222,
+          "position": 39.238672682,
+          "width": 640
+        }
+      ],
+      "decisivePolicy": [
+        {
+          "elapsed": 33.59800279166666,
+          "reason": "firstQualifiedWindow",
+          "windowBitrate": 1149581.63004425,
+          "windowRequests": 23,
+          "qualifiedWindows": 1,
+          "pendingDue": null,
+          "attempts": 0
+        }
+      ],
+      "reasonCounts": {
+        "playbackIneligible": 7,
+        "insufficientBuffer": 47,
+        "highNotObserved": 12,
+        "highOutput": 285,
+        "windowStarted": 1,
+        "windowPending": 58,
+        "firstQualifiedWindow": 1,
+        "nearEnd": 58
+      },
+      "attempts": 0,
+      "tickets": 0,
+      "events": [],
+      "signals": [],
+      "observation": {
+        "schemaVersion": 1,
+        "geometryWidths": [
+          320,
+          640,
+          320,
+          640
+        ],
+        "downshiftObserved": true,
+        "recoveryInterventionApplied": false,
+        "highOutputAfterInterventionObserved": null,
+        "upshiftAfterDownshiftObserved": true,
+        "lastObservedBitrate": 1684368,
+        "lastIndicatedBitrate": 764000,
+        "framesPublished": 2880,
+        "diagnosticOnly": true,
+        "internalABRDecisionVerified": false,
+        "capabilityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "continuity": {
+        "frameSamplingVersion": 2,
+        "sampleCount": 6578,
+        "publishedFrames": 2880,
+        "maximumPumpGapMs": 41.03645832219627,
+        "maximumPublishedFrameGapMs": 1379.935499993735,
+        "lastPublicationSampleElapsed": 121.88441045834043,
+        "observationEndElapsed": 121.9729612916708,
+        "trailingNoPublicationMs": 88.55083333037328,
+        "replacementBoundaries": [],
+        "generationsWithoutPublishedFrame": [],
+        "continuityAccepted": false,
+        "audioSynchronizationVerified": false,
+        "physicalOutputVerified": false
+      },
+      "actualHighPublishedFrames": 2400,
+      "highFramesAfterInstall": [],
+      "diagnosticOnly": true,
+      "capabilityAccepted": false,
+      "receiptPassed": true
+    },
+    "zero-latency": {
+      "completed": true,
+      "position": 120.030738391,
+      "elapsed": 120.89058187500632,
+      "transitions": [
+        {
+          "elapsed": 0.003522875005728565,
+          "position": 0,
+          "width": 0
+        },
+        {
+          "elapsed": 0.3343285000009928,
+          "position": 0,
+          "width": 320
+        },
+        {
+          "elapsed": 4.4437488749972545,
+          "position": 4.026186601,
+          "width": 640
+        },
+        {
+          "elapsed": 20.536334583332064,
+          "position": 20.11853615,
+          "width": 320
+        },
+        {
+          "elapsed": 38.14655654167291,
+          "position": 37.495601158,
+          "width": 640
+        }
+      ],
+      "decisivePolicy": [
+        {
+          "elapsed": 28.630752875003964,
+          "reason": "firstQualifiedWindow",
+          "windowBitrate": 1748664.4612946361,
+          "windowRequests": 20,
+          "qualifiedWindows": 1,
+          "pendingDue": null,
+          "attempts": 0
+        },
+        {
+          "elapsed": 36.69876958333771,
+          "reason": "reserved",
+          "windowBitrate": 2734220.94189539,
+          "windowRequests": 18,
+          "qualifiedWindows": 0,
+          "pendingDue": 37.19876958333771,
+          "attempts": 1
+        },
+        {
+          "elapsed": 37.222792791668326,
+          "reason": "ticketReady",
+          "windowBitrate": null,
+          "windowRequests": null,
+          "qualifiedWindows": 0,
+          "pendingDue": null,
+          "attempts": 1
+        }
+      ],
+      "reasonCounts": {
+        "playbackIneligible": 2,
+        "insufficientBuffer": 37,
+        "highNotObserved": 12,
+        "highOutput": 292,
+        "windowStarted": 1,
+        "windowPending": 60,
+        "firstQualifiedWindow": 1,
+        "reserved": 1,
+        "backoff": 1,
+        "ticketReady": 1,
+        "nearEnd": 57
+      },
+      "attempts": 1,
+      "tickets": 1,
+      "events": [
+        {
+          "attempt": 1,
+          "credentialCommitAccepted": true,
+          "due": 37.19876958333771,
+          "elapsed": 37.22393479166203,
+          "elapsedAfter": 37.37066529165895,
+          "generation": 0,
+          "itemChanged": true,
+          "manifestPreparedElapsed": 37.36810783333203,
+          "outcome": "installed",
+          "positionBefore": 36.805060148,
+          "preparationCompletedElapsed": 37.36840474999917,
+          "textureClearsAfter": 1,
+          "textureClearsBefore": 1,
+          "ticketCredentialRevision": 0,
+          "ticketIntentRevision": 0
+        }
+      ],
+      "signals": [],
+      "observation": {
+        "schemaVersion": 1,
+        "geometryWidths": [
+          320,
+          640,
+          320,
+          640
+        ],
+        "downshiftObserved": true,
+        "recoveryInterventionApplied": true,
+        "highOutputAfterInterventionObserved": true,
+        "upshiftAfterDownshiftObserved": true,
+        "lastObservedBitrate": 4096874,
+        "lastIndicatedBitrate": 764000,
+        "framesPublished": 2881,
+        "diagnosticOnly": true,
+        "internalABRDecisionVerified": false,
+        "capabilityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "continuity": {
+        "frameSamplingVersion": 2,
+        "sampleCount": 6530,
+        "publishedFrames": 2881,
+        "maximumPumpGapMs": 31.797208343050443,
+        "maximumPublishedFrameGapMs": 334.2853333306266,
+        "lastPublicationSampleElapsed": 120.62346258333127,
+        "observationEndElapsed": 120.8886557083315,
+        "trailingNoPublicationMs": 265.1931250002235,
+        "replacementBoundaries": [
+          {
+            "generationBefore": 0,
+            "generationAfter": 1,
+            "elapsedBefore": 37.33765345833672,
+            "elapsedAfter": 37.47605595833738,
+            "publicationGapMs": 138.4025000006659,
+            "positionDeltaMs": 31.483710999999914,
+            "textureClears": 0
+          }
+        ],
+        "generationsWithoutPublishedFrame": [],
+        "continuityAccepted": false,
+        "audioSynchronizationVerified": false,
+        "physicalOutputVerified": false
+      },
+      "actualHighPublishedFrames": 2368,
+      "highFramesAfterInstall": [
+        {
+          "attempt": 1,
+          "frames": 1984
+        }
+      ],
+      "diagnosticOnly": true,
+      "capabilityAccepted": false,
+      "receiptPassed": true
+    }
+  },
+  "historical": {
+    "original-control": {
+      "completed": true,
+      "position": 120.022917323,
+      "elapsed": 122.93460720832809,
+      "transitions": [
+        {
+          "elapsed": 0.000939416655455716,
+          "position": 0,
+          "width": 0
+        },
+        {
+          "elapsed": 0.35481962499034125,
+          "position": 0,
+          "width": 320
+        },
+        {
+          "elapsed": 4.704687458332046,
+          "position": 4.136031359,
+          "width": 640
+        },
+        {
+          "elapsed": 22.866297541666427,
+          "position": 22.10414167,
+          "width": 320
+        },
+        {
+          "elapsed": 41.10350608332374,
+          "position": 38.308786426,
+          "width": 640
+        }
+      ],
+      "decisivePolicy": [
+        {
+          "elapsed": 33.56387595832348,
+          "reason": "firstQualifiedWindow",
+          "windowBitrate": 1021052.2901248274,
+          "windowRequests": 23,
+          "qualifiedWindows": 1,
+          "pendingDue": null,
+          "attempts": 0
+        }
+      ],
+      "reasonCounts": {
+        "playbackIneligible": 10,
+        "insufficientBuffer": 46,
+        "highNotObserved": 11,
+        "highOutput": 288,
+        "windowStarted": 1,
+        "windowPending": 58,
+        "firstQualifiedWindow": 1,
+        "nearEnd": 58
+      },
+      "attempts": 0,
+      "tickets": 0,
+      "events": [],
+      "signals": null,
+      "observation": {
+        "schemaVersion": 1,
+        "geometryWidths": [
+          320,
+          640,
+          320,
+          640
+        ],
+        "downshiftObserved": true,
+        "recoveryInterventionApplied": false,
+        "highOutputAfterInterventionObserved": null,
+        "upshiftAfterDownshiftObserved": true,
+        "lastObservedBitrate": 1444395,
+        "lastIndicatedBitrate": 764000,
+        "framesPublished": 2878,
+        "diagnosticOnly": true,
+        "internalABRDecisionVerified": false,
+        "capabilityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "continuity": {
+        "frameSamplingVersion": 2,
+        "sampleCount": 6632,
+        "publishedFrames": 2878,
+        "maximumPumpGapMs": 71.98033333406784,
+        "maximumPublishedFrameGapMs": 1337.978583324002,
+        "lastPublicationSampleElapsed": 122.75724337498832,
+        "observationEndElapsed": 122.91617116666748,
+        "trailingNoPublicationMs": 158.9277916791616,
+        "replacementBoundaries": [],
+        "generationsWithoutPublishedFrame": [],
+        "continuityAccepted": false,
+        "audioSynchronizationVerified": false,
+        "physicalOutputVerified": false
+      },
+      "actualHighPublishedFrames": 2400,
+      "highFramesAfterInstall": [],
+      "diagnosticOnly": true,
+      "capabilityAccepted": false
+    },
+    "auto-control": {
+      "completed": true,
+      "position": 120.020066468,
+      "elapsed": 120.7788894999976,
+      "transitions": [
+        {
+          "elapsed": 0.0015659166674595326,
+          "position": 0,
+          "width": 0
+        },
+        {
+          "elapsed": 0.33430666667118203,
+          "position": 0,
+          "width": 320
+        },
+        {
+          "elapsed": 4.415882291665184,
+          "position": 4.017695097,
+          "width": 640
+        },
+        {
+          "elapsed": 20.521776541660074,
+          "position": 20.123283941,
+          "width": 320
+        },
+        {
+          "elapsed": 38.130928416663664,
+          "position": 37.509871686,
+          "width": 640
+        }
+      ],
+      "decisivePolicy": [
+        {
+          "elapsed": 28.623616416662117,
+          "reason": "firstQualifiedWindow",
+          "windowBitrate": 1220636.6895982565,
+          "windowRequests": 18,
+          "qualifiedWindows": 1,
+          "pendingDue": null,
+          "attempts": 0
+        },
+        {
+          "elapsed": 36.68975166666496,
+          "reason": "reserved",
+          "windowBitrate": 1979226.952165639,
+          "windowRequests": 18,
+          "qualifiedWindows": 0,
+          "pendingDue": 37.18975166666496,
+          "attempts": 1
+        },
+        {
+          "elapsed": 37.21473204166978,
+          "reason": "ticketReady",
+          "windowBitrate": null,
+          "windowRequests": null,
+          "qualifiedWindows": 0,
+          "pendingDue": null,
+          "attempts": 1
+        }
+      ],
+      "reasonCounts": {
+        "playbackIneligible": 1,
+        "insufficientBuffer": 38,
+        "highNotObserved": 11,
+        "highOutput": 292,
+        "windowStarted": 1,
+        "windowPending": 60,
+        "firstQualifiedWindow": 1,
+        "reserved": 1,
+        "backoff": 1,
+        "ticketReady": 1,
+        "nearEnd": 58
+      },
+      "attempts": 1,
+      "tickets": 1,
+      "events": [
+        {
+          "attempt": 1,
+          "due": 37.18975166666496,
+          "elapsed": 37.215797666664,
+          "elapsedAfter": 37.362084291671636,
+          "generation": 0,
+          "itemChanged": true,
+          "manifestPreparedElapsed": 37.360059291662765,
+          "outcome": "installed",
+          "positionBefore": 36.816189604,
+          "preparationCompletedElapsed": 37.36010337500193,
+          "textureClearsAfter": 1,
+          "textureClearsBefore": 1
+        }
+      ],
+      "signals": null,
+      "observation": {
+        "schemaVersion": 1,
+        "geometryWidths": [
+          320,
+          640,
+          320,
+          640
+        ],
+        "downshiftObserved": true,
+        "recoveryInterventionApplied": true,
+        "highOutputAfterInterventionObserved": true,
+        "upshiftAfterDownshiftObserved": true,
+        "lastObservedBitrate": 3526529,
+        "lastIndicatedBitrate": 764000,
+        "framesPublished": 2880,
+        "diagnosticOnly": true,
+        "internalABRDecisionVerified": false,
+        "capabilityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "continuity": {
+        "frameSamplingVersion": 2,
+        "sampleCount": 6521,
+        "publishedFrames": 2880,
+        "maximumPumpGapMs": 94.62166666344274,
+        "maximumPublishedFrameGapMs": 311.38608332548756,
+        "lastPublicationSampleElapsed": 120.59973470833211,
+        "observationEndElapsed": 120.77678033332631,
+        "trailingNoPublicationMs": 177.04562499420717,
+        "replacementBoundaries": [
+          {
+            "generationBefore": 0,
+            "generationAfter": 1,
+            "elapsedBefore": 37.327474208330386,
+            "elapsedAfter": 37.482315833331086,
+            "publicationGapMs": 154.84162500069942,
+            "positionDeltaMs": 33.04051399999963,
+            "textureClears": 0
+          }
+        ],
+        "generationsWithoutPublishedFrame": [],
+        "continuityAccepted": false,
+        "audioSynchronizationVerified": false,
+        "physicalOutputVerified": false
+      },
+      "actualHighPublishedFrames": 2368,
+      "highFramesAfterInstall": [
+        {
+          "attempt": 1,
+          "frames": 1984
+        }
+      ],
+      "diagnosticOnly": true,
+      "capabilityAccepted": false
+    }
+  },
+  "sourceFilesUnchanged": 26
+}

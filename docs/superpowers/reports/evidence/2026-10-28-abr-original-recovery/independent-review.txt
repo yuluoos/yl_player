@@ -1,0 +1,15 @@
+独立综合复审（只读；基线 2a552cb8）
+结论：已核对范围内未发现 P1/P2，未发现将诊断结果外推为生产能力或连续性验收的不实声明。未启动新测试、修改源码或发布。
+
+核对证据：
+1. media/original 与 media/zero-latency 收据均 passed=false、exitCode=65；XCTest各0/1，requests.jsonl均为空。original原生日志含 -1009、Denied over Wi-Fi interface 和 network.offline。报告保留两次失败，未归因于 penalty box。
+2. 四轮receipt的307项binaryHashes逐项一致。成功两轮rows、policy-decisions、frame-samples、signals与device-export逐字节一致，场景均normal / auto-reload / manifest-only。
+3. original最终EOF120.023567921、640、2880帧，零票据零安装；第一窗口33.598002792秒、1149581.630 bit/s、23请求，41.144700792秒升640，第二窗口尚未满8秒，随后highOutput清零qualifiedWindows。报告自然恢复解释与原始记录一致。
+4. zero-latency最终EOF120.030738391、640、2881帧；两窗口28.630752875/36.698769583秒，20/18请求，37.222792792秒发唯一票据，真实itemChanged和credentialCommitAccepted均true。替换后generation=1实际640帧1984（全程640帧2368包含初始高档），报告已补清楚。只覆盖第一次500ms退避，未声称第二次退避或预算耗尽本轮真机覆盖。
+5. 独立从发布帧样本重算全程最大空档1379.935500/334.285333ms；替换边界138.402500ms、位置差31.483711ms、纹理清空增量0。报告区分边界与全程，physicalOutputVerified/audioSynchronizationVerified/continuityAccepted/capabilityAccepted保持false。
+6. 源码YlDashResourceLoaderTests.swift:1596明确publicPolicyRace即取消候选，正常分支才通过授权与凭据提交栅栏安装；报告保留历史public-policy-race低档失败，未用当前normal路径追认其通过。
+7. source-identity.json 26项当前哈希全部匹配，且与ios-postcommit-failure/source-identity.json完全相同；旧summary确认iPhone214、macOS189均通过且零跳过。8fee00f3..2a552cb8除台账仅两份Dart集成测试变更，原生/生产/构建相关源码未变，原生历史证据复用合理且报告明确未重跑。当前network-tests.log确认124项通过；readiness台账回归15项通过，结构检查0、两个require-ready退出1，sourceMatches=true、releaseReady=false。
+8. 全部102行requirement/platform/implementation/verification/acceptance与基线一致；旧Dart证据总表项和报告仍保留，新报告有链接。check.py:205限制直接证据最多20，故替换directref并通过报告链路保留历史可接受。
+9. 已独立逐文件核验历史21组5194项及清单哈希，全部一致。
+
+收尾边界：已进一步只读核验初版完整归档：148条清单、149项raw-provenance及四份完整xcresult全部匹配，bundle内部每个文件均与原始目录逐一比较。最终纳入本复审文本及更新正文后，仍需主执行者刷新归档清单和报告hash绑定。当前正文内容无阻断性问题；生产安全接入、其他提交后失败、高档稳定性、音画同步、物理连续性及缺资源平台项继续未验收。
