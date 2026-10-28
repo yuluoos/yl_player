@@ -353,3 +353,21 @@ that inter-frame maxima cannot show; it is not a new stall threshold, physical
 black-screen duration, or proof of output after capture ends. Valid frame
 observations are retained even if playback/EOF validation fails; the receipt
 continues to fail, and continuity/audio/physical acceptance remain false.
+
+Debug native captures may include `proxySamplingVersion=1`, a numeric `proxy`
+snapshot, and `sampleUptime` in the main rows. Admission/completion timestamps
+use the device's monotonic uptime, not origin-server elapsed time. Counters are
+scoped to the current loader and reset on item replacement; do not difference
+them across generations. Completion counts include cancellation callbacks after
+a local connection has already closed. They are not HTTP-success counts.
+`activeTasks`, `pendingSends` and `suspendedTasks` are sampled gauges of currently tracked records. A zero
+sample cannot rule out work between samples or detached callbacks after closure. No URL, headers or resource IDs
+are recorded by this snapshot. The observations do not alter proxy behavior.
+
+Frame rows additionally record `itemStatus` and `resumeSeekPending` in these
+builds. Their sampled transitions help bound exact-seek and first-buffer waits;
+`readyToPlay` is not assumed to precede the first pixel buffer. They do not
+measure decoder PTS, audible output, or justify bypassing the seek publication
+gate. Preserve the original publication gap even when the previous texture is
+retained, and compare diagnostic changes with the original built host when
+investigating observer overhead.

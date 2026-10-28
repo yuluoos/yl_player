@@ -209,6 +209,9 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   private let configuration: YlNetworkConfiguration
   private let mediaProxy: YlHlsMediaProxy
   private let upstreamDiagnostics = YlHlsUpstreamDiagnostics()
+  #if DEBUG
+  var diagnosticProxySnapshot: [String: Double] { mediaProxy.diagnosticSnapshot }
+  #endif
   var upstreamFailure: NativePlayerError? { upstreamDiagnostics.latestFailure }
   let trafficScope: YlManagedBufferScope?
   private let stateLock = NSLock()

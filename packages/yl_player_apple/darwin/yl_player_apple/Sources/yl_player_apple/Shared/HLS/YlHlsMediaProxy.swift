@@ -62,6 +62,27 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }
   }
 
+  #if DEBUG
+  // Numeric, per-proxy debug observations only. No resource/credential identity,
+  // no retained event history and no change to transport or admission decisions.
+  private var diagnosticCounters: [String: Double] = [
+    "acceptedConnections": 0, "admittedRequests": 0,
+    "upstreamCompletions": 0, "receivedBodyBytes": 0, "closedWithActiveTask": 0,
+    "cancelledCompletions": 0, "failedCompletions": 0,
+    "lastAdmissionUptime": 0, "lastCompletionUptime": 0]
+  var diagnosticSnapshot: [String: Double] {
+    lock.withLock {
+      var result = diagnosticCounters
+      result["activeConnections"] = Double(connections.count)
+      result["activeTasks"] = Double(taskRecords.count)
+      result["pendingSends"] = Double(taskRecords.values.reduce(0) { $0 + $1.pendingSends })
+      result["suspendedTasks"] = Double(connectionTasks.values.filter { $0.state == .suspended }.count)
+      result["cancelled"] = cancelled ? 1 : 0
+      return result
+    }
+  }
+  #endif
+
   let upstreamDiagnostics: YlHlsUpstreamDiagnostics
 
   private let queue = DispatchQueue(
@@ -218,6 +239,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let accepted = lock.withLock { () -> Bool in
       guard !cancelled else { return false }
       connections[identifier] = connection
+      #if DEBUG
+      diagnosticCounters["acceptedConnections", default: 0] += 1
+      #endif
       return true
     }
     guard accepted else {
@@ -306,6 +330,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       taskRecords[task.taskIdentifier]?.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: stripped)
       taskRecords[task.taskIdentifier]?.resourceKey = resourceKey
       connectionTasks[ObjectIdentifier(connection)] = task
+      #if DEBUG
+      diagnosticCounters["admittedRequests", default: 0] += 1
+      diagnosticCounters["lastAdmissionUptime"] = ProcessInfo.processInfo.systemUptime
+      #endif
       task.resume()
       return true
     }
@@ -371,7 +399,12 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       let identifier = ObjectIdentifier(connection)
       connections.removeValue(forKey: identifier)
       let task = connectionTasks.removeValue(forKey: identifier)
-      if let task { taskRecords.removeValue(forKey: task.taskIdentifier) }
+      if let task {
+        #if DEBUG
+        diagnosticCounters["closedWithActiveTask", default: 0] += 1
+        #endif
+        taskRecords.removeValue(forKey: task.taskIdentifier)
+      }
       return task
     }
     task?.cancel()
@@ -447,6 +480,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   ) {
     guard let record = lock.withLock({ taskRecords[dataTask.taskIdentifier] }),
           record.method != "HEAD" else { return }
+    #if DEBUG
+    lock.withLock { diagnosticCounters["receivedBodyBytes", default: 0] += Double(data.count) }
+    #endif
     trafficScope?.recordNetworkBytes(data.count)
     let payload: Data
     if record.usesChunkedTransfer {
@@ -514,6 +550,14 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     didCompleteWithError error: Error?
   ) {
     let outcome = lock.withLock { () -> (TaskRecord, Error?)? in
+      #if DEBUG
+      diagnosticCounters["upstreamCompletions", default: 0] += 1
+      diagnosticCounters["lastCompletionUptime"] = ProcessInfo.processInfo.systemUptime
+      if let error {
+        let cancelled = (error as NSError).domain == NSURLErrorDomain && (error as NSError).code == NSURLErrorCancelled
+        diagnosticCounters[cancelled ? "cancelledCompletions" : "failedCompletions", default: 0] += 1
+      }
+      #endif
       guard let record = taskRecords[task.taskIdentifier] else { return nil }
       record.upstreamFinished = true
       record.upstreamError = error

@@ -256,6 +256,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var lastSource: YlAppleSourceDescriptor?
   private var savedPositionMs: Int64 = 0
   private var savedPositionUs: Int64 = 0
+  #if DEBUG
+  var diagnosticProxySnapshot: [String: Double] { hlsResourceLoader?.diagnosticProxySnapshot ?? [:] }
+  var diagnosticResumeSeekPending: Bool { pendingRuntimeResume != nil }
+  #endif
   private var pendingRuntimeResume: (id: UUID, positionUs: Int64)?
   // Only replacement consumes this intent; ordinary publication uses the clock.
   private var pendingUserSeek: (id: UUID, generation: UInt64, positionUs: Int64)?

@@ -1,0 +1,138 @@
+{
+  "old-frozen-control": {
+    "passed": true,
+    "end": 120.029470928,
+    "binaryMatchesPrior": true,
+    "identity": true,
+    "cleanup": true,
+    "policy": {
+      "samples": 465,
+      "reasonCounts": {
+        "playbackIneligible": 2,
+        "insufficientBuffer": 25,
+        "highNotObserved": 11,
+        "highOutput": 54,
+        "windowStarted": 1,
+        "windowPending": 305,
+        "insufficientBandwidth": 10,
+        "nearEnd": 57
+      },
+      "attempts": 0,
+      "reservations": 0,
+      "tickets": 0,
+      "triggerExercised": false,
+      "windowBitrateMinimum": 268802.419471069,
+      "windowBitrateMaximum": 877386.7483998168,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6517,
+      "publishedFrames": 2880,
+      "maximumPumpGapMs": 43.481874992721714,
+      "maximumPublishedFrameGapMs": 317.41145833802875,
+      "lastPublicationSampleElapsed": 120.4755849166686,
+      "observationEndElapsed": 120.72269312498975,
+      "trailingNoPublicationMs": 247.10820832115132,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": false,
+      "highOutputAfterInterventionObserved": null,
+      "upshiftAfterDownshiftObserved": false,
+      "lastObservedBitrate": 990344,
+      "lastIndicatedBitrate": 414000,
+      "framesPublished": 2880,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    }
+  },
+  "old-latency-control": {
+    "passed": true,
+    "end": 120.02412337,
+    "binaryMatchesPrior": true,
+    "identity": true,
+    "cleanup": true,
+    "policy": {
+      "samples": 466,
+      "reasonCounts": {
+        "playbackIneligible": 2,
+        "insufficientBuffer": 38,
+        "highNotObserved": 34,
+        "highOutput": 270,
+        "windowStarted": 1,
+        "windowPending": 60,
+        "firstQualifiedWindow": 1,
+        "reserved": 1,
+        "backoff": 1,
+        "ticketReady": 1,
+        "nearEnd": 57
+      },
+      "attempts": 1,
+      "reservations": 1,
+      "tickets": 1,
+      "triggerExercised": true,
+      "windowBitrateMinimum": 1573719.8248557372,
+      "windowBitrateMaximum": 1611752.8821699196,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6552,
+      "publishedFrames": 2880,
+      "maximumPumpGapMs": 70.35287500184495,
+      "maximumPublishedFrameGapMs": 405.31979166553356,
+      "lastPublicationSampleElapsed": 120.93236041667114,
+      "observationEndElapsed": 121.1797378333431,
+      "trailingNoPublicationMs": 247.37741667195223,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 34.8567907083343,
+          "elapsedAfter": 34.97877108333341,
+          "publicationGapMs": 121.98037499911152,
+          "positionDeltaMs": 16.23146899999739,
+          "textureClears": 0
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320,
+        640
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": true,
+      "highOutputAfterInterventionObserved": true,
+      "upshiftAfterDownshiftObserved": true,
+      "lastObservedBitrate": 3109929,
+      "lastIndicatedBitrate": 764000,
+      "framesPublished": 2880,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    }
+  }
+}

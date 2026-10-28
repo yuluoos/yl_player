@@ -1,0 +1,19 @@
+{
+  "reviewer": "/root/boundary_review",
+  "base": "0e23b556",
+  "readOnly": true,
+  "newBlockingFindings": [],
+  "checks": [
+    "release-source conditional comparison",
+    "mirror parity",
+    "counter locking and retired callbacks",
+    "six raw media/policy/frame runs",
+    "test evidence and report scope"
+  ],
+  "nonBlockingSuggestions": [
+    "clarify each platform four-class total 130",
+    "state active cancellation classification is not deterministically covered",
+    "gauges cover tracked records, not all detached callbacks"
+  ],
+  "resolution": "All three limitations explicitly documented in report and README; no code changes required."
+}

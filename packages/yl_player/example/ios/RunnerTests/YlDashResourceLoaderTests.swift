@@ -416,7 +416,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
         let sample: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
           "generation": frameGeneration, "frames": count, "width": width, "textureClears": output.clears,
           "position": position.isFinite ? position : 0, "rate": player.rate,
-          "timeControlStatus": player.timeControlStatus.rawValue]
+          "timeControlStatus": player.timeControlStatus.rawValue,
+          "itemStatus": player.currentItem?.status.rawValue ?? -1,
+          "resumeSeekPending": backend?.diagnosticResumeSeekPending ?? false]
         do { try frameFile.write(contentsOf: JSONSerialization.data(withJSONObject: sample, options: [.sortedKeys]) + Data([10])) }
         catch { frameWriteFailed = true; return }
         try? await Task.sleep(nanoseconds: 16_000_000)
@@ -489,6 +491,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
         "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
+        "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? [:],
+        "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 1, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
         "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
@@ -2120,6 +2124,38 @@ final class YlDashResourceLoaderTests: XCTestCase {
         XCTAssertEqual(coordinator.identity?.sessionId, restoring ? "accepted" : "new-load")
       }
     }
+  }
+
+  func testProxyBoundarySnapshotTracksRealRequestAndCancellationWithoutResourceIdentity() throws {
+    let server = try DashHTTPServer()
+    defer { server.close() }
+    server.handler = { _ in (200, [:], Data([1, 2, 3, 4])) }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/private?token=secret"),
+      headers: ["Authorization": "secret"], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    XCTAssertEqual(proxy.diagnosticSnapshot["admittedRequests"], 0)
+    let done = expectation(description: "real proxied bytes")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/private?token=secret"))) { body, _, error in
+      XCTAssertNil(error); XCTAssertEqual(body, Data([1, 2, 3, 4])); done.fulfill()
+    }.resume()
+    wait(for: [done], timeout: 4)
+    let deadline = Date().addingTimeInterval(2)
+    while (proxy.diagnosticSnapshot["activeTasks"] != 0 || proxy.diagnosticSnapshot["upstreamCompletions"] != 1) && Date() < deadline {
+      RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+    }
+    let snapshot = proxy.diagnosticSnapshot
+    XCTAssertEqual(snapshot["acceptedConnections"], 1)
+    XCTAssertEqual(snapshot["admittedRequests"], 1)
+    XCTAssertEqual(snapshot["upstreamCompletions"], 1)
+    XCTAssertEqual(snapshot["receivedBodyBytes"], 4)
+    XCTAssertEqual(snapshot["activeTasks"], 0)
+    XCTAssertEqual(snapshot["pendingSends"], 0)
+    XCTAssertGreaterThan(snapshot["lastAdmissionUptime"] ?? 0, 0)
+    XCTAssertTrue(snapshot.keys.allSatisfy { !$0.contains("secret") && !$0.contains("private") })
+    proxy.cancelAll()
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeConnections"], 0)
+    XCTAssertEqual(proxy.diagnosticSnapshot["cancelled"], 1)
+    XCTAssertEqual(proxy.diagnosticSnapshot["admittedRequests"], 1)
   }
 
   func testProxyCancellationCannotInvalidateSessionDuringTaskAdmission() throws {
