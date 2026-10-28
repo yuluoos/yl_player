@@ -63,6 +63,56 @@ and Dispose. App-managed audio leaves focus decisions to the application. One
 active Android video decoder lease is granted at a time; memory and lifecycle
 events can quiesce and reconstruct the active session.
 
+For known on-demand Media3 periods, loading duration targets follow playback
+speed, with at most a 2x multiplier. For example, a 15-second media target becomes
+22.5 seconds at 1.5x. The allocator byte target and memory-pressure reduction do
+not increase; they still stop further loading decisions first. These are
+scheduling targets, not a hard limit on total process/native/decoder memory.
+Live, dynamic, unknown and ad periods retain the original duration targets.
+When Android reports a positive `memoryClass`, the compressed-media byte target
+is additionally capped at one eighth of that heap class (64 MiB heap → 8 MiB,
+128 MiB → 16 MiB). This cap only lowers tier/user targets, applies to preparation
+and live-mode changes, and remains in force after memory-pressure recovery.
+Unknown heap class retains the existing tier policy. The remaining heap allowance
+is not a guarantee of free memory or a bound on native allocations. If the byte
+budget fills before the startup/rebuffer duration target, already-buffered media
+may start draining it; an empty buffer does not qualify for this fallback.
+
+Constrained clear non-DASH TVs use a 750ms PCM AudioTrack target, adding no more
+than 256 KiB above Media3's normal size (aligned to complete frames). Platform
+minimums, passthrough/offload sizing and software speed processing are preserved.
+This cushion can absorb short scheduling delays; it cannot fix sustained network
+or decoding throughput deficits. Legacy vendor codecs retain Media3's default
+queue mode; asynchronous queueing and platform audio speed changes are not forced
+without device qualification. Tunneling remains limited to the existing 1x path.
+
+While active playback above 1x develops new rebuffer, frame-drop or audio-underrun
+events, `YlPlayer` emits a numeric `speedHealth` log at most once per 10 seconds.
+`bufferedMediaMs` and `bufferedPlayoutMs` distinguish media duration from playback
+time; allocator bytes are separate from decoded/native memory. `tunnelingRequested`
+describes selection intent, not proof that the hardware tunnel is active. No media
+URL, headers, credentials or exception text is logged. The log only reports
+observations and never changes speed, track selection or the playback position.
+`supplyEvidence=byteBudgetReached` identifies an allocator scheduling limit.
+`belowVideoDemand` requires a short buffer, active loading and a recent measured
+transfer rate below the selected video's bitrate multiplied by speed; it is a
+hint, not proof of a network fault. `measured`, `notLoading` and `unknown` avoid
+claiming available capacity from idle or missing data. Transfer measurements
+expire after 10 seconds; `bufferTrend`/`consumedMediaMs` use one previous snapshot
+and reject pauses, speed changes and obvious position discontinuities.
+
+Health windows use actual Media3 rendered/dropped output counters, including
+renderer replacement, rather than wall time multiplied by nominal frame rate.
+Pause clears the observation window without resetting recovery cooldowns.
+Buffering contributes no invented rendered frames; its actual duration remains
+in the separate rebuffer health check and is counted only once across windows.
+Missing decoder counters do not produce a guessed frame-drop ratio.
+
+Physical low-end TV acceptance remains required: compare the same local file and
+cloud-drive file at 1x/1.5x, capture these logs alongside process memory, and check
+seek, pause/resume, return to 1x and memory-pressure handling. JVM regression tests
+do not establish MT8176/MT9652 smoothness or firmware compatibility.
+
 The implementation exposes Media3 state, tracks, geometry, decoder mode,
 metrics, correlated events, and safe `YlFailure` values through the v0.2 SPI.
 Production VP9/AV1 software admission, downloads, persistent media cache and

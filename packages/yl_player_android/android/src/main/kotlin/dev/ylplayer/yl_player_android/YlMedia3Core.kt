@@ -38,6 +38,7 @@ internal class YlMedia3Core(
     // Nullable internal factory seam: codec admission below remains authoritative.
     private val networkBytes: YlNetworkByteCounter? = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null,
     private val renderersFactoryOverride: ((Context, YlVideoOutputObserver) -> YlOutputRenderersFactory)? = null,
+    private val speedDiagnostics: YlPlaybackSpeedDiagnostics = YlPlaybackSpeedDiagnostics(),
 ) : Player.Listener, AnalyticsListener {
     // Entire class, including construction, lives on the owned engine application Looper.
     private val acknowledgement = YlMedia3Acknowledgement()
@@ -68,6 +69,7 @@ internal class YlMedia3Core(
             deviceProfile.tier,
             YlSourceClass.NETWORK_VOD,
             configuration.bufferRequest(),
+            memoryClassMb = deviceProfile.signals.memoryClassMb,
         ),
     )
     private lateinit var exoPlayer: ExoPlayer
@@ -92,7 +94,8 @@ internal class YlMedia3Core(
     }
     private fun profileForLiveMode(mode: AndroidLivePlaybackMode) = YlPlaybackPolicy.effectiveBufferProfile(
         deviceProfile.tier, sourceClass, configuration.bufferRequest().copy(
-            mode = if (mode == AndroidLivePlaybackMode.LOW_LATENCY) "lowLatency" else "stable"))
+            mode = if (mode == AndroidLivePlaybackMode.LOW_LATENCY) "lowLatency" else "stable"),
+        memoryClassMb = deviceProfile.signals.memoryClassMb)
     fun setLivePlaybackMode(mode: AndroidLivePlaybackMode, requestId: Long): AndroidLivePlaybackStateMessage {
         val previous = livePlaybackState(timeline().isLive) ?: throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
         if (!active || stopped || disposed || status == "error") throw YlBoundaryException(YlFailureKind.SESSION_STALE)
@@ -136,11 +139,12 @@ internal class YlMedia3Core(
     private var adaptiveDowngradeCount = 0
     private var selectedVideoBitrate: Int? = null
     private var availableVideoBitrates: List<Int> = emptyList()
-    private var selectedVideoFrameRate = 30f
     private var surfaceRebuildBaseline = 0
     private var requestedPlaybackSpeed = 1f
     private val healthMonitor = YlPlaybackHealthMonitor()
     private var healthWindowStartedAtMs: Long? = null
+    private val videoFrameCounter = YlVideoFrameCounter()
+    private var healthWindowFrames = YlVideoFrameCounts()
     private var healthWindowDroppedFrames = 0
     private var healthWindowRebufferCount = 0
     private var healthWindowRebufferDurationMs = 0L
@@ -171,6 +175,22 @@ internal class YlMedia3Core(
         override fun run() {
             if (!disposed && active && !stopped) {
                 maybeEvaluateHealth()
+                speedDiagnostics.record(YlPlaybackSpeedSample(
+                    nowMs = SystemClock.elapsedRealtime(),
+                    speed = exoPlayer.playbackParameters.speed,
+                    playing = hasBeenReady && exoPlayer.playWhenReady &&
+                        (status == "playing" || status == "ready" || status == "buffering"),
+                    bufferedMediaMs = max(0L, exoPlayer.bufferedPosition - exoPlayer.currentPosition),
+                    allocatedBytes = loadControl.allocatedBytes,
+                    targetBytes = loadControl.targetBufferBytes,
+                    tunnelingRequested = tunnelingEnabled,
+                    rebufferCount = rebufferCount,
+                    droppedFrames = droppedVideoFrames,
+                    audioUnderruns = audioUnderruns,
+                    mediaPositionMs = exoPlayer.currentPosition,
+                    loading = exoPlayer.isLoading,
+                    videoBitrate = selectedVideoBitrate,
+                ))
                 emitPositionDelta()
                 handler.postDelayed(this, configuration.positionEventIntervalMs)
             }
@@ -184,8 +204,12 @@ internal class YlMedia3Core(
         check(protectedDrm == null || renderersFactoryOverride == null)
         val renderersFactory = (renderersFactoryOverride?.invoke(context, outputObserver)
             ?: YlOutputRenderersFactory(context, outputObserver))
-            .also { it.allowEac3SoftwareAudio = protectedDrm == null && dashVideoFamily == null &&
-                deviceProfile.isTelevision && deviceProfile.signals.apiLevel in 24..28 }
+            .also {
+                it.allowEac3SoftwareAudio = protectedDrm == null && dashVideoFamily == null &&
+                    deviceProfile.isTelevision && deviceProfile.signals.apiLevel in 24..28
+                it.useConstrainedTvAudioBuffer = protectedDrm == null && dashVideoFamily == null &&
+                    deviceProfile.isTelevision && deviceProfile.tier == YlDeviceTier.CONSTRAINED
+            }
             .setEnableDecoderFallback(protectedDrm == null)
             .setMediaCodecSelector(protectedSelector ?: YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
         exoPlayer = ExoPlayer.Builder(context, renderersFactory)
@@ -243,6 +267,8 @@ internal class YlMedia3Core(
     }
     fun seekTo(positionMs: Long) {
         if (rtmp) throw YlBoundaryException(YlFailureKind.POLICY_UNSUPPORTED)
+        speedDiagnostics.discontinuity()
+        resetHealthWindow(SystemClock.elapsedRealtime())
         liveCatchUp.absoluteSeek(requestedPlaybackSpeed, exoPlayer::setPlaybackSpeed)
         resumeAtLiveEdge = false
         if (active) exoPlayer.seekTo(positionMs) else { savedPositionMs = positionMs; emitState() }
@@ -254,7 +280,7 @@ internal class YlMedia3Core(
         if (active) { resumeAtLiveEdge = false; exoPlayer.seekToDefaultPosition() }
         else { resumeAtLiveEdge = true; emitState() }
     }
-    fun setPlaybackSpeed(speed: Double) { requestedPlaybackSpeed = speed.toFloat(); updateTunneling(); exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed) }
+    fun setPlaybackSpeed(speed: Double) { speedDiagnostics.discontinuity(); requestedPlaybackSpeed = speed.toFloat(); updateTunneling(); exoPlayer.setPlaybackSpeed(requestedPlaybackSpeed) }
     fun setVolume(volume: Double) { exoPlayer.volume = volume.toFloat() }
     private var nativePresentation = false
     private var tunnelingEnabled = false
@@ -405,6 +431,8 @@ internal class YlMedia3Core(
     }
 
     fun stop() {
+        speedDiagnostics.reset()
+        videoFrameCounter.reset()
         val nextGeneration = sourceGeneration + 1
         resetting = true
         stopped = true
@@ -439,7 +467,6 @@ internal class YlMedia3Core(
         adaptiveBitrateCeiling = null
         selectedVideoBitrate = null
         availableVideoBitrates = emptyList()
-        selectedVideoFrameRate = 30f
         surfaceRebuildBaseline = videoOutput.surfaceRebuildCount
         healthMonitor.reset()
         healthWindowStartedAtMs = null
@@ -465,6 +492,8 @@ internal class YlMedia3Core(
     }
 
     fun prepare() {
+        speedDiagnostics.reset()
+        videoFrameCounter.reset()
         val uriString = source.locator
         val generation = sourceGeneration + 1
         mediaEpoch = rtmpRecovery.invalidate()
@@ -515,7 +544,6 @@ internal class YlMedia3Core(
         adaptiveBitrateCeiling = null
         selectedVideoBitrate = null
         availableVideoBitrates = emptyList()
-        selectedVideoFrameRate = 30f
         surfaceRebuildBaseline = videoOutput.surfaceRebuildCount
         healthMonitor.reset()
         healthWindowStartedAtMs = null
@@ -544,6 +572,7 @@ internal class YlMedia3Core(
                 deviceProfile.tier,
                 sourceClass,
                 configuration.bufferRequest(),
+                memoryClassMb = deviceProfile.signals.memoryClassMb,
             ),
         )
         exoPlayer.setMediaSource(mediaSource, startPosition)
@@ -688,6 +717,9 @@ internal class YlMedia3Core(
 
     override fun onPlayWhenReadyChanged(eventTime: AnalyticsListener.EventTime, playWhenReady: Boolean, reason: Int) {
         if (!isCurrentEvent(eventTime)) return
+        resetHealthWindow(SystemClock.elapsedRealtime())
+        if (!playWhenReady) healthMonitor.discardObservation()
+        speedDiagnostics.discontinuity()
         when {
             !playWhenReady && reason == Player.PLAY_WHEN_READY_CHANGE_REASON_AUDIO_FOCUS_LOSS -> {
                 if (
@@ -824,17 +856,6 @@ internal class YlMedia3Core(
             .sortedDescending()
             .toList()
         selectedVideoBitrate = video.firstOrNull { it.isSelected }?.bitrate?.toInt()
-        tracks.groups.asSequence()
-            .filter { it.type == C.TRACK_TYPE_VIDEO }
-            .flatMap { group ->
-                (0 until group.length).asSequence()
-                    .filter(group::isTrackSelected)
-                    .map(group::getTrackFormat)
-            }
-            .firstOrNull()
-            ?.frameRate
-            ?.takeIf { it > 0f }
-            ?.let { selectedVideoFrameRate = it }
         emitState()
     }
 
@@ -991,6 +1012,11 @@ internal class YlMedia3Core(
         if (rtmp) { refreshRtmpLiveHeadIfNeeded(); return }
         if (!hasBeenReady || status == "error") return
         val nowMs = SystemClock.elapsedRealtime()
+        if (!exoPlayer.playWhenReady || (status != "playing" && status != "ready" && status != "buffering")) {
+            resetHealthWindow(nowMs)
+            healthMonitor.discardObservation()
+            if (!memoryPressure) return
+        }
         val startedAtMs = healthWindowStartedAtMs ?: nowMs.also(::resetHealthWindow)
         if (!memoryPressure && nowMs - lastHealthEvaluationMs < 1_000L) return
         lastHealthEvaluationMs = nowMs
@@ -1000,12 +1026,15 @@ internal class YlMedia3Core(
         val bufferedDuration = max(0L, exoPlayer.bufferedPosition - exoPlayer.currentPosition)
         val canDowngrade = nextLowerBitrate() != null
         val profile = loadControl.currentProfile
+        val frames = videoFrameCounter.snapshot()
         val action = healthMonitor.record(
             YlHealthSample(
                 nowMs = nowMs,
                 elapsedMs = elapsedMs,
-                droppedFrames = droppedVideoFrames - healthWindowDroppedFrames,
-                estimatedRenderedFrames = ((elapsedMs / 1_000.0) * selectedVideoFrameRate).toInt(),
+                droppedFrames = if (frames.observed) (frames.dropped - healthWindowFrames.dropped)
+                    .coerceIn(0, Int.MAX_VALUE.toLong()).toInt() else droppedVideoFrames - healthWindowDroppedFrames,
+                renderedFrames = if (frames.observed) (frames.rendered - healthWindowFrames.rendered)
+                    .coerceIn(0, Int.MAX_VALUE.toLong()).toInt() else null,
                 rebufferCount = rebufferCount - healthWindowRebufferCount,
                 rebufferDurationMs = currentRebufferDuration - healthWindowRebufferDurationMs,
                 memoryPressure = memoryPressure,
@@ -1027,9 +1056,11 @@ internal class YlMedia3Core(
 
     private fun resetHealthWindow(nowMs: Long) {
         healthWindowStartedAtMs = nowMs
+        healthWindowFrames = videoFrameCounter.snapshot()
         healthWindowDroppedFrames = droppedVideoFrames
         healthWindowRebufferCount = rebufferCount
-        healthWindowRebufferDurationMs = rebufferDurationMs
+        healthWindowRebufferDurationMs = rebufferDurationMs +
+            (bufferingStartedAtMs?.let { (nowMs - it).coerceAtLeast(0) } ?: 0L)
     }
 
     private fun nextLowerBitrate(): Int? {
@@ -1231,13 +1262,20 @@ internal class YlMedia3Core(
         timeline.liveOffsetMs).copy(mediaClockPositionMs = mediaClockPositionMs(), networkBytesReceived = networkBytes?.bytesReceived)
 
     override fun onVideoEnabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
-        if (isCurrentEvent(eventTime)) metricsCollector.videoEnabled()
+        if (!isCurrentEvent(eventTime)) return
+        videoFrameCounter.enabled(decoderCounters)
+        metricsCollector.videoEnabled()
+    }
+    override fun onVideoDisabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
+        if (isCurrentEvent(eventTime)) videoFrameCounter.disabled(decoderCounters)
     }
     override fun onAudioEnabled(eventTime: AnalyticsListener.EventTime, decoderCounters: androidx.media3.exoplayer.DecoderCounters) {
         if (isCurrentEvent(eventTime)) metricsCollector.audioEnabled()
     }
     override fun onBandwidthEstimate(eventTime: AnalyticsListener.EventTime, totalLoadTimeMs: Int, totalBytesLoaded: Long, bitrateEstimate: Long) {
-        if (isCurrentEvent(eventTime)) metricsCollector.bandwidth(bitrateEstimate)
+        if (!isCurrentEvent(eventTime)) return
+        metricsCollector.bandwidth(bitrateEstimate)
+        speedDiagnostics.transfer(eventTime.realtimeMs, totalLoadTimeMs, totalBytesLoaded)
     }
 
     /** false quarantines the worker and outputs: release timeout does not prove relinquishment. */

@@ -96,6 +96,7 @@ internal object YlPlaybackPolicy {
         tier: YlDeviceTier,
         sourceClass: YlSourceClass,
         request: YlBufferRequest,
+        memoryClassMb: Int = 0,
     ): YlBufferProfile {
         val ceiling = if (tier == YlDeviceTier.CONSTRAINED) {
             constrainedProfile(sourceClass)
@@ -118,7 +119,12 @@ internal object YlPlaybackPolicy {
         }
         val effectiveMin = min(rawMin, effectiveMax).coerceAtLeast(0)
         val rawBytes = request.maxBufferBytes ?: requested.targetBufferBytes
-        val effectiveBytes = min(rawBytes, ceiling.targetBufferBytes).coerceAtLeast(1)
+        // Reserve most of the managed heap for Flutter, extractors, subtitles and other
+        // sessions. This only lowers the existing scheduling target, not native memory.
+        // Missing device information retains the tier policy; Long avoids MiB overflow.
+        val heapCap = if (memoryClassMb > 0) memoryClassMb.toLong() * MIB / 8 else Long.MAX_VALUE
+        val effectiveBytes = minOf(rawBytes.toLong(), ceiling.targetBufferBytes.toLong(), heapCap)
+            .coerceAtLeast(1).toInt()
         return YlBufferProfile(effectiveMin, effectiveMax, effectiveBytes)
     }
 

@@ -4,7 +4,7 @@ internal data class YlHealthSample(
     val nowMs: Long,
     val elapsedMs: Long,
     val droppedFrames: Int,
-    val estimatedRenderedFrames: Int,
+    val renderedFrames: Int?,
     val rebufferCount: Int,
     val rebufferDurationMs: Long,
     val memoryPressure: Boolean,
@@ -37,6 +37,9 @@ internal class YlPlaybackHealthMonitor {
         lastDowngradeMs = null
         lastLiveEdgeSeekMs = null
     }
+
+    /** Pause discards the observation streak but never bypasses recovery cooldowns. */
+    fun discardObservation() { consecutiveUnhealthyWindows = 0 }
 
     fun record(sample: YlHealthSample): YlRecoveryAction {
         if (sample.memoryPressure) {
@@ -73,8 +76,8 @@ internal class YlPlaybackHealthMonitor {
 
     private fun evaluateHealthWindow(sample: YlHealthSample): YlRecoveryAction {
         if (sample.elapsedMs < HEALTH_WINDOW_MS) return YlRecoveryAction.None
-        val totalFrames = sample.droppedFrames + sample.estimatedRenderedFrames
-        val dropRatio = if (totalFrames > 0) sample.droppedFrames.toDouble() / totalFrames else 0.0
+        val totalFrames = sample.renderedFrames?.let { it.toLong() + sample.droppedFrames }
+        val dropRatio = if (totalFrames != null && totalFrames > 0) sample.droppedFrames.toDouble() / totalFrames else 0.0
         val unhealthy = sample.droppedFrames > 60 ||
             dropRatio > 0.05 ||
             sample.rebufferCount >= 2 ||

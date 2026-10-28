@@ -23,7 +23,8 @@ class YlManagedRedirectInterceptorTest {
                 assertEquals(2, server.requestCount)
                 assertTrue(lines.any { it.contains("httpStatus=503") && it.contains("unavailable") })
                 assertTrue(lines.any { it.contains("httpStatus=404") && it.contains("not found") })
-                assertTrue(lines.none { it.contains("599") || it.contains("private") || it.contains("secret") })
+                // A random diagnostic UUID may contain 599; only the HTTP field is a status.
+                assertTrue(lines.none { it.contains("httpStatus=599") || it.contains("private") || it.contains("secret") })
             } finally { client.close() }
         }
     }

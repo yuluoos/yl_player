@@ -142,7 +142,7 @@ class YlPlaybackHealthMonitorTest {
         nowMs = nowMs,
         elapsedMs = 30_000,
         droppedFrames = dropped,
-        estimatedRenderedFrames = rendered,
+        renderedFrames = rendered,
         rebufferCount = rebuffers,
         rebufferDurationMs = rebufferMs,
         memoryPressure = memoryPressure,

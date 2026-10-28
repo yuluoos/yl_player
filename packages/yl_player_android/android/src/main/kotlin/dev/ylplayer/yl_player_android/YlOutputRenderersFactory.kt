@@ -90,8 +90,16 @@ internal class YlVideoOutputObserver(
  * Core uses extensions OFF, no prewarming/VideoSink, and only configures decoder policy. */
 internal open class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
     var allowEac3SoftwareAudio = false
+    var useConstrainedTvAudioBuffer = false
+    @Suppress("DEPRECATION") // Preserve the pinned default sink setup, changing only its size provider.
     override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): androidx.media3.exoplayer.audio.AudioSink? {
-        val sink = super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams) ?: return null
+        val sink = if (useConstrainedTvAudioBuffer) {
+            androidx.media3.exoplayer.audio.DefaultAudioSink.Builder(context)
+                .setEnableFloatOutput(enableFloatOutput)
+                .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
+                .setAudioTrackBufferSizeProvider(YlTvAudioBufferSizeProvider())
+                .build()
+        } else super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams) ?: return null
         return if (observer.dashVideoFamily != null) YlDashPcmAudioSink(sink) else sink
     }
 

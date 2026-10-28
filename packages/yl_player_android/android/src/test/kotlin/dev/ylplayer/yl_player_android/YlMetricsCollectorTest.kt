@@ -47,6 +47,7 @@ class YlMetricsCollectorTest {
         core.field("hasBeenReady", true)
         core.field("status", "playing")
         core.field("healthWindowStartedAtMs", 0L)
+        `when`(player.playWhenReady).thenReturn(true)
         val ticker = core.javaClass.getDeclaredField("positionTicker")
             .apply { isAccessible = true }.get(core) as Runnable
         clearInvocations(player)
@@ -172,8 +173,12 @@ internal fun YlMedia3Core.field(name: String, value: Any?) {
 }
 internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGED,
     coreSource: AndroidSourceMessage = source(), protectedDrm: androidx.media3.exoplayer.drm.DrmSessionManager? = null, coreHandler: Handler = mock(Handler::class.java),
+    coreDeviceProfile: YlAndroidDeviceProfile? = null,
+    factoryObserver: ((YlOutputRenderersFactory) -> Unit)? = null,
+    speedDiagnostics: YlPlaybackSpeedDiagnostics = YlPlaybackSpeedDiagnostics(),
     action: (YlMedia3Core, ExoPlayer, MutableList<YlEngineEvent>) -> Unit) {
     val player = mock(ExoPlayer::class.java)
+    `when`(player.playbackParameters).thenReturn(PlaybackParameters.DEFAULT)
     `when`(player.duration).thenReturn(C.TIME_UNSET)
     `when`(player.currentTimeline).thenReturn(Timeline.EMPTY)
     `when`(player.currentTracks).thenReturn(androidx.media3.common.Tracks.EMPTY)
@@ -190,7 +195,8 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
         }
         scoped += mockStatic(Process::class.java)
         scoped += mockConstruction(YlFixedVideoTrackSelector::class.java, withSettings().defaultAnswer(RETURNS_DEEP_STUBS))
-        scoped += mockConstruction(YlOutputRenderersFactory::class.java, withSettings().defaultAnswer(RETURNS_SELF))
+        val factories = mockConstruction(YlOutputRenderersFactory::class.java, withSettings().defaultAnswer(RETURNS_SELF))
+        scoped += factories
         scoped += mockConstruction(ExoPlayer.Builder::class.java, withSettings().defaultAnswer(RETURNS_SELF)) { builder, _ ->
             `when`(builder.build()).thenReturn(player)
         }
@@ -204,10 +210,18 @@ internal fun withCore(policy: AndroidAudioPolicy = AndroidAudioPolicy.APP_MANAGE
         val resources = mock(android.content.res.Resources::class.java)
         `when`(context.resources).thenReturn(resources)
         `when`(resources.configuration).thenReturn(mock(android.content.res.Configuration::class.java))
+        if (coreDeviceProfile != null) {
+            val activity = mock(android.app.ActivityManager::class.java)
+            `when`(activity.memoryClass).thenReturn(coreDeviceProfile.signals.memoryClassMb)
+            `when`(context.getSystemService(Context.ACTIVITY_SERVICE)).thenReturn(activity)
+        }
         val core = YlMedia3Core(context, YlSessionIdentity("test", "load"), coreSource, request("load").options,
             createMedia3Configuration(coreSource, request("load").options, sessionOptions.copy(audioPolicy = policy)),
-            coreHandler, YlEngineVideoOutput(privateOutput), events::add, protectedDrm = protectedDrm)
+            coreHandler, YlEngineVideoOutput(privateOutput), events::add, protectedDrm = protectedDrm,
+            speedDiagnostics = speedDiagnostics)
+        coreDeviceProfile?.let { core.field("deviceProfile", it) }
         core.initialize()
+        factoryObserver?.invoke(factories.constructed().single())
         action(core, player, events)
     } finally {
         scoped.asReversed().forEach { it.close() }
