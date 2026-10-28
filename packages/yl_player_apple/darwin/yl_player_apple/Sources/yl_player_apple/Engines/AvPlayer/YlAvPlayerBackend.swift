@@ -116,6 +116,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var boundAudio: YlBoundAvPlayerAudio?
   #endif
   private let player: AVPlayer
+  private let notificationCenter: NotificationCenter
+  #if os(iOS)
+  private var audioRouteObserver: NSObjectProtocol?
+  #endif
   var onAirPlayChanged: (() -> Void)?
   private var airPlayObservation: NSKeyValueObservation?
   var airPlayEnabled: Bool { !disposed && !stopped && lastSource?.airPlay == true }
@@ -280,6 +284,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     services: YlPlatformServices,
     configuration: PlayerConfiguration,
     player: AVPlayer = AVPlayer(),
+    notificationCenter: NotificationCenter = .default,
     makePlayerItem: @escaping (AVURLAsset) -> AVPlayerItem = { AVPlayerItem(asset: $0) },
     makeVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
     emit: @escaping (YlNativeBackendCallback) -> Void
@@ -287,6 +292,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     self.playerId = playerId
     self.services = services
     self.player = player
+    self.notificationCenter = notificationCenter
     self.makePlayerItem = makePlayerItem
     self.makeVideoOutput = makeVideoOutput
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
@@ -313,6 +319,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     videoProgressProbe.reset()
     callbackBinding = CallbackBinding(emit)
     timeControlObservation?.invalidate()
+    removeAudioRouteObserver()
     if let periodicObserver { player.removeTimeObserver(periodicObserver) }
     periodicObserver = nil
     displayLink?.invalidate()
@@ -322,6 +329,23 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private func installCallbackObservers() {
     let binding = callbackBinding
+    #if os(iOS)
+    // AVPlayer pauses on route removal even when the app owns AVAudioSession.
+    // Mirror that privacy pause into transport intent; it is not a network stall.
+    audioRouteObserver = notificationCenter.addObserver(forName: AVAudioSession.routeChangeNotification,
+      object: nil, queue: .main) { [weak self] notification in
+        guard let self, self.callbackBinding === binding,
+          let raw = notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? UInt,
+          AVAudioSession.RouteChangeReason(rawValue: raw) == .oldDeviceUnavailable,
+          self.active, !self.disposed, !self.stopped,
+          self.status != "completed", self.status != "error",
+          self.playRequested || self.player.rate > 0 else { return }
+        self.recordPlaybackDiagnostic(event: "audioRouteLoss")
+        try? self.pause()
+        self.status = "paused"
+        self.emitState()
+      }
+    #endif
     timeControlObservation = player.observe(\.timeControlStatus, options: [.new]) {
       [weak self] _, _ in
       guard let self, self.callbackBinding === binding else { return }
@@ -347,6 +371,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     }
     link.isPaused = true
     displayLink = link
+  }
+
+  private func removeAudioRouteObserver() {
+    #if os(iOS)
+    if let observer = audioRouteObserver { notificationCenter.removeObserver(observer) }
+    audioRouteObserver = nil
+    #endif
   }
 
   private func checkAlive() throws {
@@ -1722,6 +1753,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
 
   func dispose() {
+    removeAudioRouteObserver()
     airPlayObservation?.invalidate(); airPlayObservation = nil
     guard !disposed else { return }
     disposed = true

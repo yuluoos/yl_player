@@ -390,3 +390,14 @@ identity, frame/position progress and candidate proxy snapshots. Metadata loaded
 is not decoder preroll, first-frame availability, safe production integration,
 or seamless output acceptance. Normal and warmed trials must remain separately
 labelled, including failures and cancelled candidates.
+
+On iOS, an `audioRoute` signal with `reason=2` is an old-device-unavailable
+notification. AVPlayer may pause for this privacy event even with buffered data.
+The backend now mirrors it into paused transport intent and waits for explicit
+play; reconnecting a route never authorizes automatic resume. Keep the native
+signal and proxy snapshots together when diagnosing a terminal pause. A capture
+that does not reach EOF still fails collection: a correctly handled system pause
+is not an ABR or continuity pass. Do not attribute earlier buffered-exhaustion
+failures to route loss without their own event evidence. Synthetic route-notice
+regressions on a physical device are distinct from physical unplug/disconnect
+validation.

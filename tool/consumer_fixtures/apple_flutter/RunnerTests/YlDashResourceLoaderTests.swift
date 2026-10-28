@@ -248,6 +248,64 @@ private enum AbrDiagnosticCaptureURL {
 }
 
 final class YlDashResourceLoaderTests: XCTestCase {
+  #if os(iOS)
+  @MainActor func testAudioRouteLossPausesIntentWithoutNetworkTimeoutAndRequiresExplicitResume() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    let center = NotificationCenter(), player = AVPlayer(), output = AppleTestTexture()
+    var tick: (() -> Void)?, states = [YlNativeState](), failures = [String]()
+    let backend = YlAvPlayerBackend(playerId: 994,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      notificationCenter: center,
+      emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+        if case .failure(let error) = $0.event { failures.append(error.code) }
+      })
+    defer { backend.dispose() }
+    try backend.open(.init(uri: media.absoluteString, kind: .file, formatHint: .mp4))
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return !output.frames.isEmpty }, timeout: 5)
+    func route(_ reason: AVAudioSession.RouteChangeReason) {
+      center.post(name: AVAudioSession.routeChangeNotification, object: nil,
+        userInfo: [AVAudioSessionRouteChangeReasonKey: reason.rawValue])
+    }
+    route(.newDeviceAvailable); route(.override)
+    XCTAssertTrue(backend.playbackIntent, "A new route or override is not a disconnect pause")
+    player.pause() // Reproduce AVPlayer's system pause; the private center isolates the notification.
+    route(.oldDeviceUnavailable)
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(states.last?.status, "paused")
+    let paused = CMTimeGetSeconds(player.currentTime())
+    try await Task.sleep(nanoseconds: 16_000_000_000) // Cross the unchanged default 15-second watchdog.
+    tick?()
+    XCTAssertTrue(failures.isEmpty)
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(states.last?.status, "paused")
+    XCTAssertEqual(CMTimeGetSeconds(player.currentTime()), paused, accuracy: 0.05)
+    route(.newDeviceAvailable)
+    XCTAssertFalse(backend.playbackIntent, "Reconnecting a route must not resume playback")
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return CMTimeGetSeconds(player.currentTime()) > paused + 0.1 }, timeout: 5)
+    XCTAssertTrue(backend.playbackIntent)
+    var reboundStates = [YlNativeState]()
+    backend.bindCallbacks { if case .state(let state) = $0.event { reboundStates.append(state) } }
+    route(.oldDeviceUnavailable)
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(reboundStates.last?.status, "paused")
+    backend.deactivate()
+    let count = reboundStates.count
+    route(.oldDeviceUnavailable)
+    XCTAssertEqual(reboundStates.count, count, "Inactive output must ignore shared route changes")
+    backend.dispose()
+    route(.oldDeviceUnavailable)
+    XCTAssertEqual(reboundStates.count, count)
+  }
+  #endif
+
   @MainActor func testCandidateMetadataPreparationRejectsExpiredAndFailedAssets() async {
     let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
     let expiredAsset = AVURLAsset(url: absent)
