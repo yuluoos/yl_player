@@ -744,6 +744,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-28-ios-load-lifecycle.md",
       "sha256": "c97c0626eee9e709ce6d8ccc724619723e325b873a75da3979912be54c2cb52c"
+    },
+    "ios-postcommit-failure-20261028": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-28-ios-postcommit-failure.md",
+      "sha256": "3e2500d5e39e886a95e613d6b2d6bc92dba1a859b62c583dd0baa827df570b0b"
     }
   },
   "rows": [
@@ -787,10 +792,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-load-lifecycle-20261028"
+        "ios-postcommit-failure-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-dart-credential-races-postcommit-failure-high-output-original-auto-recovery-and-physical-output"
+      "nextAction": "qualify-concurrent-dart-credential-races-other-commit-failures-high-output-original-auto-recovery-and-physical-output"
     },
     {
       "requirement": "CAP-ABR",
@@ -814,7 +819,8 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "ios-credential-race-20261028",
-        "ios-load-lifecycle-20261028"
+        "ios-load-lifecycle-20261028",
+        "ios-postcommit-failure-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -854,7 +860,8 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "ios-credential-race-20261028",
-        "ios-load-lifecycle-20261028"
+        "ios-load-lifecycle-20261028",
+        "ios-postcommit-failure-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -874,7 +881,8 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "ios-credential-race-20261028",
-        "ios-load-lifecycle-20261028"
+        "ios-load-lifecycle-20261028",
+        "ios-postcommit-failure-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

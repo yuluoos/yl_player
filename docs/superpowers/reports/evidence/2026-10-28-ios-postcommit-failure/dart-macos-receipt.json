@@ -1,0 +1,16 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "test",
+    "integration_test/apple_dash_credential_failure_test.dart",
+    "-d",
+    "macos",
+    "--no-pub",
+    "--reporter",
+    "expanded"
+  ],
+  "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example",
+  "exitCode": 1,
+  "logSha256": "1b456975d8b3f382cc5a8cfb89b4afbae4e3d4d00b02ccbf8672cbf57ba63316",
+  "phase": "before-final-review-fix"
+}

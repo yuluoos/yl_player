@@ -1,0 +1,13 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "drive",
+    "--driver=test_driver/integration_test.dart",
+    "--target=integration_test/apple_dash_credential_failure_test.dart",
+    "-d",
+    "00008140-000C49CC3493001C",
+    "--no-pub",
+    "--publish-port"
+  ],
+  "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example"
+}

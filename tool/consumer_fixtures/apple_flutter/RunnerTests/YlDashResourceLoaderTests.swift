@@ -3480,6 +3480,79 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  @MainActor func testCommittedMediaFailureRetainsCredentialHistoryThroughRestorationAndFreshLoad() async throws {
+    let server = try DashHTTPServer(), other = try DashHTTPServer(), data = mpd
+    defer { server.close(); other.close() }
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200,["Content-Type":"application/dash+xml"],data) }
+      if request.path == "/init.mp4" { return (302,["Location":other.url("/hop").absoluteString],Data()) }
+      return (410,["Content-Type":"video/mp4"],Data())
+    }
+    other.handler = { _ in (302,["Location":server.url("/gone.mp4").absoluteString],Data()) }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    try fixture.host.attach()
+    func request(_ id:String,_ secret:String) -> AppleLoadRequest {
+      var value = AppleHostFixture.request(id,url:server.url("/movie.mpd").absoluteString,format:.dash)
+      value.source.request = .init(headers:["X-Client":"ordinary","X-Fixture-Load":id],credentials:["Authorization":secret,"Cookie":secret,"X-Session":secret])
+      return value
+    }
+    func loader() throws -> YlHlsResourceLoader {
+      try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    }
+    func initURL(_ loader:YlHlsResourceLoader) throws -> URL {
+      let root = read(loader,try loader.encodedAssetURL()), video = read(loader,try child(root.received))
+      let line = try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("#EXT-X-MAP:") })
+      return try XCTUnwrap(line.split(separator:"\"").dropFirst().first.flatMap { URL(string:String($0)) })
+    }
+    // A successful Load reply acknowledges installation, not asynchronous media readiness.
+    let accepted = try await fixture.host.load(request:request("failing","first-fixture"))
+    let failedItem = try XCTUnwrap(fixture.av.currentItem), failedLoader = try loader()
+    try await AppleHostCharacterizations.waitFor({ failedItem.status == .failed && fixture.callbacks.failures.contains { $0.sessionId == accepted.sessionId } },timeout:5)
+    XCTAssertEqual(fixture.host.sessionId,accepted.sessionId)
+    XCTAssertTrue(fixture.av.currentItem === failedItem)
+    XCTAssertTrue(failedLoader.credentialContext.isStripped(server.url("/init.mp4").absoluteString))
+    let failure = try XCTUnwrap(fixture.callbacks.failures.first { $0.sessionId == accepted.sessionId })
+    XCTAssertEqual(failure.sessionId,accepted.sessionId)
+    let revision = failedLoader.credentialContext.revision
+    fixture.host.suspend(); fixture.host.resume()
+    try await AppleHostCharacterizations.waitFor { fixture.av.currentItem != nil && fixture.av.currentItem !== failedItem }
+    let restored = try loader()
+    XCTAssertEqual(fixture.host.sessionId,accepted.sessionId)
+    XCTAssertTrue(restored.credentialContext === failedLoader.credentialContext)
+    // Distinguish this evidence request from AVPlayer read-ahead and retries.
+    var probe = URLRequest(url:try initURL(restored)); probe.setValue("bytes=1-2",forHTTPHeaderField:"Range")
+    let (_,response) = try await URLSession.shared.data(for:probe)
+    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,410)
+    let retried = try XCTUnwrap(server.requests.last { $0.path == "/init.mp4" && $0.headers["range"] == "bytes=1-2" })
+    for key in ["authorization","cookie","x-session"] { XCTAssertNil(retried.headers[key]) }
+    XCTAssertEqual(retried.headers["x-client"],"ordinary")
+    XCTAssertEqual(restored.credentialContext.revision,revision)
+    let fresh = try await fixture.host.load(request:request("fresh","second-fixture"))
+    let freshLoader = try loader()
+    XCTAssertNotEqual(fresh.sessionId,accepted.sessionId)
+    XCTAssertFalse(freshLoader.credentialContext === failedLoader.credentialContext)
+    try await AppleHostCharacterizations.waitFor { server.requests.contains { $0.path == "/init.mp4" && $0.headers["authorization"] == "second-fixture" } }
+    let sent = try XCTUnwrap(server.requests.first { $0.path == "/init.mp4" && $0.headers["authorization"] == "second-fixture" })
+    XCTAssertEqual(sent.headers["cookie"],"second-fixture"); XCTAssertEqual(sent.headers["x-session"],"second-fixture")
+    // Complete this loader's init chain even if AVPlayer cancels read-ahead
+    // after another media request fails. The loader remains owned by this Load.
+    var freshProbe = URLRequest(url:try initURL(freshLoader)); freshProbe.setValue("bytes=2-3",forHTTPHeaderField:"Range")
+    let (_,freshResponse) = try await URLSession.shared.data(for:freshProbe)
+    XCTAssertEqual((freshResponse as? HTTPURLResponse)?.statusCode,410)
+    try await AppleHostCharacterizations.waitFor({ server.requests.contains { $0.path == "/gone.mp4" && $0.headers["x-fixture-load"] == "fresh" } },timeout:5)
+    for marker in ["failing","fresh"] {
+      XCTAssertTrue(other.requests.contains { $0.path == "/hop" && $0.headers["x-fixture-load"] == marker })
+      XCTAssertTrue(server.requests.contains { $0.path == "/gone.mp4" && $0.headers["x-fixture-load"] == marker })
+    }
+    XCTAssertThrowsError(try fixture.host.pause(command:.init(sessionId:accepted.sessionId)))
+    XCTAssertEqual(failedLoader.diagnosticProxySnapshot["cancelled"],1)
+    XCTAssertEqual(restored.diagnosticProxySnapshot["cancelled"],1)
+    XCTAssertEqual(failedLoader.credentialContext.revision,revision)
+    for r in other.requests + server.requests.filter({ $0.path == "/gone.mp4" }) {
+      for key in ["authorization","cookie","x-session"] { XCTAssertNil(r.headers[key]) }
+    }
+  }
+
   @MainActor func testHeldBodyServerHandlesSplitHeadersAndContinuesUntilPeerEOF() async throws {
     let server = try DashHeldBodyServer(manifest:mpd,body:Data(repeating:1,count:128),redirect:URL(string:"http://127.0.0.1:1/revoke")!)
     defer { server.close() }
