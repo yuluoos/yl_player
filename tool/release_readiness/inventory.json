@@ -714,6 +714,11 @@
       "path": "docs/superpowers/reports/2026-10-28-ios-preparation-intent.md",
       "sha256": "03cc101a5d66f1051af3d59abefff123311d2442c4b84322a47034dd283bca23",
       "kind": "report"
+    },
+    "ios-policy-intent-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-ios-policy-intent.md",
+      "sha256": "0cfe6b45a8afef55969ba98c54cd08672ffdf4067d080d3d301db536e17cf1a6",
+      "kind": "report"
     }
   },
   "rows": [
@@ -753,10 +758,11 @@
         "ios-candidate-preparation-20261028",
         "ios-route-pause-20261028",
         "ios-item-preroll-20261028",
-        "ios-preparation-intent-20261028"
+        "ios-preparation-intent-20261028",
+        "ios-policy-intent-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-original-profile-auto-recovery-credential-constraint-races-shorter-frame-gap-and-physical-output-matrix"
+      "nextAction": "qualify-original-auto-recovery-public-policy-credential-races-shorter-frame-gap-and-physical-output-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -774,7 +780,8 @@
         "ios-candidate-preparation-20261028",
         "ios-route-pause-20261028",
         "ios-item-preroll-20261028",
-        "ios-preparation-intent-20261028"
+        "ios-preparation-intent-20261028",
+        "ios-policy-intent-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -808,7 +815,8 @@
         "ios-candidate-preparation-20261028",
         "ios-route-pause-20261028",
         "ios-item-preroll-20261028",
-        "ios-preparation-intent-20261028"
+        "ios-preparation-intent-20261028",
+        "ios-policy-intent-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

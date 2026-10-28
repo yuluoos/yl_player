@@ -1,0 +1,16 @@
+{
+  "reviewer": "/root/policy_review",
+  "mode": "read-only; no tests rerun",
+  "blockingFindings": 0,
+  "reviewedManifestEntries": 198,
+  "rawProvenanceEntriesVerified": 181,
+  "completeXcresultBundlesVerified": 8,
+  "bundleFilesComparedToOriginal": true,
+  "nativeTests": {
+    "iPhone": 171,
+    "macOS": 146
+  },
+  "all102RowStatesUnchanged": true,
+  "productionSourceUnchanged": true,
+  "scope": "Policy guard, loader ownership, raw caps/fixed events and frames, automatic control, original configuration, source binding and evidence archive; public-host and physical-output limits retained."
+}

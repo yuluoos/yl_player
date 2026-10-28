@@ -439,3 +439,19 @@ The real frame trace must still be inspected for the landing and old-item retent
 Neither scenario changes budgets, backoff, exact seek or capability acceptance.
 Native local-media tests separately cancel after seek and preroll calls are issued;
 these cover operation boundaries, not every asynchronous race or physical output.
+
+Automatic recovery eligibility now requires an unconstrained peak bitrate,
+zero preferred maximum resolution and no fixed video selection. Width-only,
+height-only and fixed-selection policies must not reserve recovery attempts even
+when the sampled bandwidth and buffer conditions otherwise qualify.
+
+`--auto-scenario caps-during-preparation` and `fixed-during-preparation` require
+`asset-preroll`. Once the first candidate becomes ready, the diagnostic invalidates
+its ticket and commits a separately prepared width-320 cap or fixed low track
+through the existing backend replacement path. Both candidates use the same
+manifest snapshot. The event records actual success and item replacement; rows
+record maximum resolution, fixed track ID and unconstrained-policy eligibility.
+Inspect all later rows and frames for preserved selection and compliant output.
+A new generation in these scenarios comes from the injected user policy, not an
+automatic recovery success. This is backend-path coverage, not the full public
+host auto/caps/fixed matrix or physical continuity acceptance.

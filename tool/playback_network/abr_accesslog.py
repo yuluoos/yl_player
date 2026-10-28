@@ -143,7 +143,7 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
     if expected_recovery_action is not None:
         require(expected_recovery_action in ('none', 'seek-current', 'reload-source', 'auto-reload'))
         require(all(row.get('recoveryAction') == expected_recovery_action for row in rows))
-        require(expected_auto_scenario in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation'))
+        require(expected_auto_scenario in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation'))
         require(all(row.get('autoScenario') == expected_auto_scenario for row in rows))
         require(all(type(row.get('frameSamplingVersion')) is int and row['frameSamplingVersion'] == 2 for row in rows))
         attempts = [row.get('recoveryAttempt') for row in rows if row.get('recoveryAttempt') is not None]
@@ -345,7 +345,9 @@ def candidate_preparation(args):
     if mode != 'manifest-only' and (getattr(args, 'recovery_action', 'none') != 'auto-reload' or
             getattr(args, 'duration_seconds', 40) != 120 or getattr(args, 'direct_hls_control', False)):
         raise ValueError('candidate preparation requires managed 120s automatic diagnostic')
-    required_mode = {'pause-during-preparation': 'asset-preroll',
+    required_mode = {'caps-during-preparation': 'asset-preroll',
+                     'fixed-during-preparation': 'asset-preroll',
+                     'pause-during-preparation': 'asset-preroll',
                      'seek-during-preparation': 'asset-preroll',
                      'pause-during-metadata': 'asset-metadata'}.get(getattr(args, 'auto_scenario', 'normal'))
     if required_mode is not None and mode != required_mode:
@@ -399,7 +401,7 @@ def run(args):
         startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
         recovery_action = getattr(args, 'recovery_action', 'none')
         auto_scenario = getattr(args, 'auto_scenario', 'normal')
-        if auto_scenario not in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
+        if auto_scenario not in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
             raise ValueError('invalid automatic recovery scenario')
         receipt['autoScenario'] = auto_scenario
         preparation_mode = candidate_preparation(args)
@@ -532,7 +534,7 @@ def main():
                    help='0..2000ms diagnostic delay after arming/preparing; never changes the frozen profile')
     p.add_argument('--recovery-action', choices=('none', 'seek-current', 'reload-source', 'auto-reload'), default='none',
                    help='one managed 120s diagnostic intervention; never natural ABR acceptance')
-    p.add_argument('--auto-scenario', choices=('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation'), default='normal')
+    p.add_argument('--auto-scenario', choices=('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation'), default='normal')
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--direct-hls-control',action='store_true',

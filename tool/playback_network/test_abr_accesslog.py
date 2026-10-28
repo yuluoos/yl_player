@@ -45,6 +45,17 @@ class AccessLogTests(unittest.TestCase):
             with self.subTest(missing=field), self.assertRaises(ValueError):
                 validate(missing)
 
+    def test_policy_scenarios_require_preroll_preparation(self):
+        for scenario in ['caps-during-preparation', 'fixed-during-preparation']:
+            for mode in ['manifest-only', 'asset-metadata', 'asset-preroll']:
+                args = SimpleNamespace(recovery_action='auto-reload', duration_seconds=120,
+                    direct_hls_control=False, candidate_preparation=mode, auto_scenario=scenario)
+                if mode == 'asset-preroll':
+                    self.assertEqual(abr_accesslog.candidate_preparation(args), mode)
+                else:
+                    with self.subTest(scenario=scenario, mode=mode), self.assertRaises(ValueError):
+                        abr_accesslog.candidate_preparation(args)
+
     def test_intent_scenarios_require_their_actual_preparation_path(self):
         for scenario, expected in [('pause-during-metadata', 'asset-metadata'),
                                    ('seek-during-preparation', 'asset-preroll')]:

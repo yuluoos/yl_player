@@ -57,6 +57,12 @@ private final class DashLoadingRequest: YlHlsLoadingRequest {
 }
 
 // Experimental policy for the owned 320/640 fixture only. No production hook.
+private enum AbrDiagnosticRecoveryEligibility {
+  static func permitsPolicy(peakBitRate: Double, maximumResolution: CGSize, fixedTrackId: String?) -> Bool {
+    peakBitRate == 0 && maximumResolution == .zero && fixedTrackId == nil
+  }
+}
+
 private struct AbrDiagnosticRecoveryPolicy {
   struct Sample {
     let time: Double, generation: Int, allowed: Bool, width: Int
@@ -646,6 +652,28 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(weak.attempts, 0)
   }
 
+  func testAutomaticRecoveryCannotReserveUnderDimensionCapsOrFixedSelection() {
+    let cases: [(String, Double, CGSize, String?, Int)] = [
+      ("automatic", 0, .zero, nil, 1),
+      ("bitrate", 500_000, .zero, nil, 0),
+      ("width", 0, CGSize(width: 320, height: 100_000), nil, 0),
+      ("height", 0, CGSize(width: 100_000, height: 180), nil, 0),
+      ("fixed", 0, .zero, "low-track", 0),
+    ]
+    for (name, peak, resolution, fixed, expectedAttempts) in cases {
+      var policy = AbrDiagnosticRecoveryPolicy()
+      let allowed = AbrDiagnosticRecoveryEligibility.permitsPolicy(
+        peakBitRate: peak, maximumResolution: resolution, fixedTrackId: fixed)
+      for time in [0.0, 1, 9, 17, 17.5] {
+        _ = policy.observe(.init(time: time, generation: 0, allowed: allowed,
+          width: time == 0 ? 640 : 320, position: time + 10, remaining: 110 - time,
+          bufferAhead: 10, bytes: Int64(time * 200_000), transfer: time,
+          requests: Int(time * 4), overdue: 1))
+      }
+      XCTAssertEqual(policy.attempts, expectedAttempts, name)
+    }
+  }
+
   func testAutomaticRecoveryExplainsUntriggeredWindows() {
     var policy = AbrDiagnosticRecoveryPolicy()
     func sample(_ time: Double, width: Int = 320, allowed: Bool = true, buffer: Double = 10) -> AbrDiagnosticRecoveryPolicy.Sample {
@@ -701,7 +729,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertTrue((0...2000).contains(startupDelayMs))
     let recoveryAction = env["YL_ABR_PROBE_RECOVERY_ACTION"] ?? "none"
     let autoScenario = env["YL_ABR_PROBE_AUTO_SCENARIO"] ?? "normal"
-    guard ["normal", "pause-first", "pause-during-preparation", "pause-during-metadata", "seek-during-preparation"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
+    guard ["normal", "pause-first", "pause-during-preparation", "pause-during-metadata", "seek-during-preparation", "caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
       XCTFail("Invalid automatic recovery scenario"); return
     }
     guard ["none", "seek-current", "reload-source", "auto-reload"].contains(recoveryAction),
@@ -716,7 +744,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     guard autoScenario != "pause-during-metadata" || candidatePreparation == "asset-metadata" else {
       XCTFail("Metadata intent injection requires metadata preparation"); return
     }
-    guard !["pause-during-preparation", "seek-during-preparation"].contains(autoScenario) || candidatePreparation == "asset-preroll" else {
+    guard !["pause-during-preparation", "seek-during-preparation", "caps-during-preparation", "fixed-during-preparation"].contains(autoScenario) || candidatePreparation == "asset-preroll" else {
       XCTFail("Mid-preparation pause requires preroll"); return
     }
     // Preserve the historical managed probe's preparation-before-player order.
@@ -871,7 +899,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
         })
       return .init(time: ProcessInfo.processInfo.systemUptime - started, generation: frameGeneration,
         allowed: backend != nil && item?.status == .readyToPlay && player.rate > 0 &&
-          item?.preferredPeakBitRate == 0 && item?.isPlaybackLikelyToKeepUp == true,
+          AbrDiagnosticRecoveryEligibility.permitsPolicy(peakBitRate: item?.preferredPeakBitRate ?? -1,
+            maximumResolution: item?.preferredMaximumResolution ?? CGSize(width: -1, height: -1),
+            fixedTrackId: backend?.videoSelection.fixedTrackId) && item?.isPlaybackLikelyToKeepUp == true,
         width: Int(item?.presentationSize.width ?? 0), position: position,
         remaining: Double(programmeSeconds) - position, bufferAhead: buffered,
         bytes: logs.reduce(0) { $0 + $1.numberOfBytesTransferred },
@@ -910,6 +940,12 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "position": finite(CMTimeGetSeconds(player.currentTime())), "rate": player.rate,
         "status": item.status.rawValue, "width": item.presentationSize.width,
         "height": item.presentationSize.height, "peak": item.preferredPeakBitRate,
+        "maximumWidth": item.preferredMaximumResolution.width,
+        "maximumHeight": item.preferredMaximumResolution.height,
+        "fixedTrackId": backend?.videoSelection.fixedTrackId as Any? ?? NSNull(),
+        "unconstrainedPolicy": AbrDiagnosticRecoveryEligibility.permitsPolicy(
+          peakBitRate: item.preferredPeakBitRate, maximumResolution: item.preferredMaximumResolution,
+          fixedTrackId: backend?.videoSelection.fixedTrackId),
         "forwardBuffer": item.preferredForwardBufferDuration, "logs": logs,
         "errors": errors, "errorLogEventCount": item.errorLog()?.events.count ?? 0,
         "bufferEmpty": item.isPlaybackBufferEmpty, "bufferFull": item.isPlaybackBufferFull,
@@ -989,6 +1025,26 @@ final class YlDashResourceLoaderTests: XCTestCase {
               configuration: .init(map: [:]), cancellationToken: .init())
           }.value
           event["manifestPreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+          var policyCandidate: YlPreparedHlsAsset?
+          var policyFixedId: String?
+          defer { policyCandidate?.discard() } // Transferred loader ownership is not cancelled.
+          if ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
+            let snapshot = try XCTUnwrap(replacement.loader.dashSnapshot)
+            if autoScenario == "fixed-during-preparation" {
+              policyFixedId = try XCTUnwrap(replacement.loader.videoCatalog?.tracks(
+                at: Int64(CMTimeGetSeconds(player.currentTime()) * 1_000_000)).first { $0.width == 320 }?.id)
+            }
+            let fixedId = policyFixedId
+            let constraints: YlAppleVideoConstraints = autoScenario == "caps-during-preparation"
+              ? .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil) : .unconstrained
+            let context = replacement.loader.credentialContext
+            policyCandidate = try await Task.detached {
+              try YlPreparedHlsAsset(originURL: url, isDash: true, videoConstraints: constraints,
+                fixedTrackId: fixedId, headers: [:], configuration: .init(map: [:]),
+                cancellationToken: .init(), dashSnapshot: snapshot, credentialContext: context)
+            }.value
+            event["policyCandidatePreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+          }
           var preparationSucceeded = true
           var freshPreparedItem: AVPlayerItem?
           defer { warmedItem = nil }
@@ -1037,6 +1093,20 @@ final class YlDashResourceLoaderTests: XCTestCase {
               deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
               allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
               onReady: {
+                if ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
+                  automaticPolicy.invalidateIntent()
+                  do {
+                    let target = try XCTUnwrap(backend)
+                    try target.replaceActiveDash(source: source, prepared: XCTUnwrap(policyCandidate),
+                      selection: .init(fixedTrackId: policyFixedId, reason: "user"))
+                    event["policyChangeApplied"] = true
+                    event["policyChangeElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                    event["policyChangedItem"] = player.currentItem !== item
+                    event["policyFixedTrackId"] = target.videoSelection.fixedTrackId as Any? ?? NSNull()
+                    event["policyMaximumWidth"] = player.currentItem?.preferredMaximumResolution.width ?? -1
+                    event["policyMaximumHeight"] = player.currentItem?.preferredMaximumResolution.height ?? -1
+                  } catch { event["policyChangeApplied"] = false }
+                }
                 if autoScenario == "seek-during-preparation", ticket.attempt == 1 {
                   automaticPolicy.invalidateIntent()
                   let target = Int64(CMTimeGetSeconds(player.currentTime()) * 1_000) + 1_000
