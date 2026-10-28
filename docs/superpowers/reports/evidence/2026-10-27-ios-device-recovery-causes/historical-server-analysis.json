@@ -1,0 +1,44 @@
+{
+  "method": "Server write-side complete responses >10000 bytes starting after 25s. Not client receipt or available bandwidth.",
+  "runs": [
+    {
+      "run": "baseline",
+      "requestOutcomes": {
+        "complete": 336,
+        "client_io_error": 1
+      },
+      "recoveryLargeResponses": 89,
+      "medianServerFullResponseMs": 126.67420800000036,
+      "medianServerFullResponseBitrate": 1661898.5478986728
+    },
+    {
+      "run": "auto",
+      "requestOutcomes": {
+        "complete": 249
+      },
+      "recoveryLargeResponses": 56,
+      "medianServerFullResponseMs": 128.67162499999904,
+      "medianServerFullResponseBitrate": 1600573.9770965925
+    },
+    {
+      "run": "auto-repeat",
+      "requestOutcomes": {
+        "complete": 188,
+        "client_io_error": 3
+      },
+      "recoveryLargeResponses": 40,
+      "medianServerFullResponseMs": 198.45058349999817,
+      "medianServerFullResponseBitrate": 2197333.4585042777
+    },
+    {
+      "run": "auto-pause",
+      "requestOutcomes": {
+        "complete": 344,
+        "client_io_error": 2
+      },
+      "recoveryLargeResponses": 97,
+      "medianServerFullResponseMs": 189.5297500000015,
+      "medianServerFullResponseBitrate": 1973886.8793159733
+    }
+  ]
+}

@@ -4,6 +4,9 @@ import AVFoundation
 import CoreImage
 import Network
 import XCTest
+#if os(iOS)
+import UIKit
+#endif
 
 private final class DashLoaderProtocol: URLProtocol {
   static let lock = NSLock()
@@ -62,6 +65,7 @@ private struct AbrDiagnosticRecoveryPolicy {
   }
   struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double }
   private(set) var attempts = 0
+  private(set) var decision: [String: Any] = [:]
   private var generation: Int?
   private var sawHigh = false
   private var anchor: Sample?
@@ -88,33 +92,57 @@ private struct AbrDiagnosticRecoveryPolicy {
       s.transfer >= 0 && s.bytes >= 0 && s.requests >= 0 && s.remaining >= 20 && s.bufferAhead >= 5
   }
   mutating func observe(_ s: Sample) -> Ticket? {
+    var reason = "invalidSample"
+    var windowBitrate: Double?
+    var windowRequests: Int?
+    func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
+    defer {
+      decision = ["elapsed": finite(s.time), "generation": s.generation, "allowed": s.allowed,
+        "width": s.width, "position": finite(s.position), "remaining": finite(s.remaining),
+        "bufferAhead": finite(s.bufferAhead), "bytes": s.bytes, "transfer": finite(s.transfer),
+        "requests": s.requests, "overdue": s.overdue, "reason": reason, "attempts": attempts,
+        "qualifiedWindows": windows, "sawHigh": sawHigh,
+        "windowBitrate": windowBitrate.map(finite) ?? NSNull(),
+        "windowRequests": windowRequests as Any? ?? NSNull(),
+        "pendingDue": pending.map { finite($0.due) } ?? NSNull()]
+    }
     if generation != s.generation {
       generation = s.generation; sawHigh = false; anchor = nil; windows = 0
       pending = nil; inFlight = nil; last = nil
     }
     guard eligible(s), last.map({ s.time > $0.time && s.position >= $0.position }) ?? true else {
+      if !s.allowed { reason = "playbackIneligible" }
+      else if s.bufferAhead.isFinite && s.bufferAhead < 5 { reason = "insufficientBuffer" }
+      else if s.remaining.isFinite && s.remaining < 20 { reason = "nearEnd" }
+      else if eligible(s) { reason = "nonMonotonic" }
       anchor = nil; windows = 0; pending = nil; inFlight = nil; last = nil; return nil
     }
     last = s
-    if s.width == 640 { sawHigh = true; anchor = nil; windows = 0; pending = nil; return nil }
-    guard sawHigh, s.width == 320, s.overdue > 0 else { anchor = nil; windows = 0; pending = nil; return nil }
+    if s.width == 640 { reason = "highOutput"; sawHigh = true; anchor = nil; windows = 0; pending = nil; return nil }
+    guard sawHigh, s.width == 320, s.overdue > 0 else { reason = !sawHigh ? "highNotObserved" : (s.width != 320 ? "notLowOutput" : "noOverdue"); anchor = nil; windows = 0; pending = nil; return nil }
     if let pending {
-      guard s.time >= pending.due else { return nil }
+      guard s.time >= pending.due else { reason = "backoff"; return nil }
+      reason = "ticketReady"
       self.pending = nil; inFlight = pending; return pending
     }
-    guard inFlight == nil, attempts < 2 else { return nil }
-    guard let start = anchor else { anchor = s; return nil }
+    guard inFlight == nil, attempts < 2 else { reason = inFlight != nil ? "inFlight" : "budgetExhausted"; return nil }
+    guard let start = anchor else { reason = "windowStarted"; anchor = s; return nil }
     guard s.bytes >= start.bytes, s.transfer >= start.transfer, s.requests >= start.requests else {
-      anchor = s; windows = 0; return nil
+      reason = "countersReset"; anchor = s; windows = 0; return nil
     }
-    guard s.time - start.time >= 8 else { return nil }
+    guard s.time - start.time >= 8 else { reason = "windowPending"; return nil }
     anchor = s
     let duration = s.transfer - start.transfer
     let bitrate = duration > 0 ? Double(s.bytes - start.bytes) * 8 / duration : 0
+    windowBitrate = bitrate; windowRequests = s.requests - start.requests
     guard s.position > start.position, s.requests - start.requests >= 3,
-          bitrate.isFinite, bitrate >= 764_000 * 1.25 else { windows = 0; return nil }
+          bitrate.isFinite, bitrate >= 764_000 * 1.25 else {
+      reason = s.position <= start.position ? "noProgress" : (s.requests - start.requests < 3 ? "insufficientRequests" : "insufficientBandwidth")
+      windows = 0; return nil
+    }
     windows += 1
-    guard windows >= 2 else { return nil }
+    guard windows >= 2 else { reason = "firstQualifiedWindow"; return nil }
+    reason = "reserved"
     attempts += 1; windows = 0; anchor = nil
     pending = Ticket(id: UUID(), generation: s.generation, attempt: attempts,
       due: s.time + (attempts == 1 ? 0.5 : 1.0))
@@ -209,6 +237,27 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(weak.attempts, 0)
   }
 
+  func testAutomaticRecoveryExplainsUntriggeredWindows() {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320, allowed: Bool = true, buffer: Double = 10) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: allowed, width: width, position: time,
+        remaining: 120 - time, bufferAhead: buffer, bytes: Int64(time * 90_000),
+        transfer: time, requests: Int(time * 4), overdue: 1)
+    }
+    XCTAssertNil(policy.observe(sample(0, width: 640)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "highOutput")
+    XCTAssertNil(policy.observe(sample(1)))
+    XCTAssertNil(policy.observe(sample(9)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "insufficientBandwidth")
+    XCTAssertEqual(policy.decision["windowBitrate"] as? Double, 720_000)
+    XCTAssertEqual(policy.attempts, 0)
+    XCTAssertNil(policy.observe(sample(10, buffer: 4)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "insufficientBuffer")
+    XCTAssertNil(policy.observe(sample(11, allowed: false)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "playbackIneligible")
+    XCTAssertEqual(policy.decision["attempts"] as? Int, 0)
+  }
+
   @MainActor
   func testActualOwnedDashAdaptiveObservation() async throws {
     let env = ProcessInfo.processInfo.environment
@@ -260,16 +309,23 @@ final class YlDashResourceLoaderTests: XCTestCase {
         XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 200)
       }
     } else {
-      prepared = try await Task.detached {
-        try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
-          configuration: .init(map: [:]), cancellationToken: .init())
-      }.value
+      do {
+        prepared = try await Task.detached {
+          try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
+            configuration: .init(map: [:]), cancellationToken: .init())
+        }.value
+      } catch {
+        let native = error as? NativePlayerError
+        NSLog("[YL-ABR] preparationFailure category=%@ code=%@", native?.category ?? "unknown", native?.code ?? "unknown")
+        throw error
+      }
     }
     if startupDelayMs > 0 { try await Task.sleep(nanoseconds: UInt64(startupDelayMs) * 1_000_000) }
     let player = AVPlayer()
     let output = AppleTestTexture()
     var tick: (() -> Void)?
     var states: [YlNativeState] = []
+    var backendFailure: String?
     var backend: YlAvPlayerBackend?
     let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
     var directOutput: AVPlayerItemVideoOutput?
@@ -293,7 +349,13 @@ final class YlDashResourceLoaderTests: XCTestCase {
         services: .init(platform: .current, textureOutput: output,
           makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
         configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
-        emit: { if case .state(let state) = $0.event { states = [state] } })
+        emit: {
+          if case .state(let state) = $0.event { states = [state] }
+          if case .failure(let error) = $0.event {
+            backendFailure = error.code
+            NSLog("[YL-ABR] backendFailure category=%@ code=%@", error.category, error.code)
+          }
+        })
       backend = value
       try value.stagePreparedHls(source: source, prepared: XCTUnwrap(prepared), resume: false)
       try value.activate(); try value.play()
@@ -303,6 +365,32 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let file = try FileHandle(forWritingTo: directory.appendingPathComponent("rows.jsonl"))
     defer { try? file.close() }
     let started = ProcessInfo.processInfo.systemUptime
+    #if os(iOS)
+    let notificationCenter = NotificationCenter.default
+    var signalTokens: [NSObjectProtocol] = []
+    for (name, kind) in [(AVAudioSession.routeChangeNotification, "audioRoute"),
+                         (AVAudioSession.interruptionNotification, "audioInterruption"),
+                         (UIApplication.willResignActiveNotification, "willResignActive"),
+                         (UIApplication.didBecomeActiveNotification, "didBecomeActive"),
+                         (UIApplication.didEnterBackgroundNotification, "didEnterBackground"),
+                         (UIApplication.willEnterForegroundNotification, "willEnterForeground")] {
+      signalTokens.append(notificationCenter.addObserver(forName: name, object: nil, queue: nil) { notification in
+        let reason = (notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? NSNumber)?.intValue ?? -1
+        let interruption = (notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber)?.intValue ?? -1
+        let options = (notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? NSNumber)?.intValue ?? -1
+        NSLog("[YL-ABR] elapsed=%.6f signal=%@ reason=%ld interruption=%ld options=%ld",
+          ProcessInfo.processInfo.systemUptime - started, kind, reason, interruption, options)
+      })
+    }
+    defer { signalTokens.forEach(notificationCenter.removeObserver) }
+    #endif
+    let policyURL = directory.appendingPathComponent("policy-decisions.jsonl")
+    var policyFile: FileHandle?
+    if recoveryAction == "auto-reload" {
+      _ = FileManager.default.createFile(atPath: policyURL.path, contents: nil)
+      policyFile = try FileHandle(forWritingTo: policyURL)
+    }
+    defer { try? policyFile?.close() }
     var completed = false
     var frameCount = 0
     var frameGeneration = 0
@@ -401,6 +489,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
         "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
+        "policySamplingVersion": 1, "backendStatus": states.last?.status as Any? ?? NSNull(),
+        "backendFailureCode": backendFailure as Any? ?? NSNull(),
         "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
@@ -439,7 +529,12 @@ final class YlDashResourceLoaderTests: XCTestCase {
         try JSONSerialization.data(withJSONObject: attempt, options: [.sortedKeys])
           .write(to: directory.appendingPathComponent("recovery-attempt.json"), options: .atomic)
       }
-      if recoveryAction == "auto-reload", let ticket = automaticPolicy.observe(automaticSample()) {
+      var recoveryTicket: AbrDiagnosticRecoveryPolicy.Ticket?
+      if let policyFile {
+        recoveryTicket = automaticPolicy.observe(automaticSample())
+        try policyFile.write(contentsOf: JSONSerialization.data(withJSONObject: automaticPolicy.decision, options: [.sortedKeys]) + Data([10]))
+      }
+      if let ticket = recoveryTicket {
         let before = automaticSample()
         var event: [String: Any] = ["attempt": ticket.attempt, "elapsed": before.time,
           "due": ticket.due, "generation": ticket.generation, "positionBefore": before.position,

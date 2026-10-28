@@ -679,6 +679,11 @@
       "path": "docs/superpowers/reports/2026-10-27-abr-frame-retention.md",
       "sha256": "a6f05cc55b53cae19ec319a6119e48c9ed7376f5c7e26c351a8df3a1a08a2d3a",
       "kind": "report"
+    },
+    "ios-device-recovery-causes-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-ios-device-recovery-causes.md",
+      "sha256": "63ca33f0c959ba9ca03269e900ee61f577f27a73846195d634bae38a4b2cd616",
+      "kind": "report"
     }
   },
   "rows": [
@@ -711,10 +716,11 @@
         "abr-recovery-20261027",
         "abr-penalty-recovery-20261027",
         "abr-auto-recovery-20261027",
-        "abr-frame-retention-20261027"
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027"
       ],
       "acceptance": null,
-      "nextAction": "investigate-physical-stalls-and-qualify-auto-trigger-intents-budget-continuity-av-sync-and-device-matrix"
+      "nextAction": "reproduce-physical-stall-and-trigger-replacement-with-frozen-guards-then-qualify-budget-intents-output-and-device-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -726,7 +732,8 @@
         "p01",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "abr-frame-retention-20261027"
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -753,7 +760,8 @@
         "p01",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "abr-frame-retention-20261027"
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -767,7 +775,8 @@
         "p01",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "abr-frame-retention-20261027"
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

@@ -18,6 +18,118 @@ from prepare_fixture import create
 import abr_device
 
 
+def policy_trace_version(rows):
+    if not any(isinstance(row, dict) and 'policySamplingVersion' in row for row in rows):
+        return None
+    if not all(isinstance(row, dict) and type(row.get('policySamplingVersion')) is int and
+               row['policySamplingVersion'] == 1 for row in rows):
+        raise ValueError('inconsistent or unsupported policy sampling version')
+    return 1
+
+
+def summarize_policy(rows, *, expected_attempts):
+    """Validate exact native decisions; an untriggered run is not path coverage."""
+    reasons = {'invalidSample', 'playbackIneligible', 'insufficientBuffer', 'nearEnd',
+        'nonMonotonic', 'highOutput', 'highNotObserved', 'notLowOutput', 'noOverdue',
+        'backoff', 'ticketReady', 'inFlight', 'budgetExhausted', 'windowStarted',
+        'countersReset', 'windowPending', 'noProgress', 'insufficientRequests',
+        'insufficientBandwidth', 'firstQualifiedWindow', 'reserved'}
+    def require(value):
+        if not value: raise ValueError('invalid recovery policy evidence')
+    def finite(value):
+        return type(value) in (int, float) and math.isfinite(value) and value >= 0
+    require(type(expected_attempts) is int and 0 <= expected_attempts <= 2)
+    require(isinstance(rows, list) and 1 <= len(rows) <= 1000)
+    counts = {}; previous = -1; attempts = 0; reservations = 0; tickets = 0; pending = None
+    rates = []; anchor = None; qualified = 0
+    for row in rows:
+        require(isinstance(row, dict) and isinstance(row.get('reason'), str) and row['reason'] in reasons)
+        reason = row['reason']; elapsed = row.get('elapsed')
+        require(finite(elapsed) and elapsed > previous); previous = elapsed
+        for key in ('generation', 'width', 'overdue', 'qualifiedWindows'):
+            require(type(row.get(key)) is int and row[key] >= 0)
+        for key in ('bytes', 'requests'): require(type(row.get(key)) is int)
+        require(row['qualifiedWindows'] <= 1)
+        for key in ('allowed', 'sawHigh'): require(type(row.get(key)) is bool)
+        for key in ('position', 'remaining', 'bufferAhead', 'transfer'):
+            require(row.get(key) is None or (type(row.get(key)) in (int, float) and math.isfinite(row[key])))
+        # Rejected samples may contain negative/unknown native inputs. Preserve
+        # them only under the same guard priority as observe(); never qualify them.
+        eligible = (row['allowed'] and all(finite(row[key]) for key in ('position', 'transfer')) and
+                    row['bytes'] >= 0 and row['requests'] >= 0 and
+                    row['bufferAhead'] is not None and row['bufferAhead'] >= 5 and
+                    row['remaining'] is not None and row['remaining'] >= 20)
+        rejection = None
+        if not row['allowed']: rejection = 'playbackIneligible'
+        elif row['bufferAhead'] is not None and row['bufferAhead'] < 5: rejection = 'insufficientBuffer'
+        elif row['remaining'] is not None and row['remaining'] < 20: rejection = 'nearEnd'
+        elif not eligible: rejection = 'invalidSample'
+        if rejection is not None:
+            require(reason == rejection)
+        else:
+            require(reason not in ('playbackIneligible', 'insufficientBuffer', 'nearEnd', 'invalidSample'))
+            if reason == 'highOutput': require(row['width'] == 640 and row['sawHigh'])
+            elif reason == 'highNotObserved': require(row['width'] != 640 and not row['sawHigh'])
+            elif reason == 'notLowOutput': require(row['sawHigh'] and row['width'] not in (320, 640))
+            elif reason == 'noOverdue': require(row['sawHigh'] and row['width'] == 320 and row['overdue'] == 0)
+            elif reason != 'nonMonotonic':
+                require(row['sawHigh'] and row['width'] == 320 and row['overdue'] > 0)
+        budget = row.get('attempts')
+        require(type(budget) is int and attempts <= budget <= 2)
+        bitrate = row.get('windowBitrate'); requests = row.get('windowRequests'); due = row.get('pendingDue')
+        require(bitrate is None or finite(bitrate))
+        require(requests is None or (type(requests) is int and requests >= 0))
+        require(due is None or finite(due))
+        if bitrate is not None: rates.append(bitrate)
+        completed_window = reason in ('noProgress', 'insufficientRequests',
+            'insufficientBandwidth', 'firstQualifiedWindow', 'reserved')
+        if completed_window:
+            require(anchor is not None and row['generation'] == anchor['generation'] and
+                    elapsed-anchor['elapsed'] >= 8)
+            require(all(row[key] >= anchor[key] for key in ('bytes', 'transfer', 'requests')))
+            duration = row['transfer']-anchor['transfer']
+            measured = (row['bytes']-anchor['bytes'])*8/duration if duration > 0 else 0
+            require(bitrate is not None and math.isclose(bitrate, measured, rel_tol=1e-9, abs_tol=1e-6))
+            require(requests == row['requests']-anchor['requests'])
+            if reason in ('firstQualifiedWindow', 'reserved'):
+                require(row['position'] > anchor['position'])
+                require(qualified == (0 if reason == 'firstQualifiedWindow' else 1))
+                qualified = 1 if reason == 'firstQualifiedWindow' else 0
+            else:
+                qualified = 0
+            anchor = None if reason == 'reserved' else row
+        elif reason in ('windowStarted', 'countersReset'):
+            anchor = row; qualified = 0
+        elif reason == 'windowPending':
+            require(anchor is not None and row['generation'] == anchor['generation'] and
+                    elapsed-anchor['elapsed'] < 8)
+        else:
+            anchor = None; qualified = 0
+        require(row['qualifiedWindows'] == qualified)
+        if reason in ('reserved', 'firstQualifiedWindow'):
+            require(bitrate is not None and bitrate >= 955000 and requests is not None and requests >= 3)
+            require(row['allowed'] and row['sawHigh'] and row['width'] == 320 and
+                    row['bufferAhead'] >= 5 and row['remaining'] >= 20 and row['overdue'] > 0)
+        if reason == 'reserved':
+            require(budget == attempts + 1 and due is not None and
+                    math.isclose(due-elapsed, .5 if budget == 1 else 1, abs_tol=1e-6))
+            pending = (budget, row['generation'], due); reservations += 1
+        else:
+            require(budget == attempts)
+            if reason == 'ticketReady':
+                require(pending is not None and pending[0] == budget and
+                        pending[1] == row['generation'] and elapsed >= pending[2])
+                pending = None; tickets += 1
+            elif reason != 'backoff': pending = None
+        attempts = budget
+        counts[reason] = counts.get(reason, 0) + 1
+    require(attempts == expected_attempts)
+    return dict(samples=len(rows), reasonCounts=counts, attempts=attempts,
+        reservations=reservations, tickets=tickets, triggerExercised=tickets > 0,
+        windowBitrateMinimum=min(rates) if rates else None,
+        windowBitrateMaximum=max(rates) if rates else None, capabilityAccepted=False)
+
+
 def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0,
               expected_recovery_action=None, expected_auto_scenario='normal'):
     def require(value):
@@ -318,6 +430,10 @@ def run(args):
         rows=read_rows(out/'rows.jsonl')
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
+        policy_version = policy_trace_version(rows)
+        if recovery_action == 'auto-reload' and policy_version == 1:
+            receipt['policyObservation'] = summarize_policy(read_rows(out/'policy-decisions.jsonl'),
+                expected_attempts=rows[-1]['automaticAttempts'])
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
                                          expected_recovery_action=recovery_action, expected_auto_scenario=auto_scenario)

@@ -11,6 +11,25 @@ Recovery attribution uses installation completion (`elapsedAfter`) when availabl
 not the start of asynchronous preparation. The high-width observation in the main
 row summary is AVPlayerItem geometry; use the frame file for actual buffer evidence.
 
+New native captures include `policySamplingVersion: 1`. Automatic runs preserve
+`policy-decisions.jsonl` from the exact input used by each policy evaluation:
+eligibility, buffer/remaining time, cumulative transfer counters, window bitrate,
+rejection reason, reservations and backoff. The reader checks qualified-window
+counter deltas and duration, eligibility, reservations and tickets; rejected inputs
+may retain unknown/negative values without becoming eligible. The receipt validates this trace and
+reports `policyObservation`. `triggerExercised` means a recovery ticket was issued;
+it does not prove installation, successful upshift, continuity or acceptance.
+Zero attempts is explicitly untriggered, even when the media reaches EOF.
+Historical captures without the version remain readable; exact decisions cannot
+be reconstructed retroactively from their less frequent main rows.
+
+The XCTest action log records package-owned `[YL-ABR]` failure codes plus iOS
+route/interruption/lifecycle notification types and numeric reasons, with probe
+elapsed time. It does not log audio device names, credentials or source URLs and
+does not resume playback in response to these notifications. Main rows retain
+backend status/failure code alongside AVPlayer item status, which alone may stay
+ready after the backend's stall watchdog fails the session.
+
 For an explicitly paired physical iPhone, the native diagnostic collector supports
 `--physical-device UDID --owned-host RFC1918_IPV4` instead of `--device SIMULATOR_UUID`.
 Build the test host and test bundle with development signing first (the example's
@@ -321,3 +340,9 @@ Executable identity compares resolved paths so `/tmp` and `/private/tmp` aliases
 identify the same host. Cleanup still requires the exact captured PID, start
 time and process identity; a different executable path is rejected. An absent
 or unverified launched host never becomes a successful cleanup claim.
+
+The macOS native publication tests depend on the real display clock. Record the
+display awake/sleep condition when investigating missing frames. Keep the display
+awake for foreground playback tests (for example, scope `caffeinate -u -d -i` to
+the test command); retain any prior sleep-condition failures and use the same
+binary and deadlines for the comparison. This is not background-playback acceptance.

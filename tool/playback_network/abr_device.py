@@ -9,7 +9,7 @@ import time
 from urllib.parse import unquote, urlparse
 
 FILES = ('process.json', 'rows.jsonl', 'frame-samples.jsonl',
-         'automatic-events.json', 'recovery-attempt.json')
+         'automatic-events.json', 'recovery-attempt.json', 'policy-decisions.jsonl')
 
 
 def invoke(args, out, name):
