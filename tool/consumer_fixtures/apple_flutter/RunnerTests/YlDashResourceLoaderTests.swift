@@ -192,6 +192,7 @@ private final class AbrHeldMetadataLoader: NSObject, AVAssetResourceLoaderDelega
 // Owned diagnostic experiment only; never a production recovery hook.
 private enum AbrDiagnosticCandidatePreparation {
   @MainActor static func loadMetadata(_ asset: AVURLAsset, deadlineUptime: Double,
+    allowed: () -> Bool = { true }, onStarted: () -> Void = {},
     cancelPending: () -> Void) async -> String {
     // AVAsset cancellation alone does not guarantee that an owned resource
     // loader has terminated its requests. Every abort releases both owners.
@@ -199,11 +200,13 @@ private enum AbrDiagnosticCandidatePreparation {
       asset.cancelLoading(); cancelPending(); return outcome
     }
     guard deadlineUptime.isFinite else { return abort("failed") }
-    guard !Task.isCancelled else { return abort("cancelled") }
+    guard !Task.isCancelled, allowed() else { return abort("cancelled") }
     guard ProcessInfo.processInfo.systemUptime < deadlineUptime else { return abort("timedOut") }
     let keys = ["playable", "tracks", "duration"]
     asset.loadValuesAsynchronously(forKeys: keys, completionHandler: {})
+    onStarted() // Diagnostic injection only after the loading operation is issued.
     while !Task.isCancelled {
+      guard allowed() else { return abort("cancelled") }
       guard ProcessInfo.processInfo.systemUptime < deadlineUptime else {
         return abort("timedOut")
       }
@@ -222,6 +225,8 @@ private enum AbrDiagnosticCandidatePreparation {
         }
       }
       if allLoaded {
+        guard !Task.isCancelled, allowed() else { return abort("cancelled") }
+        guard ProcessInfo.processInfo.systemUptime < deadlineUptime else { return abort("timedOut") }
         if asset.isPlayable { return "loaded" }
         return abort("unplayable")
       }
@@ -242,7 +247,8 @@ private final class AbrPrerollCompletion: @unchecked Sendable {
 // Diagnostic only: the final backend still performs its exact resume seek.
 private enum AbrDiagnosticPreroll {
   @MainActor static func prepare(_ asset: AVURLAsset, position: CMTime, deadlineUptime: Double,
-    allowed: () -> Bool, onReady: () -> Void = {}, cancelPending: () -> Void) async
+    allowed: () -> Bool, onReady: () -> Void = {},
+    onOperationStarted: (String) -> Void = { _ in }, cancelPending: () -> Void) async
     -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool) {
     var candidate: AVPlayer?
     var stage = "beforeLoading"
@@ -282,6 +288,7 @@ private enum AbrDiagnosticPreroll {
     stage = "seeking"
     let seek = AbrPrerollCompletion()
     player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero) { seek.finish($0) }
+    onOperationStarted(stage)
     while seek.result == nil {
       if let reason = rejection() { return finish(reason) }
       if player.status == .failed || item.status == .failed { return finish("failed") }
@@ -296,6 +303,7 @@ private enum AbrDiagnosticPreroll {
     stage = "preroll"
     let preroll = AbrPrerollCompletion()
     player.preroll(atRate: 1) { preroll.finish($0) }
+    onOperationStarted(stage)
     while preroll.result == nil {
       if let reason = rejection() { return finish(reason) }
       if player.status == .failed || item.status == .failed { return finish("failed") }
@@ -473,6 +481,72 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  @MainActor func testMetadataPreparationReleasesRequestsWhenIntentIsRevoked() async {
+    let started = expectation(description: "real metadata request entered")
+    let cancelled = expectation(description: "revocation terminates metadata requests")
+    let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+    let asset = AVURLAsset(url: URL(string: "yl-intent-test://owned/\(UUID().uuidString)/master.m3u8")!)
+    asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.metadata.intent"))
+    var allowed = true
+    let operation = Task { @MainActor in
+      await AbrDiagnosticCandidatePreparation.loadMetadata(asset,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+        allowed: { allowed }, cancelPending: { held.cancelAll() })
+    }
+    await fulfillment(of: [started], timeout: 1)
+    allowed = false
+    await fulfillment(of: [cancelled], timeout: 1)
+    let result = await operation.value
+    XCTAssertEqual(result, "cancelled", "Revoked intent must cancel, not wait for the deadline")
+    XCTAssertEqual(held.cancellationState.pending, 0)
+    XCTAssertEqual(held.cancellationState.owner, 1)
+    XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+    withExtendedLifetime(held) {}
+  }
+
+  @MainActor func testMetadataPreparationRejectsDeniedIntentAndTaskCancellation() async {
+    var cleanups = 0, starts = 0
+    let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+    let denied = await AbrDiagnosticCandidatePreparation.loadMetadata(AVURLAsset(url: absent),
+      deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, allowed: { false },
+      onStarted: { starts += 1 }, cancelPending: { cleanups += 1 })
+    XCTAssertEqual(denied, "cancelled"); XCTAssertEqual(starts, 0); XCTAssertEqual(cleanups, 1)
+    let started = expectation(description: "task-cancel metadata request entered")
+    let cancelled = expectation(description: "task cancellation terminates requests")
+    let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+    let asset = AVURLAsset(url: URL(string: "yl-task-test://owned/\(UUID().uuidString)/master.m3u8")!)
+    asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.metadata.task"))
+    let operation = Task { @MainActor in
+      await AbrDiagnosticCandidatePreparation.loadMetadata(asset,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, cancelPending: { held.cancelAll() })
+    }
+    await fulfillment(of: [started], timeout: 1)
+    operation.cancel()
+    await fulfillment(of: [cancelled], timeout: 1)
+    let result = await operation.value
+    XCTAssertEqual(result, "cancelled"); XCTAssertEqual(held.cancellationState.pending, 0)
+    XCTAssertEqual(held.cancellationState.owner, 1); XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+    withExtendedLifetime(held) {}
+  }
+
+  @MainActor func testPrerollPreparationCancelsAfterSeekAndPrerollAreIssued() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    for target in ["seeking", "preroll"] {
+      var allowed = true, injected = 0, cleanups = 0
+      let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media),
+        position: CMTime(value: 1, timescale: 1), deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+        allowed: { allowed }, onOperationStarted: { stage in
+          if stage == target { injected += 1; allowed = false }
+        }, cancelPending: { cleanups += 1 })
+      XCTAssertEqual(injected, 1, target); XCTAssertEqual(result.stage, target)
+      XCTAssertEqual(result.outcome, "cancelled"); XCTAssertTrue(result.detached)
+      XCTAssertNil(result.item); XCTAssertFalse(result.reusesPrerolledItem); XCTAssertEqual(cleanups, 1)
+    }
+  }
+
   @MainActor func testCandidateMetadataPreparationRejectsExpiredAndFailedAssets() async {
     let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
     let expiredAsset = AVURLAsset(url: absent)
@@ -626,7 +700,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertTrue((0...2000).contains(startupDelayMs))
     let recoveryAction = env["YL_ABR_PROBE_RECOVERY_ACTION"] ?? "none"
     let autoScenario = env["YL_ABR_PROBE_AUTO_SCENARIO"] ?? "normal"
-    guard ["normal", "pause-first", "pause-during-preparation"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
+    guard ["normal", "pause-first", "pause-during-preparation", "pause-during-metadata", "seek-during-preparation"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
       XCTFail("Invalid automatic recovery scenario"); return
     }
     guard ["none", "seek-current", "reload-source", "auto-reload"].contains(recoveryAction),
@@ -638,7 +712,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
       candidatePreparation == "manifest-only" || (recoveryAction == "auto-reload" && !direct && programmeSeconds == 120) else {
       XCTFail("Invalid candidate preparation diagnostic"); return
     }
-    guard autoScenario != "pause-during-preparation" || candidatePreparation == "asset-preroll" else {
+    guard autoScenario != "pause-during-metadata" || candidatePreparation == "asset-metadata" else {
+      XCTFail("Metadata intent injection requires metadata preparation"); return
+    }
+    guard !["pause-during-preparation", "seek-during-preparation"].contains(autoScenario) || candidatePreparation == "asset-preroll" else {
       XCTFail("Mid-preparation pause requires preroll"); return
     }
     // Preserve the historical managed probe's preparation-before-player order.
@@ -924,7 +1001,21 @@ final class YlDashResourceLoaderTests: XCTestCase {
               event["warmupPositionBefore"] = finite(CMTimeGetSeconds(player.currentTime()))
               let outcome = await AbrDiagnosticCandidatePreparation.loadMetadata(replacement.asset,
                 deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
-                cancelPending: { replacement.discard() })
+                allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
+                onStarted: {
+                  if autoScenario == "pause-during-metadata", ticket.attempt == 1 {
+                    automaticPolicy.invalidateIntent()
+                    do {
+                      try XCTUnwrap(backend).pause()
+                      event["metadataPauseApplied"] = true
+                      event["metadataPauseElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                      resumeTask = Task { @MainActor in
+                        do { try await Task.sleep(nanoseconds: 2_000_000_000); try backend?.play() }
+                        catch { /* Cancellation cannot resume disposed output. */ }
+                      }
+                    } catch { event["metadataPauseApplied"] = false }
+                  }
+                }, cancelPending: { replacement.discard() })
               event["warmupOutcome"] = outcome
               event["warmupCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
               event["warmupProxyAfter"] = replacement.loader.diagnosticProxySnapshot
@@ -945,6 +1036,16 @@ final class YlDashResourceLoaderTests: XCTestCase {
               deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
               allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
               onReady: {
+                if autoScenario == "seek-during-preparation", ticket.attempt == 1 {
+                  automaticPolicy.invalidateIntent()
+                  let target = Int64(CMTimeGetSeconds(player.currentTime()) * 1_000) + 1_000
+                  event["preparationSeekTargetMs"] = target
+                  do {
+                    try XCTUnwrap(backend).seek(toMs: target)
+                    event["preparationSeekApplied"] = true
+                    event["preparationSeekElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  } catch { event["preparationSeekApplied"] = false }
+                }
                 if autoScenario == "pause-during-preparation", ticket.attempt == 1 {
                   try? backend?.pause(); automaticPolicy.invalidateIntent()
                   event["preparationPauseApplied"] = true

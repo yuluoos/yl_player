@@ -709,6 +709,11 @@
       "path": "docs/superpowers/reports/2026-10-28-ios-item-preroll.md",
       "sha256": "49a22189d5b869b69b241875f9e415ce242d82a4f9f8f39458a28ff5b17c2f0f",
       "kind": "report"
+    },
+    "ios-preparation-intent-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-ios-preparation-intent.md",
+      "sha256": "03cc101a5d66f1051af3d59abefff123311d2442c4b84322a47034dd283bca23",
+      "kind": "report"
     }
   },
   "rows": [
@@ -747,10 +752,11 @@
         "ios-request-boundary-20261027",
         "ios-candidate-preparation-20261028",
         "ios-route-pause-20261028",
-        "ios-item-preroll-20261028"
+        "ios-item-preroll-20261028",
+        "ios-preparation-intent-20261028"
       ],
       "acceptance": null,
-      "nextAction": "reproduce-original-stall-and-trigger-qualify-shorter-frame-gap-and-physical-continuity-with-full-intent-race-matrix"
+      "nextAction": "qualify-original-profile-auto-recovery-credential-constraint-races-shorter-frame-gap-and-physical-output-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -767,7 +773,8 @@
         "ios-request-boundary-20261027",
         "ios-candidate-preparation-20261028",
         "ios-route-pause-20261028",
-        "ios-item-preroll-20261028"
+        "ios-item-preroll-20261028",
+        "ios-preparation-intent-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -800,7 +807,8 @@
         "ios-request-boundary-20261027",
         "ios-candidate-preparation-20261028",
         "ios-route-pause-20261028",
-        "ios-item-preroll-20261028"
+        "ios-item-preroll-20261028",
+        "ios-preparation-intent-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

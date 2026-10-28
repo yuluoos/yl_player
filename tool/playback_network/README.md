@@ -423,3 +423,19 @@ records whether this point was reached. Resume after the diagnostic pause cannot
 revive that ticket; a second reservation uses the original longer backoff. This
 one injection does not cover every seek/preroll/credential/constraint race, and
 an unexercised injection must remain unverified.
+
+Metadata preparation also revalidates the original ticket before loading,
+throughout polling and before returning success. Revocation cancels the asset
+and its owned loader requests instead of waiting for the two-second deadline.
+`--auto-scenario pause-during-metadata` requires `asset-metadata`; it pauses and
+invalidates the first ticket after issuing the metadata loading operation.
+This injection alone does not prove a network request had already arrived;
+separate native tests hold actual resource-loader requests and verify cancellation.
+
+`--auto-scenario seek-during-preparation` requires `asset-preroll`; after actual
+candidate readiness it invalidates the first ticket and asks the existing backend
+to seek forward one second. Events record successful invocation and the target.
+The real frame trace must still be inspected for the landing and old-item retention.
+Neither scenario changes budgets, backoff, exact seek or capability acceptance.
+Native local-media tests separately cancel after seek and preroll calls are issued;
+these cover operation boundaries, not every asynchronous race or physical output.
