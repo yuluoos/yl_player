@@ -1,0 +1,275 @@
+[
+  {
+    "name": "baseline",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6568,
+      "publishedFrames": 2830,
+      "maximumPumpGapMs": 472.6175833332036,
+      "maximumPublishedFrameGapMs": 472.6175833332036,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 1.0254726666667011,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 5.2349591250001595,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 18.218340791666833,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 65.22991933333333,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 105.22037658333352,
+        "width": 320,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 120.175390968,
+    "lastWidth": 320,
+    "completed": true,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [
+      {
+        "attempt": 1,
+        "due": 44.076463083333465,
+        "elapsed": 44.08420708333347,
+        "elapsedAfter": 44.36324820833329,
+        "generation": 0,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 43.23550517,
+        "preparationCompletedElapsed": 44.36014933333331,
+        "textureClearsAfter": 1,
+        "textureClearsBefore": 1,
+        "firstHighPublishedElapsed": 49.3974614166666
+      }
+    ],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6902,
+      "publishedFrames": 2879,
+      "maximumPumpGapMs": 175.98854166658384,
+      "maximumPublishedFrameGapMs": 292.07283333335,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 44.36002416666679,
+          "elapsedAfter": 44.65209700000014,
+          "publicationGapMs": 292.07283333335,
+          "positionDeltaMs": 0.36453799999947023,
+          "textureClears": 0
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.6946912083333245,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.8611803750000036,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 18.865250125000102,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 49.3974614166666,
+        "width": 640,
+        "generation": 1
+      }
+    ],
+    "lastPosition": 120.057271225,
+    "lastWidth": 640,
+    "completed": true,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto-repeat",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [
+      {
+        "attempt": 1,
+        "due": 60.23713179166657,
+        "elapsed": 60.24447745833322,
+        "elapsedAfter": 60.533785499999794,
+        "generation": 0,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 59.528010743,
+        "preparationCompletedElapsed": 60.53106266666646,
+        "textureClearsAfter": 1,
+        "textureClearsBefore": 1,
+        "firstHighPublishedElapsed": 65.2276924583332
+      }
+    ],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6858,
+      "publishedFrames": 2881,
+      "maximumPumpGapMs": 131.6449166665734,
+      "maximumPublishedFrameGapMs": 304.69029166670225,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 60.513254999999845,
+          "elapsedAfter": 60.81794529166655,
+          "publicationGapMs": 304.69029166670225,
+          "positionDeltaMs": 18.06779500000033,
+          "textureClears": 0
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.5608176249997996,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.7344557499998245,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 18.72436387499988,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 65.2276924583332,
+        "width": 640,
+        "generation": 1
+      }
+    ],
+    "lastPosition": 120.016335167,
+    "lastWidth": 640,
+    "completed": true,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto-pause",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [
+      {
+        "attempt": 1,
+        "due": 44.02504379166703,
+        "elapsed": 44.03510854166689,
+        "elapsedAfter": 44.31873170833342,
+        "generation": 0,
+        "outcome": "cancelled",
+        "positionBefore": 43.174606165,
+        "preparationCompletedElapsed": 44.31802762500001,
+        "textureClearsAfter": 1,
+        "textureClearsBefore": 1,
+        "firstHighPublishedElapsed": null
+      },
+      {
+        "attempt": 2,
+        "due": 63.486037874999965,
+        "elapsed": 63.508202708333556,
+        "elapsedAfter": 63.761700875000315,
+        "generation": 0,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 60.623656161,
+        "preparationCompletedElapsed": 63.75976537500037,
+        "textureClearsAfter": 1,
+        "textureClearsBefore": 1,
+        "firstHighPublishedElapsed": 67.31450229166694
+      }
+    ],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6926,
+      "publishedFrames": 2879,
+      "maximumPumpGapMs": 232.95329166649026,
+      "maximumPublishedFrameGapMs": 2037.1736666666038,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 63.723179583333604,
+          "elapsedAfter": 63.98830054166683,
+          "publicationGapMs": 265.12095833322746,
+          "positionDeltaMs": 36.797047000000305,
+          "textureClears": 0
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.6841502500001297,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.87732887500033,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 18.867359916666828,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 67.31450229166694,
+        "width": 640,
+        "generation": 1
+      }
+    ],
+    "lastPosition": 120.014069758,
+    "lastWidth": 640,
+    "completed": true,
+    "capabilityAccepted": false
+  }
+]

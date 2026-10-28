@@ -1,0 +1,51 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "modelName" : "iPhone 16",
+        "osBuildNumber" : "24B119",
+        "osVersion" : "27.2",
+        "platform" : "iOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1793159882.661,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793159874.21,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to install or launch the test runner. (Underlying Error: 无法安装“Yl Player Example”. This device has reached the maximum number of installed apps using a free developer profile: {(\n    \"JAKM34U2X8.com.example.tvs.JAKM34U2X8\",\n    \"JAKM34U2X8.com.JAKM34U2X8.com.rileytestut.AltStore\",\n    \"JAKM34U2X8.com.batterytesting.BatteryTesting.JAKM34U2X8\"\n)}. (Underlying Error: Failed to install the app on the device. (Underlying Error: 无法安装“Yl Player Example”. 无法安装此App，因为无法验证其完整性。. This device has reached the maximum number of installed apps using a free developer profile: {(\n    \"JAKM34U2X8.com.example.tvs.JAKM34U2X8\",\n    \"JAKM34U2X8.com.JAKM34U2X8.com.rileytestut.AltStore\",\n    \"JAKM34U2X8.com.batterytesting.BatteryTesting.JAKM34U2X8\"\n)}. (Underlying Error: This device has reached the maximum number of installed apps using a free developer profile: {(\n    \"JAKM34U2X8.com.example.tvs.JAKM34U2X8\",\n    \"JAKM34U2X8.com.JAKM34U2X8.com.rileytestut.AltStore\",\n    \"JAKM34U2X8.com.batterytesting.BatteryTesting.JAKM34U2X8\"\n)}))))",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "Runner encountered an error",
+      "testName" : "Runner encountered an error"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 1
+}

@@ -1,0 +1,152 @@
+{
+  "method": "Post-hoc main-row sampling; not exact policy decisions or available bandwidth proof",
+  "thresholdUnchanged": 955000,
+  "runs": [
+    {
+      "name": "baseline",
+      "eligibleHighRowCount": 53,
+      "estimatedWindows": [
+        {
+          "start": 23.99397783333552,
+          "end": 32.01878458333522,
+          "bitrate": 701151.0205445221,
+          "requests": 24,
+          "meetsBitrate": false
+        },
+        {
+          "start": 32.01878458333522,
+          "end": 40.074167791666696,
+          "bitrate": 680587.7512040127,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 40.074167791666696,
+          "end": 48.14432912500342,
+          "bitrate": 764206.7797921166,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 48.14432912500342,
+          "end": 56.20239108333044,
+          "bitrate": 881621.809202782,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 56.20239108333044,
+          "end": 64.24690725000255,
+          "bitrate": 886046.5981535123,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 64.24690725000255,
+          "end": 72.28122441666346,
+          "bitrate": 764152.0745059386,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 72.28122441666346,
+          "end": 80.34115195833147,
+          "bitrate": 778525.335166501,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 80.34115195833147,
+          "end": 88.58341845833638,
+          "bitrate": 898577.3890859663,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 88.58341845833638,
+          "end": 96.8391454583325,
+          "bitrate": 832072.6171192026,
+          "requests": 20,
+          "meetsBitrate": false
+        }
+      ],
+      "actualRecordedAttempts": 0
+    },
+    {
+      "name": "auto",
+      "eligibleHighRowCount": 55,
+      "estimatedWindows": [
+        {
+          "start": 18.97183816666802,
+          "end": 27.00684358333092,
+          "bitrate": 262854.30420739023,
+          "requests": 23,
+          "meetsBitrate": false
+        },
+        {
+          "start": 27.00684358333092,
+          "end": 35.09196104166767,
+          "bitrate": 677480.2972052715,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 35.09196104166767,
+          "end": 43.185252291666984,
+          "bitrate": 723100.6045255936,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 43.185252291666984,
+          "end": 51.38758491666522,
+          "bitrate": 684989.6082041058,
+          "requests": 18,
+          "meetsBitrate": false
+        },
+        {
+          "start": 51.38758491666522,
+          "end": 59.42576887500036,
+          "bitrate": 793102.5754358924,
+          "requests": 17,
+          "meetsBitrate": false
+        },
+        {
+          "start": 59.42576887500036,
+          "end": 67.49975304166583,
+          "bitrate": 642740.6259506693,
+          "requests": 19,
+          "meetsBitrate": false
+        },
+        {
+          "start": 67.49975304166583,
+          "end": 75.61396004166454,
+          "bitrate": 832102.5345665935,
+          "requests": 18,
+          "meetsBitrate": false
+        }
+      ],
+      "actualRecordedAttempts": 0
+    },
+    {
+      "name": "auto-repeat",
+      "eligibleHighRowCount": 183,
+      "estimatedWindows": [],
+      "actualRecordedAttempts": 0
+    },
+    {
+      "name": "auto-pause",
+      "eligibleHighRowCount": 287,
+      "estimatedWindows": [
+        {
+          "start": 26.11755716666812,
+          "end": 34.18332716666191,
+          "bitrate": 856334.218660849,
+          "requests": 22,
+          "meetsBitrate": false
+        }
+      ],
+      "actualRecordedAttempts": 0
+    }
+  ]
+}

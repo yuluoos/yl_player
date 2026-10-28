@@ -1,5 +1,33 @@
 # Reproducible HTTP network profiles
 
+The Apple recovery probe also records cumulative `textureClears` (new captures)
+and reports `replacementBoundaries` from actual published buffers on either side
+of an item generation change. A held texture is not a new frame. The publication
+gap and media-position delta are distinct; zero clears does not prove continuous
+playback or audio synchronization. Older frame files remain readable with
+`textureClears: null` in the boundary summary; missing observations are not zero.
+`generationsWithoutPublishedFrame` retains generations with no observed output.
+Recovery attribution uses installation completion (`elapsedAfter`) when available,
+not the start of asynchronous preparation. The high-width observation in the main
+row summary is AVPlayerItem geometry; use the frame file for actual buffer evidence.
+
+For an explicitly paired physical iPhone, the native diagnostic collector supports
+`--physical-device UDID --owned-host RFC1918_IPV4` instead of `--device SIMULATOR_UUID`.
+Build the test host and test bundle with development signing first (the example's
+test target normally disables signing; use `CODE_SIGNING_ALLOWED=YES` for this
+device build). The phone must permit local networking and reach the selected Mac
+interface. The listener binds only that explicit canonical private IPv4 address;
+wildcard, public, link-local, hostname and implicit LAN binding are rejected.
+The standalone server CLI and all non-device probes still bind loopback only.
+The native probe also checks the explicit host, port, path and capture token.
+
+Device observations are exported from this test app's random temporary directory
+with `devicectl`. Collection copies only the bounded allowlist of observation
+files. Cleanup checks the token, device kind, PID and full executable path before
+termination; an unverified cleanup makes the receipt fail. A successful device
+receipt proves collection and validation, not screen output, audio synchronization,
+or CAP-ABR acceptance. Keep failed signing, installation and capture attempts.
+
 P04 Task 1A tool slice. Python standard library only; no native build or player
 process required. Serves an owned two-rendition AVC/AAC fixture after checking
 every `SHA256SUMS` entry, and freezes those bytes in memory. The source has two

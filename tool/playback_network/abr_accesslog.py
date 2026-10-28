@@ -13,8 +13,9 @@ import threading
 import time
 import uuid
 from xml.parsers.expat import ExpatError
-from network_profile import load_profiles, make_server
+from network_profile import load_profiles, make_server, owned_bind_host
 from prepare_fixture import create
+import abr_device
 
 
 def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0,
@@ -69,6 +70,9 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
             for key in ('elapsed', 'positionBefore'):
                 require(type(attempt.get(key)) in (int, float) and math.isfinite(attempt[key]) and attempt[key] >= 0)
             require(rows[0]['elapsed'] <= attempt['elapsed'] <= rows[-1]['elapsed'])
+            if 'elapsedAfter' in attempt:
+                require(type(attempt['elapsedAfter']) in (int, float) and math.isfinite(attempt['elapsedAfter']) and
+                        attempt['elapsed'] <= attempt['elapsedAfter'] <= rows[-1]['elapsed'])
             intervention = attempt
     if expected_duration_seconds is not None or expected_transport is not None:
         require(type(expected_duration_seconds) is int and expected_duration_seconds in (40, 120))
@@ -99,7 +103,7 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
         elif down and b>a:recovered=True
     return dict(schemaVersion=1,geometryWidths=widths,downshiftObserved=down,
         recoveryInterventionApplied=intervention is not None,
-        highOutputAfterInterventionObserved=(any(row['elapsed'] > intervention['elapsed'] and
+        highOutputAfterInterventionObserved=(any(row['elapsed'] > intervention.get('elapsedAfter', intervention['elapsed']) and
             row['width'] == 640 for row in rows) if intervention else None),
         upshiftAfterDownshiftObserved=recovered,lastObservedBitrate=observed,
         lastIndicatedBitrate=last.get('indicatedBitrate'),framesPublished=rows[-1]['framesPublished'],
@@ -112,6 +116,8 @@ def summarize_frames(rows, *, expected_frames):
         if not value: raise ValueError('invalid frame publication observation')
     require(type(expected_frames) is int and expected_frames > 0 and 2 <= len(rows) <= 15000)
     previous_time = -1; generation = 0; total = 0; published = []; pump_gaps = []
+    has_clears = any('textureClears' in row for row in rows if isinstance(row, dict))
+    previous_clears = 0; generations = set()
     for row in rows:
         require(isinstance(row, dict))
         elapsed = row.get('elapsed'); position = row.get('position')
@@ -119,15 +125,27 @@ def summarize_frames(rows, *, expected_frames):
         require(type(position) in (int, float) and math.isfinite(position) and position >= 0)
         require(type(row.get('generation')) is int and generation <= row['generation'])
         generation = row['generation']
+        generations.add(generation)
+        if has_clears:
+            require(type(row.get('textureClears')) is int and row['textureClears'] >= previous_clears)
+            previous_clears = row['textureClears']
         count = row.get('frames'); require(type(count) is int and 0 <= count <= 2)
         require(type(row.get('width')) is int and (row['width'] in (320, 640) if count else row['width'] == 0))
         if previous_time >= 0: pump_gaps.append((elapsed - previous_time) * 1000)
         previous_time = elapsed; total += count
-        if count: published.append(elapsed)
+        if count: published.append(row)
     require(total == expected_frames)
+    boundaries = [dict(generationBefore=a['generation'], generationAfter=b['generation'],
+        elapsedBefore=a['elapsed'], elapsedAfter=b['elapsed'],
+        publicationGapMs=(b['elapsed']-a['elapsed'])*1000,
+        positionDeltaMs=(b['position']-a['position'])*1000,
+        textureClears=b['textureClears']-a['textureClears'] if has_clears else None)
+        for a,b in zip(published,published[1:]) if a['generation'] != b['generation']]
     return dict(frameSamplingVersion=2, sampleCount=len(rows), publishedFrames=total,
         maximumPumpGapMs=max(pump_gaps),
-        maximumPublishedFrameGapMs=max(((b-a)*1000 for a,b in zip(published,published[1:])), default=None),
+        maximumPublishedFrameGapMs=max(((b['elapsed']-a['elapsed'])*1000 for a,b in zip(published,published[1:])), default=None),
+        replacementBoundaries=boundaries,
+        generationsWithoutPublishedFrame=sorted(generations - {row['generation'] for row in published}),
         continuityAccepted=False, audioSynchronizationVerified=False, physicalOutputVerified=False)
 
 
@@ -211,10 +229,21 @@ def run(args):
     server=None;thread=None;process=None;log=None;output=None;owned=None
     token=uuid.uuid4().hex
     before=None;products=None
+    physical_device = getattr(args, 'physical_device', None)
+    bundle = None; executable = None
+    receipt['deviceKind'] = 'physical' if physical_device else ('simulator' if args.device else 'macos')
     def hashes():
         paths=[p for p in products.rglob('*') if p.is_file() and ('.app/' in str(p) or p.suffix=='.xctestrun')]
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     try:
+        host = getattr(args, 'owned_host', None)
+        if physical_device:
+            if args.device or not re.fullmatch('[0-9A-Fa-f]{8}-[0-9A-Fa-f]{16}', physical_device) or host is None:
+                raise ValueError('invalid physical device selection')
+            host = owned_bind_host(host)
+        elif host is not None:
+            raise ValueError('private listener requires physical device selection')
+        else: host = '127.0.0.1'
         duration_seconds = getattr(args, 'duration_seconds', 40)
         direct = getattr(args, 'direct_hls_control', False)
         startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
@@ -248,6 +277,7 @@ def run(args):
             if app.name=='MacOS':app=app.parent.parent
         info=app/('Contents/Info.plist' if (app/'Contents').is_dir() else 'Info.plist')
         executable=plistlib.loads(info.read_bytes())['CFBundleExecutable']
+        if physical_device: bundle=plistlib.loads(info.read_bytes())['CFBundleIdentifier']
         before=hashes();receipt['binaryHashes']=before
         receipt['fixture']=create(out/'fixture', duration_seconds=duration_seconds,
                                   direct_hls_control=direct)
@@ -256,11 +286,14 @@ def run(args):
         if args.device:
             if not re.fullmatch('[0-9A-Fa-f-]{36}',args.device):raise ValueError('invalid simulator identifier')
             destination='platform=iOS Simulator,id='+args.device
+        if physical_device: destination='platform=iOS,id='+physical_device
         log=(out/'requests.jsonl').open('w');output=(out/'xcode.log').open('w')
-        server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog')
+        server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog',
+                           owned_host=host if physical_device else None)
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
         target.setdefault('EnvironmentVariables',{}).update(
-            YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://127.0.0.1:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
+            YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://{host}:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
+            YL_ABR_PROBE_DEVICE='1' if physical_device else '0', YL_ABR_PROBE_OWNED_HOST=host if physical_device else '',
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
             YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
@@ -273,7 +306,7 @@ def run(args):
         try:
             def observe():
                 nonlocal owned
-                if owned is None:owned=observe_owned(out,token,executable)
+                if not physical_device and owned is None:owned=observe_owned(out,token,executable)
             receipt['exitCode']=wait_for_native(process, command, observe)
         except subprocess.TimeoutExpired:
             receipt['errors'].append('native deadline')
@@ -281,7 +314,10 @@ def run(args):
                 os.killpg(process.pid,signal.SIGTERM)
                 try:process.wait(timeout=10)
                 except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=10)
+        if physical_device: abr_device.collect(physical_device, bundle, out, token)
         rows=read_rows(out/'rows.jsonl')
+        if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
+            raise ValueError('physical capture requires native device identity')
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
                                          expected_recovery_action=recovery_action, expected_auto_scenario=auto_scenario)
@@ -300,8 +336,9 @@ def run(args):
                 except ProcessLookupError: pass
                 process.wait(timeout=10)
         try:
-            receipt['ownedProcessExited']=cleanup_owned(owned)
-        except (OSError,RuntimeError,subprocess.SubprocessError):
+            receipt['ownedProcessExited']=(abr_device.cleanup(physical_device,out,token,executable)
+                if physical_device and executable else cleanup_owned(owned))
+        except (OSError,ValueError,KeyError,TypeError,RuntimeError,subprocess.SubprocessError):
             receipt['ownedProcessExited']=False
         if process is not None and not receipt['ownedProcessExited']:
             receipt['errors'].append('owned process cleanup unverified')
@@ -315,7 +352,9 @@ def run(args):
                 receipt['binaryIdentityUnchanged']=before==hashes()
             except OSError:
                 receipt['errors'].append('binary identity recheck failed')
-        receipt['passed']=receipt['exitCode']==0 and not receipt['errors'] and receipt['binaryIdentityUnchanged']
+        receipt['passed']=(receipt['exitCode']==0 and not receipt['errors'] and receipt['binaryIdentityUnchanged']
+                           and isinstance(receipt.get('observation'), dict)
+                           and isinstance(receipt.get('continuityObservation'), dict))
         (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
     return receipt
 
@@ -324,6 +363,8 @@ def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--products',type=Path,required=True);p.add_argument('--directory',type=Path,required=True)
     p.add_argument('--device',help='Explicit iOS Simulator UUID; omit for native arm64 macOS')
+    p.add_argument('--physical-device', help='Explicit paired iPhone UDID; requires --owned-host')
+    p.add_argument('--owned-host', help='Explicit owned RFC1918 IPv4 interface for physical-device capture')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)
     p.add_argument('--startup-delay-ms',type=int,default=0,

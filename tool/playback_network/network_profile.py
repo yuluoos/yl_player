@@ -6,6 +6,7 @@ player changes, global network settings, or inferred playback measurements.
 """
 import argparse
 import hashlib
+import ipaddress
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 import math
@@ -179,11 +180,24 @@ def byte_range(value, length):
     return start, end
 
 
+def owned_bind_host(value):
+    if value is None:
+        return '127.0.0.1'
+    if not isinstance(value, str):
+        raise ValueError('invalid owned listener')
+    address = ipaddress.IPv4Address(value)
+    if str(address) != value or not any(address in ipaddress.IPv4Network(net)
+            for net in ('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16')):
+        raise ValueError('owned listener requires literal RFC1918 IPv4')
+    return value
+
+
 class FixtureServer(ThreadingHTTPServer):
     daemon_threads = False
     request_queue_size = 8
 
-    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id):
+    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None):
+        host = owned_bind_host(owned_host)
         if run_id is not None and not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}', run_id):
             raise ValueError('invalid run id')
         self.assets = load_assets(root)
@@ -200,7 +214,7 @@ class FixtureServer(ThreadingHTTPServer):
         self.run_id = run_id
         self.timeline_mode = 'first-get' if start_on_first_get else 'server-start'
         self.started = not start_on_first_get
-        super().__init__(('127.0.0.1', port), Handler)
+        super().__init__((host, port), Handler)
 
     def process_request(self, request, client_address):
         with self.handlers:
@@ -366,8 +380,8 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def make_server(root, profile, log, port=0, now=time.monotonic, sleep=time.sleep,
-                start_on_first_get=False, run_id=None):
-    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id)
+                start_on_first_get=False, run_id=None, owned_host=None):
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
 
 
 def main():

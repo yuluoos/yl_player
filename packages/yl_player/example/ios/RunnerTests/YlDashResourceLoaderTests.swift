@@ -130,7 +130,39 @@ private struct AbrDiagnosticRecoveryPolicy {
   }
 }
 
+private enum AbrDiagnosticCaptureURL {
+  static func permits(_ url: URL, ownedHost: String?) -> Bool {
+    guard url.scheme == "http", url.user == nil, url.password == nil,
+      url.query == nil, url.fragment == nil, url.path == "/manifest.mpd",
+      let port = url.port, (1...65535).contains(port) else { return false }
+    guard let ownedHost else { return url.host == "127.0.0.1" }
+    guard url.host == ownedHost else { return false }
+    let parts = ownedHost.split(separator: ".", omittingEmptySubsequences: false)
+    let octets = parts.compactMap { Int($0) }
+    guard parts.count == 4, octets.count == 4,
+      zip(parts, octets).allSatisfy({ String($0.1) == $0.0 && (0...255).contains($0.1) }) else { return false }
+    return octets[0] == 10 || (octets[0] == 172 && (16...31).contains(octets[1]))
+      || (octets[0] == 192 && octets[1] == 168)
+  }
+}
+
 final class YlDashResourceLoaderTests: XCTestCase {
+  func testDeviceCaptureRequiresExplicitOwnedPrivateURL() {
+    func permits(_ text: String, _ host: String? = nil) -> Bool {
+      AbrDiagnosticCaptureURL.permits(URL(string: text)!, ownedHost: host)
+    }
+    XCTAssertTrue(permits("http://127.0.0.1:1234/manifest.mpd"))
+    XCTAssertTrue(permits("http://192.168.50.196:1234/manifest.mpd", "192.168.50.196"))
+    XCTAssertFalse(permits("http://192.168.50.196:1234/manifest.mpd"))
+    for host in ["8.8.8.8", "0.0.0.0", "169.254.1.1", "localhost", "172.32.1.1"] {
+      XCTAssertFalse(permits("http://\(host):1234/manifest.mpd", host))
+    }
+    XCTAssertFalse(permits("http://192.168.50.196:1234/manifest.mpd", "192.168.50.197"))
+    XCTAssertFalse(permits("http://user@127.0.0.1:1234/manifest.mpd"))
+    XCTAssertFalse(permits("http://127.0.0.1:1234/manifest.mpd?other=1"))
+    XCTAssertFalse(permits("http://127.0.0.1/manifest.mpd"))
+  }
+
   func testAutomaticRecoveryCandidateBudgetAndSafety() {
     XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(20, 25)]), 0)
     XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(0, 12), (20, 25)]), 2)
@@ -182,10 +214,26 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let env = ProcessInfo.processInfo.environment
     guard let rawURL = env["YL_ABR_PROBE_URL"], let rawDirectory = env["YL_ABR_PROBE_DIRECTORY"] else { return }
     let url = try XCTUnwrap(URL(string: rawURL))
-    XCTAssertEqual(url.host, "127.0.0.1")
+    let token = try XCTUnwrap(env["YL_ABR_PROBE_TOKEN"])
+    #if os(iOS) && !targetEnvironment(simulator)
+    guard env["YL_ABR_PROBE_DEVICE"] == "1", let ownedHost = env["YL_ABR_PROBE_OWNED_HOST"],
+      AbrDiagnosticCaptureURL.permits(url, ownedHost: ownedHost),
+      token.range(of: "^[a-f0-9]{32}$", options: .regularExpression) != nil else {
+      XCTFail("Physical capture requires explicit owned private source and token"); return
+    }
+    let captureDeviceKind = "physical"
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent("yl-abr-\(token)", isDirectory: true)
+    XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+    #else
+    guard env["YL_ABR_PROBE_DEVICE"] != "1", AbrDiagnosticCaptureURL.permits(url, ownedHost: nil) else {
+      XCTFail("Local capture requires loopback source"); return
+    }
+    let captureDeviceKind = "local"
     let directory = URL(fileURLWithPath: rawDirectory)
+    #endif
     let processProof: [String: Any] = ["pid": ProcessInfo.processInfo.processIdentifier,
-      "executable": ProcessInfo.processInfo.arguments[0], "token": try XCTUnwrap(env["YL_ABR_PROBE_TOKEN"])]
+      "executable": ProcessInfo.processInfo.arguments[0], "token": token, "deviceKind": captureDeviceKind]
     try JSONSerialization.data(withJSONObject: processProof, options: [.sortedKeys])
       .write(to: directory.appendingPathComponent("process.json"), options: .atomic)
     let direct = env["YL_ABR_PROBE_DIRECT_HLS"] == "1"
@@ -223,6 +271,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var tick: (() -> Void)?
     var states: [YlNativeState] = []
     var backend: YlAvPlayerBackend?
+    let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
     var directOutput: AVPlayerItemVideoOutput?
     var directCompleted = false
     var endTask: Task<Void, Never>?
@@ -246,7 +295,6 @@ final class YlDashResourceLoaderTests: XCTestCase {
         configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
         emit: { if case .state(let state) = $0.event { states = [state] } })
       backend = value
-      let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
       try value.stagePreparedHls(source: source, prepared: XCTUnwrap(prepared), resume: false)
       try value.activate(); try value.play()
     }
@@ -278,7 +326,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         frameCount += count
         let position = CMTimeGetSeconds(player.currentTime())
         let sample: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
-          "generation": frameGeneration, "frames": count, "width": width,
+          "generation": frameGeneration, "frames": count, "width": width, "textureClears": output.clears,
           "position": position.isFinite ? position : 0, "rate": player.rate,
           "timeControlStatus": player.timeControlStatus.rawValue]
         do { try frameFile.write(contentsOf: JSONSerialization.data(withJSONObject: sample, options: [.sortedKeys]) + Data([10])) }
@@ -352,7 +400,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
         "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
-        "autoScenario": autoScenario,
+        "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
         "completed": direct ? directCompleted : states.last?.status == "completed", "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
@@ -381,7 +429,6 @@ final class YlDashResourceLoaderTests: XCTestCase {
             try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
               configuration: .init(map: [:]), cancellationToken: .init())
           }.value
-          let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
           try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
           attempt["completed"] = true // installation only; landing/output checked in later rows
           attempt["itemChanged"] = player.currentItem !== item
@@ -396,7 +443,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         let before = automaticSample()
         var event: [String: Any] = ["attempt": ticket.attempt, "elapsed": before.time,
           "due": ticket.due, "generation": ticket.generation, "positionBefore": before.position,
-          "outcome": "preparing"]
+          "outcome": "preparing", "textureClearsBefore": output.clears]
         automaticEvents.append(event)
         let eventsURL = directory.appendingPathComponent("automatic-events.json")
         try JSONSerialization.data(withJSONObject: automaticEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
@@ -413,13 +460,14 @@ final class YlDashResourceLoaderTests: XCTestCase {
             try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
               configuration: .init(map: [:]), cancellationToken: .init())
           }.value
+          event["preparationCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
           if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
-            let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
             try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
             event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
           } else { replacement.discard(); event["outcome"] = "cancelled" }
         } catch { event["outcome"] = "preparationFailed" } // bounded retry, original error rows retained
         event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+        event["textureClearsAfter"] = output.clears
         automaticEvents[automaticEvents.count - 1] = event
         automaticPolicy.finish(ticket)
         try JSONSerialization.data(withJSONObject: automaticEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
@@ -864,6 +912,52 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(firstFrames, 0)
     XCTAssertEqual(failures.map(\.code), ["decoder.quality_constraint_unsupported"])
     XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+  }
+
+  @MainActor
+  func testSameSessionAutomaticReplacementRetainsFrameOnlyWithoutChangedIntent() async throws {
+    // A same-URI new load is not the same session. A seek or quality change
+    // must not keep a frame from the old timeline/policy visible.
+    for mode in ["same", "new-session", "uri", "manifest", "caps", "fixed", "seek", "pause"] {
+      let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+      let pixels = DashPixelOutput(width: 320, height: 180)
+      var tick: (() -> Void)?
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+        makeVideoOutput: { _ in pixels }, emit: { _ in })
+      defer { backend.dispose() }
+      let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let data = mpd
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false)
+      try backend.activate(); try backend.play()
+      tick?()
+      XCTAssertFalse(output.frames.isEmpty, mode)
+      player.measuredTime = CMTime(value: 1_000_500, timescale: 1_000_000)
+      var replacementSource = source
+      if mode == "new-session" { replacementSource.managedRequestIntent = .init() }
+      if mode == "uri" { replacementSource.uri = "https://origin.test/other.mpd" }
+      if mode == "seek" { try backend.seek(toMs: 2_000) }
+      if mode == "pause" { try backend.pause() }
+      let changed = YlDashManifestSnapshot(data: data + Data([10]), effectiveURL: snapshot.effectiveURL,
+        credentialsStripped: snapshot.credentialsStripped)
+      let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+        videoConstraints: mode == "caps" ? .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil) : .unconstrained,
+        fixedTrackId: mode == "fixed" ? "dash-video-w320-h180-b1000" : nil,
+        headers: [:], configuration: .init(map: [:]), cancellationToken: .init(),
+        dashSnapshot: mode == "manifest" ? changed : snapshot)
+      let clears = output.clears, frames = output.frames.count, oldItem = player.currentItem
+      try backend.replaceActiveDash(source: replacementSource, prepared: replacement,
+        selection: mode == "fixed" ? .init(fixedTrackId: "dash-video-w320-h180-b1000", reason: "user") : nil)
+      XCTAssertFalse(player.currentItem === oldItem, mode)
+      XCTAssertEqual(output.clears - clears, mode == "same" ? 0 : 1, mode)
+      tick?()
+      XCTAssertEqual(output.frames.count, frames, "Retaining a frame cannot publish before seek landing: \(mode)")
+      backend.stop()
+      XCTAssertGreaterThan(output.clears, clears, "Stop always clears retained output: \(mode)")
+    }
   }
 
   @MainActor

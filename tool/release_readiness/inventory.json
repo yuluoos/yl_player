@@ -204,7 +204,7 @@
       "packages/yl_player_apple/analysis_options.yaml": "c1e9534c05acb3643e72a82ad3d92d56d2ba9b0df2add014c18f7e1d462f24e4",
       "packages/yl_player_apple/darwin/yl_player_apple.podspec": "67bbc372539a1cfaf9078d7a63563b31009107b54b3424585606af4046abe626",
       "packages/yl_player_apple/darwin/yl_player_apple/Package.swift": "f1f3732883ec42bcb925934350b5841db2dd7ecdbbe6d193d273ee9cec68dc77",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "008b48ab77209a02c8965dbed7691229f3c1d70b2fc73e8159dd7a056a2e2c0c",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "924de77d0445c2e8a23f7e417c593434103ecaafe9347416ca67696b51c34b4d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift": "b206ecc951c295fecc1a82b25ebd8fe4c3e0e366182229b6e0c98811fcde0e36",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "0d5f0b94220d820b7e8c057fa0f02036c2ba23a7411e4efb78ec980229a828f2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift": "a6ed7c4b1af601812abcf0768f316731ae892ebca8ddfa0ddcafaef59e7b228f",
@@ -597,7 +597,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "77fdcdc820e805edfbea670ac670c9181bb69defc7171b65a24716cab37dc37c"
+    "sha256": "fbf1d8e07a40ae7eed05df3e323038ec0fe68eae0923f99dc39dbfdbeae1ab85"
   },
   "evidence": {
     "p01": {
@@ -674,6 +674,11 @@
       "path": "docs/superpowers/reports/2026-10-27-abr-auto-recovery.md",
       "sha256": "ea47bea831935a29ec2ccaf9076fdf5bb116dde56c4ed41b01d77fe09491bda4",
       "kind": "report"
+    },
+    "abr-frame-retention-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-abr-frame-retention.md",
+      "sha256": "a6f05cc55b53cae19ec319a6119e48c9ed7376f5c7e26c351a8df3a1a08a2d3a",
+      "kind": "report"
     }
   },
   "rows": [
@@ -705,10 +710,11 @@
         "remaining-main-merge-20261027",
         "abr-recovery-20261027",
         "abr-penalty-recovery-20261027",
-        "abr-auto-recovery-20261027"
+        "abr-auto-recovery-20261027",
+        "abr-frame-retention-20261027"
       ],
       "acceptance": null,
-      "nextAction": "qualify-auto-reload-session-intents-shared-request-budget-frame-gaps-av-sync-and-full-device-mode-matrix"
+      "nextAction": "investigate-physical-stalls-and-qualify-auto-trigger-intents-budget-continuity-av-sync-and-device-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -719,7 +725,8 @@
         "p04",
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "abr-frame-retention-20261027"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -745,7 +752,8 @@
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "abr-frame-retention-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -758,7 +766,8 @@
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "abr-frame-retention-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

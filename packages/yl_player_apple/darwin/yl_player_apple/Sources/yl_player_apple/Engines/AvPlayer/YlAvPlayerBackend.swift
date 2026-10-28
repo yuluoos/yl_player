@@ -567,7 +567,24 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     let loader = try chosen.takeLoader()
     let pendingSeekUs = pendingUserSeek.flatMap { $0.generation == itemGeneration ? $0.positionUs : nil }
     let positionUs = pendingSeekUs ?? currentPositionUs()
-    resetOpenState(source, resume: true)
+    // A verified same-session automatic rebuild may hold the last published
+    // frame while the new item's exact seek lands. This does not publish an old
+    // frame again or open the new generation's seek gate. Policy/source changes
+    // and explicit transport intents retain the normal clearing behavior.
+    let oldSnapshot = hlsResourceLoader?.dashSnapshot
+    let newSnapshot = loader.dashSnapshot
+    let retainsFrame = shouldPlay && firstFrameSent && currentError == nil && status != "completed"
+      && pendingUserSeek == nil && pendingRuntimeResume == nil
+      && !source.isLive && !source.airPlay && source.drm == nil
+      && source.uri == lastSource?.uri
+      && source.managedRequestIntent === lastSource?.managedRequestIntent
+      && source.credentialContext === lastSource?.credentialContext
+      && source.headers == lastSource?.headers && source.credentials == lastSource?.credentials
+      && qualityConstraint == .unconstrained && loader.videoConstraints == .unconstrained
+      && videoSelection.fixedTrackId == nil && selection.fixedTrackId == nil
+      && oldSnapshot != nil && newSnapshot != nil
+      && oldSnapshot?.data == newSnapshot?.data && oldSnapshot?.effectiveURL == newSnapshot?.effectiveURL
+    resetOpenState(source, resume: true, clearOutput: !retainsFrame)
     savedPositionUs = positionUs
     savedPositionMs = positionUs / 1_000
     playRequested = shouldPlay
@@ -762,12 +779,12 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     emitState()
   }
 
-  private func resetOpenState(_ source: YlAppleSourceDescriptor, resume: Bool) {
+  private func resetOpenState(_ source: YlAppleSourceDescriptor, resume: Bool, clearOutput: Bool = true) {
     livePausedAt = nil
     stopped = false
     cancelLiveReconnect()
     liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
-    removeCurrentItem(preserveAudioIdentity: resume)
+    removeCurrentItem(clearOutput: clearOutput, preserveAudioIdentity: resume)
     lastSource = source
     player.allowsExternalPlayback = source.airPlay
     liveMode = nil

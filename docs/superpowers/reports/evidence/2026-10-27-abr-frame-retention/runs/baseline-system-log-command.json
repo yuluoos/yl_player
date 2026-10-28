@@ -1,0 +1,18 @@
+{
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+    "log",
+    "show",
+    "--style",
+    "json",
+    "--last",
+    "5m",
+    "--predicate",
+    "processIdentifier == 14246 AND (eventMessage CONTAINS \"PenaltyBox\" OR eventMessage CONTAINS \"MediaHandleDownloadTimer\" OR eventMessage CONTAINS \"-12889\")"
+  ],
+  "exitCode": 0,
+  "stderr": "getpwuid_r did not find a match for uid 501\n"
+}

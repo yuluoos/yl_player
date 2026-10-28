@@ -1,0 +1,50 @@
+[
+  {
+    "name": "network",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_network",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "benchmark",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "ledger-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/release_readiness",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exitCode": 5
+  }
+]

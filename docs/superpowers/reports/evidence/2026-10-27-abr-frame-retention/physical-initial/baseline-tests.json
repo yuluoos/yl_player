@@ -1,0 +1,59 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64e",
+      "deviceId" : "00008140-000C49CC3493001C",
+      "deviceName" : "iPhone",
+      "modelName" : "iPhone 16",
+      "osBuildNumber" : "24B119",
+      "osVersion" : "27.2",
+      "platform" : "iOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "failed: caught error: \"The operation couldn’t be completed. (yl_player_media_core.NativePlayerError error 1.)\"",
+                      "nodeType" : "Failure Message"
+                    }
+                  ],
+                  "duration" : "0.044s",
+                  "durationInSeconds" : 0.0435260534286499,
+                  "name" : "testActualOwnedDashAdaptiveObservation()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testActualOwnedDashAdaptiveObservation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testActualOwnedDashAdaptiveObservation",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

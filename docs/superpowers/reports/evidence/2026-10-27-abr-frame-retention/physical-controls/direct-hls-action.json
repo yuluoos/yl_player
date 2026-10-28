@@ -1,0 +1,388 @@
+{
+  "attachments" : [
+
+  ],
+  "domainType" : "com.apple.dt.unit.cocoaUnitTest",
+  "duration" : 127.08346104621887,
+  "messages" : [
+
+  ],
+  "result" : "succeeded",
+  "startTime" : 1793161369.118,
+  "subsections" : [
+    {
+      "attachments" : [
+
+      ],
+      "domainType" : "Xcode.IDEActivityLogDomainType.LaunchLog",
+      "duration" : 127.04460799694061,
+      "messages" : [
+
+      ],
+      "result" : "succeeded",
+      "startTime" : 1793161369.157,
+      "subsections" : [
+        {
+          "attachments" : [
+
+          ],
+          "domainType" : "com.apple.dt.IDE.LogSection",
+          "duration" : 126.63647902011871,
+          "messages" : [
+            {
+              "annotations" : [
+
+              ],
+              "shortTitle" : "Platform: iOS",
+              "title" : "Platform: iOS",
+              "type" : "notice"
+            },
+            {
+              "annotations" : [
+
+              ],
+              "shortTitle" : "Device Identifier: 00008140-000C49CC3493001C",
+              "title" : "Device Identifier: 00008140-000C49CC3493001C",
+              "type" : "notice"
+            },
+            {
+              "annotations" : [
+
+              ],
+              "shortTitle" : "Operating System Version: 27.2 (24B119)",
+              "title" : "Operating System Version: 27.2 (24B119)",
+              "type" : "notice"
+            },
+            {
+              "annotations" : [
+
+              ],
+              "shortTitle" : "Model: iPhone 16 (iPhone17,3)",
+              "title" : "Model: iPhone 16 (iPhone17,3)",
+              "type" : "notice"
+            },
+            {
+              "annotations" : [
+
+              ],
+              "shortTitle" : "Target Architecture: arm64e",
+              "title" : "Target Architecture: arm64e",
+              "type" : "notice"
+            }
+          ],
+          "result" : "succeeded",
+          "startTime" : 1793161369.232,
+          "subsections" : [
+            {
+              "attachments" : [
+
+              ],
+              "commandInvocationDetails" : {
+                "commandDetails" : "",
+                "emittedOutput" : "",
+                "exitCode" : 0
+              },
+              "domainType" : "com.apple.dt.IDE.LogSection",
+              "duration" : 3.331037998199463,
+              "messages" : [
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Installing on iPhone",
+                  "title" : "Installing on iPhone",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Successfully installed",
+                  "title" : "Successfully installed",
+                  "type" : "notice"
+                }
+              ],
+              "result" : "succeeded",
+              "startTime" : 1793161369.232,
+              "subsections" : [
+
+              ],
+              "title" : "Installing built products"
+            },
+            {
+              "attachments" : [
+
+              ],
+              "commandInvocationDetails" : {
+                "commandDetails" : "Environment variables:\nXCTestManagerVariant=DDI\nPERFC_SUPPRESS_SYSTEM_REPORTS=1\nAPP_DISTRIBUTOR_ID_OVERRIDE=com.apple.AppStore\nSWIFT_BACKTRACE=enable=no\nXCInjectBundleInto=unused\nSQLITE_ENABLE_THREAD_ASSERTIONS=1\nYL_ABR_PROBE_OWNED_HOST=192.168.50.196\nDYLD_FRAMEWORK_PATH=/System/Developer/Library/Frameworks\nXCODE_SCHEME_NAME=Runner\nIDE_CHOSEN_LOGGING_METHOD=1\nYL_ABR_PROBE_STARTUP_DELAY_MS=0\nYL_ABR_PROBE_TOKEN=38344c0e7f0746e2a4973ff2dfef43d1\nXCTestBundleInjectPath=/usr/lib/libRPAC.dylib:/System/Developer/usr/lib/libXCTestBundleInject.dylib:/usr/lib/libMainThreadChecker.dylib:/usr/lib/libRPAC.dylib\nYL_ABR_PROBE_DIRECT_HLS=1\nXCTestSessionIdentifier=607AAFF7-D942-4C9C-A09B-05F7D17BAEAE\nYL_ABR_PROBE_AUTO_SCENARIO=normal\nRUN_DESTINATION_DEVICE_UDID=00008140-000C49CC3493001C\nYL_ABR_PROBE_DEVICE=1\nYL_ABR_PROBE_URL=http://192.168.50.196:50664/manifest.mpd\nDYLD_LIBRARY_PATH=/System/Developer/usr/lib\nXCTestConfigurationFilePath=\nTERM=dumb\nNSUnbufferedIO=YES\nRUN_DESTINATION_DEVICE_ECID=3458841124732956\nYL_ABR_PROBE_RECOVERY_ACTION=none\nPERFC_ENABLE_EXTENDED_DIAGNOSTIC_FORMAT=1\nXCTestBundlePath=PlugIns/RunnerTests.xctest\nYL_ABR_PROBE_DIRECTORY=/private/tmp/yl-continuity-physical-controls/direct-hls\nCA_ASSERT_MAIN_THREAD_TRANSACTIONS=0\nDYLD_INSERT_LIBRARIES=/usr/lib/libRPAC.dylib:/System/Developer/usr/lib/libXCTestBundleInject.dylib:/usr/lib/libMainThreadChecker.dylib:/usr/lib/libRPAC.dylib\nOS_ACTIVITY_DT_MODE=YES\nPERFC_RESET_INSERT_LIBRARIES=1\nRUN_DESTINATION_DEVICE_NAME=iPhone\nPERFC_ENABLE_PROFILE_MODE=1\nCA_DEBUG_TRANSACTIONS=0\nRUN_DESTINATION_DEVICE_PLATFORM_IDENTIFIER=com.apple.platform.iphoneos\nYL_ABR_PROBE_SECONDS=120\nYL_ABR_PROBE_PROFILE_SHA256=4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+                "emittedOutput" : "",
+                "exitCode" : 0
+              },
+              "domainType" : "com.apple.dt.IDE.LogSection",
+              "duration" : 123.30375599861145,
+              "messages" : [
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Launching dev.ylplayer.ylPlayerExample",
+                  "title" : "Launching dev.ylplayer.ylPlayerExample",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Launching suspended and the launcher is responsible for resuming.",
+                  "title" : "Launching suspended and the launcher is responsible for resuming.",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+                    {
+                      "location" : null,
+                      "title" : "LaunchSessionToken: 7b4bd26a00"
+                    },
+                    {
+                      "location" : null,
+                      "title" : "RemotePath: /private/var/containers/Bundle/Application/79686B4C-A4F1-48A6-A3AA-C20EBB8E0015/Runner.app"
+                    },
+                    {
+                      "location" : null,
+                      "title" : "AppInstallationResult(applicationBundleId: \"dev.ylplayer.ylPlayerExample\", installationURL: file:///private/var/containers/Bundle/Application/79686B4C-A4F1-48A6-A3AA-C20EBB8E0015/Runner.app/, databaseUUID: 38C40784-5427-46D4-A06E-FB8A863FA481, databaseSequenceNumber: 1956, _persistentIdentifier: 36 bytes)"
+                    },
+                    {
+                      "location" : null,
+                      "title" : "Set in Launch Options"
+                    }
+                  ],
+                  "shortTitle" : "Configure with Install Result",
+                  "title" : "Configure with Install Result",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Launching bundle with identifier dev.ylplayer.ylPlayerExample",
+                  "title" : "Launching bundle with identifier dev.ylplayer.ylPlayerExample",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Process with pid 2683 launched",
+                  "title" : "Process with pid 2683 launched",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Requested the device's screen to stay on for the duration of the launch session",
+                  "title" : "Requested the device's screen to stay on for the duration of the launch session",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Console logging policy: Mirror os_logs to std:err, and read stdio from File Descriptors",
+                  "title" : "Console logging policy: Mirror os_logs to std:err, and read stdio from File Descriptors",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Resumed target process.",
+                  "title" : "Resumed target process.",
+                  "type" : "notice"
+                },
+                {
+                  "annotations" : [
+
+                  ],
+                  "shortTitle" : "Successfully launched RunnerTests",
+                  "title" : "Successfully launched RunnerTests",
+                  "type" : "notice"
+                }
+              ],
+              "result" : "succeeded",
+              "startTime" : 1793161372.565,
+              "subsections" : [
+
+              ],
+              "title" : "Launching RunnerTests"
+            }
+          ],
+          "title" : "Launch RunnerTests"
+        }
+      ],
+      "title" : "Launch actions"
+    },
+    {
+      "attachments" : [
+
+      ],
+      "domainType" : "com.apple.dt.unit.cocoaUnitTest",
+      "duration" : 0,
+      "messages" : [
+
+      ],
+      "result" : "succeeded",
+      "startTime" : 1793161369.229,
+      "subsections" : [
+        {
+          "attachments" : [
+
+          ],
+          "domainType" : "com.apple.dt.IDE.UnitTestLogSection.Worker",
+          "duration" : 122.72717797756195,
+          "messages" : [
+
+          ],
+          "result" : "succeeded",
+          "startTime" : 1793161369.231,
+          "subsections" : [
+            {
+              "attachments" : [
+
+              ],
+              "commandInvocationDetails" : {
+                "commandDetails" : "/tmp/yl-continuity-physical-controls/direct-hls.xcresult/Staging/1_Test/Diagnostics/RunnerTests-39843B37-CF14-49C2-8C3A-8C7B4FB495C9-Configuration-Test Scheme Action-Iteration-1/RunnerTests-08F2301E-5BF8-44D2-87EC-E509BDDB9786/Session-RunnerTests-2026-10-27_212249-3TiTLh.log",
+                "emittedOutput" : "",
+                "exitCode" : 0
+              },
+              "domainType" : "com.apple.dt.IDE.UnitTestLogSection",
+              "duration" : 8.296966552734375e-05,
+              "messages" : [
+                {
+                  "annotations" : [
+
+                  ],
+                  "location" : {
+                    "concreteTypeName" : "DVTTextDocumentLocation",
+                    "url" : "file:///tmp/yl-continuity-physical-controls/direct-hls.xcresult/Staging/1_Test/Diagnostics/RunnerTests-39843B37-CF14-49C2-8C3A-8C7B4FB495C9-Configuration-Test%20Scheme%20Action-Iteration-1/RunnerTests-08F2301E-5BF8-44D2-87EC-E509BDDB9786/Session-RunnerTests-2026-10-27_212249-3TiTLh.log"
+                  },
+                  "shortTitle" : "/tmp/yl-continuity-physical-controls/direct-hls.xcresult/Staging/1_Test/Diagnostics/RunnerTests-39843B37-CF14-49C2-8C3A-8C7B4FB495C9-Configuration-Test Scheme Action-Iteration-1/RunnerTests-08F2301E-5BF8-44D2-87EC-E509BDDB9786/Session-RunnerTests-2026-10-27_212249-3TiTLh.log",
+                  "title" : "/tmp/yl-continuity-physical-controls/direct-hls.xcresult/Staging/1_Test/Diagnostics/RunnerTests-39843B37-CF14-49C2-8C3A-8C7B4FB495C9-Configuration-Test Scheme Action-Iteration-1/RunnerTests-08F2301E-5BF8-44D2-87EC-E509BDDB9786/Session-RunnerTests-2026-10-27_212249-3TiTLh.log",
+                  "type" : "notice"
+                }
+              ],
+              "result" : "succeeded",
+              "startTime" : 1793161369.231,
+              "subsections" : [
+
+              ],
+              "title" : "Writing diagnostic log for test runner launch."
+            },
+            {
+              "attachments" : [
+
+              ],
+              "domainType" : "com.apple.dt.IDE.UnitTestLogSection",
+              "duration" : 122.72717797756195,
+              "messages" : [
+
+              ],
+              "result" : "succeeded",
+              "startTime" : 1793161373.105,
+              "subsections" : [
+                {
+                  "attachments" : [
+
+                  ],
+                  "domainType" : "com.apple.dt.IDE.UnitTestLogSection",
+                  "duration" : 122.72717797756195,
+                  "messages" : [
+
+                  ],
+                  "result" : "succeeded",
+                  "startTime" : 1793161373.106,
+                  "subsections" : [
+                    {
+                      "attachments" : [
+
+                      ],
+                      "domainType" : "com.apple.dt.IDE.UnitTestLogSection",
+                      "duration" : 122.72717797756195,
+                      "messages" : [
+
+                      ],
+                      "result" : "succeeded",
+                      "startTime" : 1793161373.106,
+                      "subsections" : [
+                        {
+                          "attachments" : [
+
+                          ],
+                          "domainType" : "com.apple.dt.IDE.UnitTestLogSection",
+                          "duration" : 122.72717797756195,
+                          "messages" : [
+
+                          ],
+                          "result" : "succeeded",
+                          "startTime" : 1793161373.118,
+                          "subsections" : [
+
+                          ],
+                          "testDetails" : {
+                            "emittedOutput" : "Test Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' started.\r\n2026-10-28 12:22:28.960900+0800 Runner[2683:541138] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\n2026-10-28 12:22:28.961055+0800 Runner[2683:541211] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' passed (122.727 seconds).\r\n",
+                            "suiteName" : "YlDashResourceLoaderTests",
+                            "summary" : "2026-10-28 12:22:28.960900+0800 Runner[2683:541138] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\n2026-10-28 12:22:28.961055+0800 Runner[2683:541211] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' passed (122.727 seconds).\r\n",
+                            "testName" : "testActualOwnedDashAdaptiveObservation()",
+                            "wasSkipped" : false
+                          },
+                          "title" : "Run test case testActualOwnedDashAdaptiveObservation()"
+                        }
+                      ],
+                      "testDetails" : {
+                        "emittedOutput" : "Test Suite 'YlDashResourceLoaderTests' started at 2026-10-28 12:22:28.942.\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' started.\r\n2026-10-28 12:22:28.960900+0800 Runner[2683:541138] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\n2026-10-28 12:22:28.961055+0800 Runner[2683:541211] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' passed (122.727 seconds).\r\nTest Suite 'YlDashResourceLoaderTests' passed at 2026-10-28 12:24:31.670.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.728) seconds\r\n",
+                        "suiteName" : "YlDashResourceLoaderTests",
+                        "summary" : "Test Suite 'YlDashResourceLoaderTests' passed at 2026-10-28 12:24:31.670.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.728) seconds\r\n",
+                        "testsPassedString" : "1 test total, 1 passed",
+                        "wasSkipped" : false
+                      },
+                      "title" : "Run test suite YlDashResourceLoaderTests"
+                    }
+                  ],
+                  "testDetails" : {
+                    "emittedOutput" : "Test Suite 'RunnerTests.xctest' started at 2026-10-28 12:22:28.942.\r\nTest Suite 'YlDashResourceLoaderTests' started at 2026-10-28 12:22:28.942.\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' started.\r\n2026-10-28 12:22:28.960900+0800 Runner[2683:541138] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\n2026-10-28 12:22:28.961055+0800 Runner[2683:541211] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' passed (122.727 seconds).\r\nTest Suite 'YlDashResourceLoaderTests' passed at 2026-10-28 12:24:31.670.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.728) seconds\r\nTest Suite 'RunnerTests.xctest' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.729) seconds\r\n",
+                    "suiteName" : "RunnerTests.xctest",
+                    "summary" : "Test Suite 'RunnerTests.xctest' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.729) seconds\r\n",
+                    "testsPassedString" : "1 test total, 1 passed",
+                    "wasSkipped" : false
+                  },
+                  "title" : "Run test suite RunnerTests.xctest"
+                }
+              ],
+              "testDetails" : {
+                "emittedOutput" : "2026-10-28 12:22:28.812223+0800 Runner[2683:541186] [User Defaults] CFPrefsPlistSource<0x12c1f4140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 21, Newest: 21, Index: 1079): Value for key AppleLanguages was (\r\n    \"zh-Hans-US\",\r\n    \"en-US\"\r\n). Expected (\r\n    \"zh-Hans-US\",\r\n    \"en-US\",\r\n    \"zh-Hant-US\"\r\n) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))\r\n2026-10-28 12:22:28.812851+0800 Runner[2683:541187] [User Defaults] CFPrefsPlistSource<0x12c1f4140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 21, Newest: 21, Index: 1079): Value for key AppleLanguages was (\r\n    \"zh-Hans-US\",\r\n    \"en-US\"\r\n). Expected (\r\n    \"zh-Hans-US\",\r\n    \"en-US\",\r\n    \"zh-Hant-US\"\r\n) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))\r\n2026-10-28 12:22:28.878395+0800 Runner[2683:541138] [MC] Reading from public effective user settings.\r\n2026-10-28 12:22:28.901476+0800 Runner[2683:541138] [ERROR:flutter/runtime/ptrace_check.cc(75)] Could not call ptrace(PT_TRACE_ME): Operation not permitted\r\n2026-10-28 12:22:28.901499+0800 Runner[2683:541138] Cannot create a FlutterEngine instance in debug mode without Flutter tooling or Xcode.\r\n\r\nTo launch in debug mode in iOS 14+, run flutter run from Flutter tools, run from an IDE with a Flutter IDE plugin or run the iOS project from Xcode.\r\nAlternatively profile and release mode apps can be launched from the home screen.\r\n2026-10-28 12:22:28.918191+0800 Runner[2683:541138] [XPCErrors] non-launching port is incompatible with service identifier \"com.apple.PointerUI.pointeruid.default-service\"\r\nTest Suite 'Selected tests' started at 2026-10-28 12:22:28.942.\r\nTest Suite 'RunnerTests.xctest' started at 2026-10-28 12:22:28.942.\r\nTest Suite 'YlDashResourceLoaderTests' started at 2026-10-28 12:22:28.942.\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' started.\r\n2026-10-28 12:22:28.960900+0800 Runner[2683:541138] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\n2026-10-28 12:22:28.961055+0800 Runner[2683:541211] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' passed (122.727 seconds).\r\nTest Suite 'YlDashResourceLoaderTests' passed at 2026-10-28 12:24:31.670.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.728) seconds\r\nTest Suite 'RunnerTests.xctest' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.729) seconds\r\nTest Suite 'Selected tests' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.730) seconds\r\n",
+                "suiteName" : "Selected tests",
+                "summary" : "Test Suite 'Selected tests' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.730) seconds\r\n",
+                "testsPassedString" : "1 test total, 1 passed",
+                "wasSkipped" : false
+              },
+              "title" : "Run test suite Selected tests"
+            }
+          ],
+          "testDetails" : {
+            "emittedOutput" : "2026-10-28 12:22:28.812223+0800 Runner[2683:541186] [User Defaults] CFPrefsPlistSource<0x12c1f4140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 21, Newest: 21, Index: 1079): Value for key AppleLanguages was (\r\n    \"zh-Hans-US\",\r\n    \"en-US\"\r\n). Expected (\r\n    \"zh-Hans-US\",\r\n    \"en-US\",\r\n    \"zh-Hant-US\"\r\n) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))\r\n2026-10-28 12:22:28.812851+0800 Runner[2683:541187] [User Defaults] CFPrefsPlistSource<0x12c1f4140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 21, Newest: 21, Index: 1079): Value for key AppleLanguages was (\r\n    \"zh-Hans-US\",\r\n    \"en-US\"\r\n). Expected (\r\n    \"zh-Hans-US\",\r\n    \"en-US\",\r\n    \"zh-Hant-US\"\r\n) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))\r\n2026-10-28 12:22:28.878395+0800 Runner[2683:541138] [MC] Reading from public effective user settings.\r\n2026-10-28 12:22:28.901476+0800 Runner[2683:541138] [ERROR:flutter/runtime/ptrace_check.cc(75)] Could not call ptrace(PT_TRACE_ME): Operation not permitted\r\n2026-10-28 12:22:28.901499+0800 Runner[2683:541138] Cannot create a FlutterEngine instance in debug mode without Flutter tooling or Xcode.\r\n\r\nTo launch in debug mode in iOS 14+, run flutter run from Flutter tools, run from an IDE with a Flutter IDE plugin or run the iOS project from Xcode.\r\nAlternatively profile and release mode apps can be launched from the home screen.\r\n2026-10-28 12:22:28.918191+0800 Runner[2683:541138] [XPCErrors] non-launching port is incompatible with service identifier \"com.apple.PointerUI.pointeruid.default-service\"\r\nTest Suite 'Selected tests' started at 2026-10-28 12:22:28.942.\r\nTest Suite 'RunnerTests.xctest' started at 2026-10-28 12:22:28.942.\r\nTest Suite 'YlDashResourceLoaderTests' started at 2026-10-28 12:22:28.942.\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' started.\r\n2026-10-28 12:22:28.960900+0800 Runner[2683:541138] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\n2026-10-28 12:22:28.961055+0800 Runner[2683:541211] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489\r\nTest Case '-[RunnerTests.YlDashResourceLoaderTests testActualOwnedDashAdaptiveObservation]' passed (122.727 seconds).\r\nTest Suite 'YlDashResourceLoaderTests' passed at 2026-10-28 12:24:31.670.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.728) seconds\r\nTest Suite 'RunnerTests.xctest' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.729) seconds\r\nTest Suite 'Selected tests' passed at 2026-10-28 12:24:31.671.\r\n\t Executed 1 test, with 0 failures (0 unexpected) in 122.727 (122.730) seconds\r\n",
+            "runnablePath" : "/tmp/yl-continuity-device-build/Build/Products/Debug-iphoneos/Runner.app",
+            "runnableUTI" : "com.apple.application-bundle",
+            "testsPassedString" : "1 test total, 1 passed",
+            "wasSkipped" : false
+          },
+          "title" : "Runner (2683)"
+        }
+      ],
+      "testDetails" : {
+        "wasSkipped" : false
+      },
+      "title" : "Test target RunnerTests"
+    }
+  ],
+  "title" : "Test Runner"
+}

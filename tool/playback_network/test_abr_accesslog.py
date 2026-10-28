@@ -14,6 +14,41 @@ from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_preparation_window_cannot_be_attributed_to_installed_recovery(self):
+        rows = self.rows()
+        for row in rows: row.update(recoveryAction='auto-reload', automaticAttempts=0, automaticEvents=[])
+        rows[2]['width'] = 640
+        rows[-1].update(automaticAttempts=1, automaticEvents=[dict(attempt=1,
+            elapsed=1.5, elapsedAfter=2.5, due=1.5, generation=0, positionBefore=1,
+            outcome='installed', itemChanged=True)])
+        self.assertFalse(summarize(rows, expected_recovery_action='auto-reload')['highOutputAfterInterventionObserved'])
+
+    def test_frame_boundary_reports_stall_and_retention_without_counting_held_frame(self):
+        rows = [dict(elapsed=0, generation=0, frames=1, width=320, position=1, textureClears=1),
+                dict(elapsed=.02, generation=1, frames=0, width=0, position=0, textureClears=1),
+                dict(elapsed=.1, generation=1, frames=1, width=640, position=1.01, textureClears=1)]
+        result = abr_accesslog.summarize_frames(rows, expected_frames=2)
+        boundary = result['replacementBoundaries'][0]
+        self.assertAlmostEqual(boundary['publicationGapMs'], 100)
+        self.assertAlmostEqual(boundary['positionDeltaMs'], 10)
+        self.assertEqual(boundary['textureClears'], 0)
+        self.assertEqual(result['publishedFrames'], 2)
+        self.assertFalse(result['continuityAccepted'])
+        for value in [-1, True, None]:
+            bad = copy.deepcopy(rows); bad[-1]['textureClears'] = value
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                abr_accesslog.summarize_frames(bad, expected_frames=2)
+        missing = copy.deepcopy(rows); del missing[1]['textureClears']
+        with self.assertRaises(ValueError): abr_accesslog.summarize_frames(missing, expected_frames=2)
+        historical = [{key: value for key, value in row.items() if key != 'textureClears'} for row in rows]
+        self.assertIsNone(abr_accesslog.summarize_frames(historical, expected_frames=2)
+                          ['replacementBoundaries'][0]['textureClears'])
+        # A failed intermediate item and a final item with no frame remain visible.
+        rows[-1]['generation'] = 2
+        rows.append(dict(elapsed=.12, generation=3, frames=0, width=0, position=0, textureClears=2))
+        self.assertEqual(abr_accesslog.summarize_frames(rows, expected_frames=2)
+                         ['generationsWithoutPublishedFrame'], [1, 3])
+
     def test_auto_budget_receipt_does_not_require_or_invent_a_recovery(self):
         rows = self.rows()
         for row in rows: row.update(recoveryAction='auto-reload', automaticAttempts=0, automaticEvents=[])

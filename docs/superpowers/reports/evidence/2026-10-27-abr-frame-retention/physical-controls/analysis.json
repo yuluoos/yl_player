@@ -1,0 +1,92 @@
+[
+  {
+    "name": "baseline-stable",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6619,
+      "publishedFrames": 2875,
+      "maximumPumpGapMs": 68.00887500139652,
+      "maximumPublishedFrameGapMs": 1518.2697499985807,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.1733878749946598,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 8.389633833328844,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 23.531900291665806,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 40.9320379583296,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 120.05066293,
+    "lastWidth": 640,
+    "completed": true,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "direct-hls",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6672,
+      "publishedFrames": 2877,
+      "maximumPumpGapMs": 125.73170832911273,
+      "maximumPublishedFrameGapMs": 1247.612166669569,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.488348250000854,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.782165666671062,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 25.004538125002,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 39.358015083336795,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 120.049645323,
+    "lastWidth": 640,
+    "completed": true,
+    "capabilityAccepted": false
+  }
+]
