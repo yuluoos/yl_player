@@ -21,7 +21,7 @@ for path in sorted(raw.rglob('*')):
  if rel.name=='apple-local-networking.md':continue # Official page linked and fingerprinted separately.
  if 'fixture' in rel.parts and path.name not in ['manifest.mpd','SHA256SUMS']:continue
  # Large generated binary artifacts are contained in complete xcresult bundles; no app/provisioning copy.
- data=path.read_bytes();dest=out/rel;compressed=path.suffix in ['.log','.jsonl','.swift'] or len(data)>128*1024
+ data=path.read_bytes();dest=out/rel;compressed=(path.suffix in ['.log','.jsonl','.swift'] or path.name=='StandardOutputAndStandardError.txt') or len(data)>128*1024
  if compressed:dest=Path(str(dest)+'.gz')
  dest.parent.mkdir(parents=True,exist_ok=True);dest.write_bytes(gzip.compress(data,mtime=0) if compressed else data)
  records.append(dict(source=str(rel),sourceSha256=sha(data),archive=str(dest.relative_to(out)),archiveSha256=sha(dest.read_bytes())))

@@ -2,25 +2,25 @@
   {
     "source": "media/original.xcresult",
     "archive": "media/original.xcresult.tar.gz",
-    "archiveSha256": "d4586cf76a25d82ab981dee2828efa7641bf6528b7467aceaf471b2ac6eb4dde",
+    "archiveSha256": "f9f1d8de63dd121aea32782a4b9dfc93815b47b69f4365b4387acc10df28bd3a",
     "bundleFiles": 30
   },
   {
     "source": "media/zero-latency.xcresult",
     "archive": "media/zero-latency.xcresult.tar.gz",
-    "archiveSha256": "d187c612fe8912bb3f8f621710b2aea55154f4de63eb138ea4ab1176b47adc69",
+    "archiveSha256": "0b53aa1a48c8c07280b90b96f29c747b4e4dd055f83be661778895f32fa3acf8",
     "bundleFiles": 30
   },
   {
     "source": "network-restored-media/original.xcresult",
     "archive": "network-restored-media/original.xcresult.tar.gz",
-    "archiveSha256": "70d0a4ac62b50754c3f6fccdc098140c0ff92f44bbecbe71e6f4d434b75839e8",
+    "archiveSha256": "7e64fb81cfcd9d693efa39b3cec5eb75ab76ff7544a767c32e657332e83d8c30",
     "bundleFiles": 28
   },
   {
     "source": "network-restored-media/zero-latency.xcresult",
     "archive": "network-restored-media/zero-latency.xcresult.tar.gz",
-    "archiveSha256": "f42e2040accf4f5a2103a2a06a5a4b60d329a33ef4034b3e938b04507fff2410",
+    "archiveSha256": "dc1eb2e6ad13abecd94329e0be77e6f8891e24063d7b07908a311b9b97616b02",
     "bundleFiles": 28
   },
   {
@@ -36,10 +36,22 @@
     "archiveSha256": "eddd87375c1bf1ccfa9f5c915ab9e577f8a6f890ff671fae3e0fd663438e5e7d"
   },
   {
+    "source": "archive-whitespace-check.json",
+    "sourceSha256": "03ab3fcb5897a246479e0b7abc193ba1e75b410733953472d8d08f87c6f220fc",
+    "archive": "archive-whitespace-check.json",
+    "archiveSha256": "03ab3fcb5897a246479e0b7abc193ba1e75b410733953472d8d08f87c6f220fc"
+  },
+  {
+    "source": "archive-whitespace-check.log",
+    "sourceSha256": "775e736cebfbaa0684c69ed986c65ee4ebaa094606c0c1c3ffecd9b44f089cc6",
+    "archive": "archive-whitespace-check.log.gz",
+    "archiveSha256": "51ef95b55eabf3e4036cf57b5ce8792fe021afa2d9901e2440c8446e97a93112"
+  },
+  {
     "source": "archive.py",
-    "sourceSha256": "caa96a830c6421a05702bda55e5ced5f7e67f99ef135ce82851b29d601c2a82b",
+    "sourceSha256": "815f22dad235a27eed7f0c9c6f1bbeb4a9d0a9a2f2820b032d5613caeec8fbfb",
     "archive": "archive.py",
-    "archiveSha256": "caa96a830c6421a05702bda55e5ced5f7e67f99ef135ce82851b29d601c2a82b"
+    "archiveSha256": "815f22dad235a27eed7f0c9c6f1bbeb4a9d0a9a2f2820b032d5613caeec8fbfb"
   },
   {
     "source": "build-command.json",
@@ -126,6 +138,12 @@
     "archiveSha256": "74ea61ede8f591e62e92ced61b659127dde8f697c24801bf2c58b8009dd30d7f"
   },
   {
+    "source": "fix-archive-packaging.py",
+    "sourceSha256": "7c66b5fcc319c2ac09937850e2fba18d03f7451ee4f36706f9e3aee08fc452d7",
+    "archive": "fix-archive-packaging.py",
+    "archiveSha256": "7c66b5fcc319c2ac09937850e2fba18d03f7451ee4f36706f9e3aee08fc452d7"
+  },
+  {
     "source": "implementation-unchanged.json",
     "sourceSha256": "dcbb3761db2f66810e01f8be50fdd3ca8e16d5f01c2770cb0944f7d54f39ffbb",
     "archive": "implementation-unchanged.json",
@@ -133,9 +151,9 @@
   },
   {
     "source": "independent-review.txt",
-    "sourceSha256": "39d552cd78f9f968b1f354cfbadaef9fd832855b1f6c827284344501900da504",
+    "sourceSha256": "89d9ce98c5114af221b9c05054c954f578354dd34cf1d604d050c2b60a10f80d",
     "archive": "independent-review.txt",
-    "archiveSha256": "39d552cd78f9f968b1f354cfbadaef9fd832855b1f6c827284344501900da504"
+    "archiveSha256": "89d9ce98c5114af221b9c05054c954f578354dd34cf1d604d050c2b60a10f80d"
   },
   {
     "source": "initial-analysis.log",
@@ -638,8 +656,8 @@
   {
     "source": "original-diagnostics/0_Test_iPhone_Diagnostics/RunnerTests-180E286B-DDA5-4223-84FC-24AF46E14097-Configuration-Test Scheme Action-Iteration-1/RunnerTests-F4E7C2DE-28B5-4F97-85A0-23F07A391ECB/StandardOutputAndStandardError.txt",
     "sourceSha256": "b7856bb97d140123b20edf3f86a41de966db2a7b810b40d0eaec98d45126dcca",
-    "archive": "original-diagnostics/0_Test_iPhone_Diagnostics/RunnerTests-180E286B-DDA5-4223-84FC-24AF46E14097-Configuration-Test Scheme Action-Iteration-1/RunnerTests-F4E7C2DE-28B5-4F97-85A0-23F07A391ECB/StandardOutputAndStandardError.txt",
-    "archiveSha256": "b7856bb97d140123b20edf3f86a41de966db2a7b810b40d0eaec98d45126dcca"
+    "archive": "original-diagnostics/0_Test_iPhone_Diagnostics/RunnerTests-180E286B-DDA5-4223-84FC-24AF46E14097-Configuration-Test Scheme Action-Iteration-1/RunnerTests-F4E7C2DE-28B5-4F97-85A0-23F07A391ECB/StandardOutputAndStandardError.txt.gz",
+    "archiveSha256": "80b16829b6f17eb9890577bfe81fdac5c7bd6c2f165c8ab9ffc378d3b8a8fdf5"
   },
   {
     "source": "original-diagnostics/0_Test_iPhone_Diagnostics/RunnerTests-180E286B-DDA5-4223-84FC-24AF46E14097-Configuration-Test Scheme Action-Iteration-1/scheduling.log",
@@ -658,6 +676,30 @@
     "sourceSha256": "dba30a0590ef736822fde834146b526ea6444d5740b79719dd8539eac717dc4b",
     "archive": "original-diagnostics/0_Test_iPhone_Diagnostics/iPhone_00008140-000C49CC3493001C/testmanagerd.log.gz",
     "archiveSha256": "58619a051c3b7d313b7cd032a36c3f50b8f3e6c68dd218bb06f1a3b44fa3d9bb"
+  },
+  {
+    "source": "packaging-ledger.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "packaging-ledger.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "packaging-ledger.stdout",
+    "sourceSha256": "d312768adec5f8b1ad8520a69fb6a75cc08b40ebc4e475f311b4ab56a3225ca2",
+    "archive": "packaging-ledger.stdout",
+    "archiveSha256": "d312768adec5f8b1ad8520a69fb6a75cc08b40ebc4e475f311b4ab56a3225ca2"
+  },
+  {
+    "source": "packaging-required.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "packaging-required.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "packaging-required.stdout",
+    "sourceSha256": "d312768adec5f8b1ad8520a69fb6a75cc08b40ebc4e475f311b4ab56a3225ca2",
+    "archive": "packaging-required.stdout",
+    "archiveSha256": "d312768adec5f8b1ad8520a69fb6a75cc08b40ebc4e475f311b4ab56a3225ca2"
   },
   {
     "source": "prior-evidence.json",
@@ -946,5 +988,11 @@
     "sourceSha256": "0f85652bea29b2be0732260bbb378a8cc98904bb10802539cf858f71a2b4e38d",
     "archive": "verify-archive.py",
     "archiveSha256": "0f85652bea29b2be0732260bbb378a8cc98904bb10802539cf858f71a2b4e38d"
+  },
+  {
+    "source": "whole-round-diff-check.json",
+    "sourceSha256": "479f621a4d1807c5e47ec4754aa6cf14227521a148eadf6d59a28c7f8e49d6f9",
+    "archive": "whole-round-diff-check.json",
+    "archiveSha256": "479f621a4d1807c5e47ec4754aa6cf14227521a148eadf6d59a28c7f8e49d6f9"
   }
 ]
