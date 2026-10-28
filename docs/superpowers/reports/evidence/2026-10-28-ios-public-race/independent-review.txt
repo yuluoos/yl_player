@@ -1,0 +1,3 @@
+Reviewer: /root/public_policy_review
+Comprehensive review: one P2, await onReady blocked candidate deadline/cleanup and late public command could be accepted. Reproduced due24.9 (expiry29.9), command completed41.8 accepted. Other examined paths no unresolved P1/P2.
+Targeted review after red/green: P2 closed. Candidate continuously checks deadline while independent public command waits; immediate detach/cleanup on expiry; caller joins command after fixed candidate result; collector recomputes original deadline and rejects late command/cleanup or modified deadline. Python31/macOS178 passed; final device/media pending at review time.

@@ -474,3 +474,30 @@ or missing frame evidence reject the run even if EOF was reached. The usual
 full frame-gap evidence is retained. This native typed-host matrix does not
 exercise the Dart messenger, automatic recovery competition, physical screen,
 or audio/subtitle continuity; it never marks capability acceptance.
+
+### Public-host preparation race (diagnostic)
+
+`--public-policy-race` uses the typed public host for both loading and the policy
+command. It requires `--duration-seconds 120 --recovery-action auto-reload
+--candidate-preparation asset-preroll` with `--auto-scenario
+caps-during-preparation` or `fixed-during-preparation`; it cannot be combined with
+`--public-policy-cycle`, direct HLS, or startup delay.
+
+The frozen policy must naturally issue one ticket. After the candidate reaches
+real AVPlayer readiness, the test awaits `setVideoConstraints` or
+`selectVideoTrack`. It does not manually invalidate the ticket: current host
+policy and item identity must reject the old candidate. No public-host recovery
+installation path is added. The collector requires a successful command in the
+same session, changed active item, cancellation and cleanup of the old candidate,
+retained source budget, sustained accepted policy, and only 320-wide new frames
+following command completion. It also retains the existing policy-window,
+frame, and EOF checks. Zero tickets fail race acceptance, even if playback ends.
+
+This is a diagnostic public command race, not a production automatic recovery or
+physical audiovisual continuity acceptance. Original-profile runs that never
+exercise a ticket remain failures for this race and retain their decision logs.
+
+The candidate deadline is monitored while the public command waits. Candidate
+cleanup records are fixed before joining the independent command task; expiry
+does not cancel the user command. Race acceptance additionally requires command
+completion and candidate cleanup within the original preparation/ticket deadline.

@@ -281,6 +281,82 @@ def summarize_public_policy(rows, frames, events):
                 capabilityAccepted=False, physicalOutputVerified=False, continuityAccepted=False)
 
 
+def public_policy_race(args):
+    enabled = getattr(args, 'public_policy_race', False)
+    if type(enabled) is not bool or (enabled and (
+            getattr(args, 'public_policy_cycle', False) or
+            getattr(args, 'duration_seconds', 40) != 120 or
+            getattr(args, 'direct_hls_control', False) or
+            getattr(args, 'recovery_action', 'none') != 'auto-reload' or
+            getattr(args, 'auto_scenario', 'normal') not in ('caps-during-preparation', 'fixed-during-preparation') or
+            getattr(args, 'candidate_preparation', 'manifest-only') != 'asset-preroll' or
+            getattr(args, 'startup_delay_ms', 0) != 0)):
+        raise ValueError('public policy race requires owned 120s caps/fixed preroll diagnostic')
+    return enabled
+
+
+def summarize_public_race(rows, frames, policy):
+    """Reject missing races: a naturally issued ticket and real command must win."""
+    def require(value):
+        if not value: raise ValueError('incomplete public host preparation race evidence')
+    def finite(value):
+        return type(value) in (int, float) and math.isfinite(value) and value >= 0
+    require(isinstance(rows, list) and len(rows) >= 4 and isinstance(frames, list))
+    require(isinstance(policy, dict) and policy.get('triggerExercised') is True and
+            all(type(policy.get(k)) is int and policy[k] == 1 for k in ('reservations', 'tickets', 'attempts')))
+    require(all(isinstance(r, dict) and finite(r.get('elapsed')) for r in rows))
+    require(all(a['elapsed'] < b['elapsed'] for a,b in zip(rows, rows[1:])))
+    session = rows[0].get('sessionId'); scenario = rows[0].get('autoScenario')
+    require(isinstance(session, str) and bool(session) and
+            scenario in ('caps-during-preparation', 'fixed-during-preparation'))
+    events = rows[-1].get('automaticEvents')
+    require(isinstance(events, list) and len(events) == 1 and isinstance(events[0], dict))
+    e = events[0]
+    require(type(e.get('attempt')) is int and e['attempt'] == 1 and e.get('outcome') == 'preparationFailed')
+    require(all(e.get(k) is True for k in ('publicCommandApplied', 'publicCommandItemChanged',
+                                          'publicCommandReady', 'warmupDetached')))
+    require(all(e.get(k) is False for k in ('publicCommandManuallyInvalidated',
+                'warmupReusesPrerolledItem', 'warmupOldItemRetained')))
+    require(e.get('publicCommandSessionId') == session and e.get('warmupOutcome') == 'cancelled' and
+            e.get('warmupStage') == 'waitingReady' and e.get('freshPreparedItemInstalled') is not True)
+    keys = ('due', 'elapsed', 'publicCommandStartedElapsed', 'publicCommandCompletedElapsed', 'elapsedAfter')
+    require(all(finite(e.get(k)) for k in keys))
+    require(all(e[a] <= e[b] for a,b in zip(keys,keys[1:])) and e['elapsedAfter'] <= rows[-1]['elapsed'])
+    require(all(finite(e.get(k)) for k in ('warmupStartedElapsed', 'warmupDeadlineElapsed', 'warmupCompletedElapsed')))
+    deadline = min(e['warmupStartedElapsed'] + 2, e['due'] + 5)
+    require(math.isclose(e['warmupDeadlineElapsed'], deadline, rel_tol=0, abs_tol=1e-6))
+    require(e['elapsed'] <= e['warmupStartedElapsed'] <= e['publicCommandStartedElapsed'] <= e['warmupCompletedElapsed'] <= deadline)
+    require(e['publicCommandCompletedElapsed'] <= deadline and e['warmupCompletedElapsed'] <= e['elapsedAfter'])
+    previous = 0
+    for r in rows:
+        require(r.get('publicPolicyRace') is True and r.get('publicPolicyCycle') is False and
+                r.get('autoScenario') == scenario and r.get('sessionId') == session and
+                r.get('hostFailureCount') == 0 and
+                r.get('hostStatus') in ('loading', 'ready', 'playing', 'paused', 'buffering', 'completed'))
+        budget = r.get('automaticAttempts'); history = r.get('automaticEvents')
+        require(type(budget) is int and previous <= budget <= 1 and
+                isinstance(history, list) and history == events[:len(history)] and len(history) <= budget)
+        previous = budget
+    require(previous == 1)
+    selected = [r for r in rows if r['elapsed'] >= e['elapsedAfter']]
+    fixed = 'dash-video-w320-h180-b350000' if scenario == 'fixed-during-preparation' else None
+    cap = None if fixed else 320
+    require(len(selected) >= 3)
+    for r in selected:
+        expected = dict(acceptedMaximumWidth=cap, acceptedMaximumHeight=None, acceptedMaximumBitrate=None,
+                        fixedTrackId=fixed, maximumWidth=cap or 0, maximumHeight=100000 if cap else 0, peak=0)
+        require(all(k in r and r[k] == v for k,v in expected.items()))
+    require(all(isinstance(f, dict) and finite(f.get('elapsed')) and
+                type(f.get('frames')) is int and f['frames'] >= 0 and
+                type(f.get('width')) is int and 0 <= f['width'] <= 16384 for f in frames))
+    require(all(a['elapsed'] < b['elapsed'] for a,b in zip(frames,frames[1:])))
+    published = [f for f in frames if f['elapsed'] >= e['publicCommandCompletedElapsed'] and f['frames'] > 0]
+    require(len(published) >= 3 and all(f['width'] == 320 for f in published))
+    return dict(scenario=scenario, oldCandidateRejected=True, sameSession=True,
+                sourceAttempts=1, policyRows=len(selected), publishedFrames=sum(f['frames'] for f in published),
+                capabilityAccepted=False, continuityAccepted=False, physicalOutputVerified=False)
+
+
 def public_policy_cycle(args):
     enabled = getattr(args, 'public_policy_cycle', False)
     if type(enabled) is not bool or (enabled and (
@@ -460,6 +536,8 @@ def run(args):
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     try:
         cycle = public_policy_cycle(args)
+        race = public_policy_race(args)
+        receipt['publicPolicyRace'] = race
         receipt['publicPolicyCycle'] = cycle
         host = getattr(args, 'owned_host', None)
         if physical_device:
@@ -524,6 +602,7 @@ def run(args):
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
             YL_ABR_PROBE_PUBLIC_POLICY_CYCLE='1' if cycle else '0',
+            YL_ABR_PROBE_PUBLIC_POLICY_RACE='1' if race else '0',
             YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
             YL_ABR_PROBE_CANDIDATE_PREPARATION=preparation_mode,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
@@ -556,6 +635,11 @@ def run(args):
         # Keep valid publication evidence even when playback never reaches EOF.
         receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
             expected_frames=rows[-1]['framesPublished'])
+        if race:
+            receipt['publicRaceObservation'] = summarize_public_race(rows,
+                read_rows(out/'frame-samples.jsonl'), receipt.get('policyObservation'))
+        elif any(row.get('publicPolicyRace') is True for row in rows):
+            raise ValueError('unexpected public host preparation race')
         if cycle:
             receipt['publicPolicyObservation'] = summarize_public_policy(rows,
                 read_rows(out/'frame-samples.jsonl'), json.loads((out/'public-policy-events.json').read_text()))
@@ -616,6 +700,8 @@ def main():
     p.add_argument('--auto-scenario', choices=('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation'), default='normal')
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
+    p.add_argument('--public-policy-race', action='store_true',
+                   help='typed public caps/fixed command after candidate readiness; requires cancellation')
     p.add_argument('--public-policy-cycle', action='store_true',
                    help='typed public host auto/caps/clear/fixed/auto media matrix; no recovery intervention')
     p.add_argument('--direct-hls-control',action='store_true',

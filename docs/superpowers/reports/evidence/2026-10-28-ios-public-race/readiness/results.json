@@ -1,0 +1,65 @@
+[
+  {
+    "name": "ledger-final",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "ledger-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "exitCode": 1
+  },
+  {
+    "name": "threshold-final",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "threshold-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py",
+      "--require-ready"
+    ],
+    "exitCode": 1
+  },
+  {
+    "name": "ledger-tests-final",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_release_readiness.py",
+      "-v"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "diff-final",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

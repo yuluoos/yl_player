@@ -724,6 +724,11 @@
       "path": "docs/superpowers/reports/2026-10-28-ios-public-policy.md",
       "sha256": "9ca00f52e61a917533c8a4468be10ae66a877d2f511f028e2f1e9caacd0a72a3",
       "kind": "report"
+    },
+    "ios-public-race-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-ios-public-race.md",
+      "sha256": "e86105928ae1e7c1deeb7ef0b641593b130cc2e0a2a014b0b79d2a4b29464d16",
+      "kind": "report"
     }
   },
   "rows": [
@@ -765,10 +770,11 @@
         "ios-item-preroll-20261028",
         "ios-preparation-intent-20261028",
         "ios-policy-intent-20261028",
-        "ios-public-policy-20261028"
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-original-auto-recovery-public-command-credential-races-frame-gap-and-physical-output"
+      "nextAction": "qualify-public-pause-seek-credential-races-original-auto-recovery-frame-gap-and-physical-output"
     },
     {
       "requirement": "CAP-ABR",
@@ -788,7 +794,8 @@
         "ios-item-preroll-20261028",
         "ios-preparation-intent-20261028",
         "ios-policy-intent-20261028",
-        "ios-public-policy-20261028"
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -824,7 +831,8 @@
         "ios-item-preroll-20261028",
         "ios-preparation-intent-20261028",
         "ios-policy-intent-20261028",
-        "ios-public-policy-20261028"
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -840,7 +848,8 @@
         "remaining-main-merge-20261027",
         "abr-frame-retention-20261027",
         "ios-device-recovery-causes-20261027",
-        "ios-public-policy-20261028"
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

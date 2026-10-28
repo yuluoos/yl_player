@@ -253,19 +253,20 @@ private final class AbrPrerollCompletion: @unchecked Sendable {
 // Diagnostic only: the final backend still performs its exact resume seek.
 private enum AbrDiagnosticPreroll {
   @MainActor static func prepare(_ asset: AVURLAsset, position: CMTime, deadlineUptime: Double,
-    allowed: () -> Bool, onReady: () -> Void = {},
+    allowed: () -> Bool, onReady: @escaping @MainActor () async -> Void = {},
     onOperationStarted: (String) -> Void = { _ in }, cancelPending: () -> Void) async
-    -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool) {
+    -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool, readyCommand: Task<Void, Never>?) {
     var candidate: AVPlayer?
+    var readyCommand: Task<Void, Never>?
     var stage = "beforeLoading"
     func finish(_ outcome: String, item: AVPlayerItem? = nil)
-      -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool) {
+      -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool, readyCommand: Task<Void, Never>?) {
       let reusesPrerolledItem = item != nil && item === candidate?.currentItem
       candidate?.pause(); candidate?.cancelPendingPrerolls()
       candidate?.currentItem?.cancelPendingSeeks()
       candidate?.replaceCurrentItem(with: nil)
       if item == nil { asset.cancelLoading(); cancelPending() }
-      return (outcome, item, candidate?.currentItem == nil, stage, reusesPrerolledItem)
+      return (outcome, item, candidate?.currentItem == nil, stage, reusesPrerolledItem, readyCommand)
     }
     func rejection() -> String? {
       if Task.isCancelled || !allowed() { return "cancelled" }
@@ -289,7 +290,17 @@ private enum AbrDiagnosticPreroll {
       try? await Task.sleep(nanoseconds: 10_000_000)
     }
     if let reason = rejection() { return finish(reason) }
-    onReady() // Explicit diagnostic injection after real readiness, before seek.
+    let commandCompletion = AbrPrerollCompletion()
+    // Public commands have independent ownership. Keep enforcing the candidate's
+    // deadline while they wait; the caller joins this task after recording cleanup.
+    readyCommand = Task { @MainActor in
+      await onReady()
+      commandCompletion.finish(true)
+    }
+    while commandCompletion.result == nil {
+      if let reason = rejection() { return finish(reason) }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
     if let reason = rejection() { return finish(reason) }
     stage = "seeking"
     let seek = AbrPrerollCompletion()
@@ -463,6 +474,40 @@ final class YlDashResourceLoaderTests: XCTestCase {
       onReady: { readyCalls += 1; allowed = false }, cancelPending: { cleanups += 1 })
     XCTAssertEqual(readyCalls, 1); XCTAssertEqual(cancelled.outcome, "cancelled")
     XCTAssertTrue(cancelled.detached); XCTAssertNil(cancelled.item); XCTAssertEqual(cleanups, 1)
+  }
+
+  @MainActor func testPrerollRevalidatesIntentAndDeadlineAfterAsyncReadyCommand() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    for expire in [false, true] {
+      var allowed = true, invoked = false, cleanups = 0
+      var commandFinished = false, cleanedWhileCommandPending = false
+      let release = Task { @MainActor in
+        if expire {
+          try? await Task.sleep(nanoseconds: 2_200_000_000)
+          cleanedWhileCommandPending = cleanups == 1 && !commandFinished
+          commandFinished = true
+        }
+      }
+      defer { release.cancel() }
+      let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media), position: .zero,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, allowed: { allowed },
+        onReady: {
+          invoked = true
+          if expire {
+            while !commandFinished { try? await Task.sleep(nanoseconds: 10_000_000) }
+          } else { await Task.yield(); allowed = false; commandFinished = true }
+        }, cancelPending: { cleanups += 1 })
+      await release.value
+      await result.readyCommand?.value
+      if expire { XCTAssertTrue(cleanedWhileCommandPending, "Deadline must detach and cancel while the public command is still pending") }
+      XCTAssertTrue(invoked, "Must exercise the callback after actual readiness")
+      XCTAssertEqual(result.outcome, expire ? "timedOut" : "cancelled")
+      XCTAssertEqual(result.stage, "waitingReady")
+      XCTAssertTrue(result.detached); XCTAssertNil(result.item); XCTAssertEqual(cleanups, 1)
+    }
   }
 
   func testFailedPreparationAndRevokedTicketNeverRefundSourceBudget() throws {
@@ -789,9 +834,15 @@ final class YlDashResourceLoaderTests: XCTestCase {
       && autoScenario == "normal" && candidatePreparation == "manifest-only" && startupDelayMs == 0) else {
       XCTFail("Public policy cycle requires managed 120s without diagnostic recovery"); return
     }
+    let publicPolicyRace = env["YL_ABR_PROBE_PUBLIC_POLICY_RACE"] == "1"
+    guard !publicPolicyRace || (!publicPolicyCycle && !direct && programmeSeconds == 120
+      && recoveryAction == "auto-reload" && candidatePreparation == "asset-preroll" && startupDelayMs == 0
+      && ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario)) else {
+      XCTFail("Public policy race requires managed caps/fixed preroll diagnostic"); return
+    }
     // Preserve the historical managed probe's preparation-before-player order.
     let prepared: YlPreparedHlsAsset?
-    if direct || publicPolicyCycle {
+    if direct || publicPolicyCycle || publicPolicyRace {
       prepared = nil
       if startupDelayMs > 0 {
         // Explicitly arm the same first-GET clock before the diagnostic delay.
@@ -828,7 +879,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var directCompleted = false
     var endTask: Task<Void, Never>?
     defer { endTask?.cancel(); publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
-    if publicPolicyCycle {
+    if publicPolicyCycle || publicPolicyRace {
       let host = YlApplePlayerHost(playerId: 991, suffix: "abr-public-policy",
         options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
         services: .init(platform: .current, textureOutput: output,
@@ -976,10 +1027,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
           (CMTimeGetSeconds($0.timeRangeValue.start), CMTimeGetSeconds(CMTimeRangeGetEnd($0.timeRangeValue)))
         })
       return .init(time: ProcessInfo.processInfo.systemUptime - started, generation: frameGeneration,
-        allowed: backend != nil && item?.status == .readyToPlay && player.rate > 0 &&
+        allowed: (backend != nil || publicHost?.playbackIntent == true) && item?.status == .readyToPlay && player.rate > 0 &&
           AbrDiagnosticRecoveryEligibility.permitsPolicy(peakBitRate: item?.preferredPeakBitRate ?? -1,
             maximumResolution: item?.preferredMaximumResolution ?? CGSize(width: -1, height: -1),
-            fixedTrackId: backend?.videoSelection.fixedTrackId) && item?.isPlaybackLikelyToKeepUp == true,
+            fixedTrackId: publicHost?.initialState.videoSelection?.fixedTrackId ?? backend?.videoSelection.fixedTrackId) && item?.isPlaybackLikelyToKeepUp == true,
         width: Int(item?.presentationSize.width ?? 0), position: position,
         remaining: Double(programmeSeconds) - position, bufferAhead: buffered,
         bytes: logs.reduce(0) { $0 + $1.numberOfBytesTransferred },
@@ -1033,7 +1084,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "likelyToKeepUp": item.isPlaybackLikelyToKeepUp, "timeControlStatus": player.timeControlStatus.rawValue,
         "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
-        "publicPolicyCycle": publicPolicyCycle, "policyPhase": policyPhase,
+        "publicPolicyCycle": publicPolicyCycle, "publicPolicyRace": publicPolicyRace, "policyPhase": policyPhase,
         "sessionId": publicHost?.sessionId as Any? ?? NSNull(),
         "acceptedMaximumWidth": publicHost?.acceptedVideoConstraints.maxWidth as Any? ?? NSNull(),
         "acceptedMaximumHeight": publicHost?.acceptedVideoConstraints.maxHeight as Any? ?? NSNull(),
@@ -1052,7 +1103,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
       if reachedEnd { completed = true; break }
-      if let host = publicHost, let sessionId = publicSessionId {
+      if publicPolicyCycle, let host = publicHost, let sessionId = publicSessionId {
         let schedule: [(String, Double)] = [("caps", 8), ("clear-caps", 24), ("fixed", 50), ("restore-auto", 70)]
         let index = publicPolicyEvents.count
         if index < schedule.count, ProcessInfo.processInfo.systemUptime - started >= schedule[index].1 {
@@ -1150,7 +1201,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
           var policyCandidate: YlPreparedHlsAsset?
           var policyFixedId: String?
           defer { policyCandidate?.discard() } // Transferred loader ownership is not cancelled.
-          if ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
+          if !publicPolicyRace, ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
             let snapshot = try XCTUnwrap(replacement.loader.dashSnapshot)
             if autoScenario == "fixed-during-preparation" {
               policyFixedId = try XCTUnwrap(replacement.loader.videoCatalog?.tracks(
@@ -1211,11 +1262,34 @@ final class YlDashResourceLoaderTests: XCTestCase {
             event["warmupFramesBefore"] = frameCount
             event["warmupPositionBefore"] = finite(CMTimeGetSeconds(player.currentTime()))
             event["preparationPauseApplied"] = false
+            let warmupDeadline = min(warmupStarted + 2, started + ticket.due + 5)
+            event["warmupDeadlineElapsed"] = warmupDeadline - started
             let prepared = await AbrDiagnosticPreroll.prepare(replacement.asset, position: player.currentTime(),
-              deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
+              deadlineUptime: warmupDeadline,
               allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
               onReady: {
-                if ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
+                if publicPolicyRace, ticket.attempt == 1 {
+                  event["publicCommandReady"] = true
+                  event["publicCommandManuallyInvalidated"] = false
+                  event["publicCommandStartedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  event["publicCommandApplied"] = false
+                  do {
+                    let host = try XCTUnwrap(publicHost), sessionId = try XCTUnwrap(publicSessionId)
+                    if autoScenario == "caps-during-preparation" {
+                      try await host.setVideoConstraints(command: .init(sessionId: sessionId,
+                        constraints: .init(maxWidth: 320)))
+                    } else {
+                      try await host.selectVideoTrack(command: .init(sessionId: sessionId,
+                        trackId: "dash-video-w320-h180-b350000"))
+                    }
+                    event["publicCommandApplied"] = true
+                    event["publicCommandSessionId"] = host.sessionId
+                    event["publicCommandItemChanged"] = player.currentItem !== item
+                  } catch { event["publicCommandApplied"] = false }
+                  event["publicCommandCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  // No invalidateIntent(): actual host policy/item identity must revoke eligibility.
+                }
+                if !publicPolicyRace, ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
                   automaticPolicy.invalidateIntent()
                   do {
                     let target = try XCTUnwrap(backend)
@@ -1258,12 +1332,19 @@ final class YlDashResourceLoaderTests: XCTestCase {
             event["warmupFramesAfter"] = frameCount
             event["warmupPositionAfter"] = finite(CMTimeGetSeconds(player.currentTime()))
             event["warmupOldItemRetained"] = player.currentItem === item
+            // Candidate cleanup is already recorded, even if a public command
+            // is still finishing. Its late completion cannot change the outcome.
+            await prepared.readyCommand?.value
             preparationSucceeded = prepared.outcome == "ready" && prepared.detached && !prepared.reusesPrerolledItem && prepared.item != nil
             freshPreparedItem = prepared.item
           }
           event["preparationCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
           if !preparationSucceeded {
             replacement.discard(); event["outcome"] = "preparationFailed"
+          } else if publicPolicyRace {
+            replacement.asset.cancelLoading(); replacement.discard()
+            event["outcome"] = "cancelled"
+            event["publicUnexpectedInstallEligibility"] = automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item
           } else if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
             warmedItem = freshPreparedItem
             try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
