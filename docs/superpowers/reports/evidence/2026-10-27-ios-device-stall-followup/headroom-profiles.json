@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "stall-headroom-diagnostic-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 0,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 15000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 40
+        }
+      ]
+    }
+  ]
+}

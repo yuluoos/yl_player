@@ -1,0 +1,12 @@
+{
+  "baselineCommit": "8332c9e9",
+  "productionChanged": false,
+  "invariants": {"bitrate":955000,"windows":2,"windowSeconds":8,"minimumRequests":3,"minimumBufferSeconds":5,"minimumRemainingSeconds":20,"maximumReservations":2,"backoffSeconds":[0.5,1.0],"nativeDeadline":140,"collectorDeadline":240},
+  "originalProfileResults": "frozen-auto completes without trigger; frozen-pause completes without trigger, so its pause action never executes",
+  "controlledFaultResults": "existing five-second stall and two-second disconnect profiles both complete at low quality; their ten measured recovery windows each fail the bandwidth guard",
+  "oldTerminalStall": "not reproduced so far; previous 63.900s failure has 73.400s observed trailing no-publication interval; original failed files retained",
+  "guardBoundary": "Upshift candidate requires progress and at least 5s contiguous buffer; it cannot be counted as a buffer-exhaustion recovery mechanism",
+  "headroomControl": "Separate diagnostic profile changes only recovery B/s from 500000 to 2000000 at 15s after the same five-second stall; never replaces original profile acceptance",
+  "remaining": ["reproduce original terminal stall with boundary logs", "physical screen and acoustic continuity", "full intent/race/shared HTTP retry budget", "full auto/caps/fixed matrix", "minimum OS and additional hardware", "DRM and Dolby authorization", "external output"],
+  "releaseReady": false
+}

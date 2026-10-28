@@ -1,0 +1,25 @@
+{
+  "condition": "Only run if headroom-auto has no recovery ticket, and its recorded eligible low windows still fail the bitrate guard",
+  "changedVariable": "recovery latencyMs 40 -> 0; headroom recovery rate stays 2000000 B/s; initial/stall phases unchanged",
+  "maximumAdditionalRuns": 3,
+  "runs": [
+    [
+      "latency-baseline",
+      "none",
+      "normal"
+    ],
+    [
+      "latency-auto",
+      "auto-reload",
+      "normal"
+    ],
+    [
+      "latency-pause",
+      "auto-reload",
+      "pause-first"
+    ]
+  ],
+  "diagnosticOnly": true,
+  "baselineComparable": false,
+  "capabilityAccepted": false
+}

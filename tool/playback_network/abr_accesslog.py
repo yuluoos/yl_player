@@ -256,6 +256,9 @@ def summarize_frames(rows, *, expected_frames):
     return dict(frameSamplingVersion=2, sampleCount=len(rows), publishedFrames=total,
         maximumPumpGapMs=max(pump_gaps),
         maximumPublishedFrameGapMs=max(((b['elapsed']-a['elapsed'])*1000 for a,b in zip(published,published[1:])), default=None),
+        lastPublicationSampleElapsed=published[-1]['elapsed'],
+        observationEndElapsed=rows[-1]['elapsed'],
+        trailingNoPublicationMs=(rows[-1]['elapsed']-published[-1]['elapsed'])*1000,
         replacementBoundaries=boundaries,
         generationsWithoutPublishedFrame=sorted(generations - {row['generation'] for row in published}),
         continuityAccepted=False, audioSynchronizationVerified=False, physicalOutputVerified=False)
@@ -428,17 +431,20 @@ def run(args):
                 except subprocess.TimeoutExpired:os.killpg(process.pid,signal.SIGKILL);process.wait(timeout=10)
         if physical_device: abr_device.collect(physical_device, bundle, out, token)
         rows=read_rows(out/'rows.jsonl')
+        if not rows or not isinstance(rows[-1], dict):
+            raise ValueError('missing final ABR observation')
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
         policy_version = policy_trace_version(rows)
         if recovery_action == 'auto-reload' and policy_version == 1:
             receipt['policyObservation'] = summarize_policy(read_rows(out/'policy-decisions.jsonl'),
                 expected_attempts=rows[-1]['automaticAttempts'])
+        # Keep valid publication evidence even when playback never reaches EOF.
+        receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
+            expected_frames=rows[-1]['framesPublished'])
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
                                          expected_recovery_action=recovery_action, expected_auto_scenario=auto_scenario)
-        receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
-            expected_frames=rows[-1]['framesPublished'])
     except (OSError,ValueError,KeyError,TypeError,plistlib.InvalidFileException,ExpatError,
             subprocess.SubprocessError) as error:
         receipt['errors'].append(type(error).__name__)

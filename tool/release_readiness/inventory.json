@@ -684,6 +684,11 @@
       "path": "docs/superpowers/reports/2026-10-27-ios-device-recovery-causes.md",
       "sha256": "63ca33f0c959ba9ca03269e900ee61f577f27a73846195d634bae38a4b2cd616",
       "kind": "report"
+    },
+    "ios-device-stall-followup-20261027": {
+      "path": "docs/superpowers/reports/2026-10-27-ios-device-stall-followup.md",
+      "sha256": "5f9ecfade6ab899afa5a8dc5b40e333a5ac1ac6367d2b7cbd73b0f08d09b259e",
+      "kind": "report"
     }
   },
   "rows": [
@@ -717,10 +722,11 @@
         "abr-penalty-recovery-20261027",
         "abr-auto-recovery-20261027",
         "abr-frame-retention-20261027",
-        "ios-device-recovery-causes-20261027"
+        "ios-device-recovery-causes-20261027",
+        "ios-device-stall-followup-20261027"
       ],
       "acceptance": null,
-      "nextAction": "reproduce-physical-stall-and-trigger-replacement-with-frozen-guards-then-qualify-budget-intents-output-and-device-matrix"
+      "nextAction": "qualify-frozen-profile-trigger-and-original-stall-root-cause-plus-full-budget-intents-and-physical-output-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -761,7 +767,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "abr-frame-retention-20261027",
-        "ios-device-recovery-causes-20261027"
+        "ios-device-recovery-causes-20261027",
+        "ios-device-stall-followup-20261027"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

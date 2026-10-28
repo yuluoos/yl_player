@@ -346,3 +346,10 @@ display awake/sleep condition when investigating missing frames. Keep the displa
 awake for foreground playback tests (for example, scope `caffeinate -u -d -i` to
 the test command); retain any prior sleep-condition failures and use the same
 binary and deadlines for the comparison. This is not background-playback acceptance.
+
+`trailingNoPublicationMs` is the observed interval from the last sample containing
+a published frame to the final frame-pump sample. It preserves terminal freezes
+that inter-frame maxima cannot show; it is not a new stall threshold, physical
+black-screen duration, or proof of output after capture ends. Valid frame
+observations are retained even if playback/EOF validation fails; the receipt
+continues to fail, and continuity/audio/physical acceptance remain false.

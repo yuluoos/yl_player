@@ -49,6 +49,22 @@ class AccessLogTests(unittest.TestCase):
         self.assertEqual(abr_accesslog.summarize_frames(rows, expected_frames=2)
                          ['generationsWithoutPublishedFrame'], [1, 3])
 
+    def test_terminal_no_publication_is_not_hidden_by_last_interframe_gap(self):
+        rows = [dict(elapsed=0, generation=0, frames=1, width=320, position=1),
+                dict(elapsed=.05, generation=0, frames=1, width=320, position=1.05),
+                dict(elapsed=30, generation=0, frames=0, width=0, position=1.05)]
+        result = abr_accesslog.summarize_frames(rows, expected_frames=2)
+        self.assertAlmostEqual(result['maximumPublishedFrameGapMs'], 50)
+        self.assertAlmostEqual(result['trailingNoPublicationMs'], 29950)
+        self.assertEqual(result['lastPublicationSampleElapsed'], .05)
+        self.assertEqual(result['observationEndElapsed'], 30)
+        self.assertFalse(result['continuityAccepted'])
+        # A final publication means no observed trailing interval; it does not
+        # prove there was no stall after collection stopped.
+        rows[-1].update(frames=1, width=640)
+        self.assertEqual(abr_accesslog.summarize_frames(rows, expected_frames=3)
+                         ['trailingNoPublicationMs'], 0)
+
     def test_auto_budget_receipt_does_not_require_or_invent_a_recovery(self):
         rows = self.rows()
         for row in rows: row.update(recoveryAction='auto-reload', automaticAttempts=0, automaticEvents=[])
@@ -163,6 +179,46 @@ class CleanupTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
+    def _failed_playback_receipt(self, raw_rows):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); products = root / 'products'; app = products / 'Fixture.app'
+            app.mkdir(parents=True)
+            (app / 'Info.plist').write_bytes(plistlib.dumps({'CFBundleExecutable': 'Fixture'}))
+            (app / 'Fixture').write_bytes(b'unit fixture, never launched')
+            (products / 'probe.xctestrun').write_bytes(plistlib.dumps({
+                'RunnerTests': {'TestHostPath': '__TESTROOT__/Fixture.app/Fixture'}}))
+            args = SimpleNamespace(products=products, directory=root/'out', device=None,
+                profiles=Path(__file__).with_name('profiles.json'), profile='down-and-recover-v1')
+            def failed_native(*_args):
+                # Deliberately incomplete main rows cannot satisfy playback acceptance.
+                (args.directory/'rows.jsonl').write_text(raw_rows)
+                frames = [dict(elapsed=0, generation=0, frames=1, width=320, position=1),
+                          dict(elapsed=.05, generation=0, frames=1, width=320, position=1.05),
+                          dict(elapsed=30, generation=0, frames=0, width=0, position=1.05)]
+                (args.directory/'frame-samples.jsonl').write_text(''.join(json.dumps(x)+'\n' for x in frames))
+                return 65
+            process = Mock(); process.poll.return_value = 0
+            with patch('abr_accesslog.subprocess.Popen', return_value=process), \
+                 patch('abr_accesslog.wait_for_native', side_effect=failed_native), \
+                 patch('abr_accesslog.cleanup_owned', return_value=True):
+                receipt = abr_accesslog.run(args)
+            return receipt
+
+    def test_empty_main_rows_fail_closed_without_escaping(self):
+        receipt = self._failed_playback_receipt('')
+        self.assertFalse(receipt['passed'])
+        self.assertEqual(receipt['exitCode'], 65)
+        self.assertIn('ValueError', receipt['errors'])
+        self.assertNotIn('continuityObservation', receipt)
+
+    def test_failed_playback_retains_valid_frame_observation_without_passing(self):
+        receipt = self._failed_playback_receipt('{"framesPublished": 2}\n{"framesPublished": 2}\n')
+        self.assertFalse(receipt['passed'])
+        self.assertEqual(receipt['exitCode'], 65)
+        self.assertNotIn('observation', receipt)
+        self.assertAlmostEqual(receipt['continuityObservation']['trailingNoPublicationMs'], 29950)
+        self.assertFalse(receipt['continuityObservation']['continuityAccepted'])
+
     def test_direct_control_duration_and_identity_survive_failure_before_launch(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); products = root / 'products'
