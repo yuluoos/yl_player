@@ -157,6 +157,80 @@ private struct AbrDiagnosticRecoveryPolicy {
   }
 }
 
+private final class AbrHeldMetadataLoader: NSObject, AVAssetResourceLoaderDelegate {
+  private let lock = NSLock()
+  private var pending: [AVAssetResourceLoadingRequest] = []
+  private let started: XCTestExpectation, cancelled: XCTestExpectation
+  private var didStart = false, didCancel = false
+  private var ownerCancels = 0, terminatedRequests = 0
+  var cancellationState: (pending: Int, owner: Int, terminated: Int) {
+    lock.lock(); defer { lock.unlock() }; return (pending.count, ownerCancels, terminatedRequests)
+  }
+  func cancelAll() {
+    lock.lock(); let requests = pending; pending.removeAll(); ownerCancels += 1
+    let first = !didCancel; didCancel = true; lock.unlock()
+    for request in requests { request.finishLoading(with: URLError(.cancelled)) }
+    lock.lock(); terminatedRequests += requests.filter { $0.isFinished }.count; lock.unlock()
+    if first { cancelled.fulfill() }
+  }
+  init(started: XCTestExpectation, cancelled: XCTestExpectation) {
+    self.started = started; self.cancelled = cancelled
+  }
+  func resourceLoader(_ loader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource request: AVAssetResourceLoadingRequest) -> Bool {
+    lock.lock(); pending.append(request)
+    let first = !didStart; didStart = true; lock.unlock()
+    if first { started.fulfill() }
+    return true
+  }
+  func resourceLoader(_ loader: AVAssetResourceLoader, didCancel request: AVAssetResourceLoadingRequest) {
+    lock.lock(); pending.removeAll { $0 === request }; terminatedRequests += 1
+    let first = !didCancel; didCancel = true; lock.unlock()
+    if first { cancelled.fulfill() }
+  }
+}
+
+// Owned diagnostic experiment only; never a production recovery hook.
+private enum AbrDiagnosticCandidatePreparation {
+  @MainActor static func loadMetadata(_ asset: AVURLAsset, deadlineUptime: Double,
+    cancelPending: () -> Void) async -> String {
+    // AVAsset cancellation alone does not guarantee that an owned resource
+    // loader has terminated its requests. Every abort releases both owners.
+    func abort(_ outcome: String) -> String {
+      asset.cancelLoading(); cancelPending(); return outcome
+    }
+    guard deadlineUptime.isFinite else { return abort("failed") }
+    guard !Task.isCancelled else { return abort("cancelled") }
+    guard ProcessInfo.processInfo.systemUptime < deadlineUptime else { return abort("timedOut") }
+    let keys = ["playable", "tracks", "duration"]
+    asset.loadValuesAsynchronously(forKeys: keys, completionHandler: {})
+    while !Task.isCancelled {
+      guard ProcessInfo.processInfo.systemUptime < deadlineUptime else {
+        return abort("timedOut")
+      }
+      var allLoaded = true
+      for key in keys {
+        var error: NSError?
+        switch asset.statusOfValue(forKey: key, error: &error) {
+        case .loaded: break
+        case .failed:
+          return abort("failed")
+        case .cancelled:
+          return abort("cancelled")
+        case .unknown, .loading: allLoaded = false
+        @unknown default:
+          return abort("failed")
+        }
+      }
+      if allLoaded {
+        if asset.isPlayable { return "loaded" }
+        return abort("unplayable")
+      }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    return abort("cancelled")
+  }
+}
+
 private enum AbrDiagnosticCaptureURL {
   static func permits(_ url: URL, ownedHost: String?) -> Bool {
     guard url.scheme == "http", url.user == nil, url.password == nil,
@@ -174,6 +248,42 @@ private enum AbrDiagnosticCaptureURL {
 }
 
 final class YlDashResourceLoaderTests: XCTestCase {
+  @MainActor func testCandidateMetadataPreparationRejectsExpiredAndFailedAssets() async {
+    let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+    let expiredAsset = AVURLAsset(url: absent)
+    var expiredCleanups = 0
+    let expired = await AbrDiagnosticCandidatePreparation.loadMetadata(expiredAsset,
+      deadlineUptime: ProcessInfo.processInfo.systemUptime - 1, cancelPending: { expiredCleanups += 1 })
+    XCTAssertEqual(expiredCleanups, 1)
+    XCTAssertEqual(expired, "timedOut")
+    var error: NSError?
+    XCTAssertEqual(expiredAsset.statusOfValue(forKey: "playable", error: &error), .cancelled,
+      "An expired candidate must be cancelled, never reported as loaded")
+    var failedCleanups = 0
+    let failed = await AbrDiagnosticCandidatePreparation.loadMetadata(AVURLAsset(url: absent),
+      deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, cancelPending: { failedCleanups += 1 })
+    XCTAssertEqual(failedCleanups, 1)
+    XCTAssertEqual(failed, "failed")
+
+    let started = expectation(description: "metadata loading entered real resource loader")
+    let cancelled = expectation(description: "deadline cancels pending loading request")
+    let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+    let asset = AVURLAsset(url: URL(string: "yl-warmup-test://owned/master.m3u8")!)
+    asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.warmup.deadline-test"))
+    let loading = Task { @MainActor in
+      await AbrDiagnosticCandidatePreparation.loadMetadata(asset,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, cancelPending: { held.cancelAll() })
+    }
+    await fulfillment(of: [started], timeout: 1)
+    let timedOut = await loading.value
+    XCTAssertEqual(timedOut, "timedOut")
+    await fulfillment(of: [cancelled], timeout: 1)
+    XCTAssertEqual(held.cancellationState.pending, 0)
+    XCTAssertEqual(held.cancellationState.owner, 1)
+    XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+    withExtendedLifetime(held) {}
+  }
+
   func testDeviceCaptureRequiresExplicitOwnedPrivateURL() {
     func permits(_ text: String, _ host: String? = nil) -> Bool {
       AbrDiagnosticCaptureURL.permits(URL(string: text)!, ownedHost: host)
@@ -297,6 +407,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     guard ["none", "seek-current", "reload-source", "auto-reload"].contains(recoveryAction),
           recoveryAction == "none" || (!direct && programmeSeconds == 120) else {
       XCTFail("Invalid recovery diagnostic"); return
+    }
+    let candidatePreparation = env["YL_ABR_PROBE_CANDIDATE_PREPARATION"] ?? "manifest-only"
+    guard ["manifest-only", "asset-metadata"].contains(candidatePreparation),
+      candidatePreparation == "manifest-only" || (recoveryAction == "auto-reload" && !direct && programmeSeconds == 120) else {
+      XCTFail("Invalid candidate preparation diagnostic"); return
     }
     // Preserve the historical managed probe's preparation-before-player order.
     let prepared: YlPreparedHlsAsset?
@@ -487,6 +602,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "likelyToKeepUp": item.isPlaybackLikelyToKeepUp, "timeControlStatus": player.timeControlStatus.rawValue,
         "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
         "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
+        "candidatePreparation": candidatePreparation,
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
         "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
@@ -558,11 +674,37 @@ final class YlDashResourceLoaderTests: XCTestCase {
             try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
               configuration: .init(map: [:]), cancellationToken: .init())
           }.value
+          event["manifestPreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+          var preparationSucceeded = true
+          if candidatePreparation == "asset-metadata" {
+            // An already invalidated ticket must not start speculative loading.
+            if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
+              let warmupStarted = ProcessInfo.processInfo.systemUptime
+              event["warmupStartedElapsed"] = warmupStarted - started
+              event["warmupProxyBefore"] = replacement.loader.diagnosticProxySnapshot
+              event["warmupFramesBefore"] = frameCount
+              event["warmupPositionBefore"] = finite(CMTimeGetSeconds(player.currentTime()))
+              let outcome = await AbrDiagnosticCandidatePreparation.loadMetadata(replacement.asset,
+                deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
+                cancelPending: { replacement.discard() })
+              event["warmupOutcome"] = outcome
+              event["warmupCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+              event["warmupProxyAfter"] = replacement.loader.diagnosticProxySnapshot
+              event["warmupFramesAfter"] = frameCount
+              event["warmupPositionAfter"] = finite(CMTimeGetSeconds(player.currentTime()))
+              event["warmupOldItemRetained"] = player.currentItem === item
+              preparationSucceeded = outcome == "loaded"
+            } else { event["warmupOutcome"] = "skippedIneligible" }
+          }
           event["preparationCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
-          if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
+          if !preparationSucceeded {
+            replacement.discard(); event["outcome"] = "preparationFailed"
+          } else if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
             try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
             event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
-          } else { replacement.discard(); event["outcome"] = "cancelled" }
+          } else {
+            replacement.asset.cancelLoading(); replacement.discard(); event["outcome"] = "cancelled"
+          }
         } catch { event["outcome"] = "preparationFailed" } // bounded retry, original error rows retained
         event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
         event["textureClearsAfter"] = output.clears

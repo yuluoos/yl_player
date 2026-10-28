@@ -694,6 +694,11 @@
       "path": "docs/superpowers/reports/2026-10-27-ios-request-boundary.md",
       "sha256": "68df771442946a4d4fd9df9ce2c534f0bb49f9ab2abc121c1d2b3985b23d5f56",
       "kind": "report"
+    },
+    "ios-candidate-preparation-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-ios-candidate-preparation.md",
+      "sha256": "bad815a319f557af246b6713ed81756507bb99917c678194df0ec9aecf35079d",
+      "kind": "report"
     }
   },
   "rows": [
@@ -729,10 +734,11 @@
         "abr-frame-retention-20261027",
         "ios-device-recovery-causes-20261027",
         "ios-device-stall-followup-20261027",
-        "ios-request-boundary-20261027"
+        "ios-request-boundary-20261027",
+        "ios-candidate-preparation-20261028"
       ],
       "acceptance": null,
-      "nextAction": "reproduce-terminal-stall-with-proxy-boundaries-and-qualify-original-profile-trigger-seek-gap-optimization-and-full-safety-matrix"
+      "nextAction": "reproduce-terminal-stall-and-qualify-original-trigger-decoder-preparation-and-midload-intent-safety"
     },
     {
       "requirement": "CAP-ABR",
@@ -746,7 +752,8 @@
         "remaining-main-merge-20261027",
         "abr-frame-retention-20261027",
         "ios-device-recovery-causes-20261027",
-        "ios-request-boundary-20261027"
+        "ios-request-boundary-20261027",
+        "ios-candidate-preparation-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -776,7 +783,8 @@
         "abr-frame-retention-20261027",
         "ios-device-recovery-causes-20261027",
         "ios-device-stall-followup-20261027",
-        "ios-request-boundary-20261027"
+        "ios-request-boundary-20261027",
+        "ios-candidate-preparation-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

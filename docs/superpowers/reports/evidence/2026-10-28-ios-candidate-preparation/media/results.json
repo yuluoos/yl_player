@@ -1,0 +1,74 @@
+[
+  {
+    "name": "frozen-auto-1",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-boundary-device-build/Build/Products",
+      "--directory",
+      "/private/tmp/yl-prewarm/media/frozen-auto-1",
+      "--physical-device",
+      "00008140-000C49CC3493001C",
+      "--owned-host",
+      "192.168.50.196",
+      "--duration-seconds",
+      "120",
+      "--profile",
+      "down-and-recover-v1",
+      "--recovery-action",
+      "auto-reload"
+    ],
+    "exitCode": 0,
+    "seconds": 129.9360002909998
+  },
+  {
+    "name": "frozen-auto-2",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-boundary-device-build/Build/Products",
+      "--directory",
+      "/private/tmp/yl-prewarm/media/frozen-auto-2",
+      "--physical-device",
+      "00008140-000C49CC3493001C",
+      "--owned-host",
+      "192.168.50.196",
+      "--duration-seconds",
+      "120",
+      "--profile",
+      "down-and-recover-v1",
+      "--recovery-action",
+      "auto-reload"
+    ],
+    "exitCode": 0,
+    "seconds": 131.04455312499704
+  },
+  {
+    "name": "frozen-auto-3",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-boundary-device-build/Build/Products",
+      "--directory",
+      "/private/tmp/yl-prewarm/media/frozen-auto-3",
+      "--physical-device",
+      "00008140-000C49CC3493001C",
+      "--owned-host",
+      "192.168.50.196",
+      "--duration-seconds",
+      "120",
+      "--profile",
+      "down-and-recover-v1",
+      "--recovery-action",
+      "auto-reload"
+    ],
+    "exitCode": 0,
+    "seconds": 127.91779241599943
+  }
+]

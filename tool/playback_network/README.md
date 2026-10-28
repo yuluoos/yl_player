@@ -371,3 +371,22 @@ measure decoder PTS, audible output, or justify bypassing the seek publication
 gate. Preserve the original publication gap even when the previous texture is
 retained, and compare diagnostic changes with the original built host when
 investigating observer overhead.
+
+`--candidate-preparation asset-metadata` is an owned, managed 120-second
+`auto-reload` experiment. It loads `playable`, `tracks` and `duration` on the
+candidate asset while the current item remains installed. `playable` alone can
+report loaded without reading resources and is not a preloading proof. The
+default `manifest-only` retains the previous preparation path. Native rows must
+echo the requested mode; an older host that ignores a nondefault mode fails
+collection instead of being counted as a successful experiment.
+
+Metadata preparation stops at the earlier of two seconds or the existing
+ticket expiry. On abort it cancels asset loading and explicitly discards the
+owned loader; calling `AVAsset.cancelLoading()` alone is not treated as proof
+that loader requests ended. Installation still revalidates the original ticket
+and current item, preserves the exact seek and does not refund reserved budget.
+Events distinguish manifest completion, warmup timestamps/outcome, current-item
+identity, frame/position progress and candidate proxy snapshots. Metadata loaded
+is not decoder preroll, first-frame availability, safe production integration,
+or seamless output acceptance. Normal and warmed trials must remain separately
+labelled, including failures and cancelled candidates.

@@ -14,6 +14,33 @@ from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_candidate_preparation_is_explicit_and_limited_to_owned_auto_probe(self):
+        def args(**kwargs):
+            values = dict(recovery_action='auto-reload', duration_seconds=120, direct_hls_control=False)
+            values.update(kwargs)
+            return SimpleNamespace(**values)
+        self.assertEqual(abr_accesslog.candidate_preparation(args()), 'manifest-only')
+        self.assertEqual(abr_accesslog.candidate_preparation(args(candidate_preparation='asset-metadata')), 'asset-metadata')
+        for changes in [dict(candidate_preparation='unknown'),
+                        dict(candidate_preparation='asset-metadata', recovery_action='none'),
+                        dict(candidate_preparation='asset-metadata', duration_seconds=40),
+                        dict(candidate_preparation='asset-metadata', direct_hls_control=True)]:
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                abr_accesslog.candidate_preparation(args(**changes))
+
+    def test_candidate_preparation_requires_native_echo_and_rejects_mixed_modes(self):
+        validate = abr_accesslog.validate_candidate_preparation
+        validate([{}, {}], 'manifest-only') # Historical captures predate this diagnostic.
+        validate([dict(candidatePreparation='asset-metadata')] * 2, 'asset-metadata')
+        for rows in [[], [{}, {}], [dict(candidatePreparation='manifest-only')],
+                     [dict(candidatePreparation='asset-metadata'), {}],
+                     [dict(candidatePreparation='asset-metadata'), dict(candidatePreparation='manifest-only')],
+                     [None]]:
+            with self.subTest(rows=rows), self.assertRaises(ValueError):
+                validate(rows, 'asset-metadata')
+        with self.assertRaises(ValueError):
+            validate([dict(candidatePreparation='asset-metadata')], 'manifest-only')
+
     def test_preparation_window_cannot_be_attributed_to_installed_recovery(self):
         rows = self.rows()
         for row in rows: row.update(recoveryAction='auto-reload', automaticAttempts=0, automaticEvents=[])

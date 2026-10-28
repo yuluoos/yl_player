@@ -1,0 +1,59 @@
+{
+  "media": {
+    "runs": [
+      "frozen-auto-1",
+      "frozen-auto-2",
+      "frozen-auto-3"
+    ],
+    "binaryHashEntries": 307,
+    "sameBinaryWithinGroup": true,
+    "captureSource": {
+      "tool/playback_network/abr_accesslog.py": "0072d99fe3759479c8b8d19c1b90b6045423aa16ee8081d7fb4c6dd25ed4fe6c",
+      "tool/playback_network/abr_device.py": "a10dd0a86605de34bbe068e548a96f740e504a753e6231155150dafcd140aa40",
+      "tool/playback_network/network_profile.py": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1",
+      "tool/playback_network/profiles.json": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de",
+      "tool/playback_network/prepare_fixture.py": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9",
+      "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "56c64ea927ff347a72db8a927270730a86c76e7c86ab71f7b9cbc71ae6fcc7be",
+      "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "771566d591d32452c9f9bd34e21b2dd445652f7246b3e7697294e9147664b128",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "173b2b215e449b1deb6faed7442997d0867c58d03fee9c625f02ecbfa703df70",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "87b9b9267418757e9980c9f2bd67fb6ee89106241e832595ae6210bda5e1098d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea"
+    }
+  },
+  "candidates": {
+    "runs": [
+      "normal-1",
+      "normal-2",
+      "warm-1",
+      "warm-2",
+      "warm-pause"
+    ],
+    "binaryHashEntries": 307,
+    "sameBinaryWithinGroup": true,
+    "captureSource": {
+      "tool/playback_network/abr_accesslog.py": "a1310487cef07ac9e06ec9120ea5bcf42e6105a8a26746a43f98d0e7e34a454d",
+      "tool/playback_network/abr_device.py": "a10dd0a86605de34bbe068e548a96f740e504a753e6231155150dafcd140aa40",
+      "tool/playback_network/network_profile.py": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1",
+      "tool/playback_network/profiles.json": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de",
+      "tool/playback_network/prepare_fixture.py": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9",
+      "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "34d4cc3eb4b928a9e46fc9641c98c9e7503a3ba108efe27bdc636896b014ac2f",
+      "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "b00392bd409929b399984fe8f880328cc826c3221644bec766102d312994fb5f"
+    },
+    "captureSourceMatchesFinal": true
+  },
+  "noProductionSourceChanges": true,
+  "native": {
+    "device": {
+      "passedTests": 131,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "result": "Passed"
+    },
+    "macos": {
+      "passedTests": 131,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "result": "Passed"
+    }
+  }
+}

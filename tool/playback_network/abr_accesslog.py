@@ -338,6 +338,23 @@ def wait_for_native(process, command, observe, timeout=240):
     return code
 
 
+def candidate_preparation(args):
+    mode = getattr(args, 'candidate_preparation', 'manifest-only')
+    if mode not in ('manifest-only', 'asset-metadata'):
+        raise ValueError('invalid candidate preparation')
+    if mode == 'asset-metadata' and (getattr(args, 'recovery_action', 'none') != 'auto-reload' or
+            getattr(args, 'duration_seconds', 40) != 120 or getattr(args, 'direct_hls_control', False)):
+        raise ValueError('candidate preparation requires managed 120s automatic diagnostic')
+    return mode
+
+
+def validate_candidate_preparation(rows, expected):
+    if expected not in ('manifest-only', 'asset-metadata') or not rows or not all(
+            isinstance(row, dict) and row.get('candidatePreparation', 'manifest-only') == expected
+            for row in rows):
+        raise ValueError('native candidate preparation does not match request')
+
+
 def run(args):
     out=args.directory.resolve();out.mkdir(parents=True,exist_ok=False)
     receipt=dict(diagnosticOnly=True,capabilityAccepted=False,errors=[],exitCode=None)
@@ -367,6 +384,8 @@ def run(args):
         if auto_scenario not in ('normal', 'pause-first') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
             raise ValueError('invalid automatic recovery scenario')
         receipt['autoScenario'] = auto_scenario
+        preparation_mode = candidate_preparation(args)
+        receipt['candidatePreparation'] = preparation_mode
         if recovery_action not in ('none', 'seek-current', 'reload-source', 'auto-reload') or (direct and recovery_action != 'none'):
             raise ValueError('invalid managed recovery diagnostic')
         if recovery_action != 'none' and duration_seconds != 120:
@@ -412,6 +431,7 @@ def run(args):
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
             YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
+            YL_ABR_PROBE_CANDIDATE_PREPARATION=preparation_mode,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
         command=['xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),
@@ -442,6 +462,7 @@ def run(args):
         # Keep valid publication evidence even when playback never reaches EOF.
         receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
             expected_frames=rows[-1]['framesPublished'])
+        validate_candidate_preparation(rows, preparation_mode)
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
                                          expected_recovery_action=recovery_action, expected_auto_scenario=auto_scenario)
@@ -494,6 +515,8 @@ def main():
     p.add_argument('--recovery-action', choices=('none', 'seek-current', 'reload-source', 'auto-reload'), default='none',
                    help='one managed 120s diagnostic intervention; never natural ABR acceptance')
     p.add_argument('--auto-scenario', choices=('normal', 'pause-first'), default='normal')
+    p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata'), default='manifest-only',
+                   help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--direct-hls-control',action='store_true',
                    help='system-only direct HLS control; not a production DASH acceptance run')
     p.add_argument('--profile',default='down-and-recover-v1');a=p.parse_args()
