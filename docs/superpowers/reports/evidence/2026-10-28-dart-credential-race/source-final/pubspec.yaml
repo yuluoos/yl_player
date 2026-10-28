@@ -1,0 +1,26 @@
+name: yl_player_workspace
+publish_to: none
+environment:
+  sdk: ^3.12.0
+workspace:
+  - packages/yl_player
+  - packages/yl_player/example
+  - packages/yl_player_source_resolver
+  - packages/yl_player_source_resolver/example
+  - packages/yl_player_platform_interface
+  - packages/yl_player_android
+  - packages/yl_player_android/example
+  - packages/yl_player_apple
+  - packages/yl_player_media_core
+  - packages/yl_player_media_delivery
+  - packages/yl_player_cast
+  - packages/yl_player_cast_player_adapter
+  - packages/yl_player_cast/example
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_lints: ^6.0.0
+  yl_player_apple: ^0.3.0-dev.5

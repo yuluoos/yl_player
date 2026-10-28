@@ -1,0 +1,12 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/flutter",
+    "test",
+    "test/apple_player_controller_test.dart",
+    "test/player_controller_test.dart",
+    "--no-pub",
+    "--reporter",
+    "expanded"
+  ],
+  "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player"
+}

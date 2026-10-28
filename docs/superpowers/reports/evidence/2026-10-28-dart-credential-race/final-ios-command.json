@@ -1,0 +1,15 @@
+{
+  "command": [
+    "/Users/yy2021_8689/flutter/bin/cache/dart-sdk/bin/dart",
+    "--packages=/Users/yy2021_8689/flutter/packages/flutter_tools/.dart_tool/package_config.json",
+    "/private/tmp/yl-dart-credential-race/flutter_arm_iproxy.dart",
+    "test",
+    "integration_test/apple_dash_credential_acceptance_test.dart",
+    "-d",
+    "00008140-000C49CC3493001C",
+    "--no-pub",
+    "--reporter",
+    "expanded"
+  ],
+  "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example"
+}
