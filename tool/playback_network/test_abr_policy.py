@@ -53,6 +53,19 @@ class PolicyEvidenceTests(unittest.TestCase):
         restarted=dict(first,reason='windowStarted',qualifiedWindows=0,windowBitrate=None,windowRequests=None,intentRevision=1)
         self.summary([start,restarted])
 
+    def test_credential_revision_rejects_cross_revision_windows_and_tickets(self):
+        start = dict(row(1, 'windowStarted'), bytes=200000, transfer=1, requests=4, windowBitrate=None, windowRequests=None, credentialRevision=0)
+        first = dict(row(9, 'firstQualifiedWindow'), bytes=1800000, transfer=9, requests=36, windowBitrate=1600000, qualifiedWindows=1, credentialRevision=0)
+        reserved = dict(row(17, 'reserved', 1), bytes=3400000, transfer=17, requests=68, windowBitrate=1600000, pendingDue=17.5, credentialRevision=0)
+        ticket = dict(row(17.5, 'ticketReady', 1), windowBitrate=None, windowRequests=None, credentialRevision=0)
+        self.summary([start,first,reserved,ticket],1)
+        for index,value in [(0,1),(1,1),(2,1),(3,1),(0,True),(0,-1),(0,2**64),(0,None)]:
+            trace=[start,first,reserved,ticket];trace[index]=dict(trace[index],credentialRevision=value)
+            with self.subTest(index=index,value=value),self.assertRaises(ValueError):self.summary(trace,1)
+        with self.assertRaises(ValueError):self.summary([start,{k:v for k,v in first.items() if k!='credentialRevision'},reserved,ticket],1)
+        restarted=dict(first,reason='windowStarted',qualifiedWindows=0,windowBitrate=None,windowRequests=None,credentialRevision=1)
+        self.summary([start,restarted])
+
     def test_valid_rejections_preserve_invalid_inputs(self):
         for sample in [dict(row(1, 'playbackIneligible'), allowed=False, position=None),
                        dict(row(1, 'nearEnd'), remaining=-0.05),
@@ -87,9 +100,34 @@ class PolicyEvidenceTests(unittest.TestCase):
         self.assertIsNotNone(fn)
         self.assertIsNone(fn([{}, {}]))
         self.assertEqual(fn([{'policySamplingVersion': 1}] * 2), 1)
-        for rows in [[{'policySamplingVersion': 2}], [{'policySamplingVersion': True}],
+        self.assertEqual(fn([{'policySamplingVersion': 2}] * 2), 2)
+        for rows in [[{'policySamplingVersion': 3}], [{'policySamplingVersion': 1}, {'policySamplingVersion': 2}], [{'policySamplingVersion': True}],
                      [{'policySamplingVersion': 1}, {}], [{'policySamplingVersion': None}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): fn(rows)
+
+    def test_v2_policy_requires_credential_and_intent_ticket_binding(self):
+        fn=getattr(abr_accesslog,'validate_recovery_authority',None)
+        self.assertIsNotNone(fn)
+        policy=dict(intentSamples=[dict(elapsed=1,intentRevision=2)],
+            credentialSamples=[dict(elapsed=1,credentialRevision=3)],
+            ticketAuthorities=[dict(attempt=1,elapsed=17.5,intentRevision=2,credentialRevision=3)])
+        event=dict(attempt=1,elapsed=17.51,ticketIntentRevision=2,ticketCredentialRevision=3,outcome='installed',credentialCommitAccepted=True)
+        rows=[dict(policySamplingVersion=2,automaticEvents=[event])]
+        fn(rows,policy)
+        import copy
+        for mutation in ['missing-credential','missing-intent','wrong-credential','wrong-intent','missing-event','extra-event','wrong-time','bool-version','missing-fence']:
+            rr,pp=copy.deepcopy((rows,policy));e=rr[0]['automaticEvents'][0]
+            if mutation=='missing-credential':pp['credentialSamples']=[]
+            elif mutation=='missing-intent':pp['intentSamples']=[]
+            elif mutation=='wrong-credential':e['ticketCredentialRevision']=4
+            elif mutation=='wrong-intent':e['ticketIntentRevision']=3
+            elif mutation=='missing-event':rr[0]['automaticEvents']=[]
+            elif mutation=='extra-event':rr[0]['automaticEvents'].append(e.copy())
+            elif mutation=='wrong-time':e['elapsed']=18
+            elif mutation=='missing-fence':e.pop('credentialCommitAccepted')
+            else:e['ticketCredentialRevision']=True
+            with self.subTest(mutation=mutation),self.assertRaises(ValueError):fn(rr,pp)
+        fn([dict(policySamplingVersion=1)],{}) # Historical v1 remains identifiable.
 
     def test_ticket_without_reservation_is_not_evidence(self):
         with self.assertRaises(ValueError): self.summary([row(20, 'ticketReady', 1)], 1)

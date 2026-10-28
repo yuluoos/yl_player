@@ -529,3 +529,30 @@ windows and pending authority without refunding attempts. Later
 naturally reserved tickets remain subject to the original two-attempt budget;
 this diagnostic does not install public-host recovery candidates. Credential,
 physical-output and full production recovery acceptance remain separate.
+
+
+### Recovery credential provenance
+
+Policy sampling version 2 adds `credentialRevision` alongside transport intent.
+It is the count of distinct resources permanently stripped within the same user
+Load; repeated stripping is idempotent. It contains no URLs or credential values.
+Recovery preparation shares the active HLS loader's credential context and request
+metadata. A change resets qualification windows and revokes pending/in-flight
+authority without refunding the source attempt budget. Every candidate event binds
+both ticket revisions to its issuing decision. V2 rejects missing or mismatched
+authority; historical V1 remains separately identifiable, without upgrading its
+coverage. No production automatic recovery is enabled by this diagnostic policy.
+
+Local contracts combine actual AVPlayer candidate readiness with an owned
+cross-origin redirect/return request, and verify candidate cancellation, resource
+release and credential stripping through a separately prepared shared-context
+proxy. Synthetic bandwidth samples issue the test ticket. This is not a full
+public/Dart credential race, physical playback continuity or high-tier recovery
+acceptance; those remain separate pending checks.
+
+The final diagnostic installation is synchronous under the same context lock as
+`strip`, after both DASH loaders finish preflight. It never waits for network or
+reenters the context; background changes order before the fence (reject) or after
+actual item installation. V2 installed events require `credentialCommitAccepted`.
+This fence is exercised through actual backend item replacement, independently
+of the local readiness/redirect test; it does not enable production recovery.

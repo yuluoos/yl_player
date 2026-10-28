@@ -68,12 +68,14 @@ private struct AbrDiagnosticRecoveryPolicy {
     let position: Double, remaining: Double, bufferAhead: Double
     let bytes: Int64, transfer: Double, requests: Int, overdue: Int
     var intentRevision: UInt64 = 0
+    var credentialRevision: UInt64 = 0
   }
-  struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double; let intentRevision: UInt64 }
+  struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double; let intentRevision: UInt64; let credentialRevision: UInt64 }
   private(set) var attempts = 0
   private(set) var decision: [String: Any] = [:]
   private var generation: Int?
   private var intentRevision: UInt64?
+  private var credentialRevision: UInt64?
   private var sawHigh = false
   private var anchor: Sample?
   private var windows = 0
@@ -104,7 +106,7 @@ private struct AbrDiagnosticRecoveryPolicy {
     var windowRequests: Int?
     func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
     defer {
-      decision = ["elapsed": finite(s.time), "generation": s.generation, "intentRevision": s.intentRevision, "allowed": s.allowed,
+      decision = ["elapsed": finite(s.time), "generation": s.generation, "intentRevision": s.intentRevision, "credentialRevision": s.credentialRevision, "allowed": s.allowed,
         "width": s.width, "position": finite(s.position), "remaining": finite(s.remaining),
         "bufferAhead": finite(s.bufferAhead), "bytes": s.bytes, "transfer": finite(s.transfer),
         "requests": s.requests, "overdue": s.overdue, "reason": reason, "attempts": attempts,
@@ -118,6 +120,7 @@ private struct AbrDiagnosticRecoveryPolicy {
       pending = nil; inFlight = nil; last = nil
     }
     if intentRevision != s.intentRevision { intentRevision = s.intentRevision; invalidateIntent() }
+    if credentialRevision != s.credentialRevision { credentialRevision = s.credentialRevision; invalidateIntent() }
     guard eligible(s), last.map({ s.time > $0.time && s.position >= $0.position }) ?? true else {
       if !s.allowed { reason = "playbackIneligible" }
       else if s.bufferAhead.isFinite && s.bufferAhead < 5 { reason = "insufficientBuffer" }
@@ -153,11 +156,11 @@ private struct AbrDiagnosticRecoveryPolicy {
     reason = "reserved"
     attempts += 1; windows = 0; anchor = nil
     pending = Ticket(id: UUID(), generation: s.generation, attempt: attempts,
-      due: s.time + (attempts == 1 ? 0.5 : 1.0), intentRevision: s.intentRevision)
+      due: s.time + (attempts == 1 ? 0.5 : 1.0), intentRevision: s.intentRevision, credentialRevision: s.credentialRevision)
     return nil
   }
   func authorizes(_ ticket: Ticket, _ s: Sample) -> Bool {
-    eligible(s) && s.width == 320 && s.generation == ticket.generation && s.intentRevision == ticket.intentRevision &&
+    eligible(s) && s.width == 320 && s.generation == ticket.generation && s.intentRevision == ticket.intentRevision && s.credentialRevision == ticket.credentialRevision &&
       inFlight?.id == ticket.id && s.time >= ticket.due && s.time <= ticket.due + 5
   }
   mutating func finish(_ ticket: Ticket) {
@@ -200,6 +203,12 @@ private final class AbrHeldMetadataLoader: NSObject, AVAssetResourceLoaderDelega
 
 // Owned diagnostic experiment only; never a production recovery hook.
 private enum AbrDiagnosticCandidatePreparation {
+  static func prepareReplacement(originURL: URL, headers: [String: String], credentials: [String: String],
+    credentialContext: YlHlsCredentialContext) throws -> YlPreparedHlsAsset {
+    try YlPreparedHlsAsset(originURL: originURL, isDash: true, headers: headers,
+      credentials: credentials, configuration: .init(map: [:]), cancellationToken: .init(), credentialContext: credentialContext)
+  }
+
   @MainActor static func loadMetadata(_ asset: AVURLAsset, deadlineUptime: Double,
     allowed: () -> Bool = { true }, onStarted: () -> Void = {},
     cancelPending: () -> Void) async -> String {
@@ -708,6 +717,165 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 3, "Returning to the old position cannot revive old authority")
   }
 
+  func testCredentialCommitFenceOrdersInstallationAndBackgroundStripping() throws {
+    let context = YlHlsCredentialContext()
+    let before = context.revision
+    context.strip("first") // A redirect after the caller sampled, before commit.
+    var installed = false
+    XCTAssertFalse(context.withUnchangedRevision(before) { installed = true })
+    XCTAssertFalse(installed)
+    let attempted = DispatchSemaphore(value:0), finished = DispatchSemaphore(value:0)
+    let done = expectation(description:"background stripping completes after commit")
+    XCTAssertTrue(context.withUnchangedRevision(1) {
+      DispatchQueue.global().async {
+        attempted.signal(); context.strip("second"); finished.signal(); done.fulfill()
+      }
+      XCTAssertEqual(attempted.wait(timeout:.now()+1),.success)
+      XCTAssertEqual(finished.wait(timeout:.now()+0.05),.timedOut,"Credential change cannot interleave inside accepted installation")
+      installed = true
+    })
+    wait(for:[done],timeout:2)
+    XCTAssertTrue(installed); XCTAssertEqual(context.revision,2)
+    struct CommitFailure: Error {}
+    XCTAssertThrowsError(try context.withUnchangedRevision(2) { throw CommitFailure() })
+    context.strip("third"); XCTAssertEqual(context.revision,3,"Thrown commit must release the fence")
+  }
+
+  @MainActor func testCredentialFenceCoversActualDashBackendItemInstallation() throws {
+    let context = YlHlsCredentialContext(), data = mpd
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) },context:context)
+    let candidate = try prepare(DashLoaderProtocol.configuration { $0.respond(data) },context:context)
+    defer { candidate.discard() }
+    let player = AVPlayer()
+    let attempted = DispatchSemaphore(value:0), finished = DispatchSemaphore(value:0)
+    let done = expectation(description:"strip completes after backend item commit")
+    var replacing = false
+    let backend = YlAvPlayerBackend(playerId:995,
+      services:.init(platform:.current,textureOutput:AppleTestTexture(),makeDisplayDriver:{ _ in AppleTestDisplay() }),
+      configuration:.init(map:["audioPolicy":"appManaged"]),player:player,
+      makePlayerItem:{ asset in
+        if replacing {
+          DispatchQueue.global().async {
+            attempted.signal(); context.strip("changed-at-install"); finished.signal(); done.fulfill()
+          }
+          XCTAssertEqual(attempted.wait(timeout:.now()+1),.success)
+          XCTAssertEqual(finished.wait(timeout:.now()+0.05),.timedOut)
+        }
+        return AVPlayerItem(asset:asset)
+      },emit:{ _ in })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri:origin.absoluteString,kind:.network,formatHint:.dash)
+    try backend.stagePreparedHls(source:source,prepared:original,resume:false)
+    try backend.activate()
+    let oldItem = try XCTUnwrap(player.currentItem)
+    replacing = true
+    XCTAssertTrue(try context.withUnchangedRevision(0) { try backend.replaceActiveDash(source:source,prepared:candidate) })
+    XCTAssertTrue(player.currentItem !== oldItem)
+    wait(for:[done],timeout:2)
+    XCTAssertEqual(context.revision,1)
+  }
+
+  func testCredentialRevisionIsConcurrentIdempotentAndLoadScoped() {
+    let context = YlHlsCredentialContext()
+    DispatchQueue.concurrentPerform(iterations: 256) { context.strip("resource-\($0 % 16)") }
+    XCTAssertEqual(context.revision,16)
+    for index in 0..<16 { XCTAssertTrue(context.isStripped("resource-\(index)")) }
+    XCTAssertEqual(YlHlsCredentialContext().revision,0)
+  }
+
+  func testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget() throws {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320, revision: UInt64 = 0) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: true, width: width, position: time,
+        remaining: 120-time, bufferAhead: 10, bytes: Int64(time*200_000), transfer: time,
+        requests: Int(time*4), overdue: 1, credentialRevision: revision)
+    }
+    for (time,width) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(time,width:width)) }
+    let old = try XCTUnwrap(policy.observe(sample(17.5)))
+    XCTAssertFalse(policy.authorizes(old,sample(17.6,revision:1)), "Credential stripping revokes authority without an item or transport change")
+    _ = policy.observe(sample(18,revision:1))
+    policy.finish(old)
+    XCTAssertEqual(policy.attempts,1)
+    _ = policy.observe(sample(26,revision:1)); _ = policy.observe(sample(34,revision:1))
+    XCTAssertNil(policy.observe(sample(34.99,revision:1)))
+    let next = try XCTUnwrap(policy.observe(sample(35,revision:1)))
+    XCTAssertEqual(next.attempt,2); XCTAssertTrue(policy.authorizes(next,sample(35.1,revision:1)))
+    XCTAssertFalse(policy.authorizes(old,sample(35.1,revision:1)))
+  }
+
+  @MainActor func testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect() async throws {
+    let server = try DashHTTPServer(), other = try DashHTTPServer()
+    defer { server.close(); other.close() }
+    let data = mpd
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200,[:],data) }
+      if request.path == "/seg-1.m4s" { return (302,["Location":other.url("/hop").absoluteString],Data()) }
+      return (200,[:],Data([1,2,3]))
+    }
+    other.handler = { _ in (302,["Location":server.url("/return").absoluteString],Data()) }
+    let context = YlHlsCredentialContext()
+    let current = try YlPreparedHlsAsset(originURL:server.url("/movie.mpd"),isDash:true,
+      headers:["Authorization":"fixture","Cookie":"fixture","X-Client":"ordinary"],credentials:["X-Session":"fixture"],
+      configuration:.init(map:[:]),cancellationToken:.init(),credentialContext:context)
+    defer { current.discard() }
+    let candidate = try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL:server.url("/movie.mpd"),
+      headers:["Authorization":"fixture","Cookie":"fixture","X-Client":"ordinary"],credentials:["X-Session":"fixture"],credentialContext:context)
+    defer { candidate.discard() }
+    let cancelledCandidate = try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL:server.url("/movie.mpd"),
+      headers:["X-Client":"ordinary"],credentials:["X-Session":"fixture"],credentialContext:context)
+    defer { cancelledCandidate.discard() }
+    func segment(_ prepared:YlPreparedHlsAsset) throws -> URL {
+      let master = read(prepared.loader,prepared.asset.url)
+      let video = read(prepared.loader,try child(master.received))
+      return try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("http:") }.flatMap { URL(string:String($0)) })
+    }
+    let oldURL = try segment(current), candidateURL = try segment(candidate)
+    XCTAssertEqual(context.revision,0)
+    var policy = AbrDiagnosticRecoveryPolicy()
+    var epoch = ProcessInfo.processInfo.systemUptime
+    func sample(_ time: Double, width: Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time:time,generation:0,allowed:true,width:width,position:time,remaining:120-time,
+        bufferAhead:10,bytes:Int64(time*200_000),transfer:time,requests:Int(time*4),overdue:1,
+        credentialRevision:context.revision)
+    }
+    for (time,width) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(time,width:width)) }
+    let ticket = try XCTUnwrap(policy.observe(sample(17.5)))
+    epoch = ProcessInfo.processInfo.systemUptime
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var redirectsCompleted = false, cleanups = 0
+    let prepared = await AbrDiagnosticPreroll.prepare(AVURLAsset(url:media),position:.zero,
+      deadlineUptime:epoch+2,allowed:{ policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)) },
+      onReady:{
+        do {
+          let (_,response) = try await URLSession.shared.data(from:oldURL)
+          XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,200); redirectsCompleted = true
+        } catch { XCTFail("Owned redirect request failed") }
+      },cancelPending:{ cleanups += 1; cancelledCandidate.discard() })
+    await prepared.readyCommand?.value
+    XCTAssertTrue(redirectsCompleted); XCTAssertEqual(prepared.outcome,"cancelled")
+    XCTAssertTrue(prepared.detached); XCTAssertNil(prepared.item); XCTAssertEqual(cleanups,1)
+    XCTAssertFalse(policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)))
+    XCTAssertEqual(policy.attempts,1,"A credential change never refunds the source budget")
+    XCTAssertThrowsError(try cancelledCandidate.takeLoader(),"Revocation must consume and cancel the candidate loader")
+    XCTAssertEqual(cancelledCandidate.loader.diagnosticProxySnapshot["cancelled"],1)
+    XCTAssertTrue(context.isStripped(server.url("/seg-1.m4s").absoluteString))
+    XCTAssertEqual(context.revision,1)
+    XCTAssertTrue(candidate.loader.credentialContext === context, "A prepared recovery must keep its user Load credential history")
+    let (_,nextResponse) = try await URLSession.shared.data(from:candidateURL)
+    XCTAssertEqual((nextResponse as? HTTPURLResponse)?.statusCode,200)
+    let requests = server.requests.filter { $0.path == "/seg-1.m4s" }
+    XCTAssertEqual(requests.count,2); XCTAssertEqual(requests.first?.headers["authorization"],"fixture")
+    XCTAssertNil(requests.last?.headers["authorization"]); XCTAssertNil(requests.last?.headers["cookie"])
+    XCTAssertNil(requests.last?.headers["x-session"]); XCTAssertEqual(requests.last?.headers["x-client"],"ordinary")
+    for r in other.requests + server.requests.filter({ $0.path == "/return" }) {
+      XCTAssertNil(r.headers["authorization"]); XCTAssertNil(r.headers["cookie"]); XCTAssertNil(r.headers["x-session"])
+    }
+    XCTAssertEqual(context.revision,1,"Repeated stripping of the same resource is idempotent")
+    XCTAssertEqual(YlHlsCredentialContext().revision,0,"A different user Load has its own history")
+  }
+
   func testRecoveryTicketRejectsAcknowledgedIntentRevisionWithoutItemChange() throws {
     var policy = AbrDiagnosticRecoveryPolicy()
     func sample(_ time: Double, width: Int = 320, revision: UInt64 = 0) -> AbrDiagnosticRecoveryPolicy.Sample {
@@ -1068,6 +1236,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var resumeTask: Task<Void, Never>?
     var publicResume: [String: Any]?
     defer { resumeTask?.cancel() }
+    func currentCredentialContext() -> YlHlsCredentialContext? {
+      ((player.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)?.credentialContext
+    }
     func automaticSample() -> AbrDiagnosticRecoveryPolicy.Sample {
       let item = player.currentItem
       let position = CMTimeGetSeconds(player.currentTime())
@@ -1087,7 +1258,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
         transfer: logs.reduce(0) { $0 + $1.transferDuration },
         requests: logs.reduce(0) { $0 + $1.numberOfMediaRequests },
         overdue: logs.reduce(0) { $0 + $1.downloadOverdue },
-        intentRevision: publicHost?.acknowledgedTransportRevision ?? 0)
+        intentRevision: publicHost?.acknowledgedTransportRevision ?? 0,
+        credentialRevision: currentCredentialContext()?.revision ?? 0)
     }
     while ProcessInfo.processInfo.systemUptime - started < 140 {
       let item = try XCTUnwrap(player.currentItem)
@@ -1151,7 +1323,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
         "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
-        "policySamplingVersion": 1, "backendStatus": states.last?.status as Any? ?? NSNull(),
+        "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
         "completed": reachedEnd, "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
@@ -1211,9 +1383,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
           attempt["completed"] = finished
           attempt["itemChanged"] = player.currentItem !== item
         } else {
+          let credentials = try XCTUnwrap(currentCredentialContext())
           let replacement = try await Task.detached {
-            try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
-              configuration: .init(map: [:]), cancellationToken: .init())
+            try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL: url,
+              headers: source.headers, credentials: source.credentials, credentialContext: credentials)
           }.value
           try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
           attempt["completed"] = true // installation only; landing/output checked in later rows
@@ -1233,7 +1406,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
       if let ticket = recoveryTicket {
         let before = automaticSample()
         var event: [String: Any] = ["attempt": ticket.attempt, "elapsed": before.time,
-          "due": ticket.due, "generation": ticket.generation, "ticketIntentRevision": ticket.intentRevision, "positionBefore": before.position,
+          "due": ticket.due, "generation": ticket.generation, "ticketIntentRevision": ticket.intentRevision, "ticketCredentialRevision": ticket.credentialRevision, "positionBefore": before.position,
           "outcome": "preparing", "textureClearsBefore": output.clears]
         automaticEvents.append(event)
         let eventsURL = directory.appendingPathComponent("automatic-events.json")
@@ -1247,9 +1420,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
           }
         }
         do {
+          let credentials = try XCTUnwrap(currentCredentialContext())
           let replacement = try await Task.detached {
-            try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
-              configuration: .init(map: [:]), cancellationToken: .init())
+            try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL: url,
+              headers: source.headers, credentials: source.credentials, credentialContext: credentials)
           }.value
           event["manifestPreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
           var policyCandidate: YlPreparedHlsAsset?
@@ -1423,11 +1597,22 @@ final class YlDashResourceLoaderTests: XCTestCase {
             replacement.asset.cancelLoading(); replacement.discard()
             event["outcome"] = "cancelled"
             event["publicUnexpectedInstallEligibility"] = automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item
-          } else if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
-            warmedItem = freshPreparedItem
-            try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
-            if let freshPreparedItem { event["freshPreparedItemInstalled"] = player.currentItem === freshPreparedItem }
-            event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
+          } else if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item && currentCredentialContext() === credentials {
+            // This owned backend has no reentrant credential callbacks. Both
+            // DASH loaders have completed preflight; no network wait is allowed
+            // in the synchronous replacement. Background strip linearizes
+            // either before this fence (reject) or after installation.
+            let committed = try credentials.withUnchangedRevision(ticket.credentialRevision) {
+              warmedItem = freshPreparedItem
+              try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
+            }
+            event["credentialCommitAccepted"] = committed
+            if committed {
+              if let freshPreparedItem { event["freshPreparedItemInstalled"] = player.currentItem === freshPreparedItem }
+              event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
+            } else {
+              replacement.asset.cancelLoading(); replacement.discard(); event["outcome"] = "cancelled"
+            }
           } else {
             replacement.asset.cancelLoading(); replacement.discard(); event["outcome"] = "cancelled"
           }

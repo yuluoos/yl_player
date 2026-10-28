@@ -272,7 +272,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlDemuxPipeline.swift": "51953f7e42134fe8151fd93cee5d1e9674eae9f5cd0c12fc918082cf697245c0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlFallbackBufferBudget.swift": "97ba53d986d51218c6e2b9d01b067a5481eecc1ac5074b13c4b49e9fde4a446b",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "1bd40387d7db6fbc53e0f5cd37c531875d47d7939d7f226d455a4d227d51421a",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "87b9b9267418757e9980c9f2bd67fb6ee89106241e832595ae6210bda5e1098d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
@@ -597,7 +597,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "08c8e57789fd1a4fbd68ceb8a5f5636163cc39718a60dfc648420eb50ce62f42"
+    "sha256": "745362ff8d58a76ae2fe185ba8b91708b15c04a687f00ef3925363f02b463ba7"
   },
   "evidence": {
     "p01": {
@@ -734,6 +734,11 @@
       "path": "docs/superpowers/reports/2026-10-28-ios-public-transport.md",
       "sha256": "ad4e16586b48a144ccda273337356aed7007208bac6fe273a6dad4b31a2dab4a",
       "kind": "report"
+    },
+    "ios-credential-race-20261028": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-28-ios-credential-race.md",
+      "sha256": "1c31cebc2e20fbafce1aa9d4b10dd5e961f414c8b6c5b81a0e8fc7feb2865d18"
     }
   },
   "rows": [
@@ -762,7 +767,6 @@
         "p01",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027",
         "abr-recovery-20261027",
         "abr-penalty-recovery-20261027",
         "abr-auto-recovery-20261027",
@@ -777,10 +781,11 @@
         "ios-policy-intent-20261028",
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
-        "ios-public-transport-20261028"
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-public-transport-high-output-credential-races-original-auto-recovery-frame-gap-and-physical-output"
+      "nextAction": "qualify-public-credential-lifecycle-and-network-cancellation-high-output-original-auto-recovery-and-physical-output"
     },
     {
       "requirement": "CAP-ABR",
@@ -802,7 +807,8 @@
         "ios-policy-intent-20261028",
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
-        "ios-public-transport-20261028"
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -840,7 +846,8 @@
         "ios-policy-intent-20261028",
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
-        "ios-public-transport-20261028"
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -858,7 +865,8 @@
         "ios-device-recovery-causes-20261027",
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
-        "ios-public-transport-20261028"
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

@@ -1,0 +1,64 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1793203287.103,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793203259.499,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertTrue failed - A prepared recovery must keep its user Load credential history",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlDashResourceLoaderTests/testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect",
+      "testName" : "testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect()"
+    },
+    {
+      "failureText" : "XCTAssertFalse failed - Credential stripping revokes authority without an item or transport change",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlDashResourceLoaderTests/testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget",
+      "testName" : "testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "3 runs of 1 test failed with XCTAssertNil failed: \"fixture\""
+    }
+  ],
+  "totalTestCount" : 2
+}

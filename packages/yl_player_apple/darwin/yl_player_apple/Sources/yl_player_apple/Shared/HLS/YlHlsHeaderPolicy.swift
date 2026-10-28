@@ -30,6 +30,20 @@ final class YlHlsCredentialContext {
   private let lock = NSLock()
   private var strippedResources = Set<String>()
 
+  var revision: UInt64 {
+    lock.lock(); defer { lock.unlock() }
+    return UInt64(strippedResources.count)
+  }
+
+  /// Serializes a short synchronous commit with provenance changes. The body
+  /// must not reenter this context or perform/wait for network preparation.
+  func withUnchangedRevision(_ expected: UInt64, _ commit: () throws -> Void) rethrows -> Bool {
+    lock.lock(); defer { lock.unlock() }
+    guard UInt64(strippedResources.count) == expected else { return false }
+    try commit()
+    return true
+  }
+
   func isStripped(_ resource: String) -> Bool {
     lock.lock()
     defer { lock.unlock() }

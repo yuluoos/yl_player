@@ -1,0 +1,89 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.053s",
+                  "durationInSeconds" : 0.052996039390563965,
+                  "name" : "testCredentialCommitFenceOrdersInstallationAndBackgroundStripping()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testCredentialCommitFenceOrdersInstallationAndBackgroundStripping()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testCredentialCommitFenceOrdersInstallationAndBackgroundStripping",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.072s",
+                  "durationInSeconds" : 0.07231795787811279,
+                  "name" : "testCredentialFenceCoversActualDashBackendItemInstallation()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testCredentialFenceCoversActualDashBackendItemInstallation()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testCredentialFenceCoversActualDashBackendItemInstallation",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0013s",
+                  "durationInSeconds" : 0.0013309717178344727,
+                  "name" : "testCredentialRevisionIsConcurrentIdempotentAndLoadScoped()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testCredentialRevisionIsConcurrentIdempotentAndLoadScoped()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testCredentialRevisionIsConcurrentIdempotentAndLoadScoped",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.13s",
+                  "durationInSeconds" : 0.13487493991851807,
+                  "name" : "testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00071s",
+                  "durationInSeconds" : 0.0007109642028808594,
+                  "name" : "testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

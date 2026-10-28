@@ -1,0 +1,1 @@
+定向复核 /root/credential_review：原 P2 关闭。同锁覆盖revision检查与同步安装；throws释放锁。受控调用已完成双方DASH preflight，清理/catalog读取/redirect回调无相反锁序或上下文重入，未发现新P1/P2。真实backend换item测试和candidate loader取消检查覆盖修复。v2 installed要求credentialCommitAccepted=true。结论仅限此诊断闭包，不得推广到任意生产回调；必须保留不得重入/不得等待网络准备注释。未重跑测试。

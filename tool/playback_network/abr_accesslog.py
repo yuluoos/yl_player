@@ -22,9 +22,9 @@ def policy_trace_version(rows):
     if not any(isinstance(row, dict) and 'policySamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('policySamplingVersion')) is int and
-               row['policySamplingVersion'] == 1 for row in rows):
+               row['policySamplingVersion'] in (1,2) and row['policySamplingVersion'] == rows[0]['policySamplingVersion'] for row in rows):
         raise ValueError('inconsistent or unsupported policy sampling version')
-    return 1
+    return rows[0]['policySamplingVersion']
 
 
 def summarize_policy(rows, *, expected_attempts):
@@ -43,9 +43,18 @@ def summarize_policy(rows, *, expected_attempts):
     counts = {}; previous = -1; attempts = 0; reservations = 0; tickets = 0; pending = None
     rates = []; anchor = None; qualified = 0
     has_revision = any(isinstance(r,dict) and 'intentRevision' in r for r in rows)
+    has_credentials = any(isinstance(r,dict) and 'credentialRevision' in r for r in rows)
+    credential_revision = None; credential_samples = []
     revision = None; intent_samples = []; ticket_authorities = []
     for row in rows:
         require(isinstance(row, dict) and isinstance(row.get('reason'), str) and row['reason'] in reasons)
+        if has_credentials:
+            value = row.get('credentialRevision')
+            require(type(value) is int and 0 <= value < 2**64 and (credential_revision is None or value >= credential_revision))
+            if credential_revision is not None and value != credential_revision:
+                anchor = None; qualified = 0; pending = None
+            credential_revision = value
+            credential_samples.append(dict(elapsed=row.get('elapsed'), credentialRevision=credential_revision))
         if has_revision:
             value = row.get('intentRevision')
             require(type(value) is int and 0 <= value < 2**64 and (revision is None or value >= revision))
@@ -122,23 +131,43 @@ def summarize_policy(rows, *, expected_attempts):
         if reason == 'reserved':
             require(budget == attempts + 1 and due is not None and
                     math.isclose(due-elapsed, .5 if budget == 1 else 1, abs_tol=1e-6))
-            pending = (budget, row['generation'], due, revision); reservations += 1
+            pending = (budget, row['generation'], due, revision, credential_revision); reservations += 1
         else:
             require(budget == attempts)
             if reason == 'ticketReady':
                 require(pending is not None and pending[0] == budget and
-                        pending[1] == row['generation'] and elapsed >= pending[2] and pending[3] == revision)
+                        pending[1] == row['generation'] and elapsed >= pending[2] and pending[3] == revision and pending[4] == credential_revision)
                 pending = None; tickets += 1
-                if has_revision: ticket_authorities.append(dict(attempt=budget,elapsed=elapsed,intentRevision=revision))
+                if has_revision or has_credentials: ticket_authorities.append(dict(attempt=budget,elapsed=elapsed,intentRevision=revision,credentialRevision=credential_revision))
             elif reason != 'backoff': pending = None
         attempts = budget
         counts[reason] = counts.get(reason, 0) + 1
     require(attempts == expected_attempts)
     return dict(samples=len(rows), reasonCounts=counts, attempts=attempts,
         reservations=reservations, tickets=tickets, triggerExercised=tickets > 0,
-        intentSamples=intent_samples, ticketAuthorities=ticket_authorities,
+        intentSamples=intent_samples, credentialSamples=credential_samples, ticketAuthorities=ticket_authorities,
         windowBitrateMinimum=min(rates) if rates else None,
         windowBitrateMaximum=max(rates) if rates else None, capabilityAccepted=False)
+
+
+
+def validate_recovery_authority(rows, policy):
+    """V2 binds every observed candidate to its transport/credential authority."""
+    if policy_trace_version(rows) != 2: return
+    def require(value):
+        if not value: raise ValueError('invalid recovery credential authority')
+    require(isinstance(policy,dict))
+    require(isinstance(policy.get('intentSamples'),list) and bool(policy['intentSamples']))
+    require(isinstance(policy.get('credentialSamples'),list) and bool(policy['credentialSamples']))
+    events=rows[-1].get('automaticEvents');authorities=policy.get('ticketAuthorities')
+    require(isinstance(events,list) and isinstance(authorities,list) and len(events)==len(authorities))
+    for e,a in zip(events,authorities):
+        require(isinstance(e,dict) and isinstance(a,dict) and type(e.get('attempt')) is int and e['attempt']==a.get('attempt'))
+        require(all(type(x) in (int,float) and math.isfinite(x) for x in (e.get('elapsed'),a.get('elapsed'))))
+        require(0<=e['elapsed']-a['elapsed']<=.05)
+        if e.get('outcome') == 'installed': require(e.get('credentialCommitAccepted') is True)
+        for event_key,key in [('ticketIntentRevision','intentRevision'),('ticketCredentialRevision','credentialRevision')]:
+            require(type(e.get(event_key)) is int and type(a.get(key)) is int and 0<=e[event_key]<2**64 and e[event_key]==a[key])
 
 
 def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, expected_startup_delay_ms=0,
@@ -730,9 +759,10 @@ def run(args):
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
         policy_version = policy_trace_version(rows)
-        if recovery_action == 'auto-reload' and policy_version == 1:
+        if recovery_action == 'auto-reload' and policy_version in (1,2):
             receipt['policyObservation'] = summarize_policy(read_rows(out/'policy-decisions.jsonl'),
                 expected_attempts=rows[-1]['automaticAttempts'])
+            validate_recovery_authority(rows,receipt['policyObservation'])
         # Keep valid publication evidence even when playback never reaches EOF.
         receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
             expected_frames=rows[-1]['framesPublished'])

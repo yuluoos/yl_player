@@ -1,0 +1,9 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "tool/release_readiness/check.py"
+  ],
+  "exitCode": 2,
+  "cause": "CAP-ABR ios evidence list has 21 entries; maximum remains 20"
+}
