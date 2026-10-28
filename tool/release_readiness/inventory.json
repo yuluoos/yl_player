@@ -704,6 +704,11 @@
       "path": "docs/superpowers/reports/2026-10-28-ios-route-pause.md",
       "sha256": "22184e6cb91cde1ff550d1134d65714ad9b3513bf19be549d85cabef287e6146",
       "kind": "report"
+    },
+    "ios-item-preroll-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-ios-item-preroll.md",
+      "sha256": "49a22189d5b869b69b241875f9e415ce242d82a4f9f8f39458a28ff5b17c2f0f",
+      "kind": "report"
     }
   },
   "rows": [
@@ -741,10 +746,11 @@
         "ios-device-stall-followup-20261027",
         "ios-request-boundary-20261027",
         "ios-candidate-preparation-20261028",
-        "ios-route-pause-20261028"
+        "ios-route-pause-20261028",
+        "ios-item-preroll-20261028"
       ],
       "acceptance": null,
-      "nextAction": "verify-physical-route-loss-and-reproduce-terminal-stall-original-trigger-and-full-continuity-matrix"
+      "nextAction": "reproduce-original-stall-and-trigger-qualify-shorter-frame-gap-and-physical-continuity-with-full-intent-race-matrix"
     },
     {
       "requirement": "CAP-ABR",
@@ -760,7 +766,8 @@
         "ios-device-recovery-causes-20261027",
         "ios-request-boundary-20261027",
         "ios-candidate-preparation-20261028",
-        "ios-route-pause-20261028"
+        "ios-route-pause-20261028",
+        "ios-item-preroll-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -792,7 +799,8 @@
         "ios-device-stall-followup-20261027",
         "ios-request-boundary-20261027",
         "ios-candidate-preparation-20261028",
-        "ios-route-pause-20261028"
+        "ios-route-pause-20261028",
+        "ios-item-preroll-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"

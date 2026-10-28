@@ -143,7 +143,7 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
     if expected_recovery_action is not None:
         require(expected_recovery_action in ('none', 'seek-current', 'reload-source', 'auto-reload'))
         require(all(row.get('recoveryAction') == expected_recovery_action for row in rows))
-        require(expected_auto_scenario in ('normal', 'pause-first'))
+        require(expected_auto_scenario in ('normal', 'pause-first', 'pause-during-preparation'))
         require(all(row.get('autoScenario') == expected_auto_scenario for row in rows))
         require(all(type(row.get('frameSamplingVersion')) is int and row['frameSamplingVersion'] == 2 for row in rows))
         attempts = [row.get('recoveryAttempt') for row in rows if row.get('recoveryAttempt') is not None]
@@ -340,19 +340,34 @@ def wait_for_native(process, command, observe, timeout=240):
 
 def candidate_preparation(args):
     mode = getattr(args, 'candidate_preparation', 'manifest-only')
-    if mode not in ('manifest-only', 'asset-metadata'):
+    if mode not in ('manifest-only', 'asset-metadata', 'asset-preroll'):
         raise ValueError('invalid candidate preparation')
-    if mode == 'asset-metadata' and (getattr(args, 'recovery_action', 'none') != 'auto-reload' or
+    if mode != 'manifest-only' and (getattr(args, 'recovery_action', 'none') != 'auto-reload' or
             getattr(args, 'duration_seconds', 40) != 120 or getattr(args, 'direct_hls_control', False)):
         raise ValueError('candidate preparation requires managed 120s automatic diagnostic')
+    if getattr(args, 'auto_scenario', 'normal') == 'pause-during-preparation' and mode != 'asset-preroll':
+        raise ValueError('mid-preparation pause requires preroll')
     return mode
 
 
 def validate_candidate_preparation(rows, expected):
-    if expected not in ('manifest-only', 'asset-metadata') or not rows or not all(
+    if expected not in ('manifest-only', 'asset-metadata', 'asset-preroll') or not rows or not all(
             isinstance(row, dict) and row.get('candidatePreparation', 'manifest-only') == expected
             for row in rows):
         raise ValueError('native candidate preparation does not match request')
+    if expected == 'asset-preroll':
+        for row in rows:
+            events = row.get('automaticEvents', [])
+            if not isinstance(events, list):
+                raise ValueError('invalid preroll event evidence')
+            for event in events:
+                if not isinstance(event, dict):
+                    raise ValueError('invalid preroll event evidence')
+                if event.get('outcome') == 'installed' and not (
+                        event.get('warmupOutcome') == 'ready' and event.get('warmupStage') == 'ready' and
+                        event.get('warmupDetached') is True and event.get('warmupReusesPrerolledItem') is False and
+                        event.get('freshPreparedItemInstalled') is True and event.get('warmupOldItemRetained') is True):
+                    raise ValueError('preroll installation lacks fresh item preparation evidence')
 
 
 def run(args):
@@ -381,7 +396,7 @@ def run(args):
         startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
         recovery_action = getattr(args, 'recovery_action', 'none')
         auto_scenario = getattr(args, 'auto_scenario', 'normal')
-        if auto_scenario not in ('normal', 'pause-first') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
+        if auto_scenario not in ('normal', 'pause-first', 'pause-during-preparation') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
             raise ValueError('invalid automatic recovery scenario')
         receipt['autoScenario'] = auto_scenario
         preparation_mode = candidate_preparation(args)
@@ -514,8 +529,8 @@ def main():
                    help='0..2000ms diagnostic delay after arming/preparing; never changes the frozen profile')
     p.add_argument('--recovery-action', choices=('none', 'seek-current', 'reload-source', 'auto-reload'), default='none',
                    help='one managed 120s diagnostic intervention; never natural ABR acceptance')
-    p.add_argument('--auto-scenario', choices=('normal', 'pause-first'), default='normal')
-    p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata'), default='manifest-only',
+    p.add_argument('--auto-scenario', choices=('normal', 'pause-first', 'pause-during-preparation'), default='normal')
+    p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--direct-hls-control',action='store_true',
                    help='system-only direct HLS control; not a production DASH acceptance run')

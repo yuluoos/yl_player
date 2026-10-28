@@ -28,6 +28,44 @@ class AccessLogTests(unittest.TestCase):
             with self.subTest(changes=changes), self.assertRaises(ValueError):
                 abr_accesslog.candidate_preparation(args(**changes))
 
+    def test_preroll_install_requires_fresh_item_and_completed_preparation(self):
+        event = dict(outcome='installed', warmupOutcome='ready', warmupStage='ready',
+                     warmupDetached=True, warmupReusesPrerolledItem=False,
+                     freshPreparedItemInstalled=True, warmupOldItemRetained=True)
+        def validate(value):
+            abr_accesslog.validate_candidate_preparation([
+                dict(candidatePreparation='asset-preroll', automaticEvents=[value])], 'asset-preroll')
+        validate(event)
+        for field, value in [('warmupOutcome', 'loaded'), ('warmupStage', 'seeking'),
+                             ('warmupDetached', False), ('warmupReusesPrerolledItem', True),
+                             ('freshPreparedItemInstalled', False), ('warmupOldItemRetained', False)]:
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                validate(dict(event, **{field: value}))
+            missing = dict(event); missing.pop(field)
+            with self.subTest(missing=field), self.assertRaises(ValueError):
+                validate(missing)
+
+    def test_mid_preparation_pause_requires_preroll(self):
+        for mode in ['manifest-only', 'asset-metadata']:
+            args = SimpleNamespace(recovery_action='auto-reload', duration_seconds=120,
+                direct_hls_control=False, candidate_preparation=mode,
+                auto_scenario='pause-during-preparation')
+            with self.subTest(mode=mode), self.assertRaises(ValueError):
+                abr_accesslog.candidate_preparation(args)
+
+    def test_preroll_requires_owned_auto_and_native_echo(self):
+        args = SimpleNamespace(recovery_action='auto-reload', duration_seconds=120,
+                               direct_hls_control=False, candidate_preparation='asset-preroll')
+        self.assertEqual(abr_accesslog.candidate_preparation(args), 'asset-preroll')
+        abr_accesslog.validate_candidate_preparation([dict(candidatePreparation='asset-preroll')], 'asset-preroll')
+        for rows in [[{}], [dict(candidatePreparation='asset-metadata')],
+                     [dict(candidatePreparation='asset-preroll'), {}]]:
+            with self.assertRaises(ValueError):
+                abr_accesslog.validate_candidate_preparation(rows, 'asset-preroll')
+        args.direct_hls_control = True
+        with self.assertRaises(ValueError):
+            abr_accesslog.candidate_preparation(args)
+
     def test_candidate_preparation_requires_native_echo_and_rejects_mixed_modes(self):
         validate = abr_accesslog.validate_candidate_preparation
         validate([{}, {}], 'manifest-only') # Historical captures predate this diagnostic.

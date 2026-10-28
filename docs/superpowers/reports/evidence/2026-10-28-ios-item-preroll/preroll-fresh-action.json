@@ -1,0 +1,38 @@
+{
+  "attachments" : [
+
+  ],
+  "domainType" : "com.apple.dt.unit.cocoaUnitTest",
+  "duration" : 14.184991955757141,
+  "messages" : [
+    {
+      "annotations" : [
+
+      ],
+      "shortTitle" : "Testing cancelled because the build failed.",
+      "title" : "Testing cancelled because the build failed.",
+      "type" : "error"
+    }
+  ],
+  "result" : "succeeded",
+  "startTime" : 1793179882.022,
+  "subsections" : [
+    {
+      "attachments" : [
+
+      ],
+      "domainType" : "Xcode.IDEActivityLogDomainType.LaunchLog",
+      "duration" : 14.14498507976532,
+      "messages" : [
+
+      ],
+      "result" : "succeeded",
+      "startTime" : 1793179882.062,
+      "subsections" : [
+
+      ],
+      "title" : "Launch actions"
+    }
+  ],
+  "title" : "Test Runner"
+}

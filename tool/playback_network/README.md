@@ -401,3 +401,25 @@ is not an ABR or continuity pass. Do not attribute earlier buffered-exhaustion
 failures to route loss without their own event evidence. Synthetic route-notice
 regressions on a physical device are distinct from physical unplug/disconnect
 validation.
+
+`--candidate-preparation asset-preroll` adds a bounded owned-media experiment:
+create a muted, paused candidate player, wait for player/item readiness, seek
+exactly, then preroll at rate 1. It checks the original ticket and playback
+intent throughout, with the earlier of a two-second limit or ticket expiry.
+Aborts cancel seeks/prerolls/asset loading, detach the item and discard its loader.
+
+A prerolled item must never be transferred between players. The physical-device
+prototype raised an AVPlayerItem association exception even after detaching it.
+The retained experiment instead creates a **fresh item from the warmed asset**;
+normal exact resume seek is still required and decoder state is not transferred.
+Capture validation rejects installations without explicit completed preparation,
+old-item retention, candidate detachment, fresh-item adoption and non-reuse proof.
+This is opt-in diagnostic tooling, not production automatic recovery or latency
+acceptance. Failed preparation still spends its reserved attempt.
+
+`--auto-scenario pause-during-preparation` requires `asset-preroll` and invalidates
+the first ticket after actual candidate readiness, before its seek. The event
+records whether this point was reached. Resume after the diagnostic pause cannot
+revive that ticket; a second reservation uses the original longer backoff. This
+one injection does not cover every seek/preroll/credential/constraint race, and
+an unexercised injection must remain unverified.

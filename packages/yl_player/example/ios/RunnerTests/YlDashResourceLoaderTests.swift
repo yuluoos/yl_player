@@ -232,6 +232,86 @@ private enum AbrDiagnosticCandidatePreparation {
   }
 }
 
+// Completion callbacks may arrive on AVFoundation queues after cancellation.
+private final class AbrPrerollCompletion: @unchecked Sendable {
+  private let lock = NSLock()
+  private var value: Bool?
+  func finish(_ result: Bool) { lock.lock(); value = result; lock.unlock() }
+  var result: Bool? { lock.lock(); defer { lock.unlock() }; return value }
+}
+
+// Diagnostic only: the final backend still performs its exact resume seek.
+private enum AbrDiagnosticPreroll {
+  @MainActor static func prepare(_ asset: AVURLAsset, position: CMTime, deadlineUptime: Double,
+    allowed: () -> Bool, onReady: () -> Void = {}, cancelPending: () -> Void) async
+    -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool) {
+    var candidate: AVPlayer?
+    var stage = "beforeLoading"
+    func finish(_ outcome: String, item: AVPlayerItem? = nil)
+      -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool) {
+      let reusesPrerolledItem = item != nil && item === candidate?.currentItem
+      candidate?.pause(); candidate?.cancelPendingPrerolls()
+      candidate?.currentItem?.cancelPendingSeeks()
+      candidate?.replaceCurrentItem(with: nil)
+      if item == nil { asset.cancelLoading(); cancelPending() }
+      return (outcome, item, candidate?.currentItem == nil, stage, reusesPrerolledItem)
+    }
+    func rejection() -> String? {
+      if Task.isCancelled || !allowed() { return "cancelled" }
+      if ProcessInfo.processInfo.systemUptime >= deadlineUptime { return "timedOut" }
+      return nil
+    }
+    guard deadlineUptime.isFinite, CMTimeGetSeconds(position).isFinite,
+      CMTimeGetSeconds(position) >= 0 else { return finish("failed") }
+    if let reason = rejection() { return finish(reason) }
+    let player = AVPlayer()
+    player.isMuted = true; player.allowsExternalPlayback = false
+    let item = AVPlayerItem(asset: asset)
+    item.preferredForwardBufferDuration = 10
+    item.preferredPeakBitRate = 0
+    candidate = player
+    player.replaceCurrentItem(with: item)
+    stage = "waitingReady"
+    while player.status != .readyToPlay || item.status != .readyToPlay {
+      if let reason = rejection() { return finish(reason) }
+      if player.status == .failed || item.status == .failed { return finish("failed") }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    if let reason = rejection() { return finish(reason) }
+    onReady() // Explicit diagnostic injection after real readiness, before seek.
+    if let reason = rejection() { return finish(reason) }
+    stage = "seeking"
+    let seek = AbrPrerollCompletion()
+    player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero) { seek.finish($0) }
+    while seek.result == nil {
+      if let reason = rejection() { return finish(reason) }
+      if player.status == .failed || item.status == .failed { return finish("failed") }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    guard seek.result == true else { return finish("seekFailed") }
+    if let reason = rejection() { return finish(reason) }
+    // SDK contract: preroll throws unless the player is ready and rate is zero.
+    guard player.status == .readyToPlay, item.status == .readyToPlay, player.rate == 0 else {
+      return finish("failed")
+    }
+    stage = "preroll"
+    let preroll = AbrPrerollCompletion()
+    player.preroll(atRate: 1) { preroll.finish($0) }
+    while preroll.result == nil {
+      if let reason = rejection() { return finish(reason) }
+      if player.status == .failed || item.status == .failed { return finish("failed") }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    if let reason = rejection() { return finish(reason) }
+    guard preroll.result == true else { return finish("prerollFailed") }
+    stage = "ready"
+    // A detached, prerolled AVPlayerItem still raised a cross-player association
+    // exception on the physical device. Never transfer it. Only share the asset;
+    // a fresh item must perform the backend's normal exact resume seek again.
+    return finish("ready", item: AVPlayerItem(asset: asset))
+  }
+}
+
 private enum AbrDiagnosticCaptureURL {
   static func permits(_ url: URL, ownedHost: String?) -> Bool {
     guard url.scheme == "http", url.user == nil, url.password == nil,
@@ -306,6 +386,93 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(reboundStates.count, count)
   }
   #endif
+
+  @MainActor func testPrerollCandidateCreatesFreshItemAndCancelsAfterRealReadiness() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var cleanups = 0
+    let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media),
+      position: CMTime(value: 1, timescale: 1), deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+      allowed: { true }, cancelPending: { cleanups += 1 })
+    XCTAssertEqual(result.outcome, "ready"); XCTAssertEqual(result.stage, "ready")
+    XCTAssertTrue(result.detached); XCTAssertFalse(result.reusesPrerolledItem); XCTAssertEqual(cleanups, 0)
+    let item = try XCTUnwrap(result.item)
+    let receiving = AVPlayer()
+    defer { receiving.pause(); receiving.replaceCurrentItem(with: nil) }
+    receiving.isMuted = true; receiving.replaceCurrentItem(with: item)
+    let landed = await receiving.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+    XCTAssertTrue(landed)
+    receiving.play()
+    try await AppleHostCharacterizations.waitFor({ CMTimeGetSeconds(receiving.currentTime()) >= 1.1 }, timeout: 5)
+    var allowed = true, readyCalls = 0
+    let cancelled = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media), position: .zero,
+      deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, allowed: { allowed },
+      onReady: { readyCalls += 1; allowed = false }, cancelPending: { cleanups += 1 })
+    XCTAssertEqual(readyCalls, 1); XCTAssertEqual(cancelled.outcome, "cancelled")
+    XCTAssertTrue(cancelled.detached); XCTAssertNil(cancelled.item); XCTAssertEqual(cleanups, 1)
+  }
+
+  func testFailedPreparationAndRevokedTicketNeverRefundSourceBudget() throws {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: true, width: width, position: time,
+        remaining: 120 - time, bufferAhead: 10, bytes: Int64(time * 200_000),
+        transfer: time, requests: Int(time * 4), overdue: 1)
+    }
+    _ = policy.observe(sample(0, width: 640))
+    for time in [1.0, 9, 17] { XCTAssertNil(policy.observe(sample(time))) }
+    let first = try XCTUnwrap(policy.observe(sample(17.5)))
+    XCTAssertEqual(first.attempt, 1); XCTAssertEqual(first.due, 17.5)
+    policy.invalidateIntent(); policy.finish(first)
+    XCTAssertFalse(policy.authorizes(first, sample(18)))
+    XCTAssertEqual(policy.attempts, 1)
+    for time in [20.0, 28, 36] { XCTAssertNil(policy.observe(sample(time))) }
+    XCTAssertNil(policy.observe(sample(36.99)))
+    let second = try XCTUnwrap(policy.observe(sample(37)))
+    XCTAssertEqual(second.attempt, 2); XCTAssertEqual(second.due, 37)
+    policy.finish(second) // The second preparation failed; its budget stays spent.
+    for time in 38...99 { XCTAssertNil(policy.observe(sample(Double(time)))) }
+    XCTAssertEqual(policy.attempts, 2)
+    XCTAssertEqual(policy.decision["reason"] as? String, "budgetExhausted")
+  }
+
+  @MainActor func testPrerollCandidateAbortsExpiredDeniedAndRevokedIntent() async {
+    let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+    for (deadline, allowed, expected) in [(ProcessInfo.processInfo.systemUptime - 1, true, "timedOut"),
+                                         (ProcessInfo.processInfo.systemUptime + 2, false, "cancelled")] {
+      var cleanups = 0
+      let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: absent), position: .zero,
+        deadlineUptime: deadline, allowed: { allowed }, cancelPending: { cleanups += 1 })
+      XCTAssertEqual(result.outcome, expected); XCTAssertNil(result.item)
+      XCTAssertTrue(result.detached); XCTAssertEqual(cleanups, 1)
+    }
+    for mode in ["intent", "task", "deadline"] {
+      let started = expectation(description: "preroll enters loader: " + mode)
+      let cancelled = expectation(description: "abort releases loader: " + mode)
+      let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+      let asset = AVURLAsset(url: URL(string: "yl-preroll-test://owned/\(UUID().uuidString)/master.m3u8")!)
+      asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.preroll.cancel-test"))
+      var intent = true
+      let loading = Task { @MainActor in
+        await AbrDiagnosticPreroll.prepare(asset, position: .zero,
+          deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+          allowed: { intent }, cancelPending: { held.cancelAll() })
+      }
+      await fulfillment(of: [started], timeout: 1)
+      if mode == "intent" { intent = false }
+      if mode == "task" { loading.cancel() }
+      let result = await loading.value
+      XCTAssertEqual(result.outcome, mode == "deadline" ? "timedOut" : "cancelled")
+      XCTAssertNil(result.item); XCTAssertTrue(result.detached)
+      await fulfillment(of: [cancelled], timeout: 1)
+      XCTAssertEqual(held.cancellationState.pending, 0)
+      XCTAssertEqual(held.cancellationState.owner, 1)
+      XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+      withExtendedLifetime(held) {}
+    }
+  }
 
   @MainActor func testCandidateMetadataPreparationRejectsExpiredAndFailedAssets() async {
     let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
@@ -460,7 +627,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertTrue((0...2000).contains(startupDelayMs))
     let recoveryAction = env["YL_ABR_PROBE_RECOVERY_ACTION"] ?? "none"
     let autoScenario = env["YL_ABR_PROBE_AUTO_SCENARIO"] ?? "normal"
-    guard ["normal", "pause-first"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
+    guard ["normal", "pause-first", "pause-during-preparation"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
       XCTFail("Invalid automatic recovery scenario"); return
     }
     guard ["none", "seek-current", "reload-source", "auto-reload"].contains(recoveryAction),
@@ -468,9 +635,12 @@ final class YlDashResourceLoaderTests: XCTestCase {
       XCTFail("Invalid recovery diagnostic"); return
     }
     let candidatePreparation = env["YL_ABR_PROBE_CANDIDATE_PREPARATION"] ?? "manifest-only"
-    guard ["manifest-only", "asset-metadata"].contains(candidatePreparation),
+    guard ["manifest-only", "asset-metadata", "asset-preroll"].contains(candidatePreparation),
       candidatePreparation == "manifest-only" || (recoveryAction == "auto-reload" && !direct && programmeSeconds == 120) else {
       XCTFail("Invalid candidate preparation diagnostic"); return
+    }
+    guard autoScenario != "pause-during-preparation" || candidatePreparation == "asset-preroll" else {
+      XCTFail("Mid-preparation pause requires preroll"); return
     }
     // Preserve the historical managed probe's preparation-before-player order.
     let prepared: YlPreparedHlsAsset?
@@ -495,6 +665,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
     if startupDelayMs > 0 { try await Task.sleep(nanoseconds: UInt64(startupDelayMs) * 1_000_000) }
     let player = AVPlayer()
+    var warmedItem: AVPlayerItem?
     let output = AppleTestTexture()
     var tick: (() -> Void)?
     var states: [YlNativeState] = []
@@ -522,6 +693,13 @@ final class YlDashResourceLoaderTests: XCTestCase {
         services: .init(platform: .current, textureOutput: output,
           makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
         configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+        makePlayerItem: { asset in
+          if let item = warmedItem, item.asset === asset {
+            warmedItem = nil
+            return item
+          }
+          return AVPlayerItem(asset: asset)
+        },
         emit: {
           if case .state(let state) = $0.event { states = [state] }
           if case .failure(let error) = $0.event {
@@ -735,6 +913,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
           }.value
           event["manifestPreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
           var preparationSucceeded = true
+          var freshPreparedItem: AVPlayerItem?
+          defer { warmedItem = nil }
           if candidatePreparation == "asset-metadata" {
             // An already invalidated ticket must not start speculative loading.
             if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
@@ -755,11 +935,46 @@ final class YlDashResourceLoaderTests: XCTestCase {
               preparationSucceeded = outcome == "loaded"
             } else { event["warmupOutcome"] = "skippedIneligible" }
           }
+          if candidatePreparation == "asset-preroll" {
+            let warmupStarted = ProcessInfo.processInfo.systemUptime
+            event["warmupStartedElapsed"] = warmupStarted - started
+            event["warmupProxyBefore"] = replacement.loader.diagnosticProxySnapshot
+            event["warmupFramesBefore"] = frameCount
+            event["warmupPositionBefore"] = finite(CMTimeGetSeconds(player.currentTime()))
+            event["preparationPauseApplied"] = false
+            let prepared = await AbrDiagnosticPreroll.prepare(replacement.asset, position: player.currentTime(),
+              deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
+              allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
+              onReady: {
+                if autoScenario == "pause-during-preparation", ticket.attempt == 1 {
+                  try? backend?.pause(); automaticPolicy.invalidateIntent()
+                  event["preparationPauseApplied"] = true
+                  event["preparationPauseElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  resumeTask = Task { @MainActor in
+                    do { try await Task.sleep(nanoseconds: 2_000_000_000); try backend?.play() }
+                    catch { /* Cancellation cannot resume disposed output. */ }
+                  }
+                }
+              }, cancelPending: { replacement.discard() })
+            event["warmupOutcome"] = prepared.outcome
+            event["warmupStage"] = prepared.stage
+            event["warmupDetached"] = prepared.detached
+            event["warmupReusesPrerolledItem"] = prepared.reusesPrerolledItem
+            event["warmupCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+            event["warmupProxyAfter"] = replacement.loader.diagnosticProxySnapshot
+            event["warmupFramesAfter"] = frameCount
+            event["warmupPositionAfter"] = finite(CMTimeGetSeconds(player.currentTime()))
+            event["warmupOldItemRetained"] = player.currentItem === item
+            preparationSucceeded = prepared.outcome == "ready" && prepared.detached && !prepared.reusesPrerolledItem && prepared.item != nil
+            freshPreparedItem = prepared.item
+          }
           event["preparationCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
           if !preparationSucceeded {
             replacement.discard(); event["outcome"] = "preparationFailed"
           } else if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
+            warmedItem = freshPreparedItem
             try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
+            if let freshPreparedItem { event["freshPreparedItemInstalled"] = player.currentItem === freshPreparedItem }
             event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
           } else {
             replacement.asset.cancelLoading(); replacement.discard(); event["outcome"] = "cancelled"
