@@ -56,12 +56,16 @@ final class YlAppleSessionCoordinator: NSObject {
   private let avBackend: YlAvPlayerBackend
   private let slot: YlBackendSlot
   private let openCoordinator = YlOpenCoordinator()
-  private let dashRecovery = YlDashAutoRecoveryController()
+  private let dashRecovery: YlDashAutoRecoveryController
   private var dashRecoveryTimer: Timer?
   private var dashRecoveryObserver: NSObjectProtocol?
   private var dashRecoveryRevision: UInt64 = 0
   var diagnosticProxySnapshot: [String: Double] { avBackend.diagnosticProxySnapshot }
   var diagnosticResumeSeekPending: Bool { avBackend.diagnosticResumeSeekPending }
+  var onDashRecoveryEvent: (([String: Any]) -> Void)? {
+    get { dashRecovery.onEvent }
+    set { dashRecovery.onEvent = newValue }
+  }
   var onDashRecoveryDecision: (([String: Any]) -> Void)? {
     get { dashRecovery.onDecision }
     set { dashRecovery.onDecision = newValue }
@@ -70,6 +74,7 @@ final class YlAppleSessionCoordinator: NSObject {
   var dashRecoveryEvents: [[String: Any]] { dashRecovery.events }
   var dashRecoveryAttempts: Int { dashRecovery.policy.attempts }
   private let capsCoordinator = YlOpenCoordinator(label: "dev.ylplayer.dash.caps")
+  private let afterDashRecoveryPreparation: ((YlOpenCancellationToken) -> Void)?
   private let beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)?
   private var committedDashSnapshot: YlDashManifestSnapshot?
   private let commandCoordinator: YlAsyncCommandCoordinator
@@ -119,6 +124,8 @@ final class YlAppleSessionCoordinator: NSObject {
        configuration: PlayerConfiguration, textureOwner: YlAppleTextureOwner, avPlayer: AVPlayer = AVPlayer(),
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        automaticDashRecoveryEnabled: Bool = true,
+       dashRecoveryController: YlDashAutoRecoveryController = YlDashAutoRecoveryController(),
+       afterDashRecoveryPreparation: ((YlOpenCancellationToken) -> Void)? = nil,
        beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)? = nil,
        makeAvPlayerVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
@@ -130,6 +137,8 @@ final class YlAppleSessionCoordinator: NSObject {
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        audioOwnership: YlPlayerAudioOwnership? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.dashRecovery = dashRecoveryController
+    self.afterDashRecoveryPreparation = afterDashRecoveryPreparation
     self.beforeDashCapsPreparation = beforeDashCapsPreparation
     self.audioOwnership = audioOwnership
     self.videoSessionFactory = videoSessionFactory
@@ -522,6 +531,7 @@ final class YlAppleSessionCoordinator: NSObject {
         do {
           try self.commit(candidate, identity: identity, reactivating: false, loadVideoConstraints: loadConstraints)
           self.identity = identity
+          self.dashRecovery.useSource(identity)
           didCommit()
           self.activeEvents?.commit()
           if let activeTexture = self.activeTexture { self.textureOwner.commit(activeTexture) }
@@ -1386,8 +1396,10 @@ private extension YlAppleSessionCoordinator {
       guard let self else { throw YlOpenCancellationToken.cancellationError() }
       // Reuse the committed immutable projection and its credential history.
       // A fresh loader/asset resets AVPlayer's item without refetching a new MPD.
-      return .headeredHls(source: source, prepared: try self.prepareHeaderedHls(source: source,
+      let candidate = YlPreparedOpen.headeredHls(source: source, prepared: try self.prepareHeaderedHls(source: source,
         token: token, credentialContext: credentials, videoConstraints: .unconstrained, dashSnapshot: snapshot))
+      self.afterDashRecoveryPreparation?(token)
+      return candidate
     }, currentSample: { [weak self] in self?.recoverySample() }, commit: { [weak self] candidate in
       guard let self, self.identity == identity, self.dashRecoveryRevision == revision,
         self.committedHlsCredentials === credentials, self.pendingLoadRequestId == nil,

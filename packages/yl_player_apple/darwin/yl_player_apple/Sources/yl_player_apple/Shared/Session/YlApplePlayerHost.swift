@@ -82,6 +82,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
        services: YlPlatformServices, callbacks: ApplePlayerFlutterApiProtocol,
        avPlayer: AVPlayer = AVPlayer(), commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
        automaticDashRecoveryEnabled: Bool = true,
+       dashRecoveryController: YlDashAutoRecoveryController = YlDashAutoRecoveryController(),
+       afterDashRecoveryPreparation: ((YlOpenCancellationToken) -> Void)? = nil,
        makeAvPlayerVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
@@ -113,6 +115,8 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
       textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
       automaticDashRecoveryEnabled: automaticDashRecoveryEnabled,
+      dashRecoveryController: dashRecoveryController,
+      afterDashRecoveryPreparation: afterDashRecoveryPreparation,
       makeAvPlayerVideoOutput: makeAvPlayerVideoOutput, beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
       videoSessionFactory: videoSessionFactory, audioRendererFactory: audioRendererFactory,
       audioTerminalCandidateEnabled: audioTerminalCandidateEnabled, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
@@ -140,6 +144,10 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   var playbackIntent: Bool { coordinator.currentPlaybackIntent }
   var diagnosticProxySnapshot: [String: Double] { coordinator.diagnosticProxySnapshot }
   var diagnosticResumeSeekPending: Bool { coordinator.diagnosticResumeSeekPending }
+  var onDashRecoveryEvent: (([String: Any]) -> Void)? {
+    get { coordinator.onDashRecoveryEvent }
+    set { coordinator.onDashRecoveryEvent = newValue }
+  }
   var onDashRecoveryDecision: (([String: Any]) -> Void)? {
     get { coordinator.onDashRecoveryDecision }
     set { coordinator.onDashRecoveryDecision = newValue }

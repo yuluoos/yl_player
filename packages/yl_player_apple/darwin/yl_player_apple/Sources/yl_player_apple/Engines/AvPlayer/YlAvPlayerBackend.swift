@@ -135,6 +135,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     var rotation: Int
     var blocked = false
     var awaitingResumeSeek = false
+    var seekRevision: UInt64 = 0
     var measuredGeometry: YlVideoGeometry? = nil
     var fixedTrack: YlNativeTrack?
     var catalog: YlDashVideoCatalog?
@@ -146,6 +147,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   }
   private let framePolicyLock = NSLock()
   private var framePolicy: FramePolicy?
+  private var userSeekRevision: UInt64 = 0
   private let makePlayerItem: (AVURLAsset) -> AVPlayerItem
   private let makeVideoOutput: ([String: Any]) -> AVPlayerItemVideoOutput
   private let errorLogCollector = YlAvPlayerErrorLogCollector()
@@ -464,6 +466,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       let seekId = UUID()
       let targetUs = Self.microsecondsFromMilliseconds(milliseconds)
       if videoSelection.fixedTrackId != nil { confirmedDashPositionUs = confirmedPositionUs() }
+      userSeekRevision &+= 1
       pendingUserSeek = (seekId, generation, targetUs)
       unconfirmedFixedLanding = videoSelection.fixedTrackId != nil
       refreshFramePolicy()
@@ -1303,7 +1306,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   func copyPixelBuffer() -> Unmanaged<CVPixelBuffer>? {
     framePolicyLock.lock()
     guard let policy = framePolicy, !policy.blocked, !policy.awaitingResumeSeek else { framePolicyLock.unlock(); return nil }
-    let rotation = policy.rotation
+    let rotation = policy.rotation, seekRevision = policy.seekRevision
     let fixedTrack = policy.fixedTrack, catalog = policy.catalog
     framePolicyLock.unlock()
     let itemTime = policy.output.itemTime(forHostTime: CACurrentMediaTime())
@@ -1317,24 +1320,26 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       let available = catalog?.tracks(at: framePosition).contains { $0.id == fixed.id } == true
       guard available else {
         DispatchQueue.main.async { [weak self] in
-          guard let self, self.itemGeneration == policy.generation else { return }
+          guard let self, self.itemGeneration == policy.generation, self.userSeekRevision == seekRevision else { return }
           self.emitState()
         }
         return nil
       }
       guard geometry?.encodedSize.width == CGFloat(fixed.width ?? 0),
             geometry?.encodedSize.height == CGFloat(fixed.height ?? 0) else {
-        scheduleVideoConstraintFailure(generation: policy.generation)
+        scheduleVideoConstraintFailure(generation: policy.generation, seekRevision: seekRevision)
         return nil
       }
     }
     let permitted = Self.permits(geometry, constraints: caps)
     framePolicyLock.lock()
-    guard framePolicy === policy, !policy.blocked, !policy.awaitingResumeSeek, policy.rotation == rotation else { framePolicyLock.unlock(); return nil }
+    guard framePolicy === policy, !policy.blocked, !policy.awaitingResumeSeek, policy.rotation == rotation, policy.seekRevision == seekRevision else { framePolicyLock.unlock(); return nil }
     if !permitted { policy.blocked = true }
     else { policy.measuredGeometry = geometry }
     framePolicyLock.unlock()
     guard permitted else {
+      // This current-authority violation already latched blocked under the lock.
+      // A later seek must not suppress its terminal notification.
       scheduleVideoConstraintFailure(generation: policy.generation)
       return nil
     }
@@ -1359,8 +1364,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       dashVideoCatalog?.tracks(at: confirmedDashPositionUs).first { $0.id == id }
     }
     framePolicy?.catalog = dashVideoCatalog
-    framePolicy?.awaitingResumeSeek = pendingRuntimeResume != nil
-      || (videoSelection.fixedTrackId != nil && (pendingUserSeek != nil || unconfirmedFixedLanding))
+    framePolicy?.seekRevision = userSeekRevision
+    framePolicy?.awaitingResumeSeek = pendingRuntimeResume != nil || pendingUserSeek != nil
+      || (videoSelection.fixedTrackId != nil && unconfirmedFixedLanding)
     framePolicyLock.unlock()
   }
 
@@ -1377,9 +1383,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       && (qualityConstraint.maxWidth != nil || qualityConstraint.maxHeight != nil)
   }
 
-  private func scheduleVideoConstraintFailure(generation: UInt64) {
+  private func scheduleVideoConstraintFailure(generation: UInt64, seekRevision: UInt64? = nil) {
     DispatchQueue.main.async { [weak self] in
-      guard let self, !self.disposed, self.itemGeneration == generation else { return }
+      guard let self, !self.disposed, self.itemGeneration == generation,
+        seekRevision.map({ self.userSeekRevision == $0 }) ?? true else { return }
       self.failVideoConstraints(generation: generation)
     }
   }

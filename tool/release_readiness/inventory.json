@@ -204,7 +204,7 @@
       "packages/yl_player_apple/analysis_options.yaml": "c1e9534c05acb3643e72a82ad3d92d56d2ba9b0df2add014c18f7e1d462f24e4",
       "packages/yl_player_apple/darwin/yl_player_apple.podspec": "67bbc372539a1cfaf9078d7a63563b31009107b54b3424585606af4046abe626",
       "packages/yl_player_apple/darwin/yl_player_apple/Package.swift": "f1f3732883ec42bcb925934350b5841db2dd7ecdbbe6d193d273ee9cec68dc77",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "33a09a1cd27ca493cdba0c065ee6b19a742137807c5e48f805601dc82c1867bd",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "3826091e6b2ea76fc4b21eaf507c366ec0d21351362bbce5abe11e3c91e5f773",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift": "b206ecc951c295fecc1a82b25ebd8fe4c3e0e366182229b6e0c98811fcde0e36",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryController.swift": "df694453ba3602ba715fa2f5c3e23263fbd02dc16b3b3fe68817fc63ebd085d2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift": "545bb00962864485ccd3a940466931b7dd5130cd0651587ee79b8111459465d0",
@@ -284,9 +284,9 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlMetricsCollector.swift": "54b7ecd725b85fbb9a4d5f1d12c13dd34479ffbd0c7fbd06c9454beaa2885bd1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlVideoGeometryResolver.swift": "88fe1b980885b5b24361320bcae82efe0009b63b59c86e644af3687c1a7d2813",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Network/YlLiveReconnectController.swift": "c12d8748fa708fe2a5367a842cc9e9b6efa8fd1def9ecc1923909b86cb4f2985",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "a52d85b588aee6c4ed49e076327c70424008fd30a7ab0e8c7257829d1ac00abc",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "104329213326a478df5dbbc3493d448de552abba3424033999b2e6b21b9e4f71",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerRegistry.swift": "832f38db6c1fa7ae415cd9921a12f70a4b67ec1991bd5f05ca56870a7343d042",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "7e43897bec6f3467acbee7a4391adf72c2c7172f7d9f51c00fd19c0d1b43f271",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "ea5f3306464cbc57040b302aa74c065e9f8f75c3b0c2824d3264fda7fceaa839",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionModels.swift": "ca9916cd2abf206d93cea261f265c225bb91b789c60287294f9647605ca013b4",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleStateReducer.swift": "c052ec2f6464b9548f48b6a738b8b9bbb5287a4f2b83ee10f3ceeb94bec68bad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift": "6d5d8bed04bc376d4df93c2b89d7a134860c1c6adfce70a317d93f6a208ea8c0",
@@ -599,7 +599,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "1201f9ef8ddef223f8de4077e89b2bec748a0e0106ddfab626851a3df9f117d0"
+    "sha256": "9502690d6171181eaab100d4c208717845ce546e1ca46d1b7a4817f26d90405e"
   },
   "evidence": {
     "p01": {
@@ -766,6 +766,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-28-ios-production-recovery.md",
       "sha256": "114f786fc7834c8aaa72ad9a759fa011bb60d01171b445a67c1c4878e3ba55d8"
+    },
+    "ios-production-races-20261028": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-28-ios-production-races.md",
+      "sha256": "05024214bad62c56b73ac6b28f44e3d0d1f6868a6affa9142703b647cebbfdf5"
     }
   },
   "rows": [
@@ -809,10 +814,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-production-recovery-20261028"
+        "ios-production-races-20261028"
       ],
       "acceptance": null,
-      "nextAction": "qualify-production-recovery-stability-device-command-races-other-commit-failures-and-physical-av-continuity"
+      "nextAction": "qualify-other-commit-failures-command-lifecycle-races-multidevice-network-stability-and-physical-av-continuity"
     },
     {
       "requirement": "CAP-ABR",

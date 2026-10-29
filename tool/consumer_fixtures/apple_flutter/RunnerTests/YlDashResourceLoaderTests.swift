@@ -573,6 +573,36 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  @MainActor func testProductionLoadCommitsRecoveryBudgetBeforeReturningAndFailureKeepsIt() async throws {
+    let server = try DashHTTPServer(), data = mpd
+    defer { server.close() }
+    server.handler = { request in
+      (200, [:], request.path == "/bad.mpd" ? Data("<MPD type=\"dynamic\"/>".utf8) : data)
+    }
+    let controller = YlDashAutoRecoveryController()
+    let host = YlApplePlayerHost(playerId: 992, suffix: "production-budget",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { AppleClockDisplay(onTick: $0) }),
+      callbacks: AppleRecordingCallbacks(), automaticDashRecoveryEnabled: false, dashRecoveryController: controller)
+    defer { host.close() }
+    try host.attach()
+    let first = try await host.load(request: AppleHostFixture.request("reused", url: server.url("/movie.mpd").absoluteString, format: .dash))
+    for t in [0.0, 1, 9, 17] {
+      controller.tick(productionSample(t, high: t == 0), prepare: { _ in XCTFail("No ticket before backoff"); throw YlOpenCancellationToken.cancellationError() },
+        currentSample: { nil }, commit: { _ in XCTFail("No installation"); return [:] })
+    }
+    XCTAssertEqual(host.dashRecoveryAttempts, 1)
+    do {
+      _ = try await host.load(request: AppleHostFixture.request("failed", url: server.url("/bad.mpd").absoluteString, format: .dash))
+      XCTFail("Malformed candidate must not commit")
+    } catch {}
+    XCTAssertEqual(host.dashRecoveryAttempts, 1, "Failed Load keeps the surviving source budget")
+    let second = try await host.load(request: AppleHostFixture.request("reused", url: server.url("/movie.mpd").absoluteString, format: .dash))
+    XCTAssertNotEqual(first.sessionId, second.sessionId)
+    XCTAssertEqual(host.dashRecoveryAttempts, 0, "New committed session cannot expose the old budget before the next timer tick")
+    XCTAssertTrue(host.dashRecoveryEvents.isEmpty)
+  }
+
   func testProductionRecoveryBudgetUsesCommittedSessionNotReusedRequestLabel() {
     let controller = YlDashAutoRecoveryController()
     let first = YlAppleSessionIdentity(sessionId: "first", loadRequestId: "reused")
@@ -1223,10 +1253,16 @@ final class YlDashResourceLoaderTests: XCTestCase {
       && programmeSeconds == 120 && recoveryAction == "auto-reload" && candidatePreparation == "manifest-only"
       && autoScenario == "normal" && startupDelayMs == 0) else { XCTFail("Invalid production recovery capture"); return }
     let productionCommand = env["YL_ABR_PROBE_PRODUCTION_COMMAND"] ?? "none"
-    guard ["none", "pause-resume"].contains(productionCommand), productionCommand == "none" || productionRecovery else {
+    guard ["none", "pause-resume", "pause-prepared", "seek-prepared", "load-prepared"].contains(productionCommand), productionCommand == "none" || productionRecovery else {
       XCTFail("Invalid production command scenario"); return
     }
     var productionCommandEvents: [String: Any] = [:]
+    var productionObservedEvents: [[String: Any]] = []
+    let productionBarrier = DispatchSemaphore(value: 0)
+    defer { productionBarrier.signal() }
+    // The serial preparation queue invokes this only after a real candidate exists.
+    // The main queue issues public commands; the production deadline remains 2s.
+    var productionPreparedCallback: ((YlOpenCancellationToken) -> Void)?
     var productionCommandTask: Task<Void, Never>?
     defer { productionCommandTask?.cancel() }
     let productionEpoch = ProcessInfo.processInfo.systemUptime
@@ -1285,16 +1321,71 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var directCompleted = false
     var endTask: Task<Void, Never>?
     defer { endTask?.cancel(); publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
+    if productionCommand.hasSuffix("-prepared") {
+      productionPreparedCallback = { token in
+        let preparedAt = ProcessInfo.processInfo.systemUptime - productionEpoch
+        DispatchQueue.main.async {
+          guard productionCommandTask == nil else { productionBarrier.signal(); return }
+          productionCommandTask = Task { @MainActor in
+            defer { productionBarrier.signal() }
+            do {
+              let host = try XCTUnwrap(publicHost), session = try XCTUnwrap(publicSessionId)
+              let item = player.currentItem, position = CMTimeGetSeconds(player.currentTime())
+              let target = Int64(position * 1000) + 1000
+              productionCommandEvents = ["sessionId": session, "scenario": productionCommand,
+                "candidatePrepared": preparedAt, "commandStarted": ProcessInfo.processInfo.systemUptime - productionEpoch,
+                "attemptsAtCommand": host.dashRecoveryAttempts, "positionBefore": position, "targetMs": target]
+              if productionCommand == "pause-prepared" {
+                try host.pause(command: .init(sessionId: session))
+                productionCommandEvents["pausePosition"] = CMTimeGetSeconds(player.currentTime())
+                productionCommandEvents["pauseAcknowledged"] = !host.playbackIntent && player.rate == 0
+              } else if productionCommand == "seek-prepared" {
+                try host.seekTo(command: .init(sessionId: session, positionMs: target))
+              } else {
+                let loaded = try await host.load(request: AppleHostFixture.request("public-policy-cycle",
+                  url: url.absoluteString, format: .dash, autoplay: true, start: target))
+                publicSessionId = loaded.sessionId
+                productionCommandEvents["newSessionId"] = loaded.sessionId
+                productionCommandEvents["newAttempts"] = host.dashRecoveryAttempts
+                XCTAssertEqual(host.dashRecoveryAttempts, 0, "Successful Load returns its own recovery budget")
+              }
+              productionCommandEvents["commandCompleted"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+              productionCommandEvents["tokenCancelled"] = token.isCancelled
+              productionCommandEvents["itemUnchanged"] = player.currentItem === item
+              productionCommandEvents["oldEvents"] = productionObservedEvents
+              productionCommandEvents["released"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+              productionBarrier.signal()
+              if productionCommand == "pause-prepared" {
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                productionCommandEvents["beforeResumePosition"] = CMTimeGetSeconds(player.currentTime())
+                productionCommandEvents["beforeResumeAttempts"] = host.dashRecoveryAttempts
+                productionCommandEvents["itemUnchangedBeforeResume"] = player.currentItem === item
+                try await host.play(command: .init(sessionId: session))
+                productionCommandEvents["resumeCompleted"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+                productionCommandEvents["resumed"] = host.playbackIntent
+              }
+            } catch { productionCommandEvents["failed"] = true }
+            do { try JSONSerialization.data(withJSONObject: productionCommandEvents, options: [.sortedKeys])
+              .write(to: directory.appendingPathComponent("production-command-events.json"), options: .atomic) }
+            catch { productionPolicyWriteFailed = true }
+          }
+        }
+        _ = productionBarrier.wait(timeout: .now() + 3)
+      }
+    }
     if publicPolicyCycle || publicPolicyRace || productionRecovery {
       let host = YlApplePlayerHost(playerId: 991, suffix: "abr-public-policy",
         options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
         services: .init(platform: .current, textureOutput: output,
           makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player, automaticDashRecoveryEnabled: productionRecovery,
+        afterDashRecoveryPreparation: productionPreparedCallback,
         makeAvPlayerVideoOutput: { AbrTimestampVideoOutput(attributes: $0, times: presentationTimes) })
       publicHost = host
       if productionRecovery {
+        host.onDashRecoveryEvent = { event in productionObservedEvents.append(productionEvent(event)) }
         host.onDashRecoveryDecision = { [weak host] decision in
           var row = decision
+          row["sessionId"] = publicSessionId ?? ""
           for key in ["elapsed", "pendingDue"] {
             if let value = row[key] as? Double { row[key] = value - productionEpoch }
           }
@@ -1862,6 +1953,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     framePump.cancel(); await framePump.value
     XCTAssertFalse(frameWriteFailed)
     XCTAssertFalse(productionPolicyWriteFailed)
+    if productionCommand.hasSuffix("-prepared") {
+      XCTAssertEqual(productionCommandEvents["tokenCancelled"] as? Bool, true)
+      XCTAssertNil(productionCommandEvents["failed"])
+      XCTAssertEqual((productionCommandEvents["oldEvents"] as? [[String: Any]])?.first?["outcome"] as? String, "cancelled")
+    }
     if productionCommand == "pause-resume" {
       XCTAssertEqual(productionCommandEvents["pauseAcknowledged"] as? Bool, true)
       XCTAssertEqual(productionCommandEvents["resumed"] as? Bool, true)
@@ -2305,6 +2401,101 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(firstFrames, 0)
     XCTAssertEqual(failures.map(\.code), ["decoder.quality_constraint_unsupported"])
     XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+  }
+
+  @MainActor func testConfirmedCapsFrameFailureCannotBecomeSilentAfterSeek() async throws {
+    let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 640, height: 360)
+    var failures: [String] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+        if case .failure(let error) = $0.event { failures.append(error.code) }
+      })
+    defer { backend.dispose() }
+    let data = mpd
+    let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil), headers: [:],
+      configuration: .init(map: [:]), cancellationToken: .init(), sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Current caps violation is synchronously rejected and latched")
+    try backend.seek(toMs: 1000)
+    try XCTUnwrap(player.seekCompletion)(true)
+    let drained = expectation(description: "confirmed terminal delivered")
+    DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+    XCTAssertEqual(failures, ["decoder.quality_constraint_unsupported"], "Seek must not suppress a confirmed terminal latch and silently block output")
+  }
+
+  @MainActor func testSeekRevisionRejectsInFlightRasterCopyAndStaleFixedFailure() async throws {
+    for fixed in [false, true] {
+      let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: fixed ? 640 : 320, height: fixed ? 360 : 180)
+      var failures: [String] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error.code) }
+        })
+      defer { backend.dispose() }
+      let data = mpd
+      try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash),
+        prepared: prepare(DashLoaderProtocol.configuration { $0.respond(data) }), resume: false)
+      try backend.activate()
+      if fixed {
+        let track = try XCTUnwrap(backend.confirmedVideoTracks.first { $0.width == 320 })
+        backend.acceptVideoSelection(.init(fixedTrackId: track.id, reason: "user"))
+        // Commit a fixed landing before the background copy snapshots FramePolicy.
+        try backend.seek(toMs: 0); try XCTUnwrap(player.seekCompletion)(true)
+        let fixedReady = expectation(description: "fixed policy ready")
+        DispatchQueue.main.async { fixedReady.fulfill() }; await fulfillment(of: [fixedReady], timeout: 1)
+        XCTAssertEqual(backend.videoSelection.fixedTrackId, track.id)
+      }
+      let entered = expectation(description: "raster copy entered"), released = DispatchSemaphore(value: 0)
+      defer { released.signal() }
+      pixels.beforeCopy = { entered.fulfill(); XCTAssertEqual(released.wait(timeout: .now()+3), .success) }
+      let copy = Task.detached { backend.copyPixelBuffer()?.takeRetainedValue() != nil }
+      await fulfillment(of: [entered], timeout: 1)
+      try backend.seek(toMs: 1000)
+      player.measuredTime = CMTime(seconds: 1, preferredTimescale: 1000)
+      try XCTUnwrap(player.seekCompletion)(true)
+      let landed = expectation(description: "seek landed")
+      DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+      released.signal()
+      let copied = await copy.value
+      XCTAssertFalse(copied, "Old raster copy cannot cross a complete seek transition")
+      let drained = expectation(description: "old errors drained")
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertFalse(failures.contains("decoder.quality_constraint_unsupported"), "A stale fixed buffer cannot terminate the new landing")
+    }
+  }
+
+  @MainActor func testAutomaticUserSeekBlocksOldFramesUntilLatestLanding() async throws {
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture(), pixels = DashPixelOutput(width: 320, height: 180)
+    var tick: (() -> Void)?
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: { _ in })
+    defer { backend.dispose() }
+    let data = mpd
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash),
+      prepared: prepare(DashLoaderProtocol.configuration { $0.respond(data) }), resume: false)
+    try backend.activate(); try backend.play(); tick?()
+    let count = output.frames.count
+    XCTAssertGreaterThan(count, 0)
+    try backend.seek(toMs: 1000)
+    let first = try XCTUnwrap(player.seekCompletion)
+    tick?(); XCTAssertEqual(output.frames.count, count, "Automatic selection cannot publish the old timeline while seek is pending")
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    try backend.seek(toMs: 2000)
+    let latest = try XCTUnwrap(player.seekCompletion)
+    first(true)
+    let staleDrained = expectation(description: "stale callback drained")
+    DispatchQueue.main.async { staleDrained.fulfill() }; await fulfillment(of: [staleDrained], timeout: 1)
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "An older seek callback cannot reopen publication")
+    player.measuredTime = CMTime(seconds: 2, preferredTimescale: 1000); pixels.measuredItemTime = player.measuredTime
+    latest(true)
+    let landed = expectation(description: "latest callback drained")
+    DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+    tick?(); XCTAssertEqual(output.frames.count, count + 1)
   }
 
   @MainActor
@@ -4230,6 +4421,7 @@ private final class ResidualRatePlayer: AVPlayer {
 
 private final class DashPixelOutput: AVPlayerItemVideoOutput, @unchecked Sendable {
   let buffer: CVPixelBuffer
+  var beforeCopy: (() -> Void)?
   var measuredItemTime = CMTime.zero
   override func itemTime(forHostTime hostTimeInSeconds: CFTimeInterval) -> CMTime { measuredItemTime }
   init(width: Int, height: Int) {
@@ -4240,7 +4432,7 @@ private final class DashPixelOutput: AVPlayerItemVideoOutput, @unchecked Sendabl
     super.init(pixelBufferAttributes: nil)
   }
   override func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool { true }
-  override func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { buffer }
+  override func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { beforeCopy?(); return buffer }
 }
 
 // The decoder allocation boundary is controlled; source preparation, FFmpeg
