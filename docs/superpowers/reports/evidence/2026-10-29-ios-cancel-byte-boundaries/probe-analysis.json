@@ -1,0 +1,2972 @@
+{
+  "native-probe-fixed/unoccupied": {
+    "device": "My Mac",
+    "samples": [
+      {
+        "trace": {
+          "admission": 19025.126809208334,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "34B87022-0492-4DA8-BA5C-91BECB12BAF5",
+          "downstreamTerminal": 19025.13049075,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.01670992374420166,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "7DBBB2DE-E40A-4FB5-8AF2-8D2F54E11795",
+          "requestID": 1,
+          "resourceToken": "ee134698dbcbef4b33b8aee1d319ad5cf57947694154cb12129053e0cf4889ed",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19025.145537875,
+          "taskOutcome": 1,
+          "terminal": 19025.14553979167,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.01670992374420166,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "5898EE24-0E61-47B5-B8E7-6D4DBB55F079"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19025.19227475,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "5898EE24-0E61-47B5-B8E7-6D4DBB55F079",
+          "downstreamTerminal": 19025.198111,
+          "firstBody": 19025.19773025,
+          "firstSend": 19025.197647,
+          "httpStatus": 200,
+          "lastBody": 19025.19773025,
+          "lastSend": 19025.197741958335,
+          "lastSendComplete": 19025.19810525,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.005509018898010254,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.004593014717102051,
+                "fetchToRequestSeconds": 0.001600027084350586,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 3.2901763916015625e-05,
+                "responseSeconds": 0.0009570121765136719,
+                "responseWaitSeconds": 0.0020030736923217773,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "7DBBB2DE-E40A-4FB5-8AF2-8D2F54E11795",
+          "requestID": 2,
+          "resourceToken": "ee134698dbcbef4b33b8aee1d319ad5cf57947694154cb12129053e0cf4889ed",
+          "response": 19025.19755841667,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 0.0003632916668721009,
+          "sendWaitSum": 0.0004632083328033332,
+          "sentBodyBytes": 2,
+          "taskComplete": 19025.198063333333,
+          "taskOutcome": 0,
+          "terminal": 19025.198111875,
+          "upstreamComplete": 19025.198066625002,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19025.205168291668,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "4540E28B-F2C2-4658-8918-90C9803A7ACA",
+          "downstreamTerminal": 19025.205450875,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0003039836883544922,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "E9D84801-66A4-4961-B72D-EBAF2171D7FB",
+          "requestID": 1,
+          "resourceToken": "69afecee0b6682d1f8c3fd77ea89f92af8c288b91ce7b692ee545edcdcc917d5",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19025.205653208333,
+          "taskOutcome": 1,
+          "terminal": 19025.205654125002,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0003039836883544922,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "EA274C62-A6FA-40B0-ACE8-E23707605D3A"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19025.21049454167,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "EA274C62-A6FA-40B0-ACE8-E23707605D3A",
+          "downstreamTerminal": 19025.217557208336,
+          "firstBody": 19025.2173845,
+          "firstSend": 19025.21733429167,
+          "httpStatus": 200,
+          "lastBody": 19025.2173845,
+          "lastSend": 19025.217387625,
+          "lastSendComplete": 19025.21754316667,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.006914019584655762,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.006523013114929199,
+                "fetchToRequestSeconds": 0.004815936088562012,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 0.00010704994201660156,
+                "responseSeconds": 0.0003470182418823242,
+                "responseWaitSeconds": 0.0012530088424682617,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "E9D84801-66A4-4961-B72D-EBAF2171D7FB",
+          "requestID": 2,
+          "resourceToken": "69afecee0b6682d1f8c3fd77ea89f92af8c288b91ce7b692ee545edcdcc917d5",
+          "response": 19025.217305916667,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 0.00016762499944888987,
+          "sendWaitSum": 0.0003231666669307742,
+          "sentBodyBytes": 2,
+          "taskComplete": 19025.217550208334,
+          "taskOutcome": 0,
+          "terminal": 19025.217558375,
+          "upstreamComplete": 19025.217552458336,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19025.264347041666,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "4DDE74C0-3DAB-46A8-972F-DF59CE774406",
+          "downstreamTerminal": 19025.26460304167,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00039398670196533203,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "9B1D8B22-F9FD-4313-B0E8-5834B0B9F362",
+          "requestID": 1,
+          "resourceToken": "d0ee527f40260c9327088334bf9e28beba33805eba307ff24e3389c29b4d7f2a",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19025.265003875,
+          "taskOutcome": 1,
+          "terminal": 19025.265006458336,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00039398670196533203,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "83AD8CFD-EA26-4D01-9B12-76214CBE091E"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19025.280607333334,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "83AD8CFD-EA26-4D01-9B12-76214CBE091E",
+          "downstreamTerminal": 19025.284814958333,
+          "firstBody": 19025.284657791668,
+          "firstSend": 19025.284601583335,
+          "httpStatus": 200,
+          "lastBody": 19025.284657791668,
+          "lastSend": 19025.284660833335,
+          "lastSendComplete": 19025.284706583334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.004080057144165039,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0034749507904052734,
+                "fetchToRequestSeconds": 0.0029829740524291992,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 4.00543212890625e-05,
+                "responseSeconds": 0.00016891956329345703,
+                "responseWaitSeconds": 0.0002830028533935547,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "9B1D8B22-F9FD-4313-B0E8-5834B0B9F362",
+          "requestID": 2,
+          "resourceToken": "d0ee527f40260c9327088334bf9e28beba33805eba307ff24e3389c29b4d7f2a",
+          "response": 19025.284570083335,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 4.812499901163392e-05,
+          "sendWaitSum": 9.387499812874012e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19025.284805375002,
+          "taskOutcome": 0,
+          "terminal": 19025.284816083335,
+          "upstreamComplete": 19025.284807833334,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19025.29728304167,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "974ECF84-C8AA-4061-9C1F-48EC04CFCC4E",
+          "downstreamTerminal": 19025.297512,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0005440711975097656,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "3BE75A48-F5BA-416A-8FC0-3167B1CA02CF",
+          "requestID": 1,
+          "resourceToken": "75f001de27b9630a2ea1afd41505e5652989312bf61b63debb33f54494198cbd",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19025.29796766667,
+          "taskOutcome": 1,
+          "terminal": 19025.297969791667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0005440711975097656,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "6C238258-F71B-45CA-88B7-507D171D39A2"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19025.302466625002,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "6C238258-F71B-45CA-88B7-507D171D39A2",
+          "downstreamTerminal": 19025.30600366667,
+          "firstBody": 19025.305675208336,
+          "firstSend": 19025.305528625002,
+          "httpStatus": 200,
+          "lastBody": 19025.305675208336,
+          "lastSend": 19025.30567829167,
+          "lastSendComplete": 19025.305802583334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0032349824905395508,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0025789737701416016,
+                "fetchToRequestSeconds": 0.0015530586242675781,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 3.3974647521972656e-05,
+                "responseSeconds": 0.00021398067474365234,
+                "responseWaitSeconds": 0.0007779598236083984,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "3BE75A48-F5BA-416A-8FC0-3167B1CA02CF",
+          "requestID": 2,
+          "resourceToken": "75f001de27b9630a2ea1afd41505e5652989312bf61b63debb33f54494198cbd",
+          "response": 19025.3055025,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 0.0001323750002484303,
+          "sendWaitSum": 0.0002566666662460193,
+          "sentBodyBytes": 2,
+          "taskComplete": 19025.305995083334,
+          "taskOutcome": 0,
+          "terminal": 19025.306004625003,
+          "upstreamComplete": 19025.3059985,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19025.311406625002,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "C7EF5CEF-46DE-458E-A3BB-306EE5B6CB8F",
+          "downstreamTerminal": 19025.311687625002,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00028002262115478516,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "E3B17B6B-5A23-4076-9C5E-BFC4C0CA2832",
+          "requestID": 1,
+          "resourceToken": "baadc5cae9d346609352cfcdc9c385bb587367bc6f18f6b35c8ceac8816896a8",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19025.311906625,
+          "taskOutcome": 1,
+          "terminal": 19025.31190891667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00028002262115478516,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "41393C23-E7F9-4FCF-8BD0-2834E94BA17E"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19025.316817416668,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "41393C23-E7F9-4FCF-8BD0-2834E94BA17E",
+          "downstreamTerminal": 19025.321603708333,
+          "firstBody": 19025.321417958334,
+          "firstSend": 19025.321372916667,
+          "httpStatus": 200,
+          "lastBody": 19025.321417958334,
+          "lastSend": 19025.321421833334,
+          "lastSendComplete": 19025.32146966667,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.004534006118774414,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0038900375366210938,
+                "fetchToRequestSeconds": 0.0027780532836914062,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 9.202957153320312e-05,
+                "responseSeconds": 0.0002759695053100586,
+                "responseWaitSeconds": 0.0007439851760864258,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "E3B17B6B-5A23-4076-9C5E-BFC4C0CA2832",
+          "requestID": 2,
+          "resourceToken": "baadc5cae9d346609352cfcdc9c385bb587367bc6f18f6b35c8ceac8816896a8",
+          "response": 19025.321344791668,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 7.666666715522297e-05,
+          "sendWaitSum": 0.00012450000212993473,
+          "sentBodyBytes": 2,
+          "taskComplete": 19025.32159141667,
+          "taskOutcome": 0,
+          "terminal": 19025.32160479167,
+          "upstreamComplete": 19025.32159429167,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19025.326186916667,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "C7F59686-E49F-45DF-AEFA-5F1359C8B6A9",
+          "downstreamTerminal": 19025.326270416666,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0002549886703491211,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": null,
+                "dnsSeconds": null,
+                "durationStates": {
+                  "connectSeconds": 3,
+                  "dnsSeconds": 3,
+                  "fetchSeconds": 2,
+                  "fetchToRequestSeconds": 2,
+                  "requestSeconds": 3,
+                  "responseSeconds": 3,
+                  "responseWaitSeconds": 3,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": null,
+                "fetchToRequestSeconds": null,
+                "fetchType": 0,
+                "protocolCode": 0,
+                "requestSeconds": null,
+                "responseSeconds": null,
+                "responseWaitSeconds": null,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 0,
+                  "responseBody": 0,
+                  "responseHeaders": 0
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "F372D449-8718-419C-8AF6-B10980CC6943",
+          "requestID": 1,
+          "resourceToken": "477c387a221dd2a3d6d683ba31299420c6487106c6f57498f4a267d75dae875c",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19025.327270875,
+          "taskOutcome": 1,
+          "terminal": 19025.327272791666,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0002549886703491211,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 0,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 0,
+                "responseBody": 0,
+                "responseHeaders": 0
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "reported",
+            "transactions": [
+              {
+                "index": 0,
+                "request": "zero",
+                "response": "zero"
+              }
+            ],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "8924972F-4C26-488B-91D3-A491FC3EB865"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19025.332230666667,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "8924972F-4C26-488B-91D3-A491FC3EB865",
+          "downstreamTerminal": 19025.337413083336,
+          "firstBody": 19025.33671329167,
+          "firstSend": 19025.336670208333,
+          "httpStatus": 200,
+          "lastBody": 19025.33671329167,
+          "lastSend": 19025.337086583335,
+          "lastSendComplete": 19025.337407500003,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.004889011383056641,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.003610968589782715,
+                "fetchToRequestSeconds": 0.0019229650497436523,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 7.092952728271484e-05,
+                "responseSeconds": 0.0002549886703491211,
+                "responseWaitSeconds": 0.0013620853424072266,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "F372D449-8718-419C-8AF6-B10980CC6943",
+          "requestID": 2,
+          "resourceToken": "477c387a221dd2a3d6d683ba31299420c6487106c6f57498f4a267d75dae875c",
+          "response": 19025.33663741667,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 0.0004145833336224314,
+          "sendWaitSum": 0.0007355000016104896,
+          "sentBodyBytes": 2,
+          "taskComplete": 19025.337377208336,
+          "taskOutcome": 0,
+          "terminal": 19025.337413958336,
+          "upstreamComplete": 19025.337381333335,
+          "version": 6
+        }
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  },
+  "ios-final/forced": {
+    "device": "iPhone",
+    "samples": [
+      {
+        "trace": {
+          "admission": 61273.82748629167,
+          "bodyBytes": 4,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "0ADED9FD-6FFD-4F53-9C08-77D186068FCE",
+          "downstreamTerminal": 61273.82947520834,
+          "firstBody": 61273.82936379167,
+          "firstSend": 61273.829344708334,
+          "httpStatus": 200,
+          "lastBody": 61273.82936379167,
+          "lastSend": 61273.829365875004,
+          "lastSendComplete": 61273.829379083334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0018900632858276367,
+            "transactionCount": 2,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 2,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 3,
+                  "responseWaitSeconds": 2,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": null,
+                "fetchToRequestSeconds": 0.0006489753723144531,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.800060272216797e-05,
+                "responseSeconds": null,
+                "responseWaitSeconds": null,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 313,
+                  "responseBody": 0,
+                  "responseHeaders": 0
+                }
+              },
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0007420778274536133,
+                "fetchToRequestSeconds": 0.00036907196044921875,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.800060272216797e-05,
+                "responseSeconds": 5.710124969482422e-05,
+                "responseWaitSeconds": 0.00029790401458740234,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 313,
+                  "responseBody": 4,
+                  "responseHeaders": 84
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "95B88EC0-E527-4A35-A9C4-DBA691AD166E",
+          "requestID": 1,
+          "resourceToken": "afa5a8d92779e736bd29901d61c763ebf055bce74c500819ae1faa6c84adcdb8",
+          "response": 61273.829334875,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.0000002880115062e-05,
+          "sendWaitSum": 4.320833249948919e-05,
+          "sentBodyBytes": 4,
+          "serverRequestID": 17,
+          "taskComplete": 61273.829470083336,
+          "taskOutcome": 0,
+          "terminal": 61273.829475791674,
+          "upstreamComplete": 61273.82947320834,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0018900632858276367,
+          "transactionCount": 2,
+          "transactions": [
+            {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 2,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.0006489753723144531,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 1.800060272216797e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 313,
+                "responseBody": 0,
+                "responseHeaders": 0
+              }
+            },
+            {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.0007420778274536133,
+              "fetchToRequestSeconds": 0.00036907196044921875,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 1.800060272216797e-05,
+              "responseSeconds": 5.710124969482422e-05,
+              "responseWaitSeconds": 0.00029790401458740234,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 313,
+                "responseBody": 4,
+                "responseHeaders": 84
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "reported",
+            "transactions": [
+              {
+                "index": 0,
+                "request": "positive",
+                "response": "zero"
+              },
+              {
+                "index": 1,
+                "request": "positive",
+                "response": "positive"
+              }
+            ],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "0ADED9FD-6FFD-4F53-9C08-77D186068FCE",
+          "0ADED9FD-6FFD-4F53-9C08-77D186068FCE"
+        ],
+        "matchedServerParseIndices": [
+          0,
+          1
+        ],
+        "serverSnapshotAfterExplicitFollowup": false,
+        "capabilityAccepted": false
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  },
+  "ios-final/queued": {
+    "device": "iPhone",
+    "samples": [
+      {
+        "trace": {
+          "admission": 61273.945274916674,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "D1C2EFDE-0310-46E4-899E-07CDB67121B6",
+          "downstreamTerminal": 61273.94533679167,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 7.49826431274414e-05,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "DB2E2CC0-3F68-49A5-A9E5-834CBDECFB1D",
+          "requestID": 2,
+          "resourceToken": "52315a55819478100d48d8aba8c5ae77de3dee1dc3d896bf7ed3e5ec3fc45d3c",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61273.945422041674,
+          "taskOutcome": 1,
+          "terminal": 61273.94542270834,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 7.49826431274414e-05,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "8378179E-9789-48FF-9DE0-33D6933814B3",
+          "6731EFFF-7333-4ABF-A6A8-4A9626528841"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": false,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61273.94684825,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "6731EFFF-7333-4ABF-A6A8-4A9626528841",
+          "downstreamTerminal": 61273.947769625,
+          "firstBody": 61273.94770275,
+          "firstSend": 61273.94767937501,
+          "httpStatus": 200,
+          "lastBody": 61273.94770275,
+          "lastSend": 61273.947704583334,
+          "lastSendComplete": 61273.947721000004,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0008620023727416992,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0007299184799194336,
+                "fetchToRequestSeconds": 0.00040793418884277344,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.1086463928222656e-05,
+                "responseSeconds": 5.4955482482910156e-05,
+                "responseWaitSeconds": 0.00025594234466552734,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 279,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "DB2E2CC0-3F68-49A5-A9E5-834CBDECFB1D",
+          "requestID": 3,
+          "resourceToken": "52315a55819478100d48d8aba8c5ae77de3dee1dc3d896bf7ed3e5ec3fc45d3c",
+          "response": 61273.94767104167,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 1.770832750480622e-05,
+          "sendWaitSum": 3.412499791011214e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61273.94776537501,
+          "taskOutcome": 0,
+          "terminal": 61273.94777008334,
+          "upstreamComplete": 61273.94776675,
+          "version": 6
+        }
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  },
+  "ios-final/unoccupied": {
+    "device": "iPhone",
+    "samples": [
+      {
+        "trace": {
+          "admission": 61274.59351120834,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "D7AE98A1-FE33-4BD2-A5C3-1AAF0F102992",
+          "downstreamTerminal": 61274.59363475,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00016701221466064453,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "7378E843-8E38-4B6D-B450-D14121162EBD",
+          "requestID": 1,
+          "resourceToken": "296db332464a350bc30c812a6e606807d67b9a9cace3e2fc2e2a03341085d459",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61274.59380041667,
+          "taskOutcome": 1,
+          "terminal": 61274.59380158334,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00016701221466064453,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "6B81D807-A456-4F65-B66F-C508104A295E"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61274.595197333336,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "6B81D807-A456-4F65-B66F-C508104A295E",
+          "downstreamTerminal": 61274.59630029167,
+          "firstBody": 61274.59621170834,
+          "firstSend": 61274.596191083336,
+          "httpStatus": 200,
+          "lastBody": 61274.59621170834,
+          "lastSend": 61274.59621354167,
+          "lastSendComplete": 61274.59622983334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0010249614715576172,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0008639097213745117,
+                "fetchToRequestSeconds": 0.0005789995193481445,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.6927719116210938e-05,
+                "responseSeconds": 6.99758529663086e-05,
+                "responseWaitSeconds": 0.00019800662994384766,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 283,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "7378E843-8E38-4B6D-B450-D14121162EBD",
+          "requestID": 2,
+          "resourceToken": "296db332464a350bc30c812a6e606807d67b9a9cace3e2fc2e2a03341085d459",
+          "response": 61274.59617995834,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 2.5083332729991525e-05,
+          "sendWaitSum": 4.1375002183485776e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61274.59629454167,
+          "taskOutcome": 0,
+          "terminal": 61274.596300833335,
+          "upstreamComplete": 61274.59629641667,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 61274.59882120834,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "6B270CA2-82D9-4DEA-B593-1C824238784B",
+          "downstreamTerminal": 61274.598881875005,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 8.893013000488281e-05,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "6FF61EB9-BE04-4FD6-872C-1B509BC1CA12",
+          "requestID": 1,
+          "resourceToken": "438251627bf3ccc4b1b02e88c19b7363f7b4f1491febc8f9dda8906bf31648be",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61274.59898904167,
+          "taskOutcome": 1,
+          "terminal": 61274.598989833336,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 8.893013000488281e-05,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "B41A7040-2B9E-45E0-94AC-E62BC644EEBD"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61274.59990166667,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "B41A7040-2B9E-45E0-94AC-E62BC644EEBD",
+          "downstreamTerminal": 61274.600806250004,
+          "firstBody": 61274.600726958335,
+          "firstSend": 61274.60070779167,
+          "httpStatus": 200,
+          "lastBody": 61274.600726958335,
+          "lastSend": 61274.600728916674,
+          "lastSendComplete": 61274.60076054167,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0008360147476196289,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0006959438323974609,
+                "fetchToRequestSeconds": 0.0003489255905151367,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.4066696166992188e-05,
+                "responseSeconds": 5.900859832763672e-05,
+                "responseWaitSeconds": 0.0002739429473876953,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 283,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "6FF61EB9-BE04-4FD6-872C-1B509BC1CA12",
+          "requestID": 2,
+          "resourceToken": "438251627bf3ccc4b1b02e88c19b7363f7b4f1491febc8f9dda8906bf31648be",
+          "response": 61274.60069875,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.1624993425793946e-05,
+          "sendWaitSum": 5.774998862762004e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61274.600799375,
+          "taskOutcome": 0,
+          "terminal": 61274.60080683334,
+          "upstreamComplete": 61274.60080141667,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 61274.60293575,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "1D417CBD-C5A2-41FD-ACB3-742EA17CD88F",
+          "downstreamTerminal": 61274.60297966667,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 7.200241088867188e-05,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "D65DE716-AF17-4853-A93A-D42412CB7B7E",
+          "requestID": 1,
+          "resourceToken": "c93002974cb7565094b1f9e299ad1cdcf09930dfd27979647188ff583e7d8115",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61274.603061875,
+          "taskOutcome": 1,
+          "terminal": 61274.60306266667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 7.200241088867188e-05,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "CB29A08B-771A-48B3-A871-0A2A20254711"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61274.60388966667,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "CB29A08B-771A-48B3-A871-0A2A20254711",
+          "downstreamTerminal": 61274.60467716667,
+          "firstBody": 61274.60461075,
+          "firstSend": 61274.604594083336,
+          "httpStatus": 200,
+          "lastBody": 61274.60461075,
+          "lastSend": 61274.60461241667,
+          "lastSendComplete": 61274.60464079167,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0007330179214477539,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0006150007247924805,
+                "fetchToRequestSeconds": 0.00044405460357666016,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.2993812561035156e-05,
+                "responseSeconds": 4.601478576660156e-05,
+                "responseWaitSeconds": 0.0001119375228881836,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 283,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "D65DE716-AF17-4853-A93A-D42412CB7B7E",
+          "requestID": 2,
+          "resourceToken": "c93002974cb7565094b1f9e299ad1cdcf09930dfd27979647188ff583e7d8115",
+          "response": 61274.60458675001,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 2.8375005058478564e-05,
+          "sendWaitSum": 4.850000550504774e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61274.60467283334,
+          "taskOutcome": 0,
+          "terminal": 61274.604677625,
+          "upstreamComplete": 61274.60467445834,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 61274.60669758334,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "9342ADDE-7EC9-4B5A-A02E-D2F7938C1C4D",
+          "downstreamTerminal": 61274.60673962501,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 7.390975952148438e-05,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "6547C256-B56C-4514-B6C0-BDBC62A98A82",
+          "requestID": 1,
+          "resourceToken": "6c393bd9cf83fe0448ccbd7f30f013e7f8e5577cefdda4a0a901806cf1f7221b",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61274.606819,
+          "taskOutcome": 1,
+          "terminal": 61274.606819541674,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 7.390975952148438e-05,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "676323E3-ECFF-46A4-A11D-24EE5A9B58D1"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61274.60766604167,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "676323E3-ECFF-46A4-A11D-24EE5A9B58D1",
+          "downstreamTerminal": 61274.60851354167,
+          "firstBody": 61274.60843566667,
+          "firstSend": 61274.60841933334,
+          "httpStatus": 200,
+          "lastBody": 61274.60843566667,
+          "lastSend": 61274.608437125,
+          "lastSendComplete": 61274.608463833334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0007840394973754883,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0006650686264038086,
+                "fetchToRequestSeconds": 0.00035202503204345703,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.0967254638671875e-05,
+                "responseSeconds": 5.4001808166503906e-05,
+                "responseWaitSeconds": 0.0002480745315551758,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 283,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "6547C256-B56C-4514-B6C0-BDBC62A98A82",
+          "requestID": 2,
+          "resourceToken": "6c393bd9cf83fe0448ccbd7f30f013e7f8e5577cefdda4a0a901806cf1f7221b",
+          "response": 61274.608411625006,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 4.066666588187218e-05,
+          "sendWaitSum": 6.73749964335002e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61274.60850975,
+          "taskOutcome": 0,
+          "terminal": 61274.60851404167,
+          "upstreamComplete": 61274.60851116667,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 61274.61046216667,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "01C083DA-7E53-4024-91CE-4EF5243ED17F",
+          "downstreamTerminal": 61274.61050145834,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 7.390975952148438e-05,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "A8439E90-6616-456C-A117-8B410C28C986",
+          "requestID": 1,
+          "resourceToken": "be9004a4772a12dec3d75b636d99a3ad539b2b6ffdbbafff750a6e0b96d2f4d3",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61274.61058429167,
+          "taskOutcome": 1,
+          "terminal": 61274.61058483334,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 7.390975952148438e-05,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "91862E52-8C7B-4031-B0DB-C45CA9CB35D4"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61274.61142954167,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "91862E52-8C7B-4031-B0DB-C45CA9CB35D4",
+          "downstreamTerminal": 61274.61230558334,
+          "firstBody": 61274.61223012501,
+          "firstSend": 61274.612213125,
+          "httpStatus": 200,
+          "lastBody": 61274.61223012501,
+          "lastSend": 61274.612231625004,
+          "lastSendComplete": 61274.61226904167,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0008169412612915039,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0006769895553588867,
+                "fetchToRequestSeconds": 0.00036597251892089844,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.2040138244628906e-05,
+                "responseSeconds": 4.398822784423828e-05,
+                "responseWaitSeconds": 0.0002549886703491211,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 283,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "A8439E90-6616-456C-A117-8B410C28C986",
+          "requestID": 2,
+          "resourceToken": "be9004a4772a12dec3d75b636d99a3ad539b2b6ffdbbafff750a6e0b96d2f4d3",
+          "response": 61274.61220520834,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.741666296264157e-05,
+          "sendWaitSum": 5.704166687792167e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61274.61230195834,
+          "taskOutcome": 0,
+          "terminal": 61274.612306,
+          "upstreamComplete": 61274.61230316667,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 61274.61433691667,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "BC06D5B7-BEC5-403E-AB41-D243E9244329",
+          "downstreamTerminal": 61274.61437633334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 6.29425048828125e-05,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "0F151328-83B3-4F70-B403-A9C294FDFB37",
+          "requestID": 1,
+          "resourceToken": "f966a910af301ab832534987f038d9e0517316a298b83225783b25ef6627470e",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 61274.61444866667,
+          "taskOutcome": 1,
+          "terminal": 61274.61444925,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 6.29425048828125e-05,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "0A8C6F1B-DFDB-4CA3-9D38-FA98347816CC"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 61274.615374333334,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "0A8C6F1B-DFDB-4CA3-9D38-FA98347816CC",
+          "downstreamTerminal": 61274.61621683334,
+          "firstBody": 61274.616138375,
+          "firstSend": 61274.61611841667,
+          "httpStatus": 200,
+          "lastBody": 61274.616138375,
+          "lastSend": 61274.616141875005,
+          "lastSendComplete": 61274.61615745834,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0007729530334472656,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0006510019302368164,
+                "fetchToRequestSeconds": 0.00034499168395996094,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.2993812561035156e-05,
+                "responseSeconds": 5.0067901611328125e-05,
+                "responseWaitSeconds": 0.0002429485321044922,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 283,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "0F151328-83B3-4F70-B403-A9C294FDFB37",
+          "requestID": 2,
+          "resourceToken": "f966a910af301ab832534987f038d9e0517316a298b83225783b25ef6627470e",
+          "response": 61274.616111083335,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 2.5125002139247954e-05,
+          "sendWaitSum": 4.0708335291128606e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 61274.61621120834,
+          "taskOutcome": 0,
+          "terminal": 61274.61621745834,
+          "upstreamComplete": 61274.616212625006,
+          "version": 6
+        }
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  },
+  "macos-final/forced": {
+    "device": "My Mac",
+    "samples": [
+      {
+        "trace": {
+          "admission": 19191.242021791666,
+          "bodyBytes": 4,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "A8FF675F-4CD0-46BA-8621-CB1F70827685",
+          "downstreamTerminal": 19191.244655958333,
+          "firstBody": 19191.244552375003,
+          "firstSend": 19191.244525958333,
+          "httpStatus": 200,
+          "lastBody": 19191.244552375003,
+          "lastSend": 19191.244555208334,
+          "lastSendComplete": 19191.244575333334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0025320053100585938,
+            "transactionCount": 2,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 2,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 3,
+                  "responseWaitSeconds": 2,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": null,
+                "fetchToRequestSeconds": 0.0007020235061645508,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 2.5033950805664062e-05,
+                "responseSeconds": null,
+                "responseWaitSeconds": null,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 316,
+                  "responseBody": 0,
+                  "responseHeaders": 0
+                }
+              },
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0010360479354858398,
+                "fetchToRequestSeconds": 0.0007320642471313477,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 2.193450927734375e-05,
+                "responseSeconds": 8.702278137207031e-05,
+                "responseWaitSeconds": 0.00019502639770507812,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 316,
+                  "responseBody": 4,
+                  "responseHeaders": 84
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "98AA2AB7-0898-433F-BDE0-5DCD4838BAF4",
+          "requestID": 1,
+          "resourceToken": "060d6065ee2a56df389ec1181e47f6d0ba2f8bb0b9ad08e601743d4d43126ce4",
+          "response": 19191.244510041666,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.4333334042457864e-05,
+          "sendWaitSum": 5.445833448902704e-05,
+          "sentBodyBytes": 4,
+          "serverRequestID": 17,
+          "taskComplete": 19191.244649666667,
+          "taskOutcome": 0,
+          "terminal": 19191.244657000003,
+          "upstreamComplete": 19191.24465379167,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0025320053100585938,
+          "transactionCount": 2,
+          "transactions": [
+            {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 2,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.0007020235061645508,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 2.5033950805664062e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 316,
+                "responseBody": 0,
+                "responseHeaders": 0
+              }
+            },
+            {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.0010360479354858398,
+              "fetchToRequestSeconds": 0.0007320642471313477,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 2.193450927734375e-05,
+              "responseSeconds": 8.702278137207031e-05,
+              "responseWaitSeconds": 0.00019502639770507812,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 316,
+                "responseBody": 4,
+                "responseHeaders": 84
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "reported",
+            "transactions": [
+              {
+                "index": 0,
+                "request": "positive",
+                "response": "zero"
+              },
+              {
+                "index": 1,
+                "request": "positive",
+                "response": "positive"
+              }
+            ],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "A8FF675F-4CD0-46BA-8621-CB1F70827685",
+          "A8FF675F-4CD0-46BA-8621-CB1F70827685"
+        ],
+        "matchedServerParseIndices": [
+          0,
+          1
+        ],
+        "serverSnapshotAfterExplicitFollowup": false,
+        "capabilityAccepted": false
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  },
+  "macos-final/queued": {
+    "device": "My Mac",
+    "samples": [
+      {
+        "trace": {
+          "admission": 19191.330865708336,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "774B42B4-95B9-4A69-9688-108AB136ACD3",
+          "downstreamTerminal": 19191.330944708334,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00012004375457763672,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "1B0AC419-522E-4A5C-BCEB-9A380CCD8ED7",
+          "requestID": 2,
+          "resourceToken": "e2b2fecba853228ea2619d4319538a9ec1ce5eb161bc0fa608e56aa98807945a",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19191.331078708336,
+          "taskOutcome": 1,
+          "terminal": 19191.331079833333,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00012004375457763672,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "EE0C7A60-FF51-4606-BA1E-D2F67BFE1455",
+          "968F97C0-1D5B-42D1-9A59-D04AD843D3D2"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": false,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19191.333262750002,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "968F97C0-1D5B-42D1-9A59-D04AD843D3D2",
+          "downstreamTerminal": 19191.335636625,
+          "firstBody": 19191.335537416668,
+          "firstSend": 19191.335511125002,
+          "httpStatus": 200,
+          "lastBody": 19191.335537416668,
+          "lastSend": 19191.335540250002,
+          "lastSendComplete": 19191.335576,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.002290010452270508,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.002079010009765625,
+                "fetchToRequestSeconds": 0.0017049312591552734,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 3.0040740966796875e-05,
+                "responseSeconds": 9.703636169433594e-05,
+                "responseWaitSeconds": 0.00024700164794921875,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 282,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "1B0AC419-522E-4A5C-BCEB-9A380CCD8ED7",
+          "requestID": 3,
+          "resourceToken": "e2b2fecba853228ea2619d4319538a9ec1ce5eb161bc0fa608e56aa98807945a",
+          "response": 19191.335494458333,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.574999936972745e-05,
+          "sendWaitSum": 7.004166400292888e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19191.335629625002,
+          "taskOutcome": 0,
+          "terminal": 19191.335637458335,
+          "upstreamComplete": 19191.33563225,
+          "version": 6
+        }
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  },
+  "macos-final/unoccupied": {
+    "device": "My Mac",
+    "samples": [
+      {
+        "trace": {
+          "admission": 19192.0951825,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "6A986D86-A342-4BE5-BBA0-A1A3126B04D3",
+          "downstreamTerminal": 19192.095264666666,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00013399124145507812,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "BC84E628-174A-41A4-8C23-668D20E94B0C",
+          "requestID": 1,
+          "resourceToken": "619b6f3d81a986e49a81449c53cb4f04b79bf2a24cfe03c13d7435f3408adcf7",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19192.09541404167,
+          "taskOutcome": 1,
+          "terminal": 19192.095415291667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00013399124145507812,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "D22AC5F0-F186-43DA-B4DE-8379D51F0C6D"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19192.096979958336,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 2,
+          "correlationID": "D22AC5F0-F186-43DA-B4DE-8379D51F0C6D",
+          "downstreamTerminal": 19192.10107029167,
+          "firstBody": 19192.100875333334,
+          "firstSend": 19192.10084429167,
+          "httpStatus": 200,
+          "lastBody": 19192.100875333334,
+          "lastSend": 19192.100878541667,
+          "lastSendComplete": 19192.100916875002,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.003913998603820801,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0.001000046730041504,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0035959482192993164,
+                "fetchToRequestSeconds": 0.003096938133239746,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 3.600120544433594e-05,
+                "responseSeconds": 0.00011301040649414062,
+                "responseWaitSeconds": 0.00034999847412109375,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "BC84E628-174A-41A4-8C23-668D20E94B0C",
+          "requestID": 2,
+          "resourceToken": "619b6f3d81a986e49a81449c53cb4f04b79bf2a24cfe03c13d7435f3408adcf7",
+          "response": 19192.100823166667,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.833333539660089e-05,
+          "sendWaitSum": 7.641666888957843e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19192.101083166668,
+          "taskOutcome": 0,
+          "terminal": 19192.10108379167,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19192.103638083336,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "4F2A677F-29B0-4EC6-A54E-48DECF3035C1",
+          "downstreamTerminal": 19192.103719208335,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0001379251480102539,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "F448920F-7D67-4E2E-808C-8354F972238F",
+          "requestID": 1,
+          "resourceToken": "1d331751bd4cd4800942ed3a15f367153c5ee160e6a6503f3d63755da55c10d7",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19192.103880125,
+          "taskOutcome": 1,
+          "terminal": 19192.10388104167,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0001379251480102539,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "8D247DB0-6FBB-4C94-8D88-BDAEA8392B22"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19192.105309708335,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "8D247DB0-6FBB-4C94-8D88-BDAEA8392B22",
+          "downstreamTerminal": 19192.106666291667,
+          "firstBody": 19192.106557125,
+          "firstSend": 19192.10651454167,
+          "httpStatus": 200,
+          "lastBody": 19192.106557125,
+          "lastSend": 19192.106560291668,
+          "lastSendComplete": 19192.106595875,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0012689828872680664,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0010089874267578125,
+                "fetchToRequestSeconds": 0.0004839897155761719,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 2.002716064453125e-05,
+                "responseSeconds": 8.702278137207031e-05,
+                "responseWaitSeconds": 0.00041794776916503906,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "F448920F-7D67-4E2E-808C-8354F972238F",
+          "requestID": 2,
+          "resourceToken": "1d331751bd4cd4800942ed3a15f367153c5ee160e6a6503f3d63755da55c10d7",
+          "response": 19192.106499375,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.5583332646638155e-05,
+          "sendWaitSum": 6.97083305567503e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19192.106659708334,
+          "taskOutcome": 0,
+          "terminal": 19192.106667125,
+          "upstreamComplete": 19192.106662041668,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19192.109531125003,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "53953B2E-0EBD-42AC-8ED0-B5F76E66EA34",
+          "downstreamTerminal": 19192.109607375,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00013899803161621094,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "7E790E50-787D-4B0C-B19D-E540EA413FFB",
+          "requestID": 1,
+          "resourceToken": "8b75a2a2aba3699ef68e8b8918d23e107b12191c51981a62d91d779123d420c0",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19192.109757708335,
+          "taskOutcome": 1,
+          "terminal": 19192.109758916667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00013899803161621094,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "4B59EF44-04E2-48CB-9F88-6DC7A34F107D"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19192.112275416668,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "4B59EF44-04E2-48CB-9F88-6DC7A34F107D",
+          "downstreamTerminal": 19192.114735958334,
+          "firstBody": 19192.114608125,
+          "firstSend": 19192.11456729167,
+          "httpStatus": 200,
+          "lastBody": 19192.114608125,
+          "lastSend": 19192.114611,
+          "lastSendComplete": 19192.114669875,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.002319931983947754,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0018849372863769531,
+                "fetchToRequestSeconds": 0.0014098882675170898,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 2.8014183044433594e-05,
+                "responseSeconds": 9.59634780883789e-05,
+                "responseWaitSeconds": 0.0003510713577270508,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "7E790E50-787D-4B0C-B19D-E540EA413FFB",
+          "requestID": 2,
+          "resourceToken": "8b75a2a2aba3699ef68e8b8918d23e107b12191c51981a62d91d779123d420c0",
+          "response": 19192.114546083336,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 5.887500083190389e-05,
+          "sendWaitSum": 9.433333252673037e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19192.114728833334,
+          "taskOutcome": 0,
+          "terminal": 19192.114736958334,
+          "upstreamComplete": 19192.11473166667,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19192.117357458334,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "7A13A9F8-DEC7-4D8E-B8B0-2929DDE921CD",
+          "downstreamTerminal": 19192.117461833335,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0001569986343383789,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "FB5BD1C9-C109-4DF9-A6C0-050269FA92A1",
+          "requestID": 1,
+          "resourceToken": "13f358087ca869207f87bfadbcc3ab8157cdaab7706630a57348234a58a3400f",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19192.11763991667,
+          "taskOutcome": 1,
+          "terminal": 19192.117643916667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0001569986343383789,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "24C7C8B3-CC05-4A96-AA13-3FDC3F36CEDA"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19192.120065666666,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "24C7C8B3-CC05-4A96-AA13-3FDC3F36CEDA",
+          "downstreamTerminal": 19192.12147491667,
+          "firstBody": 19192.12136791667,
+          "firstSend": 19192.12134366667,
+          "httpStatus": 200,
+          "lastBody": 19192.12136791667,
+          "lastSend": 19192.121370333334,
+          "lastSendComplete": 19192.121389750002,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.001314997673034668,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.001096963882446289,
+                "fetchToRequestSeconds": 0.0005799531936645508,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.800060272216797e-05,
+                "responseSeconds": 7.593631744384766e-05,
+                "responseWaitSeconds": 0.00042307376861572266,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "FB5BD1C9-C109-4DF9-A6C0-050269FA92A1",
+          "requestID": 2,
+          "resourceToken": "13f358087ca869207f87bfadbcc3ab8157cdaab7706630a57348234a58a3400f",
+          "response": 19192.121329083333,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.274999835412018e-05,
+          "sendWaitSum": 5.216666613705456e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19192.121465250002,
+          "taskOutcome": 0,
+          "terminal": 19192.121476,
+          "upstreamComplete": 19192.121467875,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19192.123834500002,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "1942D965-4739-4CCE-88D9-0AE5EFBDA02D",
+          "downstreamTerminal": 19192.12391225,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.00012195110321044922,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "6E763BFF-441C-4FBF-B5FD-D77E02A23479",
+          "requestID": 1,
+          "resourceToken": "18956a36c1ebaf0c77818d1ef50831a5b69471ca7f626e6353769e8da296dba8",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19192.124045375,
+          "taskOutcome": 1,
+          "terminal": 19192.12404641667,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.00012195110321044922,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "5639F85D-A9F7-4C58-8667-3C87E9E90AEC"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19192.126324125,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "5639F85D-A9F7-4C58-8667-3C87E9E90AEC",
+          "downstreamTerminal": 19192.129064166667,
+          "firstBody": 19192.1289655,
+          "firstSend": 19192.128929875,
+          "httpStatus": 200,
+          "lastBody": 19192.1289655,
+          "lastSend": 19192.128968625002,
+          "lastSendComplete": 19192.129000958335,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0026640892028808594,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.002435922622680664,
+                "fetchToRequestSeconds": 0.002097010612487793,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 2.193450927734375e-05,
+                "responseSeconds": 8.392333984375e-05,
+                "responseWaitSeconds": 0.00023305416107177734,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "6E763BFF-441C-4FBF-B5FD-D77E02A23479",
+          "requestID": 2,
+          "resourceToken": "18956a36c1ebaf0c77818d1ef50831a5b69471ca7f626e6353769e8da296dba8",
+          "response": 19192.128915958336,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 3.233333336538635e-05,
+          "sendWaitSum": 6.0458332882262766e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19192.129057333335,
+          "taskOutcome": 0,
+          "terminal": 19192.129065041667,
+          "upstreamComplete": 19192.12906004167,
+          "version": 6
+        }
+      },
+      {
+        "trace": {
+          "admission": 19192.131707166667,
+          "bodyBytes": 0,
+          "bodyCallbacks": 0,
+          "cancelCause": 2,
+          "correlationID": "19299B30-ACFC-4983-B5DE-2634A55D75E1",
+          "downstreamTerminal": 19192.131792666667,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0001569986343383789,
+            "transactionCount": 0,
+            "transactions": [],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 1,
+          "proxyID": "BA4B6B9A-B2CF-46C8-8332-05AD18D0E69C",
+          "requestID": 1,
+          "resourceToken": "9f7bdd20ad8670ce42a01d81a3aa469e67357591e7e6174bc60d6bea04a99ce2",
+          "sendCompletions": 0,
+          "sendCount": 0,
+          "sendFailures": 0,
+          "sendWaitMax": 0,
+          "sendWaitSum": 0,
+          "sentBodyBytes": 0,
+          "taskComplete": 19192.131950208335,
+          "taskOutcome": 1,
+          "terminal": 19192.131951416668,
+          "version": 6
+        },
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0001569986343383789,
+          "transactionCount": 0,
+          "transactions": [],
+          "truncated": 0,
+          "version": 3,
+          "available": true,
+          "complete": false,
+          "byteEvidence": {
+            "availability": "no-transactions",
+            "transactions": [],
+            "serverReceiptProven": false,
+            "physicalTransmissionProven": false,
+            "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+          }
+        },
+        "parsedServerTraceIDs": [
+          "953B7472-0E33-4157-82A2-A3B48DE40CBB"
+        ],
+        "matchedServerParseIndices": [],
+        "serverSnapshotAfterExplicitFollowup": true,
+        "capabilityAccepted": false,
+        "followupTrace": {
+          "admission": 19192.135057791667,
+          "bodyBytes": 2,
+          "bodyCallbacks": 1,
+          "cancelCause": 0,
+          "correlationID": "953B7472-0E33-4157-82A2-A3B48DE40CBB",
+          "downstreamTerminal": 19192.13676991667,
+          "firstBody": 19192.136603416668,
+          "firstSend": 19192.136578458336,
+          "httpStatus": 200,
+          "lastBody": 19192.136603416668,
+          "lastSend": 19192.136605958334,
+          "lastSendComplete": 19192.136650666667,
+          "metrics": {
+            "redirectCount": 0,
+            "taskSeconds": 0.0015929937362670898,
+            "transactionCount": 1,
+            "transactions": [
+              {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "durationStates": {
+                  "connectSeconds": 0,
+                  "dnsSeconds": 0,
+                  "fetchSeconds": 0,
+                  "fetchToRequestSeconds": 0,
+                  "requestSeconds": 0,
+                  "responseSeconds": 0,
+                  "responseWaitSeconds": 0,
+                  "tlsSeconds": 3
+                },
+                "fetchSeconds": 0.0012830495834350586,
+                "fetchToRequestSeconds": 0.0009260177612304688,
+                "fetchType": 1,
+                "protocolCode": 1,
+                "requestSeconds": 1.800060272216797e-05,
+                "responseSeconds": 8.702278137207031e-05,
+                "responseWaitSeconds": 0.00025200843811035156,
+                "reused": 0,
+                "tlsSeconds": null,
+                "transportBytes": {
+                  "requestBody": 0,
+                  "requestHeaders": 286,
+                  "responseBody": 2,
+                  "responseHeaders": 63
+                }
+              }
+            ],
+            "truncated": 0,
+            "version": 3
+          },
+          "outcome": 0,
+          "proxyID": "BA4B6B9A-B2CF-46C8-8332-05AD18D0E69C",
+          "requestID": 2,
+          "resourceToken": "9f7bdd20ad8670ce42a01d81a3aa469e67357591e7e6174bc60d6bea04a99ce2",
+          "response": 19192.136564,
+          "sendCompletions": 2,
+          "sendCount": 2,
+          "sendFailures": 0,
+          "sendWaitMax": 4.470833300729282e-05,
+          "sendWaitSum": 7.266666580107994e-05,
+          "sentBodyBytes": 2,
+          "taskComplete": 19192.136762791666,
+          "taskOutcome": 0,
+          "terminal": 19192.136770833335,
+          "upstreamComplete": 19192.1367655,
+          "version": 6
+        }
+      }
+    ],
+    "capabilityAccepted": false,
+    "interpretation": "Controlled boundary observations; list indices are server parses for a task, not per-transaction correspondence. Empty or unknown byte evidence is not zero. No historical cause or acceptance inferred."
+  }
+}

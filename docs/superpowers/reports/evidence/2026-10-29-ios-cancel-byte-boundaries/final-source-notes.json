@@ -1,0 +1,12 @@
+{
+  "base": "524f31a0",
+  "productionTransportChanged": false,
+  "newNativeMethod": "testUnoccupiedProxyCancellationPreservesTransportAndServerEvidence",
+  "canonicalRegistryCases": {"ios": 879, "macos": 923},
+  "selectedFinalMatrixCases": {"ios": 252, "macos": 227},
+  "initialNativeFailure": "New test read existing Double counters as Int; corrected tests, production unchanged. Complete failed xcresult retained.",
+  "reviewP2": "Observer notification may precede delivery cleanup; add capture.wait before ownership assertions. Reviewed fix, final matrices passed.",
+  "sandboxFailure": "Initial socket tool suite could not bind loopback in sandbox; retained 3 failures/33 errors, escalated full rerun 200 passed.",
+  "registryFailure": "Consumer detected +1 new native method; registry increased 878/922 to 879/923, final 45 passed/1 historical skip.",
+  "auxiliaryReplayCorrection": "Initial ad hoc replay compared legacy original error wording with current parser errors; corrected comparison to archived prior reanalysis. Six original captures remain unchanged."
+}

@@ -1,0 +1,57 @@
+{
+  "normal": {
+    "oldPassed": false,
+    "newPassed": false,
+    "errors": [
+      "proxy successful transaction metrics incomplete",
+      "proxy request correlation incomplete"
+    ],
+    "proxyCount": 413,
+    "uncorrelated": 1,
+    "incompleteSuccesses": [
+      {
+        "code": "incomplete-successful-transactions",
+        "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+        "requestID": 4
+      }
+    ],
+    "framesRetained": true,
+    "cliExit": 1,
+    "rawHashesUnchanged": true
+  },
+  "normal-repeat": {
+    "oldPassed": true,
+    "newPassed": true,
+    "errors": [],
+    "proxyCount": 407,
+    "uncorrelated": 0,
+    "incompleteSuccesses": [],
+    "framesRetained": true,
+    "cliExit": 0,
+    "rawHashesUnchanged": true
+  },
+  "normal-third": {
+    "oldPassed": false,
+    "newPassed": false,
+    "errors": [
+      "proxy request correlation incomplete"
+    ],
+    "proxyCount": 416,
+    "uncorrelated": 4,
+    "incompleteSuccesses": [],
+    "framesRetained": true,
+    "cliExit": 1,
+    "rawHashesUnchanged": true
+  },
+  "original": {
+    "oldPassed": true,
+    "newPassed": true,
+    "errors": [],
+    "proxyCount": 344,
+    "uncorrelated": 0,
+    "incompleteSuccesses": [],
+    "framesRetained": true,
+    "cliExit": 0,
+    "rawHashesUnchanged": true
+  }
+}

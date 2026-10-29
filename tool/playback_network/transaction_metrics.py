@@ -7,6 +7,34 @@ DURATIONS = {'fetchSeconds', 'fetchToRequestSeconds', 'dnsSeconds', 'connectSeco
 CORE = ('fetchToRequestSeconds', 'requestSeconds', 'responseWaitSeconds', 'responseSeconds')
 
 
+def _byte_evidence(metrics):
+    """Describe validated Foundation counts, never infer delivery or fill dates."""
+    if metrics is None:
+        availability = 'unavailable'
+    elif metrics['transactionCount'] == 0:
+        availability = 'no-transactions'
+    elif metrics.get('version') != 3:
+        availability = 'legacy'
+    else:
+        availability = 'truncated' if metrics['truncated'] else 'reported'
+
+    def state(header, body):
+        if any(v is not None and v > 0 for v in (header, body)):
+            return 'positive'
+        return 'zero' if header == 0 and body == 0 else 'unknown'
+
+    transactions = []
+    if metrics is not None and metrics.get('version') == 3:
+        for index, item in enumerate(metrics['transactions']):
+            counts = item['transportBytes']
+            transactions.append(dict(index=index,
+                request=state(counts['requestHeaders'], counts['requestBody']),
+                response=state(counts['responseHeaders'], counts['responseBody'])))
+    return dict(availability=availability, transactions=transactions,
+        serverReceiptProven=False, physicalTransmissionProven=False,
+        interpretation='Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates.')
+
+
 def summarize_transactions(metrics):
     def require(ok):
         if not ok:
@@ -19,7 +47,8 @@ def summarize_transactions(metrics):
         return type(value) is int and value >= 0 and (maximum is None or value <= maximum)
 
     if metrics is None:
-        return dict(available=False, complete=False, taskSeconds=None, transactions=[])
+        return dict(available=False, complete=False, taskSeconds=None, transactions=[],
+                    byteEvidence=_byte_evidence(None))
     require(isinstance(metrics, dict))
     v2 = 'version' in metrics
     require(not v2 or (type(metrics['version']) is int and metrics['version'] in (2, 3)))
@@ -61,4 +90,5 @@ def summarize_transactions(metrics):
         if core_present:
             require(math.isclose(item['fetchSeconds'], sum(item[k] for k in CORE), rel_tol=1e-6, abs_tol=1e-6))
         complete = complete and core_present and item['fetchType'] == 1
-    return dict(copy.deepcopy(metrics), available=True, complete=bool(complete))
+    return dict(copy.deepcopy(metrics), available=True, complete=bool(complete),
+                byteEvidence=_byte_evidence(metrics))

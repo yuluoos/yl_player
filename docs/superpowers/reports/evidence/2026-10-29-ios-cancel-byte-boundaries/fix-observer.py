@@ -1,0 +1,4 @@
+from pathlib import Path
+p=Path('tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift');s=p.read_text();a=s.index('  func testUnoccupiedProxyCancellation');b=s.index('  func testProxyRequestTimingRecordsRealCancellation',a);block=s[a:b];block=block.replace('      wait(for: [cancelled], timeout: 3)\n','      wait(for: [cancelled], timeout: 3)\n      // Observer entry precedes delivery cleanup; wait for both before inspecting ownership.\n      XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))\n');s=s[:a]+block+s[b:];p.write_text(s)
+for v in ('ios','macos'):Path(f'packages/yl_player/example/{v}/RunnerTests/YlDashResourceLoaderTests.swift').write_text('@testable import yl_player_media_core\n'+s)
+p=Path('/private/tmp/yl-cancel-byte-boundaries/run.py');s=p.read_text().replace("else n.removesuffix('-repeat')","else ('ios-build' if n.startswith('ios-build') else n)");p.write_text(s)

@@ -928,6 +928,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-transaction-bytes.md",
       "sha256": "136eeaefe7570bc7304b9c77d6cd752ff6ace8629f66282b16e34ea1ec680248",
       "kind": "report"
+    },
+    "ios-cancel-byte-boundaries-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-cancel-byte-boundaries.md",
+      "sha256": "0721209bbf2999849fef5f6ac762b9254933620846e1545e4eac961d5d98b5f4",
+      "kind": "report"
     }
   },
   "rows": [
@@ -972,10 +977,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-transaction-bytes-20261029"
+        "ios-cancel-byte-boundaries-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-foundation-byte-boundaries-cancellation-dual-transaction-root-causes-and-physical-av"
+      "nextAction": "qualify-default-pool-cancellation-historical-double-transaction-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",
