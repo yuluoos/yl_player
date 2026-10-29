@@ -1,0 +1,50 @@
+{
+  "implementation_commit": "73aab34259965686f7d26489286ecc3f6648d984",
+  "candidate_files": 80,
+  "candidate_matches": true,
+  "original_evidence_matches": true,
+  "qualification_rows_unchanged": true,
+  "source_snapshot_unchanged": true,
+  "report_sha256": "e3d12c0bcdfd6cab0d9440152e7b9e576acd78bf45c366aa1340a3c056d16bb4",
+  "inventory_sha256": "5e2b145ded1db0bea81793106455fb345f8c21a8a39262a79a574d4e0d86d30a",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "expected": 0
+    }
+  ],
+  "cleanup": {
+    "branch": "codex/p07-cm4-wire-contracts",
+    "branch_deleted": true,
+    "merged_commit": "73aab34259965686f7d26489286ecc3f6648d984",
+    "worktree": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "worktree_removed": false,
+    "reason": "The task's primary checkout cannot be removed.",
+    "worktree_detached": true,
+    "scope": "only this round; no other worktrees or branches modified"
+  }
+}
