@@ -953,6 +953,11 @@
       "path": "docs/superpowers/reports/2026-10-29-final-media-budget.md",
       "sha256": "e5d3d958d31362487bceb8873b9bdda800a533cf7eb42870ea221b5131cfa655",
       "kind": "report"
+    },
+    "budget-low-cause-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-budget-low-cause.md",
+      "sha256": "269fa62297ce2e1fa4b9988f5ca965ba2bdd1780c53a52c6b49a7c6ca82cecee",
+      "kind": "report"
     }
   },
   "rows": [
@@ -997,10 +1002,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "final-media-budget-20261029"
+        "budget-low-cause-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-exhausted-budget-natural-recovery-continuity-and-historical-dual-transactions"
+      "nextAction": "isolate-high-rendition-request-failure-without-increasing-recovery-budget"
     },
     {
       "requirement": "CAP-ABR",

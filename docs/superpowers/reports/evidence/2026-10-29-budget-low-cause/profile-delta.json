@@ -1,0 +1,14 @@
+{
+  "baselineProfile": "repeat-stall-budget-diagnostic-v1",
+  "controlProfile": "repeat-throttle-budget-diagnostic-v1",
+  "onlyStepDelta": {
+    "index": 3,
+    "field": "bytesPerSecond",
+    "before": 0,
+    "after": 50000
+  },
+  "allOtherStepsEqual": true,
+  "sameBudget": 2,
+  "diagnosticControl": true,
+  "acceptanceThresholdsUnchanged": true
+}

@@ -1,0 +1,2365 @@
+{
+  "previous-budget": {
+    "postInstallOutput": {
+      "lastInstall": 56.82876620833122,
+      "firstHigh": 56.931676583328226,
+      "firstLowAfterHigh": 67.14599249999446,
+      "highAfterLow": null,
+      "postInstallErrorCountTransitions": [
+        {
+          "elapsed": 56.97199383332918,
+          "count": 0,
+          "automaticAttempts": 2
+        },
+        {
+          "elapsed": 62.122057916662015,
+          "count": 2,
+          "automaticAttempts": 2
+        },
+        {
+          "elapsed": 62.38026191665995,
+          "count": 4,
+          "automaticAttempts": 2
+        },
+        {
+          "elapsed": 64.20022829166555,
+          "count": 8,
+          "automaticAttempts": 2
+        }
+      ]
+    },
+    "renditions": {
+      "0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      },
+      "1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "2": {
+        "width": 0,
+        "mimeType": "audio/mp4"
+      },
+      "second-1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "second-0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      }
+    },
+    "serverClockPhases": [
+      {
+        "startMs": 0,
+        "endMs": 60000,
+        "requestCounts": {
+          "manifest": 2,
+          "audio": 118,
+          "high": 45,
+          "low": 59
+        },
+        "outcomes": {
+          "complete": 223,
+          "client_io_error": 1
+        },
+        "highRequests": [
+          {
+            "requestId": 2,
+            "asset": "network-period-0/init-1.m4s",
+            "startMs": 368.196458,
+            "endMs": 417.505791,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 4,
+            "asset": "network-period-0/chunk-1-00001.m4s",
+            "startMs": 371.947708,
+            "endMs": 507.877833,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 7,
+            "asset": "network-period-0/chunk-1-00002.m4s",
+            "startMs": 525.961875,
+            "endMs": 708.739375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 11,
+            "asset": "network-period-0/chunk-1-00003.m4s",
+            "startMs": 730.490958,
+            "endMs": 959.958583,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 16,
+            "asset": "network-period-0/chunk-1-00004.m4s",
+            "startMs": 993.990166,
+            "endMs": 1259.758666,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 19,
+            "asset": "network-period-1/init-1.m4s",
+            "startMs": 1285.87725,
+            "endMs": 1329.427666,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 20,
+            "asset": "network-period-1/chunk-1-00001.m4s",
+            "startMs": 1287.575541,
+            "endMs": 1396.899833,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 24,
+            "asset": "network-period-1/chunk-1-00002.m4s",
+            "startMs": 1441.428,
+            "endMs": 1632.595875,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 27,
+            "asset": "network-period-1/chunk-1-00003.m4s",
+            "startMs": 1696.490041,
+            "endMs": 1913.175541,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 29,
+            "asset": "network-period-1/chunk-1-00004.m4s",
+            "startMs": 1938.307541,
+            "endMs": 2160.137583,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 31,
+            "asset": "network-period-2/init-1.m4s",
+            "startMs": 2190.15925,
+            "endMs": 2238.034208,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 30,
+            "asset": "network-period-2/chunk-1-00001.m4s",
+            "startMs": 2189.848583,
+            "endMs": 2303.252291,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 32,
+            "asset": "network-period-2/chunk-1-00002.m4s",
+            "startMs": 2343.67425,
+            "endMs": 2508.935666,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 33,
+            "asset": "network-period-2/chunk-1-00003.m4s",
+            "startMs": 2533.530333,
+            "endMs": 2737.992333,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 35,
+            "asset": "network-period-2/chunk-1-00004.m4s",
+            "startMs": 2763.003375,
+            "endMs": 3007.077041,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 38,
+            "asset": "network-period-3/init-1.m4s",
+            "startMs": 3036.468708,
+            "endMs": 3081.013791,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 39,
+            "asset": "network-period-3/chunk-1-00001.m4s",
+            "startMs": 3037.028125,
+            "endMs": 3147.331958,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 41,
+            "asset": "network-period-3/chunk-1-00002.m4s",
+            "startMs": 3758.014916,
+            "endMs": 3928.625333,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 43,
+            "asset": "network-period-3/chunk-1-00003.m4s",
+            "startMs": 4757.3225,
+            "endMs": 4968.955958,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 45,
+            "asset": "network-period-3/chunk-1-00004.m4s",
+            "startMs": 5759.343833,
+            "endMs": 5998.488625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 48,
+            "asset": "network-period-4/init-1.m4s",
+            "startMs": 6761.717541,
+            "endMs": 6809.417791,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 47,
+            "asset": "network-period-4/chunk-1-00001.m4s",
+            "startMs": 6760.3855,
+            "endMs": 6871.181791,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 51,
+            "asset": "network-period-4/chunk-1-00002.m4s",
+            "startMs": 7762.255041,
+            "endMs": 7946.503708,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 54,
+            "asset": "network-period-4/chunk-1-00003.m4s",
+            "startMs": 8789.525791,
+            "endMs": 8993.747125,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 56,
+            "asset": "network-period-4/chunk-1-00004.m4s",
+            "startMs": 9761.04425,
+            "endMs": 9997.848458,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 58,
+            "asset": "network-period-5/init-1.m4s",
+            "startMs": 10763.353583,
+            "endMs": 15005.405041,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 60,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "startMs": 12767.368625,
+            "endMs": 15048.370916,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 59,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "startMs": 10764.224708,
+            "endMs": 15049.604541,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 188,
+            "asset": "network-period-13/init-1.m4s",
+            "startMs": 56863.695958,
+            "endMs": 56864.717708,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 189,
+            "asset": "network-period-13/chunk-1-00003.m4s",
+            "startMs": 56864.103666,
+            "endMs": 56921.876416,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 194,
+            "asset": "network-period-13/chunk-1-00004.m4s",
+            "startMs": 56938.617708,
+            "endMs": 56999.73725,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 198,
+            "asset": "network-period-14/init-1.m4s",
+            "startMs": 57034.642958,
+            "endMs": 57035.594041,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 199,
+            "asset": "network-period-14/chunk-1-00001.m4s",
+            "startMs": 57040.51075,
+            "endMs": 57066.108375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 202,
+            "asset": "network-period-14/chunk-1-00002.m4s",
+            "startMs": 57097.645,
+            "endMs": 57131.913166,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 206,
+            "asset": "network-period-14/chunk-1-00003.m4s",
+            "startMs": 57154.920083,
+            "endMs": 57210.642875,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 210,
+            "asset": "network-period-14/chunk-1-00004.m4s",
+            "startMs": 57227.995416,
+            "endMs": 57286.35675,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 214,
+            "asset": "network-period-15/init-1.m4s",
+            "startMs": 57309.838916,
+            "endMs": 57311.035041,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 215,
+            "asset": "network-period-15/chunk-1-00001.m4s",
+            "startMs": 57310.585916,
+            "endMs": 57328.546375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 216,
+            "asset": "network-period-15/chunk-1-00002.m4s",
+            "startMs": 57365.555208,
+            "endMs": 57398.868,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 217,
+            "asset": "network-period-15/chunk-1-00003.m4s",
+            "startMs": 57419.606041,
+            "endMs": 57463.027458,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 218,
+            "asset": "network-period-15/chunk-1-00004.m4s",
+            "startMs": 57490.468458,
+            "endMs": 57540.851125,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 219,
+            "asset": "network-period-16/init-1.m4s",
+            "startMs": 57570.177791,
+            "endMs": 57570.958375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 220,
+            "asset": "network-period-16/chunk-1-00001.m4s",
+            "startMs": 57570.896625,
+            "endMs": 57588.542416,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 222,
+            "asset": "network-period-16/chunk-1-00002.m4s",
+            "startMs": 58113.954875,
+            "endMs": 58147.911666,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 224,
+            "asset": "network-period-16/chunk-1-00003.m4s",
+            "startMs": 59134.894,
+            "endMs": 59179.867541,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 60000,
+        "endMs": 65000,
+        "requestCounts": {
+          "low": 2,
+          "audio": 2,
+          "high": 1
+        },
+        "outcomes": {
+          "complete": 5
+        },
+        "highRequests": [
+          {
+            "requestId": 226,
+            "asset": "network-period-16/chunk-1-00004.m4s",
+            "startMs": 60108.326875,
+            "endMs": 65073.831958,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 65000,
+        "endMs": 90000,
+        "requestCounts": {
+          "low": 42,
+          "audio": 46
+        },
+        "outcomes": {
+          "complete": 88
+        },
+        "highRequests": []
+      },
+      {
+        "startMs": 90000,
+        "endMs": null,
+        "requestCounts": {
+          "audio": 34,
+          "low": 28
+        },
+        "outcomes": {
+          "complete": 62
+        },
+        "highRequests": []
+      }
+    ],
+    "deviceClockErrorCountTransitions": [
+      {
+        "elapsed": 0.35641966666298686,
+        "count": 0,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 12.805901833329699,
+        "count": 4,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 13.058727166666358,
+        "count": 5,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 14.867738499997358,
+        "count": 8,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 56.97199383332918,
+        "count": 0,
+        "automaticAttempts": 2
+      },
+      {
+        "elapsed": 62.122057916662015,
+        "count": 2,
+        "automaticAttempts": 2
+      },
+      {
+        "elapsed": 62.38026191665995,
+        "count": 4,
+        "automaticAttempts": 2
+      },
+      {
+        "elapsed": 64.20022829166555,
+        "count": 8,
+        "automaticAttempts": 2
+      }
+    ],
+    "allSamplesUnconstrained": true,
+    "lastHighServerRequest": 60108.326875,
+    "tail90Seconds": {
+      "publishedFrames": 795,
+      "widths": [
+        320
+      ],
+      "positions": [
+        86.878674046,
+        119.970852084
+      ],
+      "generations": [
+        1
+      ]
+    },
+    "finalWidth": 320,
+    "finalPosition": 120.025593411,
+    "completed": true,
+    "attempts": 2,
+    "installed": 1,
+    "policyReasons": {
+      "playbackIneligible": 11,
+      "insufficientBuffer": 51,
+      "highOutput": 95,
+      "windowStarted": 2,
+      "windowPending": 126,
+      "firstQualifiedWindow": 2,
+      "reserved": 2,
+      "backoff": 3,
+      "ticketReady": 1,
+      "budgetExhausted": 139,
+      "nearEnd": 60
+    },
+    "strictPassed": false,
+    "allProxyRequestsCorrelated": true,
+    "clockNote": "Server profile timestamps and device elapsed timestamps are separate clock domains; no direct subtraction or precise cross-clock onset claim.",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false
+  },
+  "budget-stall": {
+    "postInstallOutput": {
+      "lastInstall": 56.82925270832493,
+      "firstHigh": 57.486174791658414,
+      "firstLowAfterHigh": 67.11205837500165,
+      "highAfterLow": null,
+      "postInstallErrorCountTransitions": [
+        {
+          "elapsed": 57.06761012499919,
+          "count": 0,
+          "automaticAttempts": 2
+        },
+        {
+          "elapsed": 62.23675329166872,
+          "count": 4,
+          "automaticAttempts": 2
+        },
+        {
+          "elapsed": 64.30830374998914,
+          "count": 8,
+          "automaticAttempts": 2
+        }
+      ]
+    },
+    "renditions": {
+      "0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      },
+      "1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "2": {
+        "width": 0,
+        "mimeType": "audio/mp4"
+      },
+      "second-1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "second-0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      }
+    },
+    "serverClockPhases": [
+      {
+        "startMs": 0,
+        "endMs": 60000,
+        "requestCounts": {
+          "manifest": 2,
+          "low": 72,
+          "audio": 118,
+          "high": 40
+        },
+        "outcomes": {
+          "complete": 228,
+          "client_io_error": 4
+        },
+        "highRequests": [
+          {
+            "requestId": 29,
+            "asset": "network-period-1/init-1.m4s",
+            "startMs": 1690.87225,
+            "endMs": 1734.817167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 30,
+            "asset": "network-period-1/chunk-1-00001.m4s",
+            "startMs": 1691.376167,
+            "endMs": 1813.209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 32,
+            "asset": "network-period-1/chunk-1-00002.m4s",
+            "startMs": 1837.668833,
+            "endMs": 1999.623,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 33,
+            "asset": "network-period-1/chunk-1-00003.m4s",
+            "startMs": 2025.610042,
+            "endMs": 2231.487583,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 34,
+            "asset": "network-period-1/chunk-1-00004.m4s",
+            "startMs": 2256.472625,
+            "endMs": 2484.397542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 35,
+            "asset": "network-period-2/init-1.m4s",
+            "startMs": 2508.336667,
+            "endMs": 2556.402583,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 36,
+            "asset": "network-period-2/chunk-1-00001.m4s",
+            "startMs": 2508.991167,
+            "endMs": 2623.446833,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 37,
+            "asset": "network-period-2/chunk-1-00002.m4s",
+            "startMs": 2667.300583,
+            "endMs": 2833.336625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 41,
+            "asset": "network-period-2/chunk-1-00003.m4s",
+            "startMs": 2857.618042,
+            "endMs": 3063.029958,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 42,
+            "asset": "network-period-2/chunk-1-00004.m4s",
+            "startMs": 3104.580125,
+            "endMs": 3324.426125,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 44,
+            "asset": "network-period-3/init-1.m4s",
+            "startMs": 3348.834125,
+            "endMs": 3396.525042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 43,
+            "asset": "network-period-3/chunk-1-00001.m4s",
+            "startMs": 3348.597458,
+            "endMs": 3463.418125,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 46,
+            "asset": "network-period-3/chunk-1-00002.m4s",
+            "startMs": 3754.278667,
+            "endMs": 3918.468125,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 48,
+            "asset": "network-period-3/chunk-1-00003.m4s",
+            "startMs": 4773.545208,
+            "endMs": 4978.6285,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 50,
+            "asset": "network-period-3/chunk-1-00004.m4s",
+            "startMs": 5754.980667,
+            "endMs": 5989.680417,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 52,
+            "asset": "network-period-4/init-1.m4s",
+            "startMs": 6753.590625,
+            "endMs": 6802.166333,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 53,
+            "asset": "network-period-4/chunk-1-00001.m4s",
+            "startMs": 6754.447583,
+            "endMs": 6878.538792,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 56,
+            "asset": "network-period-4/chunk-1-00002.m4s",
+            "startMs": 7757.164333,
+            "endMs": 7944.192375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 59,
+            "asset": "network-period-4/chunk-1-00003.m4s",
+            "startMs": 8782.270833,
+            "endMs": 8976.449167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 61,
+            "asset": "network-period-4/chunk-1-00004.m4s",
+            "startMs": 9754.60525,
+            "endMs": 9984.696167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 63,
+            "asset": "network-period-5/init-1.m4s",
+            "startMs": 10751.80825,
+            "endMs": 15004.093417,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 64,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "startMs": 10756.874625,
+            "endMs": 15019.3715,
+            "outcome": "client_io_error"
+          },
+          {
+            "requestId": 65,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "startMs": 12770.65425,
+            "endMs": 15020.679375,
+            "outcome": "client_io_error"
+          },
+          {
+            "requestId": 200,
+            "asset": "network-period-13/init-1.m4s",
+            "startMs": 57014.053792,
+            "endMs": 57014.832042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 201,
+            "asset": "network-period-13/chunk-1-00003.m4s",
+            "startMs": 57014.236667,
+            "endMs": 57069.648375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 206,
+            "asset": "network-period-13/chunk-1-00004.m4s",
+            "startMs": 57085.352958,
+            "endMs": 57140.320833,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 209,
+            "asset": "network-period-14/init-1.m4s",
+            "startMs": 57165.698958,
+            "endMs": 57166.461875,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 210,
+            "asset": "network-period-14/chunk-1-00001.m4s",
+            "startMs": 57165.98875,
+            "endMs": 57190.812208,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 214,
+            "asset": "network-period-14/chunk-1-00002.m4s",
+            "startMs": 57212.110833,
+            "endMs": 57259.673167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 216,
+            "asset": "network-period-14/chunk-1-00003.m4s",
+            "startMs": 57283.762042,
+            "endMs": 57330.165083,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 221,
+            "asset": "network-period-14/chunk-1-00004.m4s",
+            "startMs": 57355.835458,
+            "endMs": 57401.962875,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 222,
+            "asset": "network-period-15/init-1.m4s",
+            "startMs": 57434.848583,
+            "endMs": 57435.71075,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 223,
+            "asset": "network-period-15/chunk-1-00001.m4s",
+            "startMs": 57435.087542,
+            "endMs": 57452.281333,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 224,
+            "asset": "network-period-15/chunk-1-00002.m4s",
+            "startMs": 57496.755458,
+            "endMs": 57528.678042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 225,
+            "asset": "network-period-15/chunk-1-00003.m4s",
+            "startMs": 57576.71575,
+            "endMs": 57617.289167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 226,
+            "asset": "network-period-15/chunk-1-00004.m4s",
+            "startMs": 57642.061417,
+            "endMs": 57687.531792,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 227,
+            "asset": "network-period-16/init-1.m4s",
+            "startMs": 57719.417333,
+            "endMs": 57720.064042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 228,
+            "asset": "network-period-16/chunk-1-00001.m4s",
+            "startMs": 57719.563125,
+            "endMs": 57736.943125,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 230,
+            "asset": "network-period-16/chunk-1-00002.m4s",
+            "startMs": 58087.129583,
+            "endMs": 58118.683708,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 232,
+            "asset": "network-period-16/chunk-1-00003.m4s",
+            "startMs": 59111.705792,
+            "endMs": 59154.470125,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 60000,
+        "endMs": 65000,
+        "requestCounts": {
+          "low": 2,
+          "audio": 2,
+          "high": 1
+        },
+        "outcomes": {
+          "complete": 5
+        },
+        "highRequests": [
+          {
+            "requestId": 234,
+            "asset": "network-period-16/chunk-1-00004.m4s",
+            "startMs": 60080.14775,
+            "endMs": 65069.734458,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 65000,
+        "endMs": 90000,
+        "requestCounts": {
+          "low": 42,
+          "audio": 46
+        },
+        "outcomes": {
+          "complete": 88
+        },
+        "highRequests": []
+      },
+      {
+        "startMs": 90000,
+        "endMs": null,
+        "requestCounts": {
+          "audio": 34,
+          "low": 28
+        },
+        "outcomes": {
+          "complete": 62
+        },
+        "highRequests": []
+      }
+    ],
+    "deviceClockErrorCountTransitions": [
+      {
+        "elapsed": 0.35180566666531377,
+        "count": 0,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 12.798943708330626,
+        "count": 4,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 13.053741708325106,
+        "count": 5,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 14.876530208333861,
+        "count": 8,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 57.06761012499919,
+        "count": 0,
+        "automaticAttempts": 2
+      },
+      {
+        "elapsed": 62.23675329166872,
+        "count": 4,
+        "automaticAttempts": 2
+      },
+      {
+        "elapsed": 64.30830374998914,
+        "count": 8,
+        "automaticAttempts": 2
+      }
+    ],
+    "allSamplesUnconstrained": true,
+    "lastHighServerRequest": 60080.14775,
+    "tail90Seconds": {
+      "publishedFrames": 794,
+      "widths": [
+        320
+      ],
+      "positions": [
+        86.929035165,
+        119.968405015
+      ],
+      "generations": [
+        1
+      ]
+    },
+    "finalWidth": 320,
+    "finalPosition": 120.02831844,
+    "completed": true,
+    "attempts": 2,
+    "installed": 1,
+    "policyReasons": {
+      "playbackIneligible": 11,
+      "insufficientBuffer": 51,
+      "highNotObserved": 13,
+      "highOutput": 82,
+      "windowStarted": 2,
+      "windowPending": 125,
+      "firstQualifiedWindow": 2,
+      "reserved": 2,
+      "backoff": 4,
+      "ticketReady": 1,
+      "budgetExhausted": 139,
+      "nearEnd": 60
+    },
+    "strictPassed": false,
+    "allProxyRequestsCorrelated": true,
+    "clockNote": "Server profile timestamps and device elapsed timestamps are separate clock domains; no direct subtraction or precise cross-clock onset claim.",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false
+  },
+  "budget-throttle": {
+    "postInstallOutput": {
+      "lastInstall": 54.33032487500168,
+      "firstHigh": 55.28751120832749,
+      "firstLowAfterHigh": 67.27527275000466,
+      "highAfterLow": null,
+      "postInstallErrorCountTransitions": [
+        {
+          "elapsed": 54.52750083334104,
+          "count": 0,
+          "automaticAttempts": 2
+        },
+        {
+          "elapsed": 62.28830404166365,
+          "count": 1,
+          "automaticAttempts": 2
+        }
+      ]
+    },
+    "renditions": {
+      "0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      },
+      "1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "2": {
+        "width": 0,
+        "mimeType": "audio/mp4"
+      },
+      "second-1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "second-0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      }
+    },
+    "serverClockPhases": [
+      {
+        "startMs": 0,
+        "endMs": 60000,
+        "requestCounts": {
+          "manifest": 2,
+          "low": 72,
+          "audio": 120,
+          "high": 39
+        },
+        "outcomes": {
+          "complete": 231,
+          "client_io_error": 2
+        },
+        "highRequests": [
+          {
+            "requestId": 21,
+            "asset": "network-period-1/init-1.m4s",
+            "startMs": 1837.948584,
+            "endMs": 1886.332667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 22,
+            "asset": "network-period-1/chunk-1-00001.m4s",
+            "startMs": 1843.407834,
+            "endMs": 2000.690167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 26,
+            "asset": "network-period-1/chunk-1-00002.m4s",
+            "startMs": 2048.248084,
+            "endMs": 2365.104,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 29,
+            "asset": "network-period-1/chunk-1-00003.m4s",
+            "startMs": 2388.832375,
+            "endMs": 2631.055375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 31,
+            "asset": "network-period-1/chunk-1-00004.m4s",
+            "startMs": 2656.689417,
+            "endMs": 2879.278042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 32,
+            "asset": "network-period-2/init-1.m4s",
+            "startMs": 2937.191417,
+            "endMs": 2986.87625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 33,
+            "asset": "network-period-2/chunk-1-00001.m4s",
+            "startMs": 2937.426084,
+            "endMs": 3052.710667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 37,
+            "asset": "network-period-2/chunk-1-00002.m4s",
+            "startMs": 3094.830375,
+            "endMs": 3257.678459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 38,
+            "asset": "network-period-2/chunk-1-00003.m4s",
+            "startMs": 3280.691959,
+            "endMs": 3523.887209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 39,
+            "asset": "network-period-2/chunk-1-00004.m4s",
+            "startMs": 3548.218584,
+            "endMs": 3802.355459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 40,
+            "asset": "network-period-3/init-1.m4s",
+            "startMs": 3850.814459,
+            "endMs": 3899.253459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 41,
+            "asset": "network-period-3/chunk-1-00001.m4s",
+            "startMs": 3851.012,
+            "endMs": 3981.035,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 43,
+            "asset": "network-period-3/chunk-1-00002.m4s",
+            "startMs": 4030.63425,
+            "endMs": 4236.226834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 45,
+            "asset": "network-period-3/chunk-1-00003.m4s",
+            "startMs": 5028.671792,
+            "endMs": 5268.610917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 47,
+            "asset": "network-period-3/chunk-1-00004.m4s",
+            "startMs": 6007.325125,
+            "endMs": 6277.545042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 49,
+            "asset": "network-period-4/init-1.m4s",
+            "startMs": 7010.269625,
+            "endMs": 7053.682625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 50,
+            "asset": "network-period-4/chunk-1-00001.m4s",
+            "startMs": 7011.0375,
+            "endMs": 7126.256834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 53,
+            "asset": "network-period-4/chunk-1-00002.m4s",
+            "startMs": 8014.699875,
+            "endMs": 8199.712917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 56,
+            "asset": "network-period-4/chunk-1-00003.m4s",
+            "startMs": 9059.16725,
+            "endMs": 9253.434667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 58,
+            "asset": "network-period-4/chunk-1-00004.m4s",
+            "startMs": 10021.847417,
+            "endMs": 15029.237042,
+            "outcome": "client_io_error"
+          },
+          {
+            "requestId": 196,
+            "asset": "network-period-13/init-1.m4s",
+            "startMs": 54477.800875,
+            "endMs": 54478.538834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 197,
+            "asset": "network-period-13/chunk-1-00001.m4s",
+            "startMs": 54478.06825,
+            "endMs": 54495.4465,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 199,
+            "asset": "network-period-13/chunk-1-00002.m4s",
+            "startMs": 54537.218292,
+            "endMs": 54573.9305,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 204,
+            "asset": "network-period-13/chunk-1-00003.m4s",
+            "startMs": 54592.813125,
+            "endMs": 54644.719459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 207,
+            "asset": "network-period-13/chunk-1-00004.m4s",
+            "startMs": 54666.629792,
+            "endMs": 54718.4175,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 210,
+            "asset": "network-period-14/init-1.m4s",
+            "startMs": 54738.627792,
+            "endMs": 54739.299209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 211,
+            "asset": "network-period-14/chunk-1-00001.m4s",
+            "startMs": 54741.240542,
+            "endMs": 54763.939334,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 215,
+            "asset": "network-period-14/chunk-1-00002.m4s",
+            "startMs": 54796.8115,
+            "endMs": 54827.975042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 216,
+            "asset": "network-period-14/chunk-1-00003.m4s",
+            "startMs": 54856.346375,
+            "endMs": 54912.940917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 217,
+            "asset": "network-period-14/chunk-1-00004.m4s",
+            "startMs": 54937.2175,
+            "endMs": 54982.464917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 218,
+            "asset": "network-period-15/init-1.m4s",
+            "startMs": 55018.77025,
+            "endMs": 55019.658959,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 219,
+            "asset": "network-period-15/chunk-1-00001.m4s",
+            "startMs": 55020.156959,
+            "endMs": 55036.9885,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 220,
+            "asset": "network-period-15/chunk-1-00002.m4s",
+            "startMs": 55086.594,
+            "endMs": 55116.68425,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 222,
+            "asset": "network-period-15/chunk-1-00003.m4s",
+            "startMs": 55272.775084,
+            "endMs": 55332.079834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 224,
+            "asset": "network-period-15/chunk-1-00004.m4s",
+            "startMs": 56293.122459,
+            "endMs": 56338.0285,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 226,
+            "asset": "network-period-16/init-1.m4s",
+            "startMs": 57247.139584,
+            "endMs": 57247.713042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 227,
+            "asset": "network-period-16/chunk-1-00001.m4s",
+            "startMs": 57274.279084,
+            "endMs": 57297.16075,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 230,
+            "asset": "network-period-16/chunk-1-00002.m4s",
+            "startMs": 58251.6795,
+            "endMs": 58287.757834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 233,
+            "asset": "network-period-16/chunk-1-00003.m4s",
+            "startMs": 59275.906209,
+            "endMs": 59323.986667,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 60000,
+        "endMs": 65000,
+        "requestCounts": {
+          "audio": 7,
+          "high": 1,
+          "low": 5
+        },
+        "outcomes": {
+          "complete": 13
+        },
+        "highRequests": [
+          {
+            "requestId": 235,
+            "asset": "network-period-16/chunk-1-00004.m4s",
+            "startMs": 60266.21575,
+            "endMs": 62280.129084,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 65000,
+        "endMs": 90000,
+        "requestCounts": {
+          "low": 37,
+          "audio": 39
+        },
+        "outcomes": {
+          "complete": 76
+        },
+        "highRequests": []
+      },
+      {
+        "startMs": 90000,
+        "endMs": null,
+        "requestCounts": {
+          "audio": 34,
+          "low": 28
+        },
+        "outcomes": {
+          "complete": 62
+        },
+        "highRequests": []
+      }
+    ],
+    "deviceClockErrorCountTransitions": [
+      {
+        "elapsed": 0.4605912499973783,
+        "count": 0,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 12.12822737499664,
+        "count": 4,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 14.195193374995142,
+        "count": 8,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 54.52750083334104,
+        "count": 0,
+        "automaticAttempts": 2
+      },
+      {
+        "elapsed": 62.28830404166365,
+        "count": 1,
+        "automaticAttempts": 2
+      }
+    ],
+    "allSamplesUnconstrained": true,
+    "lastHighServerRequest": 60266.21575,
+    "tail90Seconds": {
+      "publishedFrames": 798,
+      "widths": [
+        320
+      ],
+      "positions": [
+        86.759256072,
+        119.966680665
+      ],
+      "generations": [
+        1
+      ]
+    },
+    "finalWidth": 320,
+    "finalPosition": 120.028338744,
+    "completed": true,
+    "attempts": 2,
+    "installed": 1,
+    "policyReasons": {
+      "playbackIneligible": 10,
+      "insufficientBuffer": 44,
+      "highNotObserved": 12,
+      "highOutput": 86,
+      "windowStarted": 2,
+      "windowPending": 125,
+      "firstQualifiedWindow": 2,
+      "reserved": 2,
+      "backoff": 4,
+      "ticketReady": 1,
+      "budgetExhausted": 144,
+      "nearEnd": 60
+    },
+    "strictPassed": false,
+    "allProxyRequestsCorrelated": true,
+    "clockNote": "Server profile timestamps and device elapsed timestamps are separate clock domains; no direct subtraction or precise cross-clock onset claim.",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false
+  },
+  "normal": {
+    "postInstallOutput": {
+      "lastInstall": 86.57724383332243,
+      "firstHigh": 87.21729770832462,
+      "firstLowAfterHigh": null,
+      "highAfterLow": null,
+      "postInstallErrorCountTransitions": [
+        {
+          "elapsed": 86.70739045832306,
+          "count": 0,
+          "automaticAttempts": 2
+        }
+      ]
+    },
+    "renditions": {
+      "0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      },
+      "1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "2": {
+        "width": 0,
+        "mimeType": "audio/mp4"
+      },
+      "second-1": {
+        "width": 640,
+        "mimeType": "video/mp4"
+      },
+      "second-0": {
+        "width": 320,
+        "mimeType": "video/mp4"
+      }
+    },
+    "serverClockPhases": [
+      {
+        "startMs": 0,
+        "endMs": 60000,
+        "requestCounts": {
+          "manifest": 2,
+          "low": 50,
+          "audio": 123,
+          "high": 65
+        },
+        "outcomes": {
+          "complete": 236,
+          "client_io_error": 4
+        },
+        "highRequests": [
+          {
+            "requestId": 29,
+            "asset": "network-period-1/init-1.m4s",
+            "startMs": 1714.647917,
+            "endMs": 1764.45325,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 30,
+            "asset": "network-period-1/chunk-1-00001.m4s",
+            "startMs": 1715.3575,
+            "endMs": 1871.320917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 32,
+            "asset": "network-period-1/chunk-1-00002.m4s",
+            "startMs": 1897.464334,
+            "endMs": 2068.586834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 33,
+            "asset": "network-period-1/chunk-1-00003.m4s",
+            "startMs": 2095.549834,
+            "endMs": 2291.645167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 34,
+            "asset": "network-period-1/chunk-1-00004.m4s",
+            "startMs": 2319.806459,
+            "endMs": 2536.981917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 36,
+            "asset": "network-period-2/init-1.m4s",
+            "startMs": 2605.828042,
+            "endMs": 2650.915542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 35,
+            "asset": "network-period-2/chunk-1-00001.m4s",
+            "startMs": 2605.708334,
+            "endMs": 2713.198459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 38,
+            "asset": "network-period-2/chunk-1-00002.m4s",
+            "startMs": 2753.802417,
+            "endMs": 2940.158542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 41,
+            "asset": "network-period-2/chunk-1-00003.m4s",
+            "startMs": 2963.190167,
+            "endMs": 3174.476292,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 42,
+            "asset": "network-period-2/chunk-1-00004.m4s",
+            "startMs": 3224.780792,
+            "endMs": 3455.722834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 44,
+            "asset": "network-period-3/init-1.m4s",
+            "startMs": 3481.166125,
+            "endMs": 3527.492,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 43,
+            "asset": "network-period-3/chunk-1-00001.m4s",
+            "startMs": 3480.597542,
+            "endMs": 3597.333542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 46,
+            "asset": "network-period-3/chunk-1-00002.m4s",
+            "startMs": 3761.237834,
+            "endMs": 3933.293292,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 48,
+            "asset": "network-period-3/chunk-1-00003.m4s",
+            "startMs": 4782.36175,
+            "endMs": 4988.957667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 50,
+            "asset": "network-period-3/chunk-1-00004.m4s",
+            "startMs": 5762.860167,
+            "endMs": 5997.586084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 52,
+            "asset": "network-period-4/init-1.m4s",
+            "startMs": 6763.010334,
+            "endMs": 6811.095917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 53,
+            "asset": "network-period-4/chunk-1-00001.m4s",
+            "startMs": 6763.280625,
+            "endMs": 6877.882917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 56,
+            "asset": "network-period-4/chunk-1-00002.m4s",
+            "startMs": 7799.001375,
+            "endMs": 7988.230667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 59,
+            "asset": "network-period-4/chunk-1-00003.m4s",
+            "startMs": 8792.507667,
+            "endMs": 9001.574667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 61,
+            "asset": "network-period-4/chunk-1-00004.m4s",
+            "startMs": 9765.146042,
+            "endMs": 9999.196792,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 63,
+            "asset": "network-period-5/init-1.m4s",
+            "startMs": 10764.041709,
+            "endMs": 15002.706,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 64,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "startMs": 10764.947084,
+            "endMs": 15023.460334,
+            "outcome": "client_io_error"
+          },
+          {
+            "requestId": 65,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "startMs": 12768.463417,
+            "endMs": 15024.74425,
+            "outcome": "client_io_error"
+          },
+          {
+            "requestId": 153,
+            "asset": "network-period-9/init-1.m4s",
+            "startMs": 37944.951875,
+            "endMs": 37945.5905,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 154,
+            "asset": "network-period-9/chunk-1-00002.m4s",
+            "startMs": 37947.314834,
+            "endMs": 37983.675042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 159,
+            "asset": "network-period-9/chunk-1-00003.m4s",
+            "startMs": 38001.876459,
+            "endMs": 38049.958625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 162,
+            "asset": "network-period-9/chunk-1-00004.m4s",
+            "startMs": 38065.889292,
+            "endMs": 38122.434084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 166,
+            "asset": "network-period-10/init-1.m4s",
+            "startMs": 38148.385625,
+            "endMs": 38148.983042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 167,
+            "asset": "network-period-10/chunk-1-00001.m4s",
+            "startMs": 38148.587917,
+            "endMs": 38171.193292,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 171,
+            "asset": "network-period-10/chunk-1-00002.m4s",
+            "startMs": 38204.426334,
+            "endMs": 38242.50525,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 172,
+            "asset": "network-period-10/chunk-1-00003.m4s",
+            "startMs": 38280.527167,
+            "endMs": 38322.183084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 173,
+            "asset": "network-period-10/chunk-1-00004.m4s",
+            "startMs": 38342.304042,
+            "endMs": 38387.204542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 174,
+            "asset": "network-period-11/init-1.m4s",
+            "startMs": 38412.738834,
+            "endMs": 38413.37575,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 175,
+            "asset": "network-period-11/chunk-1-00001.m4s",
+            "startMs": 38413.728125,
+            "endMs": 38430.617792,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 176,
+            "asset": "network-period-11/chunk-1-00002.m4s",
+            "startMs": 38470.84675,
+            "endMs": 38503.226417,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 177,
+            "asset": "network-period-11/chunk-1-00003.m4s",
+            "startMs": 38526.615167,
+            "endMs": 38568.286459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 178,
+            "asset": "network-period-11/chunk-1-00004.m4s",
+            "startMs": 38591.969209,
+            "endMs": 38637.2355,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 180,
+            "asset": "network-period-12/init-1.m4s",
+            "startMs": 38978.032625,
+            "endMs": 38978.825709,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 181,
+            "asset": "network-period-12/chunk-1-00001.m4s",
+            "startMs": 38979.322875,
+            "endMs": 38996.603834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 184,
+            "asset": "network-period-12/chunk-1-00002.m4s",
+            "startMs": 39982.556,
+            "endMs": 40019.317209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 187,
+            "asset": "network-period-12/chunk-1-00003.m4s",
+            "startMs": 41021.017875,
+            "endMs": 41061.244084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 189,
+            "asset": "network-period-12/chunk-1-00004.m4s",
+            "startMs": 41980.559334,
+            "endMs": 42025.817709,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 191,
+            "asset": "network-period-13/init-1.m4s",
+            "startMs": 42980.186542,
+            "endMs": 42981.368292,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 192,
+            "asset": "network-period-13/chunk-1-00001.m4s",
+            "startMs": 42980.545375,
+            "endMs": 43002.842917,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 195,
+            "asset": "network-period-13/chunk-1-00002.m4s",
+            "startMs": 43987.284709,
+            "endMs": 44026.348834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 198,
+            "asset": "network-period-13/chunk-1-00003.m4s",
+            "startMs": 44994.158542,
+            "endMs": 45037.379209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 200,
+            "asset": "network-period-13/chunk-1-00004.m4s",
+            "startMs": 45977.966667,
+            "endMs": 46030.025334,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 202,
+            "asset": "network-period-14/init-1.m4s",
+            "startMs": 46986.172542,
+            "endMs": 46987.184709,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 203,
+            "asset": "network-period-14/chunk-1-00001.m4s",
+            "startMs": 46993.135084,
+            "endMs": 47011.329209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 207,
+            "asset": "network-period-14/chunk-1-00002.m4s",
+            "startMs": 47985.162125,
+            "endMs": 48025.479375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 209,
+            "asset": "network-period-14/chunk-1-00003.m4s",
+            "startMs": 48985.749959,
+            "endMs": 49027.94625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 211,
+            "asset": "network-period-14/chunk-1-00004.m4s",
+            "startMs": 49976.589125,
+            "endMs": 50025.916084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 213,
+            "asset": "network-period-15/init-1.m4s",
+            "startMs": 50978.84575,
+            "endMs": 50980.012417,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 214,
+            "asset": "network-period-15/chunk-1-00001.m4s",
+            "startMs": 50979.742125,
+            "endMs": 50998.802084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 218,
+            "asset": "network-period-15/chunk-1-00002.m4s",
+            "startMs": 51987.042417,
+            "endMs": 52026.822375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 220,
+            "asset": "network-period-15/chunk-1-00003.m4s",
+            "startMs": 52979.645542,
+            "endMs": 53032.651167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 222,
+            "asset": "network-period-15/chunk-1-00004.m4s",
+            "startMs": 53978.070042,
+            "endMs": 54026.512834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 225,
+            "asset": "network-period-16/init-1.m4s",
+            "startMs": 54979.780292,
+            "endMs": 54981.186459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 224,
+            "asset": "network-period-16/chunk-1-00001.m4s",
+            "startMs": 54979.666375,
+            "endMs": 54997.775,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 229,
+            "asset": "network-period-16/chunk-1-00002.m4s",
+            "startMs": 55983.120959,
+            "endMs": 56019.717542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 231,
+            "asset": "network-period-16/chunk-1-00003.m4s",
+            "startMs": 57005.176625,
+            "endMs": 57054.660334,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 233,
+            "asset": "network-period-16/chunk-1-00004.m4s",
+            "startMs": 57980.668209,
+            "endMs": 58030.893167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 235,
+            "asset": "network-period-17/init-1.m4s",
+            "startMs": 58978.428292,
+            "endMs": 58979.121625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 236,
+            "asset": "network-period-17/chunk-1-00001.m4s",
+            "startMs": 58979.406084,
+            "endMs": 58998.88175,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 239,
+            "asset": "network-period-17/chunk-1-00002.m4s",
+            "startMs": 59982.048042,
+            "endMs": 65022.815042,
+            "outcome": "client_io_error"
+          }
+        ]
+      },
+      {
+        "startMs": 60000,
+        "endMs": 65000,
+        "requestCounts": {
+          "low": 4,
+          "audio": 2
+        },
+        "outcomes": {
+          "complete": 4,
+          "client_io_error": 2
+        },
+        "highRequests": []
+      },
+      {
+        "startMs": 65000,
+        "endMs": 90000,
+        "requestCounts": {
+          "audio": 58,
+          "low": 36,
+          "high": 18
+        },
+        "outcomes": {
+          "complete": 112
+        },
+        "highRequests": [
+          {
+            "requestId": 324,
+            "asset": "network-period-21/init-1.m4s",
+            "startMs": 86734.960792,
+            "endMs": 86735.673084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 325,
+            "asset": "network-period-21/chunk-1-00002.m4s",
+            "startMs": 86735.276542,
+            "endMs": 86770.655167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 329,
+            "asset": "network-period-21/chunk-1-00003.m4s",
+            "startMs": 86792.881167,
+            "endMs": 86843.570167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 333,
+            "asset": "network-period-21/chunk-1-00004.m4s",
+            "startMs": 86889.191792,
+            "endMs": 86937.517417,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 337,
+            "asset": "network-period-22/init-1.m4s",
+            "startMs": 86960.620375,
+            "endMs": 86961.359875,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 338,
+            "asset": "network-period-22/chunk-1-00001.m4s",
+            "startMs": 86960.782,
+            "endMs": 86983.44225,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 341,
+            "asset": "network-period-22/chunk-1-00002.m4s",
+            "startMs": 87019.409917,
+            "endMs": 87055.010625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 343,
+            "asset": "network-period-22/chunk-1-00003.m4s",
+            "startMs": 87075.921459,
+            "endMs": 87116.386625,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 344,
+            "asset": "network-period-22/chunk-1-00004.m4s",
+            "startMs": 87136.124625,
+            "endMs": 87180.899834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 345,
+            "asset": "network-period-23/init-1.m4s",
+            "startMs": 87204.933542,
+            "endMs": 87205.713584,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 346,
+            "asset": "network-period-23/chunk-1-00001.m4s",
+            "startMs": 87205.138042,
+            "endMs": 87222.30575,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 348,
+            "asset": "network-period-23/chunk-1-00002.m4s",
+            "startMs": 87261.766292,
+            "endMs": 87298.238667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 351,
+            "asset": "network-period-23/chunk-1-00003.m4s",
+            "startMs": 87333.33875,
+            "endMs": 87374.403542,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 352,
+            "asset": "network-period-23/chunk-1-00004.m4s",
+            "startMs": 87399.075792,
+            "endMs": 87444.270792,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 353,
+            "asset": "network-period-24/init-1.m4s",
+            "startMs": 87477.128542,
+            "endMs": 87477.867667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 354,
+            "asset": "network-period-24/chunk-1-00001.m4s",
+            "startMs": 87477.278334,
+            "endMs": 87494.385334,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 356,
+            "asset": "network-period-24/chunk-1-00002.m4s",
+            "startMs": 88237.949334,
+            "endMs": 88273.935709,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 358,
+            "asset": "network-period-24/chunk-1-00003.m4s",
+            "startMs": 89261.029459,
+            "endMs": 89304.42775,
+            "outcome": "complete"
+          }
+        ]
+      },
+      {
+        "startMs": 90000,
+        "endMs": null,
+        "requestCounts": {
+          "audio": 32,
+          "high": 26
+        },
+        "outcomes": {
+          "complete": 58
+        },
+        "highRequests": [
+          {
+            "requestId": 360,
+            "asset": "network-period-24/chunk-1-00004.m4s",
+            "startMs": 90238.681375,
+            "endMs": 90287.685792,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 363,
+            "asset": "network-period-25/init-1.m4s",
+            "startMs": 91239.760334,
+            "endMs": 91240.477375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 362,
+            "asset": "network-period-25/chunk-1-00001.m4s",
+            "startMs": 91239.642834,
+            "endMs": 91257.5555,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 366,
+            "asset": "network-period-25/chunk-1-00002.m4s",
+            "startMs": 92242.725167,
+            "endMs": 92281.76575,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 369,
+            "asset": "network-period-25/chunk-1-00003.m4s",
+            "startMs": 93252.615792,
+            "endMs": 93293.576959,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 371,
+            "asset": "network-period-25/chunk-1-00004.m4s",
+            "startMs": 94237.811792,
+            "endMs": 94285.133584,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 373,
+            "asset": "network-period-26/init-1.m4s",
+            "startMs": 95239.984625,
+            "endMs": 95240.74675,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 374,
+            "asset": "network-period-26/chunk-1-00001.m4s",
+            "startMs": 95242.611334,
+            "endMs": 95260.281667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 377,
+            "asset": "network-period-26/chunk-1-00002.m4s",
+            "startMs": 96245.585375,
+            "endMs": 96282.314375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 380,
+            "asset": "network-period-26/chunk-1-00003.m4s",
+            "startMs": 97239.962542,
+            "endMs": 97280.887042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 382,
+            "asset": "network-period-26/chunk-1-00004.m4s",
+            "startMs": 98239.169917,
+            "endMs": 98284.708084,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 384,
+            "asset": "network-period-27/init-1.m4s",
+            "startMs": 99236.976834,
+            "endMs": 99237.717834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 385,
+            "asset": "network-period-27/chunk-1-00001.m4s",
+            "startMs": 99237.267042,
+            "endMs": 99255.019459,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 388,
+            "asset": "network-period-27/chunk-1-00002.m4s",
+            "startMs": 100251.632209,
+            "endMs": 100292.47425,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 391,
+            "asset": "network-period-27/chunk-1-00003.m4s",
+            "startMs": 101248.690625,
+            "endMs": 101289.347375,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 393,
+            "asset": "network-period-27/chunk-1-00004.m4s",
+            "startMs": 102239.979084,
+            "endMs": 102288.9835,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 395,
+            "asset": "network-period-28/init-1.m4s",
+            "startMs": 103235.4795,
+            "endMs": 103236.256667,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 396,
+            "asset": "network-period-28/chunk-1-00001.m4s",
+            "startMs": 103238.620792,
+            "endMs": 103256.701417,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 399,
+            "asset": "network-period-28/chunk-1-00002.m4s",
+            "startMs": 104247.739042,
+            "endMs": 104286.915584,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 402,
+            "asset": "network-period-28/chunk-1-00003.m4s",
+            "startMs": 105289.16375,
+            "endMs": 105332.264209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 404,
+            "asset": "network-period-28/chunk-1-00004.m4s",
+            "startMs": 106236.846125,
+            "endMs": 106288.280167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 406,
+            "asset": "network-period-29/init-1.m4s",
+            "startMs": 107243.428042,
+            "endMs": 107244.667209,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 407,
+            "asset": "network-period-29/chunk-1-00001.m4s",
+            "startMs": 107243.895209,
+            "endMs": 107263.148042,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 410,
+            "asset": "network-period-29/chunk-1-00002.m4s",
+            "startMs": 108245.677792,
+            "endMs": 108283.648834,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 413,
+            "asset": "network-period-29/chunk-1-00003.m4s",
+            "startMs": 109305.154,
+            "endMs": 109381.778167,
+            "outcome": "complete"
+          },
+          {
+            "requestId": 415,
+            "asset": "network-period-29/chunk-1-00004.m4s",
+            "startMs": 110237.289917,
+            "endMs": 110289.390542,
+            "outcome": "complete"
+          }
+        ]
+      }
+    ],
+    "deviceClockErrorCountTransitions": [
+      {
+        "elapsed": 0.31722324999282137,
+        "count": 0,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 12.83445970833418,
+        "count": 4,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 13.095962291656178,
+        "count": 5,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 14.904544291668572,
+        "count": 8,
+        "automaticAttempts": 0
+      },
+      {
+        "elapsed": 38.01665095832141,
+        "count": 0,
+        "automaticAttempts": 1
+      },
+      {
+        "elapsed": 62.05111654166831,
+        "count": 1,
+        "automaticAttempts": 1
+      },
+      {
+        "elapsed": 63.091272166668205,
+        "count": 3,
+        "automaticAttempts": 1
+      },
+      {
+        "elapsed": 64.13305912500073,
+        "count": 5,
+        "automaticAttempts": 1
+      },
+      {
+        "elapsed": 86.70739045832306,
+        "count": 0,
+        "automaticAttempts": 2
+      }
+    ],
+    "allSamplesUnconstrained": true,
+    "lastHighServerRequest": 110237.289917,
+    "tail90Seconds": {
+      "publishedFrames": 750,
+      "widths": [
+        640
+      ],
+      "positions": [
+        88.767264025,
+        119.963320129
+      ],
+      "generations": [
+        2
+      ]
+    },
+    "finalWidth": 640,
+    "finalPosition": 120.023344734,
+    "completed": true,
+    "attempts": 2,
+    "installed": 2,
+    "policyReasons": {
+      "playbackIneligible": 1,
+      "insufficientBuffer": 44,
+      "highNotObserved": 13,
+      "highOutput": 227,
+      "windowStarted": 2,
+      "windowPending": 126,
+      "firstQualifiedWindow": 2,
+      "reserved": 2,
+      "backoff": 5,
+      "ticketReady": 2,
+      "nearEnd": 60
+    },
+    "strictPassed": true,
+    "allProxyRequestsCorrelated": true,
+    "clockNote": "Server profile timestamps and device elapsed timestamps are separate clock domains; no direct subtraction or precise cross-clock onset claim.",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false
+  }
+}

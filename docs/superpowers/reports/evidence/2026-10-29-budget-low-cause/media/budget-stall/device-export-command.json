@@ -1,0 +1,21 @@
+{
+  "command": [
+    "xcrun",
+    "devicectl",
+    "device",
+    "copy",
+    "from",
+    "--device",
+    "00008140-000C49CC3493001C",
+    "--source",
+    "tmp/yl-abr-44490aef8c5d44ba8eeaca7224625f06",
+    "--domain-type",
+    "appDataContainer",
+    "--domain-identifier",
+    "dev.ylplayer.ylPlayerExample",
+    "--destination",
+    "/private/tmp/yl-budget-low-cause/media/budget-stall/device-export"
+  ],
+  "exitCode": 0,
+  "output": "File received from Device\n/private/tmp/yl-budget-low-cause/media/budget-stall/device-export\n"
+}
