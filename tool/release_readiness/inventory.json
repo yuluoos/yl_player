@@ -204,7 +204,7 @@
       "packages/yl_player_apple/analysis_options.yaml": "c1e9534c05acb3643e72a82ad3d92d56d2ba9b0df2add014c18f7e1d462f24e4",
       "packages/yl_player_apple/darwin/yl_player_apple.podspec": "67bbc372539a1cfaf9078d7a63563b31009107b54b3424585606af4046abe626",
       "packages/yl_player_apple/darwin/yl_player_apple/Package.swift": "f1f3732883ec42bcb925934350b5841db2dd7ecdbbe6d193d273ee9cec68dc77",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "abee275b49e4afd99fb11a62709ce66334c53bac5740c8ddd370dfbc5c72399d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "6576ce48f22692e0dece591cedb60117d7d5b32eadbdb2b42456e6b91cb83ea0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift": "b206ecc951c295fecc1a82b25ebd8fe4c3e0e366182229b6e0c98811fcde0e36",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryController.swift": "df694453ba3602ba715fa2f5c3e23263fbd02dc16b3b3fe68817fc63ebd085d2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift": "545bb00962864485ccd3a940466931b7dd5130cd0651587ee79b8111459465d0",
@@ -599,7 +599,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "deebc99e6ad31324fb80f0b6150f4ac073efe27e1c9578923974d0fc8ba0e3c3"
+    "sha256": "ef8efb1a895004ee9f0c8187582ebb661724573ef0a607ecb678761588c03dd6"
   },
   "evidence": {
     "p01": {
@@ -776,6 +776,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-28-ios-recovery-landing.md",
       "sha256": "a66c60c17820055309dd49ea88f659546e5b2f752d0c22124b87773283ce3745"
+    },
+    "ios-resume-timeout-20261029": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-29-ios-resume-timeout.md",
+      "sha256": "3ed5f2b1a08f9f2f0f0536608594ad11d555a0df6159a29b0579187bddb83c8b"
     }
   },
   "rows": [
@@ -819,10 +824,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-recovery-landing-20261028"
+        "ios-resume-timeout-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-missing-landing-callback-other-postcommit-races-multidevice-network-stability-and-physical-av-continuity"
+      "nextAction": "qualify-original-profile-high-recovery-other-postcommit-races-multidevice-and-physical-av-continuity"
     },
     {
       "requirement": "CAP-ABR",

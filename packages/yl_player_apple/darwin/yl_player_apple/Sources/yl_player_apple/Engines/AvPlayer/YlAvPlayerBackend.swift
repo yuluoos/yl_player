@@ -271,6 +271,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   var diagnosticResumeSeekPending: Bool { pendingRuntimeResume != nil }
   #endif
   private var pendingRuntimeResume: (id: UUID, positionUs: Int64)?
+  private let scheduleRuntimeResumeTimeout: YlAvPlayerStallWatchdog.Scheduler
   // Only replacement consumes this intent; ordinary publication uses the clock.
   private var pendingUserSeek: (id: UUID, generation: UInt64, positionUs: Int64)?
   private var itemGeneration: UInt64 = 0
@@ -293,6 +294,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     notificationCenter: NotificationCenter = .default,
     makePlayerItem: @escaping (AVURLAsset) -> AVPlayerItem = { AVPlayerItem(asset: $0) },
     makeVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
+    scheduleRuntimeResumeTimeout: @escaping YlAvPlayerStallWatchdog.Scheduler = { delay, action in
+      DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: action)
+    },
     emit: @escaping (YlNativeBackendCallback) -> Void
   ) {
     self.playerId = playerId
@@ -301,6 +305,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     self.notificationCenter = notificationCenter
     self.makePlayerItem = makePlayerItem
     self.makeVideoOutput = makeVideoOutput
+    self.scheduleRuntimeResumeTimeout = scheduleRuntimeResumeTimeout
     self.liveReconnectController = YlLiveReconnectController(configuration: configuration.network)
     self.configuration = configuration
     self.callbackBinding = CallbackBinding(emit)
@@ -471,7 +476,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       unconfirmedFixedLanding = videoSelection.fixedTrackId != nil
       refreshFramePolicy()
       let resumeId = pendingRuntimeResume.map { _ in seekId }
-      if let resumeId { pendingRuntimeResume = (resumeId, targetUs) }
+      if let resumeId {
+        pendingRuntimeResume = (resumeId, targetUs)
+        armRuntimeResumeTimeout()
+      }
       #if DEBUG && YL_BOUND_AV
       boundAudio?.install(targetUs: targetUs)
       #endif
@@ -503,6 +511,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
             if let resumeId, self.pendingRuntimeResume?.id == resumeId {
               self.pendingRuntimeResume = nil
               self.refreshFramePolicy()
+              self.refreshStallWatchdog()
             }
             self.refreshFramePolicy()
             // A cancelled fixed seek has no landing authority. Keep its last
@@ -962,6 +971,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       let position = exactResumeUs.map { CMTime(value: $0, timescale: 1_000_000) }
         ?? CMTime(milliseconds: positionMs, preferredTimescale: 1_000)
       if let pending = pendingRuntimeResume {
+        armRuntimeResumeTimeout()
         player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero) { [weak self] finished in
           DispatchQueue.main.async {
             guard let self, self.isCurrent(item, generation: generation),
@@ -976,6 +986,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
               self.confirmedDashPositionUs = microseconds(self.player.currentTime()) ?? self.confirmedDashPositionUs
             } else if self.videoSelection.fixedTrackId != nil { self.unconfirmedFixedLanding = true }
             self.refreshFramePolicy()
+            self.refreshStallWatchdog()
             if finished || self.videoSelection.fixedTrackId == nil { self.emitState() }
             else { self.recoverFixedLanding() }
           }
@@ -986,11 +997,29 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     }
   }
 
-  private func failRuntimeResume() {
+  private func armRuntimeResumeTimeout() {
+    guard let pending = pendingRuntimeResume, let item = player.currentItem else { return }
+    let generation = itemGeneration
+    let timeoutMs = configuration.network.readTimeoutMs
+    // Position restoration remains an operation while paused. Only its current
+    // item and seek own this deadline; pauses or subscriber rebinding cannot
+    // cancel or restart it when a failed Load leaves the old item installed.
+    stallWatchdog.cancel()
+    scheduleRuntimeResumeTimeout(TimeInterval(timeoutMs) / 1_000) { [weak self, weak item] in
+      guard let self, let item, self.isCurrent(item, generation: generation),
+        self.active, !self.stopped,
+        self.pendingRuntimeResume?.id == pending.id else { return }
+      self.recordPlaybackDiagnostic(event: "resumeSeekTimeout")
+      self.failRuntimeResume(timeoutMs: timeoutMs)
+    }
+  }
+
+  private func failRuntimeResume(timeoutMs: Int64? = nil) {
     // The replacement already owns the item. A failed exact landing has no
     // authority to publish its default timeline, even after a public seek.
     reportRestorationFailure(NativePlayerError(category: "source", code: "source.seek_failed",
-      message: "The playback position could not be restored."))
+      message: "The playback position could not be restored.",
+      diagnostic: timeoutMs.map { "AVPlayer(phase=resumeSeek, timeoutMs=\($0))" }))
   }
 
   private func observe(_ item: AVPlayerItem, generation: UInt64) {
@@ -1262,7 +1291,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private func refreshStallWatchdog() {
     let generation = itemGeneration
     stallWatchdog.update(
-      active: active,
+      active: active && pendingRuntimeResume == nil,
       wantsToPlay: playRequested,
       hasCurrentItem: player.currentItem != nil,
       timeControlStatus: player.timeControlStatus,
@@ -1279,7 +1308,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     _ error: NativePlayerError,
     generation: UInt64
   ) {
-    guard failureGate.begin(generation: generation),
+    guard pendingRuntimeResume == nil, failureGate.begin(generation: generation),
           failureGate.finish(
             generation: generation,
             currentGeneration: itemGeneration
