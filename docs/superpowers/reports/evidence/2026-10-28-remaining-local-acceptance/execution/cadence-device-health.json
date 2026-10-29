@@ -1,0 +1,24 @@
+[
+  {
+    "command": [
+      "adb",
+      "-s",
+      "emulator-5580",
+      "get-state"
+    ],
+    "exitCode": 0,
+    "stdout": "device\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "adb",
+      "-s",
+      "emulator-5580",
+      "shell",
+      "echo",
+      "owned-device-ready"
+    ],
+    "timedOut": true
+  }
+]

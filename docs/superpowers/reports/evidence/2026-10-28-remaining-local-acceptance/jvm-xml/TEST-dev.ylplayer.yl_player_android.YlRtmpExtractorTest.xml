@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlRtmpExtractorTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:55.650Z" hostname="MacBook-Pro.local" time="23.5">
+  <properties/>
+  <testcase name="independent MediaMTX peer feeds AVC AAC samples to pinned extractor()" classname="dev.ylplayer.yl_player_android.YlRtmpExtractorTest" time="1.461"/>
+  <testcase name="independent video-only peer formats every declared track()" classname="dev.ylplayer.yl_player_android.YlRtmpExtractorTest" time="1.27"/>
+  <testcase name="real AVC AAC fixture passes owned FLV adapter into pinned Media3 extractor()" classname="dev.ylplayer.yl_player_android.YlRtmpExtractorTest" time="0.004"/>
+  <testcase name="independent peer transfers more than three negotiated ACK windows()" classname="dev.ylplayer.yl_player_android.YlRtmpExtractorTest" time="20.764"/>
+  <system-out><![CDATA[AVC samples=20, AAC samples=37, seekable=false, duration=-9223372036854775807
+video-only AVC samples=20, all declared tracks formatted=true
+AVC samples=20, AAC samples=35, seekable=false, duration=-9223372036854775807
+independent sustained FLV bytes=8404875, RTMP received=8405436, window=2500000, ACK bytes=7500000, elapsedMs=20753
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" tests="16" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.583Z" hostname="MacBook-Pro.local" time="0.046">
+  <properties/>
+  <testcase name="prepare failure does not touch prior owner()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="new request waits for safe candidate release then rollback before ownership transfer()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.003"/>
+  <testcase name="quiesce deadline waits for acknowledgement then restores without activation()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="commit precedes prior deactivation and same player old engine participates()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="restore deadline quarantines release and late success cannot change ownership()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.006"/>
+  <testcase name="independent nonexclusive activation commits while first awaits acknowledgement()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="nonexclusive replacements quiesce their own former without touching video peer()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="same player successors retain one gate through cancelled nonexclusive release()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.004"/>
+  <testcase name="quiesce failure disposes candidate without changing owner()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.003"/>
+  <testcase name="activation and commit failure restore exactly once after candidate release()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.003"/>
+  <testcase name="detach releases previous and candidate without restoring()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="activation deadline releases candidate and observes asynchronous restore()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <testcase name="known audio progresses during exclusive quarantine and retiring video owner()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.003"/>
+  <testcase name="unknown candidate proven nonexclusive restores prior before audio commit()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.001"/>
+  <testcase name="nonexclusive retirement blocks same player only and detach owns every pending participant()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.003"/>
+  <testcase name="restore failure clears resource ownership and reports prior terminal failure()" classname="dev.ylplayer.yl_player_android.YlDecoderLeaseCoordinatorTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

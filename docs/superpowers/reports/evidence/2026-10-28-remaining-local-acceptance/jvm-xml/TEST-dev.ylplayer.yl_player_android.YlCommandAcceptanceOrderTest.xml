@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:36.520Z" hostname="MacBook-Pro.local" time="0.089">
+  <properties/>
+  <testcase name="new rejected suspended requests do not take ownership from older valid requests()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.016"/>
+  <testcase name="worker rejection settles quiescence without losing a newer accepted suspended track()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.006"/>
+  <testcase name="track and timeline acceptance remain independent across peer quiescence()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.01"/>
+  <testcase name="new worker rejection does not replace the earlier successfully accepted track()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.004"/>
+  <testcase name="reviewer probe older active track cannot replace newer accepted suspended track()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.004"/>
+  <testcase name="older active live edge cannot replace newer suspended position()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.005"/>
+  <testcase name="stop while peer waits for former command settlement fences every late result()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.005"/>
+  <testcase name="peer rollback cannot publish before its former players old worker has settled()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.007"/>
+  <testcase name="host invalidation cancels its worker and settles peer quiescence before late acknowledgement()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.012"/>
+  <testcase name="pending position yields only to successfully accepted newer timeline intent()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.007"/>
+  <testcase name="accepted position survives quiescence while its worker is active or queued behind track()" classname="dev.ylplayer.yl_player_android.YlCommandAcceptanceOrderTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

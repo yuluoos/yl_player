@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlWidevineDriverTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.101Z" hostname="MacBook-Pro.local" time="0.063">
+  <properties/>
+  <testcase name="session requests hardware protection and releases exactly once()" classname="dev.ylplayer.yl_player_android.YlWidevineDriverTest" time="0.025"/>
+  <testcase name="lower protection or unknown API capability never falls back()" classname="dev.ylplayer.yl_player_android.YlWidevineDriverTest" time="0.001"/>
+  <testcase name="provisioning is explicit and close failure still releases object()" classname="dev.ylplayer.yl_player_android.YlWidevineDriverTest" time="0.001"/>
+  <testcase name="only current nonempty all-usable statuses are usable and closed callbacks are ignored()" classname="dev.ylplayer.yl_player_android.YlWidevineDriverTest" time="0.017"/>
+  <testcase name="denied response never maps to expired and streaming has no default URL transport()" classname="dev.ylplayer.yl_player_android.YlWidevineDriverTest" time="0.018"/>
+  <testcase name="Media3 receives copied secure session handle only while driver is open()" classname="dev.ylplayer.yl_player_android.YlWidevineDriverTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

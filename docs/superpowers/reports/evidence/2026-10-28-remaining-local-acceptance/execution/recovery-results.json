@@ -1,0 +1,82 @@
+[
+  {
+    "name": "android-config-only",
+    "command": [
+      "flutter",
+      "build",
+      "apk",
+      "--debug",
+      "--config-only",
+      "--no-pub"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player_android/example",
+    "exitCode": 0,
+    "elapsedSeconds": 0.7584229170024628
+  },
+  {
+    "name": "foundation-final",
+    "command": [
+      "sh",
+      "tool/check_foundation.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 1,
+    "elapsedSeconds": 269.99811679100094
+  },
+  {
+    "name": "jvm-peer-final",
+    "command": [
+      "python3",
+      "tool/rtmp_acceptance/run.py",
+      "--",
+      "python3",
+      "/private/tmp/yl-local-acceptance/jvm-retry/run.py"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 74.07669375000114
+  },
+  {
+    "name": "android_session_replacement-final",
+    "command": [
+      "sh",
+      "tool/run_android_integration.sh",
+      "integration_test/android_session_replacement_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 127,
+    "elapsedSeconds": 0.006963292005821131
+  },
+  {
+    "name": "android_multi_player_rollback-final",
+    "command": [
+      "sh",
+      "tool/run_android_integration.sh",
+      "integration_test/android_multi_player_rollback_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 127,
+    "elapsedSeconds": 0.005277666001347825
+  },
+  {
+    "name": "state_update_cadence-final",
+    "command": [
+      "sh",
+      "tool/run_android_integration.sh",
+      "integration_test/state_update_cadence_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 127,
+    "elapsedSeconds": 0.005343874996469822
+  },
+  {
+    "name": "extra-matrix",
+    "command": [
+      "python3",
+      "/private/tmp/yl-local-acceptance/final_extra.py"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 113.13657508300093
+  }
+]

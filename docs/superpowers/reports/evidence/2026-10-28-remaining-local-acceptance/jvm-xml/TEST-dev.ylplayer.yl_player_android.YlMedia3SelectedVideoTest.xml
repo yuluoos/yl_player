@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.640Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="ready video with an unselected declared audio track requests audio fallback()" classname="dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest" time="0.0"/>
+  <testcase name="ready audio with unselected declared video is a decoder fallback signal()" classname="dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest" time="0.001"/>
+  <testcase name="audio only and selected video remain valid()" classname="dev.ylplayer.yl_player_android.YlMedia3SelectedVideoTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

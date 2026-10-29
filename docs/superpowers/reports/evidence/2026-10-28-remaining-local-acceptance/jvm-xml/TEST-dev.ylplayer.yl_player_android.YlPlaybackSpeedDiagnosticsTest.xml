@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.793Z" hostname="MacBook-Pro.local" time="0.007">
+  <properties/>
+  <testcase name="logging failures cannot interrupt playback or defeat rate limiting()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.001"/>
+  <testcase name="normal speed and paused playback establish baseline without reporting historical symptoms()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.0"/>
+  <testcase name="byte saturation takes precedence over a slow measured transfer()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.0"/>
+  <testcase name="new session clears throttling and counter baselines()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.001"/>
+  <testcase name="missing short invalid and future transfer samples do not claim network capacity()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.001"/>
+  <testcase name="recent measured transfer can indicate insufficient video supply only while loading with short buffer()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.0"/>
+  <testcase name="healthy and invalid speed samples never log()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.001"/>
+  <testcase name="repeated symptoms are limited to one report every ten seconds without losing pending counts()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.0"/>
+  <testcase name="symptoms report media and playout buffer separately without source data()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.001"/>
+  <testcase name="pause seek and reset invalidate supply evidence()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.0"/>
+  <testcase name="continuous observations report buffer consumption without counting speed changes or seeks()" classname="dev.ylplayer.yl_player_android.YlPlaybackSpeedDiagnosticsTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

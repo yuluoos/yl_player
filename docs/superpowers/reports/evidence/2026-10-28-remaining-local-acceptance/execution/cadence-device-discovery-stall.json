@@ -1,0 +1,8 @@
+{
+  "verifiedOwnedChain": [
+    "31417 /opt/homebrew/share/android-commandlinetools/platform-tools/adb -s emulator-5554 shell getprop",
+    "31401 /Users/yy2021_8689/flutter/bin/cache/dart-sdk/bin/dartvm --resolved_executable_name=/Users/yy2021_8689/flutter/bin/cache/dart-sdk/bin/dart --executable_name=/Users/yy2021_8689/flutter/bin/cache/dart-sdk/bin/dart --packages=/Users/yy2021_8689/flutter/packages/flutter_tools/.dart_tool/package_config.json /Users/yy2021_8689/flutter/bin/cache/flutter_tools.snapshot test integration_test/state_update_cadence_test.dart -d emulator-5580 --timeout 5m --dart-define=YL_ANDROID_API=36",
+    "28824 sh /Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/run_android_integration.sh integration_test/state_update_cadence_test.dart"
+  ],
+  "action": "Terminate only owned read-only getprop, not other device."
+}

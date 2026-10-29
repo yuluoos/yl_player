@@ -1,0 +1,63 @@
+[
+  {
+    "name": "decode-probe",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/dolby_reference",
+      "-p",
+      "test_decode_probe.py"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 0.5538626249981462
+  },
+  {
+    "name": "source-resolver",
+    "command": [
+      "flutter",
+      "test",
+      "--no-pub",
+      "test"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player_source_resolver",
+    "exitCode": 0,
+    "elapsedSeconds": 23.118173832997854
+  },
+  {
+    "name": "android-consumer",
+    "command": [
+      "sh",
+      "tool/check_consumers.sh",
+      "--android-only"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 45.37603825000406
+  },
+  {
+    "name": "publication",
+    "command": [
+      "sh",
+      "tool/check_publication.sh",
+      "--archives-only"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 40.46985658400081
+  },
+  {
+    "name": "compositor",
+    "command": [
+      "sh",
+      "tool/playback_benchmark/check_compositor_probe.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 3.5471268750043237
+  }
+]

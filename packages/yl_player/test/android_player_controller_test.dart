@@ -6,6 +6,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yl_player/yl_player.dart';
+import 'package:yl_player_android/src/android_codec.dart';
 import 'package:yl_player_android/src/android_player.dart';
 import 'package:yl_player_android/src/android_transport.dart';
 import 'package:yl_player_android/src/pigeon/yl_player_android.g.dart';
@@ -297,7 +298,7 @@ final class _Factory implements AndroidFactoryTransport {
   @override
   Future<AndroidCreateReply> create(AndroidCreateRequest request) async =>
       AndroidCreateReply(
-        schemaMajor: 7,
+        schemaMajor: AndroidCodec.schemaMajor,
         spiMajor: 2,
         channelSuffix: 'controller-test',
         textureId: 1,

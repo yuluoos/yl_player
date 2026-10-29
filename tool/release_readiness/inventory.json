@@ -23,7 +23,7 @@
       "packages/yl_player/lib/src/network_traffic.dart": "e9b1e1897e5eb084a6bc1476ba53a9d23b20827d5c80521dfb9a961df5c92fa7",
       "packages/yl_player/lib/src/playback_session.dart": "3de288306cd43a4a93aed508811c8ef760d183d9e682f5252b328c352abc6f7b",
       "packages/yl_player/lib/src/player_controller.dart": "5dcf4eabaddb60865fc0a40c2d6b0f23d6caffcc82426644125149c03a62239e",
-      "packages/yl_player/lib/src/player_view.dart": "1eaebaf6d38271aa04deb10f867968636506003aa34692a800d6945bd97cbff6",
+      "packages/yl_player/lib/src/player_view.dart": "639506fb52902dbdd345e0b8e72e8d2eaecfc5f7282a53ff7cdedcd2f7615093",
       "packages/yl_player/lib/src/subtitles/ass_overlay.dart": "d00087377f162d2dc96a49d4fe3ff0443276729baa6f3194c56006d7def954c4",
       "packages/yl_player/lib/src/subtitles/ass_parser.dart": "595ec7615d5a36e7c232e1f22730bbacf54805786d164729a3905395b836aa6e",
       "packages/yl_player/lib/src/subtitles/ass_wrap.dart": "85145633b9d26fd85db6b34c2a504250fe78e5aede59d93346b82e1cec6c1ed9",
@@ -67,7 +67,7 @@
       "packages/yl_player_android/LICENSE": "54bac49375e118f24f71b6f59ba659775667440695a137ae1c9a399a668c2aa0",
       "packages/yl_player_android/LICENSES/FFmpeg-LGPL-2.1-or-later.txt": "75699c19c96232163a9094b942faa2ee783ecf5ba8669b780ea002758ee1f116",
       "packages/yl_player_android/LICENSES/FFmpeg-NOTICE.txt": "76d7c2c47df0924597c534403031153c9af86e966138a9a5aff79bde580ddd2a",
-      "packages/yl_player_android/README.md": "dff0b1e6af20b0b12ebebbc214eabd19affbfc47fe6d8b9d3d5791602ac99976",
+      "packages/yl_player_android/README.md": "1efeca9a4f52f739219525e478bf7b0b35a6dc197089d11c5a4d71001e5cc586",
       "packages/yl_player_android/analysis_options.yaml": "df692318073ecc5f3b8a759a1f9338eb21995900d3c2bc1fbcd2c7780a1c7c6e",
       "packages/yl_player_android/android/.gitignore": "419c1e3c95573dbbc3676451a01808dcd07953c55aff02fff27e201703af725c",
       "packages/yl_player_android/android/build.gradle.kts": "98a1ef1b320881113745be87f0306c8c2f0a942d864b3fe2cb256fbad3fa358c",
@@ -78,6 +78,7 @@
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "c8f0838908bd5c671e56a2dc3e8387891cabc0642151c57fec49acba30573c50",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashLifecycleInstrumentedTest.kt": "2292e67aeb6b01a404f5d12a873116017bd6e669adb8369e7a2b951de6a98ff5",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "f1809113db1a99f5f638303340f5707ae7a39a77ce671f4beb40da47add94f24",
+      "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlEac3AudioInstrumentedTest.kt": "7e40735b7cc87de692dfd89eb8768bcf25dc0f70fb95d6173de55d570b60c59f",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlFormatDecodeInstrumentedTest.kt": "9eb6dc344b9bf6b182b504eab671c85aa0e07e6fc7827dba915d29c7748a5572",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmOutputInstrumentedTest.kt": "72534948626da69ac01ba9fba945dbd3ac8df73a4d8b78a5703f896369b72279",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmReference.kt": "e17c6b2bb6a0420b20815e94a692382eadf511c4eaf90b4cd958afb5b0658a2c",
@@ -85,24 +86,24 @@
       "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3Audio.kt": "3b2732c1990862bc79934d2453d29bf69799d134512a63eb2bef412987d7144f",
       "packages/yl_player_android/android/src/main/AndroidManifest.xml": "90b810ac5ac13c90e87a41e6bdf59acb0bff05ec771aa41eeedca3258fcf46a0",
       "packages/yl_player_android/android/src/main/cpp/YlSoftwareVideoBudget.inc": "61d0e05273a202123062b378d5e5eac2c53c81fb199010ff6015722230e9ce41",
-      "packages/yl_player_android/android/src/main/cpp/yl_player_ffmpeg.cpp": "7253f888801268de1d0bdfa3823680601112ecbb3247bd74cd48d0e196911007",
+      "packages/yl_player_android/android/src/main/cpp/yl_player_ffmpeg.cpp": "534694dfd5f43f031ba188958e495b2c45e31b6e4568750b86a0b0049edc794c",
       "packages/yl_player_android/android/src/main/java/androidx/media3/exoplayer/dash/manifest/YlSegmentClockAccess.java": "7d4acc92d55b1b0b8497b4d43631335236c63b94614a68df1c95e3749e787a12",
-      "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so": "ade6746bb2c4f9bb4b561cbfc821093fd11d1a2f4da5655a5a756de978cebe1c",
-      "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so": "df5fc2fad6801e18496dc25474f2df06f47b36464ecd3128c3f6c38df85b993b",
-      "packages/yl_player_android/android/src/main/jniLibs/bridge-artifact.json": "ebe6893c153fee3e1b1699e36bee1bd43c87d4f8492fba2a63f4d15f2d27258f",
+      "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so": "b1035d561cfeb24813372141773bc1c9bd6d66280af87689a16e32806880acde",
+      "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so": "63d2e7a018cc08a6ea9caea926453d87bbad318c7fd92816f204e3b077c86621",
+      "packages/yl_player_android/android/src/main/jniLibs/bridge-artifact.json": "45b4179fb3be3d70de4ef8b3f2818c80257f5091a737bf78877878a4940cbdd6",
       "packages/yl_player_android/android/src/main/jniLibs/configure-contract.txt": "07bfe96894802b010190443570aec8dfa95df1a65e79766dab643301c9d527a0",
       "packages/yl_player_android/android/src/main/jniLibs/ffmpeg-9.0.1.lock": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1",
-      "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so": "b59c1a87defef52275ba93b5f24a4bce1b7e42c839e6315a5d5ae1d935ee2427",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAdaptiveLoadControl.kt": "a726fd17c322e6dfd4f9d33023c280513bf881b1c8146105e9e5e0e65e42c882",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidDeviceProfile.kt": "0f08527ebf244c5db1a9ddfdd0c6aa28af4ac5f99110b658752804c0f5197775",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidMemoryPolicy.kt": "a245198c08cdc5365dc87eebdb772f59f7f6c3ce65bf54859ecf1218ca7176b0",
+      "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so": "3eaa02009e2402abfdc7c32cb0e6340b0a31516af262143cd86a05cc82188d57",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAdaptiveLoadControl.kt": "988e13b3f165ff5441c7a02525f3b536482c74c6436687efca960ca4497c5cac",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidDeviceProfile.kt": "99cbb4760cfc5f1d56160b8ceb9cb95e1e06d23884e1acdb1dd833d90af8a6e8",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidMemoryPolicy.kt": "9b890edf23c2023e3c596640c87b0262a0a66fbaf917f2dfa7e29a932f9fc1a5",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidNetwork.kt": "1bcc305b8609b72c9e877f0a92819b08b6be310e7690af442b49e560299c72a8",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAnnexB.kt": "02957795e482f33cb5d2f5dcca0ba5979fae2bc6fa91765cd40afcac3d21db4b",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAnnexB.kt": "c9466f737f4f88f57e9456c586107eaec4e4fabd09edf12cf56cd08fb54a535b",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioFocusCoordinator.kt": "7da85ad2285558b9d5e3ac1bd5f82fef5b621727926e4fd2ba678bde511f6a08",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAudioSelectionPolicy.kt": "e98a1be78a0d4f66532332e134577c39e8652ba0ea2f19b1fcbeaa1e0f7f52f4",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlBoundaryValidation.kt": "146d55d99606d848d0406ca5174083c62684362db3d954c0b9c6e23cb24047eb",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlCallbackDispatcher.kt": "7af0f39d0fce81eea49de4330d4801b7994b62bbac22e5eb0a9bd7b185af042b",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlCandidateVideoOutput.kt": "4a15c509ee62ed46348f6127f372e23d77b427029c4f832b556d62295e50dede",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlCandidateVideoOutput.kt": "fe1df6c29c7f8a5a2ad4f873b1506dd28c1adffca9fdf25fafe189354314a208",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashCandidateRegistry.kt": "4ebb687435c7430e2aa7f4916fd34492bf86de103077bf31ef8823025db34044",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashManifestParser.kt": "b75843de53a63c7ffa81df13ca72dc6baf48ae66f15dfd3c51803b41b3de3def",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDashPcmAudioSink.kt": "c4c62792dd8ea3979c5c182c26ca12401beb6d8b0a79f3d94c4109d9fff2616f",
@@ -114,12 +115,13 @@
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDecoderLeaseCoordinator.kt": "042e4ee14a16b094664920c362a94658458a06f54a0906bbd99a0ee537ad0035",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDrmBridge.kt": "f04543697748d61856e73a0ff25cf5f8b95439386a442727cade4502fae1c2d4",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlDrmKeySession.kt": "d9a0457e0d9ef6ea37c1b02e27d877753416f7bd08f0c82ff5f2a60378f95c8d",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlEac3AudioRenderer.kt": "5b4042010f532c5b75f57bcd5a07f9f4cd4d6774dd98ff84c17ac2da601e3d72",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFailureMapper.kt": "a7021270c92117e2aa64a0f5578565f9a887377e6090f1cd3f3fddf61903aea2",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFallbackRoutingPolicy.kt": "99554ee13179fec0b3cd3e5e90b61258e37f958b9409193808a5c4e3c86eb55e",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFfmpegBridge.kt": "07f3b5b6a2f0e5f5fa432fdb9439bd8272603792fccd46e10d9d7b8a046f0c23",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFfmpegBridge.kt": "45418c49a147790e14d1f75c03933809a292ac6f7d911872ae6707a85bd8c66d",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFirstFrameGate.kt": "43744521bfc485f1439bff83344e2af503499b19c0435a86ce65c1e3e4be60a2",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFixedVideoTrackSelector.kt": "30c02f5675609d6833a0198597319aee5d9b9d2375ae6d00506529df3f6118ec",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt": "ba8cea7f11ee885c123247a74e940d7623f9b394f40f2ee5cf219da2b864a02e",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt": "ce49c7ce7cb30458441b283ee9ce4461204f143bb3195a703bb8487cb3db62d6",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHlsPlaylistParser.kt": "4fbe904e9567c60b437e3dd46eecb6ba89830910e7cab99a248683ff6037e3ca",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlLifecyclePolicy.kt": "b8bad9139a93af1158c114664ecbd05368cefbc6a03c3cc4801133f534de259b",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlLiveModePolicy.kt": "13c4e471896137e988cbfa446b2ef51d7784f1dfb77f23d74c73177a1ac17d58",
@@ -129,27 +131,30 @@
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlManagedRetryPolicy.kt": "520ce33d25d569db93942454012c05a2e880976adeb17c4b950da0ca328f83ba",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Acknowledgement.kt": "20ed21ceb26ba8d05ad5f17abdedf567efde4a9fc6498824796214eceb7580b3",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Configuration.kt": "6afe6ca89467ed1db0c77ecad8e3dbd787d5dae832175ee66c67d800ccef63db",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "3c669c287d27f4b6a589500afd83588f0ac2bcde5b496635e97246d394184973",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "9a8ecd2992d5676a491b4662a99640f15d99ffdda594464d43f1f943b266ecbc",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3DrmSessionManager.kt": "fce63143c5ec1417b2ca8510f3aa8570210fdfbd081d773e3d2daed2471b5879",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt": "89bbc86d3cd981c4d30b643fd7c63a2abe80e4716ffa93cb795ceb317fd854cb",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt": "6594f0dd7775d242221aa95d7c5ef91059059c0e7a6c9e82ef01a45049f89a19",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3StatePolicy.kt": "fea1ad83e6fe661f78c44543881b27d0993e1738ec29c05619349f84c508aac1",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "ae85fb894c6f84cbdca7d046de35dc1a17e55d98cce5adf5205fe74da450e01c",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMetricsCollector.kt": "f725df7f758486bbab67cf5e3d3ae62ed2f345a0649d9874d6a202224923f773",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeByteSource.kt": "6febab1f3b7da3b436bac845b2c8e6c7afc09cc7a40b7014133902ab46c52a88",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeCodecs.kt": "cb81052b67ba669457790be14077d7c1497ef9b1a0aae2d7bcd8594a0df9f4c6",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeFallbackEngine.kt": "3a510a5489adb191d33be7f1551e90507661cf4090265345f610f30f0511244a",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeCodecs.kt": "c76e34345a9d308a382e755dc706aa55c205bca3838fd4d920ab0bf7959a484b",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeFallbackEngine.kt": "b23bb741ed53c18646aa38b2a3581ae42e67ceb1ca351e3cc34d52759d653fc8",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeModels.kt": "e95139861d3501b8528ad8f85fc35a0667804e7d512fcaf880b795f8f2971618",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativePcmPreroll.kt": "cd3afb47318eb273a2ee01065c4a322aa8bd9dbb3f0dbdd9dd39f4de2db5d5d4",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeViewBinding.kt": "77d473200beea374fca70ea9c594c050b1608b364335a419036e90f6a6e2cc20",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeViewFactory.kt": "a3be03f79a36954530d4a9c0aab92aefd706ae6cbbf815aa5326b97c5cd31c29",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNetworkByteCounter.kt": "d1a4754e61c08e36ea26b8acd4c09d2fb8c4130705d31e8da30edf2324afb1f9",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOriginCredentialPolicy.kt": "05ad159fde19d6d8ea1d4276fa6dc9e724d508793a839dc07d53a8c4472428da",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "4e983b1ddacceab2f68224548df5aa82b5b4e9331580b257b9b61220d7e0b39c",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "389c4bdaf3a36cb19ba2765a095c1b71a1c239de12373c24551e1c189564953d",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPigeonPlayerHost.kt": "436fd35e7260aedc10a03cb846de17ca1b77ef78ef99f00b5e63117dc01f4b31",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackHealthMonitor.kt": "38f38a771ba954db0f8743725c3a2a58bfc8cc7af06b7058e23e7236e8f2d781",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackPolicy.kt": "29c1f9368a4ad6ecba3a710ae2d55cc5b3f9e100bde40c843e45f061df05536f",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackHealthMonitor.kt": "45a41622793c1c4060b52007ebb1c65dcda9cd2809215ccc41b3cb72bc2ca75e",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackPolicy.kt": "41829164299a4d41d34a14e60b07fa4719121e8f13f189281e9dc27b3a67ee4b",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackSpeedDiagnostics.kt": "38446763d5eaf684ef61c3d372bc07aa534ed98e0ece6adc1a518d53e3dd9b2a",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackStallWatchdog.kt": "cb934bf356be05510c294fdebb12d3ab818363d7730dea806a7132c08cd9687c",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerAndroidPlugin.kt": "6e6af4ad7ec94dc513744b0399394e0a48c88c38e90c194881e980a57f1e060b",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerAndroidPlugin.kt": "da6f93a54b91e90ac11830e040168968103530a452c9c449dd14069fa2cf89c6",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerErrorPolicy.kt": "51505e651515ecf0629c084cc7b482ac41e91924bca3da003cb12aefaef1488a",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistry.kt": "22716d89746ad11d99ab72ffcf0a0a5bfe0617ff8339717f16ca13d6dee6f22d",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistry.kt": "60ba82d4d23a2e62e3fd64bab6da2c91127972d9ae61e088aef3058aedeee962",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProgressiveExtractors.kt": "c8bd4604c145c5bf6fd35d9f763f5726a0421dec4f562f5e917412050f34369c",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedCodecSelector.kt": "9cd18b916702f491fdb41e8e801fddb8e6aac16545d289467fe927e200156396",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlProtectedViewFactory.kt": "957514685a9fc15c3a46cc35fe0cb92ac9934907261b3304ab2dbf14fb467b97",
@@ -172,19 +177,21 @@
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlSourceAssessment.kt": "bf6a17d652777a8263f5c54a953323c281c5aa81ca0ba7e07015b95590d88616",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlStateReducer.kt": "ce312728eb07ecc4924243bd38dbbe31c2ac45bde65916540b8c701f47d37ca2",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlStopPolicy.kt": "fa32c4d792f5417276adaa41b667a416353347773260d1e11cda7aec5830c2e2",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoOutput.kt": "942858d02a0c67b3a4f88e30050ef10a0ae2665cc44f13dc45644930b5c3c80a",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlTvAudioBufferSizeProvider.kt": "412da46e436de7849702721a4057b9f39d4130465bedbb4397ab5c1fafcbaf88",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoFrameCounter.kt": "39a6e8444a23e733ccb4e0da4b3c043b1219f938b948e395fa77551984cd2cd4",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoOutput.kt": "9153fd6e3df37c6fde0415ca35b62cb8370958205131a6bec429e4ad0210f8ba",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoSelectionPolicy.kt": "c529f52be81f401540fb4420747602e9ebc6110951209a331707e9c7e2ffb02b",
       "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlWidevineDriver.kt": "62a8d13d3b17366b4ddb1d97439fb7e70ff5c8324bf38941302aea05f43fc918",
-      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/pigeon/YlPlayerAndroid.g.kt": "07a45403f5a79a341f1377619f518e801a2364411cfa2bebe02ceb6d376eab73",
+      "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/pigeon/YlPlayerAndroid.g.kt": "347b0508defa757e005980f13eb13b16fa045fb38df291ae5005c4b3000c73b8",
       "packages/yl_player_android/lib/src/android_callbacks.dart": "1747f46c5828ecaa5960e2b43a9eb3decaf7038e90a5989eb7dc2b4d298cc6b0",
-      "packages/yl_player_android/lib/src/android_codec.dart": "cc60f27fa0c5d78719a26e1db5a003b51c2c4c3b72efaaa8f58e68c938c4ea0a",
+      "packages/yl_player_android/lib/src/android_codec.dart": "212985f3847d1d9b999c2f5febb809c8f22cb819e7a61b6b365f48da7f8b0f4e",
       "packages/yl_player_android/lib/src/android_drm.dart": "f2e877da9325c2f88b2f3c77ccbb51e3bfc9f318fcd55198ea2771cac4650e4c",
-      "packages/yl_player_android/lib/src/android_player.dart": "780a11d11ec5af0eb321471fc4190e0f8d1efce5382aba917295d9894f61fa1b",
+      "packages/yl_player_android/lib/src/android_player.dart": "06221ef3ba5a4f291ee534349842bf5c99c20d674ec5c6c2e7d137d341648720",
       "packages/yl_player_android/lib/src/android_transport.dart": "6c17f9aa81ebdf9bc7fb2c0124a50f4b7d03e13fc0a5d99c786d04d2fa9871b9",
       "packages/yl_player_android/lib/src/live_mode_barrier.dart": "52ca9c05f54b228d08d001cdbd83b198cbfa6b1486c9a3e6fdb2a0cd6223cfb6",
-      "packages/yl_player_android/lib/src/pigeon/yl_player_android.g.dart": "505017d59b4559247bec88647afdf75f2cd910173290ef09a99695476c7197dd",
+      "packages/yl_player_android/lib/src/pigeon/yl_player_android.g.dart": "bbc262f02c29e78fca5ff21ea9e50fada43a5fd5dccf8594542461d88d8df7a4",
       "packages/yl_player_android/lib/yl_player_android.dart": "574cb683497f951e81b59ea864f55bf04a5ca31f66e3dac566ed5c8d9ecb8749",
-      "packages/yl_player_android/pigeons/yl_player_android.dart": "c0adb4ba50db550754eafcf0b43dd07c4da86eea8fd4a7921a5046b5218b7366",
+      "packages/yl_player_android/pigeons/yl_player_android.dart": "e4a9d8bc6e634ad4d1e17bab8e664fdee14cb1e173095b250578de4c95d0786b",
       "packages/yl_player_android/pubspec.yaml": "0acb5623d2ffb52786e9820c5ba458075cd17377f6a125a9a7dbef12f11efe95",
       "packages/yl_player_android/tool/android_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
       "packages/yl_player_android/tool/android_ffmpeg/build_shared_libraries.sh": "49788a07bb50d5a88d37ca349c437dfcdf97d3d666d3e580b764e210824c5a0b",
@@ -597,7 +604,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "77fdcdc820e805edfbea670ac670c9181bb69defc7171b65a24716cab37dc37c"
+    "sha256": "b4651f1fd23bf40cbc2384b2a0f39c0f0f90b0f736ca918b71aa25a895972eb5"
   },
   "evidence": {
     "p01": {
@@ -659,6 +666,11 @@
       "path": "docs/superpowers/reports/2026-10-27-remaining-main-merge.md",
       "sha256": "51177cfea07362d4429fcfe982f3e766ccbd23dea2d420eaa4ff551c21b4a17e",
       "kind": "report"
+    },
+    "remaining-local-acceptance-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-remaining-local-acceptance.md",
+      "sha256": "9c68fe50ace545eb074585156eae48fc758ec929f66215117213bbb0b6120763",
+      "kind": "report"
     }
   },
   "rows": [
@@ -671,10 +683,11 @@
         "p04",
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
-      "nextAction": "resolve-observed-android-tv-recovery-no-upshift-and-complete-physical-api24-repeat-matrix"
+      "nextAction": "complete-physical-api24-repeat-and-bound-output-qualification-after-120s-local-recovery-observed"
     },
     {
       "requirement": "CAP-ABR",
@@ -686,7 +699,8 @@
         "p01",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "resolve-reproduced-avplayer-recovery-no-upshift-and-run-full-bound-matrix"
@@ -700,7 +714,8 @@
         "p04",
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
@@ -713,7 +728,8 @@
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -726,7 +742,8 @@
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -739,7 +756,8 @@
       "evidence": [
         "p01",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
@@ -752,7 +770,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -765,7 +784,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -778,7 +798,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "qualify-exact-software-device-and-thermal-budget"
@@ -791,7 +812,8 @@
       "evidence": [
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "supply-licensed-media-and-physical-protection-chain"
@@ -804,7 +826,8 @@
       "evidence": [
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "supply-licensed-media-and-physical-protection-chain"
@@ -817,7 +840,8 @@
       "evidence": [
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "supply-licensed-media-and-physical-protection-chain"
@@ -831,7 +855,8 @@
         "p07",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -845,7 +870,8 @@
         "p07",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -859,7 +885,8 @@
         "p07",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -873,7 +900,8 @@
         "p07",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -887,7 +915,8 @@
         "p07",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -901,7 +930,8 @@
         "p07",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "specify-and-verify-physical-dv-chain"
@@ -914,7 +944,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -927,7 +958,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -940,7 +972,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -953,7 +986,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-nine-script-media-handoff-and-cleanup"
@@ -966,7 +1000,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-nine-script-media-handoff-and-cleanup"
@@ -979,7 +1014,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-nine-script-media-handoff-and-cleanup"
@@ -993,7 +1029,8 @@
         "p04",
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -1007,7 +1044,8 @@
         "p04",
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -1021,7 +1059,8 @@
         "p04",
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -1035,7 +1074,8 @@
         "p01",
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1049,7 +1089,8 @@
         "p01",
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1063,7 +1104,8 @@
         "p01",
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1076,7 +1118,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1089,7 +1132,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1102,7 +1146,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1115,7 +1160,8 @@
       "evidence": [
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1128,7 +1174,8 @@
       "evidence": [
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1141,7 +1188,8 @@
       "evidence": [
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1154,7 +1202,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-html-empty-refresh-retains-current-channels"
@@ -1167,7 +1216,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-html-empty-refresh-retains-current-channels"
@@ -1180,7 +1230,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-html-empty-refresh-retains-current-channels"
@@ -1194,7 +1245,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-dns-classification-across-request-boundaries"
@@ -1208,7 +1260,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-dns-classification-across-request-boundaries"
@@ -1222,7 +1275,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-dns-classification-across-request-boundaries"
@@ -1236,7 +1290,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
@@ -1250,7 +1305,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
@@ -1264,7 +1320,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
@@ -1277,7 +1334,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-runtime-termination-and-budget-release"
@@ -1290,7 +1348,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-runtime-termination-and-budget-release"
@@ -1303,7 +1362,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-runtime-termination-and-budget-release"
@@ -1316,7 +1376,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-host-and-invalid-result-faults"
@@ -1329,7 +1390,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-host-and-invalid-result-faults"
@@ -1342,7 +1404,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-host-and-invalid-result-faults"
@@ -1356,7 +1419,8 @@
         "p05",
         "p04",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "restore-pinned-server-and-run-fault-matrix"
@@ -1370,7 +1434,8 @@
         "p05",
         "p04",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "restore-pinned-server-and-run-fault-matrix"
@@ -1384,7 +1449,8 @@
         "p05",
         "p04",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "restore-pinned-server-and-run-fault-matrix"
@@ -1397,7 +1463,8 @@
       "evidence": [
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation"
@@ -1410,7 +1477,8 @@
       "evidence": [
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation"
@@ -1423,7 +1491,8 @@
       "evidence": [
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation"
@@ -1436,7 +1505,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-required-hardware-and-resource-rejection"
@@ -1449,7 +1519,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-required-hardware-and-resource-rejection"
@@ -1462,7 +1533,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-required-hardware-and-resource-rejection"
@@ -1475,7 +1547,8 @@
       "evidence": [
         "p07",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-valid-unsupported-dolby-against-original-input"
@@ -1488,7 +1561,8 @@
       "evidence": [
         "p07",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-valid-unsupported-dolby-against-original-input"
@@ -1501,7 +1575,8 @@
       "evidence": [
         "p07",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-valid-unsupported-dolby-against-original-input"
@@ -1514,7 +1589,8 @@
       "evidence": [
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-subtitle-only-failure-and-video-continuity"
@@ -1527,7 +1603,8 @@
       "evidence": [
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-subtitle-only-failure-and-video-continuity"
@@ -1540,7 +1617,8 @@
       "evidence": [
         "p02",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-subtitle-only-failure-and-video-continuity"
@@ -1553,7 +1631,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -1566,7 +1645,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -1579,7 +1659,8 @@
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-bounded-actual-source-attempt-summary"
@@ -1594,7 +1675,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -1609,7 +1691,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -1624,7 +1707,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -1639,7 +1723,8 @@
         "p04",
         "platform",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "close-current-consumer-and-adapter-audit"
@@ -1654,7 +1739,8 @@
         "p04",
         "platform",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "close-current-consumer-and-adapter-audit"
@@ -1669,7 +1755,8 @@
         "p04",
         "platform",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "close-current-consumer-and-adapter-audit"
@@ -1682,7 +1769,8 @@
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -1695,7 +1783,8 @@
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -1708,7 +1797,8 @@
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -1723,7 +1813,8 @@
         "p04",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -1738,7 +1829,8 @@
         "p04",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -1753,7 +1845,8 @@
         "p04",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -1766,7 +1859,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -1779,7 +1873,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -1792,7 +1887,8 @@
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -1807,7 +1903,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-current-error-matrix-and-redaction-audit"
@@ -1822,7 +1919,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-current-error-matrix-and-redaction-audit"
@@ -1837,7 +1935,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-current-error-matrix-and-redaction-audit"
@@ -1852,7 +1951,8 @@
         "p06",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -1867,7 +1967,8 @@
         "p06",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -1882,7 +1983,8 @@
         "p06",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -1897,7 +1999,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
@@ -1912,7 +2015,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
@@ -1927,7 +2031,8 @@
         "p05",
         "p06",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
@@ -1941,7 +2046,8 @@
         "platform",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
@@ -1955,7 +2061,8 @@
         "platform",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
@@ -1969,7 +2076,8 @@
         "platform",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs"
@@ -1984,7 +2092,8 @@
         "p06",
         "p07",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"
@@ -1999,7 +2108,8 @@
         "p06",
         "p07",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"
@@ -2014,7 +2124,8 @@
         "p06",
         "p07",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "verify-protected-hdr-subtitle-and-external-output"
@@ -2028,7 +2139,8 @@
         "p08",
         "remaining-engineering",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"
@@ -2044,7 +2156,8 @@
         "p05",
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy"
@@ -2057,7 +2170,8 @@
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
-        "remaining-main-merge-20261027"
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
       ],
       "acceptance": null,
       "nextAction": "record-final-source-bound-remote-ci-results"

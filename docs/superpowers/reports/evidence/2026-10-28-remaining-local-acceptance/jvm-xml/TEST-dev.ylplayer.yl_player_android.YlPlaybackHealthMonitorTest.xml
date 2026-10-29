@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.786Z" hostname="MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="downgrade cooldown is sixty seconds and never emits upgrade()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="HLS forced live edge recovery is rate limited()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="HTTP FLV severe backlog reconnects and then exhausts()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.001"/>
+  <testcase name="running low memory downgrades adaptive streams but keeps fixed streams alive()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="two unhealthy windows downgrade one step()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="sustained frame drops cannot terminate a fixed rendition()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="rebuffer statistics alone cannot declare a fixed rendition unsupported()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="drop ratio and rebuffer thresholds mark a window unhealthy()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.0"/>
+  <testcase name="HLS catches up gently and resets speed inside target()" classname="dev.ylplayer.yl_player_android.YlPlaybackHealthMonitorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

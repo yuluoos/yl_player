@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlSessionAudioTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:19.830Z" hostname="MacBook-Pro.local" time="0.054">
+  <properties/>
+  <testcase name="failed same player handoff preserves ownership and ducked latest volume on rollback()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.01"/>
+  <testcase name="transient gain never overrides later explicit pause or stop()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.004"/>
+  <testcase name="participant joining an already ducked request inherits multiplier before play and volume edits()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.004"/>
+  <testcase name="noisy and permanent loss pause all participants and late gain cannot restart them()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.004"/>
+  <testcase name="last participant release resets shared duck policy without waiting for gain()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.003"/>
+  <testcase name="permanent loss then play before queued pause acquires a fresh request without stale gain()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.002"/>
+  <testcase name="two managed players share focus and close of one does not release the other()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.002"/>
+  <testcase name="app managed play pause background stop and close never touch shared driver()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.002"/>
+  <testcase name="denied autoplay reports failure after commit without starting engine()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.003"/>
+  <testcase name="same player successful autoplay handoff retains ownership and nonautoplay replacement releases it()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.002"/>
+  <testcase name="cross player candidate failure keeps acquired focus throughout quiesce and rollback()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.004"/>
+  <testcase name="candidate prepare is silent and denied direct play never starts engine()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.003"/>
+  <testcase name="focus resumes intended current player and duck composes latest volume()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.001"/>
+  <testcase name="managed explicit play awaiting volume preserves intent through background without playing hidden()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.002"/>
+  <testcase name="permanent loss across volume acknowledgement retains newer play and retires old request()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.002"/>
+  <testcase name="focus gain awaiting volume cannot replay into a pending background quiesce()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.001"/>
+  <testcase name="background waits for quiesce and release acknowledgement then foreground reacquires()" classname="dev.ylplayer.yl_player_android.YlSessionAudioTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

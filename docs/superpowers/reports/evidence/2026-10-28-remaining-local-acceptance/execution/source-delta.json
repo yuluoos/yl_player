@@ -1,0 +1,186 @@
+{
+  "previous": "77fdcdc820e805edfbea670ac670c9181bb69defc7171b65a24716cab37dc37c",
+  "current": "b4651f1fd23bf40cbc2384b2a0f39c0f0f90b0f736ca918b71aa25a895972eb5",
+  "files": [
+    {
+      "path": "packages/yl_player/lib/src/player_view.dart",
+      "before": "1eaebaf6d38271aa04deb10f867968636506003aa34692a800d6945bd97cbff6",
+      "after": "639506fb52902dbdd345e0b8e72e8d2eaecfc5f7282a53ff7cdedcd2f7615093"
+    },
+    {
+      "path": "packages/yl_player_android/README.md",
+      "before": "dff0b1e6af20b0b12ebebbc214eabd19affbfc47fe6d8b9d3d5791602ac99976",
+      "after": "1efeca9a4f52f739219525e478bf7b0b35a6dc197089d11c5a4d71001e5cc586"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlEac3AudioInstrumentedTest.kt",
+      "before": null,
+      "after": "7e40735b7cc87de692dfd89eb8768bcf25dc0f70fb95d6173de55d570b60c59f"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/cpp/yl_player_ffmpeg.cpp",
+      "before": "7253f888801268de1d0bdfa3823680601112ecbb3247bd74cd48d0e196911007",
+      "after": "534694dfd5f43f031ba188958e495b2c45e31b6e4568750b86a0b0049edc794c"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/arm64-v8a/libyl_player_ffmpeg.so",
+      "before": "ade6746bb2c4f9bb4b561cbfc821093fd11d1a2f4da5655a5a756de978cebe1c",
+      "after": "b1035d561cfeb24813372141773bc1c9bd6d66280af87689a16e32806880acde"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/armeabi-v7a/libyl_player_ffmpeg.so",
+      "before": "df5fc2fad6801e18496dc25474f2df06f47b36464ecd3128c3f6c38df85b993b",
+      "after": "63d2e7a018cc08a6ea9caea926453d87bbad318c7fd92816f204e3b077c86621"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/bridge-artifact.json",
+      "before": "ebe6893c153fee3e1b1699e36bee1bd43c87d4f8492fba2a63f4d15f2d27258f",
+      "after": "45b4179fb3be3d70de4ef8b3f2818c80257f5091a737bf78877878a4940cbdd6"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/jniLibs/x86_64/libyl_player_ffmpeg.so",
+      "before": "b59c1a87defef52275ba93b5f24a4bce1b7e42c839e6315a5d5ae1d935ee2427",
+      "after": "3eaa02009e2402abfdc7c32cb0e6340b0a31516af262143cd86a05cc82188d57"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAdaptiveLoadControl.kt",
+      "before": "a726fd17c322e6dfd4f9d33023c280513bf881b1c8146105e9e5e0e65e42c882",
+      "after": "988e13b3f165ff5441c7a02525f3b536482c74c6436687efca960ca4497c5cac"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidDeviceProfile.kt",
+      "before": "0f08527ebf244c5db1a9ddfdd0c6aa28af4ac5f99110b658752804c0f5197775",
+      "after": "99cbb4760cfc5f1d56160b8ceb9cb95e1e06d23884e1acdb1dd833d90af8a6e8"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAndroidMemoryPolicy.kt",
+      "before": "a245198c08cdc5365dc87eebdb772f59f7f6c3ce65bf54859ecf1218ca7176b0",
+      "after": "9b890edf23c2023e3c596640c87b0262a0a66fbaf917f2dfa7e29a932f9fc1a5"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAnnexB.kt",
+      "before": "02957795e482f33cb5d2f5dcca0ba5979fae2bc6fa91765cd40afcac3d21db4b",
+      "after": "c9466f737f4f88f57e9456c586107eaec4e4fabd09edf12cf56cd08fb54a535b"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlCandidateVideoOutput.kt",
+      "before": "4a15c509ee62ed46348f6127f372e23d77b427029c4f832b556d62295e50dede",
+      "after": "fe1df6c29c7f8a5a2ad4f873b1506dd28c1adffca9fdf25fafe189354314a208"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlEac3AudioRenderer.kt",
+      "before": null,
+      "after": "5b4042010f532c5b75f57bcd5a07f9f4cd4d6774dd98ff84c17ac2da601e3d72"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlFfmpegBridge.kt",
+      "before": "07f3b5b6a2f0e5f5fa432fdb9439bd8272603792fccd46e10d9d7b8a046f0c23",
+      "after": "45418c49a147790e14d1f75c03933809a292ac6f7d911872ae6707a85bd8c66d"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt",
+      "before": "ba8cea7f11ee885c123247a74e940d7623f9b394f40f2ee5cf219da2b864a02e",
+      "after": "ce49c7ce7cb30458441b283ee9ce4461204f143bb3195a703bb8487cb3db62d6"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt",
+      "before": "3c669c287d27f4b6a589500afd83588f0ac2bcde5b496635e97246d394184973",
+      "after": "9a8ecd2992d5676a491b4662a99640f15d99ffdda594464d43f1f943b266ecbc"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Engine.kt",
+      "before": "89bbc86d3cd981c4d30b643fd7c63a2abe80e4716ffa93cb795ceb317fd854cb",
+      "after": "6594f0dd7775d242221aa95d7c5ef91059059c0e7a6c9e82ef01a45049f89a19"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeCodecs.kt",
+      "before": "cb81052b67ba669457790be14077d7c1497ef9b1a0aae2d7bcd8594a0df9f4c6",
+      "after": "c76e34345a9d308a382e755dc706aa55c205bca3838fd4d920ab0bf7959a484b"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeFallbackEngine.kt",
+      "before": "3a510a5489adb191d33be7f1551e90507661cf4090265345f610f30f0511244a",
+      "after": "b23bb741ed53c18646aa38b2a3581ae42e67ceb1ca351e3cc34d52759d653fc8"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeViewBinding.kt",
+      "before": null,
+      "after": "77d473200beea374fca70ea9c594c050b1608b364335a419036e90f6a6e2cc20"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlNativeViewFactory.kt",
+      "before": null,
+      "after": "a3be03f79a36954530d4a9c0aab92aefd706ae6cbbf815aa5326b97c5cd31c29"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt",
+      "before": "4e983b1ddacceab2f68224548df5aa82b5b4e9331580b257b9b61220d7e0b39c",
+      "after": "389c4bdaf3a36cb19ba2765a095c1b71a1c239de12373c24551e1c189564953d"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackHealthMonitor.kt",
+      "before": "38f38a771ba954db0f8743725c3a2a58bfc8cc7af06b7058e23e7236e8f2d781",
+      "after": "45a41622793c1c4060b52007ebb1c65dcda9cd2809215ccc41b3cb72bc2ca75e"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackPolicy.kt",
+      "before": "29c1f9368a4ad6ecba3a710ae2d55cc5b3f9e100bde40c843e45f061df05536f",
+      "after": "41829164299a4d41d34a14e60b07fa4719121e8f13f189281e9dc27b3a67ee4b"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlaybackSpeedDiagnostics.kt",
+      "before": null,
+      "after": "38446763d5eaf684ef61c3d372bc07aa534ed98e0ece6adc1a518d53e3dd9b2a"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerAndroidPlugin.kt",
+      "before": "6e6af4ad7ec94dc513744b0399394e0a48c88c38e90c194881e980a57f1e060b",
+      "after": "da6f93a54b91e90ac11830e040168968103530a452c9c449dd14069fa2cf89c6"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlPlayerRegistry.kt",
+      "before": "22716d89746ad11d99ab72ffcf0a0a5bfe0617ff8339717f16ca13d6dee6f22d",
+      "after": "60ba82d4d23a2e62e3fd64bab6da2c91127972d9ae61e088aef3058aedeee962"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlTvAudioBufferSizeProvider.kt",
+      "before": null,
+      "after": "412da46e436de7849702721a4057b9f39d4130465bedbb4397ab5c1fafcbaf88"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoFrameCounter.kt",
+      "before": null,
+      "after": "39a6e8444a23e733ccb4e0da4b3c043b1219f938b948e395fa77551984cd2cd4"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlVideoOutput.kt",
+      "before": "942858d02a0c67b3a4f88e30050ef10a0ae2665cc44f13dc45644930b5c3c80a",
+      "after": "9153fd6e3df37c6fde0415ca35b62cb8370958205131a6bec429e4ad0210f8ba"
+    },
+    {
+      "path": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/pigeon/YlPlayerAndroid.g.kt",
+      "before": "07a45403f5a79a341f1377619f518e801a2364411cfa2bebe02ceb6d376eab73",
+      "after": "347b0508defa757e005980f13eb13b16fa045fb38df291ae5005c4b3000c73b8"
+    },
+    {
+      "path": "packages/yl_player_android/lib/src/android_codec.dart",
+      "before": "cc60f27fa0c5d78719a26e1db5a003b51c2c4c3b72efaaa8f58e68c938c4ea0a",
+      "after": "212985f3847d1d9b999c2f5febb809c8f22cb819e7a61b6b365f48da7f8b0f4e"
+    },
+    {
+      "path": "packages/yl_player_android/lib/src/android_player.dart",
+      "before": "780a11d11ec5af0eb321471fc4190e0f8d1efce5382aba917295d9894f61fa1b",
+      "after": "06221ef3ba5a4f291ee534349842bf5c99c20d674ec5c6c2e7d137d341648720"
+    },
+    {
+      "path": "packages/yl_player_android/lib/src/pigeon/yl_player_android.g.dart",
+      "before": "505017d59b4559247bec88647afdf75f2cd910173290ef09a99695476c7197dd",
+      "after": "bbc262f02c29e78fca5ff21ea9e50fada43a5fd5dccf8594542461d88d8df7a4"
+    },
+    {
+      "path": "packages/yl_player_android/pigeons/yl_player_android.dart",
+      "before": "c0adb4ba50db550754eafcf0b43dd07c4da86eea8fd4a7921a5046b5218b7366",
+      "after": "e4a9d8bc6e634ad4d1e17bab8e664fdee14cb1e173095b250578de4c95d0786b"
+    }
+  ]
+}

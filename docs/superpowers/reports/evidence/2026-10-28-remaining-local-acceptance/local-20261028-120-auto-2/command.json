@@ -1,0 +1,17 @@
+[
+  "/Users/yy2021_8689/flutter/bin/flutter",
+  "test",
+  "--no-pub",
+  "integration_test/local_long_diagnostic_test.dart",
+  "-d",
+  "emulator-5580",
+  "--reporter",
+  "expanded",
+  "--dart-define=YL_ABR_RUN=local-20261028-120-auto-2",
+  "--dart-define=YL_ABR_MODE=auto",
+  "--dart-define=YL_ABR_URL=http://127.0.0.1:18791/manifest.mpd",
+  "--dart-define=YL_ABR_PROFILE=down-and-recover-v1",
+  "--dart-define=YL_ABR_PROFILE_SHA256=4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+  "--dart-define=YL_ABR_MEDIA_SHA256=1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+  "--dart-define=YL_ABR_PROGRAMME_SECONDS=120"
+]

@@ -1,0 +1,32 @@
+[
+  {
+    "key": "FFMPEG",
+    "exitCode": 0,
+    "sha256": "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635",
+    "expected": "cf38e0e28c7e5605942c4a77755349b0145804a397af37eb1fb4c77cb237f635"
+  },
+  {
+    "key": "FFMPEG_SIGNATURE",
+    "exitCode": 0,
+    "sha256": "b613a00005232a1245ace7080088781ac23a916119d3e5b0d6c042368eee0177",
+    "expected": null
+  },
+  {
+    "key": "OPUS",
+    "exitCode": 0,
+    "sha256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
+    "expected": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1"
+  },
+  {
+    "key": "DAV1D",
+    "exitCode": 0,
+    "sha256": "732010aa5ef461fa93355ed2c6c5fedb48ddc4b74e697eaabe8907eaeb943011",
+    "expected": "732010aa5ef461fa93355ed2c6c5fedb48ddc4b74e697eaabe8907eaeb943011"
+  },
+  {
+    "key": "MEDIAMTX",
+    "exitCode": 0,
+    "sha256": "25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef",
+    "expected": "25e20ed41611f1f3103b8359585210b29b11b69fa0d9e11bd11b92f7bbcb42ef"
+  }
+]

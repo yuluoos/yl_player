@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.642Z" hostname="MacBook-Pro.local" time="0.036">
+  <properties/>
+  <testcase name="real analytics callbacks map bandwidth and observed counters while selected bitrate stays on track()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.003"/>
+  <testcase name="selected representation bitrate is not a bandwidth estimate()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.003"/>
+  <testcase name="timestamped observations exclude initial buffering and preserve immutable snapshots()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.0"/>
+  <testcase name="public texture resizes to renderer dimensions without coded rotation or PAR()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.017"/>
+  <testcase name="live clock preserves real progress behind the sliding window without inventing pause progress()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.003"/>
+  <testcase name="three times speed with sustained frame drops keeps a fixed video playing()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.002"/>
+  <testcase name="measured zero counters and bandwidth remain distinct from unknown and allocator bytes()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.0"/>
+  <testcase name="real core fresh metrics do not claim unobserved zero or managed allocator bytes()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.002"/>
+  <testcase name="real core keeps PAR out of rendered dimensions and uses coded format dimensions()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.003"/>
+  <testcase name="periodic metrics delta does not repeat static video geometry()" classname="dev.ylplayer.yl_player_android.YlMetricsCollectorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

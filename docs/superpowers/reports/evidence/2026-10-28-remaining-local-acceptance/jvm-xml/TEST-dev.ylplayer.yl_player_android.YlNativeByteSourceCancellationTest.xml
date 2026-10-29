@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlNativeByteSourceCancellationTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.678Z" hostname="MacBook-Pro.local" time="0.011">
+  <properties/>
+  <testcase name="cancellationDoesNotCloseTheResponseOnTheCallingThread()" classname="dev.ylplayer.yl_player_android.YlNativeByteSourceCancellationTest" time="0.001"/>
+  <testcase name="realRangeAndHlsSourcesRetainUpstreamStatusForAvio()" classname="dev.ylplayer.yl_player_android.YlNativeByteSourceCancellationTest" time="0.008"/>
+  <testcase name="failedAvioReadRetainsCauseAcrossSeekAndClearsAfterSuccessfulRead()" classname="dev.ylplayer.yl_player_android.YlNativeByteSourceCancellationTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlCoreFrameHealthTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:36.705Z" hostname="MacBook-Pro.local" time="0.841">
+  <properties/>
+  <testcase name="paused time and old frames are discarded before the next health window()" classname="dev.ylplayer.yl_player_android.YlCoreFrameHealthTest" time="0.816"/>
+  <testcase name="low actual output cannot be hidden by fictional rendered frames during a stall()" classname="dev.ylplayer.yl_player_android.YlCoreFrameHealthTest" time="0.012"/>
+  <testcase name="ongoing rebuffer duration is not counted again in subsequent windows()" classname="dev.ylplayer.yl_player_android.YlCoreFrameHealthTest" time="0.007"/>
+  <testcase name="actual frames at high speed prevent false adaptive downgrade from a wall clock estimate()" classname="dev.ylplayer.yl_player_android.YlCoreFrameHealthTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

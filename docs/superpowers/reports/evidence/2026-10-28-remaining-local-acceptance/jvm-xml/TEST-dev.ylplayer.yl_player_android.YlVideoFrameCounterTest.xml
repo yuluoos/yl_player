@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlVideoFrameCounterTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.084Z" hostname="MacBook-Pro.local" time="0.0">
+  <properties/>
+  <testcase name="decoder replacement preserves final frames and ignores late disable from old decoder()" classname="dev.ylplayer.yl_player_android.YlVideoFrameCounterTest" time="0.0"/>
+  <testcase name="unknown is distinct from measured zero and snapshots do not invent progress()" classname="dev.ylplayer.yl_player_android.YlVideoFrameCounterTest" time="0.0"/>
+  <testcase name="duplicate enable and counter reset do not double count historical frames()" classname="dev.ylplayer.yl_player_android.YlVideoFrameCounterTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

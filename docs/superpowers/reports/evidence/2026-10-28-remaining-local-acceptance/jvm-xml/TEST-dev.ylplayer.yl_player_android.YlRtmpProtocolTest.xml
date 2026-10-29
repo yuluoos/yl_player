@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:19.236Z" hostname="MacBook-Pro.local" time="0.007">
+  <properties/>
+  <testcase name="timestamp resets are per track and force a fresh epoch()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="declared codec configurations are immutable within a demux epoch()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.001"/>
+  <testcase name="late AAC after video-only header rejects explicitly before tag output()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="AMF real object vectors preserve types and enforce recursion entries and strings()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.001"/>
+  <testcase name="fmt zero one two three timestamps inherit and advance()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="chunk stream count and aggregate reassembly bytes are bounded()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.002"/>
+  <testcase name="recovery only after commit and has one lifetime budget()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.001"/>
+  <testcase name="AVC AAC preserve payload composition and timestamp but reject enhanced codecs()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="chunk reader handles partial input extended timestamp and multi chunks()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.002"/>
+  <testcase name="bounds reject before allocation and abort releases accounting()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="valid config reset takes epoch precedence but malformed reset stays permanent()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="new fmt3 after fmt0 inherits nonzero timestamp as delta including extended values()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <testcase name="interleaved chunks reassemble independently and abort drops pending buffer()" classname="dev.ylplayer.yl_player_android.YlRtmpProtocolTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

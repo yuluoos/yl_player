@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlTvAudioSinkTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.025Z" hostname="MacBook-Pro.local" time="0.056">
+  <properties/>
+  <testcase name="ordinary factory still uses the upstream audio sink configuration()" classname="dev.ylplayer.yl_player_android.YlTvAudioSinkTest" time="0.047"/>
+  <testcase name="core enables PCM cushion only for constrained clear non DASH televisions()" classname="dev.ylplayer.yl_player_android.YlTvAudioSinkTest" time="0.008"/>
+  <testcase name="production TV factory installs bounded provider and preserves audio flags()" classname="dev.ylplayer.yl_player_android.YlTvAudioSinkTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

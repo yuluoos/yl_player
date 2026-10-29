@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.723Z" hostname="MacBook-Pro.local" time="0.133">
+  <properties/>
+  <testcase name="actual core rejects absent track and nonlive edge before mutating restore inputs()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.005"/>
+  <testcase name="all managed native integer fields preserve min max and reject one past before acceptance()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.011"/>
+  <testcase name="newer position intent wins over live edge captured by held rollback track application()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.003"/>
+  <testcase name="real host waits for worker rejection and returns exactly once without storing rejected intent()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.005"/>
+  <testcase name="real queued host replies reject missing track and VOD live edge without failing playback()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.005"/>
+  <testcase name="production create rejects invalid intervals before texture allocation()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.078"/>
+  <testcase name="core measured live offset preserves unknown and clamps negative for timeline metrics and restore()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.003"/>
+  <testcase name="worker completion after stop or replacement cannot store intent in the new session()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.003"/>
+  <testcase name="accepted track and live edge during held restoration apply after its captured restore point()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.002"/>
+  <testcase name="real host detach settles a pending asynchronous command once and ignores late worker result()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.004"/>
+  <testcase name="managed delays validate signed32 and ordering in actual assess and load()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.002"/>
+  <testcase name="runtime malformed commands leave healthy session and restore inputs unchanged()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.003"/>
+  <testcase name="load constraint ranges reject before cancelling pending load or creating engine()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.003"/>
+  <testcase name="two proven audio coordinators restore independently while first worker is held()" classname="dev.ylplayer.yl_player_android.YlFinalBoundaryTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

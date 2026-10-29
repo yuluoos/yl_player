@@ -11,7 +11,10 @@ final class AndroidCallbackProbe {
         '$prefix.$method.$suffix',
         AndroidPlayerFlutterApi.pigeonChannelCodec,
       ).setMessageHandler((message) async {
-        final value = (message! as List<Object?>).single!;
+        final arguments = message! as List<Object?>;
+        final Object value = method == 'onNetworkBytesReceived'
+            ? (arguments[0]! as String, arguments[1] as int?)
+            : arguments.single!;
         received.add(value);
         if (hold != null) {
           final current = hold!;
@@ -26,6 +29,7 @@ final class AndroidCallbackProbe {
   static const prefix =
       'dev.flutter.pigeon.yl_player_android.AndroidPlayerFlutterApi';
   static const methods = [
+    'onNetworkBytesReceived',
     'onState',
     'onStateDelta',
     'onFirstFrame',

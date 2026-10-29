@@ -1,0 +1,572 @@
+[
+  {
+    "runId": "local-20261028-120-auto-1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-120-auto-1",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 120,
+      "lastVideoRequestEndMs": 106209.883916,
+      "videoRequestTailAfterRecoveryMs": 81209.883916,
+      "downshiftLatencyUs": {
+        "min": 18082389,
+        "max": 18144783
+      },
+      "upshiftLatencyUs": {
+        "min": 17005546,
+        "max": 17067940
+      },
+      "weakLowRequestLatencyUs": 4867113,
+      "recoveryHighRequestLatencyUs": 2035063,
+      "adaptationObserved": true,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": null,
+      "rebufferDurationUsDelta": null,
+      "requestBodyBytesWritten": 6791165,
+      "requestFailures": 0,
+      "requestCount": 335,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 320418,
+      "networkPhaseBytes": [
+        1414096,
+        498237,
+        4822711
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        640.0,
+        360.0
+      ],
+      [
+        320.0,
+        180.0
+      ],
+      [
+        640.0,
+        360.0
+      ]
+    ],
+    "finalPositionUs": 120000000,
+    "lastMediaWriteMs": 107014.756208,
+    "process": {
+      "runId": "local-20261028-120-auto-1",
+      "duration": 120,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "606b55ee60390f6797f4cc761edd7a8175972c3e11b6ef9ec7cae35232ba6312",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-120-auto-2",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-120-auto-2",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 120,
+      "lastVideoRequestEndMs": 105510.682333,
+      "videoRequestTailAfterRecoveryMs": 80510.682333,
+      "downshiftLatencyUs": {
+        "min": 18012837,
+        "max": 18069562
+      },
+      "upshiftLatencyUs": {
+        "min": 17889191,
+        "max": 17945916
+      },
+      "weakLowRequestLatencyUs": 4657651,
+      "recoveryHighRequestLatencyUs": 3019217,
+      "adaptationObserved": true,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 2,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 6769634,
+      "requestFailures": 0,
+      "requestCount": 335,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 412587,
+      "networkPhaseBytes": [
+        1414467,
+        505347,
+        4793699
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        640.0,
+        360.0
+      ],
+      [
+        320.0,
+        180.0
+      ],
+      [
+        640.0,
+        360.0
+      ]
+    ],
+    "finalPositionUs": 120000000,
+    "lastMediaWriteMs": 106323.10375,
+    "process": {
+      "runId": "local-20261028-120-auto-2",
+      "duration": 120,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "9e598b359af725ce457b3c1e180a95c4f807d3b36c7b58422eb6f88b414cbc28",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-40-auto-1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-40-auto-1",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 25500.680958,
+      "videoRequestTailAfterRecoveryMs": 500.6809580000008,
+      "downshiftLatencyUs": {
+        "min": 18308853,
+        "max": 18364351
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 5398137,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 1,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 2049929,
+      "requestFailures": 0,
+      "requestCount": 114,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 273861,
+      "networkPhaseBytes": [
+        1414096,
+        480427,
+        136611
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        640.0,
+        360.0
+      ],
+      [
+        320.0,
+        180.0
+      ]
+    ],
+    "finalPositionUs": 40000000,
+    "lastMediaWriteMs": 26344.276166,
+    "process": {
+      "runId": "local-20261028-40-auto-1",
+      "duration": 40,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "86227b38f4a87b0ce7302ec26dc71bef9dcb59d566b0d3cd178ed73b7ae0f935",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-40-auto-2",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-40-auto-2",
+      "mode": "auto",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 25424.894417,
+      "videoRequestTailAfterRecoveryMs": 424.8944169999995,
+      "downshiftLatencyUs": {
+        "min": 18750826,
+        "max": 18807380
+      },
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 6212489,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 1,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 2083662,
+      "requestFailures": 0,
+      "requestCount": 113,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 270043,
+      "networkPhaseBytes": [
+        1450081,
+        491487,
+        123299
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        640.0,
+        360.0
+      ],
+      [
+        320.0,
+        180.0
+      ]
+    ],
+    "finalPositionUs": 40000000,
+    "lastMediaWriteMs": 25424.894417,
+    "process": {
+      "runId": "local-20261028-40-auto-2",
+      "duration": 40,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "ae9468ac72e3d488351be41b941a117f85d96b5143db86f79192eaa51b67d346",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-40-caps-1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-40-caps-1",
+      "mode": "caps",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 30384.000916,
+      "videoRequestTailAfterRecoveryMs": 5384.000916000001,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 653,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 3,
+      "rebufferDurationUsDelta": 1950000,
+      "requestBodyBytesWritten": 1400980,
+      "requestFailures": 0,
+      "requestCount": 113,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 729377,
+      "networkPhaseBytes": [
+        830901,
+        298653,
+        252631
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        320.0,
+        180.0
+      ]
+    ],
+    "finalPositionUs": 40000000,
+    "lastMediaWriteMs": 30384.000916,
+    "process": {
+      "runId": "local-20261028-40-caps-1",
+      "duration": 40,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "90735bab85b88eda51b10c0aa779257d3c2f34c0bc5c7e8d8242af2d212a2bb7",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-40-caps-2",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-40-caps-2",
+      "mode": "caps",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 25156.989917,
+      "videoRequestTailAfterRecoveryMs": 156.98991699999897,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": 303398,
+      "recoveryHighRequestLatencyUs": null,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": null,
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "requestBodyBytesWritten": 1400980,
+      "requestFailures": 0,
+      "requestCount": 113,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 274346,
+      "networkPhaseBytes": [
+        828940,
+        502121,
+        51124
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        320.0,
+        180.0
+      ]
+    ],
+    "finalPositionUs": 40000000,
+    "lastMediaWriteMs": 26049.429709,
+    "process": {
+      "runId": "local-20261028-40-caps-2",
+      "duration": 40,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "019598d2a4a6d42025ee811c2b6c14784b0b0df495c4844f25051edcf48e4ce8",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-40-fixed-1",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-40-fixed-1",
+      "mode": "fixed",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 29201.860334,
+      "videoRequestTailAfterRecoveryMs": 4201.860334000001,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": null,
+      "recoveryHighRequestLatencyUs": 44521,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": true,
+      "rebufferCountDelta": 1,
+      "rebufferDurationUsDelta": 532000,
+      "requestBodyBytesWritten": 2577048,
+      "requestFailures": 0,
+      "requestCount": 118,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 591356,
+      "networkPhaseBytes": [
+        1187821,
+        515720,
+        854712
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        640.0,
+        360.0
+      ]
+    ],
+    "finalPositionUs": 40000000,
+    "lastMediaWriteMs": 30072.4825,
+    "process": {
+      "runId": "local-20261028-40-fixed-1",
+      "duration": 40,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "391a0484825f3e3f8218fa14145fea07c462659efb7b6c6b0d0fcbaf46fa6e20",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  },
+  {
+    "runId": "local-20261028-40-fixed-2",
+    "summary": {
+      "schemaVersion": 1,
+      "runId": "local-20261028-40-fixed-2",
+      "mode": "fixed",
+      "captureComplete": true,
+      "programmeDurationSeconds": 40,
+      "lastVideoRequestEndMs": 26493.081542,
+      "videoRequestTailAfterRecoveryMs": 1493.081542,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "weakLowRequestLatencyUs": null,
+      "recoveryHighRequestLatencyUs": 94216,
+      "adaptationObserved": false,
+      "mediaRequestPhases": [
+        "initial",
+        "recovery",
+        "weak"
+      ],
+      "outcome": "completed",
+      "processExitCode": 0,
+      "cleaned": true,
+      "violations": [],
+      "observedGeometrySwitches": 0,
+      "fixedHighObserved": true,
+      "rebufferCountDelta": 1,
+      "rebufferDurationUsDelta": 174000,
+      "requestBodyBytesWritten": 2447965,
+      "requestFailures": 0,
+      "requestCount": 116,
+      "mediaRequestReachedRecovery": true,
+      "maximumSampleGapUs": 388564,
+      "networkPhaseBytes": [
+        1486192,
+        537227,
+        405751
+      ],
+      "networkPhasesCovered": true,
+      "adaptationLatencyUs": null,
+      "endToEndLatencyUs": null,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "baselineComparable": false
+    },
+    "geometry": [
+      [
+        640.0,
+        360.0
+      ]
+    ],
+    "finalPositionUs": 40000000,
+    "lastMediaWriteMs": 26493.081542,
+    "process": {
+      "runId": "local-20261028-40-fixed-2",
+      "duration": 40,
+      "sourceCommit": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+      "reusedToolsCommit": "83deb9ed",
+      "physicalDevice": false,
+      "baselineComparable": false,
+      "exitCode": 0,
+      "apkSha256": "2690b9169b4ed86051415ba8f98004b0238c34d91898f351b8933ab4b2dc819d",
+      "serverExitCode": 0,
+      "summaryExitCode": 0
+    }
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "ownedFlutterPid": 28859,
+  "ownedReadOnlyQueryPid": 28963,
+  "command": "28859 /opt/homebrew/share/android-commandlinetools/platform-tools/adb -s emulator-5554 shell getprop",
+  "action": "Terminate only this runner-owned stalled getprop query; do not restart or alter emulator-5554 or adb server."
+}

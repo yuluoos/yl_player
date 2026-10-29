@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlNativeCodecProbeTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.690Z" hostname="MacBook-Pro.local" time="0.057">
+  <properties/>
+  <testcase name="initialized legacy vendor retains unknown evidence and strict mode releases rejected codec()" classname="dev.ylplayer.yl_player_android.YlNativeCodecProbeTest" time="0.031"/>
+  <testcase name="preferred legacy vendor can decode native 4K HEVC without strict hardware proof()" classname="dev.ylplayer.yl_player_android.YlNativeCodecProbeTest" time="0.024"/>
+  <testcase name="legacy software names and unsupported Main10 profiles stay rejected()" classname="dev.ylplayer.yl_player_android.YlNativeCodecProbeTest" time="0.001"/>
+  <testcase name="actual software codec is rejected even when discovery returned a vendor candidate()" classname="dev.ylplayer.yl_player_android.YlNativeCodecProbeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

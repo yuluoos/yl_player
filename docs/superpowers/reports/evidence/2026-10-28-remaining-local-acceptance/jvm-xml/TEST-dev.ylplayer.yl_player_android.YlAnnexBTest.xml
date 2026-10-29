@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlAnnexBTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:35.930Z" hostname="MacBook-Pro.local" time="0.057">
+  <properties/>
+  <testcase name="mixed start codes preserve all parameter SEI and picture payloads()" classname="dev.ylplayer.yl_player_android.YlAnnexBTest" time="0.004"/>
+  <testcase name="sparse scan agrees with bytewise prefixes at every alignment()" classname="dev.ylplayer.yl_player_android.YlAnnexBTest" time="0.043"/>
+  <testcase name="large HEVC access units preserve payload across mixed prefixes and incomplete suffix()" classname="dev.ylplayer.yl_player_android.YlAnnexBTest" time="0.009"/>
+  <testcase name="canonical packet needs no copy and retains trailing bytes()" classname="dev.ylplayer.yl_player_android.YlAnnexBTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

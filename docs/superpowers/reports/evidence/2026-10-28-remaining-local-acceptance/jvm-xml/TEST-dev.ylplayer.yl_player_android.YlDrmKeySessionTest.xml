@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" tests="14" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.656Z" hostname="MacBook-Pro.local" time="0.028">
+  <properties/>
+  <testcase name="challenge copies and diagnostics never print binary data()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.003"/>
+  <testcase name="pending then key-required starts a renewal without waiting for usable()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="oversize response and system output restriction fail closed()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="denial is not expiry and explicit system expiry is distinguished()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="queued renewal challenge failure completes failure instead of losing its deadline()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.001"/>
+  <testcase name="failed candidate cannot revoke another session and open failure releases driver()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.001"/>
+  <testcase name="synchronous install callbacks are processed after successful installation only()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="pending status revokes usable state and cannot wait forever()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="renewal coalesces repeated events and dispose discards late results()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="timeout cancels transport and late result cannot install even before dispose()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.001"/>
+  <testcase name="background cancels old callbacks and foreground owns a new driver()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.002"/>
+  <testcase name="queued initial key request cannot publish readiness before renewal finishes()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.001"/>
+  <testcase name="deadline includes waiting for system usable keys()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.001"/>
+  <testcase name="HTTP success is not usable keys and duplicate response cannot install twice()" classname="dev.ylplayer.yl_player_android.YlDrmKeySessionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

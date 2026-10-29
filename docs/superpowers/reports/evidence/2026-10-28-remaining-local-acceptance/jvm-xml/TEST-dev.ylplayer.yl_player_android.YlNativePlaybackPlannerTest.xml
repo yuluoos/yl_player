@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" tests="15" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.749Z" hostname="MacBook-Pro.local" time="0.004">
+  <properties/>
+  <testcase name="rejects software video above 1080p or 30fps()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="unmeasured software is not admitted by the historical resolution envelope()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.001"/>
+  <testcase name="rejects software codecs outside approved h264 and hevc scope()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="uses software for 1080p HEVC when device decoders reject its profile level()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="uses software for unsupported h264 or hevc configuration within bounded envelope()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="audio clock interpolates between coarse hardware timestamps()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="non blocking pcm write retains partial data for a later scheduler turn()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.001"/>
+  <testcase name="software video pacing uses decoded frame time instead of reordered packet time()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.001"/>
+  <testcase name="normal speed does not install muting playback parameters()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="unknown fps never enters software decoding()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="uses hardware after FFmpeg demux when codec configuration is supported()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="audio clock interpolation never advances beyond written pcm()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="full video queue waits for presentation time instead of rendering a burst()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="pcm flush discards bytes that were not accepted by audio track()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <testcase name="main10 level 62 remains software when hardware configuration probe rejects its level()" classname="dev.ylplayer.yl_player_android.YlNativePlaybackPlannerTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

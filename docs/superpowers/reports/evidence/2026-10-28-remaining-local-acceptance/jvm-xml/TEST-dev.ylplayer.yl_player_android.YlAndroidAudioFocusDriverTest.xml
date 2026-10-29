@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:34.942Z" hostname="MacBook-Pro.local" time="0.981">
+  <properties/>
+  <testcase name="API26 uses media attributes explicit duck callbacks no delayed focus and same request for abandon()" classname="dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest" time="0.832"/>
+  <testcase name="real callbacks pause modern duck requests and duck legacy requests on main handler()" classname="dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest" time="0.023"/>
+  <testcase name="API24 honors real grant result and abandons only granted legacy request()" classname="dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest" time="0.002"/>
+  <testcase name="one application noisy receiver delivers only matching action then unregisters once()" classname="dev.ylplayer.yl_player_android.YlAndroidAudioFocusDriverTest" time="0.123"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

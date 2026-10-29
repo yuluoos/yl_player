@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.909Z" hostname="MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="aes128 without explicit iv derives it from media sequence()" classname="dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest" time="0.001"/>
+  <testcase name="parses live media sequence init map byte ranges and aes128 key()" classname="dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest" time="0.001"/>
+  <testcase name="selects the highest master variant within software envelope()" classname="dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest" time="0.0"/>
+  <testcase name="endlist marks vod and sample aes is rejected()" classname="dev.ylplayer.yl_player_android.YlHlsPlaylistParserTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

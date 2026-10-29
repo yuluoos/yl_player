@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.881Z" hostname="MacBook-Pro.local" time="0.027">
+  <properties/>
+  <testcase name="pressure and runtime profile updates never restore above heap allowance()" classname="dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest" time="0.0"/>
+  <testcase name="core initial and live mode profiles both carry device heap cap()" classname="dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest" time="0.026"/>
+  <testcase name="full byte budget permits buffered start without waiting for impossible time target()" classname="dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest" time="0.0"/>
+  <testcase name="heap allowance caps every tier source and mode without increasing existing targets()" classname="dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest" time="0.001"/>
+  <testcase name="unknown heap preserves policy and explicit smaller request stays smaller()" classname="dev.ylplayer.yl_player_android.YlHeapBufferBudgetTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

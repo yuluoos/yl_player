@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "runId": "local-20261028-40-caps-1",
+  "mode": "caps",
+  "captureComplete": true,
+  "programmeDurationSeconds": 40,
+  "lastVideoRequestEndMs": 30384.000916,
+  "videoRequestTailAfterRecoveryMs": 5384.000916000001,
+  "downshiftLatencyUs": null,
+  "upshiftLatencyUs": null,
+  "weakLowRequestLatencyUs": 653,
+  "recoveryHighRequestLatencyUs": null,
+  "adaptationObserved": false,
+  "mediaRequestPhases": [
+    "initial",
+    "recovery",
+    "weak"
+  ],
+  "outcome": "completed",
+  "processExitCode": 0,
+  "cleaned": true,
+  "violations": [],
+  "observedGeometrySwitches": 0,
+  "fixedHighObserved": null,
+  "rebufferCountDelta": 3,
+  "rebufferDurationUsDelta": 1950000,
+  "requestBodyBytesWritten": 1400980,
+  "requestFailures": 0,
+  "requestCount": 113,
+  "mediaRequestReachedRecovery": true,
+  "maximumSampleGapUs": 729377,
+  "networkPhaseBytes": [
+    830901,
+    298653,
+    252631
+  ],
+  "networkPhasesCovered": true,
+  "adaptationLatencyUs": null,
+  "endToEndLatencyUs": null,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "baselineComparable": false
+}

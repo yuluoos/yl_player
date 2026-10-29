@@ -1,0 +1,6 @@
+[
+  "./gradlew",
+  ":yl_player_android:testDebugUnitTest",
+  "--offline",
+  "--stacktrace"
+]

@@ -91,16 +91,19 @@ collect_changes() {
 
 affects_android() {
   [ "$changed_paths" = '*' ] || printf '%s\n' "$changed_paths" | grep -Eq \
-    '^(packages/yl_player_android/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'
+    '^(packages/yl_player_android/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.(yaml|lock)$|tool/|\.github/workflows/)'
 }
 
 affects_apple() {
   [ "$changed_paths" = '*' ] || printf '%s\n' "$changed_paths" | grep -Eq \
-    '^(packages/yl_player_apple/|packages/yl_player_media_core/|packages/yl_player_media_delivery/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.yaml$|tool/|\.github/workflows/)'
+    '^(packages/yl_player_apple/|packages/yl_player_media_core/|packages/yl_player_media_delivery/|packages/yl_player_platform_interface/|packages/yl_player/(lib|example)/|pubspec\.(yaml|lock)$|tool/|\.github/workflows/)'
 }
 
 android_unit() {
   step 'android-jvm-unit'
+  # Fresh checkouts omit generated Gradle launchers and local SDK properties.
+  # Flutter prepares them without compiling an APK or changing pinned versions.
+  run_in packages/yl_player_android/example flutter build apk --debug --config-only --no-pub
   run_in packages/yl_player_android/example/android \
     ./gradlew :yl_player_android:testDebugUnitTest --stacktrace
 }

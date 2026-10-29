@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlRtmpControlTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:52.255Z" hostname="MacBook-Pro.local" time="3.393">
+  <properties/>
+  <testcase name="ping replies retain timestamp and config chatter cannot prevent media timeout()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.128"/>
+  <testcase name="audio and controls alone cannot complete video setup even when paused()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="1.023"/>
+  <testcase name="Core pause freezes an already blocked loader read and resumes same connection()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.497"/>
+  <testcase name="pause preserves elapsed inactivity instead of granting a new full allowance()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="1.161"/>
+  <testcase name="Core pause before registration is inherited and Stop cancels blocked read()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.262"/>
+  <testcase name="server denial is permanent and contains no remote prose()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.003"/>
+  <testcase name="close cancels established blocked media read promptly()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.004"/>
+  <testcase name="wrong transaction is protocol failure instead of false setup success()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.002"/>
+  <testcase name="acknowledgement crosses a receive window during incomplete video message()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.003"/>
+  <testcase name="consumer backpressure longer than inactivity does not expire a healthy stream()" classname="dev.ylplayer.yl_player_android.YlRtmpControlTest" time="0.309"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

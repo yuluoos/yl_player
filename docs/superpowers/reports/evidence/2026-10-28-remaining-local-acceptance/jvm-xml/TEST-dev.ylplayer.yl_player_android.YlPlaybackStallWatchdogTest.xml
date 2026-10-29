@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.800Z" hostname="MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="repeated refresh keeps original first frame deadline()" classname="dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest" time="0.0"/>
+  <testcase name="first frame timeout reports network failure()" classname="dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest" time="0.0"/>
+  <testcase name="rebuffer timeout reports network failure after first frame()" classname="dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest" time="0.0"/>
+  <testcase name="playback recovery cancels pending rebuffer failure()" classname="dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest" time="0.0"/>
+  <testcase name="play intent cancellation suppresses pending timeout()" classname="dev.ylplayer.yl_player_android.YlPlaybackStallWatchdogTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

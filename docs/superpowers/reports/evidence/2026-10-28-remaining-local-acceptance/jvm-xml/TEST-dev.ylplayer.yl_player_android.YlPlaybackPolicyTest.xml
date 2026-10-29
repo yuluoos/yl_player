@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.788Z" hostname="MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="running low target is reduced by exactly 25 percent()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="constrained requests are clamped but smaller custom values survive()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="standard and capable modes retain bounded existing behavior()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="any constrained boundary wins()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="Android 7 1_5GB 32-bit is constrained()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="automatic live suffix and unknown live are deterministic()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="constrained automatic profiles match TVBox ceilings()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="explicit hint wins and query is ignored()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="local sources are classified before URL inspection()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="memory signals map to bounded actions()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.0"/>
+  <testcase name="capable requires every capable signal()" classname="dev.ylplayer.yl_player_android.YlPlaybackPolicyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

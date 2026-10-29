@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.429Z" hostname="MacBook-Pro.local" time="0.015">
+  <properties/>
+  <testcase name="Retry After valid date and seconds replace backoff but excessive value refuses retry()" classname="dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest" time="0.013"/>
+  <testcase name="retry count excludes initial and exponential delay saturates without jitter()" classname="dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest" time="0.0"/>
+  <testcase name="only idempotent requests and specified statuses or transient errors retry()" classname="dev.ylplayer.yl_player_android.YlManagedRetryPolicyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

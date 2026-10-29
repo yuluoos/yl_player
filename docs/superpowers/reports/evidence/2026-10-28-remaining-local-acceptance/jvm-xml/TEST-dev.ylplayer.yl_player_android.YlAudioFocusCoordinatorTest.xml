@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:35.988Z" hostname="MacBook-Pro.local" time="0.007">
+  <properties/>
+  <testcase name="denied acquisition never owns focus or receiver and a later play can retry()" classname="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" time="0.002"/>
+  <testcase name="permanent loss retires its request immediately and stale gain cannot authorize a denied new request()" classname="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" time="0.001"/>
+  <testcase name="first play acquires once and final participant alone releases focus and noisy()" classname="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" time="0.001"/>
+  <testcase name="transient loss does not authorize new or repeated play until actual gain()" classname="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" time="0.0"/>
+  <testcase name="focus and noisy reach all current participants and stale released listener is ignored()" classname="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" time="0.0"/>
+  <testcase name="framework cleanup failure cannot throw across irrevocable session handoff and still abandons owned focus()" classname="dev.ylplayer.yl_player_android.YlAudioFocusCoordinatorTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

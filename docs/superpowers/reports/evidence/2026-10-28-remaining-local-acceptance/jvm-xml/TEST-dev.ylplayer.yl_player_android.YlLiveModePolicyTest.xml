@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlLiveModePolicyTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.914Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="HTTP FLV long pause refreshes only low live demand()" classname="dev.ylplayer.yl_player_android.YlLiveModePolicyTest" time="0.0"/>
+  <testcase name="mode refresh and transient recovery spend one lifetime budget()" classname="dev.ylplayer.yl_player_android.YlLiveModePolicyTest" time="0.0"/>
+  <testcase name="absolute seek ends installed catch-up and respects explicit rate()" classname="dev.ylplayer.yl_player_android.YlLiveModePolicyTest" time="0.001"/>
+  <testcase name="RTMP low mode flushes pause backlog only on playback demand()" classname="dev.ylplayer.yl_player_android.YlLiveModePolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

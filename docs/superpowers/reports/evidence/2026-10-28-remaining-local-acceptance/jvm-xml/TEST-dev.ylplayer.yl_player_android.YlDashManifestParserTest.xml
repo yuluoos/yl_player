@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlDashManifestParserTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:37.687Z" hostname="MacBook-Pro.local" time="0.74">
+  <properties/>
+  <testcase name="finite segment endpoints infer omitted static programme duration()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.083"/>
+  <testcase name="parser publishes initialization and media alternatives only after graph admission()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.006"/>
+  <testcase name="unknown duration rejects disagreement infinite timelines and text-only evidence()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.005"/>
+  <testcase name="template child requests inherit same origin and unknown paths stay stripped()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.003"/>
+  <testcase name="multiple relative base URLs register their own children()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.006"/>
+  <testcase name="timeline list and single file index register actual request URLs()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.01"/>
+  <testcase name="unused sibling BaseURL fanout is bounded before downstream copies()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.015"/>
+  <testcase name="long BaseURL and finite segment expansion obey retained URI budget()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.528"/>
+  <testcase name="manifest byte and representation admission bounds reject before exposure()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.048"/>
+  <testcase name="finite preceding Period resolves omitted following start()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.004"/>
+  <testcase name="template expansion and numeric padding are bounded before Media3 formatting()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.003"/>
+  <testcase name="individual expanded BaseURL rejects before retained children()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.002"/>
+  <testcase name="programme retains gaps and clips overlap independently from Media3 period durations()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.006"/>
+  <testcase name="rational programme boundaries avoid fractional accumulation and signed rounding errors()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.0"/>
+  <testcase name="cross origin BaseURL followed by absolute return origin never restores credentials()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.005"/>
+  <testcase name="redirected manifest root taints all returned child requests()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.002"/>
+  <testcase name="malformed numeric attributes are sanitized as container errors()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.004"/>
+  <testcase name="video coverage retains raw rational PTO and does not fill explicit segment holes()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.002"/>
+  <testcase name="dynamic protected and excessive timeline manifests fail before child requests()" classname="dev.ylplayer.yl_player_android.YlDashManifestParserTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

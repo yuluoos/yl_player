@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlRtmpReadinessTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:19.244Z" hostname="MacBook-Pro.local" time="0.007">
+  <properties/>
+  <testcase name="terminal failure after an automatic epoch reaches original operation waiter()" classname="dev.ylplayer.yl_player_android.YlRtmpReadinessTest" time="0.002"/>
+  <testcase name="automatic epoch replacement resolves existing restore waiter with fresh decoder evidence()" classname="dev.ylplayer.yl_player_android.YlRtmpReadinessTest" time="0.001"/>
+  <testcase name="completed epoch never supplies readiness to the next epoch()" classname="dev.ylplayer.yl_player_android.YlRtmpReadinessTest" time="0.0"/>
+  <testcase name="committed coordinator foreground restore completes through automatic recovery epoch()" classname="dev.ylplayer.yl_player_android.YlRtmpReadinessTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

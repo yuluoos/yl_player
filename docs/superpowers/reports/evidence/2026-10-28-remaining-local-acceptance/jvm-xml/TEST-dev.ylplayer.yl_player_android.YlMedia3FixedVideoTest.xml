@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.581Z" hostname="MacBook-Pro.local" time="0.058">
+  <properties/>
+  <testcase name="finite DASH public clock cannot run beyond programme while AudioTrack drains()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.002"/>
+  <testcase name="restore carries semantic fixed intent and rebinds recreated tracks before publication()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.005"/>
+  <testcase name="fixed cap conflict leaves policy and restore point unchanged and health cannot downgrade()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.003"/>
+  <testcase name="queued earlier output must not borrow the latest input coded format()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.002"/>
+  <testcase name="output coded metadata changes even when cropped VideoSize is unchanged()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.022"/>
+  <testcase name="same Period explicit quality change publishes output size without waiting for new tracks()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.004"/>
+  <testcase name="DASH output coverage follows actual format and half open period clock()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.003"/>
+  <testcase name="actual renderer reset hides old picture before a new output can publish()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.002"/>
+  <testcase name="output generations fence queued frames and deduplicate without losing reset recovery()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.001"/>
+  <testcase name="lookahead and delayed prior Period callbacks cannot release fixed mode and stop fences old callbacks()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.004"/>
+  <testcase name="read ahead input and scheduled future size stay pending until current Period mode changes()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.004"/>
+  <testcase name="core preserves fixed and catalog across transient emptiness then publishes PD01 and sticky reason()" classname="dev.ylplayer.yl_player_android.YlMedia3FixedVideoTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

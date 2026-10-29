@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" tests="8" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.912Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="focus grace expiry releases and later gain rebuilds()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <testcase name="dispose is emitted exactly once()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <testcase name="explicit pause is never undone by focus gain()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.001"/>
+  <testcase name="focus gain inside grace resumes only focus-paused playback()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <testcase name="foreground rebuilds a paused source without starting playback()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <testcase name="surface and memory events map to bounded actions()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <testcase name="surface generation rejects stale source and surface callbacks()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <testcase name="background release is idempotent()" classname="dev.ylplayer.yl_player_android.YlLifecyclePolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.804Z" hostname="MacBook-Pro.local" time="0.117">
+  <properties/>
+  <testcase name="real factories across registries retain one application focus owner until final registry detaches()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.011"/>
+  <testcase name="dispose unregisters and releases once even when called twice()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="factory or handler setup failure rolls back allocated resources()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.001"/>
+  <testcase name="real production binding creates idle session and incompatible schema allocates nothing()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="plugin registers only the generated factory and removes its lifecycle registrations()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.045"/>
+  <testcase name="real factory accepts explicit managed audio without idle ownership or allocation()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.0"/>
+  <testcase name="load reply preserves request identity and mismatches fail safely()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.003"/>
+  <testcase name="create registers one unique monotonic suffix per texture and attach is once only()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.003"/>
+  <testcase name="all generated command handlers sanitize thrown session errors()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.009"/>
+  <testcase name="texture allocation failure is typed and creates no session()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="delivery failure cancels pending load and releases the instance()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.004"/>
+  <testcase name="committed schema 3 bytes reach schema 4 factory version gate()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.003"/>
+  <testcase name="failed texture id read releases every allocated resource()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.003"/>
+  <testcase name="timeout and engine detach settle pending load and ignore late acknowledgement()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.005"/>
+  <testcase name="foreign protected view registration fails attachment without host admission()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.001"/>
+  <testcase name="detach invalidates every host immediately and owns independent cleanup until acknowledged()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="actual recoverable load uses observed fallback without bypassing session identity()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.004"/>
+  <testcase name="a transient handler removal failure is retried while all other handlers are removed()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="new player inherits registry background state()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="engine detach releases all hosts when a session teardown throws()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.003"/>
+  <testcase name="lifecycle forwarding isolates a failed host and keeps other sessions alive()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <testcase name="host catches session exception before generated fallback and attach failure closes instance()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.001"/>
+  <testcase name="dispose waits asynchronously for safe session release before releasing texture()" classname="dev.ylplayer.yl_player_android.YlPlayerRegistryTest" time="0.002"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,62 @@
+[
+  {
+    "name": "abr-repeat",
+    "command": [
+      "python3",
+      "/private/tmp/yl-local-acceptance/run_abr.py",
+      "caps:40:1",
+      "fixed:40:1",
+      "auto:40:2",
+      "auto:120:2",
+      "caps:40:2",
+      "fixed:40:2"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 680.8432980829966
+  },
+  {
+    "name": "foundation",
+    "command": [
+      "sh",
+      "tool/check_foundation.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 1,
+    "elapsedSeconds": 173.36002691600152
+  },
+  {
+    "name": "android-example-dependencies",
+    "command": [
+      "flutter",
+      "pub",
+      "get"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player_android/example",
+    "exitCode": 0,
+    "elapsedSeconds": 1.5972249579936033
+  },
+  {
+    "name": "jvm-peer",
+    "command": [
+      "python3",
+      "tool/rtmp_acceptance/run.py",
+      "--",
+      "python3",
+      "/private/tmp/yl-local-acceptance/run_jvm_peer.py"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 1,
+    "elapsedSeconds": 5.757434624996677
+  },
+  {
+    "name": "android-device",
+    "command": [
+      "sh",
+      "tool/check_native_android.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 1,
+    "elapsedSeconds": 83.84014341700095
+  }
+]

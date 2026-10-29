@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.802Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="resource and live recovery errors are stable()" classname="dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest" time="0.0"/>
+  <testcase name="missing hardware decoder has a stable public error()" classname="dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest" time="0.0"/>
+  <testcase name="codec diagnostic cannot contain a URL or headers()" classname="dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest" time="0.001"/>
+  <testcase name="adaptive decoder initialization can retry only once()" classname="dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest" time="0.0"/>
+  <testcase name="capability and decoder failures keep distinct codes()" classname="dev.ylplayer.yl_player_android.YlPlayerErrorPolicyTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

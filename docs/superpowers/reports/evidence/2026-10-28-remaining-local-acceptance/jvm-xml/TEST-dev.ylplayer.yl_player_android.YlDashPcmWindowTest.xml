@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.427Z" hostname="MacBook-Pro.local" time="0.045">
+  <properties/>
+  <testcase name="PCM sink retains clipped buffer across partial writes and duplicate manifest merges()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.038"/>
+  <testcase name="negative preroll keeps only samples in the programme window()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.001"/>
+  <testcase name="fractional endpoints project once to sample grid without accumulating drift()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.0"/>
+  <testcase name="codec preroll is bounded without silently truncating extreme frame duration()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.0"/>
+  <testcase name="seek flush discards partially written gap before accepting new position()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.002"/>
+  <testcase name="final AAC buffer is clipped after decoding not at compressed packet boundary()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.0"/>
+  <testcase name="encoder priming is trimmed from content before leading silence is inserted()" classname="dev.ylplayer.yl_player_android.YlDashPcmWindowTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlProtectedOutputTest" tests="13" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.941Z" hostname="MacBook-Pro.local" time="0.024">
+  <properties/>
+  <testcase name="frame arriving before attach acknowledgement reveals only after acknowledgement()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.002"/>
+  <testcase name="coordinator publishes protected frame identity and failed replacement restores old session()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.002"/>
+  <testcase name="holder destruction and retirement detach before returning with attach held()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.003"/>
+  <testcase name="uncommitted unknown and duplicate view cannot borrow another candidate()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.001"/>
+  <testcase name="destroy waits for worker detach and queued attach rechecks revision()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.003"/>
+  <testcase name="protected replacement rejects inactive and inspection branches()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.0"/>
+  <testcase name="failed candidate does not retire current and commit fences previous owner()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.002"/>
+  <testcase name="declared protected source cannot silently commit clear selected video()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.0"/>
+  <testcase name="protected primary never invokes clear native fallback on decoder failure()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.002"/>
+  <testcase name="protected core rejects ordinary output before attaching decoder()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.003"/>
+  <testcase name="late attachment ACK and frame are fenced across holder recreation and retire()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.002"/>
+  <testcase name="protected output rejects insecure switch and inspection before touching decoder()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.002"/>
+  <testcase name="native old frame cannot acquire new revision when same surface is rebound()" classname="dev.ylplayer.yl_player_android.YlProtectedOutputTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

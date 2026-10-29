@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.857Z" hostname="MacBook-Pro.local" time="0.023">
+  <properties/>
+  <testcase name="legacy software codec names are rejected()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="strict gate waits for initialized evidence and admits audio without video callback()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.001"/>
+  <testcase name="positive evidence belongs to initialized codec and unavailable on API28 names()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="audio codecs pass through normal Media3 selection()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="HEVC requires an explicit accepted hardware candidate()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="constrained envelope is capped at 1080p30()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="32 bit television keeps constrained buffers without rejecting hardware supported 4K()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.001"/>
+  <testcase name="strict selector accepts only API29 records and refuses name-only API28 candidates()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.001"/>
+  <testcase name="known vendor codec names are accepted()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="platform software flag wins over a vendor-looking name()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="host limits can only tighten an envelope()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="landscape display does not reject portrait video by encoded height()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="production inventory reports deduplicated video MIME families excluding software audio and encoders()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.017"/>
+  <testcase name="canonical aliases prove only consistent exact initialized codec metadata()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.001"/>
+  <testcase name="hardware preferred can play legacy vendor codecs without claiming hardware evidence()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="display resolution is a viewport preference and tier limits remain hard()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="portrait display does not reject landscape video by encoded width()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <testcase name="unmeasured Media3 software is never offered for video under any policy()" classname="dev.ylplayer.yl_player_android.YlHardwareCodecSelectorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

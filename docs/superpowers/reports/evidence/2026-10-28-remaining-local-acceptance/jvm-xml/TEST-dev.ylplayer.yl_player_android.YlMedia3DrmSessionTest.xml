@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.526Z" hostname="MacBook-Pro.local" time="0.054">
+  <properties/>
+  <testcase name="bounded key wait maps timeout and never claims expired()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.021"/>
+  <testcase name="clear and incompatible encryption do not open driver or send license()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <testcase name="changed Period initialization has independent session and bounded concurrency()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.003"/>
+  <testcase name="last release cancels license and discards late response and callback()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.002"/>
+  <testcase name="format bytes copied and ambiguous or oversized init never creates session()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <testcase name="dispose before scheduled start allocates nothing and bad close cannot escape coroutine()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <testcase name="DASH capability probe accepts missing manifest PSSH but acquisition still requires init bytes()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <testcase name="event subscriptions balance duplicate acquires and late subscriber receives current state()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.017"/>
+  <testcase name="reference counts retain decoder borrowed keys through manager release and system failure()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <testcase name="last release closes CDM and clears challenge before playback looper can quit()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <testcase name="candidate waits for usable system keys and failure ends readiness wait()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.002"/>
+  <testcase name="Media3 cannot decode until system keys usable and pending revokes usability()" classname="dev.ylplayer.yl_player_android.YlMedia3DrmSessionTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

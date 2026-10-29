@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlDrmBridgeTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.629Z" hostname="MacBook-Pro.local" time="0.026">
+  <properties/>
+  <testcase name="redirect rejection retains its actionable failure code()" classname="dev.ylplayer.yl_player_android.YlDrmBridgeTest" time="0.004"/>
+  <testcase name="coordinator routes DRM through protected factory and license bridge then returns descriptor()" classname="dev.ylplayer.yl_player_android.YlDrmBridgeTest" time="0.004"/>
+  <testcase name="cancelled native request sends cancellation and never installs late reply()" classname="dev.ylplayer.yl_player_android.YlDrmBridgeTest" time="0.004"/>
+  <testcase name="view ACK waits for worker attachment and rejects wrong owner()" classname="dev.ylplayer.yl_player_android.YlDrmBridgeTest" time="0.009"/>
+  <testcase name="cancelling exact pending load preserves current session and cannot cancel a newer request()" classname="dev.ylplayer.yl_player_android.YlDrmBridgeTest" time="0.002"/>
+  <testcase name="binary reply must match complete exchange identity and standard errors retain meaning()" classname="dev.ylplayer.yl_player_android.YlDrmBridgeTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

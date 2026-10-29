@@ -1,0 +1,16 @@
+[
+  "/private/tmp/yl-local-acceptance/venv/bin/python3",
+  "-B",
+  "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/playback_network/network_profile.py",
+  "--root",
+  "/private/tmp/yl-local-acceptance/fixture-40",
+  "--profile",
+  "down-and-recover-v1",
+  "--start-on-first-get",
+  "--run-id",
+  "local-20261028-40-caps-2",
+  "--port",
+  "18791",
+  "--log",
+  "/private/tmp/yl-local-acceptance/local-20261028-40-caps-2/requests.jsonl"
+]

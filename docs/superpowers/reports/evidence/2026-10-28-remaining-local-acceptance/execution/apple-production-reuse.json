@@ -1,0 +1,19 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--name-only",
+    "c07fba9f",
+    "63f5a618",
+    "--",
+    "packages/yl_player_apple",
+    "packages/yl_player_media_core",
+    "packages/yl_player_media_delivery",
+    "packages/yl_player_platform_interface",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "exitCode": 0,
+  "changedFiles": [],
+  "note": "Scope includes tests/examples; empty diff supports reuse of unchanged native evidence, not new execution. Shared yl_player view is covered by current Flutter tests."
+}

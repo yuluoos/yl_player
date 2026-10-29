@@ -1,0 +1,14 @@
+logLevel: info
+rtsp: false
+rtmp: true
+rtmpAddress: 127.0.0.1:19350
+hls: false
+webrtc: false
+srt: false
+moq: false
+api: false
+metrics: false
+pprof: false
+playback: false
+paths:
+  all_others:

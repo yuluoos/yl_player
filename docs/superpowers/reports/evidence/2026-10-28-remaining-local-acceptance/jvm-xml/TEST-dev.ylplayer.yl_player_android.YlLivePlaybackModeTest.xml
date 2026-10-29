@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlLivePlaybackModeTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.916Z" hostname="MacBook-Pro.local" time="0.008">
+  <properties/>
+  <testcase name="duplicate IDs background and unknown live state reject before worker()" classname="dev.ylplayer.yl_player_android.YlLivePlaybackModeTest" time="0.002"/>
+  <testcase name="native FIFO commits each request and preserves rejection between successes()" classname="dev.ylplayer.yl_player_android.YlLivePlaybackModeTest" time="0.003"/>
+  <testcase name="stop immediately cancels native pending modes and late worker cannot publish()" classname="dev.ylplayer.yl_player_android.YlLivePlaybackModeTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.446Z" hostname="MacBook-Pro.local" time="0.072">
+  <properties/>
+  <testcase name="owned gap hides stale video and accepts content commands without publishing silence as an audio track()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.016"/>
+  <testcase name="same declared id with different audio roles never collides()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.005"/>
+  <testcase name="missing format ids follow role when groups reorder()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.005"/>
+  <testcase name="accepted choice survives stale observed selection and invalid command()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.004"/>
+  <testcase name="DASH restore rebinds declared content despite representation names and array order()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.006"/>
+  <testcase name="actual missing audio in nonempty Period reports error instead of replacing choice()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.003"/>
+  <testcase name="lookahead and late Period catalogs never replace public audio directory()" classname="dev.ylplayer.yl_player_android.YlMedia3AudioIdentityTest" time="0.032"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,22 @@
+{
+  "base": "63f5a6188b604eaf28d00238593f8582fc3de2b4",
+  "branch": "codex/remaining-local-acceptance",
+  "trackedDiffSha256": "5fae17b43064d3e2e66a48542574e80d324ebef67407789b1ba2fa82bd5163ba",
+  "files": {
+    ".github/workflows/ci.yml": "e1e237d49bab952e0bdf26031f08facc41f3102018f05027fcb9598745a55366",
+    "docs/superpowers/plans/2026-10-28-remaining-local-acceptance.md": "382a8a11e199a46d9638fd08922d7c609ca45753a3cce6a276aecbfab5e5d7e9",
+    "docs/superpowers/reports/2026-10-28-remaining-local-acceptance.md": "9c68fe50ace545eb074585156eae48fc758ec929f66215117213bbb0b6120763",
+    "packages/yl_player/example/integration_test/android_multi_player_rollback_test.dart": "0e3f32813e240cc436de8887b938a7828899db734f88e184ff6c1c552d45fe3f",
+    "packages/yl_player/example/integration_test/support/android_callback_probe.dart": "cc92817ac249debffb9ecddb4b0ee4c7a0635f2829196366a919a19e02840bc9",
+    "packages/yl_player/example/test/android_callback_probe_test.dart": "f666911e119733301ce3485840a9e8cf9e28f13dd46e914922c5fafa0087274d",
+    "packages/yl_player/test/android_player_controller_test.dart": "2ecada13e9924d8fd8cfb17e20c8e79f106b12998474be899b2705b9e29c4077",
+    "tool/check_foundation.sh": "2eee4fd91c798dbd139a946bd79a58e6d24cb14ed7be2efc2c59e99be27fee6c",
+    "tool/check_native_android.sh": "bdc227fc38b56eaad7547e4783d0dcac57ad238bfcb8c0fb8dfcb72834b10fc9",
+    "tool/check_player_v2.sh": "6a1912a8ed50903404dbe8fab680725443413d76487f7f9320bfffffafabdd42",
+    "tool/release_readiness/inventory.json": "5d702cf30700c411eba9304ac448a4d072edc7af76685512e14b4d05d1506e9a",
+    "tool/test_android_scripts.py": "0c03a75e5b44bb0fd535cff23e5f7e00514f22ff7fcd096209e8642f9f4e7f75",
+    "tool/test_player_v2_gate.py": "3d4b3ae5f4c1ff5622c143134ddaa77a15ad6e88eafdf276b9be9155a95ca843"
+  },
+  "releaseScopeSha256": "b4651f1fd23bf40cbc2384b2a0f39c0f0f90b0f736ca918b71aa25a895972eb5",
+  "note": "Uncommitted candidate file identities; excludes evidence directory to avoid a self-referential hash. Product scope is separate from CI/test/report scope."
+}

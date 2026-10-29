@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:36.435Z" hostname="MacBook-Pro.local" time="0.084">
+  <properties/>
+  <testcase name="background during actual public replacement retains current unreleased output for foreground()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.03"/>
+  <testcase name="foreground during recreate install gap never attaches a released wrapper()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.005"/>
+  <testcase name="rollback retains private resources on unacknowledged detach()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.002"/>
+  <testcase name="acknowledged detach revokes render eligibility while retaining owned resources()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.001"/>
+  <testcase name="worker accepted old frame crossing rebuild cannot consume main public milestone()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.041"/>
+  <testcase name="native holder replacements fence old frames and keep parking surface until release()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.001"/>
+  <testcase name="strict reacquisition keeps public surface private until new evidence and acknowledged handoff()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.0"/>
+  <testcase name="configuration replacement during strict inspection cannot publish the new public surface()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.0"/>
+  <testcase name="private resource releases only after successful public output acknowledgement()" classname="dev.ylplayer.yl_player_android.YlCandidateVideoOutputTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,17 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--name-only",
+    "63f5a618",
+    "--",
+    "packages/*/lib",
+    "packages/*/android",
+    "packages/*/darwin",
+    "pubspec.yaml",
+    "pubspec.lock"
+  ],
+  "exitCode": 0,
+  "stdout": "",
+  "stderr": ""
+}

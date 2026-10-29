@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.944Z" hostname="MacBook-Pro.local" time="12.483">
+  <properties/>
+  <testcase name="resumed framing mismatch fails before delivering bytes beyond the validated range()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="1.005"/>
+  <testcase name="mismatching resume and cancellation cannot produce concatenated body or extra retry()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="3.016"/>
+  <testcase name="managed requests disable transparent gzip and unsafe encoded resume()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="1.008"/>
+  <testcase name="connected server header stall expires and body timeout starts only after headers()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="2.011"/>
+  <testcase name="chunked shortened range cannot leak wrong bytes inside the original resource length()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.024"/>
+  <testcase name="logs retain real upstream statuses across managed retries without exposing request data()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.008"/>
+  <testcase name="actual HLS parser propagates master media key segment and return-origin provenance for both policies()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.045"/>
+  <testcase name="OkHttp status recovery cannot bypass zero managed retry budget()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.004"/>
+  <testcase name="both policies keep same origin headers and permanently strip custom credentials across redirects()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.017"/>
+  <testcase name="chunked full remaining range overrun fails before completing a capped caller read()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.006"/>
+  <testcase name="managed status retry count and events are exact()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.04"/>
+  <testcase name="chunked final span EOF probe preserves inactivity retry and cancellation()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="2.025"/>
+  <testcase name="managed rejects mismatched initial range and body retry header changes()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="1.014"/>
+  <testcase name="chunked premature EOF cannot reset an exhausted retry budget()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.01"/>
+  <testcase name="chunked short EOF and valid shortened spans resume inside the original retry budget()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.018"/>
+  <testcase name="injected clock schedules one retry and fresh hop deadlines while preserving counters()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.008"/>
+  <testcase name="partial body resumes exactly with same budget and strong validator()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="1.009"/>
+  <testcase name="nonretryable 421 stays visible and no retry event is emitted()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.007"/>
+  <testcase name="redirect limit log includes the actual upstream redirect status()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.006"/>
+  <testcase name="premature fixed length disconnect resumes with same strong representation()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.008"/>
+  <testcase name="307 and 308 retain method body and redirect counter survives retries()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.02"/>
+  <testcase name="cancellation while body resume retry is scheduled prevents reopening()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="1.012"/>
+  <testcase name="header deadline settles while DNS is still blocked and late lookup cannot consume another budget()" classname="dev.ylplayer.yl_player_android.YlManagedRedirectInterceptorTest" time="0.154"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

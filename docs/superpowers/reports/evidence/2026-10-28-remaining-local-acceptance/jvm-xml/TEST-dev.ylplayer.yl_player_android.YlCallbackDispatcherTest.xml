@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:36.268Z" hostname="MacBook-Pro.local" time="0.166">
+  <properties/>
+  <testcase name="five second acknowledgement deadline is terminal()" classname="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" time="0.05"/>
+  <testcase name="snapshot copies caller owned track lists and keeps original load identity()" classname="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" time="0.002"/>
+  <testcase name="callback error terminates once and never skips the failed milestone()" classname="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" time="0.003"/>
+  <testcase name="detach invalidates in flight acknowledgement and queued items()" classname="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" time="0.004"/>
+  <testcase name="attach gates all methods and each acknowledgement permits exactly one following item()" classname="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" time="0.004"/>
+  <testcase name="all six generated callback methods share one acknowledged queue and suffix()" classname="dev.ylplayer.yl_player_android.YlCallbackDispatcherTest" time="0.103"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

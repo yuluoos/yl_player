@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" tests="54" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:19.885Z" hostname="MacBook-Pro.local" time="0.122">
+  <properties/>
+  <testcase name="new load in retained background waits without allocation or autoplay()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="pending retry events replay once after initial or replacement commit before live retries()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="held background release survives stop close and caller cancellation before safe cleanup()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="background during held foreground restore retains unapplied explicit play()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="committed failure emits failed state and exactly one session failure()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="commit publishes correlated loading and uses player local monotonic identity()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="candidate failure callback before commit keeps former authoritative()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="volume changed after worker assignment follows committed player()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="background at committed loading keeps reply and saves not yet dispatched autoplay()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="rollback uses current position after earlier seek has advanced()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="safe exceptional close waits for other retired engine release before freeing output()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="play and pause while backgrounded only change foreground playback intention()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="old session command is stale and stop cancels candidate while preserving output()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="candidate preparation failure leaves former decoder untouched()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="failed and stopped candidates discard provisional retries()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="play during held predecessor quiesce cannot bypass shared lease()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.005"/>
+  <testcase name="play queued during failed quiesce cannot reactivate failed resources()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.005"/>
+  <testcase name="upstream status survives committed failure and stale failure cannot overwrite replacement()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="foreground publishes snapshot observed during held restoration only after acknowledgement()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="managed credentials share assessment and load route without interim rejection()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="pause of playing background session remains paused after lease restoration()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="replacement waits captured background release and cannot lose new lease to its continuation()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="safe cleanup error does not touch former or replace original preparation failure()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="private frame does not consume public gate and late output frames are ignored()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="strict activation deadline reports decoder unavailable and restores former session()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="caller cancellation retains completed quiesce snapshot for rollback()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="candidate traffic arrives before commit and old candidate cannot publish after stop()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="activation failure restores same player old engine before returning()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="controls changed while peer activation fails survive rollback()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="foreground waits held background quiesce before restoring original play intent()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="real managed wrapper stop succeeds for active and pending replacement while load cancels()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.004"/>
+  <testcase name="background cancels held first load before it can autoplay()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="candidate upstream failure preserves HTTP cause and former session()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="close remains pending until every engine safely releases and main keeps running()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="foreground background bounce preserves explicit play until applied()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="two nonexclusive sessions suspend on background and retain independent intent()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="managed close preserves output until every borrower acknowledges even after failure()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="validation and prepare failure retain old session with no new state()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="background shares held peer quiesce and completes before candidate disposal()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="memory notification reaches candidate held in decoder activation()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="stop and close retain lease until acknowledged disposal while stop fences presentation()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="background cancels held replacement and foreground restores only saved intent()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="stop cancels candidate without waiting for old restoration()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="peer retains metadata and reacquires lease on play()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="background release stays independent of unacknowledged candidate cleanup()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <testcase name="network on demand activation may continue beyond the live deadline()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="quiesce failure cannot retain a false playing state()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="held restore cannot acknowledge constraints without worker application()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="second load cancels uncommitted candidate and ignores its late callback()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="worker rejection does not replace remembered video constraints()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="video command rejects unimplemented engine without changing mode()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.001"/>
+  <testcase name="fixed commands require worker acknowledgement and reject held restoration()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="fixed semantic restore point survives replacement rollback and old session cannot affect replacement or stop()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.002"/>
+  <testcase name="synchronous publication failure closes accepted session without restoring former()" classname="dev.ylplayer.yl_player_android.YlSessionCoordinatorTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

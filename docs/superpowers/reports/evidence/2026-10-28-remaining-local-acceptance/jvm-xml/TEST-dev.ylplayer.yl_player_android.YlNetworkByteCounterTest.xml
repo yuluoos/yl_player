@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlNetworkByteCounterTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.758Z" hostname="MacBook-Pro.local" time="0.027">
+  <properties/>
+  <testcase name="concurrent reads accumulate once and separate loads stay isolated()" classname="dev.ylplayer.yl_player_android.YlNetworkByteCounterTest" time="0.01"/>
+  <testcase name="HTTP counts body payload for both policies and repeated requests without bitrate estimates()" classname="dev.ylplayer.yl_player_android.YlNetworkByteCounterTest" time="0.013"/>
+  <testcase name="RTMP counts received handshake bytes before media readiness or protocol failure()" classname="dev.ylplayer.yl_player_android.YlNetworkByteCounterTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

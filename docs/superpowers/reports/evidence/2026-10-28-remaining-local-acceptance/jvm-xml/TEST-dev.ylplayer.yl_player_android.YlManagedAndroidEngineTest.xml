@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.924Z" hostname="MacBook-Pro.local" time="0.019">
+  <properties/>
+  <testcase name="fixed selection delegates and blocks incompatible fallback until authoritative auto snapshot()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.003"/>
+  <testcase name="rejected constraints do not poison later fallback policy()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.001"/>
+  <testcase name="DASH disabled fallback preserves terminal prepare and asynchronous failures()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.002"/>
+  <testcase name="already completed release remains successful with immediate dispatch()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.001"/>
+  <testcase name="explicit auto reason survives fallback snapshots and restoration until stop()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.004"/>
+  <testcase name="failed borrower release still waits for every other owned release()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.001"/>
+  <testcase name="decoder failure during activation switches once and restores controls()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.001"/>
+  <testcase name="track unavailable reason survives fallback snapshots and restoration until stop()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.002"/>
+  <testcase name="decoder failure during preparation publishes the backend switch()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.001"/>
+  <testcase name="disposal acknowledgement waits for owned release and completes without self cancellation()" classname="dev.ylplayer.yl_player_android.YlManagedAndroidEngineTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.024Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="high rate multichannel audio adds at most 256 KiB in whole frames()" classname="dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest" time="0.0"/>
+  <testcase name="stereo PCM gains a small scheduling cushion without changing speed processing()" classname="dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest" time="0.0"/>
+  <testcase name="passthrough and offload sizes preserve Media3 device workarounds()" classname="dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest" time="0.001"/>
+  <testcase name="platform playback speed cannot multiply the additional byte allowance()" classname="dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest" time="0.0"/>
+  <testcase name="platform minimum is never reduced or needlessly inflated()" classname="dev.ylplayer.yl_player_android.YlTvAudioBufferSizeProviderTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

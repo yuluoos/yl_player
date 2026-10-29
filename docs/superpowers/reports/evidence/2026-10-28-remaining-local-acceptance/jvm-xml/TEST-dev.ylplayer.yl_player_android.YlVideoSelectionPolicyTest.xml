@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.085Z" hostname="MacBook-Pro.local" time="0.016">
+  <properties/>
+  <testcase name="DASH automatic selection stays in accepted SDR family across Period and restore()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.006"/>
+  <testcase name="absence returns auto and clears override while transient empty groups retain fixed intent()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.001"/>
+  <testcase name="DASH Dolby family retains profile and transfer and rejects unproven FEL path()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.0"/>
+  <testcase name="selection boundary fixes recreated group before next Period prebuffer without changing public intent()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.002"/>
+  <testcase name="missing AVC fixed quality can fall back to supported SDR HEVC while preserving independent caps()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.001"/>
+  <testcase name="unsupported decoder cap conflict unknown constrained metadata and HDR fail safely()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.001"/>
+  <testcase name="DASH actual decoder color cannot contradict accepted manifest family()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.0"/>
+  <testcase name="SDR HEVC fixed quality preserves identity across recreated Period groups()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.001"/>
+  <testcase name="fixed override contains exactly requested track and survives changed IDs and order()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.001"/>
+  <testcase name="explicit high bitdepth AVC metadata is incompatible even when codec profile claims SDR()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.0"/>
+  <testcase name="auto explicit choice and reset have separate stable reasons()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.0"/>
+  <testcase name="same resolution is not identity and duplicate semantic identity is rejected()" classname="dev.ylplayer.yl_player_android.YlVideoSelectionPolicyTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

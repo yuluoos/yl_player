@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:34.904Z" hostname="MacBook-Pro.local" time="0.036">
+  <properties/>
+  <testcase name="runtime profile change preserves memory pressure until explicit restore()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.029"/>
+  <testcase name="new source profile replaces pressure state()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <testcase name="loading stops at maximum duration()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.001"/>
+  <testcase name="loading continues below minimum while byte budget remains()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <testcase name="pinned Media3 selected tracks callback retains explicit buffer target()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.002"/>
+  <testcase name="memory shrink is idempotent until restore()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <testcase name="pinned Media3 prepare callback is implemented without changing adaptive profile()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <testcase name="playback start uses bounded initial and rebuffer thresholds()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <testcase name="loading continues between duration limits while bytes remain()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <testcase name="playback speed reduces playout duration()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.001"/>
+  <testcase name="byte ceiling wins over additional buffer time()" classname="dev.ylplayer.yl_player_android.YlAdaptiveLoadControlTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

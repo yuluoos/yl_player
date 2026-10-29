@@ -51,7 +51,7 @@ void main() {
             networkPolicy: const YlNetworkPolicy.managed(maxRetries: 0),
           ),
         ),
-        throwsA(failureCode(YlFailureCodes.networkFailed)),
+        throwsA(failureCode('network.http_status.404')),
       );
       expect(first.state.sessionId, session.id);
       await waitForState(

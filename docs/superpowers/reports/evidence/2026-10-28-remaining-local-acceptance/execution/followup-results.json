@@ -1,0 +1,55 @@
+[
+  {
+    "name": "foundation-resume",
+    "command": [
+      "sh",
+      "/private/tmp/yl-local-acceptance/foundation-resume.sh"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 158.67823441699875
+  },
+  {
+    "name": "final-analyze",
+    "command": [
+      "flutter",
+      "analyze"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exitCode": 0,
+    "elapsedSeconds": 8.69548429200222
+  },
+  {
+    "name": "android_session_replacement-retry",
+    "command": [
+      "sh",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/run_android_integration.sh",
+      "integration_test/android_session_replacement_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 0,
+    "elapsedSeconds": 42.116838041001756
+  },
+  {
+    "name": "android_multi_player_rollback-retry",
+    "command": [
+      "sh",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/run_android_integration.sh",
+      "integration_test/android_multi_player_rollback_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 1,
+    "elapsedSeconds": 38.334024375006265
+  },
+  {
+    "name": "state_update_cadence-retry",
+    "command": [
+      "sh",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/run_android_integration.sh",
+      "integration_test/state_update_cadence_test.dart"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exitCode": 79,
+    "elapsedSeconds": 278.96639549999963
+  }
+]

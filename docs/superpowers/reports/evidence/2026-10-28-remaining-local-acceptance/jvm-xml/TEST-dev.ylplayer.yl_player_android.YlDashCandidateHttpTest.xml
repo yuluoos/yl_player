@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:37.560Z" hostname="MacBook-Pro.local" time="0.123">
+  <properties/>
+  <testcase name="managed DASH starts at declared first candidate regardless of Media3 choice()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.067"/>
+  <testcase name="body resume stays on validated candidate and shares its retry budget()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.01"/>
+  <testcase name="foreign fallback and return origin do not restore custom credentials()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.013"/>
+  <testcase name="candidate switching shares one retry budget rather than retries per URL()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.013"/>
+  <testcase name="cancel during scheduled candidate retry prevents the next request()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.005"/>
+  <testcase name="candidate changes cannot refund redirect budget()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.009"/>
+  <testcase name="caller entity validator pins original candidate rather than restarting at first()" classname="dev.ylplayer.yl_player_android.YlDashCandidateHttpTest" time="0.005"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

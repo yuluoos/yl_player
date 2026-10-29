@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.939Z" hostname="MacBook-Pro.local" time="0.001">
+  <properties/>
+  <testcase name="missing secure or actual hardware evidence fails closed()" classname="dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest" time="0.001"/>
+  <testcase name="Media3 insecure retry still queries secure codecs and filters false evidence()" classname="dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest" time="0.0"/>
+  <testcase name="audio secure requirement is preserved and cannot select unprotected audio()" classname="dev.ylplayer.yl_player_android.YlProtectedCodecSelectorTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

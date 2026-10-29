@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlSourceAssessmentTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.012Z" hostname="MacBook-Pro.local" time="0.002">
+  <properties/>
+  <testcase name="known local content progressive and managed HLS have real routes()" classname="dev.ylplayer.yl_player_android.YlSourceAssessmentTest" time="0.0"/>
+  <testcase name="automatic DASH path is a known route despite query()" classname="dev.ylplayer.yl_player_android.YlSourceAssessmentTest" time="0.0"/>
+  <testcase name="malformed descriptors and unimplemented hard buffers reject()" classname="dev.ylplayer.yl_player_android.YlSourceAssessmentTest" time="0.0"/>
+  <testcase name="unknown containers and attainable strict evidence require inspection()" classname="dev.ylplayer.yl_player_android.YlSourceAssessmentTest" time="0.001"/>
+  <testcase name="invalid ports and HTTP header values fail before native allocation()" classname="dev.ylplayer.yl_player_android.YlSourceAssessmentTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

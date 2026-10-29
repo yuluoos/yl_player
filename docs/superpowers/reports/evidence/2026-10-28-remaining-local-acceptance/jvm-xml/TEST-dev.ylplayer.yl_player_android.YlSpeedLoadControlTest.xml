@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:20.015Z" hostname="MacBook-Pro.local" time="0.004">
+  <properties/>
+  <testcase name="live dynamic unknown and ad periods keep their original time targets()" classname="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" time="0.001"/>
+  <testcase name="VOD at one and a half speed maintains fifteen seconds of playout()" classname="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" time="0.001"/>
+  <testcase name="changing speed never revokes the memory pressure reduction()" classname="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" time="0.0"/>
+  <testcase name="speed changes do not compound targets and prefetch scaling stops at two times()" classname="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" time="0.001"/>
+  <testcase name="actual allocator byte target wins even when media duration is insufficient()" classname="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" time="0.001"/>
+  <testcase name="rebuffer startup still measures actual playout time()" classname="dev.ylplayer.yl_player_android.YlSpeedLoadControlTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

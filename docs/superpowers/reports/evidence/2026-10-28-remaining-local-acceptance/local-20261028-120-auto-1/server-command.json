@@ -1,0 +1,16 @@
+[
+  "/opt/homebrew/opt/python@3.14/bin/python3.14",
+  "-B",
+  "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/playback_network/network_profile.py",
+  "--root",
+  "/private/tmp/yl-local-acceptance/fixture-120",
+  "--profile",
+  "down-and-recover-v1",
+  "--start-on-first-get",
+  "--run-id",
+  "local-20261028-120-auto-1",
+  "--port",
+  "18791",
+  "--log",
+  "/private/tmp/yl-local-acceptance/local-20261028-120-auto-1/requests.jsonl"
+]

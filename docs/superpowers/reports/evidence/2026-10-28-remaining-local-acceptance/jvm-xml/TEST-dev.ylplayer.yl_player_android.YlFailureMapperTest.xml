@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlFailureMapperTest" tests="12" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:38.688Z" hostname="MacBook-Pro.local" time="0.033">
+  <properties/>
+  <testcase name="generic boundary retains HTTP cause but explicit decoder and cancellation keep authority()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.024"/>
+  <testcase name="only proven cancellation is reported as cancelled()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.0"/>
+  <testcase name="known failures have stable codes and unknown FlutterErrors cannot bypass sanitization()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.001"/>
+  <testcase name="transport exceptions retain specific reasons through a wrapper()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.001"/>
+  <testcase name="structured http 403 crosses mapper media and Flutter boundaries without retry()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.001"/>
+  <testcase name="upstream status and safe reason survive wrapped command and session failures()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.001"/>
+  <testcase name="media cancellation outranks competing dns evidence()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.0"/>
+  <testcase name="explicit policy and cancellation classifications outrank nested network evidence()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.001"/>
+  <testcase name="dns failures are classified from bounded cause chain without leaking prose()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.0"/>
+  <testcase name="public failures and local diagnostics never contain untrusted exception prose()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.003"/>
+  <testcase name="logging failure cannot escape the safe boundary()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.0"/>
+  <testcase name="media playback preserves structured dns cause()" classname="dev.ylplayer.yl_player_android.YlFailureMapperTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

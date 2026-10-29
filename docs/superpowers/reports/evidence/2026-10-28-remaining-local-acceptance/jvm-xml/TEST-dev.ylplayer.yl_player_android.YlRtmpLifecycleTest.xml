@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:51:19.156Z" hostname="MacBook-Pro.local" time="0.079">
+  <properties/>
+  <testcase name="coordinator preserves unsupported protocol before creating engine()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.009"/>
+  <testcase name="runtime time seek rejects zero and nonzero before changing intent()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.004"/>
+  <testcase name="Stop discards unreserved paused recovery and play does not resurrect it()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.01"/>
+  <testcase name="Core pause retains reserved backoff and rapid play cannot lose or double debit continuation()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.052"/>
+  <testcase name="Core defers transient failure while paused without reserving and Stop discards it()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.002"/>
+  <testcase name="Core keeps permanent and exhausted failures terminal while paused()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.001"/>
+  <testcase name="fresh epochs fence stale callbacks and preserve spent automatic budget()" classname="dev.ylplayer.yl_player_android.YlRtmpLifecycleTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

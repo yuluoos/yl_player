@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2026-10-29T03:50:51.921Z" hostname="MacBook-Pro.local" time="0.018">
+  <properties/>
+  <testcase name="AVI timing and FLV seek use the owned route()" classname="dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest" time="0.004"/>
+  <testcase name="streaming FLV remains available to the standard extractor()" classname="dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest" time="0.003"/>
+  <testcase name="ordinary MP4 remains available to the standard extractors()" classname="dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest" time="0.01"/>
+  <testcase name="actual MPEG1 PS cannot fall through to raw MP3 detection()" classname="dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest" time="0.001"/>
+  <testcase name="pack prefix without valid marker bits is not a PS route()" classname="dev.ylplayer.yl_player_android.YlProgressiveExtractorsTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
