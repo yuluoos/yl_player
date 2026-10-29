@@ -1,0 +1,90 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64e",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "modelName" : "iPhone 16",
+        "osBuildNumber" : "24B119",
+        "osVersion" : "27.2",
+        "platform" : "iOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 0,
+      "passedTests" : 249,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 0,
+  "finishTime" : 1793284303.587,
+  "passedTests" : 249,
+  "result" : "Passed",
+  "runtimeWarnings" : [
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-initiated quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "This method should not be called on the main thread as it may lead to UI unresponsiveness."
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "[Internal] Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Default quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlAppleSessionTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    },
+    {
+      "issueType" : "Runtime Warning",
+      "message" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+      "sourceURL" : "file:///Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/ios/RunnerTests/YlNetworkByteSourceTests.swift"
+    }
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793284247.249,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Longest Test Runs",
+      "impact" : "43% of duration",
+      "text" : "2 longest test runs with outlier durations exceeding 3.68s (three standard deviations)"
+    }
+  ],
+  "totalTestCount" : 249
+}

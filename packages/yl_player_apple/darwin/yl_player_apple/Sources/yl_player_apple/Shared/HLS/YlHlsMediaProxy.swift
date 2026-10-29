@@ -251,7 +251,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       return values
     }
     #if DEBUG
-    traces.forEach { $0.finish(outcome: 1) }
+    traces.forEach { $0.finish(outcome: 1, cancelCause: 1) }
     #endif
     upstreamDiagnostics.clear()
     listener.cancel()
@@ -279,7 +279,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }
     connection.stateUpdateHandler = { [weak self, weak connection] state in
       guard let self, let connection else { return }
-      if case .failed = state { self.close(connection) }
+      if case .failed = state { self.close(connection, diagnosticCancelCause: 3) }
       if case .cancelled = state { self.close(connection) }
     }
     connection.start(queue: queue)
@@ -291,7 +291,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       [weak self, weak connection] data, _, isComplete, error in
       guard let self, let connection else { return }
       if error != nil {
-        self.close(connection)
+        self.close(connection, diagnosticCancelCause: 3)
         return
       }
       var requestData = accumulated
@@ -303,12 +303,12 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       if requestData.range(of: Data("\r\n\r\n".utf8)) != nil {
         guard self.handle(requestData, on: connection) else { return }
         if isComplete {
-          self.close(connection)
+          self.close(connection, diagnosticCancelCause: 2)
         } else {
           self.monitorDisconnect(connection)
         }
       } else if isComplete {
-        self.close(connection)
+        self.close(connection, diagnosticCancelCause: 2)
       } else {
         self.receiveRequest(from: connection, accumulated: requestData)
       }
@@ -394,7 +394,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       [weak self, weak connection] _, _, isComplete, error in
       guard let self, let connection else { return }
       if error != nil || isComplete {
-        self.close(connection)
+        self.close(connection, diagnosticCancelCause: error == nil ? 2 : 3)
       } else {
         self.monitorDisconnect(connection)
       }
@@ -442,7 +442,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }))
   }
 
-  private func close(_ connection: NWConnection) {
+  private func close(_ connection: NWConnection, diagnosticCancelCause: Int = 4) {
     #if DEBUG
     var trace: YlHlsProxyRequestTrace?
     #endif
@@ -462,7 +462,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       return task
     }
     #if DEBUG
-    trace?.finish(outcome: 1)
+    trace?.finish(outcome: 1, cancelCause: diagnosticCancelCause)
     #endif
     task?.cancel()
     connection.cancel()
@@ -861,7 +861,7 @@ final class YlHlsProxyRequestTrace {
     self.observer = observer
     let correlationID = UUID().uuidString
     self.correlationID = correlationID
-    values = ["version": 4, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
+    values = ["version": 5, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
       "admission": ProcessInfo.processInfo.systemUptime,
       "bodyBytes": 0.0, "sentBodyBytes": 0.0, "bodyCallbacks": 0.0,
       "sendCount": 0.0, "sendCompletions": 0.0, "sendFailures": 0.0,
@@ -977,12 +977,15 @@ final class YlHlsProxyRequestTrace {
     }
     if let row { observer(row) }
   }
-  func finish(outcome: Int) {
+  // First transport termination wins: 0 non-cancel, 1 proxy invalidated,
+  // 2 downstream EOF, 3 downstream error, 4 other local close.
+  func finish(outcome: Int, cancelCause: Int = 4) {
     let row = lock.withLock { () -> [String: Any]? in
       guard !sealed && !downstreamFinished else { return nil }
       downstreamFinished = true
       values["downstreamTerminal"] = ProcessInfo.processInfo.systemUptime
       values["outcome"] = Double(outcome)
+      values["cancelCause"] = outcome == 1 ? cancelCause : 0
       return completedRow()
     }
     if let row { observer(row) }

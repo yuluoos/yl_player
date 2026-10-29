@@ -100,7 +100,7 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertIsNone(proxy_trace_version([{}]))
         self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':1}]),1)
         for rows in [[{'proxyRequestSamplingVersion':True}],
-                     [{'proxyRequestSamplingVersion':5}],
+                     [{'proxyRequestSamplingVersion':6}],
                      [{'proxyRequestSamplingVersion':1},{}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): proxy_trace_version(rows)
 
@@ -160,3 +160,28 @@ class ProxyTaskSettlementTests(unittest.TestCase):
             with self.subTest(key=key),self.assertRaises(ValueError):summarize_proxy_boundaries([invalid],[base.server],4)
         legacy=dict(base.trace,taskComplete=10.32)
         with self.assertRaises(ValueError):summarize_proxy_boundaries([legacy],[base.server],1)
+
+
+class ProxyCancellationCauseTests(unittest.TestCase):
+    def test_v5_preserves_cause_without_waiving_server_correlation(self):
+        base=ProxyBoundaryTests();base.setUp()
+        row=dict(base.trace,version=5,metrics=None,outcome=1,taskOutcome=1,
+            downstreamTerminal=10.33,taskComplete=10.33,cancelCause=2)
+        row.pop('serverRequestID')
+        result=summarize_proxy_boundaries([row],[base.server],5)
+        self.assertFalse(result['fullyCorrelated'])
+        self.assertEqual(result['requests'][0]['cancelCause'],2)
+        for value in [0,5,True,1.5]:
+            with self.subTest(value=value),self.assertRaises(ValueError):
+                summarize_proxy_boundaries([dict(row,cancelCause=value)],[base.server],5)
+        missing=dict(row);missing.pop('cancelCause')
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([missing],[base.server],5)
+
+    def test_v5_success_cannot_be_labelled_as_cancellation(self):
+        from test_transaction_metrics import DurationStateTests
+        base=ProxyBoundaryTests();base.setUp()
+        row=dict(base.trace,version=5,metrics=DurationStateTests().source(),
+            downstreamTerminal=10.33,taskComplete=10.32,taskOutcome=0,cancelCause=0)
+        self.assertTrue(summarize_proxy_boundaries([row],[base.server],5)['fullyCorrelated'])
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,cancelCause=1)],[base.server],5)
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,version=4)],[base.server],4)

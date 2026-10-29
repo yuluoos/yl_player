@@ -111,7 +111,7 @@ def main():
     result['policy'] = summarize_policy(policy, expected_attempts=policy[-1].get('attempts'))
     from proxy_boundaries import proxy_trace_version, summarize_proxy_boundaries
     version = proxy_trace_version(read_rows(args.capture/'rows.jsonl'))
-    if version in (1, 2, 3, 4):
+    if version in (1, 2, 3, 4, 5):
         result['proxy'] = summarize_proxy_boundaries(read_rows(args.capture/'proxy-requests.jsonl'), requests, version)
     print(json.dumps(result, indent=2, allow_nan=False))
 

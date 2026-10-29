@@ -1,0 +1,1 @@
+独立综合复审 fast_cancel_review：核对1513原始代理记录均关联服务器，39取消均cause2、32任务取消/7任务成功、28取消metrics核心区间不完整，报告数字一致。历史两轮原receipt仍false/关联不完整。台账102行implementation/verification/acceptance未变，旧全局evidence定义和哈希未变；20个直接引用上限要求轮替最近报告，新报告链接旧报告，无实质证据丢失。建议精确说明全局定义/报告链保留，已修正文案并重跑台账检查。代码阶段无可确认P1/P2；最终复审无未解决P1/P2；独立核对438输入身份、iOS249/macOS224唯一用例身份、历史36组8186哈希。审查读取时report.py与ledger-tests.stderr刚更新，归档须统一刷新后再核验。

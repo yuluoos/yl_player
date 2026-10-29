@@ -1656,7 +1656,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "productionRecovery": productionRecovery, "productionCommand": productionCommand,
         "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxyRequestSamplingVersion": 4, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "proxyRequestSamplingVersion": 5, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -3963,35 +3963,42 @@ final class YlDashResourceLoaderTests: XCTestCase {
   }
 
   func testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse() throws {
-    let server = try DashHTTPServer(); defer { server.close() }
-    let entered = expectation(description: "upstream entered")
-    let release = DispatchSemaphore(value: 0); defer { release.signal() }
-    server.handler = { _ in
-      entered.fulfill(); _ = release.wait(timeout: .now() + 4)
-      return (200, ["X-Yl-Request-Id": "18"], Data([1, 2]))
+    for downstream in [false, true] {
+      let server = try DashHTTPServer(); defer { server.close() }
+      let entered = expectation(description: "upstream entered")
+      let release = DispatchSemaphore(value: 0); defer { release.signal() }
+      server.handler = { _ in
+        entered.fulfill(); _ = release.wait(timeout: .now() + 4)
+        return (200, ["X-Yl-Request-Id": "18"], Data([1, 2]))
+      }
+      let capturedLock = NSLock(); var captured: [[String: Any]] = []
+      YlHlsMediaProxy.diagnosticRequestObserver = { row in capturedLock.withLock { captured.append(row) } }
+      defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+      let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
+      defer { proxy.cancelAll() }
+      let done = expectation(description: "cancelled downstream")
+      let client = URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, error in
+        XCTAssertNotNil(error); done.fulfill()
+      }
+      client.resume()
+      wait(for: [entered], timeout: 3)
+      if downstream { client.cancel() } else { proxy.cancelAll() }
+      wait(for: [done], timeout: 3)
+      XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
+      release.signal()
+      let rows = capturedLock.withLock { captured }
+      XCTAssertEqual(rows.count, 1)
+      XCTAssertEqual(rows.first?["outcome"] as? Double, 1)
+      if downstream {
+        XCTAssertTrue([2, 3].contains(rows.first?["cancelCause"] as? Int ?? -1))
+      } else { XCTAssertEqual(rows.first?["cancelCause"] as? Int, 1) }
+      XCTAssertNil(rows.first?["response"])
+      XCTAssertNil(rows.first?["upstreamComplete"])
+      XCTAssertNotNil(rows.first?["taskComplete"])
+      XCTAssertEqual(rows.first?["taskOutcome"] as? Int, 1)
+      XCTAssertNotNil(rows.first?["downstreamTerminal"])
+      XCTAssertNotNil(rows.first?["metrics"] as? [String: Any], "Cancellation must retain real late Foundation metrics")
     }
-    let capturedLock = NSLock(); var captured: [[String: Any]] = []
-    YlHlsMediaProxy.diagnosticRequestObserver = { row in capturedLock.withLock { captured.append(row) } }
-    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
-    let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
-    defer { proxy.cancelAll() }
-    let done = expectation(description: "cancelled downstream")
-    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, error in
-      XCTAssertNotNil(error); done.fulfill()
-    }.resume()
-    wait(for: [entered], timeout: 3)
-    proxy.cancelAll(); release.signal()
-    wait(for: [done], timeout: 3)
-    XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
-    let rows = capturedLock.withLock { captured }
-    XCTAssertEqual(rows.count, 1)
-    XCTAssertEqual(rows.first?["outcome"] as? Double, 1)
-    XCTAssertNil(rows.first?["response"])
-    XCTAssertNil(rows.first?["upstreamComplete"])
-    XCTAssertNotNil(rows.first?["taskComplete"])
-    XCTAssertEqual(rows.first?["taskOutcome"] as? Int, 1)
-    XCTAssertNotNil(rows.first?["downstreamTerminal"])
-    XCTAssertNotNil(rows.first?["metrics"] as? [String: Any], "Cancellation must retain real late Foundation metrics")
   }
 
 
@@ -4005,11 +4012,13 @@ final class YlDashResourceLoaderTests: XCTestCase {
     trace.finish(outcome: 1)
     trace.sent(started: start, bytes: 8, failed: false)
     trace.point("upstreamComplete")
+    trace.finish(outcome: 1, cancelCause: 1)
     trace.finish(outcome: 0)
     XCTAssertTrue(rows.isEmpty, "Cancellation delivery waits for task settlement, not late sends")
     trace.taskCompleted(outcome: 1)
     trace.taskCompleted(outcome: 0)
     XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows[0]["cancelCause"] as? Int, 4)
     XCTAssertEqual(rows[0]["taskOutcome"] as? Int, 1)
     XCTAssertEqual(rows[0]["outcome"] as? Double, 1)
     XCTAssertEqual(rows[0]["sendCount"] as? Double, 1)
@@ -4146,7 +4155,8 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
     XCTAssertEqual(transactions.count, 2)
     XCTAssertEqual(server.requests.count, 2)
-    XCTAssertEqual(row["version"] as? Int, 4)
+    XCTAssertEqual(row["version"] as? Int, 5)
+    XCTAssertEqual(row["cancelCause"] as? Int, 0)
     XCTAssertEqual(metrics["version"] as? Int, 2)
     XCTAssertEqual(metrics["transactionCount"] as? Int, 2)
     let first = try XCTUnwrap(transactions.first)

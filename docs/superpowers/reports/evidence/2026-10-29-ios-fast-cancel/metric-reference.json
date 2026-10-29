@@ -1,0 +1,5 @@
+{
+  "source": "https://developer.apple.com/documentation/foundation/urlsessiontasktransactionmetrics/requeststartdate?changes=_6",
+  "checked": "2026-10-29",
+  "summary": "Apple distinguishes fetchStartDate from requestStartDate. An absent optional requestStartDate is retained as missing evidence; it does not prove absence of lower-level network traffic."
+}
