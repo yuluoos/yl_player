@@ -283,8 +283,8 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "24d90e6814c58851f4185582a1606c597e029372fc095ce259ed7d5f6e523993",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "ed5e6f8ba13a70c0b398676ecfaa4f5d4369971fca4d5095df20eec15d99e517",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "18542c89b6e5d488333c48ec9c889547a32f0f1d75d9a2231cc895bd3e80d2ad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlFallbackTrackCatalog.swift": "17feb3b121f13c5247115faeaae36e082e6174e44ddcc851696e66b49476b8c1",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "db94d76602e95f2eb6cc467ceedc5f11a88358d74f6fd013e8a3ab99c73e2cf2"
+    "sha256": "bc13b80799b42cb676bd3e31f29498933047a281650205a83ccbd6d2aa9e42f5"
   },
   "evidence": {
     "p01": {
@@ -943,6 +943,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-half-close-fix.md",
       "sha256": "2750ead5d1c2b23ff1750feb8f8df686295ffaad89f66756a75066e5416aca56",
       "kind": "report"
+    },
+    "native-timeout-overflow-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-native-timeout-overflow.md",
+      "sha256": "fd15e02b360d89da3faf3494abd4bb708485e1d5aca980b87c221c7fe073fb96",
+      "kind": "report"
     }
   },
   "rows": [
@@ -987,10 +992,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-half-close-fix-20261029"
+        "native-timeout-overflow-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-bounded-half-close-recovery-and-historical-dual-transaction-root-cause"
+      "nextAction": "qualify-long-media-continuity-and-historical-dual-transaction-root-cause"
     },
     {
       "requirement": "CAP-ABR",

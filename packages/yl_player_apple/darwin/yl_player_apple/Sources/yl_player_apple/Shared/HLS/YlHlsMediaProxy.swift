@@ -168,8 +168,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     sessionConfiguration.timeoutIntervalForRequest = TimeInterval(
       max(1, configuration.readTimeoutMs)
     ) / 1_000
-    sessionConfiguration.timeoutIntervalForResource = TimeInterval(
-      max(1, configuration.connectTimeoutMs + configuration.readTimeoutMs)
+    // Native options may exceed the map's limits. Convert before summing so
+    // valid Int64 inputs cannot trap before Foundation receives the interval.
+    sessionConfiguration.timeoutIntervalForResource = max(1,
+      TimeInterval(configuration.connectTimeoutMs) + TimeInterval(configuration.readTimeoutMs)
     ) / 1_000
     session = sessionFactory(sessionConfiguration, self, delegateQueue)
 
