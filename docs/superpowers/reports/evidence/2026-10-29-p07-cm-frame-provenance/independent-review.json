@@ -1,0 +1,22 @@
+{
+  "reviewer": "/root/cm_frame_review",
+  "mode": "independent fresh-context read-only",
+  "findings": [],
+  "coverage": [
+    "fixed FFmpeg classification and state resets",
+    "pinned libdovi container counts and variable-length serialization",
+    "strict payload shape/type/target checks",
+    "decode-order source and frame PTS/POC association",
+    "schema compatibility and failure boundaries",
+    "101 Python test log (100 passed/1 skipped)",
+    "synthetic real-parser/state contract"
+  ],
+  "reviewer_tests": {
+    "cm_state_and_frame_pairing": 15,
+    "passed": 15
+  },
+  "limits": [
+    "final full-media decode receipts were still running at review",
+    "no real compressed video or full Dolby mapping qualification"
+  ]
+}

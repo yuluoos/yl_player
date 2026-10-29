@@ -197,7 +197,7 @@ def extract_rpus(source, packets, *, length_size, stream_index, media_size,
     return rows, bytes(framed)
 
 
-def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False, include_mapping=False, include_dm_color=False):
+def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False, include_mapping=False, include_dm_color=False, include_dm_blocks=False):
     require(0 < len(rows) == len(parsed) <= MAX_PACKETS)
     require(isinstance(time_base, str) and re.fullmatch('[1-9][0-9]*/[1-9][0-9]*', time_base))
     require(re.fullmatch('[0-9a-f]{64}', media_sha256))
@@ -206,6 +206,8 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
     records = []
     mapping_references = None
     dm_color_states = None
+    dm_block_states = None
+    include_dm_color = include_dm_color or include_dm_blocks
     include_mapping = include_mapping or include_dm_color
     if include_mapping:
         require(all(type(row.get('packet_index')) is int and row['packet_index'] == index
@@ -215,6 +217,9 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
     if include_dm_color:
         from dm_color_state import resolve as resolve_color
         dm_color_states = resolve_color(parsed)
+    if include_dm_blocks:
+        from dm_block_state import resolve as resolve_blocks
+        dm_block_states = resolve_blocks(parsed)
     for row, value in zip(rows, parsed):
         require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping','unparsed_rpu_bits'} | ({'mapping','previous_mapping_id'} if include_mapping else set()) | ({'rpu_header'} if include_dm_color else set()))
         profile = integer(value['profile']); require(0 <= profile <= 255)
@@ -248,6 +253,8 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
         if dm_color_states is not None:
             records[-1]['dm_color_state'] = dm_color_states[len(records)-1]
             records[-1]['rpu_header'] = value['rpu_header']
+        if dm_block_states is not None:
+            records[-1]['dm_block_state'] = dm_block_states[len(records)-1]
     presentation = sorted(records, key=lambda row: row['pts'])
     require(len({row['pts'] for row in records}) == len(records))
     transitions = sum(a['display_metadata_sha256'] != b['display_metadata_sha256']
@@ -291,10 +298,16 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
         result['dm_color_state_resolved'] = True
         result['compressed_dm_color_rpus'] = sum(row['signalled_compressed'] for row in dm_color_states)
         result['dm_color_scope'] = 'static_color_fields_same_id_same_configuration'
+    if include_dm_blocks:
+        result['schema_version'] = 5
+        result['dm_block_state_resolved'] = True
+        result['dm_block_scope'] = 'known_static_inheritance_and_current_packet_dynamic_blocks'
+        result['inherited_static_block_instances'] = sum(row['inherited_static_blocks'] for row in dm_block_states)
     return result
 
 
-def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False, include_mapping=False, include_dm_color=False):
+def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False, include_mapping=False, include_dm_color=False, include_dm_blocks=False):
+    include_dm_color = include_dm_color or include_dm_blocks
     include_mapping = include_mapping or include_dm_color
     media = Path(media).resolve(strict=True)
     inspector = Path(inspector).resolve(strict=True)
@@ -332,7 +345,7 @@ def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=
     require(file_digest(media) == expected_sha256)
     require(file_digest(inspector) == inspector_sha256)
     result = summarize(rows, parsed, time_base=stream['time_base'], media_sha256=expected_sha256, trace_sink=trace_sink,
-                       include_layers=include_layers, include_mapping=include_mapping, include_dm_color=include_dm_color)
+                       include_layers=include_layers, include_mapping=include_mapping, include_dm_color=include_dm_color, include_dm_blocks=include_dm_blocks)
     result['inspector_sha256'] = inspector_sha256
     result['packet_count'] = len(probe['packets'])
     result['declared_sample_count'] = declared_samples
@@ -350,11 +363,12 @@ def main():
     parser.add_argument('--layers', action='store_true', help='Include schema 2 BL/EL NAL coverage; not decoded pairing.')
     parser.add_argument('--mapping', action='store_true', help='Resolve mapping ID provenance in decode order; not effective DM/trim state.')
     parser.add_argument('--dm-color', action='store_true', help='Resolve the bounded static DM color subset; implies --mapping. Not CM/trim mapping.')
+    parser.add_argument('--dm-blocks', action='store_true', help='Resolve known static CM block inheritance and per-packet dynamic blocks; implies --dm-color. Does not execute trims.')
     parser.add_argument('--trace',type=Path,help='Optional new JSONL trace file; existing paths are refused.')
     args = parser.parse_args()
     try:
         trace = io.BytesIO()
-        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers,include_mapping=args.mapping,include_dm_color=args.dm_color)
+        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers,include_mapping=args.mapping,include_dm_color=args.dm_color,include_dm_blocks=args.dm_blocks)
         if args.trace is not None:
             fd = os.open(args.trace,os.O_WRONLY | os.O_CREAT | os.O_EXCL,0o600)
             try:

@@ -79,12 +79,12 @@ def pair_frames(rows, base, enhancement):
             for r in sorted(rows,key=lambda r:r['pts'])]
 
 
-def decode(media, expected_sha256, inspector, decoder, ffprobe='ffprobe', *, trace_sink=None):
+def decode(media, expected_sha256, inspector, decoder, ffprobe='ffprobe', *, trace_sink=None, include_metadata=False):
     media=Path(media).resolve(strict=True);decoder=Path(decoder).resolve(strict=True)
     ffprobe=Path(shutil.which(str(ffprobe)) or ffprobe).resolve(strict=True)
     decoder_hash=file_digest(decoder);ffprobe_hash=file_digest(ffprobe)
     inventory_trace=io.BytesIO()
-    inventory=inspect(media,expected_sha256,inspector,str(ffprobe),trace_sink=inventory_trace,include_layers=True)
+    inventory=inspect(media,expected_sha256,inspector,str(ffprobe),trace_sink=inventory_trace,include_layers=True,include_dm_blocks=include_metadata)
     rows=[json.loads(line) for line in inventory_trace.getvalue().splitlines()]
     require(set(inventory['profile_counts']) in ({'5'},{'7'}))
     has_el=set(inventory['profile_counts'])=={'7'}
@@ -122,7 +122,7 @@ def decode(media, expected_sha256, inspector, decoder, ffprobe='ffprobe', *, tra
     pairs=pair_frames(rows,decoded[0],decoded[1] if has_el else None)
     trace=b''.join((json.dumps(r,sort_keys=True,separators=(',',':'))+'\n').encode() for r in pairs)
     if trace_sink is not None: trace_sink.write(trace)
-    return dict(schema_version=1,inspection='decoded_packet_provenance',media_sha256=expected_sha256,
+    result = dict(schema_version=1,inspection='decoded_packet_provenance',media_sha256=expected_sha256,
         decoder_sha256=decoder_hash,ffprobe_sha256=ffprobe_hash,inspector_sha256=inventory['inspector_sha256'],
         time_base=inventory['time_base'],decoded_frames=len(pairs),enhancement_decoded=has_el,
         packet_to_decoded_frame_verified=True,decoded_layer_pairing_verified=has_el,
@@ -130,15 +130,24 @@ def decode(media, expected_sha256, inspector, decoder, ffprobe='ffprobe', *, tra
         standalone_poc_verified=True,effective_metadata_resolved=False,
         previous_mapping_rpus=inventory['previous_mapping_rpus'],trace_sha256=digest(trace),
         mapping_quality='external_missing',native_dv_signal='external_missing')
+    if include_metadata:
+        result.update(schema_version=2, mapping_reference_ids_resolved=True,
+            dm_color_state_resolved=True, dm_block_state_resolved=True,
+            metadata_scope='mapping_reference_color_and_known_block_transport_only',
+            metadata_inventory_trace_sha256=inventory['presentation_trace_sha256'],
+            compressed_dm_color_rpus=inventory['compressed_dm_color_rpus'],
+            inherited_static_block_instances=inventory['inherited_static_block_instances'])
+    return result
 
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ('media','sha256','inspector','decoder'):p.add_argument('--'+name,required=True)
     p.add_argument('--ffprobe',default='ffprobe');p.add_argument('--trace',type=Path)
+    p.add_argument('--metadata',action='store_true',help='Bind mapping, color and known CM block provenance to decoded frames; not pixel qualification.')
     a=p.parse_args()
     try:
-        trace=io.BytesIO();result=decode(a.media,a.sha256,a.inspector,a.decoder,a.ffprobe,trace_sink=trace)
+        trace=io.BytesIO();result=decode(a.media,a.sha256,a.inspector,a.decoder,a.ffprobe,trace_sink=trace,include_metadata=a.metadata)
         if a.trace is not None:
             with a.trace.open('xb') as output: output.write(trace.getvalue())
         print(json.dumps(result,sort_keys=True,indent=2));return 0

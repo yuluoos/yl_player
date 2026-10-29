@@ -1,0 +1,66 @@
+{
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 2908,
+    "4.0": 2908
+  },
+  "compressed_dm_color_rpus": 0,
+  "container_coverage": "finite_box_extents_and_declared_samples",
+  "declared_sample_count": 2908,
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 2727,
+  "dm_block_scope": "known_static_inheritance_and_current_packet_dynamic_blocks",
+  "dm_block_state_resolved": true,
+  "dm_color_scope": "static_color_fields_same_id_same_configuration",
+  "dm_color_state_resolved": true,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "FEL": 2908
+  },
+  "first_packet_rpu_sha256": "51575d38871a9d41b9c38993408c168834c0461a5d65cb5a9596ca1602bbf534",
+  "inherited_static_block_instances": 0,
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "7ebd55a5a00d78735aea2b263d2ce0db26a9f308e6e38a6839e87c91fa802bfb",
+  "layer_inventory": {
+    "base_vcl_nals": 2908,
+    "decoded_layer_pairing_verified": false,
+    "encoding": "single_track_unspec63_wrapped_el",
+    "enhancement_nals": 9578,
+    "enhancement_vcl_nals": 2908,
+    "p7_packets_without_enhancement_vcl": 0,
+    "packets_with_enhancement_vcl": 2908
+  },
+  "level_counts": {
+    "1": 2908,
+    "2": 2908,
+    "254": 2908,
+    "3": 2908,
+    "4": 2908,
+    "5": 2908,
+    "6": 2908,
+    "8": 2908,
+    "9": 2908
+  },
+  "mapping_quality": "external_missing",
+  "mapping_reference_ids_resolved": true,
+  "media_sha256": "419fc183988cb57b0cac2907a01d9f43b1a5ec34012b4c0655574d77678ee4fa",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 2908,
+  "presentation_reordered_packets": 2114,
+  "presentation_trace_sha256": "cc32ffcd8d299a4441e29642cbd3567d090b5a75890072f8bd55bafd912a25d2",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "7": 2908
+  },
+  "pts_range": [
+    0,
+    2909907
+  ],
+  "rpu_count": 2908,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 34,
+  "schema_version": 5,
+  "time_base": "1/24000",
+  "unique_rpu_hashes": 1283
+}

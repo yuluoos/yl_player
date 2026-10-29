@@ -25,3 +25,5 @@ python3 -B tool/dolby_reference/stream_inventory.py \
   --inspector "$new_build_dir/target/release/yl-dovi-stream-inspector" \
   --dm-color --trace "$new_trace"
 ```
+
+后续可选 `--dm-blocks` 在颜色头子集之外提供已知 CM 块传递状态，并可绑定到解码帧；`--dm-color` 本身的范围保持不变。见 [DM_BLOCK_STATE.md](DM_BLOCK_STATE.md)。

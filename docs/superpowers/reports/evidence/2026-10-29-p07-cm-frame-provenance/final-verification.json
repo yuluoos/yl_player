@@ -1,0 +1,37 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit_code": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit_code": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "expected": 0
+    }
+  ],
+  "candidate_files_match": true,
+  "rust_build_sources_match": true,
+  "qualification_rows_unchanged": 102,
+  "sourceMatches": true,
+  "releaseReady": false
+}

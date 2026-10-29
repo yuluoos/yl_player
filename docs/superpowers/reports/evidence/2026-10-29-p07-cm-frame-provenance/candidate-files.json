@@ -1,0 +1,22 @@
+{
+  "base": "9687fab8736b4bc0a225058832069140c3b31efe",
+  "files": {
+    "tool/dolby_reference/dm_block_state.py": "12380d2e3f009ed084369b7ed55f327e8d00fb87ada2c250a4de0547d26ea50b",
+    "tool/dolby_reference/dm_color_state.py": "760ce52acfef6bb8dabe4f013afeca667c1af685664837d30ff9cd26b781b5ff",
+    "tool/dolby_reference/stream_inventory.py": "c00c222d7aff9643c2279a12ee385f90eb794fb7ca5e39ef6921b677a96291c1",
+    "tool/dolby_reference/decoded_alignment.py": "9d6c350b183734de1359e8beade56796978a218555370037a10c95fee90bcb3e",
+    "tool/dolby_reference/test_dm_block_state.py": "1ea55562fb2e72522f7e3a7e66f80cc167ee6e93a0c65e0e97eb7d26b00adc19",
+    "tool/dolby_reference/test_decoded_alignment.py": "234a496da5800794d483c4b013138f4137b23aa2b650af387cb7b07bf69cb495",
+    "tool/dolby_reference/test_stream_inventory.py": "7ca3b75cd0fc6934dc9c999fda79c1ccf10375ebed75cb2302757a54d8b7d427",
+    "tool/dolby_reference/probes/stream_inspector/examples/cm_state_fixture.rs": "7eb6fd281d325ca633a2d97c849317877f3bb170bff3eb463f906223cffa816c",
+    "tool/dolby_reference/probes/stream_inspector/src/main.rs": "15631e1c245c90b715f103a18f39281cb7940eaf25592395d8383176de5b4e6f",
+    "tool/dolby_reference/probes/stream_inspector/Cargo.toml": "c104e0e7bbe0676a48eb10dd9a87622b26809f0b091ba17a8bf5dac709610876",
+    "tool/dolby_reference/probes/stream_inspector/Cargo.lock": "35ec248fd4522bbd84500f30bca0a840455c6a001939bb87fb8fa6ce85ea0aa0",
+    "tool/dolby_reference/probes/decode_layers.c": "e60ad1422bacbc8a182b35893291beacfb3b1987601f77ae61837a0a5e177d64",
+    "tool/dolby_reference/DM_BLOCK_STATE.md": "847e64454c8c17a251b9b3be4b058147319e1c95ea610f47643012cf4c23ed10",
+    "tool/dolby_reference/DM_COLOR_STATE.md": "1255270653f6e2aeb9f54b4a6c9a7e39d2c50346241288d978586bf3ccc76fbb",
+    "tool/dolby_reference/DECODED_ALIGNMENT.md": "77b5d5a886add0f9021b1fe5cb03be0e5a076ca950afe3512d499154870f9c4b",
+    "tool/dolby_reference/README.md": "4fe2a3935a90fa1ada4aaabfd8641b8a51132d20430a9a38a3e64bb60d0a73b8",
+    "docs/superpowers/plans/2026-10-29-p07-cm-frame-provenance.md": "dc727849a2f831b5a25ef740bf718f6cc698eacdc2033dbc1e3e24610086c5ab"
+  }
+}

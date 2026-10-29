@@ -206,6 +206,22 @@ class CollectorCliTests(unittest.TestCase):
                 self.assertFalse(report['effective_metadata_resolved'])
                 self.assertEqual(report['presentation_trace_sha256'],hashlib.sha256(trace.read_bytes()).hexdigest())
 
+    def test_block_mode_implies_color_parser_and_refuses_static_compression(self):
+        from test_dm_block_state import record, l1, l6
+        for bad in [False, True]:
+            v=record([l1(),l6()],compressed=bad)
+            self.inspector=self.script('block-inspector',
+                'import sys; assert sys.argv[2:]==["--dm-color"]; print('+repr(json.dumps(v))+')')
+            trace=self.root/('blocks-'+str(bad)+'.jsonl')
+            result=self.cli('--dm-blocks','--trace',trace)
+            self.assertEqual(result.returncode,2 if bad else 0,result.stdout)
+            self.assertEqual(trace.exists(),not bad)
+            if not bad:
+                report=json.loads(result.stdout)
+                self.assertEqual(report['schema_version'],5)
+                self.assertTrue(report['dm_block_state_resolved'])
+                self.assertFalse(report['effective_metadata_resolved'])
+
     def test_incomplete_or_unknown_declared_sample_count_is_refused(self):
         for count in ['2', '0', 'N/A', None]:
             with self.subTest(count=count):

@@ -1,0 +1,53 @@
+{
+  "schema_version": 5,
+  "inspection": "signalled_rpu_inventory",
+  "media_sha256": "726d0ce05d0649e30cdebd5cff86466974cf4f031321968cd2ac0914a80b3086",
+  "rpu_count": 4,
+  "profile_counts": {
+    "8": 4
+  },
+  "el_type_counts": {
+    "none": 4
+  },
+  "cm_counts": {
+    "2.9": 4,
+    "4.0": 1
+  },
+  "level_counts": {
+    "1": 3,
+    "2": 1,
+    "3": 1,
+    "5": 4,
+    "6": 1,
+    "9": 1,
+    "11": 1,
+    "254": 1
+  },
+  "previous_mapping_rpus": 2,
+  "rpus_with_unparsed_bits": 0,
+  "absent_display_metadata_rpus": 0,
+  "scene_refresh_flag_count": 0,
+  "display_metadata_transitions": 2,
+  "unique_rpu_hashes": 3,
+  "time_base": "1/24",
+  "pts_range": [
+    0,
+    3
+  ],
+  "presentation_reordered_packets": 3,
+  "presentation_trace_sha256": "5385ff10c4499104934ea73d723bf9d24efa7c5ba0a66d5f48cb30a2f42cd3ea",
+  "first_packet_rpu_sha256": "31a30b938fd398ecc1b9e7acffb7ff06467bb3cf4c809438249b319dfbd65d81",
+  "effective_metadata_resolved": false,
+  "decoded_frame_alignment_verified": false,
+  "mapping_quality": "external_missing",
+  "native_dv_signal": "external_missing",
+  "mapping_reference_ids_resolved": true,
+  "dm_color_state_resolved": true,
+  "compressed_dm_color_rpus": 2,
+  "dm_color_scope": "static_color_fields_same_id_same_configuration",
+  "dm_block_state_resolved": true,
+  "dm_block_scope": "known_static_inheritance_and_current_packet_dynamic_blocks",
+  "inherited_static_block_instances": 2,
+  "test": "synthetic_valid_rpu_parser_and_state_contract",
+  "real_compressed_video": false
+}

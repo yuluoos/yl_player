@@ -78,3 +78,7 @@ optional `stream_inventory.py --mapping` mode resolves signalled mapping IDs to
 coefficient records in decode order; it does not establish complete DM/trim state.
 Full CM/trim/NLQ, physical DV signalling and mapping quality remain unverified
 even when both layer decodes, POC and their association pass.
+
+## 可选元数据子集来源（schema 2）
+
+增加 `--metadata`，内部使用 schema 5 原始包盘点，把 mapping 引用、颜色头及已知 CM 块传递状态带入现有包/PTS/POC 和 BL/EL 对应核验。最终 trace 同时绑定解码像素哈希与元数据来源，并记录中间盘点 trace 哈希。默认 schema 1 不变；完整有效 DM、实际 trim/目标映射和物理 DV 仍未完成。限制和命令见 [DM_BLOCK_STATE.md](DM_BLOCK_STATE.md)。

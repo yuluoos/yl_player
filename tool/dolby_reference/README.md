@@ -101,3 +101,7 @@ header interpretation are not replaced by mapping-ID lookup.
 ## 可选 DM 颜色头状态
 
 `--dm-color` 输出 schema 4 并隐含 mapping ID 追踪，在解码顺序内处理有限子集的压缩颜色继承，记录完整来源包、原始头和颜色哈希。它不执行 CM/trim 或图像映射；完整 effective metadata 仍未完成。边界、失败语义及运行方式见 [DM_COLOR_STATE.md](DM_COLOR_STATE.md)。
+
+## CM 块状态与解码帧
+
+`--dm-blocks` 在 schema 5 盘点中区分已知静态继承和逐包动态块；`decoded_alignment.py --metadata` 将这些来源与颜色头/mapping 绑定到实际 BL/EL 解码帧。原模式兼容，完整有效元数据及像素映射标记不提升。见 [DM_BLOCK_STATE.md](DM_BLOCK_STATE.md)。

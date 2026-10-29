@@ -1,0 +1,25 @@
+{
+  "sourceSha256": "e60ad1422bacbc8a182b35893291beacfb3b1987601f77ae61837a0a5e177d64",
+  "binarySha256": "4c56f879325185faaa0e006fc784b399c0b7ffd30893e1b43b048a5e789f1baa",
+  "compiler": "Apple clang version 21.0.0 (clang-2100.3.34.2)",
+  "ffmpegModules": [
+    "62.11.100",
+    "60.8.100"
+  ],
+  "command": [
+    "/usr/bin/cc",
+    "-std=c11",
+    "-D_POSIX_C_SOURCE=200809L",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/dolby_reference/probes/decode_layers.c",
+    "-o",
+    "/private/tmp/yl-p07-cm-state/decoder-build/yl-decode-layers",
+    "-I/opt/homebrew/Cellar/ffmpeg/8.0.1_4/include",
+    "-L/opt/homebrew/Cellar/ffmpeg/8.0.1_4/lib",
+    "-lavcodec",
+    "-lavutil"
+  ]
+}

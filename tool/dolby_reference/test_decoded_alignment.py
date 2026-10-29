@@ -21,6 +21,28 @@ class AlignmentTests(unittest.TestCase):
         self.assertEqual([r['rpu_sha256'] for r in result],['0'*64,'2'*64,'1'*64])
         self.assertEqual(result[1]['base']['pixels_sha256'],'a'*64)
 
+    def test_inherited_metadata_remains_bound_to_packet_through_decoder_reordering(self):
+        import io,json
+        from test_dm_block_state import record,l1,l6
+        from stream_inventory import summarize
+        trace=io.BytesIO()
+        rows=self.rows()
+        summarize(rows,[record([l6(),l1()]),record([l1()],compressed=True),record([l1()],compressed=True)],
+                  time_base='1/24',media_sha256='f'*64,include_dm_blocks=True,trace_sink=trace)
+        metadata_rows=[json.loads(line) for line in trace.getvalue().splitlines()]
+        pairs=alignment.pair_frames(metadata_rows,self.frames(),self.frames())
+        self.assertEqual([r['packet_index'] for r in pairs],[0,2,1])
+        for row in pairs:
+            self.assertEqual(row['base']['packet_index'],row['packet_index'])
+            self.assertEqual(row['enhancement']['packet_index'],row['packet_index'])
+            self.assertEqual(row['dm_color_state']['color_source_packet_index'],0)
+            static=next(b for b in row['dm_block_state']['blocks'] if b['level']==6)
+            dynamic=next(b for b in row['dm_block_state']['blocks'] if b['level']==1)
+            self.assertEqual(static['source_packet_index'],0)
+            self.assertEqual(dynamic['source_packet_index'],row['packet_index'])
+        wrong=self.frames();wrong[1]['pts']=99
+        with self.assertRaises(InspectionError):alignment.pair_frames(metadata_rows,wrong,self.frames())
+
     def test_rejects_missing_duplicate_wrong_timestamp_or_packet_tag(self):
         cases=[self.frames()[:-1],self.frames()+[self.frames()[0]]]
         for key,value in [('pts',99),('poc',99),('packet_index',99),('width',0),('pixels_sha256','bad')]:

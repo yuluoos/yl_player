@@ -686,6 +686,11 @@
       "path": "docs/superpowers/reports/2026-10-29-p07-dm-main-merge.md",
       "sha256": "1767f282eb7d2d59063320c4d31375b457d955e24fca252de67431902b1d1f77",
       "kind": "report"
+    },
+    "p07-cm-frame-provenance-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-p07-cm-frame-provenance.md",
+      "sha256": "6eb97523b8a0de843a3efea4537cf0edf9fb578e5dd1997dc8d35f716d56a567",
+      "kind": "report"
     }
   },
   "rows": [
@@ -873,7 +878,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "p07-dm-color-state-20261029",
-        "p07-dm-main-merge-20261029"
+        "p07-dm-main-merge-20261029",
+        "p07-cm-frame-provenance-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -890,7 +896,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "p07-dm-color-state-20261029",
-        "p07-dm-main-merge-20261029"
+        "p07-dm-main-merge-20261029",
+        "p07-cm-frame-provenance-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -907,7 +914,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "p07-dm-color-state-20261029",
-        "p07-dm-main-merge-20261029"
+        "p07-dm-main-merge-20261029",
+        "p07-cm-frame-provenance-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
