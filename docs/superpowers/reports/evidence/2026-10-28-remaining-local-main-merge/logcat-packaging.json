@@ -1,0 +1,89 @@
+{
+  "reason": "Preserve raw logcat bytes while avoiding whitespace violations in versioned text; no semantic/code changes.",
+  "files": [
+    {
+      "original": "native-device-logs/yl-android-test.wBgjUn",
+      "archived": "native-device-logs/yl-android-test.wBgjUn.gz",
+      "originalSha256": "ca0383c28ce2bf2ac7cfa9453f2ae24f3bb859f0fc843c7b9ef7272df1fbafad",
+      "gzipSha256": "b7864e25e497d7657ff50af10c34700fd8107d10f7050fc622ffc48962cef0d4"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.M0yBIW.failure-logcat",
+      "archived": "native-device-logs/yl-android-test.M0yBIW.failure-logcat.gz",
+      "originalSha256": "17790ef616485de2de726075c6f5bcbcce446990b35b3e8f9f62bb00c60a77c0",
+      "gzipSha256": "9696fd9a568fb61e220da14f694c74a4f91e4457d48799050a34e082561432e1"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.o9TtFx.previous-logcat",
+      "archived": "native-device-logs/yl-android-test.o9TtFx.previous-logcat.gz",
+      "originalSha256": "30b403158826748b0b2a513543178a76e16b4d2257ea7c4ca08ee4cd08b53e01",
+      "gzipSha256": "7877cd58bbf71494891aed8c7f0fc01789ee30f2d92722a5acd3255bc8410ba9"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.M0yBIW.previous-logcat",
+      "archived": "native-device-logs/yl-android-test.M0yBIW.previous-logcat.gz",
+      "originalSha256": "728f34535fc7b6a11b85845b33edab449749e12d48f50f2f3ab33d4d9788618d",
+      "gzipSha256": "73838b037130ef9f87d3c0e9ca91c086b641f6e5049773882c772b95ea57ecbb"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.M0yBIW",
+      "archived": "native-device-logs/yl-android-test.M0yBIW.gz",
+      "originalSha256": "8bdf06385d0f2f169be925e5b9769910258cc376ba59e73b22c2505b8a75c1c8",
+      "gzipSha256": "cf68f204694f16644a1dd5cff204f8aac94152e1d2e4a1b807a038c2ce2dc6c7"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.vpRc5i.previous-logcat",
+      "archived": "native-device-logs/yl-android-test.vpRc5i.previous-logcat.gz",
+      "originalSha256": "043827e299caee92560922f3e9113abd484a90fd429a90049de8672e9013dcb3",
+      "gzipSha256": "7b5fb66fbc3ac7f4ecda343bc02d3e5c15519086fcff129b3e58088a931d28bd"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.o9TtFx",
+      "archived": "native-device-logs/yl-android-test.o9TtFx.gz",
+      "originalSha256": "c6a85a0f6c83bb468a3c16b01e3d0e105928947e5c2346489827b9bdb76920fc",
+      "gzipSha256": "cb1dfe7a2f2e8ee1f9c52c0d806d6bc2109574bb03e83f668703a0c49cf3a3a4"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.x9Qzjs.previous-logcat",
+      "archived": "native-device-logs/yl-android-test.x9Qzjs.previous-logcat.gz",
+      "originalSha256": "308fd79430330a5b7991e83df1828a664e827816521c33c7ee7114f9710c7391",
+      "gzipSha256": "1505955e6796fb2993307dca3dd3a02aa0a41bacc711722ba5b018d2d27427e0"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.wBgjUn.previous-logcat",
+      "archived": "native-device-logs/yl-android-test.wBgjUn.previous-logcat.gz",
+      "originalSha256": "57895f0a2cedb5169dac24bbf865cc06306cd10caf04041a3f273393767dfa6d",
+      "gzipSha256": "a0c6ca781c9284d79de47d41ac10669a01f6f69a4c72ca8bca5d91aa3df0d752"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.x9Qzjs",
+      "archived": "native-device-logs/yl-android-test.x9Qzjs.gz",
+      "originalSha256": "95a68043b0f38c627dfe77508b3370149ce3943c2db69223bf8a01b53b285096",
+      "gzipSha256": "cb3f1664da2f33e8d3ca71475c8a83bbf70f2266a3566d64454727a1032b1c7e"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.F9g5j0",
+      "archived": "native-device-logs/yl-android-test.F9g5j0.gz",
+      "originalSha256": "253c46fad97e25f3928507d7fe153ad0a078fa4d4bc4da194ef683489bf8da95",
+      "gzipSha256": "9f3f567c237a16da61c39bdff7a3ddae4170ddc9d014f83c9c302ae41d192f86"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.F9g5j0.previous-logcat",
+      "archived": "native-device-logs/yl-android-test.F9g5j0.previous-logcat.gz",
+      "originalSha256": "d2acdbb4c27072bc144474284bf3df4aea047aef19755d0c6f49a3a6ab944fe5",
+      "gzipSha256": "87180d7572911f72b0096adc9b507d05fdc2f0a88fe68d8411997db81455d317"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.o9TtFx.failure-logcat",
+      "archived": "native-device-logs/yl-android-test.o9TtFx.failure-logcat.gz",
+      "originalSha256": "ad5e2642e9a7ec6dc9bfb859b0442773970ada12e0d11033c92e326d8ac4f94c",
+      "gzipSha256": "b17bc05127c1ba07bce23bb845d93ad9ee29a6bc921dbb8d3f9867a8cc4b530d"
+    },
+    {
+      "original": "native-device-logs/yl-android-test.vpRc5i",
+      "archived": "native-device-logs/yl-android-test.vpRc5i.gz",
+      "originalSha256": "bbd7d1154fce083a63892e028dd83a2d7e787ba70a4daa0b94f8be3ef3cbb542",
+      "gzipSha256": "e8c0cb3a629dd9f849c3d320cd627c1a96c622cb0191d9865668c35a31d84080"
+    }
+  ]
+}
