@@ -65,6 +65,29 @@ class AlignmentTests(unittest.TestCase):
         self.assertNotIn('effective_metadata_sha256',result[1])
 
 
+class ProfileBoundaryTests(unittest.TestCase):
+    def test_mixed_unknown_profiles_and_single_layer_el_fail_before_decode(self):
+        import json, tempfile
+        from pathlib import Path
+        from unittest.mock import patch
+        from stream_inventory import file_digest
+        with tempfile.TemporaryDirectory() as directory:
+            path=Path(directory)/'dummy';path.write_bytes(b'not executed')
+            cases=[({'5':1,'8':1},0,0),({'7':1,'8':1},0,0),({'9':1},0,0),
+                   ({'8':1},1,0),({'5':1},1,0),({'7':1},0,0)]
+            for profiles,el,el_vcl in cases:
+                def inventory(*args,**kwargs):
+                    kwargs['trace_sink'].write(json.dumps({'packet_index':0}).encode()+b'\n')
+                    return {'profile_counts':profiles,'layer_inventory':{
+                        'enhancement_nals':el,'packets_with_enhancement_vcl':el_vcl}}
+                with self.subTest(profiles=profiles,el=el), \
+                        patch.object(alignment,'inspect',side_effect=inventory), \
+                        patch.object(alignment,'run_bounded') as run:
+                    with self.assertRaises(InspectionError):
+                        alignment.decode(path,file_digest(path),path,path,ffprobe=path)
+                    run.assert_not_called()
+
+
 class AccessUnitTests(unittest.TestCase):
     def nal(self,kind,first=True): return bytes([kind<<1,1,128 if first else 0,20])
     def pack(self,*nals): return b''.join(len(n).to_bytes(4,'big')+n for n in nals)

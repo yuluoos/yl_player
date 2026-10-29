@@ -1,0 +1,38 @@
+{
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "expected": 0
+    }
+  ],
+  "candidate_matches": true,
+  "qualification_rows_unchanged": true,
+  "report_sha256": "b482acdbd363cd88ed2daf4a70bd9495ba33460f97af3f2c228b42c3b81065cb",
+  "inventory_sha256": "fe4b67ea813740f888b2a452cbb6136e85199a6633bfce3599666a2a0de83c2e",
+  "main": "83554d908f6d64a49bdc7906e108e2dc3be3ab0a",
+  "branch": "codex/p07-p8-decoded-state"
+}

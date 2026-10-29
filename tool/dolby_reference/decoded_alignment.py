@@ -86,7 +86,7 @@ def decode(media, expected_sha256, inspector, decoder, ffprobe='ffprobe', *, tra
     inventory_trace=io.BytesIO()
     inventory=inspect(media,expected_sha256,inspector,str(ffprobe),trace_sink=inventory_trace,include_layers=True,include_dm_blocks=include_metadata)
     rows=[json.loads(line) for line in inventory_trace.getvalue().splitlines()]
-    require(set(inventory['profile_counts']) in ({'5'},{'7'}))
+    require(set(inventory['profile_counts']) in ({'5'},{'7'},{'8'}))
     has_el=set(inventory['profile_counts'])=={'7'}
     require(not has_el or inventory['layer_inventory']['packets_with_enhancement_vcl']==len(rows))
     require(has_el or inventory['layer_inventory']['enhancement_nals']==0)

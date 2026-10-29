@@ -1,7 +1,9 @@
 # Decoded layer provenance
 
 `decoded_alignment.py` joins **actual software HEVC output** to the original
-finite MP4 access units and their signalled RPU inventory. It is a research tool,
+finite MP4 access units and their signalled RPU inventory. Accepted homogeneous
+profiles are P5/P8 single-layer and P7 with one enhancement picture per packet;
+mixed profiles or enhancement NALs in a single-layer input fail. It is a research tool,
 not a new player capability or a Dolby reference renderer.
 
 Build the local probe against installed FFmpeg development libraries:
@@ -82,3 +84,37 @@ even when both layer decodes, POC and their association pass.
 ## 可选元数据子集来源（schema 2）
 
 增加 `--metadata`，内部使用 schema 5 原始包盘点，把 mapping 引用、颜色头及已知 CM 块传递状态带入现有包/PTS/POC 和 BL/EL 对应核验。最终 trace 同时绑定解码像素哈希与元数据来源，并记录中间盘点 trace 哈希。默认 schema 1 不变；完整有效 DM、实际 trim/目标映射和物理 DV 仍未完成。限制和命令见 [DM_BLOCK_STATE.md](DM_BLOCK_STATE.md)。
+
+## P8 compressed-state integration (generated fixture)
+
+`--metadata` now also accepts P8 single-layer input. A 12-frame, 10-bit libx265
+fixture exercises actual MP4 packet timestamps, B-frame reorder and closed-GOP
+POC resets. A test-only FFmpeg mux helper appends four repeating RPU records
+(full, compressed/use_previous, full reset, compressed/use_previous) in decode
+order without altering source packet bytes. The pinned libdovi fixture is
+`probes/stream_inspector/examples/cm_state_fixture.rs`; build that example in
+the verified offline inspector build with `cargo build --release --locked
+--offline --example cm_state_fixture` and the same manifest/environment as its
+build receipt. Run integration with explicit executable paths:
+
+```sh
+YL_RUN_P8_PROVENANCE=1 \
+YL_DOVI_INSPECTOR=/absolute/path/yl-dovi-stream-inspector \
+YL_DOVI_CM_FIXTURE=/absolute/path/cm_state_fixture \
+python3 -B -m unittest discover -s tool/dolby_reference -p 'test_p8_provenance.py' -v
+```
+
+This opt-in also requires `ffmpeg`/`ffprobe`, libx265, `cc`, `pkg-config` and
+FFmpeg libavformat/libavcodec/libavutil development packages. Explicit opt-in
+with missing prerequisites fails; default runs skip these three tests.
+The helper is solely a generated-test fixture, not a general Dolby muxer or a
+container/profile conformance validator. Generated media stays in temporary
+storage. Tests compare packet timestamps, unchanged BL bytes and decoded pixel
+hashes against the no-RPU source. Those pixels have no Dolby transform applied:
+they verify provenance, not mapping quality or a certified P8 playback result.
+
+The actual-video chain is now tested with **synthetic compressed metadata**;
+real captured compressed/use_previous media is still missing. Compressed CM4
+dynamic blocks without L254 remain unsupported by the pinned parser. Full DM,
+trim/NLQ mapping, independent target generation/tolerances and physical output
+remain open. Both output schemas and all qualification flags are unchanged.

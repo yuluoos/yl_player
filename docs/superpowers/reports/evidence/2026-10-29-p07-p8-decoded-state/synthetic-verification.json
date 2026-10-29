@@ -1,0 +1,64 @@
+{
+  "kind": "synthetic_transport_only",
+  "frames": 12,
+  "reordered": 7,
+  "display_order_packet_indices": [
+    0,
+    2,
+    1,
+    5,
+    4,
+    3,
+    6,
+    9,
+    8,
+    10,
+    7,
+    11
+  ],
+  "inherited_source_later_in_presentation": 2,
+  "test": "test_real_decode_binds_compressed_state_across_reorder_and_reset passed",
+  "source_rpu_and_modified_pixels_verified": true,
+  "mapping_quality": "external_missing",
+  "native_dv_signal": "external_missing",
+  "identities": {
+    "source": {
+      "sha256": "2ff2e9b9319a2d5cce07d739ed65b4867d4bc6b628d550fb8567b41dc4ced526",
+      "bytes": 5703
+    },
+    "synthetic_media": {
+      "sha256": "5599d5239227a757ee29eab3b5667f8a239d71b9175a1f46d9f6d78ad21d835f",
+      "bytes": 6939
+    },
+    "raw_rpus": {
+      "sha256": "ee96642b3ce34a905ba3d9dab5a3a8d5668bc5793817c6e0c74e6e5ebfa2db6a",
+      "bytes": 1236
+    },
+    "mux": {
+      "sha256": "5b110f13a301c5d8a1a0970950c26a81dad089b4eb4ae068b07b9dc17d07bcca",
+      "bytes": 35152
+    },
+    "decoder": {
+      "sha256": "4c56f879325185faaa0e006fc784b399c0b7ffd30893e1b43b048a5e789f1baa",
+      "bytes": 35952
+    },
+    "inspector": {
+      "sha256": "fed248260b4d8de5f6c9af112c0d24183104141ceab8842a71d6ee900a42b5ce",
+      "bytes": 746784
+    },
+    "fixture": {
+      "sha256": "34eee36967d0ac6441b9ffdce008109cda11d40963a13ded19981cc1bc8eb492",
+      "bytes": 715728
+    }
+  },
+  "ffmpeg": [
+    "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+    "built with Apple clang version 17.0.0 (clang-1700.6.3.2)",
+    "configuration: --prefix=/opt/homebrew/Cellar/ffmpeg/8.0.1_4 --enable-shared --enable-pthreads --enable-version3 --cc=clang --host-cflags= --host-ldflags= --enable-ffplay --enable-gpl --enable-libsvtav1 --enable-libopus --enable-libx264 --enable-libmp3lame --enable-libdav1d --enable-libvpx --enable-libx265 --enable-openssl --enable-videotoolbox --enable-audiotoolbox --enable-neon"
+  ],
+  "modules": [
+    "62.3.100",
+    "62.11.100",
+    "60.8.100"
+  ]
+}

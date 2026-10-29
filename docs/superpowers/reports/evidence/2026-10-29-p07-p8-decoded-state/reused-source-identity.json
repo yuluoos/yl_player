@@ -1,0 +1,36 @@
+{
+  "tool/dolby_reference/probes/decode_layers.c": {
+    "sha256": "e60ad1422bacbc8a182b35893291beacfb3b1987601f77ae61837a0a5e177d64",
+    "matches_base": true
+  },
+  "tool/dolby_reference/probes/build_decode_probe.py": {
+    "sha256": "a38d4b7890c8839dc34ca72b429699f4e21553f88fabd748ea8cd7fbf1f487c8",
+    "matches_base": true
+  },
+  "tool/dolby_reference/probes/stream_inspector/examples/cm_state_fixture.rs": {
+    "sha256": "7eb6fd281d325ca633a2d97c849317877f3bb170bff3eb463f906223cffa816c",
+    "matches_base": true
+  },
+  "tool/dolby_reference/probes/stream_inspector/src/main.rs": {
+    "sha256": "15631e1c245c90b715f103a18f39281cb7940eaf25592395d8383176de5b4e6f",
+    "matches_base": true
+  },
+  "tool/dolby_reference/dm_color_state.py": {
+    "sha256": "760ce52acfef6bb8dabe4f013afeca667c1af685664837d30ff9cd26b781b5ff",
+    "matches_base": true
+  },
+  "tool/dolby_reference/dm_block_state.py": {
+    "sha256": "12380d2e3f009ed084369b7ed55f327e8d00fb87ada2c250a4de0547d26ea50b",
+    "matches_base": true
+  },
+  "tool/dolby_reference/mapping_references.py": {
+    "sha256": "dd5a06551c9ce25be28b182400ae7be90ebb4200fea3cae3cf7068cce3006d69",
+    "matches_base": true
+  },
+  "tool/dolby_reference/stream_inventory.py": {
+    "sha256": "c00c222d7aff9643c2279a12ee385f90eb794fb7ca5e39ef6921b677a96291c1",
+    "matches_base": true
+  },
+  "qualification_rows_unchanged": true,
+  "source_snapshot_unchanged": true
+}
