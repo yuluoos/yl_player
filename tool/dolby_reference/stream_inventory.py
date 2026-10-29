@@ -1,6 +1,7 @@
 """Offline, bounded inventory of signalled RPU metadata in one HEVC MP4 track.
 
-This does not decode pictures, resolve reused metadata or certify DV mapping.
+Optional mapping/color modes resolve only their explicit subsets. No picture
+decoding, full effective DM/trim resolution or DV mapping certification.
 """
 import argparse
 from collections import Counter
@@ -196,7 +197,7 @@ def extract_rpus(source, packets, *, length_size, stream_index, media_size,
     return rows, bytes(framed)
 
 
-def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False, include_mapping=False):
+def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include_layers=False, include_mapping=False, include_dm_color=False):
     require(0 < len(rows) == len(parsed) <= MAX_PACKETS)
     require(isinstance(time_base, str) and re.fullmatch('[1-9][0-9]*/[1-9][0-9]*', time_base))
     require(re.fullmatch('[0-9a-f]{64}', media_sha256))
@@ -204,13 +205,18 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
     previous, absent, cuts, unparsed = 0, 0, 0, 0
     records = []
     mapping_references = None
+    dm_color_states = None
+    include_mapping = include_mapping or include_dm_color
     if include_mapping:
         require(all(type(row.get('packet_index')) is int and row['packet_index'] == index
                     for index, row in enumerate(rows)))
         from mapping_references import resolve
         mapping_references = resolve(parsed)
+    if include_dm_color:
+        from dm_color_state import resolve as resolve_color
+        dm_color_states = resolve_color(parsed)
     for row, value in zip(rows, parsed):
-        require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping','unparsed_rpu_bits'} | ({'mapping','previous_mapping_id'} if include_mapping else set()))
+        require(set(value) == {'profile','el_type','cm_levels','display_metadata','use_previous_mapping','unparsed_rpu_bits'} | ({'mapping','previous_mapping_id'} if include_mapping else set()) | ({'rpu_header'} if include_dm_color else set()))
         profile = integer(value['profile']); require(0 <= profile <= 255)
         require(value['el_type'] in (None, 'MEL', 'FEL'))
         require(type(value['use_previous_mapping']) is bool)
@@ -239,6 +245,9 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
                         'use_previous_mapping':value['use_previous_mapping']})
         if mapping_references is not None:
             records[-1]['mapping_reference'] = mapping_references[len(records)-1]
+        if dm_color_states is not None:
+            records[-1]['dm_color_state'] = dm_color_states[len(records)-1]
+            records[-1]['rpu_header'] = value['rpu_header']
     presentation = sorted(records, key=lambda row: row['pts'])
     require(len({row['pts'] for row in records}) == len(records))
     transitions = sum(a['display_metadata_sha256'] != b['display_metadata_sha256']
@@ -277,10 +286,16 @@ def summarize(rows, parsed, *, time_base, media_sha256, trace_sink=None, include
     if include_mapping:
         result['schema_version'] = 3
         result['mapping_reference_ids_resolved'] = True
+    if include_dm_color:
+        result['schema_version'] = 4
+        result['dm_color_state_resolved'] = True
+        result['compressed_dm_color_rpus'] = sum(row['signalled_compressed'] for row in dm_color_states)
+        result['dm_color_scope'] = 'static_color_fields_same_id_same_configuration'
     return result
 
 
-def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False, include_mapping=False):
+def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=None, include_layers=False, include_mapping=False, include_dm_color=False):
+    include_mapping = include_mapping or include_dm_color
     media = Path(media).resolve(strict=True)
     inspector = Path(inspector).resolve(strict=True)
     inspector_sha256 = file_digest(inspector)
@@ -312,12 +327,12 @@ def inspect(media, expected_sha256, inspector, ffprobe='ffprobe', *, trace_sink=
             include_layers=include_layers)
     with tempfile.TemporaryDirectory(prefix='yl-dovi-rpus-') as scratch:
         path = Path(scratch)/'rpus.bin'; path.write_bytes(framed)
-        parsed = [json.loads(line) for line in run_bounded([str(Path(inspector).resolve(strict=True)),str(path)] + (['--mapping'] if include_mapping else []),
+        parsed = [json.loads(line) for line in run_bounded([str(Path(inspector).resolve(strict=True)),str(path)] + (['--dm-color'] if include_dm_color else ['--mapping'] if include_mapping else []),
                   limit=128*1024*1024).splitlines()]
     require(file_digest(media) == expected_sha256)
     require(file_digest(inspector) == inspector_sha256)
     result = summarize(rows, parsed, time_base=stream['time_base'], media_sha256=expected_sha256, trace_sink=trace_sink,
-                       include_layers=include_layers, include_mapping=include_mapping)
+                       include_layers=include_layers, include_mapping=include_mapping, include_dm_color=include_dm_color)
     result['inspector_sha256'] = inspector_sha256
     result['packet_count'] = len(probe['packets'])
     result['declared_sample_count'] = declared_samples
@@ -334,11 +349,12 @@ def main():
     parser.add_argument('--ffprobe',default='ffprobe')
     parser.add_argument('--layers', action='store_true', help='Include schema 2 BL/EL NAL coverage; not decoded pairing.')
     parser.add_argument('--mapping', action='store_true', help='Resolve mapping ID provenance in decode order; not effective DM/trim state.')
+    parser.add_argument('--dm-color', action='store_true', help='Resolve the bounded static DM color subset; implies --mapping. Not CM/trim mapping.')
     parser.add_argument('--trace',type=Path,help='Optional new JSONL trace file; existing paths are refused.')
     args = parser.parse_args()
     try:
         trace = io.BytesIO()
-        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers,include_mapping=args.mapping)
+        result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers,include_mapping=args.mapping,include_dm_color=args.dm_color)
         if args.trace is not None:
             fd = os.open(args.trace,os.O_WRONLY | os.O_CREAT | os.O_EXCL,0o600)
             try:

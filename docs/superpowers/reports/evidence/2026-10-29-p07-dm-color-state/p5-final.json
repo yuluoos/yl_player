@@ -1,0 +1,49 @@
+{
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 6314
+  },
+  "compressed_dm_color_rpus": 0,
+  "container_coverage": "finite_box_extents_and_declared_samples",
+  "declared_sample_count": 6314,
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 5107,
+  "dm_color_scope": "static_color_fields_same_id_same_configuration",
+  "dm_color_state_resolved": true,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 6314
+  },
+  "first_packet_rpu_sha256": "5d70cf29f0bd6f52f9567b0d101283397bddcf7bd55d39a9e47bf0893c3719b4",
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "7ebd55a5a00d78735aea2b263d2ce0db26a9f308e6e38a6839e87c91fa802bfb",
+  "level_counts": {
+    "1": 6314,
+    "2": 6314,
+    "4": 6314,
+    "5": 6314,
+    "6": 6314
+  },
+  "mapping_quality": "external_missing",
+  "mapping_reference_ids_resolved": true,
+  "media_sha256": "87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 6314,
+  "presentation_reordered_packets": 5392,
+  "presentation_trace_sha256": "2bacbbf0dd27588c2eb017a13177f9b2b721ad3db3575f312394589a3de54acb",
+  "previous_mapping_rpus": 0,
+  "profile_counts": {
+    "5": 6314
+  },
+  "pts_range": [
+    0,
+    6313000
+  ],
+  "rpu_count": 6314,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 72,
+  "schema_version": 4,
+  "time_base": "1/24000",
+  "unique_rpu_hashes": 4641
+}

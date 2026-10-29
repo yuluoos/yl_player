@@ -29,7 +29,8 @@ fn levels(metadata: &DmData) -> Vec<u8> {
 
 fn run() -> ProbeResult<()> {
     let args: Vec<_> = std::env::args_os().collect();
-    let mapping_mode = args.len() == 3 && args[2] == "--mapping";
+    let color_mode = args.len() == 3 && args[2] == "--dm-color";
+    let mapping_mode = color_mode || (args.len() == 3 && args[2] == "--mapping");
     if args.len() != 2 && !mapping_mode { return Err("arguments".into()); }
     let file = File::open(&args[1])?;
     if file.metadata()?.len() > 32*1024*1024 { return Err("size".into()); }
@@ -57,6 +58,9 @@ fn run() -> ProbeResult<()> {
             record["mapping"] = serde_json::to_value(&rpu.rpu_data_mapping)?;
             record["previous_mapping_id"] = serde_json::to_value(
                 if rpu.header.use_prev_vdr_rpu_flag { Some(rpu.header.prev_vdr_rpu_id) } else { None })?;
+        }
+        if color_mode {
+            record["rpu_header"] = serde_json::to_value(&rpu.header)?;
         }
         serde_json::to_writer(&mut output, &record)?;
         output.write_all(b"\n")?;

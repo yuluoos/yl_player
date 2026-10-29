@@ -97,3 +97,7 @@ reused records fail. `--layers` remains independently selectable. Schema 1/2
 are unchanged without `--mapping`. This resolves reference provenance only;
 `effective_metadata_resolved` remains false because DM/trim inheritance and
 header interpretation are not replaced by mapping-ID lookup.
+
+## 可选 DM 颜色头状态
+
+`--dm-color` 输出 schema 4 并隐含 mapping ID 追踪，在解码顺序内处理有限子集的压缩颜色继承，记录完整来源包、原始头和颜色哈希。它不执行 CM/trim 或图像映射；完整 effective metadata 仍未完成。边界、失败语义及运行方式见 [DM_COLOR_STATE.md](DM_COLOR_STATE.md)。

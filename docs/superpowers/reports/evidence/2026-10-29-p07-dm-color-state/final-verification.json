@@ -1,0 +1,51 @@
+{
+  "commands": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit_code": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit_code": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tool/playback_benchmark",
+        "-p",
+        "test_release_readiness.py"
+      ],
+      "exit_code": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit_code": 0,
+      "expected": 0
+    }
+  ],
+  "candidate_hashes_match": true,
+  "python_syntax": true,
+  "sourceMatches": true,
+  "releaseReady": false
+}

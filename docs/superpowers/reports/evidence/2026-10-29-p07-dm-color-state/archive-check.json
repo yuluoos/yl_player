@@ -1,0 +1,16 @@
+{
+  "initial_check": "two raw .log files matched repository ignore rules",
+  "remedy": "lossless gzip, no evidence discarded",
+  "converted": [
+    {
+      "original": "readiness-final-tests.log",
+      "stored": "readiness-final-tests.log.gz",
+      "raw_sha256": "2e21c03743df8bccd043aeb170499c6d151633bffd45dfbd07b98b0eb5766646"
+    },
+    {
+      "original": "final-diff-check.log",
+      "stored": "final-diff-check.log.gz",
+      "raw_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "reviewer": "/root/dm_color_review",
+  "mode": "independent fresh-context read-only",
+  "base": "fa696c97332fd5f4c3134640f6a046caeac23ec0",
+  "findings": [],
+  "coverage": [
+    "tracked and untracked implementation/tests",
+    "fixed libdovi and FFmpeg color semantics",
+    "decode-order inheritance and PTS provenance",
+    "old schema compatibility",
+    "failure atomicity",
+    "Python/Rust/readiness logs",
+    "actual P5/FEL trace, color/header hashes and source indices",
+    "unchanged 102 qualification states"
+  ],
+  "limitations": [
+    "no real compressed DM stream",
+    "no full CM/trim resolution or pixel/physical DV qualification"
+  ]
+}

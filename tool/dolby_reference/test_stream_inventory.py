@@ -190,6 +190,22 @@ class CollectorCliTests(unittest.TestCase):
         self.assertEqual(again.returncode,2)
         self.assertEqual(trace.read_bytes(),original)
 
+    def test_color_mode_forwards_flag_and_keeps_failures_atomic(self):
+        from test_dm_color_state import value
+        for compressed in [False, True]:
+            self.inspector=self.script('color-inspector',
+                'import sys; assert sys.argv[2:]==["--dm-color"]; print('+repr(json.dumps(value(compressed=compressed)))+')')
+            trace=self.root/('color-'+str(compressed)+'.jsonl')
+            result=self.cli('--dm-color','--trace',trace)
+            self.assertEqual(result.returncode,2 if compressed else 0,result.stdout)
+            self.assertEqual(trace.exists(),not compressed)
+            if not compressed:
+                report=json.loads(result.stdout)
+                self.assertEqual(report['schema_version'],4)
+                self.assertTrue(report['mapping_reference_ids_resolved'])
+                self.assertFalse(report['effective_metadata_resolved'])
+                self.assertEqual(report['presentation_trace_sha256'],hashlib.sha256(trace.read_bytes()).hexdigest())
+
     def test_incomplete_or_unknown_declared_sample_count_is_refused(self):
         for count in ['2', '0', 'N/A', None]:
             with self.subTest(count=count):
