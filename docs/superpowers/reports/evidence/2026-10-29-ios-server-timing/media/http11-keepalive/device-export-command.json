@@ -1,0 +1,21 @@
+{
+  "command": [
+    "xcrun",
+    "devicectl",
+    "device",
+    "copy",
+    "from",
+    "--device",
+    "00008140-000C49CC3493001C",
+    "--source",
+    "tmp/yl-abr-10493765fed7444f8b23273bd7db0ba8",
+    "--domain-type",
+    "appDataContainer",
+    "--domain-identifier",
+    "dev.ylplayer.ylPlayerExample",
+    "--destination",
+    "/private/tmp/yl-server-timing/media/http11-keepalive/device-export"
+  ],
+  "exitCode": 0,
+  "output": "File received from Device\n/private/tmp/yl-server-timing/media/http11-keepalive/device-export\n"
+}

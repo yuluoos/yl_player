@@ -46,6 +46,23 @@ class ShapingTests(unittest.TestCase):
         return net.Shaper(net.Profile(profile(*steps)), self.clock.now,
                           self.clock.sleep)
 
+    def test_waiting_for_budget_lock_observes_deadline_and_stop(self):
+        for stop in [False,True]:
+            with self.subTest(stop=stop):
+                shaper=net.Shaper(net.Profile(profile(step())))
+                shaper.lock.acquire();done=threading.Event();failures=[];timing=net.RequestTiming(shaper.now)
+                def consume():
+                    try:shaper.consume(1,deadline=shaper.elapsed()+(.06 if not stop else 10),timing=timing)
+                    except Exception as error:failures.append(type(error))
+                    finally:done.set()
+                worker=threading.Thread(target=consume,daemon=True);worker.start()
+                if stop:shaper.stopped.set()
+                try:self.assertTrue(done.wait(.5),'A queued request must not wait for the lock owner after cancellation/deadline')
+                finally:shaper.lock.release();worker.join(timeout=1)
+                self.assertEqual(failures,[net.Disconnected if stop else TimeoutError])
+                self.assertEqual(timing.values['queueFailures'],1)
+                self.assertEqual(timing.values['holdCalls'],0)
+
     def test_transfer_crosses_rate_boundary_without_resetting_timeline(self):
         s = self.shaper(step(), step(1000, 100))
         s.consume(1100, deadline=10)
@@ -146,6 +163,22 @@ class ServerTests(unittest.TestCase):
         # A response EOF can precede its handler's final log append.
         self.server.wait_handlers()
         return [json.loads(line) for line in self.log.getvalue().splitlines()]
+
+    def test_actual_server_records_oversleep_without_increasing_rate_credit(self):
+        class Oversleep(Clock):
+            def sleep(self,seconds):super().sleep(seconds);self.value+=.01
+        self.start(steps=[step(rate=1000,latency=40)],clock=Oversleep())
+        self.assertEqual(self.request()[2],self.payload)
+        rows=self.records();timing=rows[0]['serverTiming']
+        self.assertAlmostEqual(timing['latencySeconds'],.05)
+        self.assertAlmostEqual(timing['sleepRequestedSeconds'],.3)
+        self.assertAlmostEqual(timing['sleepSeconds'],.36)
+        self.assertAlmostEqual(timing['holdSeconds'],.36)
+        self.assertEqual(timing['headerWriteCalls'],1)
+        self.assertEqual(timing['bodyWriteCalls'],1)
+        self.assertEqual(timing['queueCalls'],1)
+        from server_timing import summarize_server_timing
+        self.assertTrue(summarize_server_timing(rows)['complete'])
 
     def test_http11_persistence_reuses_socket_and_preserves_range_head(self):
         self.start(connection_mode='http11-keepalive')

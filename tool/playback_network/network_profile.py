@@ -81,6 +81,10 @@ def load_profiles(path):
     return result
 
 
+from contextlib import nullcontext
+from server_timing import RequestTiming
+
+
 class Shaper:
     """All connections share one budget; no credit is saved during idle time.
 
@@ -116,18 +120,28 @@ class Shaper:
             self.sleep(min(target - elapsed, boundary - elapsed, .05))
         self.state(deadline)
 
-    def consume(self, count, deadline):
-        with self.lock:
-            remaining = float(count)
-            while remaining > 1e-7:
-                elapsed, step, boundary = self.state(deadline)
-                rate = step['bytesPerSecond']
-                duration = min(boundary - elapsed, .05,
-                               remaining / rate if rate else math.inf)
-                self.sleep(duration)
-                # Use scheduled time, never oversleep as credit for a burst.
-                remaining -= duration * rate
-            self.state(deadline)
+    def consume(self, count, deadline, timing=None):
+        with timing.measure('queue') if timing else nullcontext():
+            while True:
+                elapsed, _, _ = self.state(deadline)
+                if self.lock.acquire(timeout=min(.05, deadline-elapsed)):
+                    break
+        try:
+            with timing.measure('hold') if timing else nullcontext():
+                remaining = float(count)
+                while remaining > 1e-7:
+                    elapsed, step, boundary = self.state(deadline)
+                    rate = step['bytesPerSecond']
+                    duration = min(boundary - elapsed, .05,
+                                   remaining / rate if rate else math.inf)
+                    if timing: timing.requested_sleep(duration)
+                    with timing.measure('sleep') if timing else nullcontext():
+                        self.sleep(duration)
+                    # Scheduled time only: oversleep never creates burst credit.
+                    remaining -= duration * rate
+                self.state(deadline)
+        finally:
+            self.lock.release()
 
 
 def load_assets(root):
@@ -315,6 +329,7 @@ class Handler(BaseHTTPRequestHandler):
                 s.origin = s.now()
                 self.server.started = True
             active = self.server.started
+        timing = RequestTiming(s.now)
         started = s.elapsed()
         row = dict(schemaVersion=1, profile=s.profile.id,
                    connectionMode=self.server.connection_mode, connectionId=self.connection_id,
@@ -348,7 +363,8 @@ class Handler(BaseHTTPRequestHandler):
                     status, start, end = 416, 0, 0
             deadline = started + 120
             if active:
-                s.begin(deadline)
+                with timing.measure('latency'):
+                    s.begin(deadline)
             row.update(status=status, rangeStart=start, rangeEndExclusive=end)
             self.send_response(status)
             self.send_header('Content-Length', str(end - start))
@@ -376,12 +392,14 @@ class Handler(BaseHTTPRequestHandler):
                 self.send_header('Content-Range', f'bytes {start}-{end - 1}/{len(body)}')
             elif status == 416:
                 self.send_header('Content-Range', f'bytes */{len(body)}')
-            self.end_headers()
+            with timing.measure('headerWrite'):
+                self.end_headers()
             if not head and status in (200, 206):
                 for offset in range(start, end, 1024):
                     chunk = body[offset:min(offset + 1024, end)]
-                    s.consume(len(chunk), deadline)
-                    self.wfile.write(chunk)
+                    s.consume(len(chunk), deadline, timing)
+                    with timing.measure('bodyWrite'):
+                        self.wfile.write(chunk)
                     row['bodyBytesWritten'] += len(chunk)
                     phase = max(i for i, step in enumerate(s.profile.steps)
                                 if step['atMs'] <= s.elapsed()*1000)
@@ -394,6 +412,7 @@ class Handler(BaseHTTPRequestHandler):
             row['outcome'] = 'client_io_error'
         finally:
             row['endMs'] = round(s.elapsed() * 1000, 6) if active else None
+            row['serverTiming'] = timing.finish()
             with self.server.records_lock:
                 self.server.log.write(json.dumps(row, sort_keys=True) + '\n')
                 self.server.log.flush()

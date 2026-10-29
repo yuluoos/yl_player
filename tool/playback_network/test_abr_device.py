@@ -107,7 +107,7 @@ class DeviceCaptureTests(unittest.TestCase):
                     patch('abr_accesslog.read_rows', return_value=[None, None]):
                 receipt = abr_accesslog.run(args)
             self.assertFalse(receipt['passed'])
-            self.assertEqual(receipt['errors'], ['ValueError', 'connection evidence incomplete'])
+            self.assertEqual(receipt['errors'], ['ValueError', 'connection or server timing evidence incomplete'])
             self.assertEqual(receipt['exitCode'], 0)
             self.assertEqual(json.loads((args.directory/'receipt.json').read_text()), receipt)
 

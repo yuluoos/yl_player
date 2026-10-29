@@ -1002,8 +1002,10 @@ def run(args):
                 from network_profile import summarize_connections
                 receipt['connectionObservation'] = summarize_connections(
                     read_rows(out/'requests.jsonl'), receipt['connectionMode'])
+                from server_timing import summarize_server_timing
+                receipt['serverTimingObservation'] = summarize_server_timing(read_rows(out/'requests.jsonl'))
             except (OSError,ValueError,KeyError,TypeError):
-                receipt['errors'].append('connection evidence incomplete')
+                receipt['errors'].append('connection or server timing evidence incomplete')
         if output:output.close()
         receipt['binaryIdentityUnchanged']=False
         if before is not None:

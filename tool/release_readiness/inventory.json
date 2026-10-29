@@ -873,6 +873,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-connection-persistence.md",
       "sha256": "8f56033da6473c9d67b71b671f803d2eb3d222cd7670e82a0d35d0731a59a125",
       "kind": "report"
+    },
+    "ios-server-timing-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-server-timing.md",
+      "sha256": "b1da94e07e686d17233c20b3b589184028bf5a0107982c024b9408404a013727",
+      "kind": "report"
     }
   },
   "rows": [
@@ -917,10 +922,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-connection-persistence-20261029"
+        "ios-server-timing-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-server-wait-write-cost-original-recovery-fast-cancel-stability-and-physical-av"
+      "nextAction": "qualify-original-recovery-reproducibility-http11-timeout-production-races-fast-cancel-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",
