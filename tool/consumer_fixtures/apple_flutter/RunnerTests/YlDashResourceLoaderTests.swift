@@ -2468,6 +2468,185 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  @MainActor func testRetiredRecoveryLandingCannotFailLaterIntentOrLifecycle() async throws {
+    for action in ["seek", "replacement", "stop", "deactivate", "dispose"] {
+      let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 320, height: 180)
+      var failures: [String] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error.code) }
+        })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      func candidate() throws -> YlPreparedHlsAsset {
+        try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:], configuration: .init(map: [:]),
+          cancellationToken: .init(), dashSnapshot: snapshot)
+      }
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+      player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+      try backend.replaceActiveDash(source: source, prepared: candidate())
+      let retired = try XCTUnwrap(player.seekCompletion)
+      switch action {
+      case "seek": try backend.seek(toMs: 20_000)
+      case "replacement": try backend.replaceActiveDash(source: source, prepared: candidate())
+      case "stop": backend.stop()
+      case "deactivate": backend.deactivate()
+      default: backend.dispose()
+      }
+      retired(false); retired(true)
+      let drained = expectation(description: "retired landing " + action)
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertTrue(failures.isEmpty, action)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Retired completion has no publication authority: " + action)
+      if action == "seek" || action == "replacement" {
+        player.measuredTime = try XCTUnwrap(player.requestedSeek)
+        try XCTUnwrap(player.seekCompletion)(true)
+        let landed = expectation(description: "current landing " + action)
+        DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+        XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue(), action)
+        XCTAssertTrue(failures.isEmpty)
+      }
+    }
+  }
+
+  @MainActor func testRecoveryCommitRefusalKeepsOldOutputAndSecondAttemptBudget() async throws {
+    let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 320, height: 180)
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: { _ in })
+    defer { backend.dispose() }
+    let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+    func candidate() throws -> YlPreparedHlsAsset {
+      try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:], configuration: .init(map: [:]),
+        cancellationToken: .init(), dashSnapshot: snapshot)
+    }
+    try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate(); try backend.play()
+    player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+    let oldItem = player.currentItem, oldGeneration = backend.dashRecoveryItemGeneration
+    XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    let first = try candidate(), second = try candidate()
+    var now = 0.0, deadlines: [() -> Void] = [], commits = 0, preparations = 0
+    let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, callback in deadlines.append(callback) })
+    controller.useSource(.init(sessionId: "source", loadRequestId: "same"))
+    let refused = expectation(description: "audio ownership refused commit")
+    controller.onEvent = { _ in refused.fulfill() }
+    backend.beforeAudioOutput = { throw NativePlayerError(category: "resource", code: "ios.audio_session_failed", message: "Controlled audio refusal") }
+    func tick(_ time: Double, prepared: YlPreparedHlsAsset, held: (() -> Void)? = nil) {
+      now = time
+      controller.tick(productionSample(time, high: time == 0), prepare: { _ in
+        preparations += 1; held?(); return .headeredHls(source: source, prepared: prepared)
+      }, currentSample: { self.productionSample(now) }, commit: { candidate in
+        commits += 1
+        guard case let .headeredHls(_, prepared) = candidate else { throw YlOpenCancellationToken.cancellationError() }
+        let before = backend.dashRecoveryItemGeneration
+        try backend.replaceActiveDash(source: source, prepared: prepared)
+        return ["itemChanged": before != backend.dashRecoveryItemGeneration]
+      })
+    }
+    for t in [0.0, 1, 9, 17, 17.5] { tick(t, prepared: first) }
+    await fulfillment(of: [refused], timeout: 3)
+    XCTAssertTrue(player.currentItem === oldItem); XCTAssertEqual(backend.dashRecoveryItemGeneration, oldGeneration)
+    XCTAssertEqual(CMTimeGetSeconds(player.currentTime()), 12)
+    XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Refused commit preserves usable old output")
+    XCTAssertNil(first.loader.dashSnapshot, "Rejected candidate releases its loader")
+    XCTAssertEqual(controller.events.first?["failureCode"] as? String, "ios.audio_session_failed")
+    XCTAssertNotEqual(controller.events.first?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.policy.attempts, 1); XCTAssertEqual(commits, 1)
+    backend.beforeAudioOutput = {}
+    let started = expectation(description: "second preparation held"), installed = expectation(description: "second installed")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    controller.onEvent = { _ in installed.fulfill() }
+    for t in [20.0, 28, 36, 36.99] { tick(t, prepared: second) }
+    XCTAssertEqual(controller.policy.attempts, 2); XCTAssertEqual(preparations, 1)
+    tick(37, prepared: second, held: { started.fulfill(); XCTAssertEqual(release.wait(timeout: .now()+3), .success) })
+    await fulfillment(of: [started], timeout: 1)
+    XCTAssertEqual(deadlines.count, 2); deadlines[0]()
+    XCTAssertEqual(controller.events.count, 1, "Old deadline cannot cancel the second ticket")
+    release.signal(); await fulfillment(of: [installed], timeout: 3)
+    XCTAssertEqual(controller.events.last?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.events.last?["due"] as? Double, 37)
+    XCTAssertFalse(player.currentItem === oldItem); XCTAssertEqual(commits, 2)
+    for t in 38...70 { tick(Double(t), prepared: second) }
+    XCTAssertEqual(controller.policy.attempts, 2); XCTAssertEqual(preparations, 2)
+    XCTAssertEqual(controller.events.count, 2, "Commit failure never refunds a reservation")
+  }
+
+  @MainActor func testRetiredSourceDeadlineCannotCancelFreshSourceRecovery() async throws {
+    var now = 0.0, deadlines: [() -> Void] = [], commits = 0
+    let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, callback in deadlines.append(callback) })
+    let source = YlAppleSourceDescriptor(uri: "https://owned.example/movie.mpd", kind: .network, formatHint: .dash)
+    let oldStarted = expectation(description: "old preparation"), newStarted = expectation(description: "new preparation")
+    let oldRelease = DispatchSemaphore(value: 0), newRelease = DispatchSemaphore(value: 0)
+    defer { oldRelease.signal(); newRelease.signal() }
+    func reserve(_ identity: String, started: XCTestExpectation, release: DispatchSemaphore) {
+      controller.useSource(.init(sessionId: identity, loadRequestId: "reused"))
+      for t in [0.0, 1, 9, 17, 17.5] {
+        now = t
+        controller.tick(productionSample(t, high: t == 0), prepare: { token in
+          token.onCancel { release.signal() }; started.fulfill()
+          XCTAssertEqual(release.wait(timeout: .now()+3), .success)
+          return .avPlayer(source: source)
+        }, currentSample: { self.productionSample(now) }, commit: { _ in commits += 1; return [:] })
+      }
+    }
+    reserve("old", started: oldStarted, release: oldRelease)
+    await fulfillment(of: [oldStarted], timeout: 1)
+    reserve("new", started: newStarted, release: newRelease)
+    await fulfillment(of: [newStarted], timeout: 1)
+    XCTAssertTrue(controller.events.isEmpty); XCTAssertEqual(controller.policy.attempts, 1)
+    XCTAssertEqual(deadlines.count, 2); deadlines[0]()
+    XCTAssertTrue(controller.events.isEmpty, "Old source deadline cannot cancel a fresh source ticket")
+    let installed = expectation(description: "fresh source installed")
+    controller.onEvent = { _ in installed.fulfill() }; newRelease.signal()
+    await fulfillment(of: [installed], timeout: 2)
+    XCTAssertEqual(controller.events.count, 1); XCTAssertEqual(commits, 1)
+    XCTAssertEqual(controller.events.first?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.policy.attempts, 1)
+  }
+
+  @MainActor func testAutomaticReplacementFailedLandingCannotPublishWrongTimeline() async throws {
+    for publicSeek in [false, true] {
+      let player = DashCatalogClockPlayer(), output = AppleTestTexture(), pixels = DashPixelOutput(width: 320, height: 180)
+      var failures: [NativePlayerError] = [], states: [YlNativeState] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error) }
+          if case .state(let state) = $0.event { states.append(state) }
+        })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false)
+      try backend.activate()
+      player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+      player.resetClockOnReplacement = true
+      let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:],
+        configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+      try backend.replaceActiveDash(source: source, prepared: replacement)
+      if publicSeek { try backend.seek(toMs: 20_000) }
+      XCTAssertEqual(CMTimeGetSeconds(try XCTUnwrap(player.requestedSeek)), publicSeek ? 20 : 12)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      let failedLanding = try XCTUnwrap(player.seekCompletion)
+      failedLanding(false)
+      let drained = expectation(description: "failed landing delivered")
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "A failed recovery landing cannot open output at the new item's zero position")
+      XCTAssertEqual(failures.map(\.code), ["source.seek_failed"])
+      XCTAssertEqual(states.last?.status, "error")
+      failedLanding(false)
+      let duplicate = expectation(description: "duplicate drained")
+      DispatchQueue.main.async { duplicate.fulfill() }; await fulfillment(of: [duplicate], timeout: 1)
+      XCTAssertEqual(failures.count, 1, "Only the current landing can terminate once")
+    }
+  }
+
   @MainActor func testAutomaticUserSeekBlocksOldFramesUntilLatestLanding() async throws {
     let player = DashCatalogClockPlayer(), output = AppleTestTexture(), pixels = DashPixelOutput(width: 320, height: 180)
     var tick: (() -> Void)?

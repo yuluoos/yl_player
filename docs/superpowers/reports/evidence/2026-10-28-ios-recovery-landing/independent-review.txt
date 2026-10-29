@@ -1,0 +1,39 @@
+Independent review — 2026-10-28 — recovery landing code/tests
+Reviewer: recovery_landing_review (delegated read-only review; no source edits or builds)
+Baseline: a240032b; reviewed working-tree diff and docs/superpowers/plans/2026-10-28-ios-recovery-landing.md.
+
+Result: No actionable production or test defect found in the reviewed change.
+
+Evidence and scope:
+- Production change is 16 added lines in YlAvPlayerBackend.swift. Both finished=false branches require a current runtime-resume operation and automatic video selection. Public seek additionally checks item generation, callback binding, active/stopped state and latest seek UUID; initial recovery completion checks current item identity/generation and runtime-resume UUID.
+- reportRestorationFailure -> deactivate -> removeCurrentItem retires the item generation, clears pendingRuntimeResume/pendingUserSeek/frame policy, pauses output, clears texture and emits source.seek_failed/error. A repeated completion cannot act after this retirement.
+- Existing fixed selection fallback/recovery remains below the new automatic-only condition. Ordinary public seek without pendingRuntimeResume cannot enter the new failure branch.
+- New failed-landing test resets the controlled player clock on replacement, checks the requested 12s/20s target, injects false into both initial restoration and public-seek takeover, verifies no pixel buffer, exact failure/error state and duplicate-completion rejection. /private/tmp/yl-recovery-landing/landing-red-summary.json records an actual non-nil CVPixelBuffer assertion failure on baseline; landing-green-summary.json records 4/4 passed, zero skips/failures.
+- New retirement test covers later seek, replacement, stop, deactivate, dispose; both false and true retired completions are injected. Later seek/replacement must still land and publish successfully.
+- Commit-refusal test calls real YlAvPlayerBackend.replaceActiveDash through YlDashAutoRecoveryController/YlOpenCoordinator. Audio-hook rejection precedes mutation; assertions cover old item/generation/time/pixel output, rejected loader disposal, first attempt consumption, second due=37 reservation and old-deadline isolation, then exhausted budget.
+- Source-deadline test holds both preparations, changes source identity, then invokes the old deadline while the fresh ticket is in flight; only the fresh source may install.
+- Canonical and iOS/macOS test sources differ only by the established @testable import yl_player_media_core added in mirrors. Expected case counts increment by four on each target.
+
+Limits: Controlled seek callbacks/pixels verify ownership and publication contract, not physical AVFoundation audio/video continuity. Missing-callback timeout, multiple devices and minimum OS remain explicitly outside this acceptance, as stated in the plan. Full matrix, final report and release-ledger review are pending at this review stage.
+
+Follow-up review — relay scheduler gap and final native matrix
+Result: No actionable defect found in the additional live_relay.py/test_live_relay.py change.
+- state(since) rejects any disconnect phase crossed since this connection's first real bytes, including a connection that began inside a disconnect phase. A connection starting after recovery has a new since value and does not inherit a retired outage.
+- The connection start is passed to latency polling, upload, download shaping and silent-peer watchdog. The extra check after asynchronous upstream connection prevents initial payload forwarding after a skipped outage.
+- New end-to-end socket test deliberately jumps elapsed from 0 to 0.2 across the 70–180ms outage, retains the same 1s read limit, checks EOF and disconnected outcome for the old connection, and verifies a later connection forwards 5 bytes without a disconnected outcome or resetting origin.
+- Original network.log retains 130-test run with one TimeoutError in test_idle_connection_drops_at_boundary_and_reconnect_does_not_reset. relay-red.log deterministically reproduces the same read timeout in the new controlled-clock test. network-corrected.log records all 131 tests passing; no timeout or threshold relaxation appears in the diff.
+- final-macos-summary.json: 215 passed, 0 failed, 0 skipped. final-device-summary.json: iPhone 16 / iOS 27.2, 240 passed, 0 failed, 0 skipped. Both corresponding tests.json contain all four newly added native tests.
+- Both native summaries preserve runtime diagnostics (QoS inversion and main-thread warnings). Passing result does not mean warning-free execution or physical continuity qualification.
+Final narrative/release-ledger review still pending.
+
+Final report, ledger and archive review — 2026-10-28
+Result: No actionable finding. Reviewed docs/superpowers/reports/2026-10-28-ios-recovery-landing.md, inventory.json diff, final-verification.json, raw-provenance.json, SHA256SUMS, final-source-binding.json and readiness-results.json.
+- Report accurately states the native tests use controlled players/callbacks/policy clocks despite running in device XCTest. It explicitly does not claim a new long-media run, new production-network recovery, or physical audio/video continuity acceptance.
+- Missing landing callback, other asynchronous post-commit failures, additional lifecycle interleavings, multiple devices/minimum OS and calibrated physical continuity remain unaccepted. Runtime warnings and 45 passed/1 skipped consumer result are disclosed.
+- Independently compared baseline/current inventory: all 102 requirement/platform/implementation/verification/acceptance fields unchanged. Production binding changes only YlAvPlayerBackend.swift and aggregate hash; report digest matches the saved report. CAP-ABR iOS is not promoted. ledger.stdout confirms sourceMatches=true and releaseReady=false; readiness-results preserves expected exit 1 for both require-ready gates.
+- Independently verified every one of 91 current archive SHA256SUMS entries and 8 critical archived raw documents/logs byte-for-byte against /private/tmp originals (native red/green summaries, original network failure, deterministic relay red, final network green, final native summaries and source binding).
+- Independently verified all 396 frozen native source/test hashes against the working tree.
+- Independently reassembled all four xcresult archives, verified aggregate archive hashes, read every member and compared each against both provenance and the original raw bundle: final-device 518 files; final-macos 2472; landing-green 36; landing-red 1988; total 5014 files matched.
+- final-verification.json reports 79 raw provenance records and 4 complete bundles, consistent with inspected archive. Historical evidence remains linked as historical, not promoted to current-build acceptance.
+
+No source changes, native builds, new native test runs or publication actions performed by this reviewer. Main task must resynchronize this appended review record into the final archive and regenerate/verify its hash manifest, as already planned.

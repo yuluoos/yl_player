@@ -480,6 +480,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
           DispatchQueue.main.async {
             guard let self, self.itemGeneration == generation, self.callbackBinding === binding,
                   self.active, !self.stopped, self.pendingUserSeek?.id == seekId else { return }
+            if !finished, let resumeId, self.pendingRuntimeResume?.id == resumeId,
+               self.videoSelection.fixedTrackId == nil {
+              self.failRuntimeResume()
+              return
+            }
             self.pendingUserSeek = nil
             if finished {
               self.unconfirmedFixedLanding = false
@@ -961,6 +966,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
           DispatchQueue.main.async {
             guard let self, self.isCurrent(item, generation: generation),
                   self.pendingRuntimeResume?.id == pending.id else { return }
+            if !finished, self.videoSelection.fixedTrackId == nil {
+              self.failRuntimeResume()
+              return
+            }
             self.pendingRuntimeResume = nil
             if finished {
               self.unconfirmedFixedLanding = false
@@ -975,6 +984,13 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero)
       }
     }
+  }
+
+  private func failRuntimeResume() {
+    // The replacement already owns the item. A failed exact landing has no
+    // authority to publish its default timeline, even after a public seek.
+    reportRestorationFailure(NativePlayerError(category: "source", code: "source.seek_failed",
+      message: "The playback position could not be restored."))
   }
 
   private func observe(_ item: AVPlayerItem, generation: UInt64) {

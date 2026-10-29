@@ -51,24 +51,28 @@ class LiveRelay:
     def elapsed(self):
         return 0 if self.origin is None else time.monotonic() - self.origin
 
-    def state(self):
+    def state(self, since=None):
         elapsed = self.elapsed()
         step, boundary = self.profile.at(elapsed)
-        if self.closed or step['disconnect']:
+        crossed_disconnect = since is not None and (
+            self.profile.at(since)[0]['disconnect'] or any(
+                s['disconnect'] and since <= s['atMs']/1000 <= elapsed
+                for s in self.profile.steps))
+        if self.closed or step['disconnect'] or crossed_disconnect:
             raise Disconnected()
         return elapsed, step, boundary
 
-    async def consume(self, count):
+    async def consume(self, count, since=None):
         async with self.lock:
             remaining = count
             while remaining > 1e-7:
-                elapsed, step, boundary = self.state()
+                elapsed, step, boundary = self.state(since)
                 rate = step['bytesPerSecond']
                 delay = min(.02, boundary - elapsed,
                             remaining / rate if rate else float('inf'))
                 await asyncio.sleep(delay)
                 remaining -= delay * rate
-            self.state()
+            self.state(since)
 
     def accept(self, reader, writer):
         if self.closed or len(self.tasks) >= self.max_connections or self.accepted >= 10000:
@@ -99,29 +103,33 @@ class LiveRelay:
                     return
                 if self.origin is None:
                     self.origin = time.monotonic()
-                row['startMs'] = self.elapsed()*1000
-                elapsed, step, _ = self.state()
+                started = self.elapsed()
+                row['startMs'] = started*1000
+                # Polling may skip a short outage. Every connection retains its
+                # own start so a later reconnect does not inherit that outage.
+                elapsed, step, _ = self.state(started)
                 until = elapsed + step['latencyMs']/1000
                 while self.elapsed() < until:
-                    self.state()
+                    self.state(started)
                     await asyncio.sleep(min(.02, until-self.elapsed()))
                 peer_reader, peer_writer = await asyncio.open_connection(
                     '127.0.0.1', self.upstream_port, limit=16384)
                 self.writers.add(peer_writer)
+                self.state(started)
                 peer_writer.write(first)
                 await peer_writer.drain()
                 row['upstreamBytesWritten'] += len(first)
 
                 async def upstream():
                     while data := await reader.read(1024):
-                        self.state()
+                        self.state(started)
                         peer_writer.write(data)
                         await peer_writer.drain()
                         row['upstreamBytesWritten'] += len(data)
 
                 async def downstream():
                     while data := await peer_reader.read(1024):
-                        await self.consume(len(data))
+                        await self.consume(len(data), started)
                         writer.write(data)
                         await writer.drain()
                         row['downstreamBytesWritten'] += len(data)
@@ -132,7 +140,7 @@ class LiveRelay:
                 async def watch_profile():
                     # Disconnect applies even to silent/paused peers.
                     while True:
-                        self.state()
+                        self.state(started)
                         await asyncio.sleep(.02)
 
                 children = [asyncio.create_task(c()) for c in

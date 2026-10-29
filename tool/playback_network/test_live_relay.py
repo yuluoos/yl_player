@@ -100,6 +100,42 @@ class RelayTests(unittest.IsolatedAsyncioTestCase):
         await self.relay.close()
         self.assertIn('disconnected', self.log.getvalue())
 
+    async def test_skipped_disconnect_window_closes_old_connection_but_allows_reconnect(self):
+        received = asyncio.Event()
+        async def peer(reader, writer):
+            await reader.readexactly(5)
+            received.set()
+            await reader.read()
+        port = await self.start(peer, [
+            dict(atMs=0, bytesPerSecond=1000000, latencyMs=0),
+            dict(atMs=70, bytesPerSecond=0, latencyMs=0, disconnect=True),
+            dict(atMs=180, bytesPerSecond=1000000, latencyMs=0)])
+        elapsed = 0.0
+        self.relay.elapsed = lambda: elapsed
+        reader, writer = await asyncio.open_connection('127.0.0.1', port)
+        try:
+            writer.write(b'hello'); await writer.drain()
+            await asyncio.wait_for(received.wait(), 1)
+            # A delayed poll skips the disconnect interval entirely.
+            elapsed = .2
+            self.assertEqual(await asyncio.wait_for(reader.read(), 1), b'')
+        finally:
+            writer.close(); await writer.wait_closed()
+        received.clear()
+        origin = self.relay.origin
+        reader, writer = await asyncio.open_connection('127.0.0.1', port)
+        writer.write(b'again'); await writer.drain()
+        await asyncio.wait_for(received.wait(), 1)
+        self.assertFalse(reader.at_eof())
+        self.assertEqual(self.relay.origin, origin)
+        writer.close(); await writer.wait_closed()
+        await self.relay.close()
+        rows = [json.loads(line) for line in self.log.getvalue().splitlines()]
+        self.assertEqual(rows[0]['outcome'], 'disconnected')
+        self.assertEqual(rows[0]['downstreamBytesWritten'], 0)
+        self.assertEqual(rows[1]['upstreamBytesWritten'], 5)
+        self.assertNotEqual(rows[1]['outcome'], 'disconnected')
+
     async def test_connection_limit_refuses_extra_clients(self):
         async def peer(reader, writer):
             await reader.read()
