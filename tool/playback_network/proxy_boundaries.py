@@ -8,7 +8,7 @@ def proxy_trace_version(rows):
     if not any(isinstance(row, dict) and 'proxyRequestSamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('proxyRequestSamplingVersion')) is int and
-               row['proxyRequestSamplingVersion'] in (1, 2, 3) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
+               row['proxyRequestSamplingVersion'] in (1, 2, 3, 4) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
         raise ValueError('unsupported or inconsistent proxy request sampling version')
     return rows[0]['proxyRequestSamplingVersion']
 
@@ -29,7 +29,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         'sendFailures', 'sendWaitSum', 'sendWaitMax'}
     times = {'response', 'firstBody', 'lastBody', 'firstSend', 'lastSend',
         'lastSendComplete', 'upstreamComplete'}
-    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics'}
+    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics', 'downstreamTerminal', 'taskComplete', 'taskOutcome'}
     uuid_pattern = r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}'
     def uuid(value):
         return isinstance(value, str) and re.fullmatch(uuid_pattern, value)
@@ -52,8 +52,14 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
     outcomes = ['complete', 'cancelled', 'sendFailed', 'upstreamFailed']
     for row in rows:
         require(isinstance(row, dict) and required <= row.keys() and not row.keys()-required-optional)
-        require(type(row['version']) is int and row['version'] in (1, 2, 3))
+        require(type(row['version']) is int and row['version'] in (1, 2, 3, 4))
         require(('metrics' in row) == (row['version'] >= 2))
+        settlement = {'downstreamTerminal','taskComplete','taskOutcome'}
+        require((settlement <= row.keys()) if row['version']==4 else not settlement.intersection(row))
+        if row['version']==4:
+            require(type(row['taskOutcome']) is int and row['taskOutcome'] in (0,1,2))
+            require(all(finite(row[k]) and row['admission']<=row[k]<=row['terminal'] for k in ('downstreamTerminal','taskComplete')))
+            if row['outcome']==0:require(row['taskOutcome']==0)
         require(isinstance(row['proxyID'], str) and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', row['proxyID']))
         require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics')))
         counters = required - {'version', 'proxyID', 'admission', 'terminal', 'sendWaitSum', 'sendWaitMax'}
@@ -64,6 +70,9 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         require(row['terminal'] >= row['admission'])
         for key in times & row.keys():
             require(row['admission'] <= row[key] <= row['terminal'])
+            if row['version']==4:require(row[key]<=row['downstreamTerminal'])
+        if row['version']==4 and row['outcome']==0:
+            require(row['taskComplete']<=row['downstreamTerminal'])
         for before,after in [('response','firstBody'),('firstBody','lastBody'),
             ('lastBody','upstreamComplete'),('firstSend','lastSend')]:
             if before in row and after in row: require(row[before] <= row[after])
@@ -96,7 +105,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             require(row['bodyBytes'] == row['sentBodyBytes'] == server['bodyBytesWritten'])
             require(server.get('outcome') == 'complete' and 200 <= row['httpStatus'] < 300)
         transaction_metrics = summarize_transactions(row.get('metrics'))
-        if row['version']==3 and row.get('metrics') is not None:
+        if row['version']>=3 and row.get('metrics') is not None:
             require(transaction_metrics.get('version')==2)
         if row['version'] >= 2 and row['outcome'] == 0:
             require(transaction_metrics['complete'])
@@ -110,7 +119,10 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             responseWaitSeconds=row['response']-row['admission'] if 'response' in row else None,
             bodyCallbackSpanSeconds=row['lastBody']-row['firstBody'] if 'lastBody' in row else None,
             sendWaitSumSeconds=row['sendWaitSum'], sendWaitMaxSeconds=row['sendWaitMax'],
-            terminalSeconds=row['terminal']-row['admission']))
+            terminalSeconds=row['terminal']-row['admission'],
+            downstreamSeconds=row['downstreamTerminal']-row['admission'] if row['version']==4 else None,
+            taskCompletionSeconds=row['taskComplete']-row['admission'] if row['version']==4 else None,
+            taskOutcome=row.get('taskOutcome')))
     media = {ident for ident, row in servers.items() if row.get('method') == 'GET' and
              isinstance(row.get('asset'),str) and row['asset'].endswith('.m4s')}
     missing = sorted(media-matched)

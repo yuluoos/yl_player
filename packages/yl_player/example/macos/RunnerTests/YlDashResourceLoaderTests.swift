@@ -1656,7 +1656,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "productionRecovery": productionRecovery, "productionCommand": productionCommand,
         "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxyRequestSamplingVersion": 3, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "proxyRequestSamplingVersion": 4, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -3982,16 +3982,23 @@ final class YlDashResourceLoaderTests: XCTestCase {
     wait(for: [entered], timeout: 3)
     proxy.cancelAll(); release.signal()
     wait(for: [done], timeout: 3)
+    XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
     let rows = capturedLock.withLock { captured }
     XCTAssertEqual(rows.count, 1)
     XCTAssertEqual(rows.first?["outcome"] as? Double, 1)
     XCTAssertNil(rows.first?["response"])
     XCTAssertNil(rows.first?["upstreamComplete"])
+    XCTAssertNotNil(rows.first?["taskComplete"])
+    XCTAssertEqual(rows.first?["taskOutcome"] as? Int, 1)
+    XCTAssertNotNil(rows.first?["downstreamTerminal"])
+    XCTAssertNotNil(rows.first?["metrics"] as? [String: Any], "Cancellation must retain real late Foundation metrics")
   }
+
 
   func testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion() {
     var rows: [[String: Any]] = []
     let trace = YlHlsProxyRequestTrace(proxyID: "test-proxy", requestID: 1) { rows.append($0) }
+    trace.attachTask()
     trace.response(status: 200, serverID: -1)
     trace.body(bytes: 8)
     let start = trace.enqueue()
@@ -3999,7 +4006,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     trace.sent(started: start, bytes: 8, failed: false)
     trace.point("upstreamComplete")
     trace.finish(outcome: 0)
+    XCTAssertTrue(rows.isEmpty, "Cancellation delivery waits for task settlement, not late sends")
+    trace.taskCompleted(outcome: 1)
+    trace.taskCompleted(outcome: 0)
     XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows[0]["taskOutcome"] as? Int, 1)
     XCTAssertEqual(rows[0]["outcome"] as? Double, 1)
     XCTAssertEqual(rows[0]["sendCount"] as? Double, 1)
     XCTAssertEqual(rows[0]["sendCompletions"] as? Double, 0)
@@ -4135,7 +4146,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
     XCTAssertEqual(transactions.count, 2)
     XCTAssertEqual(server.requests.count, 2)
-    XCTAssertEqual(row["version"] as? Int, 3)
+    XCTAssertEqual(row["version"] as? Int, 4)
     XCTAssertEqual(metrics["version"] as? Int, 2)
     XCTAssertEqual(metrics["transactionCount"] as? Int, 2)
     let first = try XCTUnwrap(transactions.first)

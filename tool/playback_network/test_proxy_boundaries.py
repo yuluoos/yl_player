@@ -100,7 +100,7 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertIsNone(proxy_trace_version([{}]))
         self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':1}]),1)
         for rows in [[{'proxyRequestSamplingVersion':True}],
-                     [{'proxyRequestSamplingVersion':4}],
+                     [{'proxyRequestSamplingVersion':5}],
                      [{'proxyRequestSamplingVersion':1},{}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): proxy_trace_version(rows)
 
@@ -133,3 +133,30 @@ class ProxyDateStateTests(unittest.TestCase):
         with self.assertRaises(ValueError):summarize_proxy_boundaries([row],[fixture.server],3)
         row['outcome']=1
         self.assertFalse(summarize_proxy_boundaries([row],[fixture.server],3)['requests'][0]['transactionMetrics']['complete'])
+
+class ProxyTaskSettlementTests(unittest.TestCase):
+    def test_v4_rejects_callbacks_after_transport_fields_are_frozen(self):
+        from test_transaction_metrics import DurationStateTests
+        base=ProxyBoundaryTests();base.setUp()
+        row=dict(base.trace,version=4,metrics=DurationStateTests().source(),downstreamTerminal=10.33,taskComplete=10.32,taskOutcome=0)
+        for changes in [dict(downstreamTerminal=10.1),dict(taskComplete=10.335,terminal=10.34)]:
+            with self.subTest(changes=changes),self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,**changes)],[base.server],4)
+
+    def test_v4_keeps_downstream_close_separate_from_later_task_settlement(self):
+        from test_transaction_metrics import DurationStateTests
+        base=ProxyBoundaryTests();base.setUp()
+        row=dict(base.trace,version=4,metrics=DurationStateTests().source(),downstreamTerminal=10.33,taskComplete=10.32,taskOutcome=0)
+        result=summarize_proxy_boundaries([row],[base.server],4)
+        self.assertTrue(result['fullyCorrelated'])
+        self.assertAlmostEqual(result['requests'][0]['downstreamSeconds'],.33)
+        self.assertAlmostEqual(result['requests'][0]['taskCompletionSeconds'],.32)
+        cancelled=dict(row,outcome=1,taskOutcome=1,downstreamTerminal=10.31,taskComplete=10.32,metrics=None)
+        cancelled.pop('upstreamComplete')
+        self.assertTrue(summarize_proxy_boundaries([cancelled],[base.server],4)['fullyCorrelated'])
+        for changes in [dict(taskComplete=10.34),dict(downstreamTerminal=9),dict(taskOutcome=True),dict(taskOutcome=1),dict(metrics=None)]:
+            with self.subTest(changes=changes),self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,**changes)],[base.server],4)
+        for key in ['taskComplete','taskOutcome','downstreamTerminal']:
+            invalid=dict(row);invalid.pop(key)
+            with self.subTest(key=key),self.assertRaises(ValueError):summarize_proxy_boundaries([invalid],[base.server],4)
+        legacy=dict(base.trace,taskComplete=10.32)
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([legacy],[base.server],1)

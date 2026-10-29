@@ -680,3 +680,14 @@ Parsed requests discarded by the existing 10,000-record limit have an explicit
 Missing request links, discarded requests, unfinished handlers or truncated rejection samples prevent
 complete lifecycle evidence; none of this relaxes transaction completeness,
 recovery budget, final high output or physical continuity gates.
+
+Proxy boundary v4 separates `downstreamTerminal` (transport fields frozen) from
+`taskComplete` and `taskOutcome` (0 success, 1 cancellation, 2 other error).
+`terminal` is the final record seal after both sides have finished. DEBUG task
+trace ownership survives playback cancellation until Foundation's metrics and
+completion callbacks; playback cancellation itself does not wait. Late body/send
+callbacks cannot change the frozen transport outcome. The capture still waits
+for observer delivery, and missing completion cannot be treated as a complete
+capture. v1–v3 retain their original interpretation. v4 success requires task
+success and all transaction core intervals; cancellation metrics can still be
+unavailable and are never fabricated. Missing server correlation still fails.
