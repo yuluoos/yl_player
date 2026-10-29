@@ -1,0 +1,71 @@
+[
+  {
+    "name": "main-readiness-tests",
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_release_readiness.py",
+      "-v"
+    ],
+    "actual": 0,
+    "expected": 0
+  },
+  {
+    "name": "main-readiness",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "actual": 0,
+    "expected": 0
+  },
+  {
+    "name": "main-readiness-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "actual": 1,
+    "expected": 1
+  },
+  {
+    "name": "main-thresholds",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py"
+    ],
+    "actual": 0,
+    "expected": 0
+  },
+  {
+    "name": "main-thresholds-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py",
+      "--require-ready"
+    ],
+    "actual": 1,
+    "expected": 1
+  },
+  {
+    "name": "main-diff-check",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "actual": 0,
+    "expected": 0
+  }
+]
