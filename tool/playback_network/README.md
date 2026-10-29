@@ -303,9 +303,9 @@ ticket is issued and resumes two seconds later, exercising cancellation and
 retained budget. It is separately identified in every row and the receipt.
 The scenario explicitly invalidates the ticket on pause, so an early resume
 cannot revive it. A production dispatcher would have to connect this invalidation
-to every relevant intent change; that integration is not present here.
-Broader seek/constraint/DRM/network races still need production qualification;
-the host has no automatic-recovery product hook.
+to every relevant intent change. These legacy diagnostic scenarios explicitly
+disable the production dispatcher, preserving their original experimental scope.
+Broader seek/constraint/DRM/network races still need production qualification.
 
 Frame sampling version 2 uses an independent approximately 16 ms main-actor
 pump during asynchronous preparation. `frame-samples.jsonl` records actual
@@ -556,3 +556,22 @@ reenters the context; background changes order before the fence (reject) or afte
 actual item installation. V2 installed events require `credentialCommitAccepted`.
 This fence is exercised through actual backend item replacement, independently
 of the local readiness/redirect test; it does not enable production recovery.
+
+## Production iOS recovery capture
+
+Add `--production-recovery` to the physical-device, 120-second `auto-reload`,
+`normal`, `manifest-only` capture. This selects the typed public host with the
+production dispatcher enabled; the probe never installs a diagnostic candidate.
+Native production decisions and completed events share the existing strict
+policy/authority validation. Actual buffers must show high output after a real
+downshift and after any successful installation; EOF and final high output are
+required. System interruption signals invalidate this controlled capture.
+
+`--production-command pause-resume` sends a public Pause after reservation one,
+waits two seconds, then sends public Play. It requires multiple native paused
+samples with no position drift beyond 50 ms, no early install, no budget refund,
+and a real installation using reservation two and its 1000 ms backoff. This is a
+separate scenario, not a replacement for an unmodified original-profile run.
+Host proxy boundaries and resume-seek gates are recorded alongside actual frames.
+All receipts remain diagnostic evidence; production-path coverage does not by
+itself certify CAP-ABR, physical continuity or audio synchronization.

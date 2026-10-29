@@ -81,6 +81,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   init(playerId: Int64, suffix: String, options: ApplePlayerOptionsMessage,
        services: YlPlatformServices, callbacks: ApplePlayerFlutterApiProtocol,
        avPlayer: AVPlayer = AVPlayer(), commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
+       automaticDashRecoveryEnabled: Bool = true,
        makeAvPlayerVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
@@ -111,6 +112,7 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
     coordinator = YlAppleSessionCoordinator(playerId: playerId, services: services,
       configuration: PlayerConfiguration(positionEventIntervalMs: options.positionUpdateIntervalMs),
       textureOwner: textureOwner, avPlayer: avPlayer, commandCoordinator: commandCoordinator,
+      automaticDashRecoveryEnabled: automaticDashRecoveryEnabled,
       makeAvPlayerVideoOutput: makeAvPlayerVideoOutput, beforeFallbackConstruction: beforeFallbackConstruction, slotCompatibility: slotCompatibility, bufferLedger: bufferLedger,
       videoSessionFactory: videoSessionFactory, audioRendererFactory: audioRendererFactory,
       audioTerminalCandidateEnabled: audioTerminalCandidateEnabled, hardwareEvidenceStage: hardwareEvidenceStage, audioOwnership: audio) { [weak self] identity, callback in
@@ -136,6 +138,15 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   var managesAudio: Bool { options.audioPolicy == .pluginManagedMediaPlayback }
   var isActive: Bool { coordinator.isActive }
   var playbackIntent: Bool { coordinator.currentPlaybackIntent }
+  var diagnosticProxySnapshot: [String: Double] { coordinator.diagnosticProxySnapshot }
+  var diagnosticResumeSeekPending: Bool { coordinator.diagnosticResumeSeekPending }
+  var onDashRecoveryDecision: (([String: Any]) -> Void)? {
+    get { coordinator.onDashRecoveryDecision }
+    set { coordinator.onDashRecoveryDecision = newValue }
+  }
+  var dashRecoveryDecision: [String: Any] { coordinator.dashRecoveryDecision }
+  var dashRecoveryEvents: [[String: Any]] { coordinator.dashRecoveryEvents }
+  var dashRecoveryAttempts: Int { coordinator.dashRecoveryAttempts }
   var acknowledgedTransportRevision: UInt64 { coordinator.acknowledgedTransportRevision }
   var acceptedVideoConstraints: YlAppleVideoConstraints { coordinator.acceptedVideoConstraints }
   var sessionId: String? { reducer.identity?.sessionId }

@@ -2,6 +2,9 @@ import yl_player_media_core
 import AVFoundation
 import CoreVideo
 import QuartzCore
+#if os(iOS)
+import UIKit
+#endif
 
 enum YlAvPlayerStatePolicy {
   static func status(
@@ -170,6 +173,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var confirmedDashPositionUs: Int64 = 0
   private var unconfirmedFixedLanding = false
   private var fixedRecoveryDeadline: DispatchWorkItem?
+  var onDashRecoveryInvalidated: (() -> Void)?
   var onAutomaticFallback: (() -> Void)?
   var confirmedVideoTracks: [YlNativeTrack] {
     dashVideoCatalog?.tracks(at: confirmedPositionUs()) ?? []
@@ -436,6 +440,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     refreshStallWatchdog()
   }
   func pause() throws {
+    onDashRecoveryInvalidated?()
     try checkAlive(); guard !stopped else { return }
     if playRequested { livePausedAt = CACurrentMediaTime() }
     playRequested = false
@@ -444,6 +449,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     player.pause()
   }
   func seek(toMs milliseconds: Int64, cancellationToken: YlOpenCancellationToken? = nil) throws {
+    onDashRecoveryInvalidated?()
     try checkAlive(); guard !stopped else { return }
     try cancellationToken?.throwIfCancelled()
     automaticLiveCatchUpAllowed = YlLiveCatchUpPolicy.endAutomaticCatchUp(
@@ -1709,6 +1715,53 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       audioTracks: audioTracks, videoTracks: videoTracks,
       metrics: collectMetrics(liveOffsetMs: liveOffsetMs),
       error: error ?? currentError, geometry: videoGeometry, videoSelection: videoSelection, livePlayback: livePlaybackState(live))))
+  }
+
+  /// One native sample owns output geometry, buffer, counters and item authority.
+  /// Ambiguous geometry or a non-legacy DASH path has no recovery authority.
+  var dashRecoveryItemGeneration: UInt64 { itemGeneration }
+  func dashRecoverySample(now: Double, intentRevision: UInt64, credentialRevision: UInt64) -> YlDashAutoRecoveryPolicy.Sample? {
+    guard let item = player.currentItem, let source = lastSource,
+      let catalog = dashVideoCatalog, hlsResourceLoader != nil,
+      !source.isLive, !source.airPlay, source.drm == nil,
+      YlSourceRouter.route(source) == .dashHls else { return nil }
+    let position = CMTimeGetSeconds(player.currentTime())
+    let duration = CMTimeGetSeconds(item.duration)
+    guard position.isFinite, position >= 0, duration.isFinite, duration > 0 else { return nil }
+    let audioBandwidth = dashAudioCatalog?.compactMap(\.bitrate).max() ?? 0
+    let tracks = catalog.tracks(at: currentPositionUs())
+    let variants: [YlDashAutoRecoveryPolicy.Variant] = tracks.compactMap { track in
+      guard let width = track.width, let height = track.height, let bitrate = track.bitrate,
+            width > 0, height > 0, bitrate > 0, audioBandwidth >= 0 else { return nil }
+      return .init(id: track.id, width: width, height: height, bandwidth: Double(bitrate) + Double(audioBandwidth))
+    }.sorted { $0.id < $1.id }
+    let matches = variants.filter { Double($0.width) == item.presentationSize.width && Double($0.height) == item.presentationSize.height }
+    let current = matches.count == 1 ? matches[0] : nil
+    let logs = item.accessLog()?.events ?? []
+    var bytes: Int64 = 0, requests = 0, overdue = 0
+    for log in logs {
+      let b = bytes.addingReportingOverflow(log.numberOfBytesTransferred)
+      let r = requests.addingReportingOverflow(log.numberOfMediaRequests)
+      let o = overdue.addingReportingOverflow(log.downloadOverdue)
+      guard !b.overflow, !r.overflow, !o.overflow else { return nil }
+      bytes = b.partialValue; requests = r.partialValue; overdue = o.partialValue
+    }
+    var foreground = false
+    #if os(iOS)
+    foreground = UIApplication.shared.applicationState == .active
+    #endif
+    let allowed = current != nil && foreground && active && !stopped && !disposed && currentError == nil && firstFrameSent
+      && playRequested && player.rate > 0 && desiredRate == 1 && item.status == .readyToPlay
+      && item.isPlaybackLikelyToKeepUp && pendingUserSeek == nil && pendingRuntimeResume == nil
+      && qualityConstraint == .unconstrained && videoSelection.fixedTrackId == nil
+      && item.preferredPeakBitRate == 0 && item.preferredMaximumResolution == .zero
+      && !player.isExternalPlaybackActive
+    return .init(time: now, generation: itemGeneration, allowed: allowed,
+      catalog: variants, current: current, position: position, remaining: duration - position,
+      bufferAhead: YlDashAutoRecoveryPolicy.contiguousAhead(position: position, ranges: item.loadedTimeRanges.map {
+        (CMTimeGetSeconds($0.timeRangeValue.start), CMTimeGetSeconds(CMTimeRangeGetEnd($0.timeRangeValue)))
+      }), bytes: bytes, transfer: logs.reduce(0) { $0 + $1.transferDuration }, requests: requests, overdue: overdue,
+      intentRevision: intentRevision, credentialRevision: credentialRevision)
   }
 
   private func emitStateDelta() {

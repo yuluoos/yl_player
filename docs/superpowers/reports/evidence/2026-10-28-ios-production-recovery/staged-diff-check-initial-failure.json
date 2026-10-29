@@ -1,0 +1,12 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "83deb9ed"
+  ],
+  "exitCode": 2,
+  "stdout": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift:133: new blank line at EOF.\n",
+  "stderr": ""
+}

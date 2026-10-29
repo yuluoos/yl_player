@@ -18,6 +18,77 @@ from prepare_fixture import create
 import abr_device
 
 
+def summarize_production_command(rows, policy):
+    def require(value):
+        if not value: raise ValueError('invalid production pause recovery evidence')
+    require(bool(rows) and all(r.get('productionCommand') == 'pause-resume' for r in rows))
+    e = rows[-1].get('productionCommandEvents')
+    require(isinstance(e, dict) and e.get('sessionId') == rows[-1].get('sessionId'))
+    require(e.get('pauseAcknowledged') is True and e.get('resumed') is True and not e.get('failed', False))
+    require(e.get('itemUnchangedBeforeResume') is True and e.get('installedBeforeResume') is False)
+    require(e.get('reservationAttempts') == e.get('beforeResumeAttempts') == 1)
+    for key in ('pauseStarted', 'resumeCompleted', 'pausePosition', 'beforeResumePosition'):
+        require(type(e.get(key)) in (int, float) and math.isfinite(e[key]) and e[key] >= 0)
+    require(e['resumeCompleted'] - e['pauseStarted'] >= 2 and abs(e['beforeResumePosition'] - e['pausePosition']) <= .05)
+    paused = [r for r in rows if e['pauseStarted']+.1 <= r['elapsed'] < e['resumeCompleted']-.1]
+    require(len(paused) >= 3 and all(r.get('publicPlaybackIntent') is False and r.get('rate') == 0 and
+        r.get('hostStatus') == 'paused' and abs(r['position']-e['pausePosition']) <= .05 and
+        r.get('automaticAttempts') == 1 and not r.get('automaticEvents') for r in paused))
+    events = rows[-1].get('automaticEvents')
+    require(rows[-1].get('automaticAttempts') == 2 and isinstance(events, list) and len(events) == 1)
+    require(events[0].get('attempt') == 2 and events[0].get('outcome') == 'installed' and events[0]['elapsed'] > e['resumeCompleted'])
+    require(isinstance(policy, dict) and policy.get('reservations') == 2 and policy.get('tickets') == 1 and policy.get('attempts') == 2)
+    require([t.get('attempt') for t in policy.get('ticketAuthorities', [])] == [2])
+    return dict(cancelledReservationPreserved=True, secondAttemptInstalled=True, pausedSamples=len(paused), capabilityAccepted=False)
+
+
+def production_recovery(args):
+    enabled = getattr(args, 'production_recovery', False)
+    if type(enabled) is not bool: raise ValueError('invalid production recovery selection')
+    command = getattr(args, 'production_command', 'none')
+    if command not in ('none', 'pause-resume') or (not enabled and command != 'none'):
+        raise ValueError('invalid production command scenario')
+    if not enabled: return False
+    if (not getattr(args, 'physical_device', None) or getattr(args, 'duration_seconds', None) != 120 or
+        getattr(args, 'recovery_action', None) != 'auto-reload' or getattr(args, 'auto_scenario', None) != 'normal' or
+        getattr(args, 'candidate_preparation', None) != 'manifest-only' or getattr(args, 'startup_delay_ms', 0) != 0 or
+        any(getattr(args, key, False) for key in ('public_policy_cycle', 'public_policy_race', 'direct_hls_control'))):
+        raise ValueError('production recovery requires physical normal 120s capture')
+    return True
+
+
+def summarize_production_recovery(rows, frames):
+    def require(value):
+        if not value: raise ValueError('invalid production recovery evidence')
+    require(bool(rows) and bool(frames))
+    session = rows[0].get('sessionId')
+    require(isinstance(session, str) and bool(session))
+    require(all(r.get('productionRecovery') is True and r.get('captureDeviceKind') == 'physical' and
+        r.get('sessionId') == session and r.get('publicPolicyCycle') is False and
+        r.get('publicPolicyRace') is False and r.get('hostFailureCount') == 0 for r in rows))
+    high_seen = False; down = None
+    for r in rows:
+        if r.get('width') == 640: high_seen = True
+        elif r.get('width') == 320 and high_seen and down is None: down = r['elapsed']
+    require(down is not None and rows[-1].get('width') == 640)
+    require(any(f.get('frames', 0) > 0 and f.get('width') == 640 and f['elapsed'] > down for f in frames))
+    published_high = False; published_low = False; published_recovered = False
+    for frame in frames:
+        if frame.get('frames', 0) <= 0: continue
+        if frame.get('width') == 640:
+            published_high = True
+            if published_low: published_recovered = True
+        elif frame.get('width') == 320 and published_high:
+            published_low = True
+    require(published_recovered)
+    installed = [e for e in rows[-1]['automaticEvents'] if e['outcome'] == 'installed']
+    for event in installed:
+        require(event.get('itemChanged') is True and event.get('credentialCommitAccepted') is True)
+        require(any(f.get('frames', 0) > 0 and f.get('width') == 640 and f['elapsed'] > event['elapsedAfter'] for f in frames))
+    return dict(installed=len(installed), triggerExercised=bool(installed), publicSessionUnchanged=True,
+                highFramesAfterRecovery=True, capabilityAccepted=False, physicalOutputVerified=False)
+
+
 def policy_trace_version(rows):
     if not any(isinstance(row, dict) and 'policySamplingVersion' in row for row in rows):
         return None
@@ -665,6 +736,8 @@ def run(args):
         paths=[p for p in products.rglob('*') if p.is_file() and ('.app/' in str(p) or p.suffix=='.xctestrun')]
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     try:
+        production = production_recovery(args)
+        receipt['productionRecovery'] = production
         cycle = public_policy_cycle(args)
         race = public_policy_race(args)
         receipt['publicPolicyRace'] = race
@@ -731,6 +804,8 @@ def run(args):
             YL_ABR_PROBE_DEVICE='1' if physical_device else '0', YL_ABR_PROBE_OWNED_HOST=host if physical_device else '',
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
+            YL_ABR_PROBE_PRODUCTION_RECOVERY='1' if production else '0',
+            YL_ABR_PROBE_PRODUCTION_COMMAND=getattr(args, 'production_command', 'none'),
             YL_ABR_PROBE_PUBLIC_POLICY_CYCLE='1' if cycle else '0',
             YL_ABR_PROBE_PUBLIC_POLICY_RACE='1' if race else '0',
             YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
@@ -776,6 +851,17 @@ def run(args):
                 read_rows(out/'frame-samples.jsonl'), json.loads((out/'public-policy-events.json').read_text()))
         elif any(row.get('publicPolicyCycle') is True for row in rows):
             raise ValueError('unexpected public host policy capture')
+        if production:
+            receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'))
+            command = getattr(args, 'production_command', 'none')
+            if not all(r.get('productionCommand', 'none') == command for r in rows):
+                raise ValueError('production command echo mismatch')
+            if read_rows(out/'signals.jsonl'):
+                raise ValueError('production capture interrupted')
+            if command == 'pause-resume':
+                receipt['productionCommandObservation'] = summarize_production_command(rows, receipt.get('policyObservation'))
+        elif any(r.get('productionRecovery') is True for r in rows):
+            raise ValueError('unexpected production recovery capture')
         validate_candidate_preparation(rows, preparation_mode)
         receipt['observation']=summarize(rows, expected_duration_seconds=duration_seconds,
                                          expected_transport=receipt['transport'], expected_startup_delay_ms=startup_delay_ms,
@@ -831,6 +917,8 @@ def main():
     p.add_argument('--auto-scenario', choices=('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation'), default='normal')
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
+    p.add_argument('--production-command', choices=('none', 'pause-resume'), default='none')
+    p.add_argument('--production-recovery', action='store_true', help='observe automatic production public-host recovery; no diagnostic installation')
     p.add_argument('--public-policy-race', action='store_true',
                    help='typed public caps/fixed command after candidate readiness; requires cancellation')
     p.add_argument('--public-policy-cycle', action='store_true',

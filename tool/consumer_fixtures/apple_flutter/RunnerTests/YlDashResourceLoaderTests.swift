@@ -522,6 +522,173 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  func testProductionRecoveryControllerCommitsWithinPreparationDeadline() async throws {
+    var now = 0.0
+    let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, _ in })
+    let committed = expectation(description: "current candidate committed")
+    let source = YlAppleSourceDescriptor(uri: "https://owned.example/movie.mpd", kind: .network, formatHint: .dash)
+    for t in [0.0, 1, 9, 17, 17.5] {
+      now = t
+      controller.tick(productionSample(t, high: t == 0), prepare: { _ in .avPlayer(source: source) },
+        currentSample: { self.productionSample(now) }, commit: { _ in committed.fulfill(); return [:] })
+    }
+    await fulfillment(of: [committed], timeout: 3)
+    XCTAssertEqual(controller.events.count, 1)
+    XCTAssertEqual(controller.events.first?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.policy.attempts, 1)
+  }
+
+  func testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget() async throws {
+    for action in ["cancel", "deadline", "credential"] {
+      var now = 0.0, credential: UInt64 = 0
+      var deadline: (() -> Void)?
+      let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, callback in deadline = callback })
+      let finalized = expectation(description: "candidate finalized " + action)
+      controller.onEvent = { _ in finalized.fulfill() }
+      let started = expectation(description: "held preparation " + action)
+      let released = expectation(description: "cancelled preparation " + action)
+      let barrier = DispatchSemaphore(value: 0)
+      var installs = 0
+      let source = YlAppleSourceDescriptor(uri: "https://owned.example/movie.mpd", kind: .network, formatHint: .dash)
+      for t in [0.0, 1, 9, 17, 17.5] {
+        now = t
+        controller.tick(productionSample(t, high: t == 0), prepare: { token in
+          token.onCancel { barrier.signal() }; started.fulfill()
+          _ = barrier.wait(timeout: .now() + 3); released.fulfill()
+          return .avPlayer(source: source)
+        }, currentSample: { self.productionSample(now, credential: credential) }, commit: { _ in installs += 1; return [:] })
+      }
+      await fulfillment(of: [started], timeout: 2)
+      if action == "cancel" { controller.invalidate() }
+      else if action == "deadline" { now = 19.501; deadline?() }
+      else { credential = 1; barrier.signal() }
+      await fulfillment(of: [released], timeout: 2)
+      await fulfillment(of: [finalized], timeout: 2)
+      XCTAssertEqual(controller.events.count, 1)
+      XCTAssertEqual(installs, 0, action)
+      XCTAssertEqual(controller.policy.attempts, 1, action)
+      XCTAssertNotEqual(controller.events.first?["outcome"] as? String, "installed", action)
+      controller.resetForSource()
+      XCTAssertEqual(controller.policy.attempts, 0)
+    }
+  }
+
+  func testProductionRecoveryBudgetUsesCommittedSessionNotReusedRequestLabel() {
+    let controller = YlDashAutoRecoveryController()
+    let first = YlAppleSessionIdentity(sessionId: "first", loadRequestId: "reused")
+    controller.useSource(first)
+    for t in [0.0, 1, 9, 17] {
+      controller.tick(productionSample(t, high: t == 0), prepare: { _ in XCTFail("No ticket before backoff"); throw YlOpenCancellationToken.cancellationError() },
+        currentSample: { nil }, commit: { _ in XCTFail("No installation"); return [:] })
+    }
+    XCTAssertEqual(controller.policy.attempts, 1)
+    controller.invalidate(); controller.useSource(first)
+    XCTAssertEqual(controller.policy.attempts, 1)
+    controller.useSource(.init(sessionId: "second", loadRequestId: "reused"))
+    XCTAssertEqual(controller.policy.attempts, 0, "A new committed Load owns a fresh budget even if its public label is reused")
+  }
+
+  func testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit() throws {
+    for counter in ["bytes", "transfer", "requests"] {
+      func regressed(_ time: Double, to value: Double) -> YlDashAutoRecoveryPolicy.Sample {
+        productionSample(time, requests: counter == "requests" ? Int(value) : nil,
+          bytes: counter == "bytes" ? Int64(value * 250_000) : nil, transfer: counter == "transfer" ? value : nil)
+      }
+      var pending = YlDashAutoRecoveryPolicy()
+      for t in [0.0, 1, 9, 17] { _ = pending.observe(productionSample(t, high: t == 0)) }
+      XCTAssertNil(pending.observe(regressed(17.5, to: 0)), counter)
+      XCTAssertEqual(pending.attempts, 1)
+      XCTAssertEqual(pending.decision["reason"] as? String, "countersReset")
+      var inflight = YlDashAutoRecoveryPolicy()
+      for t in [0.0, 1, 9, 17] { _ = inflight.observe(productionSample(t, high: t == 0)) }
+      let ticket = try XCTUnwrap(inflight.observe(productionSample(17.5)))
+      XCTAssertFalse(inflight.authorizes(ticket, regressed(18, to: 0)), counter)
+      var window = YlDashAutoRecoveryPolicy()
+      for t in [0.0, 1, 5] { _ = window.observe(productionSample(t, high: t == 0)) }
+      _ = window.observe(regressed(6, to: 4)) // Above the window anchor, below the immediately preceding sample.
+      XCTAssertEqual(window.decision["reason"] as? String, "countersReset")
+      _ = window.observe(productionSample(9))
+      XCTAssertEqual(window.decision["qualifiedWindows"] as? Int, 0)
+    }
+  }
+
+  private func productionSample(_ time: Double, high: Bool = false, bandwidth: Double = 1_500_000,
+    allowed: Bool = true, generation: UInt64 = 0, intent: UInt64 = 0, credential: UInt64 = 0,
+    buffer: Double = 10, remaining: Double = 90, requests: Int? = nil,
+    bytes: Int64? = nil, transfer: Double? = nil) -> YlDashAutoRecoveryPolicy.Sample {
+    let low = YlDashAutoRecoveryPolicy.Variant(id: "low", width: 426, height: 240, bandwidth: 400_000)
+    let upper = YlDashAutoRecoveryPolicy.Variant(id: "upper", width: 960, height: 540, bandwidth: bandwidth)
+    return .init(time: time, generation: generation, allowed: allowed, catalog: [low, upper], current: high ? upper : low,
+      position: time, remaining: remaining, bufferAhead: buffer, bytes: bytes ?? Int64(time * 250_000), transfer: transfer ?? time,
+      requests: requests ?? Int(time), overdue: 1, intentRevision: intent, credentialRevision: credential)
+  }
+
+  func testProductionRecoveryUsesDynamicBandwidthAndTwoWindows() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    XCTAssertNil(p.observe(productionSample(0, high: true)))
+    XCTAssertNil(p.observe(productionSample(1)))
+    XCTAssertNil(p.observe(productionSample(9)))
+    XCTAssertEqual(p.attempts, 0)
+    XCTAssertNil(p.observe(productionSample(17)))
+    XCTAssertEqual(p.attempts, 1)
+    XCTAssertNil(p.observe(productionSample(17.49)))
+    let ticket = try XCTUnwrap(p.observe(productionSample(17.5)))
+    XCTAssertEqual(ticket.due, 17.5)
+    XCTAssertTrue(p.authorizes(ticket, productionSample(18)))
+    // 2 Mbps cannot qualify a 2 Mbps target with the unchanged 1.25 headroom.
+    var insufficient = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17, 25, 33] {
+      XCTAssertNil(insufficient.observe(productionSample(t, high: t == 0, bandwidth: 2_000_000)))
+    }
+    XCTAssertEqual(insufficient.attempts, 0)
+  }
+
+  func testProductionRecoveryCancellationKeepsBackoffAndSourceBudget() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    let first = try XCTUnwrap(p.observe(productionSample(17.5)))
+    p.invalidateIntent()
+    XCTAssertFalse(p.authorizes(first, productionSample(18)))
+    for t in [18.0, 26, 34] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    XCTAssertEqual(p.attempts, 2)
+    XCTAssertNil(p.observe(productionSample(34.99, intent: 1)))
+    let second = try XCTUnwrap(p.observe(productionSample(35, intent: 1)))
+    XCTAssertEqual(second.due, 35)
+    p.finish(second)
+    for t in [36.0, 44, 52, 60] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    XCTAssertEqual(p.attempts, 2)
+    p = YlDashAutoRecoveryPolicy()
+    XCTAssertEqual(p.attempts, 0)
+  }
+
+  func testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    let ticket = try XCTUnwrap(p.observe(productionSample(17.5)))
+    for s in [productionSample(18, high: true), productionSample(18, allowed: false),
+      productionSample(18, generation: 1), productionSample(18, intent: 1), productionSample(18, credential: 1),
+      productionSample(18, buffer: 4.999), productionSample(18, remaining: 19.999),
+      productionSample(22.501), productionSample(18, bandwidth: 1_600_000)] {
+      XCTAssertFalse(p.authorizes(ticket, s))
+    }
+    XCTAssertTrue(p.authorizes(ticket, productionSample(22.5)))
+  }
+
+  func testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17, 25] { XCTAssertNil(p.observe(productionSample(t))) }
+    XCTAssertEqual(p.attempts, 0)
+    p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17, 25] { _ = p.observe(productionSample(t, high: t == 0, requests: 1)) }
+    XCTAssertEqual(p.attempts, 0)
+    p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    XCTAssertEqual(p.attempts, 1)
+    XCTAssertNil(p.observe(productionSample(17.4, high: true)))
+    XCTAssertNil(p.observe(productionSample(17.6)))
+    XCTAssertEqual(p.attempts, 1)
+  }
+
   func testFailedPreparationAndRevokedTicketNeverRefundSourceBudget() throws {
     var policy = AbrDiagnosticRecoveryPolicy()
     func sample(_ time: Double, width: Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
@@ -1051,9 +1218,36 @@ final class YlDashResourceLoaderTests: XCTestCase {
       && ["caps-during-preparation", "fixed-during-preparation", "pause-during-preparation", "seek-during-preparation"].contains(autoScenario)) else {
       XCTFail("Public policy race requires managed caps/fixed preroll diagnostic"); return
     }
+    let productionRecovery = env["YL_ABR_PROBE_PRODUCTION_RECOVERY"] == "1"
+    guard !productionRecovery || (captureDeviceKind == "physical" && !direct && !publicPolicyCycle && !publicPolicyRace
+      && programmeSeconds == 120 && recoveryAction == "auto-reload" && candidatePreparation == "manifest-only"
+      && autoScenario == "normal" && startupDelayMs == 0) else { XCTFail("Invalid production recovery capture"); return }
+    let productionCommand = env["YL_ABR_PROBE_PRODUCTION_COMMAND"] ?? "none"
+    guard ["none", "pause-resume"].contains(productionCommand), productionCommand == "none" || productionRecovery else {
+      XCTFail("Invalid production command scenario"); return
+    }
+    var productionCommandEvents: [String: Any] = [:]
+    var productionCommandTask: Task<Void, Never>?
+    defer { productionCommandTask?.cancel() }
+    let productionEpoch = ProcessInfo.processInfo.systemUptime
+    var productionPolicyFile: FileHandle?
+    var productionPolicyWriteFailed = false
+    if productionRecovery {
+      let path = directory.appendingPathComponent("policy-decisions.jsonl")
+      _ = FileManager.default.createFile(atPath: path.path, contents: nil)
+      productionPolicyFile = try FileHandle(forWritingTo: path)
+    }
+    defer { try? productionPolicyFile?.close() }
+    func productionEvent(_ input: [String: Any]) -> [String: Any] {
+      var result = input
+      for key in ["elapsed", "elapsedAfter", "due", "preparationDeadline"] {
+        if let value = result[key] as? Double { result[key] = value - productionEpoch }
+      }
+      return result
+    }
     // Preserve the historical managed probe's preparation-before-player order.
     let prepared: YlPreparedHlsAsset?
-    if direct || publicPolicyCycle || publicPolicyRace {
+    if direct || publicPolicyCycle || publicPolicyRace || productionRecovery {
       prepared = nil
       if startupDelayMs > 0 {
         // Explicitly arm the same first-GET clock before the diagnostic delay.
@@ -1091,13 +1285,49 @@ final class YlDashResourceLoaderTests: XCTestCase {
     var directCompleted = false
     var endTask: Task<Void, Never>?
     defer { endTask?.cancel(); publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
-    if publicPolicyCycle || publicPolicyRace {
+    if publicPolicyCycle || publicPolicyRace || productionRecovery {
       let host = YlApplePlayerHost(playerId: 991, suffix: "abr-public-policy",
         options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
         services: .init(platform: .current, textureOutput: output,
-          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player,
+          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player, automaticDashRecoveryEnabled: productionRecovery,
         makeAvPlayerVideoOutput: { AbrTimestampVideoOutput(attributes: $0, times: presentationTimes) })
       publicHost = host
+      if productionRecovery {
+        host.onDashRecoveryDecision = { [weak host] decision in
+          var row = decision
+          for key in ["elapsed", "pendingDue"] {
+            if let value = row[key] as? Double { row[key] = value - productionEpoch }
+          }
+          do { try productionPolicyFile?.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])) }
+          catch { productionPolicyWriteFailed = true }
+          if productionCommand == "pause-resume", productionCommandTask == nil,
+            decision["reason"] as? String == "reserved", decision["attempts"] as? Int == 1 {
+            productionCommandTask = Task { @MainActor [weak host] in
+              do {
+                let host = try XCTUnwrap(host), sessionId = try XCTUnwrap(publicSessionId)
+                let item = player.currentItem
+                productionCommandEvents = ["sessionId": sessionId, "reservationAttempts": host.dashRecoveryAttempts,
+                  "pauseStarted": ProcessInfo.processInfo.systemUptime - productionEpoch]
+                try host.pause(command: .init(sessionId: sessionId))
+                productionCommandEvents["pauseAcknowledged"] = !host.playbackIntent && player.rate == 0
+                productionCommandEvents["pausePosition"] = CMTimeGetSeconds(player.currentTime())
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                productionCommandEvents["beforeResumePosition"] = CMTimeGetSeconds(player.currentTime())
+                productionCommandEvents["beforeResumeAttempts"] = host.dashRecoveryAttempts
+                productionCommandEvents["itemUnchangedBeforeResume"] = player.currentItem === item
+                productionCommandEvents["installedBeforeResume"] = host.dashRecoveryEvents.contains { $0["outcome"] as? String == "installed" }
+                try await host.play(command: .init(sessionId: sessionId))
+                productionCommandEvents["resumed"] = host.playbackIntent
+                productionCommandEvents["resumeCompleted"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+              } catch { productionCommandEvents["failed"] = true }
+              do {
+                try JSONSerialization.data(withJSONObject: productionCommandEvents, options: [.sortedKeys])
+                  .write(to: directory.appendingPathComponent("production-command-events.json"), options: .atomic)
+              } catch { productionPolicyWriteFailed = true }
+            }
+          }
+        }
+      }
       try host.attach()
       do {
         let loaded = try await host.load(request: AppleHostFixture.request("public-policy-cycle",
@@ -1149,7 +1379,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     _ = FileManager.default.createFile(atPath: directory.appendingPathComponent("rows.jsonl").path, contents: nil)
     let file = try FileHandle(forWritingTo: directory.appendingPathComponent("rows.jsonl"))
     defer { try? file.close() }
-    let started = ProcessInfo.processInfo.systemUptime
+    let started = productionRecovery ? productionEpoch : ProcessInfo.processInfo.systemUptime
     #if os(iOS)
     let previousIdleTimer = UIApplication.shared.isIdleTimerDisabled
     UIApplication.shared.isIdleTimerDisabled = true
@@ -1184,7 +1414,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     #endif
     let policyURL = directory.appendingPathComponent("policy-decisions.jsonl")
     var policyFile: FileHandle?
-    if recoveryAction == "auto-reload" {
+    if recoveryAction == "auto-reload" && !productionRecovery {
       _ = FileManager.default.createFile(atPath: policyURL.path, contents: nil)
       policyFile = try FileHandle(forWritingTo: policyURL)
     }
@@ -1220,7 +1450,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
           "position": position.isFinite ? position : 0, "rate": player.rate,
           "timeControlStatus": player.timeControlStatus.rawValue,
           "itemStatus": player.currentItem?.status.rawValue ?? -1,
-          "resumeSeekPending": backend?.diagnosticResumeSeekPending ?? false]
+          "resumeSeekPending": backend?.diagnosticResumeSeekPending ?? publicHost?.diagnosticResumeSeekPending ?? false]
         do { try frameFile.write(contentsOf: JSONSerialization.data(withJSONObject: sample, options: [.sortedKeys]) + Data([10])) }
         catch { frameWriteFailed = true; return }
         try? await Task.sleep(nanoseconds: 16_000_000)
@@ -1319,9 +1549,12 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "hostFailureCount": publicCallbacks.failures.count,
         "candidatePreparation": candidatePreparation,
         "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
-        "frameSamplingVersion": 2, "automaticAttempts": automaticPolicy.attempts, "automaticEvents": automaticEvents,
+        "frameSamplingVersion": 2, "automaticAttempts": productionRecovery ? (publicHost?.dashRecoveryAttempts ?? 0) : automaticPolicy.attempts,
+        "automaticEvents": productionRecovery ? (publicHost?.dashRecoveryEvents.map(productionEvent) ?? []) : automaticEvents,
+        "productionRecovery": productionRecovery, "productionCommand": productionCommand,
+        "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? [:],
+        "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -1628,6 +1861,12 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertTrue(completed)
     framePump.cancel(); await framePump.value
     XCTAssertFalse(frameWriteFailed)
+    XCTAssertFalse(productionPolicyWriteFailed)
+    if productionCommand == "pause-resume" {
+      XCTAssertEqual(productionCommandEvents["pauseAcknowledged"] as? Bool, true)
+      XCTAssertEqual(productionCommandEvents["resumed"] as? Bool, true)
+      XCTAssertEqual(publicHost?.dashRecoveryAttempts, 2)
+    }
     #if os(iOS)
     XCTAssertFalse(signalWriteFailed)
     #endif

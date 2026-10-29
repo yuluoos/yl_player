@@ -14,6 +14,72 @@ from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_production_pause_keeps_budget_and_requires_real_paused_samples(self):
+        marker = dict(sessionId='same', pauseStarted=17, resumeCompleted=19.1, pausePosition=16,
+            beforeResumePosition=16, reservationAttempts=1, beforeResumeAttempts=1,
+            itemUnchangedBeforeResume=True, installedBeforeResume=False, pauseAcknowledged=True, resumed=True)
+        event = dict(attempt=2, outcome='installed', elapsed=36)
+        rows = [dict(elapsed=t, sessionId='same', productionCommand='pause-resume', productionCommandEvents=marker,
+            automaticAttempts=1 if t<36 else 2, automaticEvents=[] if t<36 else [event],
+            rate=0, publicPlaybackIntent=False, hostStatus='paused', position=16) for t in [17.2,17.6,18,18.4,19,120]]
+        policy = dict(reservations=2, tickets=1, attempts=2, ticketAuthorities=[dict(attempt=2)])
+        self.assertTrue(abr_accesslog.summarize_production_command(rows,policy)['cancelledReservationPreserved'])
+        for mutation in ['refunded','played','drift','installed','missing-pause','wrong-ticket','wrong-echo']:
+            rr, pp = copy.deepcopy((rows,policy))
+            if mutation=='refunded':rr[0]['automaticAttempts']=0
+            elif mutation=='played':rr[0]['publicPlaybackIntent']=True
+            elif mutation=='drift':rr[0]['position']=16.051
+            elif mutation=='installed':rr[-1]['productionCommandEvents']['installedBeforeResume']=True
+            elif mutation=='missing-pause':rr=rr[-1:]
+            elif mutation=='wrong-ticket':pp['ticketAuthorities'][0]['attempt']=1
+            else:rr[0]['productionCommand']='none'
+            with self.subTest(mutation=mutation),self.assertRaises(ValueError):
+                abr_accesslog.summarize_production_command(rr,pp)
+
+    def test_production_recovery_requires_physical_public_normal_capture(self):
+        values = dict(production_recovery=True, physical_device='00008140-000C49CC3493001C',
+            duration_seconds=120, recovery_action='auto-reload', candidate_preparation='manifest-only',
+            auto_scenario='normal', public_policy_cycle=False, public_policy_race=False, direct_hls_control=False,
+            startup_delay_ms=0)
+        self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values)))
+        self.assertFalse(abr_accesslog.production_recovery(SimpleNamespace()))
+        for key, value in [('physical_device', None), ('duration_seconds', 40), ('recovery_action', 'none'),
+                           ('auto_scenario', 'pause-first'), ('candidate_preparation', 'asset-preroll'),
+                           ('public_policy_cycle', True), ('public_policy_race', True), ('direct_hls_control', True),
+                           ('startup_delay_ms', 1), ('production_recovery', 1)]:
+            with self.subTest(key=key), self.assertRaises(ValueError):
+                abr_accesslog.production_recovery(SimpleNamespace(**dict(values, **{key: value})))
+
+    def test_production_recovery_requires_real_public_install_and_high_frames(self):
+        event = dict(outcome='installed', elapsedAfter=20, itemChanged=True, credentialCommitAccepted=True)
+        rows = [dict(elapsed=0, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=640, automaticEvents=[]),
+                dict(elapsed=10, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=320, automaticEvents=[]),
+                dict(elapsed=120, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=640, automaticEvents=[event])]
+        frames = [dict(elapsed=1, width=640, frames=1), dict(elapsed=11, width=320, frames=1), dict(elapsed=21, width=640, frames=1)]
+        result = abr_accesslog.summarize_production_recovery(rows, frames)
+        self.assertEqual(result['installed'], 1)
+        self.assertFalse(result['capabilityAccepted'])
+        for mutation in ['wrong-mode', 'no-session', 'changed-session', 'host-failure', 'no-high', 'stale-high', 'no-install', 'credential', 'ends-low', 'no-downshift', 'no-low-frame', 'no-initial-high-frame']:
+            rr, ff = copy.deepcopy((rows, frames))
+            if mutation=='wrong-mode':rr[0]['productionRecovery']=False
+            elif mutation=='no-session':rr[0]['sessionId']=None
+            elif mutation=='changed-session':rr[-1]['sessionId']='other'
+            elif mutation=='host-failure':rr[-1]['hostFailureCount']=1
+            elif mutation=='no-high':
+                for f in ff:f['width']=320
+            elif mutation=='stale-high':ff[-1]['elapsed']=19
+            elif mutation=='no-install':rr[-1]['automaticEvents'][0]['itemChanged']=False
+            elif mutation=='credential':rr[-1]['automaticEvents'][0]['credentialCommitAccepted']=False
+            elif mutation=='ends-low':rr[-1]['width']=320
+            elif mutation=='no-downshift':rr[1]['width']=640
+            elif mutation=='no-low-frame':ff[1]['width']=640
+            else:ff[0]['width']=320
+            with self.subTest(mutation=mutation), self.assertRaises(ValueError):
+                abr_accesslog.summarize_production_recovery(rr, ff)
+
     def test_candidate_preparation_is_explicit_and_limited_to_owned_auto_probe(self):
         def args(**kwargs):
             values = dict(recovery_action='auto-reload', duration_seconds=120, direct_hls_control=False)

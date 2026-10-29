@@ -1,0 +1,23 @@
+[
+  "caffeinate",
+  "-udis",
+  "xcodebuild",
+  "test",
+  "-quiet",
+  "-workspace",
+  "packages/yl_player/example/macos/Runner.xcworkspace",
+  "-scheme",
+  "Runner",
+  "-configuration",
+  "Debug",
+  "-destination",
+  "platform=macOS,arch=arm64",
+  "-derivedDataPath",
+  "/private/tmp/yl-public-policy-macos",
+  "CODE_SIGNING_ALLOWED=NO",
+  "-parallel-testing-enabled",
+  "NO",
+  "-resultBundlePath",
+  "/private/tmp/yl-production-recovery/counter-red.xcresult",
+  "-only-testing:RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit"
+]
