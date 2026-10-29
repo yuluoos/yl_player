@@ -781,6 +781,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-29-ios-resume-timeout.md",
       "sha256": "3ed5f2b1a08f9f2f0f0536608594ad11d555a0df6159a29b0579187bddb83c8b"
+    },
+    "ios-original-bandwidth-20261029": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-29-ios-original-bandwidth.md",
+      "sha256": "90b765a311c8a1b6dd9afb7ca01fc12c9e125145be20d6f7b0dfe27001ed506e"
     }
   },
   "rows": [
@@ -824,10 +829,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-resume-timeout-20261029"
+        "ios-original-bandwidth-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-original-profile-high-recovery-other-postcommit-races-multidevice-and-physical-av-continuity"
+      "nextAction": "diagnose-original-request-boundaries-qualify-high-recovery-other-postcommit-races-multidevice-physical-av-continuity"
     },
     {
       "requirement": "CAP-ABR",

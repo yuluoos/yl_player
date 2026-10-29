@@ -1,0 +1,21 @@
+{
+  "command": [
+    "xcrun",
+    "devicectl",
+    "device",
+    "copy",
+    "from",
+    "--device",
+    "00008140-000C49CC3493001C",
+    "--source",
+    "tmp/yl-abr-aee5e904bee044109d9b293624fa6ecd",
+    "--domain-type",
+    "appDataContainer",
+    "--domain-identifier",
+    "dev.ylplayer.ylPlayerExample",
+    "--destination",
+    "/private/tmp/yl-original-bandwidth/media/reviewed-headroom/device-export"
+  ],
+  "exitCode": 0,
+  "output": "File received from Device\n/private/tmp/yl-original-bandwidth/media/reviewed-headroom/device-export\n"
+}

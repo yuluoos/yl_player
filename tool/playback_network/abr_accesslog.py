@@ -259,6 +259,13 @@ def summarize_policy(rows, *, expected_attempts):
                 require(qualified == (0 if reason == 'firstQualifiedWindow' else 1))
                 qualified = 1 if reason == 'firstQualifiedWindow' else 0
             else:
+                # Mirror the production guard order before attributing a failed
+                # window to bandwidth. In particular, an exact-threshold rate
+                # cannot be labelled insufficientBandwidth.
+                expected_reason = ('noProgress' if row['position'] <= anchor['position'] else
+                                   'insufficientRequests' if requests < 3 else
+                                   'insufficientBandwidth' if bitrate < 955000 else None)
+                require(reason == expected_reason)
                 qualified = 0
             anchor = None if reason == 'reserved' else row
         elif reason in ('windowStarted', 'countersReset'):

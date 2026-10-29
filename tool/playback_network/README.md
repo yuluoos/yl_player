@@ -579,3 +579,28 @@ itself certify CAP-ABR, physical continuity or audio synchronization.
 生产候选提交前竞争可使用 `--production-recovery --production-command pause-prepared|seek-prepared|load-prepared`，仍限定真机、120秒、normal/auto-reload/manifest-only。内部默认nil钩子仅在真实候选准备完成后暂挂；公开命令负责取消，采集器不直接取消生产控制器、不改带宽或截止。第一候选必须在2秒准备期限内被取消且没有安装；暂停/跳转后必须消耗第二次预算并真实恢复高档。暂停需至少2秒、3个静止样本；跳转与新Load的首个实际帧PTS必须位于目标前后50ms内，后续帧不能落回目标之前50ms以外；首帧延迟单独报告，不据此授予物理连续性验收。
 
 新Load使用相同请求标签但必须产生新会话，旧候选取消和新预算分别审计，公开Load返回时新预算必须已归零；其高档帧属于新Load，不能宣称同会话自动恢复。`production-command-events.json`、按会话标识的策略决策和原始帧共同核验边界。所有受控通过仍不代表物理音画连续性或跨设备稳定性通过。
+
+## Read-only bandwidth diagnosis
+
+For a completed owned-fixture capture with exact policy decisions:
+
+```sh
+python3 -B tool/playback_network/bandwidth_diagnostics.py CAPTURE_DIRECTORY \
+  --profiles PROFILE_DOCUMENT.json > NEW_DIAGNOSTIC.json
+```
+
+This checks profile identity and request accounting, reuses the strict policy
+validator, and reports each phase's server write bytes, summed request durations,
+and the union of overlapping request intervals separately. A request crossing a
+phase boundary, failed/empty responses, and HEAD preflight remain counted in the
+excluded totals; they are not silently treated as successful phase samples.
+The configured ceiling and nominal request latency sum are configuration values,
+not measurements of link capacity or actual latency. Neither server goodput nor
+its interval union replaces the AVPlayer policy's bandwidth observation. The
+server and device clocks are not subtracted or assumed synchronized. The report
+cannot approve recovery, continuity, or capability acceptance, and never modifies
+raw captures or the original collector receipt.
+
+For causal comparisons, keep the original profile frozen and change one factor
+in a separately named diagnostic profile. Existing stall/headroom/zero-latency
+contrasts change several factors and do not isolate request delay alone.

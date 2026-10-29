@@ -1,0 +1,52 @@
+{
+  "passedRuns": 7,
+  "results": {
+    "reviewed-load-prepared": {
+      "apple-991-s2": {
+        "samples": 274,
+        "attempts": 0
+      },
+      "apple-991-s1": {
+        "samples": 207,
+        "attempts": 1
+      }
+    },
+    "reviewed-normal-1": {
+      "apple-991-s1": {
+        "samples": 484,
+        "attempts": 1
+      }
+    },
+    "reviewed-normal-2": {
+      "apple-991-s1": {
+        "samples": 484,
+        "attempts": 1
+      }
+    },
+    "reviewed-normal-3": {
+      "apple-991-s1": {
+        "samples": 483,
+        "attempts": 1
+      }
+    },
+    "reviewed-original": {
+      "apple-991-s1": {
+        "samples": 484,
+        "attempts": 0
+      }
+    },
+    "reviewed-pause-prepared": {
+      "apple-991-s1": {
+        "samples": 493,
+        "attempts": 2
+      }
+    },
+    "reviewed-seek-prepared": {
+      "apple-991-s1": {
+        "samples": 482,
+        "attempts": 2
+      }
+    }
+  },
+  "originalReceiptsUnchanged": true
+}

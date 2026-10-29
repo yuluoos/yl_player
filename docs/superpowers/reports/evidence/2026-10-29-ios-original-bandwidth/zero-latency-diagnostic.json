@@ -1,0 +1,3973 @@
+{
+  "schemaVersion": 1,
+  "profile": "original-zero-latency-v1",
+  "profileSha256": "348e8302ded6d1fa05111855cfff775cd16dc7883b9a20bb6c16e230943ee6ad",
+  "totalRequests": 376,
+  "excludedCounts": {
+    "crossPhase": 3,
+    "incompleteOrNonBody": 2
+  },
+  "phases": [
+    {
+      "phaseIndex": 0,
+      "startMs": 0,
+      "endMs": 10000,
+      "requestCount": 58,
+      "bodyBytesWritten": 1163537,
+      "configuredCeilingBps": 4000000,
+      "configuredLatencySumMs": 2320,
+      "requestDurationSumMs": 5961.075833000001,
+      "activeUnionMs": 4196.625584,
+      "spanMs": 9118.194125,
+      "requestWeightedGoodputBps": 1561512.7639326574,
+      "activeUnionGoodputBps": 2218042.999949456
+    },
+    {
+      "phaseIndex": 1,
+      "startMs": 10000,
+      "endMs": 25000,
+      "requestCount": 38,
+      "bodyBytesWritten": 433629,
+      "configuredCeilingBps": 400000,
+      "configuredLatencySumMs": 7600,
+      "requestDurationSumMs": 21940.391293000004,
+      "activeUnionMs": 13237.705208000003,
+      "spanMs": 13492.860999999999,
+      "requestWeightedGoodputBps": 158111.67420276508,
+      "activeUnionGoodputBps": 262056.9007612848
+    },
+    {
+      "phaseIndex": 2,
+      "startMs": 25000,
+      "endMs": null,
+      "requestCount": 275,
+      "bodyBytesWritten": 5316464,
+      "configuredCeilingBps": 4000000,
+      "configuredLatencySumMs": 0,
+      "requestDurationSumMs": 16539.002920999992,
+      "activeUnionMs": 13574.539419,
+      "spanMs": 86242.19712499999,
+      "requestWeightedGoodputBps": 2571600.730899951,
+      "activeUnionGoodputBps": 3133197.4284497085
+    }
+  ],
+  "capacityMeasured": false,
+  "capabilityAccepted": false,
+  "interpretation": "Server write intervals only; overlapping request durations remain summed separately. No cross-clock subtraction or replacement of policy bandwidth.",
+  "policy": {
+    "samples": 485,
+    "reasonCounts": {
+      "playbackIneligible": 3,
+      "insufficientBuffer": 31,
+      "highNotObserved": 11,
+      "highOutput": 280,
+      "windowStarted": 1,
+      "windowPending": 94,
+      "insufficientBandwidth": 1,
+      "firstQualifiedWindow": 1,
+      "reserved": 1,
+      "backoff": 1,
+      "ticketReady": 1,
+      "nearEnd": 60
+    },
+    "attempts": 1,
+    "reservations": 1,
+    "tickets": 1,
+    "triggerExercised": true,
+    "intentSamples": [
+      {
+        "elapsed": 0.5074107500004175,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 0.7566895833333547,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 1.0073486250003043,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 1.2568557916674763,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 1.507468333333236,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 1.756464624999353,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 2.0072412916670146,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 2.2574139999996987,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 2.5073411666671745,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 2.757341374999669,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 3.0073169999996026,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 3.257295374998648,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 3.5072895833327493,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 3.7564012083312264,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 4.006609333333472,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 4.256789583334466,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 4.507276500000444,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 4.75730295833273,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 5.006830916667241,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 5.25740441666494,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 5.507419875000778,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 5.756981208331126,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 6.007458749998477,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 6.257352541666478,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 6.506785249999666,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 6.757433333332301,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 7.007289166667761,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 7.257408875000692,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 7.507356791666098,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 7.757390250000753,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 8.00669891666621,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 8.257339125000726,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 8.507363583332335,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 8.757404958334519,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 9.007389624999632,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 9.257333791665587,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 9.50741412500065,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 9.757350416664849,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 10.007389791666355,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 10.257348999999522,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 10.507401041664707,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 10.757477833332814,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 11.007382916664938,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 11.257448291664332,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 11.507421750000503,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 11.757337999999436,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 12.00740545833105,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 12.25737879166627,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 12.507422791666613,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 12.757481416665541,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 13.00736975000109,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 13.25733604166453,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 13.507412583334371,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 13.757388375001028,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 14.00740708333251,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 14.257405833333905,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 14.5073307499988,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 14.75737724999999,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 15.007414208332193,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 15.257340541666053,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 15.507329458334425,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 15.757408291665342,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 16.007380083334283,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 16.25742258333412,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 16.507463875001122,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 16.757333124998695,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 17.00742700000046,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 17.257411083333864,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 17.50736591666646,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 17.757346541664447,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 18.007430791665684,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 18.275959041664464,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 18.507348041664955,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 18.757352333333984,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 19.007360374998825,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 19.25734945833392,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 19.50667604166665,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 19.757398833331536,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 20.00745525000093,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 20.25670641666511,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 20.507344541667408,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 20.757383333333564,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 21.006815166667366,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 21.257392416664516,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 21.507371708332357,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 21.75672404166471,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 22.007389874997898,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 22.2573541666643,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 22.506722708334564,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 22.75745362499947,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 23.007384333333903,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 23.257406958331558,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 23.50734516666489,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 23.7573985416675,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 24.007363041666395,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 24.257350583331572,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 24.507529041664384,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 24.757325708331337,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 25.007401625000057,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 25.25737983333238,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 25.506457874998887,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 25.75733441666671,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 26.007396749999316,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 26.257367916667135,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 26.507339374998992,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 26.75735312499819,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 27.007430791665684,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 27.257350249998126,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 27.507341166667175,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 27.756480249998276,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 28.007419749999826,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 28.257332083332585,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 28.507345791666012,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 28.7574258333334,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 29.00733279166525,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 29.257323624999117,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 29.50734191666561,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 29.756773916666134,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 30.00735312499819,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 30.257406291664665,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 30.507384291664494,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 30.75740012499955,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 31.00732699999935,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 31.257328458334086,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 31.50729604166554,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 31.75729383333237,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 32.00733754166504,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 32.25731000000087,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 32.507359291666944,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 32.757374291664746,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 33.00737970833143,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 33.25737762499921,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 33.50732333333144,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 33.75736658333335,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 34.0073686249998,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 34.257379624999885,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 34.507328833333304,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 34.757375333334494,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 35.00735483333119,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 35.257413291667035,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 35.507360958334175,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 35.75741041666697,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 36.007467291667126,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 36.257392499999696,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 36.50732645833341,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 36.75738570833346,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 37.00755291666428,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 37.25736120833244,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 37.50732425000024,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 37.75733137499992,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 38.00739199999953,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 38.25739645833164,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 38.508083500000794,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 38.757061833333864,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 39.00733804166521,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 39.25738741666646,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 39.50739120833168,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 39.757346499998675,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 40.00739316666659,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 40.257399958332826,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 40.50733991666493,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 40.757323541667574,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 41.00739574999898,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 41.25712129166641,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 41.50670745833122,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 41.75717008333231,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 42.00740704166674,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 42.257338916664594,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 42.507388166664896,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 42.75737941666739,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 43.00741316666608,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 43.25734312499844,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 43.50739304166564,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 43.75739087499824,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 44.00742370833177,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 44.257292999998754,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 44.50727991666645,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 44.757306999999855,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 45.00745420833118,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 45.257333083332924,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 45.507326708331675,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 45.75739799999792,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 46.00778954166526,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 46.25635937499828,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 46.50735733333204,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 46.75732491666713,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 47.00739574999898,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 47.257379083333944,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 47.50732008333216,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 47.7573845416664,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 48.00680258333159,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 48.25738695833206,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 48.50732829166736,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 48.756790083331,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 49.00744820833279,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 49.25734083333373,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 49.506752083332685,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 49.75731249999808,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 50.00732704166512,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 50.25733220833354,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 50.50733070833303,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 50.75732633333246,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 51.006851958332845,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 51.2573324583318,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 51.50727824999922,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 51.75738566666769,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 52.007392374998744,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 52.25731216666463,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 52.507330500000535,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 52.75738358333183,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 53.007396083332424,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 53.257337458333495,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 53.50733033333381,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 53.75676124999882,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 54.00736195833451,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 54.25734341666612,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 54.50739129166686,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 54.75732645833341,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 55.00740299999961,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 55.257400416667224,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 55.50726716666759,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 55.75732270833396,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 56.007426083331666,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 56.25733274999948,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 56.507316666666156,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 56.757378499998595,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 57.00738804166758,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 57.25728325000091,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 57.50733704166487,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 57.7573802083316,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 58.00743325000076,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 58.257329958330956,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 58.50732608333419,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 58.75732120833345,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 59.00739224999779,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 59.256376708333846,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 59.50738637500035,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 59.75733079166457,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 60.007408458332065,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 60.25732808333123,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 60.507336291666434,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 60.75738779166568,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 61.007411541664624,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 61.25731620833176,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 61.50730283333178,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 61.76109029166764,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 62.00737679166559,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 62.25732900000003,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 62.50736291666544,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 62.75740287499866,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 63.007420791665936,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 63.257381708332105,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 63.50737545833181,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 63.756975874999625,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 64.00737020833185,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 64.2567222083344,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 64.5073331249987,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 64.75731608333444,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 65.00740524999856,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 65.2573391666665,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 65.50733512499937,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 65.75737500000105,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 66.00732708333453,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 66.25734158333216,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 66.50742099999843,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 66.75730333333195,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 67.00743345833325,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 67.25732270833396,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 67.50665920833126,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 67.75740337499883,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 68.0068578749997,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 68.2573277916672,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 68.50732608333419,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 68.75688358333355,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 69.00743279166636,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 69.25732908333157,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 69.50685175000035,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 69.75733241666603,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 70.00741370833202,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 70.25681887500104,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 70.50733704166487,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 70.75732745833375,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 71.00679483333442,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 71.25734312499844,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 71.50741295833359,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 71.75742666666702,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 72.00737866666532,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 72.25732054166656,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 72.50742108333361,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 72.75740883333128,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 73.00732362499912,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 73.25731950000045,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 73.50732254166724,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 73.75731133333102,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 74.00727687499966,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 74.2573963750001,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 74.50753145833369,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 74.75736291666544,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 75.00739887500094,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 75.25731887499933,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 75.5073799999991,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 75.75737891666722,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 76.00961124999958,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 76.2573748750001,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 76.50732349999817,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 76.75738487499984,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 77.00733670833142,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 77.25733395833231,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 77.50733158333242,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 77.75738112500039,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 78.00740308333116,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 78.25731566666582,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 78.50741004166775,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 78.75733187500009,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 79.00739470833287,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 79.25736975000109,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 79.5073384999996,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 79.75742312500006,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 80.00745533333247,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 80.25734166666734,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 80.5073681666654,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 80.75737412499802,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 81.00737045833375,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 81.25732483333195,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 81.50738704166724,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 81.75713125000038,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 82.00737899999876,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 82.25735437500043,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 82.50737104166546,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 82.75730862499768,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 83.007427083332,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 83.25676870833195,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 83.50887666666677,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 83.75740949999818,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 84.00651787500101,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 84.25745941666537,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 84.5073804583335,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 84.7573312083332,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 85.00739195833376,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 85.25744591666444,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 85.5073283749989,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 85.75741308333454,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 86.00744087500061,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 86.25732070833328,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 86.50739362500099,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 86.75744399999894,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 87.00743924999915,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 87.25732283333127,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 87.50733579166626,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 87.75730770833252,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 88.00738637500035,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 88.2573277916672,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 88.5074905416659,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 88.75739941666689,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 89.00744716666668,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 89.25747054166641,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 89.5072243333343,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 89.75732699999935,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 90.00709254166577,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 90.25734525000007,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 90.50734379166533,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 90.75732824999795,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 91.00715941666567,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 91.25730974999897,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 91.50744579166712,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 91.75738979166636,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 92.00740995833257,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 92.25740666666752,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 92.50734333333457,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 92.75740145833333,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 93.00740816666439,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 93.25732595833324,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 93.50733920833227,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 93.75739949999843,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 94.00737812499938,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 94.25736279166449,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 94.50736920833151,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 94.75733374999982,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 95.00739983333187,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 95.25740099999894,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 95.50728120833446,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 95.75738312500107,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 96.00741424999796,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 96.25732716666607,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 96.50738062500022,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 96.75736999999936,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 97.00744045833198,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 97.25735304166665,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 97.50740483333357,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 97.75738741666646,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 98.00746529166645,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 98.25732908333157,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 98.50733974999821,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 98.75736445833172,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 99.00741041666697,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 99.25734058333182,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 99.50731779166745,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 99.75731154166715,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 100.0074010416647,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 100.25731704166537,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 100.50731954166622,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 100.7573901249998,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 101.00654533333363,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 101.25738999999885,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 101.50738358333183,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 101.75738208333132,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 102.00648695833297,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 102.25731395833282,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 102.5073352916661,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 102.75741270833169,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 103.00737283333365,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 103.25731879166779,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 103.50638479166446,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 103.7573961249982,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 104.00735445833197,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 104.25642808333214,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 104.50733254166698,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 104.75731270833421,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 105.00649741666712,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 105.25740075000067,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 105.50730308333368,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 105.75701729166758,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 106.0073832916678,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 106.25733150000087,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 106.50649312499809,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 106.75734462499895,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 107.007097624999,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 107.25650200000018,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 107.50737245833443,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 107.75738212500073,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 108.00749495833225,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 108.25733866666633,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 108.50734812500014,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 108.75738466666735,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 109.00669112499963,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 109.2573978750006,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 109.50734354166707,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 109.75733904166555,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 110.00778370833359,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 110.25732174999939,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 110.50734708333403,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 110.75741054166429,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 111.00738787500086,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 111.25738999999885,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 111.50720575000014,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 111.75740362500073,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 112.00733445833248,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 112.25659774999804,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 112.50871499999994,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 112.75737983333238,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 113.0074191249987,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 113.25735029166754,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 113.50740087499798,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 113.75740129166661,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 114.00744533333273,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 114.25734441666646,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 114.50741095833291,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 114.75734241666578,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 115.00734308333267,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 115.25732962500115,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 115.50733924999804,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 115.75734237500001,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 116.00749908333455,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 116.25685091666674,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 116.50733979166762,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 116.75738916666523,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 117.0074303750007,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 117.25731974999871,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 117.50724529166473,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 117.75736633333145,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 118.0073404166651,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 118.25770316666603,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 118.50733362499886,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 118.75732429166601,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 119.00747041666546,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 119.25927283333294,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 119.50738854166775,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 119.75731308333343,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 120.00745179166552,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 120.25739904166767,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 120.50743929166492,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 120.7573888750012,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 121.00736479166517,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 121.25732241666628,
+        "intentRevision": 1
+      },
+      {
+        "elapsed": 121.50735795833316,
+        "intentRevision": 1
+      }
+    ],
+    "credentialSamples": [
+      {
+        "elapsed": 0.5074107500004175,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 0.7566895833333547,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 1.0073486250003043,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 1.2568557916674763,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 1.507468333333236,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 1.756464624999353,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 2.0072412916670146,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 2.2574139999996987,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 2.5073411666671745,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 2.757341374999669,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 3.0073169999996026,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 3.257295374998648,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 3.5072895833327493,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 3.7564012083312264,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 4.006609333333472,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 4.256789583334466,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 4.507276500000444,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 4.75730295833273,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 5.006830916667241,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 5.25740441666494,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 5.507419875000778,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 5.756981208331126,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 6.007458749998477,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 6.257352541666478,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 6.506785249999666,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 6.757433333332301,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 7.007289166667761,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 7.257408875000692,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 7.507356791666098,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 7.757390250000753,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 8.00669891666621,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 8.257339125000726,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 8.507363583332335,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 8.757404958334519,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 9.007389624999632,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 9.257333791665587,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 9.50741412500065,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 9.757350416664849,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 10.007389791666355,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 10.257348999999522,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 10.507401041664707,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 10.757477833332814,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 11.007382916664938,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 11.257448291664332,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 11.507421750000503,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 11.757337999999436,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 12.00740545833105,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 12.25737879166627,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 12.507422791666613,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 12.757481416665541,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 13.00736975000109,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 13.25733604166453,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 13.507412583334371,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 13.757388375001028,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 14.00740708333251,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 14.257405833333905,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 14.5073307499988,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 14.75737724999999,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 15.007414208332193,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 15.257340541666053,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 15.507329458334425,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 15.757408291665342,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 16.007380083334283,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 16.25742258333412,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 16.507463875001122,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 16.757333124998695,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 17.00742700000046,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 17.257411083333864,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 17.50736591666646,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 17.757346541664447,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 18.007430791665684,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 18.275959041664464,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 18.507348041664955,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 18.757352333333984,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 19.007360374998825,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 19.25734945833392,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 19.50667604166665,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 19.757398833331536,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 20.00745525000093,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 20.25670641666511,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 20.507344541667408,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 20.757383333333564,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 21.006815166667366,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 21.257392416664516,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 21.507371708332357,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 21.75672404166471,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 22.007389874997898,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 22.2573541666643,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 22.506722708334564,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 22.75745362499947,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 23.007384333333903,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 23.257406958331558,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 23.50734516666489,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 23.7573985416675,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 24.007363041666395,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 24.257350583331572,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 24.507529041664384,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 24.757325708331337,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 25.007401625000057,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 25.25737983333238,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 25.506457874998887,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 25.75733441666671,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 26.007396749999316,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 26.257367916667135,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 26.507339374998992,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 26.75735312499819,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 27.007430791665684,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 27.257350249998126,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 27.507341166667175,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 27.756480249998276,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 28.007419749999826,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 28.257332083332585,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 28.507345791666012,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 28.7574258333334,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 29.00733279166525,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 29.257323624999117,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 29.50734191666561,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 29.756773916666134,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 30.00735312499819,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 30.257406291664665,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 30.507384291664494,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 30.75740012499955,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 31.00732699999935,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 31.257328458334086,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 31.50729604166554,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 31.75729383333237,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 32.00733754166504,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 32.25731000000087,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 32.507359291666944,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 32.757374291664746,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 33.00737970833143,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 33.25737762499921,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 33.50732333333144,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 33.75736658333335,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 34.0073686249998,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 34.257379624999885,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 34.507328833333304,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 34.757375333334494,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 35.00735483333119,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 35.257413291667035,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 35.507360958334175,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 35.75741041666697,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 36.007467291667126,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 36.257392499999696,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 36.50732645833341,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 36.75738570833346,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 37.00755291666428,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 37.25736120833244,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 37.50732425000024,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 37.75733137499992,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 38.00739199999953,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 38.25739645833164,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 38.508083500000794,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 38.757061833333864,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 39.00733804166521,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 39.25738741666646,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 39.50739120833168,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 39.757346499998675,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 40.00739316666659,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 40.257399958332826,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 40.50733991666493,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 40.757323541667574,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 41.00739574999898,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 41.25712129166641,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 41.50670745833122,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 41.75717008333231,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 42.00740704166674,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 42.257338916664594,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 42.507388166664896,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 42.75737941666739,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 43.00741316666608,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 43.25734312499844,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 43.50739304166564,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 43.75739087499824,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 44.00742370833177,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 44.257292999998754,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 44.50727991666645,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 44.757306999999855,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 45.00745420833118,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 45.257333083332924,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 45.507326708331675,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 45.75739799999792,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 46.00778954166526,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 46.25635937499828,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 46.50735733333204,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 46.75732491666713,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 47.00739574999898,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 47.257379083333944,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 47.50732008333216,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 47.7573845416664,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 48.00680258333159,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 48.25738695833206,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 48.50732829166736,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 48.756790083331,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 49.00744820833279,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 49.25734083333373,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 49.506752083332685,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 49.75731249999808,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 50.00732704166512,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 50.25733220833354,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 50.50733070833303,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 50.75732633333246,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 51.006851958332845,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 51.2573324583318,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 51.50727824999922,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 51.75738566666769,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 52.007392374998744,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 52.25731216666463,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 52.507330500000535,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 52.75738358333183,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 53.007396083332424,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 53.257337458333495,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 53.50733033333381,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 53.75676124999882,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 54.00736195833451,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 54.25734341666612,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 54.50739129166686,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 54.75732645833341,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 55.00740299999961,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 55.257400416667224,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 55.50726716666759,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 55.75732270833396,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 56.007426083331666,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 56.25733274999948,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 56.507316666666156,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 56.757378499998595,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 57.00738804166758,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 57.25728325000091,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 57.50733704166487,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 57.7573802083316,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 58.00743325000076,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 58.257329958330956,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 58.50732608333419,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 58.75732120833345,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 59.00739224999779,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 59.256376708333846,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 59.50738637500035,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 59.75733079166457,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 60.007408458332065,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 60.25732808333123,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 60.507336291666434,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 60.75738779166568,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 61.007411541664624,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 61.25731620833176,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 61.50730283333178,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 61.76109029166764,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 62.00737679166559,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 62.25732900000003,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 62.50736291666544,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 62.75740287499866,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 63.007420791665936,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 63.257381708332105,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 63.50737545833181,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 63.756975874999625,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 64.00737020833185,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 64.2567222083344,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 64.5073331249987,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 64.75731608333444,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 65.00740524999856,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 65.2573391666665,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 65.50733512499937,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 65.75737500000105,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 66.00732708333453,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 66.25734158333216,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 66.50742099999843,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 66.75730333333195,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 67.00743345833325,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 67.25732270833396,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 67.50665920833126,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 67.75740337499883,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 68.0068578749997,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 68.2573277916672,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 68.50732608333419,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 68.75688358333355,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 69.00743279166636,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 69.25732908333157,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 69.50685175000035,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 69.75733241666603,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 70.00741370833202,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 70.25681887500104,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 70.50733704166487,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 70.75732745833375,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 71.00679483333442,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 71.25734312499844,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 71.50741295833359,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 71.75742666666702,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 72.00737866666532,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 72.25732054166656,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 72.50742108333361,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 72.75740883333128,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 73.00732362499912,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 73.25731950000045,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 73.50732254166724,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 73.75731133333102,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 74.00727687499966,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 74.2573963750001,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 74.50753145833369,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 74.75736291666544,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 75.00739887500094,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 75.25731887499933,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 75.5073799999991,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 75.75737891666722,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 76.00961124999958,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 76.2573748750001,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 76.50732349999817,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 76.75738487499984,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 77.00733670833142,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 77.25733395833231,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 77.50733158333242,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 77.75738112500039,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 78.00740308333116,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 78.25731566666582,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 78.50741004166775,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 78.75733187500009,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 79.00739470833287,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 79.25736975000109,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 79.5073384999996,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 79.75742312500006,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 80.00745533333247,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 80.25734166666734,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 80.5073681666654,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 80.75737412499802,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 81.00737045833375,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 81.25732483333195,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 81.50738704166724,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 81.75713125000038,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 82.00737899999876,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 82.25735437500043,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 82.50737104166546,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 82.75730862499768,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 83.007427083332,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 83.25676870833195,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 83.50887666666677,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 83.75740949999818,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 84.00651787500101,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 84.25745941666537,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 84.5073804583335,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 84.7573312083332,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 85.00739195833376,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 85.25744591666444,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 85.5073283749989,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 85.75741308333454,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 86.00744087500061,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 86.25732070833328,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 86.50739362500099,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 86.75744399999894,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 87.00743924999915,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 87.25732283333127,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 87.50733579166626,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 87.75730770833252,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 88.00738637500035,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 88.2573277916672,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 88.5074905416659,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 88.75739941666689,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 89.00744716666668,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 89.25747054166641,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 89.5072243333343,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 89.75732699999935,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 90.00709254166577,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 90.25734525000007,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 90.50734379166533,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 90.75732824999795,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 91.00715941666567,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 91.25730974999897,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 91.50744579166712,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 91.75738979166636,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 92.00740995833257,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 92.25740666666752,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 92.50734333333457,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 92.75740145833333,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 93.00740816666439,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 93.25732595833324,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 93.50733920833227,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 93.75739949999843,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 94.00737812499938,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 94.25736279166449,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 94.50736920833151,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 94.75733374999982,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 95.00739983333187,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 95.25740099999894,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 95.50728120833446,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 95.75738312500107,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 96.00741424999796,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 96.25732716666607,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 96.50738062500022,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 96.75736999999936,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 97.00744045833198,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 97.25735304166665,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 97.50740483333357,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 97.75738741666646,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 98.00746529166645,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 98.25732908333157,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 98.50733974999821,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 98.75736445833172,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 99.00741041666697,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 99.25734058333182,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 99.50731779166745,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 99.75731154166715,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 100.0074010416647,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 100.25731704166537,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 100.50731954166622,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 100.7573901249998,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 101.00654533333363,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 101.25738999999885,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 101.50738358333183,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 101.75738208333132,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 102.00648695833297,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 102.25731395833282,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 102.5073352916661,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 102.75741270833169,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 103.00737283333365,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 103.25731879166779,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 103.50638479166446,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 103.7573961249982,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 104.00735445833197,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 104.25642808333214,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 104.50733254166698,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 104.75731270833421,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 105.00649741666712,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 105.25740075000067,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 105.50730308333368,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 105.75701729166758,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 106.0073832916678,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 106.25733150000087,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 106.50649312499809,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 106.75734462499895,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 107.007097624999,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 107.25650200000018,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 107.50737245833443,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 107.75738212500073,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 108.00749495833225,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 108.25733866666633,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 108.50734812500014,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 108.75738466666735,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 109.00669112499963,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 109.2573978750006,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 109.50734354166707,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 109.75733904166555,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 110.00778370833359,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 110.25732174999939,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 110.50734708333403,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 110.75741054166429,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 111.00738787500086,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 111.25738999999885,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 111.50720575000014,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 111.75740362500073,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 112.00733445833248,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 112.25659774999804,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 112.50871499999994,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 112.75737983333238,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 113.0074191249987,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 113.25735029166754,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 113.50740087499798,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 113.75740129166661,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 114.00744533333273,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 114.25734441666646,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 114.50741095833291,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 114.75734241666578,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 115.00734308333267,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 115.25732962500115,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 115.50733924999804,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 115.75734237500001,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 116.00749908333455,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 116.25685091666674,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 116.50733979166762,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 116.75738916666523,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 117.0074303750007,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 117.25731974999871,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 117.50724529166473,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 117.75736633333145,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 118.0073404166651,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 118.25770316666603,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 118.50733362499886,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 118.75732429166601,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 119.00747041666546,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 119.25927283333294,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 119.50738854166775,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 119.75731308333343,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 120.00745179166552,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 120.25739904166767,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 120.50743929166492,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 120.7573888750012,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 121.00736479166517,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 121.25732241666628,
+        "credentialRevision": 0
+      },
+      {
+        "elapsed": 121.50735795833316,
+        "credentialRevision": 0
+      }
+    ],
+    "ticketAuthorities": [
+      {
+        "attempt": 1,
+        "elapsed": 44.00742370833177,
+        "intentRevision": 1,
+        "credentialRevision": 0
+      }
+    ],
+    "windowBitrateMinimum": 272040.19175212743,
+    "windowBitrateMaximum": 1203299.600927673,
+    "capabilityAccepted": false
+  }
+}

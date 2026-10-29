@@ -1,0 +1,106 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "down-and-recover-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 50000,
+          "latencyMs": 200
+        },
+        {
+          "atMs": 25000,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        }
+      ]
+    },
+    {
+      "id": "stall-and-recover-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 0,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 15000,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        }
+      ]
+    },
+    {
+      "id": "disconnect-and-recover-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 0,
+          "latencyMs": 0,
+          "disconnect": true
+        },
+        {
+          "atMs": 12000,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        }
+      ]
+    },
+    {
+      "id": "original-zero-latency-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 50000,
+          "latencyMs": 200
+        },
+        {
+          "atMs": 25000,
+          "bytesPerSecond": 500000,
+          "latencyMs": 0
+        }
+      ]
+    },
+    {
+      "id": "original-headroom-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 50000,
+          "latencyMs": 200
+        },
+        {
+          "atMs": 25000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 40
+        }
+      ]
+    }
+  ]
+}
