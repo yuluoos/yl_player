@@ -116,6 +116,11 @@ class AccessLogTests(unittest.TestCase):
             startup_delay_ms=0)
         self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values)))
         self.assertFalse(abr_accesslog.production_recovery(SimpleNamespace()))
+        self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values,require_production_install=True)))
+        for changes in [dict(require_production_install=1),dict(require_production_install=True,production_recovery=False),
+                        dict(require_production_install=True,production_command='load-prepared')]:
+            with self.subTest(changes=changes),self.assertRaises(ValueError):
+                abr_accesslog.production_recovery(SimpleNamespace(**dict(values,**changes)))
         for key, value in [('physical_device', None), ('duration_seconds', 40), ('recovery_action', 'none'),
                            ('auto_scenario', 'pause-first'), ('candidate_preparation', 'asset-preroll'),
                            ('public_policy_cycle', True), ('public_policy_race', True), ('direct_hls_control', True),
@@ -152,6 +157,25 @@ class AccessLogTests(unittest.TestCase):
             else:ff[0]['width']=320
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 abr_accesslog.summarize_production_recovery(rr, ff)
+
+    def test_required_production_install_rejects_natural_or_cancelled_only_recovery(self):
+        event = dict(outcome='installed', elapsedAfter=20, itemChanged=True, credentialCommitAccepted=True)
+        rows = [dict(elapsed=0, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=640, automaticEvents=[]),
+                dict(elapsed=10, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=320, automaticEvents=[]),
+                dict(elapsed=120, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=640, automaticEvents=[event])]
+        frames = [dict(elapsed=1, width=640, frames=1), dict(elapsed=11, width=320, frames=1), dict(elapsed=21, width=640, frames=1)]
+        self.assertEqual(abr_accesslog.summarize_production_recovery(rows, frames, require_install=True)['installed'],1)
+        for events in [[], [dict(outcome='cancelled', elapsedAfter=20, itemChanged=False)]]:
+            rr=copy.deepcopy(rows);rr[-1]['automaticEvents']=events
+            self.assertFalse(abr_accesslog.summarize_production_recovery(rr,frames)['triggerExercised'])
+            with self.subTest(events=events),self.assertRaises(ValueError):
+                abr_accesslog.summarize_production_recovery(rr,frames,require_install=True)
+        for invalid in [1, 'yes', None]:
+            with self.subTest(invalid=invalid),self.assertRaises(ValueError):
+                abr_accesslog.summarize_production_recovery(rows,frames,require_install=invalid)
 
     def test_candidate_preparation_is_explicit_and_limited_to_owned_auto_probe(self):
         def args(**kwargs):

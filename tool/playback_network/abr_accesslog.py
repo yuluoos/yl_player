@@ -121,6 +121,9 @@ def production_recovery(args):
     command = getattr(args, 'production_command', 'none')
     if command not in ('none', 'pause-resume', 'pause-prepared', 'seek-prepared', 'load-prepared') or (not enabled and command != 'none'):
         raise ValueError('invalid production command scenario')
+    required = getattr(args, 'require_production_install', False)
+    if type(required) is not bool or (required and (not enabled or command == 'load-prepared')):
+        raise ValueError('production installation requirement needs same-session production capture')
     if not enabled: return False
     if (not getattr(args, 'physical_device', None) or getattr(args, 'duration_seconds', None) != 120 or
         getattr(args, 'recovery_action', None) != 'auto-reload' or getattr(args, 'auto_scenario', None) != 'normal' or
@@ -130,9 +133,10 @@ def production_recovery(args):
     return True
 
 
-def summarize_production_recovery(rows, frames):
+def summarize_production_recovery(rows, frames, *, require_install=False):
     def require(value):
         if not value: raise ValueError('invalid production recovery evidence')
+    require(type(require_install) is bool)
     require(bool(rows) and bool(frames))
     sessions = production_sessions(rows)
     session = rows[0].get('sessionId')
@@ -156,6 +160,7 @@ def summarize_production_recovery(rows, frames):
             published_low = True
     require(published_recovered)
     installed = [e for e in rows[-1]['automaticEvents'] if e['outcome'] == 'installed']
+    require(not require_install or bool(installed))
     for event in installed:
         require(event.get('itemChanged') is True and event.get('credentialCommitAccepted') is True)
         require(any(f.get('frames', 0) > 0 and f.get('width') == 640 and f['elapsed'] > event['elapsedAfter'] for f in frames))
@@ -825,6 +830,7 @@ def run(args):
     try:
         production = production_recovery(args)
         receipt['productionRecovery'] = production
+        receipt['productionInstallRequired'] = getattr(args, 'require_production_install', False)
         cycle = public_policy_cycle(args)
         race = public_policy_race(args)
         receipt['publicPolicyRace'] = race
@@ -959,7 +965,8 @@ def run(args):
         elif any(row.get('publicPolicyCycle') is True for row in rows):
             raise ValueError('unexpected public host policy capture')
         if production:
-            receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'))
+            receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'),
+                require_install=receipt['productionInstallRequired'])
             command = getattr(args, 'production_command', 'none')
             if not all(r.get('productionCommand', 'none') == command for r in rows):
                 raise ValueError('production command echo mismatch')
@@ -1037,6 +1044,7 @@ def main():
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--production-command', choices=('none', 'pause-resume', 'pause-prepared', 'seek-prepared', 'load-prepared'), default='none')
+    p.add_argument('--require-production-install', action='store_true', help='fail unless same-session production recovery actually installs; incompatible with new Load')
     p.add_argument('--production-recovery', action='store_true', help='observe automatic production public-host recovery; no diagnostic installation')
     p.add_argument('--public-policy-race', action='store_true',
                    help='typed public caps/fixed command after candidate readiness; requires cancellation')

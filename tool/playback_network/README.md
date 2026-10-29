@@ -567,6 +567,14 @@ policy/authority validation. Actual buffers must show high output after a real
 downshift and after any successful installation; EOF and final high output are
 required. System interruption signals invalidate this controlled capture.
 
+For runs intended to exercise an actual same-session automatic installation, add
+`--require-production-install`. This only tightens the receipt: natural recovery
+or cancelled-only events fail, without changing the native player, network profile,
+or policy thresholds. It requires `--production-recovery` and is incompatible
+with `load-prepared`, whose existing cancellation/new-session budget checks apply.
+The receipt records `productionInstallRequired`; the default remains observation
+without a required installation so historical natural-ABR controls stay distinct.
+
 `--production-command pause-resume` sends a public Pause after reservation one,
 waits two seconds, then sends public Play. It requires multiple native paused
 samples with no position drift beyond 50 ms, no early install, no budget refund,

@@ -878,6 +878,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-server-timing.md",
       "sha256": "b1da94e07e686d17233c20b3b589184028bf5a0107982c024b9408404a013727",
       "kind": "report"
+    },
+    "ios-production-exercise-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-production-exercise.md",
+      "sha256": "a69a6ae861ffadb112c849af80847e987adbfa1fcb26fc2b7b8b2ff16a7f5977",
+      "kind": "report"
     }
   },
   "rows": [
@@ -922,10 +927,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-server-timing-20261029"
+        "ios-production-exercise-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-original-recovery-reproducibility-http11-timeout-production-races-fast-cancel-and-physical-av"
+      "nextAction": "qualify-partial-multitransaction-evidence-budget-exhaustion-original-stability-fast-cancel-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",
