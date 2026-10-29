@@ -100,6 +100,18 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertIsNone(proxy_trace_version([{}]))
         self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':1}]),1)
         for rows in [[{'proxyRequestSamplingVersion':True}],
-                     [{'proxyRequestSamplingVersion':2}],
+                     [{'proxyRequestSamplingVersion':3}],
                      [{'proxyRequestSamplingVersion':1},{}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): proxy_trace_version(rows)
+
+    def test_v2_metrics_required_and_bound_to_probe_version(self):
+        from transaction_metrics import summarize_transactions
+        from test_transaction_metrics import metrics
+        from proxy_boundaries import proxy_trace_version
+        self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':2}]),2)
+        fixture=ProxyBoundaryTests();fixture.setUp()
+        self.trace=fixture.trace;self.server=fixture.server
+        row=dict(self.trace,version=2,metrics=metrics())
+        self.assertTrue(summarize_proxy_boundaries([row],[self.server],2)['requests'][0]['transactionMetrics']['complete'])
+        for data,version in [(row,1),(dict(row,metrics=None),2),(self.trace,2)]:
+            with self.assertRaises(ValueError):summarize_proxy_boundaries([data],[self.server],version)

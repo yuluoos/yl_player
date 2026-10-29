@@ -614,6 +614,13 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     ))
   }
 
+  #if DEBUG
+  func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+    let trace = lock.withLock { taskRecords[task.taskIdentifier]?.trace }
+    trace?.metrics(metrics)
+  }
+  #endif
+
   func urlSession(
     _ session: URLSession,
     task: URLSessionTask,
@@ -838,7 +845,7 @@ final class YlHlsProxyRequestTrace {
     self.observer = observer
     let correlationID = UUID().uuidString
     self.correlationID = correlationID
-    values = ["version": 1, "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
+    values = ["version": 2, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
       "admission": ProcessInfo.processInfo.systemUptime,
       "bodyBytes": 0.0, "sentBodyBytes": 0.0, "bodyCallbacks": 0.0,
       "sendCount": 0.0, "sendCompletions": 0.0, "sendFailures": 0.0,
@@ -848,6 +855,41 @@ final class YlHlsProxyRequestTrace {
     lock.withLock {
       guard !sealed else { return }
       action(&values, ProcessInfo.processInfo.systemUptime)
+    }
+  }
+  // Date pairs stay within the Foundation clock; never subtract them from uptime.
+  static func interval(from start: Date?, to end: Date?) -> Double? {
+    guard let start, let end else { return nil }
+    let seconds = end.timeIntervalSince(start)
+    return seconds.isFinite && seconds >= 0 ? seconds : nil
+  }
+  func metrics(_ metrics: URLSessionTaskMetrics) {
+    func duration(_ start: Date?, _ end: Date?) -> Any {
+      Self.interval(from: start, to: end).map { $0 as Any } ?? NSNull()
+    }
+    let transactions: [[String: Any]] = metrics.transactionMetrics.prefix(32).map { t in
+      let protocolCode: Int
+      switch t.networkProtocolName {
+      case "http/1.0", "http/1.1": protocolCode = 1
+      case "h2": protocolCode = 2
+      case "h3": protocolCode = 3
+      default: protocolCode = 0
+      }
+      return ["fetchSeconds": duration(t.fetchStartDate, t.responseEndDate),
+        "fetchToRequestSeconds": duration(t.fetchStartDate, t.requestStartDate),
+        "dnsSeconds": duration(t.domainLookupStartDate, t.domainLookupEndDate),
+        "connectSeconds": duration(t.connectStartDate, t.connectEndDate),
+        "tlsSeconds": duration(t.secureConnectionStartDate, t.secureConnectionEndDate),
+        "requestSeconds": duration(t.requestStartDate, t.requestEndDate),
+        "responseWaitSeconds": duration(t.requestEndDate, t.responseStartDate),
+        "responseSeconds": duration(t.responseStartDate, t.responseEndDate),
+        "reused": t.isReusedConnection ? 1 : 0, "protocolCode": protocolCode,
+        "fetchType": t.resourceFetchType.rawValue]
+    }
+    update { v, _ in
+      v["metrics"] = ["taskSeconds": duration(metrics.taskInterval.start, metrics.taskInterval.end),
+        "transactionCount": metrics.transactionMetrics.count, "redirectCount": metrics.redirectCount,
+        "truncated": metrics.transactionMetrics.count > 32 ? 1 : 0, "transactions": transactions]
     }
   }
   func point(_ name: String) { update { $0[name] = $1 } }

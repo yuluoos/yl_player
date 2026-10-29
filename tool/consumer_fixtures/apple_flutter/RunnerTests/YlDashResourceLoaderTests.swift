@@ -1655,7 +1655,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "productionRecovery": productionRecovery, "productionCommand": productionCommand,
         "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxyRequestSamplingVersion": 1, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "proxyRequestSamplingVersion": 2, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -4007,6 +4007,16 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(rows[0]["sentBodyBytes"] as? Double, 0)
   }
 
+  func testProxyTransactionDurationPreservesUnavailableAndInvalidDates() {
+    let start = Date(timeIntervalSince1970: 100)
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: nil, to: start))
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: nil))
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: start.addingTimeInterval(-1)))
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: Date(timeIntervalSince1970: .infinity)))
+    XCTAssertEqual(YlHlsProxyRequestTrace.interval(from: start, to: start), 0)
+    XCTAssertEqual(YlHlsProxyRequestTrace.interval(from: start, to: start.addingTimeInterval(2)), 2)
+  }
+
   func testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity() throws {
     let server = try DashHTTPServer(); defer { server.close() }
     server.handler = { _ in (200, ["X-Yl-Request-Id": "17"], Data([1, 2, 3, 4])) }
@@ -4021,9 +4031,28 @@ final class YlDashResourceLoaderTests: XCTestCase {
       headers: ["Authorization": "secret"], configuration: .init(map: [:]))
     defer { proxy.cancelAll() }
     let bodyDone = expectation(description: "proxied body")
-    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/private?token=secret"))) { body, _, error in
-      XCTAssertNil(error); XCTAssertEqual(body, Data([1, 2, 3, 4])); bodyDone.fulfill()
-    }.resume()
+    // Keep the downstream connection alive until proxy EOF. URLSession may
+    // close as soon as Content-Length bytes arrive, before upstream completion.
+    let url = try proxy.proxyURL(for: server.url("/private?token=secret"))
+    let client = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
+    defer { client.cancel() }
+    let ready = expectation(description: "downstream ready")
+    client.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+    client.start(queue: DispatchQueue(label: "proxy.metrics.test.client"))
+    wait(for: [ready], timeout: 2)
+    var payload = Data()
+    func receive() {
+      client.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, complete, error in
+        XCTAssertNil(error)
+        if let data { payload.append(data) }
+        if complete || error != nil {
+          XCTAssertEqual(Data(payload.suffix(4)), Data([1, 2, 3, 4])); bodyDone.fulfill()
+        } else { receive() }
+      }
+    }
+    receive()
+    client.send(content: Data("GET \(url.path) HTTP/1.1\r\nHost: owned\r\n\r\n".utf8),
+      completion: .contentProcessed { XCTAssertNil($0) })
     wait(for: [bodyDone, boundary], timeout: 4)
     let rows = capturedLock.withLock { captured }
     XCTAssertEqual(rows.count, 1)
@@ -4032,6 +4061,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(row["bodyBytes"] as? Double, 4)
     XCTAssertEqual(row["sentBodyBytes"] as? Double, 4)
     XCTAssertEqual(row["outcome"] as? Double, 0)
+    let metrics = try XCTUnwrap(row["metrics"] as? [String: Any])
+    let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
+    XCTAssertEqual(transactions.count, 1)
+    XCTAssertEqual(metrics["transactionCount"] as? Int, 1)
+    XCTAssertNotNil(transactions.first?["responseSeconds"] as? Double)
     for (before, after) in [("admission", "response"), ("response", "firstBody"),
       ("firstBody", "lastBody"), ("lastBody", "upstreamComplete"),
       ("lastSendComplete", "terminal"), ("upstreamComplete", "terminal")] {

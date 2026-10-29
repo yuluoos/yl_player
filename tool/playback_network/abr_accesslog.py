@@ -921,9 +921,9 @@ def run(args):
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
         from proxy_boundaries import proxy_trace_version, record_proxy_observation
-        if proxy_trace_version(rows) == 1 and not direct:
+        if proxy_trace_version(rows) in (1, 2) and not direct:
             record_proxy_observation(receipt,
-                read_rows(out/'proxy-requests.jsonl'), read_rows(out/'requests.jsonl'))
+                read_rows(out/'proxy-requests.jsonl'), read_rows(out/'requests.jsonl'), proxy_trace_version(rows))
         policy_version = policy_trace_version(rows)
         if recovery_action == 'auto-reload' and policy_version in (1,2):
             decisions=read_rows(out/'policy-decisions.jsonl')

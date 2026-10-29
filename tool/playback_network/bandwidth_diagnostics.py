@@ -110,8 +110,9 @@ def main():
         raise ValueError('no policy decisions captured')
     result['policy'] = summarize_policy(policy, expected_attempts=policy[-1].get('attempts'))
     from proxy_boundaries import proxy_trace_version, summarize_proxy_boundaries
-    if proxy_trace_version(read_rows(args.capture/'rows.jsonl')) == 1:
-        result['proxy'] = summarize_proxy_boundaries(read_rows(args.capture/'proxy-requests.jsonl'), requests)
+    version = proxy_trace_version(read_rows(args.capture/'rows.jsonl'))
+    if version in (1, 2):
+        result['proxy'] = summarize_proxy_boundaries(read_rows(args.capture/'proxy-requests.jsonl'), requests, version)
     print(json.dumps(result, indent=2, allow_nan=False))
 
 

@@ -1,18 +1,19 @@
 """Validate opt-in request boundaries; never infer display or ABR acceptance."""
 import math
 import re
+from transaction_metrics import summarize_transactions
 
 
 def proxy_trace_version(rows):
     if not any(isinstance(row, dict) and 'proxyRequestSamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('proxyRequestSamplingVersion')) is int and
-               row['proxyRequestSamplingVersion'] == 1 for row in rows):
+               row['proxyRequestSamplingVersion'] in (1, 2) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
         raise ValueError('unsupported or inconsistent proxy request sampling version')
-    return 1
+    return rows[0]['proxyRequestSamplingVersion']
 
 
-def summarize_proxy_boundaries(rows, server_rows):
+def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
     def require(value):
         if not value:
             raise ValueError('invalid proxy request boundary evidence')
@@ -28,7 +29,7 @@ def summarize_proxy_boundaries(rows, server_rows):
         'sendFailures', 'sendWaitSum', 'sendWaitMax'}
     times = {'response', 'firstBody', 'lastBody', 'firstSend', 'lastSend',
         'lastSendComplete', 'upstreamComplete'}
-    optional = times | {'httpStatus', 'serverRequestID', 'correlationID'}
+    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics'}
     uuid_pattern = r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}'
     def uuid(value):
         return isinstance(value, str) and re.fullmatch(uuid_pattern, value)
@@ -44,13 +45,17 @@ def summarize_proxy_boundaries(rows, server_rows):
             token = server['proxyTraceID']; require(uuid(token))
             require(token.lower() not in trace_ids)
             trace_ids[token.lower()] = ident
+    versions = {row.get('version') for row in rows if isinstance(row, dict)}
+    require(len(versions) == 1 and (expected_version is None or versions == {expected_version}))
+    version = next(iter(versions))
     identities = set(); matched = set(); results = []; counts = {}
     outcomes = ['complete', 'cancelled', 'sendFailed', 'upstreamFailed']
     for row in rows:
         require(isinstance(row, dict) and required <= row.keys() and not row.keys()-required-optional)
-        require(type(row['version']) is int and row['version'] == 1)
+        require(type(row['version']) is int and row['version'] in (1, 2))
+        require(('metrics' in row) == (row['version'] == 2))
         require(isinstance(row['proxyID'], str) and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', row['proxyID']))
-        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID')))
+        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics')))
         counters = required - {'version', 'proxyID', 'admission', 'terminal', 'sendWaitSum', 'sendWaitMax'}
         require(all(integer(row[key]) for key in counters) and row['requestID'] > 0)
         require(row['outcome'] in range(4))
@@ -90,11 +95,14 @@ def summarize_proxy_boundaries(rows, server_rows):
             require(row['sendCount'] > 0 and row['sendCount'] == row['sendCompletions'] and row['sendFailures'] == 0)
             require(row['bodyBytes'] == row['sentBodyBytes'] == server['bodyBytesWritten'])
             require(server.get('outcome') == 'complete' and 200 <= row['httpStatus'] < 300)
+        transaction_metrics = summarize_transactions(row.get('metrics'))
+        if row['version'] == 2 and row['outcome'] == 0:
+            require(transaction_metrics['complete'])
         outcome = outcomes[int(row['outcome'])]; counts[outcome] = counts.get(outcome,0)+1
         upstream = row['upstreamComplete']-row['admission'] if 'upstreamComplete' in row else None
         duration = (server['endMs']-server['startMs'])/1000 if server is not None else None
         results.append(dict(proxyID=row['proxyID'], requestID=row['requestID'], serverRequestID=server_id,
-            outcome=outcome, bodyBytes=row['bodyBytes'], sentBodyBytes=row['sentBodyBytes'],
+            outcome=outcome, transactionMetrics=transaction_metrics, bodyBytes=row['bodyBytes'], sentBodyBytes=row['sentBodyBytes'],
             upstreamSeconds=upstream, serverSeconds=duration,
             upstreamMinusServerSeconds=upstream-duration if upstream is not None and duration is not None else None,
             responseWaitSeconds=row['response']-row['admission'] if 'response' in row else None,
@@ -104,15 +112,15 @@ def summarize_proxy_boundaries(rows, server_rows):
     media = {ident for ident, row in servers.items() if row.get('method') == 'GET' and
              isinstance(row.get('asset'),str) and row['asset'].endswith('.m4s')}
     missing = sorted(media-matched)
-    return dict(version=1, requestCount=len(rows), outcomeCounts=counts, requests=results,
+    return dict(version=version, requestCount=len(rows), outcomeCounts=counts, requests=results,
         unmatchedServerRequestIDs=missing, uncorrelatedProxyRequests=sum(x['serverRequestID'] is None for x in results),
         fullyCorrelated=not missing and all(x['serverRequestID'] is not None for x in results),
         interpretation='Same-device callback times; correlated server durations use their own clock. Upstream minus server includes transport, scheduling and backpressure, not isolated RTT. Send wait sums may overlap; contentProcessed is not client receipt or display.',
         physicalOutputVerified=False, capabilityAccepted=False)
 
 
-def record_proxy_observation(receipt, rows, server_rows):
-    observation = summarize_proxy_boundaries(rows, server_rows)
+def record_proxy_observation(receipt, rows, server_rows, expected_version=None):
+    observation = summarize_proxy_boundaries(rows, server_rows, expected_version)
     receipt['proxyRequestObservation'] = observation
     if not observation['fullyCorrelated']:
         receipt['errors'].append('proxy request correlation incomplete')
