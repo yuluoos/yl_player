@@ -1,0 +1,92 @@
+[
+  {
+    "trace": {
+      "admission": 55940.985935083336,
+      "bodyBytes": 8418,
+      "bodyCallbacks": 5,
+      "cancelCause": 0,
+      "correlationID": "62CE1819-FD7B-4387-937C-FAF757AF028B",
+      "downstreamTerminal": 55941.16912766667,
+      "firstBody": 55941.162705333336,
+      "firstSend": 55941.162659625006,
+      "httpStatus": 200,
+      "lastBody": 55941.16881329167,
+      "lastSend": 55941.16881708334,
+      "lastSendComplete": 55941.16899991667,
+      "metrics": {
+        "redirectCount": 0,
+        "taskSeconds": 0.183027982711792,
+        "transactionCount": 2,
+        "transactions": [
+          {
+            "connectSeconds": 0.06599998474121094,
+            "dnsSeconds": 0,
+            "durationStates": {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "fetchSeconds": 2,
+              "fetchToRequestSeconds": 0,
+              "requestSeconds": 0,
+              "responseSeconds": 3,
+              "responseWaitSeconds": 2,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": 0.06707310676574707,
+            "fetchType": 1,
+            "protocolCode": 1,
+            "requestSeconds": 1.2993812561035156e-05,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "reused": 0,
+            "tlsSeconds": null
+          },
+          {
+            "connectSeconds": 0.008000016212463379,
+            "dnsSeconds": 0,
+            "durationStates": {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "fetchSeconds": 0,
+              "fetchToRequestSeconds": 0,
+              "requestSeconds": 0,
+              "responseSeconds": 0,
+              "responseWaitSeconds": 0,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": 0.02706599235534668,
+            "fetchToRequestSeconds": 0.010267972946166992,
+            "fetchType": 1,
+            "protocolCode": 1,
+            "requestSeconds": 0.0012999773025512695,
+            "responseSeconds": 0.008018016815185547,
+            "responseWaitSeconds": 0.007480025291442871,
+            "reused": 0,
+            "tlsSeconds": null
+          }
+        ],
+        "truncated": 0,
+        "version": 2
+      },
+      "outcome": 0,
+      "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+      "requestID": 4,
+      "resourceToken": "9938bf30573376ff924d694399d9adc11b196c541995dd07d0f88a7b8f45deb3",
+      "response": 55941.16263608334,
+      "sendCompletions": 6,
+      "sendCount": 6,
+      "sendFailures": 0,
+      "sendWaitMax": 0.0001828333333833143,
+      "sendWaitSum": 0.0006297916697803885,
+      "sentBodyBytes": 8418,
+      "serverRequestID": 148,
+      "taskComplete": 55941.16911183334,
+      "taskOutcome": 0,
+      "terminal": 55941.16912925,
+      "upstreamComplete": 55941.16912266667,
+      "version": 6
+    },
+    "error": "invalid proxy request boundary evidence",
+    "traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 8, in <module>\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/proxy_boundaries.py\", line 118, in summarize_proxy_boundaries\n    require(transaction_metrics['complete'])\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/proxy_boundaries.py\", line 19, in require\n    raise ValueError('invalid proxy request boundary evidence')\nValueError: invalid proxy request boundary evidence\n"
+  }
+]

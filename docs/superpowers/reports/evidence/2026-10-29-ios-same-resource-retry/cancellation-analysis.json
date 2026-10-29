@@ -1,0 +1,3635 @@
+{
+  "interpretation": "cancelCause is first recorded trace.finish observation, not total order of concurrent external events. No requestStart date/server match does not prove no network bytes were sent. No correlation exemption.",
+  "results": {
+    "yl-cancel-settlement/normal": {
+      "cancelCauseCounts": {
+        "legacy-unavailable": 14
+      },
+      "cancellations": 14,
+      "uncorrelated": [
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 63,
+          "correlationID": "7C272574-5DBA-4AE5-B91E-98426405A6F7",
+          "serverRequestID": null,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 3.1833333341637626,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.579194708334398,
+            "afterElapsed": 12.844846333333408
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ],
+      "allCancellationDetails": [
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 3,
+          "correlationID": "11ED16CB-6834-4E3F-95E0-A84FBE6E48C4",
+          "serverRequestID": 5,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 81.60291666717967,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 0.3395329999984824,
+            "afterElapsed": 0.6813419166646781
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 764,
+          "sendCount": 2,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.07224607467651367,
+              "fetchToRequestSeconds": 0.01541900634765625,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.9604644775390625e-06,
+              "responseSeconds": 0.0025550127029418945,
+              "responseWaitSeconds": 0.05426609516143799,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 60,
+          "correlationID": "D09F411B-6860-451F-949C-1EE81524EAF7",
+          "serverRequestID": 62,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2011.9487499978277,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.503808041663433,
+            "afterElapsed": 12.844846333333408
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.01100003719329834,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.013988971710205078,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00014400482177734375,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.049514055252075195,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 62,
+          "correlationID": "955934C4-0191-4FDC-95EF-B4F8B992B735",
+          "serverRequestID": 64,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.0474166697823,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.759167541662464,
+            "afterElapsed": 12.844846333333408
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.004999995231628418,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.0074089765548706055,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.602836608886719e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05086195468902588,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 61,
+          "correlationID": "93078BA4-3DD7-4B91-972F-D3527850DF58",
+          "serverRequestID": 63,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.6873750025989,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.759167541662464,
+            "afterElapsed": 12.844846333333408
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.004999995231628418,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.006654024124145508,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.902217864990234e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.052017927169799805,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 63,
+          "correlationID": "7C272574-5DBA-4AE5-B91E-98426405A6F7",
+          "serverRequestID": null,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 3.1833333341637626,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.579194708334398,
+            "afterElapsed": 12.844846333333408
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 64,
+          "correlationID": "679DE147-3438-4A32-8E43-C77BA0E20852",
+          "serverRequestID": 66,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2004.5280833364814,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.579194708334398,
+            "afterElapsed": 14.91923666666844
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008382916450500488,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.808208465576172e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.0538640022277832,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 65,
+          "correlationID": "3E81F195-E671-4037-8132-9415A31F1A15",
+          "serverRequestID": 65,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2006.4053750029416,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.579194708334398,
+            "afterElapsed": 14.91923666666844
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.0085219144821167,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.410743713378906e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05389297008514404,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+          "requestID": 66,
+          "correlationID": "169D5AB7-42F2-4B35-85B1-5B80F56ADBAD",
+          "serverRequestID": 67,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2007.2128333340515,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.579194708334398,
+            "afterElapsed": 14.91923666666844
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.00925898551940918,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.198883056640625e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.0528569221496582,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "E45675D8-76E5-4E56-899B-11724DE15350",
+          "requestID": 94,
+          "correlationID": "F38468AF-F5D0-4BF5-814E-59DF93C2BB17",
+          "serverRequestID": 238,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1995.2759999941918,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 59.77137854166358,
+            "afterElapsed": 62.08202970833372
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 35840,
+          "sendCount": 16,
+          "transactions": [
+            {
+              "connectSeconds": 0.008999943733215332,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010058999061584473,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.797645568847656e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.007912039756774902,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "E45675D8-76E5-4E56-899B-11724DE15350",
+          "requestID": 96,
+          "correlationID": "DACD0D1D-5E68-45F7-A6B3-40F9DE8BFD66",
+          "serverRequestID": 240,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.9215416678926,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 60.80105862500204,
+            "afterElapsed": 63.11318549999851
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008640050888061523,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.000102996826171875,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.007156014442443848,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "E45675D8-76E5-4E56-899B-11724DE15350",
+          "requestID": 97,
+          "correlationID": "583E4CB9-9E9D-4DA7-A2F5-3138AE1551F5",
+          "serverRequestID": 241,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.2069999973173,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 61.82098916666291,
+            "afterElapsed": 64.1454988333353
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008595943450927734,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00011408329010009766,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.008138895034790039,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "E45675D8-76E5-4E56-899B-11724DE15350",
+          "requestID": 98,
+          "correlationID": "C02814DD-15DC-446F-A2EF-89DBB3CEFCC3",
+          "serverRequestID": 242,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2001.4219583317754,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 61.82098916666291,
+            "afterElapsed": 64.1454988333353
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008484959602355957,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.698204040527344e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.009065985679626465,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "E45675D8-76E5-4E56-899B-11724DE15350",
+          "requestID": 132,
+          "correlationID": "93AE5BF4-34BA-40FA-9D07-7FB24876126D",
+          "serverRequestID": 276,
+          "cancelCause": null,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 32.60045833303593,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 70.92906424999819,
+            "afterElapsed": 71.18418108333572
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 8591,
+          "sendCount": 4,
+          "transactions": [
+            {
+              "connectSeconds": 0.01100003719329834,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.03186297416687012,
+              "fetchToRequestSeconds": 0.012663006782531738,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.696846008300781e-05,
+              "responseSeconds": 0.0036810636520385742,
+              "responseWaitSeconds": 0.015471935272216797,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CB017BBB-A8B0-4005-8F76-8C73C375F122",
+          "requestID": 63,
+          "correlationID": "467839AD-5187-4BDD-BC55-5B7E935BE715",
+          "serverRequestID": 378,
+          "cancelCause": null,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 70.35966667172033,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 98.11629595833074,
+            "afterElapsed": 98.63680416666466
+          },
+          "firstInstallElapsed": 37.76894324999739,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 68293,
+          "sendCount": 29,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.06956005096435547,
+              "fetchToRequestSeconds": 0.009276986122131348,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.200241088867188e-05,
+              "responseSeconds": 0.05244803428649902,
+              "responseWaitSeconds": 0.007763028144836426,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ]
+    },
+    "yl-cancel-settlement/normal-repeat": {
+      "cancelCauseCounts": {
+        "legacy-unavailable": 14
+      },
+      "cancellations": 14,
+      "uncorrelated": [
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 58,
+          "correlationID": "4DC58F73-F8CA-4628-98BB-C2F9BE3B598D",
+          "serverRequestID": null,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.4110833332524635,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.543782749999082,
+            "afterElapsed": 12.796739458332013
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ],
+      "allCancellationDetails": [
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 1,
+          "correlationID": "4439AE21-8247-4F79-BE8B-F93B71CBE005",
+          "serverRequestID": 2,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 87.03029166645138,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 0.347848208330106,
+            "afterElapsed": 0.6917333333331044
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 828,
+          "sendCount": 2,
+          "transactions": [
+            {
+              "connectSeconds": 0.008999943733215332,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.0802849531173706,
+              "fetchToRequestSeconds": 0.02283000946044922,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 1.704692840576172e-05,
+              "responseSeconds": 0.0004869699478149414,
+              "responseWaitSeconds": 0.056950926780700684,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 55,
+          "correlationID": "FA76AB3B-4BC9-4D52-820F-AC7C6A628240",
+          "serverRequestID": 57,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2008.0167500054813,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.745483958329714,
+            "afterElapsed": 12.796739458332013
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009718060493469238,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.0044029951095581055,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.04413199424743652,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 56,
+          "correlationID": "74796664-603C-4D3C-9AD2-5E9A1AA31831",
+          "serverRequestID": 58,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2001.4374583333847,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.745483958329714,
+            "afterElapsed": 12.796739458332013
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.004999995231628418,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011595964431762695,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.506111145019531e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.053182005882263184,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 57,
+          "correlationID": "6284F932-C2E0-4A98-BFCB-5043516AFC61",
+          "serverRequestID": 59,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2003.063000003749,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.745483958329714,
+            "afterElapsed": 12.796739458332013
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011876940727233887,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 2.002716064453125e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.051823973655700684,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 58,
+          "correlationID": "4DC58F73-F8CA-4628-98BB-C2F9BE3B598D",
+          "serverRequestID": null,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.4110833332524635,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.543782749999082,
+            "afterElapsed": 12.796739458332013
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 59,
+          "correlationID": "82F69CFD-87C9-4A6F-9DF0-FC70830C494B",
+          "serverRequestID": 60,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.4036249956698,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.796739458332013,
+            "afterElapsed": 14.86417095833167
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008735060691833496,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.703636169433594e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.0532759428024292,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 60,
+          "correlationID": "F46194F7-217B-4FCE-A4B3-836623236398",
+          "serverRequestID": 61,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2001.942875001987,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.796739458332013,
+            "afterElapsed": 14.86417095833167
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008929014205932617,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.900859832763672e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05323290824890137,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 61,
+          "correlationID": "383EBC13-18B7-4402-B22E-EB2A6814BFFA",
+          "serverRequestID": 62,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2002.6260416634614,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.796739458332013,
+            "afterElapsed": 14.86417095833167
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008573055267333984,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.9948692321777344e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05334305763244629,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+          "requestID": 103,
+          "correlationID": "FF9772CC-E182-4461-A3E5-49620CB3AD52",
+          "serverRequestID": 104,
+          "cancelCause": null,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 38.34274999826448,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 24.709792208333965,
+            "afterElapsed": 24.96795195832965
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 31162,
+          "sendCount": 13,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.037590980529785156,
+              "fetchToRequestSeconds": 0.009207010269165039,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.699562072753906e-05,
+              "responseSeconds": 0.02177894115447998,
+              "responseWaitSeconds": 0.006538033485412598,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "590EBC50-BD76-400C-9FBF-32FA80896FF1",
+          "requestID": 94,
+          "correlationID": "95FC11D6-17AF-4807-952F-025C7F8154E5",
+          "serverRequestID": 233,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.6239166644518,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 59.98859366666875,
+            "afterElapsed": 62.056106249998265
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.011999964714050293,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.014866948127746582,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.702278137207031e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.007212042808532715,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "590EBC50-BD76-400C-9FBF-32FA80896FF1",
+          "requestID": 95,
+          "correlationID": "3827733C-5ADA-4711-9831-1C5991C50217",
+          "serverRequestID": 234,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2001.2710000009974,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 59.98859366666875,
+            "afterElapsed": 62.056106249998265
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.011999964714050293,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.0147169828414917,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.0067901611328125e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.008037924766540527,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "590EBC50-BD76-400C-9FBF-32FA80896FF1",
+          "requestID": 96,
+          "correlationID": "9A9F8367-4170-4990-AB3E-8C820AA7A607",
+          "serverRequestID": 235,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.0894166617654,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.056106249998265,
+            "afterElapsed": 64.13783845833677
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.026000022888183594,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.028059959411621094,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00010597705841064453,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.01065206527709961,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "590EBC50-BD76-400C-9FBF-32FA80896FF1",
+          "requestID": 97,
+          "correlationID": "2F91CB0E-70CF-48AA-B914-D8100BC16DE3",
+          "serverRequestID": 236,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.895333337714,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.056106249998265,
+            "afterElapsed": 64.13783845833677
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.021000027656555176,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.02232205867767334,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.295608520507812e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.010174989700317383,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "590EBC50-BD76-400C-9FBF-32FA80896FF1",
+          "requestID": 98,
+          "correlationID": "1B0E4464-9A8C-4798-A606-AA3020888B62",
+          "serverRequestID": 237,
+          "cancelCause": null,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.4141249955865,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.056106249998265,
+            "afterElapsed": 64.13783845833677
+          },
+          "firstInstallElapsed": 38.259138333334704,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.019999980926513672,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.022085070610046387,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.699562072753906e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.010262012481689453,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ]
+    },
+    "yl-same-resource-retry/original": {
+      "cancelCauseCounts": {
+        "2": 4
+      },
+      "cancellations": 4,
+      "uncorrelated": [],
+      "allCancellationDetails": [
+        {
+          "proxyID": "41C9A688-0D79-4F23-8879-87E4727E80ED",
+          "requestID": 68,
+          "correlationID": "C1C8F836-0312-405B-BC2C-1BD7AFFBEF49",
+          "serverRequestID": 70,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2002.6294583294657,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 13.577444499998819,
+            "afterElapsed": 15.645590125001036
+          },
+          "firstInstallElapsed": null,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 50176,
+          "sendCount": 50,
+          "transactions": [
+            {
+              "connectSeconds": 0.009999990463256836,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011139988899230957,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.49826431274414e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.2096959352493286,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "41C9A688-0D79-4F23-8879-87E4727E80ED",
+          "requestID": 73,
+          "correlationID": "5F7C754B-BD26-4F1A-B357-1E1EA15908CB",
+          "serverRequestID": 75,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.6045000007143,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 15.39166799999657,
+            "afterElapsed": 17.72307820833521
+          },
+          "firstInstallElapsed": null,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 49152,
+          "sendCount": 49,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010023951530456543,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.903575897216797e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.21718502044677734,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "41C9A688-0D79-4F23-8879-87E4727E80ED",
+          "requestID": 76,
+          "correlationID": "A6A14257-0FF1-4FC1-B220-B93437DF24C5",
+          "serverRequestID": 78,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.4644583348418,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 17.46193549999589,
+            "afterElapsed": 19.80209095833561
+          },
+          "firstInstallElapsed": null,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 49152,
+          "sendCount": 49,
+          "transactions": [
+            {
+              "connectSeconds": 0.008999943733215332,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011101007461547852,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.702278137207031e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.21373093128204346,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "41C9A688-0D79-4F23-8879-87E4727E80ED",
+          "requestID": 81,
+          "correlationID": "0B427AD0-D2C8-4FA0-86F8-08B3E0709D1E",
+          "serverRequestID": 83,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1340.2442916631117,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 19.543904208330787,
+            "afterElapsed": 21.09938979166327
+          },
+          "firstInstallElapsed": null,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 30720,
+          "sendCount": 31,
+          "transactions": [
+            {
+              "connectSeconds": 0.008999943733215332,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011029958724975586,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.0001270771026611328,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.2081979513168335,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ]
+    },
+    "yl-same-resource-retry/normal": {
+      "cancelCauseCounts": {
+        "2": 14
+      },
+      "cancellations": 14,
+      "uncorrelated": [
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 63,
+          "correlationID": "99384794-93ED-46FF-9B9F-323E90C3A545",
+          "serverRequestID": null,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.253333339875098,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.556363625000813,
+            "afterElapsed": 12.81547104166384
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ],
+      "allCancellationDetails": [
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 60,
+          "correlationID": "9D7891F4-6359-4A96-8E68-9B2533032B8E",
+          "serverRequestID": 62,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2008.2853749991045,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.738730999997642,
+            "afterElapsed": 12.81547104166384
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011162996292114258,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.001722097396850586,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.051091909408569336,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 61,
+          "correlationID": "FE2FB3EC-64AA-4BCD-BE05-47137655E21B",
+          "serverRequestID": 63,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1996.2733749998733,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.738730999997642,
+            "afterElapsed": 12.81547104166384
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008770108222961426,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.092952728271484e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.050112009048461914,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 62,
+          "correlationID": "BC359D89-B784-4246-977B-F5D254810E25",
+          "serverRequestID": 64,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.0029583384749,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.738730999997642,
+            "afterElapsed": 12.81547104166384
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008796930313110352,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.1021575927734375e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.04917001724243164,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 63,
+          "correlationID": "99384794-93ED-46FF-9B9F-323E90C3A545",
+          "serverRequestID": null,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.253333339875098,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.556363625000813,
+            "afterElapsed": 12.81547104166384
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 64,
+          "correlationID": "4A171BD8-5940-4BB0-90ED-2AF5E293B49A",
+          "serverRequestID": 65,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.8190416659345,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.556363625000813,
+            "afterElapsed": 14.89398049999727
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009324073791503906,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.2928924560546875e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05405902862548828,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 65,
+          "correlationID": "29CF1D60-01E0-4A13-A8FC-9B694F97F4EC",
+          "serverRequestID": 66,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.6692499989877,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.556363625000813,
+            "afterElapsed": 14.89398049999727
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009044051170349121,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 2.6941299438476562e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05407702922821045,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 66,
+          "correlationID": "1A655CC5-2465-48F3-84D3-91F8A6FB5D8C",
+          "serverRequestID": 67,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.86554167117,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.556363625000813,
+            "afterElapsed": 14.89398049999727
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009511947631835938,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 3.707408905029297e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05061495304107666,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "CA8E3192-437A-41F5-8FC8-147D2FDE91A8",
+          "requestID": 95,
+          "correlationID": "A3EDA541-ADB9-42FB-AF43-1F5FBB810A3E",
+          "serverRequestID": 96,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 36.49520833278075,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 19.57443324999622,
+            "afterElapsed": 19.831001583334
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 8418,
+          "sendCount": 7,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.03581702709197998,
+              "fetchToRequestSeconds": 0.009948015213012695,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.103515625e-05,
+              "responseSeconds": 0.015995025634765625,
+              "responseWaitSeconds": 0.00981295108795166,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+          "requestID": 95,
+          "correlationID": "5A37082D-C2E2-48A6-A575-36B92068CD82",
+          "serverRequestID": 239,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.7669583351817,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 60.100597708333225,
+            "afterElapsed": 62.422706208330055
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011299967765808105,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.499622344970703e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.009698033332824707,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+          "requestID": 96,
+          "correlationID": "6A1A16C2-D741-4B72-9048-5A50EC3478E1",
+          "serverRequestID": 240,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2002.1675000025425,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 60.100597708333225,
+            "afterElapsed": 62.422706208330055
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.004999995231628418,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010100960731506348,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.906291961669922e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.008929967880249023,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+          "requestID": 97,
+          "correlationID": "0D1167B6-D1E3-49B9-B238-29CE0360CAEA",
+          "serverRequestID": 241,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.8957083371351,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.16694637500041,
+            "afterElapsed": 64.24576941666601
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.014999985694885254,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.01571202278137207,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.298324584960938e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.01744997501373291,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+          "requestID": 98,
+          "correlationID": "1B103861-FE57-4ABC-B31C-DBB725B65A07",
+          "serverRequestID": 242,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.3145000005607,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.16694637500041,
+            "afterElapsed": 64.24576941666601
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.009999990463256836,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.011309027671813965,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.103515625e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.0167999267578125,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+          "requestID": 99,
+          "correlationID": "4AE00872-3CFA-4E44-86AF-4EFE08486DBD",
+          "serverRequestID": 243,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.806916664762,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.16694637500041,
+            "afterElapsed": 64.24576941666601
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008999943733215332,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010945916175842285,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.602836608886719e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.016761064529418945,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "ED92E157-B811-4AFB-A172-85064370EDE7",
+          "requestID": 47,
+          "correlationID": "07548C26-A3E0-439F-AED2-1DB52D55B819",
+          "serverRequestID": 364,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 67.36699999601115,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 92.49176770833583,
+            "afterElapsed": 92.7504839999965
+          },
+          "firstInstallElapsed": 38.26136341666279,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 45466,
+          "sendCount": 14,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.06642007827758789,
+              "fetchToRequestSeconds": 0.010714054107666016,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.296966552734375e-05,
+              "responseSeconds": 0.03904104232788086,
+              "responseWaitSeconds": 0.016582012176513672,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ]
+    },
+    "yl-same-resource-retry/normal-repeat": {
+      "cancelCauseCounts": {
+        "2": 12
+      },
+      "cancellations": 12,
+      "uncorrelated": [],
+      "allCancellationDetails": [
+        {
+          "proxyID": "DD91AF6D-7E47-47D2-ADA3-B18E580F7F1B",
+          "requestID": 1,
+          "correlationID": "0E9367AC-2C34-4CE4-B047-B43E812CC603",
+          "serverRequestID": 2,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 88.89466666732915,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 0.37887070832948666,
+            "afterElapsed": 0.7617946249956731
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 828,
+          "sendCount": 2,
+          "transactions": [
+            {
+              "connectSeconds": 0.02199995517730713,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.0856330394744873,
+              "fetchToRequestSeconds": 0.0234450101852417,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 2.396106719970703e-05,
+              "responseSeconds": 0.0032889842987060547,
+              "responseWaitSeconds": 0.058875083923339844,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "DD91AF6D-7E47-47D2-ADA3-B18E580F7F1B",
+          "requestID": 54,
+          "correlationID": "804F1E9E-3EB2-47F7-A19E-180E6B5FDB64",
+          "serverRequestID": 56,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.4685000017635,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 9.782990333333146,
+            "afterElapsed": 11.846242791660188
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 38912,
+          "sendCount": 25,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008746027946472168,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.0002770423889160156,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.055638909339904785,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "DD91AF6D-7E47-47D2-ADA3-B18E580F7F1B",
+          "requestID": 55,
+          "correlationID": "022E397D-C1A5-41E6-9C7E-25DC4E54CD1A",
+          "serverRequestID": 57,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.549374995695,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.80875483332784,
+            "afterElapsed": 12.884103124997637
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008697032928466797,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.594989776611328e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05535399913787842,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "DD91AF6D-7E47-47D2-ADA3-B18E580F7F1B",
+          "requestID": 56,
+          "correlationID": "3F686585-E935-4D8C-AE56-E28FB46E2125",
+          "serverRequestID": 58,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.7209999997285,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 11.846242791660188,
+            "afterElapsed": 13.923969624993333
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009210944175720215,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.000301361083984e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.06175398826599121,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "DD91AF6D-7E47-47D2-ADA3-B18E580F7F1B",
+          "requestID": 57,
+          "correlationID": "8882F193-7155-431B-AC36-5754365C134D",
+          "serverRequestID": 59,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.2119999951683,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 11.846242791660188,
+            "afterElapsed": 13.923969624993333
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009408950805664062,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.496906280517578e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.061518073081970215,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "DD91AF6D-7E47-47D2-ADA3-B18E580F7F1B",
+          "requestID": 126,
+          "correlationID": "2DC149C2-F1F5-4604-9313-F2364C219DF9",
+          "serverRequestID": 128,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 46.03733333351556,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 32.63567524999962,
+            "afterElapsed": 33.146760666662885
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 31162,
+          "sendCount": 15,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.04523193836212158,
+              "fetchToRequestSeconds": 0.008548974990844727,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.794929504394531e-05,
+              "responseSeconds": 0.029544949531555176,
+              "responseWaitSeconds": 0.007070064544677734,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "5E3371DA-0DD7-4C72-BE85-3C50676C44CD",
+          "requestID": 102,
+          "correlationID": "7C2437EE-B910-4E03-9094-DD794EAE382D",
+          "serverRequestID": 232,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2003.7077916640555,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 60.00543037499301,
+            "afterElapsed": 62.3478083749942
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.011999964714050293,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.013485908508300781,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00011801719665527344,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.023679018020629883,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "5E3371DA-0DD7-4C72-BE85-3C50676C44CD",
+          "requestID": 103,
+          "correlationID": "FBB5088F-C370-45DA-AFD0-2AABD5CB2E5F",
+          "serverRequestID": 233,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.1812916671042,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 60.00543037499301,
+            "afterElapsed": 62.3478083749942
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.024000048637390137,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.02562391757965088,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00010704994201660156,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.008764028549194336,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "5E3371DA-0DD7-4C72-BE85-3C50676C44CD",
+          "requestID": 104,
+          "correlationID": "9B357B93-82FF-4EE2-BBE8-698C50CA63B3",
+          "serverRequestID": 235,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2002.1685416650143,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.09029741666018,
+            "afterElapsed": 64.42644237499917
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.007906079292297363,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.99758529663086e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.0100480318069458,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "5E3371DA-0DD7-4C72-BE85-3C50676C44CD",
+          "requestID": 105,
+          "correlationID": "DEDF4535-3C98-40D0-99FF-643D8F1321AF",
+          "serverRequestID": 234,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2003.2860416613403,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.09029741666018,
+            "afterElapsed": 64.42644237499917
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.004999995231628418,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.007617950439453125,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.00543212890625e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.00972902774810791,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "5E3371DA-0DD7-4C72-BE85-3C50676C44CD",
+          "requestID": 106,
+          "correlationID": "CEF80447-2B80-439F-81A5-5CB46D253264",
+          "serverRequestID": 236,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2004.6607499971287,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.09029741666018,
+            "afterElapsed": 64.42644237499917
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.004999995231628418,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008258938789367676,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.008148193359375e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.009084939956665039,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "D0076741-94D8-419F-9C4E-34CB3FB5E3FB",
+          "requestID": 62,
+          "correlationID": "EBFD00A8-AC4D-4AC5-BAED-2F718C5EA2C2",
+          "serverRequestID": 372,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 24.407583332504146,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 97.31617154166452,
+            "afterElapsed": 97.57984895833215
+          },
+          "firstInstallElapsed": 34.01466849999997,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 8391,
+          "sendCount": 3,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.02321803569793701,
+              "fetchToRequestSeconds": 0.008398056030273438,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.296966552734375e-05,
+              "responseSeconds": 0.007896065711975098,
+              "responseWaitSeconds": 0.006840944290161133,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ]
+    },
+    "yl-same-resource-retry/normal-third": {
+      "cancelCauseCounts": {
+        "2": 17,
+        "1": 3
+      },
+      "cancellations": 20,
+      "uncorrelated": [
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 63,
+          "correlationID": "12B44A72-5682-4D67-AA08-9B2AC1F69CAE",
+          "serverRequestID": null,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 5.693375002010725,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.546100916668365,
+            "afterElapsed": 12.815973249998933
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 173,
+          "correlationID": "09C20365-5850-42BE-8F49-192ACAB1C86A",
+          "serverRequestID": null,
+          "cancelCause": 1,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 13.93320833449252,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 86.96550412500073,
+            "afterElapsed": 87.22365049999644
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 174,
+          "correlationID": "CDCA6523-4AA7-4B5D-9EC3-9C4F439CBC85",
+          "serverRequestID": null,
+          "cancelCause": 1,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.5549166679847986,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 86.96550412500073,
+            "afterElapsed": 87.22365049999644
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 175,
+          "correlationID": "AA85AE14-3DD8-4C29-A915-F118AA018EDD",
+          "serverRequestID": null,
+          "cancelCause": 1,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.239541667629965,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 86.96550412500073,
+            "afterElapsed": 87.22365049999644
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ],
+      "allCancellationDetails": [
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 3,
+          "correlationID": "41348C19-7983-4E1C-B5F5-2D09537AECFA",
+          "serverRequestID": 4,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 80.38012500037439,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 0.36027845833450556,
+            "afterElapsed": 0.7087711666681571
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 764,
+          "sendCount": 2,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.06893599033355713,
+              "fetchToRequestSeconds": 0.008689045906066895,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 1.895427703857422e-05,
+              "responseSeconds": 0.006145954132080078,
+              "responseWaitSeconds": 0.05408203601837158,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 60,
+          "correlationID": "B422DCBB-9D68-45B2-9411-C15887FE70F8",
+          "serverRequestID": 62,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2006.3870000012685,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.736817833334499,
+            "afterElapsed": 12.815973249998933
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.014999985694885254,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.017206907272338867,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.30752944946289e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.06829798221588135,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 61,
+          "correlationID": "7C122D3F-28F1-46D4-9F98-E057B2CBA16C",
+          "serverRequestID": 63,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.9975833339267,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.736817833334499,
+            "afterElapsed": 12.815973249998933
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010990023612976074,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.99758529663086e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.08390498161315918,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 62,
+          "correlationID": "AE743677-69C0-404D-9BAA-D6F877623C81",
+          "serverRequestID": 64,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1996.1912500002654,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 10.736817833334499,
+            "afterElapsed": 12.815973249998933
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.007787942886352539,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.602836608886719e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.08369600772857666,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 63,
+          "correlationID": "12B44A72-5682-4D67-AA08-9B2AC1F69CAE",
+          "serverRequestID": null,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 5.693375002010725,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.546100916668365,
+            "afterElapsed": 12.815973249998933
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 64,
+          "correlationID": "F40C7428-215F-4854-874B-8368FCAF18FF",
+          "serverRequestID": 65,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1998.3357500022976,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.815973249998933,
+            "afterElapsed": 14.890936916664941
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008855104446411133,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.9948692321777344e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.17285001277923584,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 65,
+          "correlationID": "4EC43281-B4EA-4DE5-9458-96202D179E28",
+          "serverRequestID": 66,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.2710833359743,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.815973249998933,
+            "afterElapsed": 14.890936916664941
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008675098419189453,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 3.790855407714844e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.10619008541107178,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 66,
+          "correlationID": "21970DFD-3FDB-4DC2-B86A-4FE4E899788F",
+          "serverRequestID": 67,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2000.839749998704,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 12.815973249998933,
+            "afterElapsed": 14.890936916664941
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008496999740600586,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.589557647705078e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.17236602306365967,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "2F739CE3-9EC5-4E4E-9583-8FCA6ADEBF13",
+          "requestID": 107,
+          "correlationID": "F629E128-D214-4AEF-99F8-60355039E7F0",
+          "serverRequestID": 108,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 24.03483333182521,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 24.767810708333855,
+            "afterElapsed": 25.02888504166185
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": true,
+          "bodyBytes": 8391,
+          "sendCount": 5,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.023138046264648438,
+              "fetchToRequestSeconds": 0.008249044418334961,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.000301361083984e-05,
+              "responseSeconds": 0.007566094398498535,
+              "responseWaitSeconds": 0.0072329044342041016,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 94,
+          "correlationID": "C06C4CD0-01F6-49BE-9465-1D04EDB3009F",
+          "serverRequestID": 238,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1996.5279583338997,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 59.951031541662815,
+            "afterElapsed": 62.28651270833507
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.009999990463256836,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.012751936912536621,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.90493392944336e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.008424997329711914,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 95,
+          "correlationID": "AB8BAEC9-31C4-43B2-A83A-F6A96BE370BA",
+          "serverRequestID": 239,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1999.6662916673813,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 59.951031541662815,
+            "afterElapsed": 62.28651270833507
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.01100003719329834,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.013377904891967773,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.009506225585938e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.007328987121582031,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 96,
+          "correlationID": "1327E809-B741-4075-9387-C1F62B3456C5",
+          "serverRequestID": 240,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 1997.0761666627368,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.02800858332921,
+            "afterElapsed": 64.09806774999743
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.008000016212463379,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009103059768676758,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 7.092952728271484e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.007543087005615234,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 97,
+          "correlationID": "E2507A95-E23E-4A4D-A90D-615DD5FC8859",
+          "serverRequestID": 241,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2003.9214583302964,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.02800858332921,
+            "afterElapsed": 64.09806774999743
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.007091045379638672,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 5.900859832763672e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.010465025901794434,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 98,
+          "correlationID": "13EEA454-1507-41F2-93FA-6F019190B87B",
+          "serverRequestID": 242,
+          "cancelCause": 2,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 2006.1074166660546,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 62.02800858332921,
+            "afterElapsed": 64.09806774999743
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.00884699821472168,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.8995018005371094e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.009719014167785645,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 128,
+          "correlationID": "80519076-2070-4C08-9AF5-D6B46A14CC39",
+          "serverRequestID": 272,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 40.69516666640993,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 70.0671202083322,
+            "afterElapsed": 70.32291241666826
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 33734,
+          "sendCount": 14,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.03987109661102295,
+              "fetchToRequestSeconds": 0.008324027061462402,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.404254913330078e-05,
+              "responseSeconds": 0.023395061492919922,
+              "responseWaitSeconds": 0.008067965507507324,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 146,
+          "correlationID": "992311C1-ACAA-4EA6-8A05-4BC88A6B1316",
+          "serverRequestID": 290,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 30.624083330621943,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 76.04731729166815,
+            "afterElapsed": 76.30282583332882
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 8418,
+          "sendCount": 6,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.0299069881439209,
+              "fetchToRequestSeconds": 0.009160995483398438,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00015997886657714844,
+              "responseSeconds": 0.012508034706115723,
+              "responseWaitSeconds": 0.00807797908782959,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 173,
+          "correlationID": "09C20365-5850-42BE-8F49-192ACAB1C86A",
+          "serverRequestID": null,
+          "cancelCause": 1,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 13.93320833449252,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 86.96550412500073,
+            "afterElapsed": 87.22365049999644
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 174,
+          "correlationID": "CDCA6523-4AA7-4B5D-9EC3-9C4F439CBC85",
+          "serverRequestID": null,
+          "cancelCause": 1,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.5549166679847986,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 86.96550412500073,
+            "afterElapsed": 87.22365049999644
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "A06A7DDB-0747-447D-BB2D-72A04150587C",
+          "requestID": 175,
+          "correlationID": "AA85AE14-3DD8-4C29-A915-F118AA018EDD",
+          "serverRequestID": null,
+          "cancelCause": 1,
+          "taskOutcome": 1,
+          "downstreamLifetimeMs": 4.239541667629965,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 86.96550412500073,
+            "afterElapsed": 87.22365049999644
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 0,
+          "sendCount": 0,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        },
+        {
+          "proxyID": "D70C948E-96B4-4CCE-BF66-25ABE93B62A8",
+          "requestID": 74,
+          "correlationID": "DE427D11-F0F7-41D3-A5EF-59CEF060B9D9",
+          "serverRequestID": 390,
+          "cancelCause": 2,
+          "taskOutcome": 0,
+          "downstreamLifetimeMs": 31.90845833159983,
+          "nearbyPlaybackSamples": {
+            "beforeElapsed": 102.16514616666245,
+            "afterElapsed": 102.68121145832993
+          },
+          "firstInstallElapsed": 38.01272166666604,
+          "recordedBeforeFirstInstall": false,
+          "bodyBytes": 8385,
+          "sendCount": 6,
+          "transactions": [
+            {
+              "connectSeconds": 0.01100003719329834,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 0,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 0,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": 0.030869007110595703,
+              "fetchToRequestSeconds": 0.012981057167053223,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.0002319812774658203,
+              "responseSeconds": 0.0082169771194458,
+              "responseWaitSeconds": 0.00943899154663086,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "capabilityAccepted": false
+}

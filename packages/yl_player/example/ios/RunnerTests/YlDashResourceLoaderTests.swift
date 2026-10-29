@@ -4056,19 +4056,31 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
     XCTAssertEqual(server.requests.map(\.path), ["/held"])
     release.signal(); wait(for: [firstDone], timeout: 3)
-    let afterDone = expectation(description: "proxy remains usable after queued cancellation")
-    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/after"))) { data, _, error in
+    XCTAssertEqual(server.requests.map(\.path), ["/held"], "Releasing the slot must not send the cancelled request")
+    let afterDone = expectation(description: "explicit same-resource request succeeds")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/cancelled"))) { data, _, error in
       XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); afterDone.fulfill()
     }.resume()
     wait(for: [afterDone], timeout: 3)
     XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
-    XCTAssertEqual(server.requests.map(\.path), ["/held", "/after"])
+    XCTAssertEqual(server.requests.map(\.path), ["/held", "/cancelled"])
     XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
     XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 0)
     XCTAssertNil(proxy.upstreamDiagnostics.latestFailure)
+    let allRows = capturedLock.withLock { captured }
+    XCTAssertEqual(allRows.count, 3)
+    let followup = try XCTUnwrap(allRows.first { $0["requestID"] as? Double == 3 })
+    let cancelledToken = try XCTUnwrap(row["resourceToken"] as? String)
+    XCTAssertEqual(followup["resourceToken"] as? String, cancelledToken)
+    XCTAssertEqual(followup["taskOutcome"] as? Int, 0)
+    let followupID = try XCTUnwrap(followup["correlationID"] as? String)
+    XCTAssertNotEqual(followupID, row["correlationID"] as? String)
     let serverTraceIDs = server.requests.compactMap { $0.headers["x-yl-trace-id"] }
     XCTAssertFalse(serverTraceIDs.contains(try XCTUnwrap(row["correlationID"] as? String)))
-    let evidence: [String: Any] = ["scenario": "owned-single-upstream-slot-cancellation",
+    XCTAssertEqual(serverTraceIDs.count, 2)
+    XCTAssertEqual(serverTraceIDs.last, followupID)
+    let evidence: [String: Any] = ["scenario": "owned-single-slot-cancel-then-explicit-same-url",
+      "followupTrace": followup,
       "trace": row, "closeRequested": closeRequested, "parsedServerTraceIDs": serverTraceIDs,
       "parsedServerPaths": server.requests.map(\.path), "physicalOutputVerified": false,
       "capabilityAccepted": false]

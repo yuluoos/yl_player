@@ -913,6 +913,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-resource-correlation.md",
       "sha256": "d53b9b8e646364ffd9d694de53a27a8d8e744c580064bab314b658ba80cfd4d3",
       "kind": "report"
+    },
+    "ios-same-resource-retry-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-same-resource-retry.md",
+      "sha256": "96af7ed431036702ae5cbf61b7eeb1697339d7e15b0a056c6b52e360fbd02f69",
+      "kind": "report"
     }
   },
   "rows": [
@@ -957,10 +962,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-resource-correlation-20261029"
+        "ios-same-resource-retry-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-avplayer-resource-retry-cancel-cause-strict-correlation-stability-and-physical-av"
+      "nextAction": "qualify-avplayer-same-resource-cancel-and-urlsession-missing-response-stability-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",

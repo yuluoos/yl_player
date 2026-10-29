@@ -1,0 +1,52 @@
+{
+  "results": {
+    "normal": [
+      {
+        "cancelledRequest": 61,
+        "cancelledAsset": "network-period-5/init-1.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 64,
+        "nextLowerAsset": "network-period-5/init-0.m4s",
+        "gapMs": 24.987750002765097
+      },
+      {
+        "cancelledRequest": 62,
+        "cancelledAsset": "network-period-5/chunk-1-00001.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 64,
+        "nextLowerAsset": "network-period-5/init-0.m4s",
+        "gapMs": 22.849166663945653
+      }
+    ],
+    "normal-repeat": [
+      {
+        "cancelledRequest": 54,
+        "cancelledAsset": "network-period-4/chunk-1-00004.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 56,
+        "nextLowerAsset": "network-period-4/init-0.m4s",
+        "gapMs": 16.235416660492774
+      }
+    ],
+    "normal-third": [
+      {
+        "cancelledRequest": 61,
+        "cancelledAsset": "network-period-5/init-1.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 64,
+        "nextLowerAsset": "network-period-5/init-0.m4s",
+        "gapMs": 22.499208331282716
+      },
+      {
+        "cancelledRequest": 62,
+        "cancelledAsset": "network-period-5/chunk-1-00001.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 64,
+        "nextLowerAsset": "network-period-5/init-0.m4s",
+        "gapMs": 20.372375001898035
+      }
+    ],
+    "original": []
+  },
+  "interpretation": "Same-proxy observed ordering of exactly correlated fixture video requests. Temporal proximity does not prove AVPlayer internal causality or establish unlinked requests."
+}
