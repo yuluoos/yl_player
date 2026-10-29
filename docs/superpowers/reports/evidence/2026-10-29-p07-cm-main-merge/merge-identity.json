@@ -1,0 +1,24 @@
+{
+  "base": "9687fab8736b4bc0a225058832069140c3b31efe",
+  "implementation_commit": "00be1a3a6993049d72cf9afb02bc4af031378a86",
+  "implementation_files": 57,
+  "merged_tree": "948fbc65e96182b241f22b6b2eecebd858337cfd",
+  "fast_forward": true,
+  "verified_branch_tree_matches": true,
+  "main_clean_after_implementation_merge": true,
+  "postmerge_tests": {
+    "dolby": {
+      "run": 101,
+      "passed": 100,
+      "skipped": 1
+    },
+    "readiness": {
+      "run": 15,
+      "passed": 15
+    }
+  },
+  "sourceMatches": true,
+  "releaseReady": false,
+  "no_push": true,
+  "no_publish": true
+}

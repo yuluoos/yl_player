@@ -1,0 +1,60 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/dolby_reference",
+      "-p",
+      "test_dm_block_state.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/dolby_reference",
+      "-p",
+      "test_decoded_alignment.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/dolby_reference",
+      "-p",
+      "test_stream_inventory.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0
+  }
+]

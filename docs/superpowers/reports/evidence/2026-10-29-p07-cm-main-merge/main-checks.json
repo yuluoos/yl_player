@@ -1,0 +1,81 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tool/playback_benchmark",
+      "-p",
+      "test_release_readiness.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py"
+    ],
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py",
+      "--require-ready"
+    ],
+    "exit_code": 1,
+    "expected": 1
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exit_code": 0,
+    "expected": 0
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--exit-code",
+      "9687fab8",
+      "HEAD",
+      "--",
+      "packages",
+      "pubspec.yaml",
+      "pubspec.lock",
+      ".github"
+    ],
+    "exit_code": 0,
+    "expected": 0
+  }
+]
