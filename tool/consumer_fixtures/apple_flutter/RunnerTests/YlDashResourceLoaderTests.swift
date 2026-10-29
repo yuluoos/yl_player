@@ -1655,7 +1655,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "productionRecovery": productionRecovery, "productionCommand": productionCommand,
         "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxyRequestSamplingVersion": 5, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "proxyRequestSamplingVersion": 6, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -3961,6 +3961,38 @@ final class YlDashResourceLoaderTests: XCTestCase {
     wait(for: [done], timeout: 3)
   }
 
+  func testProxyResourceTokenIsStableOnlyWithinOneProxy() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], Data([1, 2])) }
+    let lock = NSLock(); var rows: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in lock.withLock { rows.append(row) } }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let origin = server.url("/private?credential=secret")
+    let first = try YlHlsMediaProxy(originURL: origin, headers: [:], configuration: .init(map: [:]))
+    let second = try YlHlsMediaProxy(originURL: origin, headers: [:], configuration: .init(map: [:]))
+    defer { first.cancelAll(); second.cancelAll() }
+    var tokens: [String] = []
+    for (proxy, target) in [(first, origin), (first, origin), (first, server.url("/other")), (second, origin)] {
+      let done = expectation(description: "resource observation")
+      URLSession.shared.dataTask(with: try proxy.proxyURL(for: target)) { data, _, error in
+        XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); done.fulfill()
+      }.resume()
+      wait(for: [done], timeout: 3)
+      XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
+      let row = try XCTUnwrap(lock.withLock { rows.last })
+      let token = try XCTUnwrap(row["resourceToken"] as? String)
+      XCTAssertEqual(token.count, 64)
+      XCTAssertTrue(token.allSatisfy { "0123456789abcdef".contains($0) })
+      tokens.append(token)
+      let serialized = String(decoding: try JSONSerialization.data(withJSONObject: row), as: UTF8.self)
+      for secret in ["secret", "credential", "private", "http:"] { XCTAssertFalse(serialized.contains(secret)) }
+    }
+    XCTAssertEqual(rows.count, 4)
+    XCTAssertEqual(tokens[0], tokens[1], "Same URL within one proxy must be comparable")
+    XCTAssertNotEqual(tokens[0], tokens[2], "Different resources must remain distinct")
+    XCTAssertNotEqual(tokens[0], tokens[3], "Tokens must not link separate proxies")
+  }
+
   func testQueuedProxyCancellationNeverReachesServerOrPoisonsNextRequest() throws {
     let server = try DashHTTPServer(); defer { server.close() }
     let held = expectation(description: "first request owns only upstream slot")
@@ -4237,7 +4269,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
     XCTAssertEqual(transactions.count, 2)
     XCTAssertEqual(server.requests.count, 2)
-    XCTAssertEqual(row["version"] as? Int, 5)
+    XCTAssertEqual(row["version"] as? Int, 6)
     XCTAssertEqual(row["cancelCause"] as? Int, 0)
     XCTAssertEqual(metrics["version"] as? Int, 2)
     XCTAssertEqual(metrics["transactionCount"] as? Int, 2)

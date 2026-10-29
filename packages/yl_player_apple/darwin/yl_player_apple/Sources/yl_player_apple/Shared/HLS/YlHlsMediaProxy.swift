@@ -1,6 +1,9 @@
 import yl_player_media_core
 import Foundation
 import Network
+#if DEBUG
+import CryptoKit
+#endif
 
 /// Owned by one loader/session. Bounded unresolved failures are removed when the
 /// same resource succeeds; cancellation never replaces an upstream cause.
@@ -76,6 +79,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     set { diagnosticObserverLock.withLock { diagnosticCapture = newValue.map(YlHlsProxyRequestCapture.init) } }
   }
   private let diagnosticProxyID = UUID().uuidString
+  // Per-proxy secret is never emitted; no URL map or cross-proxy identity.
+  private let diagnosticResourceKey = SymmetricKey(size: .bits256)
   private var diagnosticSequence = 0
   // Retain the closed connection object until delivery so its ObjectIdentifier
   // cannot be reused by a fresh request while task settlement is pending.
@@ -355,6 +360,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       diagnosticSequence += 1
       let diagnosticTrace = Self.diagnosticRequestCapture?.makeTrace(
         proxyID: diagnosticProxyID, requestID: diagnosticSequence,
+        resourceToken: HMAC<SHA256>.authenticationCode(for: Data(resourceKey.utf8), using: diagnosticResourceKey)
+          .map { String(format: "%02x", $0) }.joined(),
         didDeliver: { [weak self] in
           _ = self?.lock.withLock { self?.diagnosticActiveTraces.removeValue(forKey: connectionID) }
         })
@@ -857,7 +864,7 @@ final class YlHlsProxyRequestTrace {
   private var values: [String: Any]
   private let observer: ([String: Any]) -> Void
   let correlationID: String
-  init(proxyID: String, requestID: Int, observer: @escaping ([String: Any]) -> Void) {
+  init(proxyID: String, requestID: Int, resourceToken: String? = nil, observer: @escaping ([String: Any]) -> Void) {
     self.observer = observer
     let correlationID = UUID().uuidString
     self.correlationID = correlationID
@@ -866,6 +873,7 @@ final class YlHlsProxyRequestTrace {
       "bodyBytes": 0.0, "sentBodyBytes": 0.0, "bodyCallbacks": 0.0,
       "sendCount": 0.0, "sendCompletions": 0.0, "sendFailures": 0.0,
       "sendWaitSum": 0.0, "sendWaitMax": 0.0]
+    if let resourceToken { values["version"] = 6; values["resourceToken"] = resourceToken }
   }
   private func update(allowAfterDownstream: Bool = false, _ action: (inout [String: Any], Double) -> Void) {
     lock.withLock {
@@ -1002,11 +1010,11 @@ final class YlHlsProxyRequestCapture {
   private var active = true
   let observer: ([String: Any]) -> Void
   init(observer: @escaping ([String: Any]) -> Void) { self.observer = observer }
-  func makeTrace(proxyID: String, requestID: Int, didDeliver: @escaping () -> Void = {}) -> YlHlsProxyRequestTrace? {
+  func makeTrace(proxyID: String, requestID: Int, resourceToken: String? = nil, didDeliver: @escaping () -> Void = {}) -> YlHlsProxyRequestTrace? {
     lock.withLock {
       guard active else { return nil }
       pending.enter()
-      return YlHlsProxyRequestTrace(proxyID: proxyID, requestID: requestID) { [self] row in
+      return YlHlsProxyRequestTrace(proxyID: proxyID, requestID: requestID, resourceToken: resourceToken) { [self] row in
         defer { didDeliver(); pending.leave() }
         observer(row)
       }

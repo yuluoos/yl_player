@@ -8,7 +8,7 @@ def proxy_trace_version(rows):
     if not any(isinstance(row, dict) and 'proxyRequestSamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('proxyRequestSamplingVersion')) is int and
-               row['proxyRequestSamplingVersion'] in (1, 2, 3, 4, 5) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
+               row['proxyRequestSamplingVersion'] in (1, 2, 3, 4, 5, 6) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
         raise ValueError('unsupported or inconsistent proxy request sampling version')
     return rows[0]['proxyRequestSamplingVersion']
 
@@ -29,7 +29,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         'sendFailures', 'sendWaitSum', 'sendWaitMax'}
     times = {'response', 'firstBody', 'lastBody', 'firstSend', 'lastSend',
         'lastSendComplete', 'upstreamComplete'}
-    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics', 'downstreamTerminal', 'taskComplete', 'taskOutcome', 'cancelCause'}
+    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics', 'downstreamTerminal', 'taskComplete', 'taskOutcome', 'cancelCause', 'resourceToken'}
     uuid_pattern = r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}'
     def uuid(value):
         return isinstance(value, str) and re.fullmatch(uuid_pattern, value)
@@ -52,7 +52,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
     outcomes = ['complete', 'cancelled', 'sendFailed', 'upstreamFailed']
     for row in rows:
         require(isinstance(row, dict) and required <= row.keys() and not row.keys()-required-optional)
-        require(type(row['version']) is int and row['version'] in (1, 2, 3, 4, 5))
+        require(type(row['version']) is int and row['version'] in (1, 2, 3, 4, 5, 6))
         require(('metrics' in row) == (row['version'] >= 2))
         settlement = {'downstreamTerminal','taskComplete','taskOutcome'}
         require((settlement <= row.keys()) if row['version']>=4 else not settlement.intersection(row))
@@ -64,8 +64,11 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         if row['version'] >= 5:
             require(type(row['cancelCause']) is int and row['cancelCause'] in range(5))
             require((row['cancelCause'] != 0) == (row['outcome'] == 1))
+        require(('resourceToken' in row) == (row['version'] >= 6))
+        if row['version'] >= 6:
+            require(isinstance(row['resourceToken'], str) and re.fullmatch(r'[0-9a-f]{64}', row['resourceToken']))
         require(isinstance(row['proxyID'], str) and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', row['proxyID']))
-        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics')))
+        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics', 'resourceToken')))
         counters = required - {'version', 'proxyID', 'admission', 'terminal', 'sendWaitSum', 'sendWaitMax'}
         require(all(integer(row[key]) for key in counters) and row['requestID'] > 0)
         require(row['outcome'] in range(4))
@@ -126,7 +129,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             terminalSeconds=row['terminal']-row['admission'],
             downstreamSeconds=row['downstreamTerminal']-row['admission'] if row['version']>=4 else None,
             taskCompletionSeconds=row['taskComplete']-row['admission'] if row['version']>=4 else None,
-            taskOutcome=row.get('taskOutcome'), cancelCause=row.get('cancelCause')))
+            taskOutcome=row.get('taskOutcome'), cancelCause=row.get('cancelCause'), resourceToken=row.get('resourceToken')))
     media = {ident for ident, row in servers.items() if row.get('method') == 'GET' and
              isinstance(row.get('asset'),str) and row['asset'].endswith('.m4s')}
     missing = sorted(media-matched)

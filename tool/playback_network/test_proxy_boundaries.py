@@ -100,7 +100,7 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertIsNone(proxy_trace_version([{}]))
         self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':1}]),1)
         for rows in [[{'proxyRequestSamplingVersion':True}],
-                     [{'proxyRequestSamplingVersion':6}],
+                     [{'proxyRequestSamplingVersion':7}],
                      [{'proxyRequestSamplingVersion':1},{}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): proxy_trace_version(rows)
 
@@ -185,3 +185,25 @@ class ProxyCancellationCauseTests(unittest.TestCase):
         self.assertTrue(summarize_proxy_boundaries([row],[base.server],5)['fullyCorrelated'])
         with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,cancelCause=1)],[base.server],5)
         with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,version=4)],[base.server],4)
+
+
+class ProxyResourceTokenTests(unittest.TestCase):
+    def test_resource_match_does_not_replace_missing_request_correlation(self):
+        from test_transaction_metrics import DurationStateTests
+        base=ProxyBoundaryTests();base.setUp()
+        success=dict(base.trace,version=6,resourceToken='a'*64,metrics=DurationStateTests().source(),
+            downstreamTerminal=10.33,taskComplete=10.32,taskOutcome=0,cancelCause=0)
+        cancel=dict(version=6,proxyID=success['proxyID'],requestID=2,resourceToken='a'*64,
+            admission=10.4,terminal=10.42,downstreamTerminal=10.41,taskComplete=10.42,taskOutcome=1,
+            outcome=1,cancelCause=2,metrics=None,bodyBytes=0,sentBodyBytes=0,bodyCallbacks=0,
+            sendCount=0,sendCompletions=0,sendFailures=0,sendWaitSum=0,sendWaitMax=0)
+        result=summarize_proxy_boundaries([success,cancel],[base.server],6)
+        self.assertEqual(result['requests'][1]['resourceToken'],'a'*64)
+        self.assertFalse(result['fullyCorrelated'])
+        self.assertEqual(result['uncorrelatedProxyRequests'],1)
+        for invalid in [None,'https://private?secret','A'*64,'a'*63,True]:
+            with self.subTest(value=invalid),self.assertRaises(ValueError):
+                summarize_proxy_boundaries([dict(success,resourceToken=invalid)],[base.server],6)
+        missing=dict(success);missing.pop('resourceToken')
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([missing],[base.server],6)
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(success,version=5)],[base.server],5)
