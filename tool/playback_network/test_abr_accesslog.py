@@ -613,7 +613,7 @@ class CleanupTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
-    def _failed_playback_receipt(self, raw_rows):
+    def _failed_playback_receipt(self, raw_rows, proxy=None, server=None):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); products = root / 'products'; app = products / 'Fixture.app'
             app.mkdir(parents=True)
@@ -626,6 +626,9 @@ class FailureReceiptTests(unittest.TestCase):
             def failed_native(*_args):
                 # Deliberately incomplete main rows cannot satisfy playback acceptance.
                 (args.directory/'rows.jsonl').write_text(raw_rows)
+                if proxy is not None:
+                    (args.directory/'proxy-requests.jsonl').write_text(json.dumps(proxy)+'\n')
+                    (args.directory/'requests.jsonl').write_text(json.dumps(server)+'\n')
                 frames = [dict(elapsed=0, generation=0, frames=1, width=320, position=1),
                           dict(elapsed=.05, generation=0, frames=1, width=320, position=1.05),
                           dict(elapsed=30, generation=0, frames=0, width=0, position=1.05)]
@@ -637,6 +640,16 @@ class FailureReceiptTests(unittest.TestCase):
                  patch('abr_accesslog.cleanup_owned', return_value=True):
                 receipt = abr_accesslog.run(args)
             return receipt
+
+    def test_proxy_metrics_failure_keeps_independent_frame_observation(self):
+        from test_proxy_boundaries import ProxyBoundaryTests
+        base=ProxyBoundaryTests();base.setUp()
+        proxy=dict(base.trace,version=2,metrics=None)
+        receipt=self._failed_playback_receipt('{"framesPublished":2,"proxyRequestSamplingVersion":2}\n',proxy,base.server)
+        self.assertFalse(receipt['passed'])
+        self.assertIn('proxy successful transaction metrics incomplete',receipt['errors'])
+        self.assertIn('continuityObservation',receipt)
+        self.assertFalse(receipt['continuityObservation']['continuityAccepted'])
 
     def test_empty_main_rows_fail_closed_without_escaping(self):
         receipt = self._failed_playback_receipt('')

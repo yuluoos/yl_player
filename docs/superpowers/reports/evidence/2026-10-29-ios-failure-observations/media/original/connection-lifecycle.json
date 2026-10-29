@@ -1,0 +1,3760 @@
+{
+  "version": 1,
+  "acceptedCount": 341,
+  "rejectedCount": 0,
+  "droppedRejections": 0,
+  "connections": [
+    {
+      "connectionId": 1,
+      "acceptedSeconds": 6.19440320799913,
+      "closedSeconds": 6.391584165998211,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        1
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 2,
+      "acceptedSeconds": 6.546725999998671,
+      "closedSeconds": 6.594460040998456,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        2
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 3,
+      "acceptedSeconds": 6.547470332998273,
+      "closedSeconds": 6.6863080829989485,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        3
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 4,
+      "acceptedSeconds": 6.547942624998541,
+      "closedSeconds": 6.596607624998796,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        4
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 5,
+      "acceptedSeconds": 6.549698540999088,
+      "closedSeconds": 6.64235295799881,
+      "activeAtAdmission": 4,
+      "requestIds": [
+        5
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 6,
+      "acceptedSeconds": 6.663445374999355,
+      "closedSeconds": 6.7317264579996845,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        6
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 7,
+      "acceptedSeconds": 6.700977332999173,
+      "closedSeconds": 6.890310832999603,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        7
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 8,
+      "acceptedSeconds": 6.748760249998668,
+      "closedSeconds": 6.840318040998682,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        8
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 9,
+      "acceptedSeconds": 6.779724540998359,
+      "closedSeconds": 6.826152207999257,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        9
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 10,
+      "acceptedSeconds": 6.856258290999904,
+      "closedSeconds": 6.928257915998984,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        10
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 11,
+      "acceptedSeconds": 6.908937624999453,
+      "closedSeconds": 7.142939790999662,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        11
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 12,
+      "acceptedSeconds": 6.945978624999043,
+      "closedSeconds": 6.998276207999879,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        12
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 13,
+      "acceptedSeconds": 7.017658665999988,
+      "closedSeconds": 7.070635082998706,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        13
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 14,
+      "acceptedSeconds": 7.02086424999834,
+      "closedSeconds": 7.112032790999365,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        14
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 15,
+      "acceptedSeconds": 7.13863470799879,
+      "closedSeconds": 7.215568290999727,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        15
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 16,
+      "acceptedSeconds": 7.164808290999645,
+      "closedSeconds": 7.4280781659999775,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        16
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 17,
+      "acceptedSeconds": 7.239497707998453,
+      "closedSeconds": 7.330619874999684,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        17
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 18,
+      "acceptedSeconds": 7.354761957998562,
+      "closedSeconds": 7.4364411659989855,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        18
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 19,
+      "acceptedSeconds": 7.455559040998196,
+      "closedSeconds": 7.500912540999707,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        19
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 20,
+      "acceptedSeconds": 7.457049832999473,
+      "closedSeconds": 7.573127457999362,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        20
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 21,
+      "acceptedSeconds": 7.458658082998227,
+      "closedSeconds": 7.507082124999215,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        21
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 22,
+      "acceptedSeconds": 7.533655540999462,
+      "closedSeconds": 7.5820180409991735,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        22
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 23,
+      "acceptedSeconds": 7.538243499999226,
+      "closedSeconds": 7.604387207999025,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        23
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 24,
+      "acceptedSeconds": 7.6149554579988035,
+      "closedSeconds": 7.823463124999762,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        24
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 25,
+      "acceptedSeconds": 7.622515332999683,
+      "closedSeconds": 7.70980999999847,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        25
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 26,
+      "acceptedSeconds": 7.732172165999145,
+      "closedSeconds": 7.820238624999547,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        26
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 27,
+      "acceptedSeconds": 7.847833499999979,
+      "closedSeconds": 8.076635582998279,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        27
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 28,
+      "acceptedSeconds": 7.925423999999111,
+      "closedSeconds": 8.01432958299847,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        28
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 29,
+      "acceptedSeconds": 8.1054409999997,
+      "closedSeconds": 8.331614499998977,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        29
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 30,
+      "acceptedSeconds": 8.354099832999054,
+      "closedSeconds": 8.405289915999674,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        30
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 31,
+      "acceptedSeconds": 8.355409165998935,
+      "closedSeconds": 8.469253999999637,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        31
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 32,
+      "acceptedSeconds": 8.647556499998245,
+      "closedSeconds": 8.864151374998983,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        32
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 33,
+      "acceptedSeconds": 8.88715958299872,
+      "closedSeconds": 9.109314915998766,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        33
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 34,
+      "acceptedSeconds": 8.929163082999366,
+      "closedSeconds": 8.976956749998863,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        34
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 35,
+      "acceptedSeconds": 8.998993707999034,
+      "closedSeconds": 9.046516874999725,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        35
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 36,
+      "acceptedSeconds": 9.000247832998866,
+      "closedSeconds": 9.09193249999953,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        36
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 37,
+      "acceptedSeconds": 9.13275799999974,
+      "closedSeconds": 9.361900082998545,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        37
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 38,
+      "acceptedSeconds": 9.588044290998369,
+      "closedSeconds": 9.640311915998609,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        38
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 39,
+      "acceptedSeconds": 9.589412832998278,
+      "closedSeconds": 9.702037499999278,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        39
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 40,
+      "acceptedSeconds": 9.920347915998718,
+      "closedSeconds": 9.997278957998788,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        40
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 41,
+      "acceptedSeconds": 9.938104332999501,
+      "closedSeconds": 10.108997790999638,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        41
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 42,
+      "acceptedSeconds": 10.93020074999913,
+      "closedSeconds": 11.000704624999344,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        42
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 43,
+      "acceptedSeconds": 10.953752790999715,
+      "closedSeconds": 11.168314749998899,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        43
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 44,
+      "acceptedSeconds": 11.930894374998388,
+      "closedSeconds": 12.013951790999272,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        44
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 45,
+      "acceptedSeconds": 11.938084582998272,
+      "closedSeconds": 12.175569540999277,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        45
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 46,
+      "acceptedSeconds": 12.937004499999603,
+      "closedSeconds": 12.981775249998464,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        46
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 47,
+      "acceptedSeconds": 12.937789832998533,
+      "closedSeconds": 12.98644766599864,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        47
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 48,
+      "acceptedSeconds": 12.93822529099998,
+      "closedSeconds": 13.050439207998352,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        48
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 49,
+      "acceptedSeconds": 13.008104249998723,
+      "closedSeconds": 13.057112665999739,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        49
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 50,
+      "acceptedSeconds": 13.009260749999157,
+      "closedSeconds": 13.077033457999278,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        50
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 51,
+      "acceptedSeconds": 13.943898040999557,
+      "closedSeconds": 14.12999679099994,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        51
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 52,
+      "acceptedSeconds": 13.945345290998375,
+      "closedSeconds": 14.034364707998975,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        52
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 53,
+      "acceptedSeconds": 14.929621874998702,
+      "closedSeconds": 14.999041957998998,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        53
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 54,
+      "acceptedSeconds": 14.967787249999674,
+      "closedSeconds": 15.175734207999994,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        54
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 55,
+      "acceptedSeconds": 15.926187165998272,
+      "closedSeconds": 16.011123915999633,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        55
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 56,
+      "acceptedSeconds": 15.936936082998727,
+      "closedSeconds": 16.176038790999883,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        56
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 57,
+      "acceptedSeconds": 16.937934082998254,
+      "closedSeconds": 17.150672665999082,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        57
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 58,
+      "acceptedSeconds": 16.93850829099938,
+      "closedSeconds": 17.168115082999066,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        58
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 59,
+      "acceptedSeconds": 16.94340787499823,
+      "closedSeconds": 17.99872533299822,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        59
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 60,
+      "acceptedSeconds": 17.187609374999738,
+      "closedSeconds": 17.458006749999186,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        61
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 61,
+      "acceptedSeconds": 17.18889733299875,
+      "closedSeconds": 17.83324729099877,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        60
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 62,
+      "acceptedSeconds": 17.922178832999634,
+      "closedSeconds": 18.4225107079983,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        62
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 63,
+      "acceptedSeconds": 18.041282874999524,
+      "closedSeconds": 19.60888899999918,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        63
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 64,
+      "acceptedSeconds": 18.922124124999755,
+      "closedSeconds": 19.549011999999493,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        64
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 65,
+      "acceptedSeconds": 19.633365874999072,
+      "closedSeconds": 21.632840207999834,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        65
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 66,
+      "acceptedSeconds": 19.92546766599844,
+      "closedSeconds": 20.524067999998806,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        66
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 67,
+      "acceptedSeconds": 20.92839924999862,
+      "closedSeconds": 21.151564290999886,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        67
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 68,
+      "acceptedSeconds": 21.184448207999594,
+      "closedSeconds": 21.412584040999718,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        68
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 69,
+      "acceptedSeconds": 21.18512487499902,
+      "closedSeconds": 21.717023832999985,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        69
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 70,
+      "acceptedSeconds": 21.639775124998778,
+      "closedSeconds": 23.660173540998585,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        70
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 71,
+      "acceptedSeconds": 21.921750915998928,
+      "closedSeconds": 22.530015290998563,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        71
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 72,
+      "acceptedSeconds": 22.92344616599985,
+      "closedSeconds": 23.53842233299838,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        72
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 73,
+      "acceptedSeconds": 23.651325832999646,
+      "closedSeconds": 25.674668207999275,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        73
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 74,
+      "acceptedSeconds": 23.92404237499977,
+      "closedSeconds": 24.54861662499934,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        74
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 75,
+      "acceptedSeconds": 24.92977520799832,
+      "closedSeconds": 25.168646332998833,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        75
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 76,
+      "acceptedSeconds": 25.19247216599979,
+      "closedSeconds": 25.418319499998688,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        76
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 77,
+      "acceptedSeconds": 25.19368595799824,
+      "closedSeconds": 25.7617817499995,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        77
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 78,
+      "acceptedSeconds": 25.654286582999703,
+      "closedSeconds": 27.18369233299927,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        78
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 79,
+      "acceptedSeconds": 25.9217457499999,
+      "closedSeconds": 26.533304249998764,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        79
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 80,
+      "acceptedSeconds": 26.924143082998853,
+      "closedSeconds": 27.35638708299848,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        80
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 81,
+      "acceptedSeconds": 27.146344832999603,
+      "closedSeconds": 27.3741994159991,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        81
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 82,
+      "acceptedSeconds": 27.147018790999937,
+      "closedSeconds": 27.696622457999183,
+      "activeAtAdmission": 4,
+      "requestIds": [
+        82
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 83,
+      "acceptedSeconds": 27.720800957999018,
+      "closedSeconds": 28.70071791599912,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        83
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 84,
+      "acceptedSeconds": 27.926531957999032,
+      "closedSeconds": 28.540629749999425,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        84
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 85,
+      "acceptedSeconds": 28.729302749999988,
+      "closedSeconds": 29.90201787499973,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        85
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 86,
+      "acceptedSeconds": 28.930075832999137,
+      "closedSeconds": 29.163877207998667,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        86
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 87,
+      "acceptedSeconds": 29.191138374999355,
+      "closedSeconds": 29.435606707998886,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        87
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 88,
+      "acceptedSeconds": 29.191987624999456,
+      "closedSeconds": 29.820104415999594,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        88
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 89,
+      "acceptedSeconds": 29.934958915999232,
+      "closedSeconds": 30.953118874998836,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        89
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 90,
+      "acceptedSeconds": 30.980334499998207,
+      "closedSeconds": 31.19988183299938,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        90
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 91,
+      "acceptedSeconds": 30.981213415998354,
+      "closedSeconds": 31.23558820799917,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        91
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 92,
+      "acceptedSeconds": 31.30527583299954,
+      "closedSeconds": 31.414205249999213,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        92
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 93,
+      "acceptedSeconds": 31.438758624999537,
+      "closedSeconds": 31.565219165999224,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        93
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 94,
+      "acceptedSeconds": 31.589749290998952,
+      "closedSeconds": 31.724129624999478,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        94
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 95,
+      "acceptedSeconds": 31.754138415999478,
+      "closedSeconds": 31.806091790998835,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        95
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 96,
+      "acceptedSeconds": 31.754451625,
+      "closedSeconds": 31.83878087499943,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        96
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 97,
+      "acceptedSeconds": 31.88389845799975,
+      "closedSeconds": 31.992502124998282,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        97
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 98,
+      "acceptedSeconds": 32.02058504099841,
+      "closedSeconds": 32.14836070799902,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        98
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 99,
+      "acceptedSeconds": 32.16810508299932,
+      "closedSeconds": 32.25484262499958,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        99
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 100,
+      "acceptedSeconds": 32.170505290998335,
+      "closedSeconds": 32.321156624999276,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        100
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 101,
+      "acceptedSeconds": 32.351536332998876,
+      "closedSeconds": 32.40811562499948,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        101
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 102,
+      "acceptedSeconds": 32.35172733299987,
+      "closedSeconds": 32.44305441599863,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        102
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 103,
+      "acceptedSeconds": 32.49123612499898,
+      "closedSeconds": 32.597648707998815,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        103
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 104,
+      "acceptedSeconds": 33.16727512499892,
+      "closedSeconds": 33.233957624999675,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        104
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 105,
+      "acceptedSeconds": 33.20627599999898,
+      "closedSeconds": 33.330440540999916,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        105
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 106,
+      "acceptedSeconds": 34.17404433299998,
+      "closedSeconds": 34.2561665409994,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        106
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 107,
+      "acceptedSeconds": 34.18092529099886,
+      "closedSeconds": 34.327170290998765,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        107
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 108,
+      "acceptedSeconds": 35.19353908299854,
+      "closedSeconds": 35.24123891599993,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        109
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 109,
+      "acceptedSeconds": 35.194036790999235,
+      "closedSeconds": 35.24336491599934,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        108
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 110,
+      "acceptedSeconds": 35.200438874999236,
+      "closedSeconds": 35.28226008299862,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        110
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 111,
+      "acceptedSeconds": 35.27961249999862,
+      "closedSeconds": 35.33004404099847,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        111
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 112,
+      "acceptedSeconds": 35.28006583299975,
+      "closedSeconds": 35.349669207998886,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        112
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 113,
+      "acceptedSeconds": 36.18829304099927,
+      "closedSeconds": 36.27774295799827,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        113
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 114,
+      "acceptedSeconds": 36.18902037499902,
+      "closedSeconds": 36.31819466599882,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        114
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 115,
+      "acceptedSeconds": 36.40774820799925,
+      "closedSeconds": 36.571346665999954,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        116
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 116,
+      "acceptedSeconds": 36.40814083299847,
+      "closedSeconds": 36.454088165999565,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        115
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 117,
+      "acceptedSeconds": 37.16997012499996,
+      "closedSeconds": 37.23661025000001,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        117
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 118,
+      "acceptedSeconds": 37.19437074999951,
+      "closedSeconds": 37.39081312499911,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        118
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 119,
+      "acceptedSeconds": 38.17249999999876,
+      "closedSeconds": 38.24861070799852,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        119
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 120,
+      "acceptedSeconds": 38.18079595799827,
+      "closedSeconds": 38.41088370799844,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        120
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 121,
+      "acceptedSeconds": 39.229357540998535,
+      "closedSeconds": 39.27845420799895,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        121
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 122,
+      "acceptedSeconds": 39.22957249999854,
+      "closedSeconds": 39.28050991599957,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        122
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 123,
+      "acceptedSeconds": 39.22971624999991,
+      "closedSeconds": 39.34340979099943,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        123
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 124,
+      "acceptedSeconds": 39.33164987499913,
+      "closedSeconds": 39.374827165998795,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        124
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 125,
+      "acceptedSeconds": 39.33184683299987,
+      "closedSeconds": 39.397072624999055,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        125
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 126,
+      "acceptedSeconds": 40.18690391599921,
+      "closedSeconds": 40.36552016599853,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        126
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 127,
+      "acceptedSeconds": 40.18710862499938,
+      "closedSeconds": 40.270222832999934,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        127
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 128,
+      "acceptedSeconds": 41.1700754579997,
+      "closedSeconds": 41.240349624999,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        128
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 129,
+      "acceptedSeconds": 41.20646470799875,
+      "closedSeconds": 41.413854915999764,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        129
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 130,
+      "acceptedSeconds": 42.17111874999864,
+      "closedSeconds": 42.2441327079996,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        130
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 131,
+      "acceptedSeconds": 42.18138695799826,
+      "closedSeconds": 42.41484591599874,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        131
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 132,
+      "acceptedSeconds": 43.17529874999855,
+      "closedSeconds": 43.22370412499913,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        132
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 133,
+      "acceptedSeconds": 43.184790290999445,
+      "closedSeconds": 43.23595479099822,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        133
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 134,
+      "acceptedSeconds": 43.185608832998696,
+      "closedSeconds": 43.30173566599842,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        134
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 135,
+      "acceptedSeconds": 43.25076245799937,
+      "closedSeconds": 43.303454332999536,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        135
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 136,
+      "acceptedSeconds": 43.25151474999984,
+      "closedSeconds": 43.32364820799921,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        136
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 137,
+      "acceptedSeconds": 44.19115270799921,
+      "closedSeconds": 44.379161749999184,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        137
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 138,
+      "acceptedSeconds": 44.192981415999384,
+      "closedSeconds": 44.28226458299832,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        138
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 139,
+      "acceptedSeconds": 45.1778251249998,
+      "closedSeconds": 45.2559144579991,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        139
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 140,
+      "acceptedSeconds": 45.196076415999414,
+      "closedSeconds": 45.40911454099842,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        140
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 141,
+      "acceptedSeconds": 46.17317979099971,
+      "closedSeconds": 46.258238707998316,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        141
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 142,
+      "acceptedSeconds": 46.18169520799893,
+      "closedSeconds": 46.42284845799986,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        142
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 143,
+      "acceptedSeconds": 47.17606258299929,
+      "closedSeconds": 47.225512457998775,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        143
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 144,
+      "acceptedSeconds": 47.18451033299971,
+      "closedSeconds": 47.23621737499889,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        144
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 145,
+      "acceptedSeconds": 47.18540858299821,
+      "closedSeconds": 47.29758266599856,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        145
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 146,
+      "acceptedSeconds": 47.26062754099985,
+      "closedSeconds": 47.309089832999234,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        146
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 147,
+      "acceptedSeconds": 47.266083415999674,
+      "closedSeconds": 47.33524812499854,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        147
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 148,
+      "acceptedSeconds": 48.192300207998414,
+      "closedSeconds": 48.380192832999455,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        148
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 149,
+      "acceptedSeconds": 48.19382258299993,
+      "closedSeconds": 48.28791262499908,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        149
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 150,
+      "acceptedSeconds": 49.172211249999236,
+      "closedSeconds": 49.2410054159991,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        150
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 151,
+      "acceptedSeconds": 49.21231245799936,
+      "closedSeconds": 49.419903415999215,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        151
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 152,
+      "acceptedSeconds": 50.17669912499878,
+      "closedSeconds": 50.26338208299967,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        152
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 153,
+      "acceptedSeconds": 50.184614374999,
+      "closedSeconds": 50.4270137909989,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        153
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 154,
+      "acceptedSeconds": 51.173725374999776,
+      "closedSeconds": 51.22263954099981,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        154
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 155,
+      "acceptedSeconds": 51.184423415999845,
+      "closedSeconds": 51.230834249998225,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        155
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 156,
+      "acceptedSeconds": 51.18641379099972,
+      "closedSeconds": 51.30248099999881,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        156
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 157,
+      "acceptedSeconds": 51.2527734159994,
+      "closedSeconds": 51.304336874998626,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        157
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 158,
+      "acceptedSeconds": 51.25318458299989,
+      "closedSeconds": 51.32514037499823,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        158
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 159,
+      "acceptedSeconds": 52.191394790999766,
+      "closedSeconds": 52.37596012499853,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        159
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 160,
+      "acceptedSeconds": 52.19222479099881,
+      "closedSeconds": 52.28164354099863,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        160
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 161,
+      "acceptedSeconds": 53.17476183299914,
+      "closedSeconds": 53.252014165998844,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        161
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 162,
+      "acceptedSeconds": 53.1845757079991,
+      "closedSeconds": 53.40066262499931,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        162
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 163,
+      "acceptedSeconds": 54.17455104099827,
+      "closedSeconds": 54.261312332999296,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        163
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 164,
+      "acceptedSeconds": 54.18171949999851,
+      "closedSeconds": 54.423174665998886,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        164
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 165,
+      "acceptedSeconds": 55.175097374998586,
+      "closedSeconds": 55.222026165998614,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        165
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 166,
+      "acceptedSeconds": 55.18346845799897,
+      "closedSeconds": 55.29533737499878,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        166
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 167,
+      "acceptedSeconds": 55.18439924999984,
+      "closedSeconds": 55.22890633299903,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        167
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 168,
+      "acceptedSeconds": 55.26175754099859,
+      "closedSeconds": 55.310512582998854,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        168
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 169,
+      "acceptedSeconds": 55.262478415999794,
+      "closedSeconds": 55.330725624999104,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        169
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 170,
+      "acceptedSeconds": 56.18738791599935,
+      "closedSeconds": 56.37366354099868,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        170
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 171,
+      "acceptedSeconds": 56.18931199999861,
+      "closedSeconds": 56.28005070799918,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        171
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 172,
+      "acceptedSeconds": 57.16777541599913,
+      "closedSeconds": 57.2414812499992,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        172
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 173,
+      "acceptedSeconds": 57.1831310409998,
+      "closedSeconds": 57.39470970799994,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        173
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 174,
+      "acceptedSeconds": 58.17375908299982,
+      "closedSeconds": 58.253462665999905,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        174
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 175,
+      "acceptedSeconds": 58.18190404099914,
+      "closedSeconds": 58.420439665998856,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        175
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 176,
+      "acceptedSeconds": 59.17555004099995,
+      "closedSeconds": 59.223856540998895,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        176
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 177,
+      "acceptedSeconds": 59.19514199999867,
+      "closedSeconds": 59.240900832999614,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        177
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 178,
+      "acceptedSeconds": 59.196813832999396,
+      "closedSeconds": 59.32059812499938,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        178
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 179,
+      "acceptedSeconds": 59.25057495799956,
+      "closedSeconds": 59.30253287499909,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        179
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 180,
+      "acceptedSeconds": 59.250946124999246,
+      "closedSeconds": 59.33254374999888,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        180
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 181,
+      "acceptedSeconds": 60.1881289999983,
+      "closedSeconds": 60.37455137500001,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        181
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 182,
+      "acceptedSeconds": 60.1900110409988,
+      "closedSeconds": 60.2816418329985,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        182
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 183,
+      "acceptedSeconds": 61.16866395799843,
+      "closedSeconds": 61.246526624998296,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        183
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 184,
+      "acceptedSeconds": 61.18371670799934,
+      "closedSeconds": 61.397045582998544,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        184
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 185,
+      "acceptedSeconds": 62.17317666599956,
+      "closedSeconds": 62.25661754099929,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        185
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 186,
+      "acceptedSeconds": 62.18181041599928,
+      "closedSeconds": 62.41919391599913,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        186
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 187,
+      "acceptedSeconds": 63.17585116599912,
+      "closedSeconds": 63.22155112499968,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        187
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 188,
+      "acceptedSeconds": 63.185195624999324,
+      "closedSeconds": 63.23628708299839,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        188
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 189,
+      "acceptedSeconds": 63.187377999998716,
+      "closedSeconds": 63.31062883300001,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        189
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 190,
+      "acceptedSeconds": 63.24762849999934,
+      "closedSeconds": 63.29767012499906,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        190
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 191,
+      "acceptedSeconds": 63.25055704099941,
+      "closedSeconds": 63.3283557499999,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        191
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 192,
+      "acceptedSeconds": 64.18715154099846,
+      "closedSeconds": 64.3751564159993,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        192
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 193,
+      "acceptedSeconds": 64.18902999999955,
+      "closedSeconds": 64.2791751249988,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        193
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 194,
+      "acceptedSeconds": 65.16984174999925,
+      "closedSeconds": 65.23713658299857,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        194
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 195,
+      "acceptedSeconds": 65.20664816599856,
+      "closedSeconds": 65.41292954099845,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        195
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 196,
+      "acceptedSeconds": 66.17177083299975,
+      "closedSeconds": 66.25037508299829,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        196
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 197,
+      "acceptedSeconds": 66.18290762499964,
+      "closedSeconds": 66.42083820799962,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        197
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 198,
+      "acceptedSeconds": 67.17948891599917,
+      "closedSeconds": 67.22659962499893,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        198
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 199,
+      "acceptedSeconds": 67.18544616599866,
+      "closedSeconds": 67.2342745829992,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        199
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 200,
+      "acceptedSeconds": 67.18688845799988,
+      "closedSeconds": 67.30281291599931,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        200
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 201,
+      "acceptedSeconds": 67.25666649999948,
+      "closedSeconds": 67.3046892909988,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        201
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 202,
+      "acceptedSeconds": 67.2570510409987,
+      "closedSeconds": 67.32800741599931,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        202
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 203,
+      "acceptedSeconds": 68.18666829099857,
+      "closedSeconds": 68.27989829099897,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        203
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 204,
+      "acceptedSeconds": 68.18782574999932,
+      "closedSeconds": 68.37839520799935,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        204
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 205,
+      "acceptedSeconds": 69.16891658299937,
+      "closedSeconds": 69.24376766599926,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        205
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 206,
+      "acceptedSeconds": 69.18315841599906,
+      "closedSeconds": 69.39688387499882,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        206
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 207,
+      "acceptedSeconds": 70.17302216600001,
+      "closedSeconds": 70.2602459159989,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        207
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 208,
+      "acceptedSeconds": 70.1814179999983,
+      "closedSeconds": 70.4235690409987,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        208
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 209,
+      "acceptedSeconds": 71.17516716599857,
+      "closedSeconds": 71.22070799999892,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        209
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 210,
+      "acceptedSeconds": 71.1853591659983,
+      "closedSeconds": 71.23302270799832,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        210
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 211,
+      "acceptedSeconds": 71.18675187499866,
+      "closedSeconds": 71.30667395799901,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        211
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 212,
+      "acceptedSeconds": 71.24768316599875,
+      "closedSeconds": 71.3021126249987,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        213
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 213,
+      "acceptedSeconds": 71.24793799999861,
+      "closedSeconds": 71.32392312499906,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        212
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 214,
+      "acceptedSeconds": 72.18624412499958,
+      "closedSeconds": 72.37424054099938,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        214
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 215,
+      "acceptedSeconds": 72.18756041599954,
+      "closedSeconds": 72.27862866599935,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        215
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 216,
+      "acceptedSeconds": 73.1704941249991,
+      "closedSeconds": 73.24167058299827,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        216
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 217,
+      "acceptedSeconds": 73.21312541599946,
+      "closedSeconds": 73.41947279099986,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        217
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 218,
+      "acceptedSeconds": 74.17365812499884,
+      "closedSeconds": 74.26121395799964,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        218
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 219,
+      "acceptedSeconds": 74.18194970799959,
+      "closedSeconds": 74.423436957999,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        219
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 220,
+      "acceptedSeconds": 75.1793976659992,
+      "closedSeconds": 75.22882124999887,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        220
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 221,
+      "acceptedSeconds": 75.18490887499865,
+      "closedSeconds": 75.23172641599922,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        221
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 222,
+      "acceptedSeconds": 75.18558808299895,
+      "closedSeconds": 75.30134129099861,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        222
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 223,
+      "acceptedSeconds": 75.257252333,
+      "closedSeconds": 75.30325124999945,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        223
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 224,
+      "acceptedSeconds": 75.25889804099825,
+      "closedSeconds": 75.33027379099985,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        224
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 225,
+      "acceptedSeconds": 76.18994937499883,
+      "closedSeconds": 76.37799820799955,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        226
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 226,
+      "acceptedSeconds": 76.19115504099864,
+      "closedSeconds": 76.2788925829991,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        225
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 227,
+      "acceptedSeconds": 77.17664491599862,
+      "closedSeconds": 77.26615687499907,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        227
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 228,
+      "acceptedSeconds": 77.18124699999862,
+      "closedSeconds": 77.40624995799953,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        228
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 229,
+      "acceptedSeconds": 78.17609962499955,
+      "closedSeconds": 78.26614841599985,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        229
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 230,
+      "acceptedSeconds": 78.18266291599866,
+      "closedSeconds": 78.4257642499997,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        230
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 231,
+      "acceptedSeconds": 79.17306758299856,
+      "closedSeconds": 79.22199679099867,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        231
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 232,
+      "acceptedSeconds": 79.18341987499844,
+      "closedSeconds": 79.23366970799907,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        232
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 233,
+      "acceptedSeconds": 79.18480387499949,
+      "closedSeconds": 79.30046508299893,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        233
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 234,
+      "acceptedSeconds": 79.24913770799867,
+      "closedSeconds": 79.29842024999925,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        234
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 235,
+      "acceptedSeconds": 79.25089133299844,
+      "closedSeconds": 79.32340041599855,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        235
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 236,
+      "acceptedSeconds": 80.18872295799883,
+      "closedSeconds": 80.37529249999898,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        236
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 237,
+      "acceptedSeconds": 80.18913704099941,
+      "closedSeconds": 80.27763958299875,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        237
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 238,
+      "acceptedSeconds": 81.17765345799853,
+      "closedSeconds": 81.24835395799892,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        238
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 239,
+      "acceptedSeconds": 81.20673024999996,
+      "closedSeconds": 81.41194029099825,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        239
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 240,
+      "acceptedSeconds": 82.17648783299956,
+      "closedSeconds": 82.26681250000001,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        240
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 241,
+      "acceptedSeconds": 82.18082570799925,
+      "closedSeconds": 82.42581012499977,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        241
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 242,
+      "acceptedSeconds": 83.180985125,
+      "closedSeconds": 83.22767133299931,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        242
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 243,
+      "acceptedSeconds": 83.18474904099821,
+      "closedSeconds": 83.23593683299987,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        243
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 244,
+      "acceptedSeconds": 83.18823104099829,
+      "closedSeconds": 83.30156924999937,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        244
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 245,
+      "acceptedSeconds": 83.25843824999902,
+      "closedSeconds": 83.33236987499913,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        245
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 246,
+      "acceptedSeconds": 83.26007162499991,
+      "closedSeconds": 83.31003795799916,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        246
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 247,
+      "acceptedSeconds": 84.19242541599851,
+      "closedSeconds": 84.38050091599871,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        247
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 248,
+      "acceptedSeconds": 84.19349304099887,
+      "closedSeconds": 84.28457216599963,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        248
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 249,
+      "acceptedSeconds": 85.20599379099986,
+      "closedSeconds": 85.29063341599976,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        249
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 250,
+      "acceptedSeconds": 85.20639104099973,
+      "closedSeconds": 85.43347370799893,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        250
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 251,
+      "acceptedSeconds": 86.17521945799854,
+      "closedSeconds": 86.2536409159984,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        251
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 252,
+      "acceptedSeconds": 86.18266533299902,
+      "closedSeconds": 86.42386704099954,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        252
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 253,
+      "acceptedSeconds": 87.17896287499934,
+      "closedSeconds": 87.2290907079987,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        253
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 254,
+      "acceptedSeconds": 87.18408995799837,
+      "closedSeconds": 87.23360191599932,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        254
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 255,
+      "acceptedSeconds": 87.18519170799846,
+      "closedSeconds": 87.29824008299875,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        255
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 256,
+      "acceptedSeconds": 87.33645541599981,
+      "closedSeconds": 87.38588849999906,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        256
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 257,
+      "acceptedSeconds": 87.3473151249982,
+      "closedSeconds": 87.4175220829984,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        257
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 258,
+      "acceptedSeconds": 88.19053099999837,
+      "closedSeconds": 88.38033637499939,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        258
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 259,
+      "acceptedSeconds": 88.19228962499983,
+      "closedSeconds": 88.2817218329983,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        259
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 260,
+      "acceptedSeconds": 89.95270287499989,
+      "closedSeconds": 90.0439857909987,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        260
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 261,
+      "acceptedSeconds": 89.95358108299843,
+      "closedSeconds": 90.18224608299897,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        261
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 262,
+      "acceptedSeconds": 90.17170916599935,
+      "closedSeconds": 90.24111149999953,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        262
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 263,
+      "acceptedSeconds": 90.20785145799891,
+      "closedSeconds": 90.43081274999895,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        263
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 264,
+      "acceptedSeconds": 91.1747466249999,
+      "closedSeconds": 91.22376887499922,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        264
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 265,
+      "acceptedSeconds": 91.18496049999885,
+      "closedSeconds": 91.3029045409985,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        266
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 266,
+      "acceptedSeconds": 91.18591645799825,
+      "closedSeconds": 91.23079120799957,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        265
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 267,
+      "acceptedSeconds": 91.25303991599867,
+      "closedSeconds": 91.30476891599938,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        267
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 268,
+      "acceptedSeconds": 91.25396799999908,
+      "closedSeconds": 91.32599579099951,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        268
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 269,
+      "acceptedSeconds": 92.26409574999889,
+      "closedSeconds": 92.45533270799933,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        269
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 270,
+      "acceptedSeconds": 92.26472829099839,
+      "closedSeconds": 92.3544442909988,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        270
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 271,
+      "acceptedSeconds": 93.19390695799848,
+      "closedSeconds": 93.28487979099918,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        271
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 272,
+      "acceptedSeconds": 93.19446274999973,
+      "closedSeconds": 93.42103670799952,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        272
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 273,
+      "acceptedSeconds": 94.17581574999895,
+      "closedSeconds": 94.25854212499871,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        273
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 274,
+      "acceptedSeconds": 94.18091724999977,
+      "closedSeconds": 94.4213623329997,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        274
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 275,
+      "acceptedSeconds": 95.19322399999874,
+      "closedSeconds": 95.23949045799964,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        275
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 276,
+      "acceptedSeconds": 95.1941626659991,
+      "closedSeconds": 95.24365645799844,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        276
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 277,
+      "acceptedSeconds": 95.19596579099925,
+      "closedSeconds": 95.31218424999861,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        277
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 278,
+      "acceptedSeconds": 95.26798249999956,
+      "closedSeconds": 95.31724554099856,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        278
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 279,
+      "acceptedSeconds": 95.26871883299827,
+      "closedSeconds": 95.33774820799954,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        279
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 280,
+      "acceptedSeconds": 96.1923564159988,
+      "closedSeconds": 96.38188108299983,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        280
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 281,
+      "acceptedSeconds": 96.19343279099849,
+      "closedSeconds": 96.28712704099962,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        281
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 282,
+      "acceptedSeconds": 97.18516966599964,
+      "closedSeconds": 97.27481141599856,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        282
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 283,
+      "acceptedSeconds": 97.18693108299885,
+      "closedSeconds": 97.41394508299891,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        283
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 284,
+      "acceptedSeconds": 98.21028266599933,
+      "closedSeconds": 98.30096862499886,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        284
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 285,
+      "acceptedSeconds": 98.21098695799992,
+      "closedSeconds": 98.46023854099985,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        285
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 286,
+      "acceptedSeconds": 99.1797217079984,
+      "closedSeconds": 99.2285780409984,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        286
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 287,
+      "acceptedSeconds": 99.18670679099887,
+      "closedSeconds": 99.2353962499983,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        287
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 288,
+      "acceptedSeconds": 99.18772870799876,
+      "closedSeconds": 99.30217249999987,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        288
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 289,
+      "acceptedSeconds": 99.25563616599902,
+      "closedSeconds": 99.30394066599911,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        289
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 290,
+      "acceptedSeconds": 99.25652229099978,
+      "closedSeconds": 99.327079916,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        290
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 291,
+      "acceptedSeconds": 100.19350758299879,
+      "closedSeconds": 100.38179074999971,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        291
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 292,
+      "acceptedSeconds": 100.19421779099866,
+      "closedSeconds": 100.28469962499912,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        292
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 293,
+      "acceptedSeconds": 101.17010579099951,
+      "closedSeconds": 101.23755870799869,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        293
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 294,
+      "acceptedSeconds": 101.19547091599998,
+      "closedSeconds": 101.39367774999846,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        294
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 295,
+      "acceptedSeconds": 102.17614687499918,
+      "closedSeconds": 102.26217066599929,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        295
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 296,
+      "acceptedSeconds": 102.18168970799888,
+      "closedSeconds": 102.42343049999909,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        296
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 297,
+      "acceptedSeconds": 103.17587737499889,
+      "closedSeconds": 103.21917833299995,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        297
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 298,
+      "acceptedSeconds": 103.18389954099985,
+      "closedSeconds": 103.23162745799891,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        298
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 299,
+      "acceptedSeconds": 103.1851964159996,
+      "closedSeconds": 103.29758374999983,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        299
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 300,
+      "acceptedSeconds": 103.24898658299935,
+      "closedSeconds": 103.30217608299972,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        301
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 301,
+      "acceptedSeconds": 103.24965645799966,
+      "closedSeconds": 103.32237170799999,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        300
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 302,
+      "acceptedSeconds": 104.18567962499947,
+      "closedSeconds": 104.37565170799826,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        302
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 303,
+      "acceptedSeconds": 104.18747208299828,
+      "closedSeconds": 104.27983741599928,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        303
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 304,
+      "acceptedSeconds": 105.1682175829992,
+      "closedSeconds": 105.23890441599906,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        304
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 305,
+      "acceptedSeconds": 105.21220833299958,
+      "closedSeconds": 105.41943274999903,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        305
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 306,
+      "acceptedSeconds": 106.1713720409989,
+      "closedSeconds": 106.25609870799963,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        306
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 307,
+      "acceptedSeconds": 106.18259612499969,
+      "closedSeconds": 106.41888962499979,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        307
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 308,
+      "acceptedSeconds": 107.17575129099896,
+      "closedSeconds": 107.22475224999835,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        308
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 309,
+      "acceptedSeconds": 107.18392904099892,
+      "closedSeconds": 107.22841854099897,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        309
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 310,
+      "acceptedSeconds": 107.18511975000001,
+      "closedSeconds": 107.29899845799991,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        310
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 311,
+      "acceptedSeconds": 107.25223587499931,
+      "closedSeconds": 107.30072116599877,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        311
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 312,
+      "acceptedSeconds": 107.25728395799888,
+      "closedSeconds": 107.32623374999821,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        312
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 313,
+      "acceptedSeconds": 108.18934345799971,
+      "closedSeconds": 108.37766274999922,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        313
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 314,
+      "acceptedSeconds": 108.1908037079993,
+      "closedSeconds": 108.28036683299979,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        314
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 315,
+      "acceptedSeconds": 109.1894729579999,
+      "closedSeconds": 109.26684204099911,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        315
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 316,
+      "acceptedSeconds": 109.19945170799838,
+      "closedSeconds": 109.41655383299985,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        316
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 317,
+      "acceptedSeconds": 110.19436112499898,
+      "closedSeconds": 110.28625595799895,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        317
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 318,
+      "acceptedSeconds": 110.1950199999992,
+      "closedSeconds": 110.44428420799886,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        318
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 319,
+      "acceptedSeconds": 111.18138924999948,
+      "closedSeconds": 111.22988958299902,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        319
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 320,
+      "acceptedSeconds": 111.18813454099836,
+      "closedSeconds": 111.2389352909995,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        320
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 321,
+      "acceptedSeconds": 111.1887950829987,
+      "closedSeconds": 111.30339945799824,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        321
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 322,
+      "acceptedSeconds": 111.25972912499856,
+      "closedSeconds": 111.30522987499899,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        322
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 323,
+      "acceptedSeconds": 111.26044212499983,
+      "closedSeconds": 111.32843258299908,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        323
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 324,
+      "acceptedSeconds": 112.23965329099883,
+      "closedSeconds": 112.42714870799864,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        324
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 325,
+      "acceptedSeconds": 112.24169074999918,
+      "closedSeconds": 112.32739491599932,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        325
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 326,
+      "acceptedSeconds": 113.16959183299878,
+      "closedSeconds": 113.24477533299978,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        326
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 327,
+      "acceptedSeconds": 113.18221454099876,
+      "closedSeconds": 113.39489583299837,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        327
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 328,
+      "acceptedSeconds": 114.17553599999883,
+      "closedSeconds": 114.25791070799824,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        328
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 329,
+      "acceptedSeconds": 114.18252662499981,
+      "closedSeconds": 114.42119816599916,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        329
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 330,
+      "acceptedSeconds": 115.17850233299941,
+      "closedSeconds": 115.22585199999958,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        330
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 331,
+      "acceptedSeconds": 115.18514229099856,
+      "closedSeconds": 115.22992883299958,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        331
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 332,
+      "acceptedSeconds": 115.1860027499988,
+      "closedSeconds": 115.29531899999893,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        332
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 333,
+      "acceptedSeconds": 115.25184437499956,
+      "closedSeconds": 115.29985787499936,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        333
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 334,
+      "acceptedSeconds": 115.25609737499872,
+      "closedSeconds": 115.32342566599982,
+      "activeAtAdmission": 3,
+      "requestIds": [
+        334
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 335,
+      "acceptedSeconds": 116.18788666599903,
+      "closedSeconds": 116.37152120799874,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        335
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 336,
+      "acceptedSeconds": 116.18807391599876,
+      "closedSeconds": 116.27579649999825,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        336
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 337,
+      "acceptedSeconds": 117.16895504099921,
+      "closedSeconds": 117.2348397909991,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        337
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 338,
+      "acceptedSeconds": 117.19888962499863,
+      "closedSeconds": 117.40578945799825,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        338
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 339,
+      "acceptedSeconds": 118.1728293749984,
+      "closedSeconds": 118.2555280409997,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        339
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 340,
+      "acceptedSeconds": 118.18027724999956,
+      "closedSeconds": 118.41926379099823,
+      "activeAtAdmission": 2,
+      "requestIds": [
+        340
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    },
+    {
+      "connectionId": 341,
+      "acceptedSeconds": 119.17597824999939,
+      "closedSeconds": 119.22147954100001,
+      "activeAtAdmission": 1,
+      "requestIds": [
+        341
+      ],
+      "unrecordedRequests": 0,
+      "closeReason": "handlerEnded"
+    }
+  ],
+  "rejections": []
+}

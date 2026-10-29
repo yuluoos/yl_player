@@ -109,12 +109,19 @@ def main():
     if not policy:
         raise ValueError('no policy decisions captured')
     result['policy'] = summarize_policy(policy, expected_attempts=policy[-1].get('attempts'))
-    from proxy_boundaries import proxy_trace_version, summarize_proxy_boundaries
+    from proxy_boundaries import proxy_trace_version, record_proxy_observation
     version = proxy_trace_version(read_rows(args.capture/'rows.jsonl'))
     if version in (1, 2, 3, 4, 5, 6):
-        result['proxy'] = summarize_proxy_boundaries(read_rows(args.capture/'proxy-requests.jsonl'), requests, version)
+        proxy_receipt = {'errors': []}
+        record_proxy_observation(proxy_receipt, read_rows(args.capture/'proxy-requests.jsonl'), requests, version)
+        result['errors'] = proxy_receipt['errors']
+        if 'proxyRequestObservation' in proxy_receipt:
+            result['proxy'] = proxy_receipt['proxyRequestObservation']
+        if 'proxyRequestValidationErrors' in proxy_receipt:
+            result['proxyRequestValidationErrors'] = proxy_receipt['proxyRequestValidationErrors']
     print(json.dumps(result, indent=2, allow_nan=False))
+    return 1 if result.get('errors') else 0
 
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

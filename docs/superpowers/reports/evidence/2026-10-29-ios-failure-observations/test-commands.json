@@ -1,0 +1,8 @@
+[
+  {"command":"python3 -B -m unittest discover -s tool/playback_network -p test_proxy_boundaries.py -v","stage":"red","exitCode":1,"log":"red-proxy.log","expectedFailures":2},
+  {"command":"python3 -B -m unittest discover -s tool/playback_network -p test_bandwidth_diagnostics.py -v","stage":"red","exitCode":1,"log":"red-cli.log","expectedFailures":1},
+  {"command":"python3 -B -m unittest discover -s tool/playback_network -p test_abr_accesslog.py -v","stage":"red","exitCode":1,"log":"red-receipt.log","expectedFailures":1},
+  {"command":"python3 -B -m unittest discover -s tool/playback_network -v","stage":"final","exitCode":0,"log":"tools-final.log","tests":195},
+  {"command":"python3 -B -m unittest discover -s tool/consumer_fixtures -v","stage":"wrong-discovery","exitCode":5,"log":"consumer-wrong-discovery.log","tests":0},
+  {"command":"python3 -B -m unittest discover -s tool/consumer_fixtures/apple_flutter -v","stage":"final","exitCode":0,"log":"consumer-final.log","tests":46,"skipped":1}
+]

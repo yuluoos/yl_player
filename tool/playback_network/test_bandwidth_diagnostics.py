@@ -106,3 +106,15 @@ class VersionFourCLITests(unittest.TestCase):
             for k,state in [('fetchSeconds',2),('responseWaitSeconds',2),('responseSeconds',3)]:first[k]=None;first['durationStates'][k]=state
             path.write_text(json.dumps(proxy)+'\n');result=subprocess.run(cmd,capture_output=True,text=True)
             self.assertNotEqual(result.returncode,0)
+            self.assertTrue(result.stdout, 'failed diagnostics lost valid observations')
+            failed=json.loads(result.stdout)
+            self.assertEqual(failed['totalRequests'],1)
+            self.assertFalse(failed['proxy']['requests'][0]['transactionMetrics']['complete'])
+            self.assertTrue(failed['errors'])
+            self.assertFalse(failed['capabilityAccepted'])
+            # Missing request correlation is also a nonzero diagnostic outcome.
+            proxy.update(outcome=1,taskOutcome=1,cancelCause=2,metrics=None)
+            proxy.pop('serverRequestID');proxy.pop('response');proxy.pop('httpStatus')
+            path.write_text(json.dumps(proxy)+'\n');result=subprocess.run(cmd,capture_output=True,text=True)
+            self.assertNotEqual(result.returncode,0)
+            self.assertFalse(json.loads(result.stdout)['proxy']['fullyCorrelated'])

@@ -918,6 +918,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-same-resource-retry.md",
       "sha256": "96af7ed431036702ae5cbf61b7eeb1697339d7e15b0a056c6b52e360fbd02f69",
       "kind": "report"
+    },
+    "ios-failure-observations-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-failure-observations.md",
+      "sha256": "c1c0cce1a3b661e6c7fa41e329f1d2933a80270a1ecc6c849d9636baec941ad4",
+      "kind": "report"
     }
   },
   "rows": [
@@ -962,10 +967,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-same-resource-retry-20261029"
+        "ios-failure-observations-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-avplayer-same-resource-cancel-and-urlsession-missing-response-stability-and-physical-av"
+      "nextAction": "qualify-native-cancellation-and-dual-transaction-root-causes-stability-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",

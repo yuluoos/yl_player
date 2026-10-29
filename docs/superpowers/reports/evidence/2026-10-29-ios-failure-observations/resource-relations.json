@@ -1,0 +1,909 @@
+{
+  "normal": {
+    "totalRequests": 409,
+    "distinctProxyResources": 400,
+    "cancellations": [
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 1,
+        "resourceToken": "e48c5d10c40c26f35d9c6f1d73582daacdc1654e73109726263a1cd098bfc768",
+        "cancelCause": 2,
+        "serverRequestID": 2,
+        "serverAsset": "network-period-0/init-0.m4s",
+        "admission": 57255.279541250005,
+        "downstreamTerminal": 57255.35859075,
+        "downstreamLifetimeMs": 79.04949999647215,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 60,
+        "resourceToken": "5a72dee34c0a4e0be4f26085ee86678b95b246efc2c49ba5f4335554ea2bf5fc",
+        "cancelCause": 2,
+        "serverRequestID": 62,
+        "serverAsset": "network-period-4/chunk-2-00005.m4s",
+        "admission": 57265.69245029167,
+        "downstreamTerminal": 57267.69410562501,
+        "downstreamLifetimeMs": 2001.6553333334741,
+        "relatedRequests": [
+          {
+            "requestID": 66,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 31.407291666255333,
+            "thisAdmissionAfterRelatedCancellationMs": -4040.57445833314,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -4040.8407083305065,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 67,
+            "asset": "network-period-4/chunk-2-00005.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 389
+          },
+          {
+            "requestID": 79,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 6041.007958330738,
+            "thisAdmissionAfterRelatedCancellationMs": -8064.012208327767,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -8063.994916665251,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 80,
+            "asset": "network-period-4/chunk-2-00005.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 389
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 79,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 6041.007958330738,
+            "thisAdmissionAfterRelatedCancellationMs": -8064.012208327767,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -8063.994916665251,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 80,
+            "asset": "network-period-4/chunk-2-00005.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 389
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-4/chunk-2-00005.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 61,
+        "resourceToken": "6133790c567c2f265755230d36ff4e0e65ce56387aa9b20894f49deee722720f",
+        "cancelCause": 2,
+        "serverRequestID": 63,
+        "serverAsset": "network-period-5/init-1.m4s",
+        "admission": 57265.70207729167,
+        "downstreamTerminal": 57267.70323295834,
+        "downstreamLifetimeMs": 2001.1556666649994,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 62,
+        "resourceToken": "566a079199a864f52589528173d4856f375884d9f82028acbaca284784980ef0",
+        "cancelCause": 2,
+        "serverRequestID": 64,
+        "serverAsset": "network-period-5/chunk-1-00001.m4s",
+        "admission": 57265.702603625,
+        "downstreamTerminal": 57267.708169375,
+        "downstreamLifetimeMs": 2005.5657499979134,
+        "relatedRequests": [
+          {
+            "requestID": 63,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 5.498833335877862,
+            "thisAdmissionAfterRelatedCancellationMs": -2013.6120000024675,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -2013.8380833377596,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": null,
+            "asset": null,
+            "serverOutcome": null,
+            "rangeStart": null,
+            "rangeEndExclusive": null
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 63,
+        "resourceToken": "566a079199a864f52589528173d4856f375884d9f82028acbaca284784980ef0",
+        "cancelCause": 2,
+        "serverRequestID": null,
+        "serverAsset": null,
+        "admission": 57267.71366820834,
+        "downstreamTerminal": 57267.716215625005,
+        "downstreamLifetimeMs": 2.5474166686763056,
+        "relatedRequests": [
+          {
+            "requestID": 62,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -2013.6120000024675,
+            "thisAdmissionAfterRelatedCancellationMs": 5.498833335877862,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 5.195666664803866,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 64,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 25431
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-1-00001.m4s"
+        ],
+        "requestCorrelationEstablished": false
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 64,
+        "resourceToken": "a37899512523df93d62ef03bb4e644dcf4a0f9887ec14834d94ba39d0cc3554c",
+        "cancelCause": 2,
+        "serverRequestID": 65,
+        "serverAsset": "network-period-5/init-0.m4s",
+        "admission": 57267.72402116667,
+        "downstreamTerminal": 57269.729754708336,
+        "downstreamLifetimeMs": 2005.7335416640854,
+        "relatedRequests": [
+          {
+            "requestID": 67,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1014.8942916639498,
+            "thisAdmissionAfterRelatedCancellationMs": -3043.63474999991,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3043.606874998659,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 68,
+            "asset": "network-period-5/init-0.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 826
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 67,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1014.8942916639498,
+            "thisAdmissionAfterRelatedCancellationMs": -3043.63474999991,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3043.606874998659,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 68,
+            "asset": "network-period-5/init-0.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 826
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-5/init-0.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 65,
+        "resourceToken": "c74392c3dfc1da2d39fb96fc0a3f145942b314368b8ee42fd69548907285f2f7",
+        "cancelCause": 2,
+        "serverRequestID": 66,
+        "serverAsset": "network-period-5/chunk-0-00001.m4s",
+        "admission": 57267.72434545834,
+        "downstreamTerminal": 57269.73171308334,
+        "downstreamLifetimeMs": 2007.3676250030985,
+        "relatedRequests": [
+          {
+            "requestID": 68,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1014.6629166629282,
+            "thisAdmissionAfterRelatedCancellationMs": -3052.7589166667894,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3052.7416666664067,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 69,
+            "asset": "network-period-5/chunk-0-00001.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 13625
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 68,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1014.6629166629282,
+            "thisAdmissionAfterRelatedCancellationMs": -3052.7589166667894,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3052.7416666664067,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 69,
+            "asset": "network-period-5/chunk-0-00001.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 13625
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-0-00001.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 66,
+        "resourceToken": "5a72dee34c0a4e0be4f26085ee86678b95b246efc2c49ba5f4335554ea2bf5fc",
+        "cancelCause": 2,
+        "serverRequestID": 67,
+        "serverAsset": "network-period-4/chunk-2-00005.m4s",
+        "admission": 57267.72551291667,
+        "downstreamTerminal": 57269.73302475001,
+        "downstreamLifetimeMs": 2007.5118333334103,
+        "relatedRequests": [
+          {
+            "requestID": 60,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -4040.57445833314,
+            "thisAdmissionAfterRelatedCancellationMs": 31.407291666255333,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 30.692333333718125,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 62,
+            "asset": "network-period-4/chunk-2-00005.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 389
+          },
+          {
+            "requestID": 79,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 4002.0888333310722,
+            "thisAdmissionAfterRelatedCancellationMs": -6030.949583328038,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -6030.932291665522,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 80,
+            "asset": "network-period-4/chunk-2-00005.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 389
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 79,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 4002.0888333310722,
+            "thisAdmissionAfterRelatedCancellationMs": -6030.949583328038,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -6030.932291665522,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 80,
+            "asset": "network-period-4/chunk-2-00005.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 389
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-4/chunk-2-00005.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "7553F481-2255-4A1E-A235-3EBA09CFB756",
+        "requestID": 93,
+        "resourceToken": "0593c154f6b64cafe8acdd1c36cdcd92722d0038ac3af889ef84d9d1e95fd9d8",
+        "cancelCause": 2,
+        "serverRequestID": 235,
+        "serverAsset": "network-period-17/chunk-1-00002.m4s",
+        "admission": 57314.958158500005,
+        "downstreamTerminal": 57316.95344816667,
+        "downstreamLifetimeMs": 1995.2896666654851,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "7553F481-2255-4A1E-A235-3EBA09CFB756",
+        "requestID": 94,
+        "resourceToken": "e20c1c41c976230e17170c509c55a0257c66f7968079eeeb8d5cc27710d91f48",
+        "cancelCause": 2,
+        "serverRequestID": 236,
+        "serverAsset": "network-period-17/chunk-2-00002.m4s",
+        "admission": 57314.95890245834,
+        "downstreamTerminal": 57316.95675625,
+        "downstreamLifetimeMs": 1997.8537916613277,
+        "relatedRequests": [
+          {
+            "requestID": 95,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 4.871041666774545,
+            "thisAdmissionAfterRelatedCancellationMs": -3999.397791660158,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -4000.022458327294,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 237,
+            "asset": "network-period-17/chunk-2-00002.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 8418
+          },
+          {
+            "requestID": 98,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 3010.9162500011735,
+            "thisAdmissionAfterRelatedCancellationMs": -5059.277416665282,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -5059.256791661028,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 240,
+            "asset": "network-period-17/chunk-2-00002.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 8418
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 98,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 3010.9162500011735,
+            "thisAdmissionAfterRelatedCancellationMs": -5059.277416665282,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -5059.256791661028,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 240,
+            "asset": "network-period-17/chunk-2-00002.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 8418
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-17/chunk-2-00002.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "7553F481-2255-4A1E-A235-3EBA09CFB756",
+        "requestID": 95,
+        "resourceToken": "e20c1c41c976230e17170c509c55a0257c66f7968079eeeb8d5cc27710d91f48",
+        "cancelCause": 2,
+        "serverRequestID": 237,
+        "serverAsset": "network-period-17/chunk-2-00002.m4s",
+        "admission": 57316.96162729167,
+        "downstreamTerminal": 57318.95830025,
+        "downstreamLifetimeMs": 1996.6729583320557,
+        "relatedRequests": [
+          {
+            "requestID": 94,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -3999.397791660158,
+            "thisAdmissionAfterRelatedCancellationMs": 4.871041666774545,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 4.194000001007225,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 236,
+            "asset": "network-period-17/chunk-2-00002.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 8418
+          },
+          {
+            "requestID": 98,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1009.3722500023432,
+            "thisAdmissionAfterRelatedCancellationMs": -3056.5525833371794,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3056.5319583329256,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 240,
+            "asset": "network-period-17/chunk-2-00002.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 8418
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 98,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1009.3722500023432,
+            "thisAdmissionAfterRelatedCancellationMs": -3056.5525833371794,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3056.5319583329256,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 240,
+            "asset": "network-period-17/chunk-2-00002.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 8418
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-17/chunk-2-00002.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "7553F481-2255-4A1E-A235-3EBA09CFB756",
+        "requestID": 96,
+        "resourceToken": "ee679903be38d361e2bb88385cb38bbac11e5d54428a3e920b1f1dbfebd06f80",
+        "cancelCause": 2,
+        "serverRequestID": 238,
+        "serverAsset": "network-period-17/init-0.m4s",
+        "admission": 57316.96744491667,
+        "downstreamTerminal": 57318.96584641667,
+        "downstreamLifetimeMs": 1998.4015000009094,
+        "relatedRequests": [
+          {
+            "requestID": 99,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1005.276291667542,
+            "thisAdmissionAfterRelatedCancellationMs": -3033.018208334397,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3032.9656666654046,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 241,
+            "asset": "network-period-17/init-0.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 826
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 99,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1005.276291667542,
+            "thisAdmissionAfterRelatedCancellationMs": -3033.018208334397,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3032.9656666654046,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 241,
+            "asset": "network-period-17/init-0.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 826
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-17/init-0.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "7553F481-2255-4A1E-A235-3EBA09CFB756",
+        "requestID": 97,
+        "resourceToken": "3a8656cb3f9d2fa7e25f46f28de3600704ab86b0a7069117a574cd4fa7740d09",
+        "cancelCause": 2,
+        "serverRequestID": 239,
+        "serverAsset": "network-period-17/chunk-0-00001.m4s",
+        "admission": 57316.96783683333,
+        "downstreamTerminal": 57318.96741920834,
+        "downstreamLifetimeMs": 1999.5823750068666,
+        "relatedRequests": [
+          {
+            "requestID": 100,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1004.0789166596369,
+            "thisAdmissionAfterRelatedCancellationMs": -3053.49337500229,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3053.4746250050375,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 242,
+            "asset": "network-period-17/chunk-0-00001.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 13625
+          }
+        ],
+        "laterCompletedSameURLRequests": [
+          {
+            "requestID": 100,
+            "outcome": 0,
+            "cancelCause": 0,
+            "admissionRelativeToCancellationMs": 1004.0789166596369,
+            "thisAdmissionAfterRelatedCancellationMs": -3053.49337500229,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3053.4746250050375,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 242,
+            "asset": "network-period-17/chunk-0-00001.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 13625
+          }
+        ],
+        "relatedServerAssetCandidates": [
+          "network-period-17/chunk-0-00001.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "CACEED39-07EC-4485-8EC1-F734BD69DF4E",
+        "requestID": 63,
+        "resourceToken": "6c965e77f3a250dfa7537a12be244bd5dc244e4a8917b887d90282d1256963c9",
+        "cancelCause": 2,
+        "serverRequestID": 376,
+        "serverAsset": "network-period-26/chunk-1-00004.m4s",
+        "admission": 57353.269920000006,
+        "downstreamTerminal": 57353.339736333335,
+        "downstreamLifetimeMs": 69.81633332907222,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      }
+    ],
+    "uncorrelated": [
+      {
+        "proxyID": "11B876FE-8E91-4EF3-BBB9-366AC4E015F9",
+        "requestID": 63,
+        "resourceToken": "566a079199a864f52589528173d4856f375884d9f82028acbaca284784980ef0",
+        "cancelCause": 2,
+        "serverRequestID": null,
+        "serverAsset": null,
+        "admission": 57267.71366820834,
+        "downstreamTerminal": 57267.716215625005,
+        "downstreamLifetimeMs": 2.5474166686763056,
+        "relatedRequests": [
+          {
+            "requestID": 62,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -2013.6120000024675,
+            "thisAdmissionAfterRelatedCancellationMs": 5.498833335877862,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 5.195666664803866,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 64,
+            "asset": "network-period-5/chunk-1-00001.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 25431
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-1-00001.m4s"
+        ],
+        "requestCorrelationEstablished": false
+      }
+    ],
+    "interpretation": "Resource token compares exact original URL only within one proxy. Related requests do not establish this request reached server, identical range/method/credentials/content, or why AVPlayer closed it.",
+    "capabilityAccepted": false,
+    "physicalOutputVerified": false
+  },
+  "original": {
+    "totalRequests": 339,
+    "distinctProxyResources": 336,
+    "cancellations": [
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 1,
+        "resourceToken": "b818698555fe36a38eab71f28f461150fab43a38d93a27cf4441e0d4277ad3cd",
+        "cancelCause": 2,
+        "serverRequestID": 2,
+        "serverAsset": "network-period-0/init-1.m4s",
+        "admission": 57387.146466833336,
+        "downstreamTerminal": 57387.22553070834,
+        "downstreamLifetimeMs": 79.06387500406709,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 6,
+        "resourceToken": "b92f9fab4dce793f34b56f7b47cfa8830500a3e1b4dfb3606151ad542c94d83e",
+        "cancelCause": 2,
+        "serverRequestID": 7,
+        "serverAsset": "network-period-0/chunk-1-00002.m4s",
+        "admission": 57387.318397250005,
+        "downstreamTerminal": 57387.520962291674,
+        "downstreamLifetimeMs": 202.56504166900413,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 16,
+        "resourceToken": "834ab0e39daa43113e1edcf178b0f80207f45af9f32d39718fd1890f444adfe8",
+        "cancelCause": 2,
+        "serverRequestID": 18,
+        "serverAsset": "network-period-1/chunk-2-00004.m4s",
+        "admission": 57387.96901183334,
+        "downstreamTerminal": 57388.068624583335,
+        "downstreamLifetimeMs": 99.61274999659508,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 63,
+        "resourceToken": "ec03e8934f07ade7aecde2cb6e626799e52e5a5f51a53960ab2aa61b98371d21",
+        "cancelCause": 2,
+        "serverRequestID": 65,
+        "serverAsset": "network-period-5/chunk-1-00003.m4s",
+        "admission": 57400.249688625,
+        "downstreamTerminal": 57402.250466000005,
+        "downstreamLifetimeMs": 2000.7773750039632,
+        "relatedRequests": [
+          {
+            "requestID": 68,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 5.44945833098609,
+            "thisAdmissionAfterRelatedCancellationMs": -4010.6346666725585,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -4011.1710833371035,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 70,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 71,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 2015.6215833339957,
+            "thisAdmissionAfterRelatedCancellationMs": -6014.374041667907,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -6014.939874999982,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 73,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 76,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 4019.2142500018235,
+            "thisAdmissionAfterRelatedCancellationMs": -7499.00091667223,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -7499.535875002039,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 78,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-1-00003.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 68,
+        "resourceToken": "ec03e8934f07ade7aecde2cb6e626799e52e5a5f51a53960ab2aa61b98371d21",
+        "cancelCause": 2,
+        "serverRequestID": 70,
+        "serverAsset": "network-period-5/chunk-1-00003.m4s",
+        "admission": 57402.255915458336,
+        "downstreamTerminal": 57404.26032329167,
+        "downstreamLifetimeMs": 2004.4078333376092,
+        "relatedRequests": [
+          {
+            "requestID": 63,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -4010.6346666725585,
+            "thisAdmissionAfterRelatedCancellationMs": 5.44945833098609,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 4.781083334819414,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 65,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 71,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 5.764291665400378,
+            "thisAdmissionAfterRelatedCancellationMs": -4008.1472083329572,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -4008.7130416650325,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 73,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 76,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 2009.3569583332282,
+            "thisAdmissionAfterRelatedCancellationMs": -5492.774083337281,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -5493.309041667089,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 78,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-1-00003.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 71,
+        "resourceToken": "ec03e8934f07ade7aecde2cb6e626799e52e5a5f51a53960ab2aa61b98371d21",
+        "cancelCause": 2,
+        "serverRequestID": 73,
+        "serverAsset": "network-period-5/chunk-1-00003.m4s",
+        "admission": 57404.26608758334,
+        "downstreamTerminal": 57406.26406266667,
+        "downstreamLifetimeMs": 1997.9750833299477,
+        "relatedRequests": [
+          {
+            "requestID": 63,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -6014.374041667907,
+            "thisAdmissionAfterRelatedCancellationMs": 2015.6215833339957,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 2014.953208337829,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 65,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 68,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -4008.1472083329572,
+            "thisAdmissionAfterRelatedCancellationMs": 5.764291665400378,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 5.22787500085542,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 70,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 76,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": 5.617583337880205,
+            "thisAdmissionAfterRelatedCancellationMs": -3482.6019583342713,
+            "thisAdmissionAfterRelatedTaskCompletionMs": -3483.1369166640798,
+            "strictlyAfterCancellation": true,
+            "serverRequestID": 78,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-1-00003.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 76,
+        "resourceToken": "ec03e8934f07ade7aecde2cb6e626799e52e5a5f51a53960ab2aa61b98371d21",
+        "cancelCause": 2,
+        "serverRequestID": 78,
+        "serverAsset": "network-period-5/chunk-1-00003.m4s",
+        "admission": 57406.26968025001,
+        "downstreamTerminal": 57407.74868954167,
+        "downstreamLifetimeMs": 1479.0092916664435,
+        "relatedRequests": [
+          {
+            "requestID": 63,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -7499.00091667223,
+            "thisAdmissionAfterRelatedCancellationMs": 4019.2142500018235,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 4018.545875005657,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 65,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "complete",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 68,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -5492.774083337281,
+            "thisAdmissionAfterRelatedCancellationMs": 2009.3569583332282,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 2008.8205416686833,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 70,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          },
+          {
+            "requestID": 71,
+            "outcome": 1,
+            "cancelCause": 2,
+            "admissionRelativeToCancellationMs": -3482.6019583342713,
+            "thisAdmissionAfterRelatedCancellationMs": 5.617583337880205,
+            "thisAdmissionAfterRelatedTaskCompletionMs": 5.051750005804934,
+            "strictlyAfterCancellation": false,
+            "serverRequestID": 73,
+            "asset": "network-period-5/chunk-1-00003.m4s",
+            "serverOutcome": "client_io_error",
+            "rangeStart": 0,
+            "rangeEndExclusive": 60790
+          }
+        ],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [
+          "network-period-5/chunk-1-00003.m4s"
+        ],
+        "requestCorrelationEstablished": true
+      },
+      {
+        "proxyID": "F51BE311-1138-431F-8C81-61018F2622A5",
+        "requestID": 312,
+        "resourceToken": "1bade5500900d160ce8ae928beb3e88cdd29757bc31c27a1879565d9ceffe52f",
+        "cancelCause": 2,
+        "serverRequestID": 314,
+        "serverAsset": "network-period-27/chunk-2-00002.m4s",
+        "admission": 57488.8057405,
+        "downstreamTerminal": 57488.9139185,
+        "downstreamLifetimeMs": 108.17800000222633,
+        "relatedRequests": [],
+        "laterCompletedSameURLRequests": [],
+        "relatedServerAssetCandidates": [],
+        "requestCorrelationEstablished": true
+      }
+    ],
+    "uncorrelated": [],
+    "interpretation": "Resource token compares exact original URL only within one proxy. Related requests do not establish this request reached server, identical range/method/credentials/content, or why AVPlayer closed it.",
+    "capabilityAccepted": false,
+    "physicalOutputVerified": false
+  }
+}

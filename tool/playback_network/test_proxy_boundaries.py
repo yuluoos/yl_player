@@ -207,3 +207,56 @@ class ProxyResourceTokenTests(unittest.TestCase):
         missing=dict(success);missing.pop('resourceToken')
         with self.assertRaises(ValueError):summarize_proxy_boundaries([missing],[base.server],6)
         with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(success,version=5)],[base.server],5)
+
+
+class FailureObservationTests(unittest.TestCase):
+    def test_incomplete_success_does_not_hide_other_requests_or_correlation_failure(self):
+        from proxy_boundaries import record_proxy_observation
+        from test_transaction_metrics import DurationStateTests
+        base=ProxyBoundaryTests();base.setUp()
+        metric=DurationStateTests().source()
+        early=copy.deepcopy(metric['transactions'][0])
+        for k,state in [('fetchSeconds',2),('responseWaitSeconds',2),('responseSeconds',3)]:
+            early[k]=None;early['durationStates'][k]=state
+        metric.update(transactionCount=2,transactions=[early,metric['transactions'][0]])
+        success=dict(base.trace,version=3,metrics=metric)
+        cancel=dict(success,requestID=2,outcome=1,metrics=None)
+        cancel.pop('serverRequestID');cancel.pop('response');cancel.pop('httpStatus')
+        inputs=copy.deepcopy([success,cancel]);receipt={'errors':['existing failure']}
+        try: record_proxy_observation(receipt,inputs,[base.server],3)
+        except ValueError: self.fail('metrics failure aborted the remaining receipt observations')
+        self.assertEqual(inputs,[success,cancel])
+        observation=receipt['proxyRequestObservation']
+        self.assertEqual(observation['requestCount'],2)
+        self.assertFalse(observation['fullyCorrelated'])
+        self.assertIsNone(observation['requests'][1]['serverRequestID'])
+        self.assertFalse(observation['requests'][0]['transactionMetrics']['complete'])
+        self.assertEqual(receipt['proxyRequestValidationErrors'],[dict(code='incomplete-successful-transactions',
+            proxyID=base.trace['proxyID'],requestID=1)])
+        self.assertIn('proxy request correlation incomplete',receipt['errors'])
+        self.assertIn('proxy successful transaction metrics incomplete',receipt['errors'])
+        self.assertIn('existing failure',receipt['errors'])
+        with self.assertRaises(ValueError):summarize_proxy_boundaries(inputs,[base.server],3)
+
+    def test_later_corruption_cannot_expose_a_partially_checked_snapshot(self):
+        from proxy_boundaries import record_proxy_observation
+        base=ProxyBoundaryTests();base.setUp()
+        incomplete=dict(base.trace,version=2,metrics=None)
+        corrupt=dict(incomplete,requestID=2,serverRequestID=8,url='https://secret')
+        receipt={'errors':[]}
+        record_proxy_observation(receipt,[incomplete,corrupt],[base.server,dict(base.server,requestId=8)],2)
+        self.assertTrue(receipt['errors'])
+        self.assertNotIn('proxyRequestObservation',receipt)
+        self.assertNotIn('secret',str(receipt))
+
+    def test_malformed_evidence_stays_failed_without_echoing_input_or_trusting_snapshot(self):
+        from proxy_boundaries import record_proxy_observation
+        base=ProxyBoundaryTests();base.setUp()
+        for invalid in [dict(base.trace,url='https://secret'),dict(base.trace,version=[])]:
+            receipt={'errors':[]}
+            try: record_proxy_observation(receipt,[invalid],[base.server])
+            except (ValueError,TypeError):self.fail('invalid evidence aborted independent observations')
+            self.assertNotIn('proxyRequestObservation',receipt)
+            self.assertEqual(receipt['proxyRequestValidationErrors'],[dict(code='invalid-boundary-evidence')])
+            self.assertTrue(receipt['errors'])
+            self.assertNotIn('secret',str(receipt))
