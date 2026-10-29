@@ -1,0 +1,3 @@
+独立复审 /root/transaction_bytes_review 初审发现P2：outer2可接受nested3，违反仅outer6支持新计数的设计。原有测试仅检查outer5。已新增outer2反例并记录review-red.log预期失败；增加任意nested3必须outer6的显式检查后重跑完整197工具通过。
+
+定向复审独立复现outer2–5全部拒绝nested3、outer6接受，P2闭合，无新增P1/P2。四项Foundation映射、负Int64转null、严格字段与计数约束、DEBUG隐私范围、时间/成功事务/服务器关联门槛、三处测试镜像一致性均符合要求。受控首响应前关闭只证明一个可复现诱因，不证明历史根因或物理网络零流量。审查者未编辑/构建/操作设备；新媒体和最终归档待综合复核。

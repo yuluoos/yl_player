@@ -260,3 +260,23 @@ class FailureObservationTests(unittest.TestCase):
             self.assertEqual(receipt['proxyRequestValidationErrors'],[dict(code='invalid-boundary-evidence')])
             self.assertTrue(receipt['errors'])
             self.assertNotIn('secret',str(receipt))
+
+
+class TransactionByteVersionTests(unittest.TestCase):
+    def test_v3_counts_are_diagnostic_and_cannot_replace_missing_dates(self):
+        from test_transaction_metrics import DurationStateTests
+        from proxy_boundaries import record_proxy_observation
+        base=ProxyBoundaryTests();base.setUp();metric=DurationStateTests().source();metric['version']=3
+        metric['transactions'][0]['transportBytes']=dict(requestHeaders=120,requestBody=0,responseHeaders=60,responseBody=4096)
+        row=dict(base.trace,version=6,resourceToken='a'*64,metrics=metric,taskOutcome=0,
+                 taskComplete=10.32,downstreamTerminal=10.33,cancelCause=0)
+        self.assertTrue(summarize_proxy_boundaries([row],[base.server],6)['requests'][0]['transactionMetrics']['complete'])
+        legacy=dict(row,version=5);legacy.pop('resourceToken')
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([legacy],[base.server],5)
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(base.trace,version=2,metrics=metric)],[base.server],2)
+        for key,state in [('fetchSeconds',2),('responseWaitSeconds',2),('responseSeconds',3)]:
+            metric['transactions'][0][key]=None;metric['transactions'][0]['durationStates'][key]=state
+        receipt={'errors':[]};record_proxy_observation(receipt,[row],[base.server],6)
+        self.assertTrue(receipt['errors'])
+        self.assertFalse(receipt['proxyRequestObservation']['requests'][0]['transactionMetrics']['complete'])
+        self.assertEqual(receipt['proxyRequestObservation']['requests'][0]['transactionMetrics']['transactions'][0]['transportBytes']['responseBody'],4096)

@@ -894,6 +894,10 @@ final class YlHlsProxyRequestTrace {
     guard let end else { return 2 }
     return interval(from: start, to: end) == nil ? 4 : 0
   }
+  // Preserve unavailable sentinels instead of presenting them as measured zero.
+  static func reportedByteCount(_ value: Int64) -> Any {
+    value >= 0 ? value as Any : NSNull()
+  }
   func metrics(_ metrics: URLSessionTaskMetrics) {
     func duration(_ start: Date?, _ end: Date?) -> Any {
       Self.interval(from: start, to: end).map { $0 as Any } ?? NSNull()
@@ -914,7 +918,12 @@ final class YlHlsProxyRequestTrace {
         "requestSeconds": Self.intervalState(from: t.requestStartDate, to: t.requestEndDate),
         "responseWaitSeconds": Self.intervalState(from: t.requestEndDate, to: t.responseStartDate),
         "responseSeconds": Self.intervalState(from: t.responseStartDate, to: t.responseEndDate)]
-      return ["durationStates": states, "fetchSeconds": duration(t.fetchStartDate, t.responseEndDate),
+      let transportBytes: [String: Any] = [
+        "requestHeaders": Self.reportedByteCount(t.countOfRequestHeaderBytesSent),
+        "requestBody": Self.reportedByteCount(t.countOfRequestBodyBytesSent),
+        "responseHeaders": Self.reportedByteCount(t.countOfResponseHeaderBytesReceived),
+        "responseBody": Self.reportedByteCount(t.countOfResponseBodyBytesReceived)]
+      return ["transportBytes": transportBytes, "durationStates": states, "fetchSeconds": duration(t.fetchStartDate, t.responseEndDate),
         "fetchToRequestSeconds": duration(t.fetchStartDate, t.requestStartDate),
         "dnsSeconds": duration(t.domainLookupStartDate, t.domainLookupEndDate),
         "connectSeconds": duration(t.connectStartDate, t.connectEndDate),
@@ -926,7 +935,7 @@ final class YlHlsProxyRequestTrace {
         "fetchType": t.resourceFetchType.rawValue]
     }
     update(allowAfterDownstream: true) { v, _ in
-      v["metrics"] = ["version": 2, "taskSeconds": duration(metrics.taskInterval.start, metrics.taskInterval.end),
+      v["metrics"] = ["version": 3, "taskSeconds": duration(metrics.taskInterval.start, metrics.taskInterval.end),
         "transactionCount": metrics.transactionMetrics.count, "redirectCount": metrics.redirectCount,
         "truncated": metrics.transactionMetrics.count > 32 ? 1 : 0, "transactions": transactions]
     }

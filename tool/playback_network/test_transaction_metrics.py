@@ -96,3 +96,25 @@ class DurationStateTests(unittest.TestCase):
             elif mutation=='version':value['version']=3
             else:del value['version']
             with self.subTest(mutation=mutation),self.assertRaises(ValueError):summarize_transactions(value)
+
+
+class TransportByteTests(unittest.TestCase):
+    def test_v3_preserves_zero_and_unknown_counts_without_completing_missing_dates(self):
+        source=DurationStateTests().source();source['version']=3
+        source['transactions'][0]['transportBytes']=dict(requestHeaders=128,requestBody=0,responseHeaders=0,responseBody=None)
+        for k,state in [('fetchSeconds',2),('responseWaitSeconds',2),('responseSeconds',3)]:
+            source['transactions'][0][k]=None;source['transactions'][0]['durationStates'][k]=state
+        before=copy.deepcopy(source)
+        try:result=summarize_transactions(source)
+        except ValueError:self.fail('v3 transport counts unavailable')
+        self.assertEqual(result['transactions'][0]['transportBytes'],dict(requestHeaders=128,requestBody=0,responseHeaders=0,responseBody=None))
+        self.assertFalse(result['complete']);self.assertEqual(source,before)
+        for field,value in [('requestBody',-1),('responseBody',True),('requestHeaders',1.5),('responseHeaders',2**63)]:
+            invalid=copy.deepcopy(source);invalid['transactions'][0]['transportBytes'][field]=value
+            with self.subTest(field=field,value=value),self.assertRaises(ValueError):summarize_transactions(invalid)
+        for mutate in ['missing','extra','downgrade']:
+            invalid=copy.deepcopy(source)
+            if mutate=='missing':del invalid['transactions'][0]['transportBytes']['requestHeaders']
+            elif mutate=='extra':invalid['transactions'][0]['transportBytes']['url']='secret'
+            else:invalid['version']=2
+            with self.subTest(mutate=mutate),self.assertRaises(ValueError):summarize_transactions(invalid)

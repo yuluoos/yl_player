@@ -121,8 +121,10 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             require(row['bodyBytes'] == row['sentBodyBytes'] == server['bodyBytesWritten'])
             require(server.get('outcome') == 'complete' and 200 <= row['httpStatus'] < 300)
         transaction_metrics = summarize_transactions(row.get('metrics'))
+        if transaction_metrics.get('version') == 3:
+            require(row['version'] == 6)
         if row['version']>=3 and row.get('metrics') is not None:
-            require(transaction_metrics.get('version')==2)
+            require(transaction_metrics.get('version') in ((2, 3) if row['version'] >= 6 else (2,)))
         if row['version'] >= 2 and row['outcome'] == 0 and not transaction_metrics['complete']:
             failures.append(dict(code='incomplete-successful-transactions',
                                  proxyID=row['proxyID'], requestID=row['requestID']))

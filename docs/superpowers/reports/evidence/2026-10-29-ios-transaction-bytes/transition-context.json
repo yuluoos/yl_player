@@ -1,0 +1,782 @@
+{
+  "normal": {
+    "events": [
+      {
+        "requestID": 56,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "408637fa9af3f336bcb49df860cb4dbe43c6f0ba4cb202045e4be177d6e82d57",
+        "admission": 59526.908890875005,
+        "downstreamTerminal": 59526.993847625,
+        "beforeElapsed": 8.711851208339795,
+        "afterElapsed": 8.970780583338637,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 58,
+        "asset": "network-period-4/chunk-2-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 57,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "31b2d84085385c9402e181aad0efd06be40979c9399b639e600cfbe0e285982f",
+        "admission": 59526.952743875,
+        "downstreamTerminal": 59527.17568220833,
+        "beforeElapsed": 8.711851208339795,
+        "afterElapsed": 9.231649958339403,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 59,
+        "asset": "network-period-4/chunk-1-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 58,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "c76af7e169699c9bae21bb77bf9f32fc459cb767da3e6bddae9151df2e59645c",
+        "admission": 59527.90977979167,
+        "downstreamTerminal": 59528.00652279167,
+        "beforeElapsed": 9.744978791670292,
+        "afterElapsed": 10.000113083333417,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 60,
+        "asset": "network-period-4/chunk-2-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 59,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "07d4c93e231ca8e3711757c1f9b40d2d8ad12b40b3d197ae86160552f18a9d46",
+        "admission": 59527.920753750004,
+        "downstreamTerminal": 59528.169101458334,
+        "beforeElapsed": 9.744978791670292,
+        "afterElapsed": 10.26456500000495,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 61,
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 60,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "71e0a24ee85029674a3962857020c4f8816429dbbb04980b89e252c8f4701eca",
+        "admission": 59528.911198458336,
+        "downstreamTerminal": 59530.91966795834,
+        "beforeElapsed": 10.785574000001361,
+        "afterElapsed": 12.852982583339326,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 62,
+        "asset": "network-period-4/chunk-2-00005.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 61,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "d07028edee9337209974bd9037b8de7063be0845252841d0508f479af2675d90",
+        "admission": 59528.92138295834,
+        "downstreamTerminal": 59530.92389191667,
+        "beforeElapsed": 10.785574000001361,
+        "afterElapsed": 12.852982583339326,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 63,
+        "asset": "network-period-5/init-1.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 62,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "bad60a3d4c4a69a849e8180f8f747ae474ee56ca7a58cedf621846b60b04ab24",
+        "admission": 59528.92175054167,
+        "downstreamTerminal": 59530.925994125006,
+        "beforeElapsed": 10.785574000001361,
+        "afterElapsed": 12.852982583339326,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 64,
+        "asset": "network-period-5/chunk-1-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 63,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "bad60a3d4c4a69a849e8180f8f747ae474ee56ca7a58cedf621846b60b04ab24",
+        "admission": 59530.931855625,
+        "downstreamTerminal": 59530.93623975,
+        "beforeElapsed": 12.592820541671244,
+        "afterElapsed": 12.852982583339326,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": null,
+        "asset": null,
+        "fixtureRepresentation": null
+      },
+      {
+        "requestID": 64,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "8796935436e0436390877177ee8da87a62c709c7f4873f283bbf8976f0f0049c",
+        "admission": 59530.94454504167,
+        "downstreamTerminal": 59532.945615958335,
+        "beforeElapsed": 12.592820541671244,
+        "afterElapsed": 14.933812541668885,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 65,
+        "asset": "network-period-5/init-0.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 65,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "cd2f161b2098054931ae302a747b08e91dff4d61aee5428817a52b81f96f837f",
+        "admission": 59530.94505483333,
+        "downstreamTerminal": 59532.94793441667,
+        "beforeElapsed": 12.592820541671244,
+        "afterElapsed": 14.933812541668885,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 66,
+        "asset": "network-period-5/chunk-0-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 66,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "71e0a24ee85029674a3962857020c4f8816429dbbb04980b89e252c8f4701eca",
+        "admission": 59530.94534400001,
+        "downstreamTerminal": 59532.949075833334,
+        "beforeElapsed": 12.592820541671244,
+        "afterElapsed": 14.933812541668885,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 67,
+        "asset": "network-period-4/chunk-2-00005.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 67,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "8796935436e0436390877177ee8da87a62c709c7f4873f283bbf8976f0f0049c",
+        "admission": 59533.955038708336,
+        "downstreamTerminal": 59533.97559254167,
+        "beforeElapsed": 15.71320091666712,
+        "afterElapsed": 15.972265500000503,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 68,
+        "asset": "network-period-5/init-0.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 68,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "cd2f161b2098054931ae302a747b08e91dff4d61aee5428817a52b81f96f837f",
+        "admission": 59533.955691208335,
+        "downstreamTerminal": 59533.98504100001,
+        "beforeElapsed": 15.71320091666712,
+        "afterElapsed": 15.972265500000503,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 69,
+        "asset": "network-period-5/chunk-0-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 69,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "9356ae403bf9f9994b61a5292c66b5da15db3460a4c7ce11f0fac726cf76d52c",
+        "admission": 59533.99224566667,
+        "downstreamTerminal": 59534.031842958335,
+        "beforeElapsed": 15.71320091666712,
+        "afterElapsed": 15.972265500000503,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 70,
+        "asset": "network-period-5/chunk-0-00002.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 70,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "25d6922018489c4ac7d09374efb2a49b35cb06b2cd1602fc7e292e83dafb9b36",
+        "admission": 59534.04049395834,
+        "downstreamTerminal": 59534.082749875,
+        "beforeElapsed": 15.71320091666712,
+        "afterElapsed": 15.972265500000503,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 71,
+        "asset": "network-period-5/chunk-0-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 71,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "704e7fc74ea2cdfe809ebcd186d1eefb788c5c901e899b0c47d5e71f0ed6b30a",
+        "admission": 59534.09315020834,
+        "downstreamTerminal": 59534.13833166667,
+        "beforeElapsed": 15.972265500000503,
+        "afterElapsed": 16.23356070833688,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 72,
+        "asset": "network-period-5/chunk-0-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 72,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "d232a85b2e8640a4fda2f83128939d4cb632812c012ba1c0bdad666b4f07c50c",
+        "admission": 59534.14801445834,
+        "downstreamTerminal": 59534.16589354167,
+        "beforeElapsed": 15.972265500000503,
+        "afterElapsed": 16.23356070833688,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 73,
+        "asset": "network-period-6/init-0.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 73,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "487b34a77707953ab10dd3f35470b3ab9f3add85add2eed99d353d85b2784234",
+        "admission": 59534.14854545834,
+        "downstreamTerminal": 59534.17828483334,
+        "beforeElapsed": 15.972265500000503,
+        "afterElapsed": 16.23356070833688,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 74,
+        "asset": "network-period-6/chunk-0-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 74,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "54449c662cdba182d9e00a9d7052461f0ec3168c369360268c5ea8cd6e5d186b",
+        "admission": 59534.18542470834,
+        "downstreamTerminal": 59534.22521491667,
+        "beforeElapsed": 15.972265500000503,
+        "afterElapsed": 16.23356070833688,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 75,
+        "asset": "network-period-6/chunk-0-00002.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 75,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "4c1bdea8c8124ad4e1b2acd4eb6816701fbdef0c883fc63afcb54e910028c01f",
+        "admission": 59534.923070625,
+        "downstreamTerminal": 59534.963711875,
+        "beforeElapsed": 16.75998249999975,
+        "afterElapsed": 17.016275958339975,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 76,
+        "asset": "network-period-6/chunk-0-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      },
+      {
+        "requestID": 76,
+        "proxyID": "DD8AC59D-A2FC-48A1-858C-96A9F7A4FF8D",
+        "resourceToken": "90a50e6f5d899a50faf237d81ab4ca7e8373e4cbe837b5b87d470b49f42446e7",
+        "admission": 59535.92237716667,
+        "downstreamTerminal": 59535.967977750006,
+        "beforeElapsed": 17.796885041672795,
+        "afterElapsed": 18.054082375005237,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 77,
+        "asset": "network-period-6/chunk-0-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "320",
+          "bandwidth": "350000"
+        }
+      }
+    ],
+    "interpretation": "Nearby playback sample bounds only; each asset label comes from that exact request correlation. Missing matches stay null; resource-token relationships live separately."
+  },
+  "original": {
+    "events": [
+      {
+        "requestID": 51,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "1eacbb80a43c54530de9d2f293f08b4820f88f767e6a53ed19d62ba7ab1f12d5",
+        "admission": 59658.52404041667,
+        "downstreamTerminal": 59658.607470125,
+        "beforeElapsed": 8.683014416666992,
+        "afterElapsed": 8.94110933333286,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 53,
+        "asset": "network-period-4/chunk-2-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 52,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "0cfa7ee920a8eddb37ff5b913ff2d0b8a5896a6823fdbef50b7783378b9430b1",
+        "admission": 59658.567777250006,
+        "downstreamTerminal": 59658.78808300001,
+        "beforeElapsed": 8.683014416666992,
+        "afterElapsed": 9.198125500006427,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 54,
+        "asset": "network-period-4/chunk-1-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 53,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "a262d6a80d74af418656c6287de0a4ef4d7359f9c0e86eb3119e9e4b1b9bbe62",
+        "admission": 59659.526349458334,
+        "downstreamTerminal": 59659.62378491667,
+        "beforeElapsed": 9.718348083333694,
+        "afterElapsed": 9.972347333336074,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 55,
+        "asset": "network-period-4/chunk-2-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 54,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "56fd5e983cfb2a896931974711ff39d8b01a70a5cc8a82afe15a14e08ca6ecd6",
+        "admission": 59659.535942875,
+        "downstreamTerminal": 59659.78554054167,
+        "beforeElapsed": 9.718348083333694,
+        "afterElapsed": 10.236082208335574,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 56,
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 55,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "fce6efd3d5c882352e37494f21bd7f888c399e4ec683a0cdc5a02c24386b33a6",
+        "admission": 59660.528438375004,
+        "downstreamTerminal": 59660.766327000005,
+        "beforeElapsed": 10.756938958336832,
+        "afterElapsed": 11.009510583338852,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 57,
+        "asset": "network-period-4/chunk-2-00005.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 56,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "1e1bc8f1853f42a9286d0677721ffe3cab67244dfe48d8c847d5530e0abf51d1",
+        "admission": 59660.537752833334,
+        "downstreamTerminal": 59660.785184125,
+        "beforeElapsed": 10.756938958336832,
+        "afterElapsed": 11.265795791667188,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 58,
+        "asset": "network-period-5/init-1.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 58,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "37364787eafcc66e2d67483aa43075068208458607ad827d737f94e93fba95d7",
+        "admission": 59660.77675525,
+        "downstreamTerminal": 59661.027792500005,
+        "beforeElapsed": 11.009510583338852,
+        "afterElapsed": 11.265795791667188,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 60,
+        "asset": "network-period-5/init-2.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 59,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "513e05541b114e7b0a061a33b247768779daab23f06791515ffdd48b3310752c",
+        "admission": 59660.777232375,
+        "downstreamTerminal": 59661.42180258334,
+        "beforeElapsed": 11.009510583338852,
+        "afterElapsed": 11.771802125003887,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 61,
+        "asset": "network-period-5/chunk-2-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 57,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "62700d399f36f263839ad3deb0acb4b2dba797b078d93e4fa976dd02b630ebc5",
+        "admission": 59660.538202083335,
+        "downstreamTerminal": 59661.61463895834,
+        "beforeElapsed": 10.756938958336832,
+        "afterElapsed": 12.036168833335978,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 59,
+        "asset": "network-period-5/chunk-1-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 60,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "a4ea586072ac70cb81bbf1945b81eb7044abb34467dae796130846936e72eb4b",
+        "admission": 59661.51952533334,
+        "downstreamTerminal": 59662.003953375,
+        "beforeElapsed": 11.519149083338561,
+        "afterElapsed": 12.294592458340048,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 62,
+        "asset": "network-period-5/chunk-2-00002.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 62,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "30949ee4d70b0fe57c35ea66f0ec89600374961b54c60a9867fe55c1c54c362c",
+        "admission": 59662.52283241667,
+        "downstreamTerminal": 59663.16220966667,
+        "beforeElapsed": 12.557004375004908,
+        "afterElapsed": 13.597813125001267,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 64,
+        "asset": "network-period-5/chunk-2-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 61,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "e7859dd258d27a2aa1fe1fcb37fdf1a7dba451a29ca36f6353bf69ad9f026839",
+        "admission": 59661.64337320834,
+        "downstreamTerminal": 59663.22292854167,
+        "beforeElapsed": 11.771802125003887,
+        "afterElapsed": 13.597813125001267,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 63,
+        "asset": "network-period-5/chunk-1-00002.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 64,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "1da724cd937fd80fb97230d38ce9593d4fac4385b05a2b8f32fef250579e1499",
+        "admission": 59663.52542504167,
+        "downstreamTerminal": 59664.141305000005,
+        "beforeElapsed": 13.597813125001267,
+        "afterElapsed": 14.633012166668777,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 66,
+        "asset": "network-period-5/chunk-2-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 65,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "daf5e45734806df5ec575fc53d18a32304c9097bdfa14d6511fec3049037d0ac",
+        "admission": 59664.52837854167,
+        "downstreamTerminal": 59664.77397537501,
+        "beforeElapsed": 14.633012166668777,
+        "afterElapsed": 15.150706000000355,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 67,
+        "asset": "network-period-5/chunk-2-00005.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 66,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "b4837b383fe8dffada8fe2b2c3f9808398ff4eded1140513c6886e7fdb59f948",
+        "admission": 59664.78344283334,
+        "downstreamTerminal": 59665.06090145834,
+        "beforeElapsed": 14.890265833339072,
+        "afterElapsed": 15.405749125005968,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 68,
+        "asset": "network-period-6/init-2.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 63,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "219d228fefd5ac16d46137fcff59a6ce46c10b071bbb402a90cf71747726a762",
+        "admission": 59663.23152204167,
+        "downstreamTerminal": 59665.23468066667,
+        "beforeElapsed": 13.33759491667297,
+        "afterElapsed": 15.669519833340019,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 65,
+        "asset": "network-period-5/chunk-1-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 67,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "d0d9c6da801aa3a9c171da57acdf6b6e0950670a62c4a7778a2565d64bc7f260",
+        "admission": 59664.78389108334,
+        "downstreamTerminal": 59665.35430904167,
+        "beforeElapsed": 14.890265833339072,
+        "afterElapsed": 15.669519833340019,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 69,
+        "asset": "network-period-6/chunk-2-00001.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 69,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "a4bf20c78c2194c1851e63a5691e08515223bf1ff66efdb52e0751535f2caa6d",
+        "admission": 59665.5198795,
+        "downstreamTerminal": 59666.137982375,
+        "beforeElapsed": 15.669519833340019,
+        "afterElapsed": 16.45032537500083,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 71,
+        "asset": "network-period-6/chunk-2-00002.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 70,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "a391ad82c15821f31bc82a1f53ae8346381e293e5060ecb432c20883a2ccb731",
+        "admission": 59666.523178250005,
+        "downstreamTerminal": 59667.162470125004,
+        "beforeElapsed": 16.713202916667797,
+        "afterElapsed": 17.48301475000335,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 72,
+        "asset": "network-period-6/chunk-2-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 68,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "219d228fefd5ac16d46137fcff59a6ce46c10b071bbb402a90cf71747726a762",
+        "admission": 59665.23999820834,
+        "downstreamTerminal": 59667.24006154167,
+        "beforeElapsed": 15.405749125005968,
+        "afterElapsed": 17.48301475000335,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 70,
+        "asset": "network-period-5/chunk-1-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      },
+      {
+        "requestID": 72,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "4e2131df7f239d6dd94433b3de00fddb1de6942e6e98b95f8e90be884967db21",
+        "admission": 59667.525200208336,
+        "downstreamTerminal": 59668.14752254167,
+        "beforeElapsed": 17.746956833339937,
+        "afterElapsed": 18.530207208335923,
+        "outcome": 0,
+        "cancelCause": 0,
+        "serverRequestID": 74,
+        "asset": "network-period-6/chunk-2-00004.m4s",
+        "fixtureRepresentation": {
+          "kind": "audio",
+          "width": null,
+          "bandwidth": "64000"
+        }
+      },
+      {
+        "requestID": 71,
+        "proxyID": "40472139-E9DD-4927-A42C-C2E1EC0E3069",
+        "resourceToken": "219d228fefd5ac16d46137fcff59a6ce46c10b071bbb402a90cf71747726a762",
+        "admission": 59667.24452904167,
+        "downstreamTerminal": 59669.24171825001,
+        "beforeElapsed": 17.227339916673372,
+        "afterElapsed": 19.56973579167243,
+        "outcome": 1,
+        "cancelCause": 2,
+        "serverRequestID": 73,
+        "asset": "network-period-5/chunk-1-00003.m4s",
+        "fixtureRepresentation": {
+          "kind": "video",
+          "width": "640",
+          "bandwidth": "700000"
+        }
+      }
+    ],
+    "interpretation": "Nearby playback sample bounds only; each asset label comes from that exact request correlation. Missing matches stay null; resource-token relationships live separately."
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "results": {
+    "normal": [
+      {
+        "cancelledRequest": 61,
+        "cancelledAsset": "network-period-5/init-1.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 64,
+        "nextLowerAsset": "network-period-5/init-0.m4s",
+        "gapMs": 20.65312500053551
+      },
+      {
+        "cancelledRequest": 62,
+        "cancelledAsset": "network-period-5/chunk-1-00001.m4s",
+        "cancelCause": 2,
+        "nextLowerRequest": 64,
+        "nextLowerAsset": "network-period-5/init-0.m4s",
+        "gapMs": 18.550916662206873
+      }
+    ],
+    "original": []
+  },
+  "interpretation": "Same-proxy observed ordering of exactly correlated fixture video requests. Temporal proximity does not prove AVPlayer internal causality or establish unlinked requests."
+}

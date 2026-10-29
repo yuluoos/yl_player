@@ -283,7 +283,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "87cb338b736d4252649ba8f4c9fe68cf6854628abde6025088c6efa9e4626c17",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "7b5610896572230777d7964c641a0db6cba6a12d49e2f73a5f2b8841fd81e2e0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "c6dc59f73aea8871b9f2090fb83454698dd6538cb8b15459046d5dd45c307a7d"
+    "sha256": "ea7916f905f2bf3bfd681661a223d056b0e677563d66af905b011c16b957c255"
   },
   "evidence": {
     "p01": {
@@ -923,6 +923,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-failure-observations.md",
       "sha256": "c1c0cce1a3b661e6c7fa41e329f1d2933a80270a1ecc6c849d9636baec941ad4",
       "kind": "report"
+    },
+    "ios-transaction-bytes-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-transaction-bytes.md",
+      "sha256": "136eeaefe7570bc7304b9c77d6cd752ff6ace8629f66282b16e34ea1ec680248",
+      "kind": "report"
     }
   },
   "rows": [
@@ -967,10 +972,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-failure-observations-20261029"
+        "ios-transaction-bytes-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-native-cancellation-and-dual-transaction-root-causes-stability-and-physical-av"
+      "nextAction": "qualify-foundation-byte-boundaries-cancellation-dual-transaction-root-causes-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",

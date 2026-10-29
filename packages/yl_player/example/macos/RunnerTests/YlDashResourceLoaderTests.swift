@@ -4163,6 +4163,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: start.addingTimeInterval(-1)), 4)
     XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: Date(timeIntervalSince1970: .infinity)), 4)
     XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: start), 0)
+    XCTAssertTrue(YlHlsProxyRequestTrace.reportedByteCount(-1) is NSNull)
+    XCTAssertTrue(YlHlsProxyRequestTrace.reportedByteCount(Int64.min) is NSNull)
+    XCTAssertEqual(YlHlsProxyRequestTrace.reportedByteCount(0) as? Int64, 0)
+    XCTAssertEqual(YlHlsProxyRequestTrace.reportedByteCount(Int64.max) as? Int64, Int64.max)
     XCTAssertNil(YlHlsProxyRequestTrace.interval(from: nil, to: start))
     XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: nil))
     XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: start.addingTimeInterval(-1)))
@@ -4284,7 +4288,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(server.requests.count, 2)
     XCTAssertEqual(row["version"] as? Int, 6)
     XCTAssertEqual(row["cancelCause"] as? Int, 0)
-    XCTAssertEqual(metrics["version"] as? Int, 2)
+    XCTAssertEqual(metrics["version"] as? Int, 3)
     XCTAssertEqual(metrics["transactionCount"] as? Int, 2)
     let first = try XCTUnwrap(transactions.first)
     XCTAssertTrue(first["fetchSeconds"] is NSNull)
@@ -4295,6 +4299,19 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(states["responseWaitSeconds"], 2)
     XCTAssertEqual(states["responseSeconds"], 3)
     XCTAssertNotNil(transactions.last?["responseSeconds"] as? Double)
+    let firstBytes = try XCTUnwrap(first["transportBytes"] as? [String: Any])
+    let lastBytes = try XCTUnwrap(transactions.last?["transportBytes"] as? [String: Any])
+    XCTAssertEqual(firstBytes["responseHeaders"] as? Int64, 0)
+    XCTAssertEqual(firstBytes["responseBody"] as? Int64, 0)
+    XCTAssertGreaterThan(try XCTUnwrap(lastBytes["responseHeaders"] as? Int64), 0)
+    XCTAssertEqual(lastBytes["responseBody"] as? Int64, 4)
+    let evidence: [String: Any] = ["trace": row,
+      "parsedServerTraceIDs": server.requests.compactMap { $0.headers["x-yl-trace-id"] },
+      "forcedFirstConnectionClose": true, "capabilityAccepted": false]
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: evidence, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "forced-close-transaction-bytes"; attachment.lifetime = .keepAlways
+    XCTContext.runActivity(named: "Forced close transaction byte evidence") { $0.add(attachment) }
+
     for (before, after) in [("admission", "response"), ("response", "firstBody"),
       ("firstBody", "lastBody"), ("lastBody", "upstreamComplete"),
       ("lastSendComplete", "terminal"), ("upstreamComplete", "terminal")] {

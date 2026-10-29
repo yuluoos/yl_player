@@ -22,7 +22,8 @@ def summarize_transactions(metrics):
         return dict(available=False, complete=False, taskSeconds=None, transactions=[])
     require(isinstance(metrics, dict))
     v2 = 'version' in metrics
-    require(not v2 or (type(metrics['version']) is int and metrics['version']==2))
+    require(not v2 or (type(metrics['version']) is int and metrics['version'] in (2, 3)))
+    v3 = v2 and metrics['version'] == 3
     require(set(metrics) == {'taskSeconds', 'transactionCount', 'redirectCount', 'truncated', 'transactions'} | ({'version'} if v2 else set()))
     require(duration(metrics['taskSeconds']))
     require(integer(metrics['transactionCount']) and integer(metrics['redirectCount']))
@@ -34,9 +35,14 @@ def summarize_transactions(metrics):
     require(isinstance(transactions, list) and len(transactions) == min(count, 32))
     complete = metrics['taskSeconds'] is not None and count > 0 and not metrics['truncated']
     for item in transactions:
-        require(isinstance(item, dict) and set(item) == DURATIONS | {'reused', 'protocolCode', 'fetchType'} | ({'durationStates'} if v2 else set()))
+        require(isinstance(item, dict) and set(item) == DURATIONS | {'reused', 'protocolCode', 'fetchType'} | ({'durationStates'} if v2 else set()) | ({'transportBytes'} if v3 else set()))
         require(all(duration(item[k]) for k in DURATIONS))
         require(integer(item['reused'], 1) and integer(item['protocolCode'], 3) and integer(item['fetchType'], 3))
+        if v3:
+            counts = item['transportBytes']
+            require(isinstance(counts, dict) and set(counts) ==
+                    {'requestHeaders', 'requestBody', 'responseHeaders', 'responseBody'})
+            require(all(value is None or integer(value, 2**63-1) for value in counts.values()))
         if v2:
             states=item['durationStates'];require(isinstance(states,dict) and set(states)==DURATIONS)
             pairs={'fetchSeconds':('fetch','responseEnd'),'fetchToRequestSeconds':('fetch','requestStart'),
