@@ -4088,6 +4088,67 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTContext.runActivity(named: "Real queued cancellation without server request") { $0.add(attachment) }
   }
 
+  func testHalfClosedClientCanReceiveDirectResponseButProxyCancels() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, [:], Data([1, 2, 3, 4])) }
+    let lock = NSLock(); var traces: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in lock.withLock { traces.append(row) } }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/half-close"), headers: [:], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    var observations: [[String: Any]] = []
+    for proxied in [false, true] {
+      let release = DispatchSemaphore(value: 0)
+      defer { release.signal() }
+      if proxied {
+        // Hold only the response, after admission; isolate EOF from success.
+        server.handler = { _ in
+          XCTAssertEqual(release.wait(timeout: .now() + 8), .success)
+          return (200, [:], Data([1, 2, 3, 4]))
+        }
+      }
+      let url = try proxied ? proxy.proxyURL(for: server.url("/half-close")) : server.url("/half-close")
+      let connection = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
+      defer { connection.cancel() }
+      let ready = expectation(description: "half close ready")
+      connection.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+      connection.start(queue: .global()); wait(for: [ready], timeout: 2)
+      let received = expectation(description: "read side remains open after write EOF")
+      var payload = Data(); var receiveFailed = false
+      func read() {
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, complete, error in
+          if let data { payload.append(data) }
+          if complete || error != nil { receiveFailed = error != nil; received.fulfill() }
+          else { read() }
+        }
+      }
+      read()
+      connection.send(content: Data("GET \(url.path) HTTP/1.1\r\nHost: owned\r\nConnection: close\r\n\r\n".utf8),
+        contentContext: .finalMessage, isComplete: true, completion: .contentProcessed { XCTAssertNil($0) })
+      wait(for: [received], timeout: 4)
+      if !proxied {
+        XCTAssertFalse(receiveFailed)
+        XCTAssertEqual(Data(payload.suffix(4)), Data([1, 2, 3, 4]))
+      } else {
+        XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
+        let row = try XCTUnwrap(lock.withLock { traces.first })
+        XCTAssertEqual(row["cancelCause"] as? Int, 2)
+        XCTAssertEqual(row["outcome"] as? Double, 1)
+        // Characterization of an OPEN defect, not acceptance of half-close support.
+        // Do not assert byte count: upstream response and EOF can race.
+      }
+      observations.append(["proxied": proxied, "receivedBytes": payload.count,
+        "receivedExpectedBody": Data(payload.suffix(4)) == Data([1, 2, 3, 4]),
+        "receiveFailed": receiveFailed, "clientReadSideKeptOpen": true])
+    }
+    let evidence: [String: Any] = ["scenario": "same-write-half-close-direct-and-proxy",
+      "observations": observations, "traces": lock.withLock { traces },
+      "halfCloseSupportAccepted": false, "historicalCauseProven": false, "capabilityAccepted": false]
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: evidence, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "half-close-direction-evidence"; attachment.lifetime = .keepAlways
+    XCTContext.runActivity(named: "Write EOF does not establish loss of response interest") { $0.add(attachment) }
+  }
+
   func testUnoccupiedProxyCancellationPreservesTransportAndServerEvidence() throws {
     // Characterize the real EOF race with the production connection limit and
     // no preceding task. A held response prevents success before cancellation;

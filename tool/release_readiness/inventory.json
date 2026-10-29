@@ -933,6 +933,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-cancel-byte-boundaries.md",
       "sha256": "0721209bbf2999849fef5f6ac762b9254933620846e1545e4eac961d5d98b5f4",
       "kind": "report"
+    },
+    "ios-half-close-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-half-close.md",
+      "sha256": "a6e53583ab2d096d946d0d4f681fb54d02dae3fcf122b3fb33ab1e6ab6efff60",
+      "kind": "report"
     }
   },
   "rows": [
@@ -977,10 +982,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-cancel-byte-boundaries-20261029"
+        "ios-half-close-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-default-pool-cancellation-historical-double-transaction-and-physical-av"
+      "nextAction": "resolve-http-half-close-cancellation-authority-and-historical-dual-transaction-cause"
     },
     {
       "requirement": "CAP-ABR",
