@@ -8,7 +8,7 @@ def proxy_trace_version(rows):
     if not any(isinstance(row, dict) and 'proxyRequestSamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('proxyRequestSamplingVersion')) is int and
-               row['proxyRequestSamplingVersion'] in (1, 2) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
+               row['proxyRequestSamplingVersion'] in (1, 2, 3) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
         raise ValueError('unsupported or inconsistent proxy request sampling version')
     return rows[0]['proxyRequestSamplingVersion']
 
@@ -52,8 +52,8 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
     outcomes = ['complete', 'cancelled', 'sendFailed', 'upstreamFailed']
     for row in rows:
         require(isinstance(row, dict) and required <= row.keys() and not row.keys()-required-optional)
-        require(type(row['version']) is int and row['version'] in (1, 2))
-        require(('metrics' in row) == (row['version'] == 2))
+        require(type(row['version']) is int and row['version'] in (1, 2, 3))
+        require(('metrics' in row) == (row['version'] >= 2))
         require(isinstance(row['proxyID'], str) and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', row['proxyID']))
         require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics')))
         counters = required - {'version', 'proxyID', 'admission', 'terminal', 'sendWaitSum', 'sendWaitMax'}
@@ -96,7 +96,9 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             require(row['bodyBytes'] == row['sentBodyBytes'] == server['bodyBytesWritten'])
             require(server.get('outcome') == 'complete' and 200 <= row['httpStatus'] < 300)
         transaction_metrics = summarize_transactions(row.get('metrics'))
-        if row['version'] == 2 and row['outcome'] == 0:
+        if row['version']==3 and row.get('metrics') is not None:
+            require(transaction_metrics.get('version')==2)
+        if row['version'] >= 2 and row['outcome'] == 0:
             require(transaction_metrics['complete'])
         outcome = outcomes[int(row['outcome'])]; counts[outcome] = counts.get(outcome,0)+1
         upstream = row['upstreamComplete']-row['admission'] if 'upstreamComplete' in row else None

@@ -124,6 +124,9 @@ def production_recovery(args):
     required = getattr(args, 'require_production_install', False)
     if type(required) is not bool or (required and (not enabled or command == 'load-prepared')):
         raise ValueError('production installation requirement needs same-session production capture')
+    exhausted = getattr(args, 'require_budget_exhaustion', False)
+    if type(exhausted) is not bool or (exhausted and (not enabled or not required or command not in ('pause-resume','pause-prepared'))):
+        raise ValueError('budget exhaustion requires same-source production cancellation and installation')
     if not enabled: return False
     if (not getattr(args, 'physical_device', None) or getattr(args, 'duration_seconds', None) != 120 or
         getattr(args, 'recovery_action', None) != 'auto-reload' or getattr(args, 'auto_scenario', None) != 'normal' or
@@ -831,6 +834,7 @@ def run(args):
         production = production_recovery(args)
         receipt['productionRecovery'] = production
         receipt['productionInstallRequired'] = getattr(args, 'require_production_install', False)
+        receipt['budgetExhaustionRequired'] = getattr(args, 'require_budget_exhaustion', False)
         cycle = public_policy_cycle(args)
         race = public_policy_race(args)
         receipt['publicPolicyRace'] = race
@@ -930,7 +934,7 @@ def run(args):
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
         from proxy_boundaries import proxy_trace_version, record_proxy_observation
-        if proxy_trace_version(rows) in (1, 2) and not direct:
+        if proxy_trace_version(rows) in (1, 2, 3) and not direct:
             record_proxy_observation(receipt,
                 read_rows(out/'proxy-requests.jsonl'), read_rows(out/'requests.jsonl'), proxy_trace_version(rows))
         policy_version = policy_trace_version(rows)
@@ -964,6 +968,11 @@ def run(args):
                 read_rows(out/'frame-samples.jsonl'), json.loads((out/'public-policy-events.json').read_text()))
         elif any(row.get('publicPolicyCycle') is True for row in rows):
             raise ValueError('unexpected public host policy capture')
+        if receipt['budgetExhaustionRequired']:
+            from budget_exhaustion import summarize_budget_exhaustion
+            if read_rows(out/'signals.jsonl'): raise ValueError('budget capture interrupted')
+            receipt['budgetExhaustionObservation'] = summarize_budget_exhaustion(rows, read_rows(out/'frame-samples.jsonl'),
+                read_rows(out/'policy-decisions.jsonl'))
         if production:
             receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'),
                 require_install=receipt['productionInstallRequired'])
@@ -1044,6 +1053,7 @@ def main():
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--production-command', choices=('none', 'pause-resume', 'pause-prepared', 'seek-prepared', 'load-prepared'), default='none')
+    p.add_argument('--require-budget-exhaustion', action='store_true', help='require a second downshift after attempt two, eligible windows and no third reservation')
     p.add_argument('--require-production-install', action='store_true', help='fail unless same-session production recovery actually installs; incompatible with new Load')
     p.add_argument('--production-recovery', action='store_true', help='observe automatic production public-host recovery; no diagnostic installation')
     p.add_argument('--public-policy-race', action='store_true',

@@ -1655,7 +1655,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "productionRecovery": productionRecovery, "productionCommand": productionCommand,
         "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxyRequestSamplingVersion": 2, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "proxyRequestSamplingVersion": 3, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -4009,6 +4009,12 @@ final class YlDashResourceLoaderTests: XCTestCase {
 
   func testProxyTransactionDurationPreservesUnavailableAndInvalidDates() {
     let start = Date(timeIntervalSince1970: 100)
+    XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: nil, to: start), 1)
+    XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: nil), 2)
+    XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: nil, to: nil), 3)
+    XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: start.addingTimeInterval(-1)), 4)
+    XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: Date(timeIntervalSince1970: .infinity)), 4)
+    XCTAssertEqual(YlHlsProxyRequestTrace.intervalState(from: start, to: start), 0)
     XCTAssertNil(YlHlsProxyRequestTrace.interval(from: nil, to: start))
     XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: nil))
     XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: start.addingTimeInterval(-1)))
@@ -4066,6 +4072,80 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(transactions.count, 1)
     XCTAssertEqual(metrics["transactionCount"] as? Int, 1)
     XCTAssertNotNil(transactions.first?["responseSeconds"] as? Double)
+    for (before, after) in [("admission", "response"), ("response", "firstBody"),
+      ("firstBody", "lastBody"), ("lastBody", "upstreamComplete"),
+      ("lastSendComplete", "terminal"), ("upstreamComplete", "terminal")] {
+      XCTAssertLessThanOrEqual(try XCTUnwrap(row[before] as? Double), try XCTUnwrap(row[after] as? Double))
+    }
+    let serialized = String(decoding: try JSONSerialization.data(withJSONObject: row), as: UTF8.self)
+    for secret in ["secret", "private", "Authorization", "http:"] { XCTAssertFalse(serialized.contains(secret)) }
+    proxy.cancelAll()
+    XCTAssertEqual(capturedLock.withLock { captured.count }, 1)
+  }
+
+  func testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in
+      if server.requests.count == 1 { return (0, [:], Data()) }
+      return (200, ["X-Yl-Request-Id": "17"], Data([1, 2, 3, 4]))
+    }
+    let boundary = expectation(description: "one request boundary")
+    let capturedLock = NSLock()
+    var captured: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in
+      capturedLock.withLock { captured.append(row) }; boundary.fulfill()
+    }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/private?token=secret"),
+      headers: ["Authorization": "secret"], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let bodyDone = expectation(description: "proxied body")
+    // Keep the downstream connection alive until proxy EOF. URLSession may
+    // close as soon as Content-Length bytes arrive, before upstream completion.
+    let url = try proxy.proxyURL(for: server.url("/private?token=secret"))
+    let client = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
+    defer { client.cancel() }
+    let ready = expectation(description: "downstream ready")
+    client.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+    client.start(queue: DispatchQueue(label: "proxy.metrics.test.client"))
+    wait(for: [ready], timeout: 2)
+    var payload = Data()
+    func receive() {
+      client.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, complete, error in
+        XCTAssertNil(error)
+        if let data { payload.append(data) }
+        if complete || error != nil {
+          XCTAssertEqual(Data(payload.suffix(4)), Data([1, 2, 3, 4])); bodyDone.fulfill()
+        } else { receive() }
+      }
+    }
+    receive()
+    client.send(content: Data("GET \(url.path) HTTP/1.1\r\nHost: owned\r\n\r\n".utf8),
+      completion: .contentProcessed { XCTAssertNil($0) })
+    wait(for: [bodyDone, boundary], timeout: 4)
+    let rows = capturedLock.withLock { captured }
+    XCTAssertEqual(rows.count, 1)
+    guard let row = rows.first else { return }
+    XCTAssertEqual(row["serverRequestID"] as? Double, 17)
+    XCTAssertEqual(row["bodyBytes"] as? Double, 4)
+    XCTAssertEqual(row["sentBodyBytes"] as? Double, 4)
+    XCTAssertEqual(row["outcome"] as? Double, 0)
+    let metrics = try XCTUnwrap(row["metrics"] as? [String: Any])
+    let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
+    XCTAssertEqual(transactions.count, 2)
+    XCTAssertEqual(server.requests.count, 2)
+    XCTAssertEqual(row["version"] as? Int, 3)
+    XCTAssertEqual(metrics["version"] as? Int, 2)
+    XCTAssertEqual(metrics["transactionCount"] as? Int, 2)
+    let first = try XCTUnwrap(transactions.first)
+    XCTAssertTrue(first["fetchSeconds"] is NSNull)
+    XCTAssertTrue(first["responseWaitSeconds"] is NSNull)
+    XCTAssertTrue(first["responseSeconds"] is NSNull)
+    let states = try XCTUnwrap(first["durationStates"] as? [String: Int])
+    XCTAssertEqual(states["fetchSeconds"], 2)
+    XCTAssertEqual(states["responseWaitSeconds"], 2)
+    XCTAssertEqual(states["responseSeconds"], 3)
+    XCTAssertNotNil(transactions.last?["responseSeconds"] as? Double)
     for (before, after) in [("admission", "response"), ("response", "firstBody"),
       ("firstBody", "lastBody"), ("lastBody", "upstreamComplete"),
       ("lastSendComplete", "terminal"), ("upstreamComplete", "terminal")] {
@@ -4829,6 +4909,7 @@ private final class DashHTTPServer {
         let request = Request(path: path, headers: headers)
         self.lock.lock(); self.log.append(request); let handler = self.responseHandler; self.lock.unlock()
         let (status, extra, body) = handler?(request) ?? (404, [:], Data())
+        if status == 0 { connection.cancel(); return }
         var header = "HTTP/1.1 \(status) Response\r\nContent-Length: \(body.count)\r\nConnection: close\r\n"
         for (key, value) in extra { header += "\(key): \(value)\r\n" }
         connection.send(content: Data((header + "\r\n").utf8) + body, completion: .contentProcessed { _ in connection.cancel() })

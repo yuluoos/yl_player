@@ -640,3 +640,28 @@ delivered until its writer returns. Active trace ownership outlives transport ta
 removal, including chunk tails. A drain failure fails the native probe, and missing
 request correlation adds an error to the collector receipt while retaining the
 partial diagnostic. Neither condition can silently produce a successful capture.
+
+
+### Date-state diagnostics and repeated-downshift budget proof
+
+New DEBUG probes use proxy request sampling version 3, with nested metrics version
+2 and `durationStates` for each duration: 0 observed, 1 missing start, 2 missing
+end, 3 both missing, 4 invalid ordered/finite pair. No absolute dates, URL or
+headers are recorded. Shared endpoint presence must agree. Historical v1/v2
+reading remains; v3 cannot silently downgrade to old metrics. Missing durations
+remain null and a successful request with any incomplete transaction still fails.
+A response-less first connection close can produce two Foundation transactions;
+this controlled reproduction does not identify the cause of every historical
+multi-transaction failure.
+
+`--require-budget-exhaustion` requires `--production-recovery`,
+`--require-production-install` and `pause-resume` or `pause-prepared`. It requires
+actual attempt-two installation, published high frames followed by new low frames
+on that same item, and two consecutive eight-second counterfactual bandwidth
+windows at the unchanged 955000bps/three-request/progress gates while native
+policy reports `budgetExhausted`. No third reservation, source/intent/credential
+reset or budget refund may satisfy it. These are independent proof windows, not
+native window decisions (the budget guard executes before window qualification).
+All original EOF/final-high, authority, transaction and continuity checks remain.
+The budget observation may survive a later final-high failure; that receipt still
+fails. This does not certify physical screen/audio continuity.

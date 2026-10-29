@@ -100,7 +100,7 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertIsNone(proxy_trace_version([{}]))
         self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':1}]),1)
         for rows in [[{'proxyRequestSamplingVersion':True}],
-                     [{'proxyRequestSamplingVersion':3}],
+                     [{'proxyRequestSamplingVersion':4}],
                      [{'proxyRequestSamplingVersion':1},{}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): proxy_trace_version(rows)
 
@@ -115,3 +115,21 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertTrue(summarize_proxy_boundaries([row],[self.server],2)['requests'][0]['transactionMetrics']['complete'])
         for data,version in [(row,1),(dict(row,metrics=None),2),(self.trace,2)]:
             with self.assertRaises(ValueError):summarize_proxy_boundaries([data],[self.server],version)
+
+
+class ProxyDateStateTests(unittest.TestCase):
+    def test_v3_requires_date_states_and_preserves_partial_failure_gate(self):
+        from proxy_boundaries import proxy_trace_version
+        from test_transaction_metrics import DurationStateTests,metrics
+        fixture=ProxyBoundaryTests();fixture.setUp()
+        self.assertEqual(proxy_trace_version([dict(proxyRequestSamplingVersion=3)]),3)
+        row=dict(fixture.trace,version=3,metrics=DurationStateTests().source())
+        self.assertTrue(summarize_proxy_boundaries([row],[fixture.server],3)['requests'][0]['transactionMetrics']['complete'])
+        for value in [metrics(),None]:
+            with self.assertRaises(ValueError):summarize_proxy_boundaries([dict(row,metrics=value)],[fixture.server],3)
+        early=copy.deepcopy(row['metrics']['transactions'][0])
+        for k,state in [('fetchSeconds',2),('responseWaitSeconds',2),('responseSeconds',3)]:early[k]=None;early['durationStates'][k]=state
+        row['metrics'].update(transactionCount=2,transactions=[early,row['metrics']['transactions'][0]])
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([row],[fixture.server],3)
+        row['outcome']=1
+        self.assertFalse(summarize_proxy_boundaries([row],[fixture.server],3)['requests'][0]['transactionMetrics']['complete'])

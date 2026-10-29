@@ -845,7 +845,7 @@ final class YlHlsProxyRequestTrace {
     self.observer = observer
     let correlationID = UUID().uuidString
     self.correlationID = correlationID
-    values = ["version": 2, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
+    values = ["version": 3, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
       "admission": ProcessInfo.processInfo.systemUptime,
       "bodyBytes": 0.0, "sentBodyBytes": 0.0, "bodyCallbacks": 0.0,
       "sendCount": 0.0, "sendCompletions": 0.0, "sendFailures": 0.0,
@@ -863,6 +863,13 @@ final class YlHlsProxyRequestTrace {
     let seconds = end.timeIntervalSince(start)
     return seconds.isFinite && seconds >= 0 ? seconds : nil
   }
+  // 0 valid, 1 missing start, 2 missing end, 3 both missing, 4 invalid pair.
+  // Only categorical reasons leave Foundation; no absolute dates or identities.
+  static func intervalState(from start: Date?, to end: Date?) -> Int {
+    guard let start else { return end == nil ? 3 : 1 }
+    guard let end else { return 2 }
+    return interval(from: start, to: end) == nil ? 4 : 0
+  }
   func metrics(_ metrics: URLSessionTaskMetrics) {
     func duration(_ start: Date?, _ end: Date?) -> Any {
       Self.interval(from: start, to: end).map { $0 as Any } ?? NSNull()
@@ -875,7 +882,15 @@ final class YlHlsProxyRequestTrace {
       case "h3": protocolCode = 3
       default: protocolCode = 0
       }
-      return ["fetchSeconds": duration(t.fetchStartDate, t.responseEndDate),
+      let states = ["fetchSeconds": Self.intervalState(from: t.fetchStartDate, to: t.responseEndDate),
+        "fetchToRequestSeconds": Self.intervalState(from: t.fetchStartDate, to: t.requestStartDate),
+        "dnsSeconds": Self.intervalState(from: t.domainLookupStartDate, to: t.domainLookupEndDate),
+        "connectSeconds": Self.intervalState(from: t.connectStartDate, to: t.connectEndDate),
+        "tlsSeconds": Self.intervalState(from: t.secureConnectionStartDate, to: t.secureConnectionEndDate),
+        "requestSeconds": Self.intervalState(from: t.requestStartDate, to: t.requestEndDate),
+        "responseWaitSeconds": Self.intervalState(from: t.requestEndDate, to: t.responseStartDate),
+        "responseSeconds": Self.intervalState(from: t.responseStartDate, to: t.responseEndDate)]
+      return ["durationStates": states, "fetchSeconds": duration(t.fetchStartDate, t.responseEndDate),
         "fetchToRequestSeconds": duration(t.fetchStartDate, t.requestStartDate),
         "dnsSeconds": duration(t.domainLookupStartDate, t.domainLookupEndDate),
         "connectSeconds": duration(t.connectStartDate, t.connectEndDate),
@@ -887,7 +902,7 @@ final class YlHlsProxyRequestTrace {
         "fetchType": t.resourceFetchType.rawValue]
     }
     update { v, _ in
-      v["metrics"] = ["taskSeconds": duration(metrics.taskInterval.start, metrics.taskInterval.end),
+      v["metrics"] = ["version": 2, "taskSeconds": duration(metrics.taskInterval.start, metrics.taskInterval.end),
         "transactionCount": metrics.transactionMetrics.count, "redirectCount": metrics.redirectCount,
         "truncated": metrics.transactionMetrics.count > 32 ? 1 : 0, "transactions": transactions]
     }

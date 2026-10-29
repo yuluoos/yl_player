@@ -283,7 +283,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "4bd0063821679b54ca147888427cf212e60eb17331e1d64eacb60a59f8c893cd",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "5452b6e8f90f414edec2bc71059818d7a73864826b44dbe93e9cf29128950261",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "83c8ad3fe1693f53b58ff238ccee7d24615eea80c80cc5f59b3f65595e8c7bb3"
+    "sha256": "62f46a459838b35bc85052dc3e73909658e04474cc8695c66bd9a67787a6648e"
   },
   "evidence": {
     "p01": {
@@ -883,6 +883,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-production-exercise.md",
       "sha256": "a69a6ae861ffadb112c849af80847e987adbfa1fcb26fc2b7b8b2ff16a7f5977",
       "kind": "report"
+    },
+    "ios-budget-metrics-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-budget-metrics.md",
+      "sha256": "1387d414232f469a038b48cdfdfc934288307e3d24c7863540c9c1dd2bfeefd3",
+      "kind": "report"
     }
   },
   "rows": [
@@ -927,10 +932,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-production-exercise-20261029"
+        "ios-budget-metrics-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-partial-multitransaction-evidence-budget-exhaustion-original-stability-fast-cancel-and-physical-av"
+      "nextAction": "qualify-historical-partial-transactions-original-stability-post-budget-high-recovery-fast-cancel-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",

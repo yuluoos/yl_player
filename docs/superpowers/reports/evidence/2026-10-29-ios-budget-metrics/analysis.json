@@ -1,0 +1,446 @@
+{
+  "results": {
+    "pause-resume": {
+      "receiptPassed": false,
+      "nativeExitCode": 0,
+      "errors": [
+        {
+          "check": "production",
+          "error": "invalid production recovery evidence"
+        }
+      ],
+      "receiptErrors": [
+        "ValueError"
+      ],
+      "budget": {
+        "secondInstallElapsed": 54.58891562500503,
+        "secondDownshiftElapsed": 67.39495312500367,
+        "exhaustedSamples": 65,
+        "qualifiedCounterfactualWindows": [
+          {
+            "start": 68.76584504167113,
+            "end": 76.76684287500393,
+            "requests": 20,
+            "bitrate": 2839374.0174081083
+          },
+          {
+            "start": 76.76684287500393,
+            "end": 84.7713367916731,
+            "requests": 18,
+            "bitrate": 2158533.762315729
+          }
+        ],
+        "maximumAttempts": 2,
+        "thirdReservationObserved": false,
+        "capabilityAccepted": false,
+        "continuityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "production": null,
+      "command": {
+        "cancelledReservationPreserved": true,
+        "secondAttemptInstalled": true,
+        "pausedSamples": 7,
+        "capabilityAccepted": false
+      },
+      "continuity": {
+        "frameSamplingVersion": 2,
+        "sampleCount": 6640,
+        "publishedFrames": 2881,
+        "maximumPumpGapMs": 38.36591666913591,
+        "maximumPublishedFrameGapMs": 2057.3209166686866,
+        "lastPublicationSampleElapsed": 123.35348658333533,
+        "observationEndElapsed": 123.45875091666676,
+        "trailingNoPublicationMs": 105.26433333143359,
+        "replacementBoundaries": [
+          {
+            "generationBefore": 0,
+            "generationAfter": 1,
+            "elapsedBefore": 54.58396954167256,
+            "elapsedAfter": 54.705403125000885,
+            "publicationGapMs": 121.43358332832577,
+            "positionDeltaMs": 1.3279420000031905,
+            "textureClears": 0
+          }
+        ],
+        "generationsWithoutPublishedFrame": [],
+        "continuityAccepted": false,
+        "audioSynchronizationVerified": false,
+        "physicalOutputVerified": false
+      },
+      "publishedPhases": [
+        {
+          "width": 320,
+          "elapsed": 0.7561964583364897
+        },
+        {
+          "width": 640,
+          "elapsed": 6.144922375002352
+        },
+        {
+          "width": 320,
+          "elapsed": 17.139479458339338
+        },
+        {
+          "width": 640,
+          "elapsed": 55.403826250003476
+        },
+        {
+          "width": 320,
+          "elapsed": 67.39495312500367
+        }
+      ],
+      "final": {
+        "elapsed": 123.47720483333978,
+        "position": 120.013163609,
+        "completed": true,
+        "width": 320,
+        "automaticAttempts": 2,
+        "automaticEvents": [
+          {
+            "attempt": 2,
+            "credentialCommitAccepted": true,
+            "due": 54.266886916673684,
+            "elapsed": 54.51868433333584,
+            "elapsedAfter": 54.58891562500503,
+            "generation": 2,
+            "itemChanged": true,
+            "outcome": "installed",
+            "positionBefore": 51.393610339,
+            "preparationDeadline": 56.51868433333584,
+            "ticketCredentialRevision": 0,
+            "ticketIntentRevision": 4
+          }
+        ],
+        "hostFailureCount": 0
+      },
+      "signals": [],
+      "proxyCount": 386,
+      "proxyFullyCorrelated": true,
+      "metricsStateCounts": {
+        "0": 2618,
+        "3": 374
+      },
+      "multipleTransactions": [],
+      "incompleteSuccessfulRequests": [],
+      "reservations": [
+        {
+          "allowed": true,
+          "attempts": 1,
+          "bufferAhead": 10.605387955333335,
+          "bytes": 1989242,
+          "credentialRevision": 0,
+          "elapsed": 34.51683679167036,
+          "generation": 2,
+          "intentRevision": 1,
+          "overdue": 15,
+          "pendingDue": 35.01683679167036,
+          "position": 33.383945378,
+          "qualifiedWindows": 0,
+          "reason": "reserved",
+          "remaining": 86.61605462200001,
+          "requests": 102,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 18.30598833400001,
+          "width": 320,
+          "windowBitrate": 2692286.276280887,
+          "windowRequests": 18
+        },
+        {
+          "allowed": true,
+          "attempts": 2,
+          "bufferAhead": 10.837649548333331,
+          "bytes": 2566314,
+          "credentialRevision": 0,
+          "elapsed": 53.266886916673684,
+          "generation": 2,
+          "intentRevision": 4,
+          "overdue": 20,
+          "pendingDue": 54.266886916673684,
+          "position": 50.143683785,
+          "qualifiedWindows": 0,
+          "reason": "reserved",
+          "remaining": 69.85631621499999,
+          "requests": 141,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 19.988950958000007,
+          "width": 320,
+          "windowBitrate": 2741029.750268114,
+          "windowRequests": 21
+        }
+      ],
+      "tickets": [
+        {
+          "allowed": true,
+          "attempts": 2,
+          "bufferAhead": 10.590389661000003,
+          "bytes": 2598667,
+          "credentialRevision": 0,
+          "elapsed": 54.51680583333655,
+          "generation": 2,
+          "intentRevision": 4,
+          "overdue": 20,
+          "pendingDue": null,
+          "position": 51.393610339,
+          "qualifiedWindows": 0,
+          "reason": "ticketReady",
+          "remaining": 68.60638966100001,
+          "requests": 143,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 20.087751208000007,
+          "width": 320,
+          "windowBitrate": null,
+          "windowRequests": null
+        }
+      ]
+    },
+    "pause-prepared": {
+      "receiptPassed": false,
+      "nativeExitCode": 0,
+      "errors": [
+        {
+          "check": "production",
+          "error": "invalid production recovery evidence"
+        }
+      ],
+      "receiptErrors": [
+        "ValueError"
+      ],
+      "budget": {
+        "secondInstallElapsed": 53.0780715833389,
+        "secondDownshiftElapsed": 67.11635370833392,
+        "exhaustedSamples": 66,
+        "qualifiedCounterfactualWindows": [
+          {
+            "start": 68.50866145833425,
+            "end": 76.75859091666644,
+            "requests": 20,
+            "bitrate": 1994768.616817655
+          },
+          {
+            "start": 76.75859091666644,
+            "end": 84.75861712500046,
+            "requests": 18,
+            "bitrate": 1762360.253514455
+          }
+        ],
+        "maximumAttempts": 2,
+        "thirdReservationObserved": false,
+        "capabilityAccepted": false,
+        "continuityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "production": null,
+      "command": {
+        "firstPublicationDelayMs": 53.02437499631196,
+        "scenario": "pause-prepared",
+        "oldCandidateRejected": true,
+        "newLoad": false,
+        "secondAttemptInstalled": true,
+        "publishedFrames": 2088,
+        "capabilityAccepted": false,
+        "continuityAccepted": false,
+        "physicalOutputVerified": false
+      },
+      "continuity": {
+        "frameSamplingVersion": 2,
+        "sampleCount": 6635,
+        "publishedFrames": 2881,
+        "maximumPumpGapMs": 44.08570833038539,
+        "maximumPublishedFrameGapMs": 2083.5587916662917,
+        "lastPublicationSampleElapsed": 123.0853461666702,
+        "observationEndElapsed": 123.298260916672,
+        "trailingNoPublicationMs": 212.9147500018007,
+        "replacementBoundaries": [
+          {
+            "generationBefore": 0,
+            "generationAfter": 1,
+            "elapsedBefore": 53.04720612500387,
+            "elapsedAfter": 53.18476683333574,
+            "publicationGapMs": 137.5607083318755,
+            "positionDeltaMs": 28.81969199999901,
+            "textureClears": 0
+          }
+        ],
+        "generationsWithoutPublishedFrame": [],
+        "continuityAccepted": false,
+        "audioSynchronizationVerified": false,
+        "physicalOutputVerified": false
+      },
+      "publishedPhases": [
+        {
+          "width": 320,
+          "elapsed": 0.4976332916703541
+        },
+        {
+          "width": 640,
+          "elapsed": 4.813841666669759
+        },
+        {
+          "width": 320,
+          "elapsed": 16.798253250002745
+        },
+        {
+          "width": 640,
+          "elapsed": 55.12711329166632
+        },
+        {
+          "width": 320,
+          "elapsed": 67.11635370833392
+        }
+      ],
+      "final": {
+        "elapsed": 123.30150416667311,
+        "position": 120.014808242,
+        "completed": true,
+        "width": 320,
+        "automaticAttempts": 2,
+        "automaticEvents": [
+          {
+            "attempt": 1,
+            "due": 33.75784416667011,
+            "elapsed": 33.76085354167299,
+            "elapsedAfter": 33.82777808333776,
+            "failureCode": "network.cancelled",
+            "generation": 2,
+            "outcome": "cancelled",
+            "positionBefore": 32.964403336,
+            "preparationDeadline": 35.76085354167299,
+            "ticketCredentialRevision": 0,
+            "ticketIntentRevision": 1
+          },
+          {
+            "attempt": 2,
+            "credentialCommitAccepted": true,
+            "due": 53.008634166668344,
+            "elapsed": 53.01099854167114,
+            "elapsedAfter": 53.0780715833389,
+            "generation": 2,
+            "itemChanged": true,
+            "outcome": "installed",
+            "positionBefore": 50.179868156,
+            "preparationDeadline": 55.01099854167114,
+            "ticketCredentialRevision": 0,
+            "ticketIntentRevision": 4
+          }
+        ],
+        "hostFailureCount": 0
+      },
+      "signals": [],
+      "proxyCount": 387,
+      "proxyFullyCorrelated": true,
+      "metricsStateCounts": {
+        "0": 2646,
+        "3": 378
+      },
+      "multipleTransactions": [],
+      "incompleteSuccessfulRequests": [],
+      "reservations": [
+        {
+          "allowed": true,
+          "attempts": 1,
+          "bufferAhead": 10.523029956666662,
+          "bytes": 2006275,
+          "credentialRevision": 0,
+          "elapsed": 33.25784416667011,
+          "generation": 2,
+          "intentRevision": 1,
+          "overdue": 13,
+          "pendingDue": 33.75784416667011,
+          "position": 32.46363671,
+          "qualifiedWindows": 0,
+          "reason": "reserved",
+          "remaining": 87.53636329,
+          "requests": 102,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 15.194497535999997,
+          "width": 320,
+          "windowBitrate": 1668300.9092310718,
+          "windowRequests": 18
+        },
+        {
+          "allowed": true,
+          "attempts": 2,
+          "bufferAhead": 10.809513700333333,
+          "bytes": 2601281,
+          "credentialRevision": 0,
+          "elapsed": 52.008634166668344,
+          "generation": 2,
+          "intentRevision": 4,
+          "overdue": 17,
+          "pendingDue": 53.008634166668344,
+          "position": 49.179819633,
+          "qualifiedWindows": 0,
+          "reason": "reserved",
+          "remaining": 70.820180367,
+          "requests": 140,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 17.407413533000003,
+          "width": 320,
+          "windowBitrate": 1951370.0084479225,
+          "windowRequests": 18
+        }
+      ],
+      "tickets": [
+        {
+          "allowed": true,
+          "attempts": 1,
+          "bufferAhead": 10.022263330666668,
+          "bytes": 2006275,
+          "credentialRevision": 0,
+          "elapsed": 33.75863254167052,
+          "generation": 2,
+          "intentRevision": 1,
+          "overdue": 13,
+          "pendingDue": null,
+          "position": 32.964403336,
+          "qualifiedWindows": 0,
+          "reason": "ticketReady",
+          "remaining": 87.035596664,
+          "requests": 102,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 15.194497535999997,
+          "width": 320,
+          "windowBitrate": null,
+          "windowRequests": null
+        },
+        {
+          "allowed": true,
+          "attempts": 2,
+          "bufferAhead": 10.801465177333334,
+          "bytes": 2625479,
+          "credentialRevision": 0,
+          "elapsed": 53.00868795833958,
+          "generation": 2,
+          "intentRevision": 4,
+          "overdue": 18,
+          "pendingDue": null,
+          "position": 50.179868156,
+          "qualifiedWindows": 0,
+          "reason": "ticketReady",
+          "remaining": 69.820131844,
+          "requests": 143,
+          "sawHigh": true,
+          "sessionId": "apple-991-s1",
+          "transfer": 17.515919658,
+          "width": 320,
+          "windowBitrate": null,
+          "windowRequests": null
+        }
+      ]
+    }
+  },
+  "totalRuns": 2,
+  "sameBinary": true,
+  "strictPasses": 0,
+  "budgetPasses": 2,
+  "capabilityAccepted": false,
+  "continuityAccepted": false,
+  "physicalOutputVerified": false
+}

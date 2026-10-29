@@ -116,6 +116,12 @@ class AccessLogTests(unittest.TestCase):
             startup_delay_ms=0)
         self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values)))
         self.assertFalse(abr_accesslog.production_recovery(SimpleNamespace()))
+        for changes in [dict(require_budget_exhaustion=1),dict(require_budget_exhaustion=True),
+                        dict(require_budget_exhaustion=True,require_production_install=True,production_command='none')]:
+            with self.subTest(budget=changes),self.assertRaises(ValueError):
+                abr_accesslog.production_recovery(SimpleNamespace(**dict(values,**changes)))
+        self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**dict(values,require_budget_exhaustion=True,
+            require_production_install=True,production_command='pause-resume'))))
         self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values,require_production_install=True)))
         for changes in [dict(require_production_install=1),dict(require_production_install=True,production_recovery=False),
                         dict(require_production_install=True,production_command='load-prepared')]:
