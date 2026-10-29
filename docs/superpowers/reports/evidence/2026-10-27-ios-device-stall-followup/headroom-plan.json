@@ -1,0 +1,25 @@
+{
+  "hypothesis": "The physical stall profile keeps low output until EOF, but its transfer windows remain below the frozen guard. Increase only recovered bandwidth to observe qualified windows without changing the guard.",
+  "controlProfile": "stall-and-recover-v1",
+  "changedVariable": "recovery bytesPerSecond 500000 -> 2000000 at 15000ms",
+  "runs": [
+    [
+      "headroom-baseline",
+      "none",
+      "normal"
+    ],
+    [
+      "headroom-auto",
+      "auto-reload",
+      "normal"
+    ],
+    [
+      "headroom-pause",
+      "auto-reload",
+      "pause-first"
+    ]
+  ],
+  "diagnosticOnly": true,
+  "baselineComparable": false,
+  "capabilityAccepted": false
+}

@@ -1,0 +1,34 @@
+[
+  {
+    "name": "ledger",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "exitCode": 0,
+    "expected": 0
+  },
+  {
+    "name": "ledger-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "exitCode": 1,
+    "expected": 1
+  },
+  {
+    "name": "threshold-required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_benchmark/threshold_registry.py",
+      "--require-ready"
+    ],
+    "exitCode": 1,
+    "expected": 1
+  }
+]

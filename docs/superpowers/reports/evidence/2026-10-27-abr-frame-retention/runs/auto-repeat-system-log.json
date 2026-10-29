@@ -1,0 +1,149 @@
+[{
+  "timezoneName" : "",
+  "messageType" : "Default",
+  "eventType" : "logEvent",
+  "source" : null,
+  "launchPersonaName" : "",
+  "formatString" : "<SEGPUMP> %s: %{public}@:%ld:%ld: :%s bw %g kbps required %g dur %g gotHeader %d received %zu bytes in %g seconds latency %d ms",
+  "userID" : 501,
+  "activityIdentifier" : 0,
+  "subsystem" : "com.apple.coremedia",
+  "category" : "",
+  "personaType" : -1,
+  "threadID" : 108361,
+  "launchPersonaType" : -1,
+  "senderImageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4",
+  "launchPersonaID" : 4294967295,
+  "backtrace" : {
+    "frames" : [
+      {
+        "imageOffset" : 6093544,
+        "imageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4"
+      }
+    ]
+  },
+  "bootUUID" : "068A7023-B0CF-4287-B90D-A954C7B31BDB",
+  "processImagePath" : "\/Users\/yy2021_8689\/Library\/Developer\/CoreSimulator\/Devices\/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8\/data\/Containers\/Bundle\/Application\/F22C3F93-81D5-40D9-AA89-F56CCB0D915B\/Runner.app\/Runner",
+  "senderImagePath" : "\/System\/Library\/Frameworks\/MediaToolbox.framework\/MediaToolbox",
+  "personaID" : 4294967295,
+  "timestamp" : "2026-10-27 20:43:18.715398-0700",
+  "machTimestamp" : 46519934696,
+  "personaName" : "",
+  "eventMessage" : "<SEGPUMP> MediaHandleDownloadTimer: 0x115d1d000:0:0: : bw 0 kbps required 764 dur 1 gotHeader 1 received 0 bytes in 2.0011 seconds latency 245 ms",
+  "processImageUUID" : "E87BBDE0-52D3-3584-AD6F-643320702916",
+  "traceID" : 1448010973628858372,
+  "processID" : 16006,
+  "senderProgramCounter" : 6093544,
+  "parentActivityIdentifier" : 0
+},{
+  "timezoneName" : "",
+  "messageType" : "Default",
+  "eventType" : "logEvent",
+  "source" : null,
+  "launchPersonaName" : "",
+  "formatString" : "<SEGPUMP> %s: %{public}@: alternate %{public}@ %{public}@ is in the penalty box",
+  "userID" : 501,
+  "activityIdentifier" : 0,
+  "subsystem" : "com.apple.coremedia",
+  "category" : "",
+  "personaType" : -1,
+  "threadID" : 108361,
+  "launchPersonaType" : -1,
+  "senderImageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4",
+  "launchPersonaID" : 4294967295,
+  "backtrace" : {
+    "frames" : [
+      {
+        "imageOffset" : 3025192,
+        "imageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4"
+      }
+    ]
+  },
+  "bootUUID" : "068A7023-B0CF-4287-B90D-A954C7B31BDB",
+  "processImagePath" : "\/Users\/yy2021_8689\/Library\/Developer\/CoreSimulator\/Devices\/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8\/data\/Containers\/Bundle\/Application\/F22C3F93-81D5-40D9-AA89-F56CCB0D915B\/Runner.app\/Runner",
+  "senderImagePath" : "\/System\/Library\/Frameworks\/MediaToolbox.framework\/MediaToolbox",
+  "personaID" : 4294967295,
+  "timestamp" : "2026-10-27 20:43:18.715749-0700",
+  "machTimestamp" : 46519943131,
+  "personaName" : "",
+  "eventMessage" : "<SEGPUMP> MoveAlternateToPenaltyBox: 0x115d1d000: alternate <FigAlternate( 1):[0x11b105e00] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box",
+  "processImageUUID" : "E87BBDE0-52D3-3584-AD6F-643320702916",
+  "traceID" : 1447993037845430276,
+  "processID" : 16006,
+  "senderProgramCounter" : 3025192,
+  "parentActivityIdentifier" : 0
+},{
+  "timezoneName" : "",
+  "messageType" : "Default",
+  "eventType" : "logEvent",
+  "source" : null,
+  "launchPersonaName" : "",
+  "formatString" : "<SEGPUMP> %s: %{public}@:%ld: adding %d %{public}@ %{public}@ to error log",
+  "userID" : 501,
+  "activityIdentifier" : 0,
+  "subsystem" : "com.apple.coremedia",
+  "category" : "",
+  "personaType" : -1,
+  "threadID" : 108361,
+  "launchPersonaType" : -1,
+  "senderImageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4",
+  "launchPersonaID" : 4294967295,
+  "backtrace" : {
+    "frames" : [
+      {
+        "imageOffset" : 6040108,
+        "imageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4"
+      }
+    ]
+  },
+  "bootUUID" : "068A7023-B0CF-4287-B90D-A954C7B31BDB",
+  "processImagePath" : "\/Users\/yy2021_8689\/Library\/Developer\/CoreSimulator\/Devices\/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8\/data\/Containers\/Bundle\/Application\/F22C3F93-81D5-40D9-AA89-F56CCB0D915B\/Runner.app\/Runner",
+  "senderImagePath" : "\/System\/Library\/Frameworks\/MediaToolbox.framework\/MediaToolbox",
+  "personaID" : 4294967295,
+  "timestamp" : "2026-10-27 20:43:18.724314-0700",
+  "machTimestamp" : 46520148690,
+  "personaName" : "",
+  "eventMessage" : "<SEGPUMP> segPumpAppendErrorLogEntry: 0x115d1d000:0: adding -12889 CoreMediaErrorDomain The operation couldn’t be completed. (CoreMediaErrorDomain error -12889.) to error log",
+  "processImageUUID" : "E87BBDE0-52D3-3584-AD6F-643320702916",
+  "traceID" : 1447991912563998724,
+  "processID" : 16006,
+  "senderProgramCounter" : 6040108,
+  "parentActivityIdentifier" : 0
+},{
+  "timezoneName" : "",
+  "messageType" : "Default",
+  "eventType" : "logEvent",
+  "source" : null,
+  "launchPersonaName" : "",
+  "formatString" : "<SEGPUMP> %s: %{public}@:%ld: handled the error %{private}@ (%d) with err %d and errorSeverity %d using action %@ with flags %lld ",
+  "userID" : 501,
+  "activityIdentifier" : 0,
+  "subsystem" : "com.apple.coremedia",
+  "category" : "",
+  "personaType" : -1,
+  "threadID" : 108361,
+  "launchPersonaType" : -1,
+  "senderImageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4",
+  "launchPersonaID" : 4294967295,
+  "backtrace" : {
+    "frames" : [
+      {
+        "imageOffset" : 6039592,
+        "imageUUID" : "9E97CF96-7627-3439-9B83-D98FC4D8FDA4"
+      }
+    ]
+  },
+  "bootUUID" : "068A7023-B0CF-4287-B90D-A954C7B31BDB",
+  "processImagePath" : "\/Users\/yy2021_8689\/Library\/Developer\/CoreSimulator\/Devices\/B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8\/data\/Containers\/Bundle\/Application\/F22C3F93-81D5-40D9-AA89-F56CCB0D915B\/Runner.app\/Runner",
+  "senderImagePath" : "\/System\/Library\/Frameworks\/MediaToolbox.framework\/MediaToolbox",
+  "personaID" : 4294967295,
+  "timestamp" : "2026-10-27 20:43:18.724396-0700",
+  "machTimestamp" : 46520150653,
+  "personaName" : "",
+  "eventMessage" : "<SEGPUMP> segPumpHandleCommonNetworkError: 0x115d1d000:0: handled the error Error Domain=CoreMediaErrorDomain Code=-12889 \"(null)\" (-12889) with err 0 and errorSeverity 2 using action stream facing recoverable error, may need to be moved to penaltybox with flags 32",
+  "processImageUUID" : "E87BBDE0-52D3-3584-AD6F-643320702916",
+  "traceID" : 1447992234703323140,
+  "processID" : 16006,
+  "senderProgramCounter" : 6039592,
+  "parentActivityIdentifier" : 0
+}]

@@ -1,0 +1,998 @@
+[
+  {
+    "source": "final-device-contracts.xcresult",
+    "archive": "final-device-contracts.xcresult.tar.gz",
+    "archiveSha256": "d3b2210379a0731810dc55c323a4539a8bf60158afcf656b8b0e04ffe9dac7c9",
+    "bundleFiles": 464
+  },
+  {
+    "source": "final-macos-contracts.xcresult",
+    "archive": "final-macos-contracts.xcresult.tar.gz.parts.json",
+    "archiveSha256": "c33930ee1b35deee9f6bc117a48a71a06627cd496169e7484447e817a97bfcf9",
+    "bundleFiles": 2388,
+    "archiveParts": [
+      {
+        "path": "final-macos-contracts.xcresult.tar.gz.part000",
+        "sha256": "3f17c6a02fb727e7b021cef3f3c1b620d09bcd1d3ee63f1c94d1df5e88ece15f",
+        "bytes": 15728640
+      },
+      {
+        "path": "final-macos-contracts.xcresult.tar.gz.part001",
+        "sha256": "697a3961c43cee77c2e5314d711767b19ad4324528145d77bcd0bf22c47e9d7e",
+        "bytes": 15728640
+      },
+      {
+        "path": "final-macos-contracts.xcresult.tar.gz.part002",
+        "sha256": "0320e6715fec50d01a39a7b6f4248395dad72a736bc4e425c59c94a1b501ac09",
+        "bytes": 15728640
+      },
+      {
+        "path": "final-macos-contracts.xcresult.tar.gz.part003",
+        "sha256": "bf34f7a6f44d74589fd91d873a48043f0d6bb61784ce60a33ea0ece7654d2b25",
+        "bytes": 15728640
+      },
+      {
+        "path": "final-macos-contracts.xcresult.tar.gz.part004",
+        "sha256": "1da113138bdf6f2a0bb447ca8eba478ab7d3fe95b60b8e0cd51da1e50fffbecd",
+        "bytes": 9671778
+      }
+    ]
+  },
+  {
+    "source": "fragment-red.xcresult",
+    "archive": "fragment-red.xcresult.tar.gz.parts.json",
+    "archiveSha256": "d3758fcf5bce350a39fa77c13d5be90630984f73241940d32798e2c5c519dfcd",
+    "bundleFiles": 1990,
+    "archiveParts": [
+      {
+        "path": "fragment-red.xcresult.tar.gz.part000",
+        "sha256": "54b4998a69ee44e8a3c1fb3e816695fecde1b0887f1065937a30d89bf3ba9c72",
+        "bytes": 15728640
+      },
+      {
+        "path": "fragment-red.xcresult.tar.gz.part001",
+        "sha256": "f97e67386d3f7ee96ccc3b6edccd80cc584a0f8cd1caca543dbdf7a25cbb8b55",
+        "bytes": 15728640
+      },
+      {
+        "path": "fragment-red.xcresult.tar.gz.part002",
+        "sha256": "13f295abc7ebee3afafd82847df1b2e5f0e8cb0526c54d73b4be8c095ff60d4b",
+        "bytes": 15728640
+      },
+      {
+        "path": "fragment-red.xcresult.tar.gz.part003",
+        "sha256": "fa1550e53e299546cfa7aa751fedd3ba23059323519a20e2ec6aa435dea66115",
+        "bytes": 15728640
+      },
+      {
+        "path": "fragment-red.xcresult.tar.gz.part004",
+        "sha256": "44689bafa9a5b091b0d1ef6deda1b53e186b663619e0d656506f96d0974b6a65",
+        "bytes": 7139300
+      }
+    ]
+  },
+  {
+    "source": "macos-contracts.xcresult",
+    "archive": "macos-contracts.xcresult.tar.gz.parts.json",
+    "archiveSha256": "7ffc7a9de0c86652d4f8f5ff00a18524b1cd1a88126b0ef894bf5c29a87edff5",
+    "bundleFiles": 2386,
+    "archiveParts": [
+      {
+        "path": "macos-contracts.xcresult.tar.gz.part000",
+        "sha256": "f868dff37a2ef448b6daa510af712995dc03ee7680bdf59eac2a82da3b8b2766",
+        "bytes": 15728640
+      },
+      {
+        "path": "macos-contracts.xcresult.tar.gz.part001",
+        "sha256": "50f378f8f0ff8a995643bbcd199347d74a9fbed6f380ceea478696de8c77c4e2",
+        "bytes": 15728640
+      },
+      {
+        "path": "macos-contracts.xcresult.tar.gz.part002",
+        "sha256": "99ad83ca368ca687fb6d7927f99fac00543e77a35b9ce539502d599810fda5dd",
+        "bytes": 15728640
+      },
+      {
+        "path": "macos-contracts.xcresult.tar.gz.part003",
+        "sha256": "09e57c33a09859d75060d4e1b0d0b41f21fb01b220eb6551b95192ad0ce28f3e",
+        "bytes": 15728640
+      },
+      {
+        "path": "macos-contracts.xcresult.tar.gz.part004",
+        "sha256": "95c8289922423d8c0d25f6abd06c69997dcddb73537b2b378a74e23607a03654",
+        "bytes": 10490255
+      }
+    ]
+  },
+  {
+    "source": "mime-fixed.xcresult",
+    "archive": "mime-fixed.xcresult.tar.gz",
+    "archiveSha256": "2f101a70658d103c10942b9d1f93a25f4ec66493456960ef637c1bd1fb3c3269",
+    "bundleFiles": 36
+  },
+  {
+    "source": "review-fixed.xcresult",
+    "archive": "review-fixed.xcresult.tar.gz",
+    "archiveSha256": "c6950c059084c46324f3d66175994641e92304ac60f29bd12bb9c83d15e0605f",
+    "bundleFiles": 18
+  },
+  {
+    "source": "review-green.xcresult",
+    "archive": "review-green.xcresult.tar.gz.parts.json",
+    "archiveSha256": "2ecd637200ba66eedc9db179723a3fe091fdbf5f07c2f6ffc9844e78859abe44",
+    "bundleFiles": 1984,
+    "archiveParts": [
+      {
+        "path": "review-green.xcresult.tar.gz.part000",
+        "sha256": "a61ab82800b5403d145d51e01d140f919cc3820d58cc9575773fa22c276073ed",
+        "bytes": 15728640
+      },
+      {
+        "path": "review-green.xcresult.tar.gz.part001",
+        "sha256": "74ff033ecbacd0ca184a6e3963d7dc07a1e81f35084bf01c5385f34da0b1f8f4",
+        "bytes": 15728640
+      },
+      {
+        "path": "review-green.xcresult.tar.gz.part002",
+        "sha256": "5cf1bd7fdc64a386ea340a8be97e7067c0e018b62e55ea932c9c09dd43b4088b",
+        "bytes": 15728640
+      },
+      {
+        "path": "review-green.xcresult.tar.gz.part003",
+        "sha256": "361922e3cfa484307198ceb28d9f2de69960de570eba34446c94313ba053f365",
+        "bytes": 15728640
+      },
+      {
+        "path": "review-green.xcresult.tar.gz.part004",
+        "sha256": "f565968323a18a6fc7e0bff6bc954f6e49e92e4f8fe661886ebca53f057c44a0",
+        "bytes": 7158304
+      }
+    ]
+  },
+  {
+    "source": "targeted-typed.xcresult",
+    "archive": "targeted-typed.xcresult.tar.gz",
+    "archiveSha256": "d37a29b5ff221e8b3662714f9bea66d8861da04aafb7f9248eef7c4af0ff5db9",
+    "bundleFiles": 32
+  },
+  {
+    "source": "targeted.xcresult",
+    "archive": "targeted.xcresult.tar.gz",
+    "archiveSha256": "0fcef1d26532b835d698e1a2dd49f3c4c380d97931ecd78635af17fe863a041c",
+    "bundleFiles": 18
+  },
+  {
+    "source": "archive.py",
+    "sourceSha256": "8bfa47e68d18093c73d99f9610aaa8b704a887904a8c71f8c15df094af97488c",
+    "archive": "archive.py",
+    "archiveSha256": "8bfa47e68d18093c73d99f9610aaa8b704a887904a8c71f8c15df094af97488c"
+  },
+  {
+    "source": "consumer-tests.log",
+    "sourceSha256": "ffdf08f955937d7d1db471c97eb3a1e49ad7ff5071e9f799c23bdb545405e6df",
+    "archive": "consumer-tests.log.gz",
+    "archiveSha256": "edf8219c846fc6a4f2f62dd3807da60e3b40c2cffc1c6c47e9d3366044ad49f1"
+  },
+  {
+    "source": "devices.json",
+    "sourceSha256": "0713decb929ac23cc47f2ff9bf6b07de794ca0f33d3c2c8668973b3dca948161",
+    "archive": "devices.json",
+    "archiveSha256": "0713decb929ac23cc47f2ff9bf6b07de794ca0f33d3c2c8668973b3dca948161"
+  },
+  {
+    "source": "devices.log",
+    "sourceSha256": "39000b954e285b40cd34a43b9588fd3a6c8469b05988f614cdb9f92b8530562f",
+    "archive": "devices.log.gz",
+    "archiveSha256": "5808f30c406d494db165e7ed25f3d60afc81e6db3d18e0c2f9a99a6069d5d7e4"
+  },
+  {
+    "source": "export-history.py",
+    "sourceSha256": "fc6a308e2db4b607a53a8be85d0e2055d4c0a2fa15873ce0be0c0e803171c9c4",
+    "archive": "export-history.py",
+    "archiveSha256": "fc6a308e2db4b607a53a8be85d0e2055d4c0a2fa15873ce0be0c0e803171c9c4"
+  },
+  {
+    "source": "failed-details.json",
+    "sourceSha256": "e5d13404bc56e0323111a97470e8c09f85a810585095550ee7fb38156f90458b",
+    "archive": "failed-details.json",
+    "archiveSha256": "e5d13404bc56e0323111a97470e8c09f85a810585095550ee7fb38156f90458b"
+  },
+  {
+    "source": "final-consumer-tests.log",
+    "sourceSha256": "7f21695bc43f7e8b4775972715797970f12f1320fbf45942cf88bf5f553515d1",
+    "archive": "final-consumer-tests.log.gz",
+    "archiveSha256": "8284a87b30c8101f7ba3ac9ba40e02b49ef83c630f8a12f366df2ee8b8399fb4"
+  },
+  {
+    "source": "final-device-contracts-command.json",
+    "sourceSha256": "717729c607d14faf1d71ffe2e2dcd7c015ebfa3b738ab444fd252c9b1735f2f3",
+    "archive": "final-device-contracts-command.json",
+    "archiveSha256": "717729c607d14faf1d71ffe2e2dcd7c015ebfa3b738ab444fd252c9b1735f2f3"
+  },
+  {
+    "source": "final-device-contracts-result.json",
+    "sourceSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+    "archive": "final-device-contracts-result.json",
+    "archiveSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+  },
+  {
+    "source": "final-device-contracts-summary.json",
+    "sourceSha256": "f0057d3f88240e8a2a72f0d2b92da67c689540a2ebb3d8d29bfc40f6706df357",
+    "archive": "final-device-contracts-summary.json",
+    "archiveSha256": "f0057d3f88240e8a2a72f0d2b92da67c689540a2ebb3d8d29bfc40f6706df357"
+  },
+  {
+    "source": "final-device-contracts-tests.json",
+    "sourceSha256": "ce9772a331615006c4edd6db5c155b57ce64f463891310b01455857c55e73e7b",
+    "archive": "final-device-contracts-tests.json.gz",
+    "archiveSha256": "9fae2145acf129c110ccdc16a95477a7ded2aeded9a8c9fb11300e7fad5c915b"
+  },
+  {
+    "source": "final-device-contracts.log",
+    "sourceSha256": "7236e136d3d2c095eab18421a869ef8e50d09b250871b6dda4374b2e5cfc473d",
+    "archive": "final-device-contracts.log.gz",
+    "archiveSha256": "6cbece33b368c0670d1ec0d87cdf7d0462819352a5eb7feff6e125fa5b43364e"
+  },
+  {
+    "source": "final-ios-build-command.json",
+    "sourceSha256": "cb6fb773abdf870717c029e6119875ca65784681795c857ae3dba4d53c9f7eba",
+    "archive": "final-ios-build-command.json",
+    "archiveSha256": "cb6fb773abdf870717c029e6119875ca65784681795c857ae3dba4d53c9f7eba"
+  },
+  {
+    "source": "final-ios-build-result.json",
+    "sourceSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+    "archive": "final-ios-build-result.json",
+    "archiveSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+  },
+  {
+    "source": "final-ios-build.log",
+    "sourceSha256": "c3dfeebe549c974eddec95502e2d5f4d0a158353298af8ccfea233e1d49ad96e",
+    "archive": "final-ios-build.log.gz",
+    "archiveSha256": "b57d92dc4ad497abb072811b7c11eb00d680a7395204a66a222871e2a713a72e"
+  },
+  {
+    "source": "final-macos-contracts-command.json",
+    "sourceSha256": "ac9570480cc46345c064371918a940243f4d3944a7fb9f56617841d30dbe542f",
+    "archive": "final-macos-contracts-command.json",
+    "archiveSha256": "ac9570480cc46345c064371918a940243f4d3944a7fb9f56617841d30dbe542f"
+  },
+  {
+    "source": "final-macos-contracts-result.json",
+    "sourceSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+    "archive": "final-macos-contracts-result.json",
+    "archiveSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+  },
+  {
+    "source": "final-macos-contracts-summary.json",
+    "sourceSha256": "a31dc39fd44ba5fddb129ae767f9735c1f0a9ea5aa51abd68d7cf1bc8ad89b41",
+    "archive": "final-macos-contracts-summary.json",
+    "archiveSha256": "a31dc39fd44ba5fddb129ae767f9735c1f0a9ea5aa51abd68d7cf1bc8ad89b41"
+  },
+  {
+    "source": "final-macos-contracts-tests.json",
+    "sourceSha256": "9d22116dbe1d5c8a697f3189b5616abbf5404020f4d364d7f92b337d6718d772",
+    "archive": "final-macos-contracts-tests.json",
+    "archiveSha256": "9d22116dbe1d5c8a697f3189b5616abbf5404020f4d364d7f92b337d6718d772"
+  },
+  {
+    "source": "final-macos-contracts.log",
+    "sourceSha256": "6c409e7cd85b8364f858a5a0a8b11293dbc4caea56699cad4178c74bb496dbea",
+    "archive": "final-macos-contracts.log.gz",
+    "archiveSha256": "c73b1843834d6f066f692bffc72bf74755e1825e49d5fe5c047bdc2e11959520"
+  },
+  {
+    "source": "final-mirrors.log",
+    "sourceSha256": "843b97afe56fbd4efe6b020839ed189ed9405b2ed8253cee55a274e14b80432c",
+    "archive": "final-mirrors.log.gz",
+    "archiveSha256": "4f9b63ff2696123226568db97547613f615ea43912af55f341d8386f1fcfebe4"
+  },
+  {
+    "source": "final-native-scope.json",
+    "sourceSha256": "0c4374e1ab9ab462178b7a48606c77ab3df3d5d074543912499b6cf1226b3899",
+    "archive": "final-native-scope.json",
+    "archiveSha256": "0c4374e1ab9ab462178b7a48606c77ab3df3d5d074543912499b6cf1226b3899"
+  },
+  {
+    "source": "final-records.py",
+    "sourceSha256": "818860c7eee4444bf517265cd89ffcd9f89967ead498035b4d4ccfb6af02c74a",
+    "archive": "final-records.py",
+    "archiveSha256": "818860c7eee4444bf517265cd89ffcd9f89967ead498035b4d4ccfb6af02c74a"
+  },
+  {
+    "source": "final-source-binding.json",
+    "sourceSha256": "746fd99fc966d8510b584ce92031fee023de37b4817bf3d9af8f3f476cad166b",
+    "archive": "final-source-binding.json",
+    "archiveSha256": "746fd99fc966d8510b584ce92031fee023de37b4817bf3d9af8f3f476cad166b"
+  },
+  {
+    "source": "fix.py",
+    "sourceSha256": "49a5b625d8c32378f0f23cb531aabe8a7b4e89acfb2679812b68c278dd605608",
+    "archive": "fix.py",
+    "archiveSha256": "49a5b625d8c32378f0f23cb531aabe8a7b4e89acfb2679812b68c278dd605608"
+  },
+  {
+    "source": "fragment-red-command.json",
+    "sourceSha256": "22ba7f5b9418f9f49e4c3ca0d6a132bdb5bd7d66d6b75ab3932b4b4c7c1855e8",
+    "archive": "fragment-red-command.json",
+    "archiveSha256": "22ba7f5b9418f9f49e4c3ca0d6a132bdb5bd7d66d6b75ab3932b4b4c7c1855e8"
+  },
+  {
+    "source": "fragment-red-result.json",
+    "sourceSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7",
+    "archive": "fragment-red-result.json",
+    "archiveSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7"
+  },
+  {
+    "source": "fragment-red-summary.json",
+    "sourceSha256": "d0a719534560d89bd6d683a947fb6f52fd1768d899ccfb21869c851ef0c666dc",
+    "archive": "fragment-red-summary.json",
+    "archiveSha256": "d0a719534560d89bd6d683a947fb6f52fd1768d899ccfb21869c851ef0c666dc"
+  },
+  {
+    "source": "fragment-red-tests.json",
+    "sourceSha256": "38cae84bc7bba97ca57791c1fb0065ded8a833ca6bd32c24bdbf92d35fd44588",
+    "archive": "fragment-red-tests.json",
+    "archiveSha256": "38cae84bc7bba97ca57791c1fb0065ded8a833ca6bd32c24bdbf92d35fd44588"
+  },
+  {
+    "source": "fragment-red.log",
+    "sourceSha256": "96aabc5c6a25cf4d44fca08039b1dfdb4969ff81b578c226ecb4fc10d938e4da",
+    "archive": "fragment-red.log.gz",
+    "archiveSha256": "e953d2eb076821da9bd798120107060eafd5fc9ec0b09749176b4b786b1bab8b"
+  },
+  {
+    "source": "fragment-red.py",
+    "sourceSha256": "fb2478fb3bf84f88c778fffb35571e75533569e0656d2e5ade5f198868dc59d7",
+    "archive": "fragment-red.py",
+    "archiveSha256": "fb2478fb3bf84f88c778fffb35571e75533569e0656d2e5ade5f198868dc59d7"
+  },
+  {
+    "source": "harden.py",
+    "sourceSha256": "713d1b963e6e493c1255ee303d19ecc4ad46e764e55330a6191841e6d7e5d5ae",
+    "archive": "harden.py",
+    "archiveSha256": "713d1b963e6e493c1255ee303d19ecc4ad46e764e55330a6191841e6d7e5d5ae"
+  },
+  {
+    "source": "implement.py",
+    "sourceSha256": "b6aebf58612ef57a708aec7d1f76a230f6b48ed5d234d5647bf53fb5674e09f4",
+    "archive": "implement.py",
+    "archiveSha256": "b6aebf58612ef57a708aec7d1f76a230f6b48ed5d234d5647bf53fb5674e09f4"
+  },
+  {
+    "source": "ios-build-command.json",
+    "sourceSha256": "cb6fb773abdf870717c029e6119875ca65784681795c857ae3dba4d53c9f7eba",
+    "archive": "ios-build-command.json",
+    "archiveSha256": "cb6fb773abdf870717c029e6119875ca65784681795c857ae3dba4d53c9f7eba"
+  },
+  {
+    "source": "ios-build-result.json",
+    "sourceSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+    "archive": "ios-build-result.json",
+    "archiveSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+  },
+  {
+    "source": "ios-build.log",
+    "sourceSha256": "68edebf4fc01955e868d298f72a90dfed18ff073dcc938c8c97a3d2bb0401fb8",
+    "archive": "ios-build.log.gz",
+    "archiveSha256": "96bee8439eec846e3eff66510e5546109ebaddbae8b70d39a391fa47bda042d0"
+  },
+  {
+    "source": "ios-candidate-attachments/E7C0EDF7-F52F-4DEC-9F44-EDB372CD5C9D.json",
+    "sourceSha256": "e9c9192ee7f40a526d19043c83bf2beafcff1bea73d8ff8fa90fc36ad79563b8",
+    "archive": "ios-candidate-attachments/E7C0EDF7-F52F-4DEC-9F44-EDB372CD5C9D.json",
+    "archiveSha256": "e9c9192ee7f40a526d19043c83bf2beafcff1bea73d8ff8fa90fc36ad79563b8"
+  },
+  {
+    "source": "ios-candidate-attachments/manifest.json",
+    "sourceSha256": "78c10015081d790289783aa747f93f8e7a8adcddc40553f102f425646ba22e97",
+    "archive": "ios-candidate-attachments/manifest.json",
+    "archiveSha256": "78c10015081d790289783aa747f93f8e7a8adcddc40553f102f425646ba22e97"
+  },
+  {
+    "source": "macos-candidate-attachments/865FBFD4-AECA-4082-A915-DC2251573D64.json",
+    "sourceSha256": "b383af9af92323fc1c4ef52d6b3ede60f446effab9584f614922ef64b4b8dba0",
+    "archive": "macos-candidate-attachments/865FBFD4-AECA-4082-A915-DC2251573D64.json",
+    "archiveSha256": "b383af9af92323fc1c4ef52d6b3ede60f446effab9584f614922ef64b4b8dba0"
+  },
+  {
+    "source": "macos-candidate-attachments/manifest.json",
+    "sourceSha256": "6b696fb862439c156f329e9e93c6804bb4895151f1d0fbfaf2481ead502daf0d",
+    "archive": "macos-candidate-attachments/manifest.json",
+    "archiveSha256": "6b696fb862439c156f329e9e93c6804bb4895151f1d0fbfaf2481ead502daf0d"
+  },
+  {
+    "source": "macos-contracts-command.json",
+    "sourceSha256": "802c0c4c0663c66dfe623778f77e3c7de0033bfff17f10764bf63217ca52b9fc",
+    "archive": "macos-contracts-command.json",
+    "archiveSha256": "802c0c4c0663c66dfe623778f77e3c7de0033bfff17f10764bf63217ca52b9fc"
+  },
+  {
+    "source": "macos-contracts-result.json",
+    "sourceSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e",
+    "archive": "macos-contracts-result.json",
+    "archiveSha256": "982b9e9bfb10ffe83cad665807abcfd3fa97b37822db5ab7831157a499548a9e"
+  },
+  {
+    "source": "macos-contracts-summary.json",
+    "sourceSha256": "1c6ec97aa73fe33d7acf2dd8babf7b474652ec5b86988dc26b469f7db134f1cc",
+    "archive": "macos-contracts-summary.json",
+    "archiveSha256": "1c6ec97aa73fe33d7acf2dd8babf7b474652ec5b86988dc26b469f7db134f1cc"
+  },
+  {
+    "source": "macos-contracts-tests.json",
+    "sourceSha256": "24bf615bc3b220818a845687769785fafe9b364bfc79325fbe6285e563486aa9",
+    "archive": "macos-contracts-tests.json",
+    "archiveSha256": "24bf615bc3b220818a845687769785fafe9b364bfc79325fbe6285e563486aa9"
+  },
+  {
+    "source": "macos-contracts.log",
+    "sourceSha256": "c42660a5a286059c1ac6d59e9e8030b569bb1f176f58209d078f00d579cf9229",
+    "archive": "macos-contracts.log.gz",
+    "archiveSha256": "5e2740e949dafbc2812eee852a9ad44a9d71a4eaeb579ca2819cfe55f32c35d3"
+  },
+  {
+    "source": "mime-fixed-command.json",
+    "sourceSha256": "f53e927d0205eeb04d0277c179605f1385b20ceff3022a530905bacb524efa66",
+    "archive": "mime-fixed-command.json",
+    "archiveSha256": "f53e927d0205eeb04d0277c179605f1385b20ceff3022a530905bacb524efa66"
+  },
+  {
+    "source": "mime-fixed-result.json",
+    "sourceSha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe",
+    "archive": "mime-fixed-result.json",
+    "archiveSha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
+  },
+  {
+    "source": "mime-fixed-summary.json",
+    "sourceSha256": "9dcfad1175a30aa9fc1e980be9e1beceae4d18fe58d8dbc001b5734f37819266",
+    "archive": "mime-fixed-summary.json",
+    "archiveSha256": "9dcfad1175a30aa9fc1e980be9e1beceae4d18fe58d8dbc001b5734f37819266"
+  },
+  {
+    "source": "mime-fixed-tests.json",
+    "sourceSha256": "f1b39758106501c6d67cc6b84ebff879a019dbace88cb1555836d91d9b9ad933",
+    "archive": "mime-fixed-tests.json",
+    "archiveSha256": "f1b39758106501c6d67cc6b84ebff879a019dbace88cb1555836d91d9b9ad933"
+  },
+  {
+    "source": "mime-fixed.log",
+    "sourceSha256": "a5cc722cec044ad7ec5caff3cb6491618776d634e4e6c053cbc43f38b43efb55",
+    "archive": "mime-fixed.log.gz",
+    "archiveSha256": "9404f4628b27a6c4c13db7a96c949a07c7fd8d34ccfeef5c7d42eadd704eded2"
+  },
+  {
+    "source": "mirrors.log",
+    "sourceSha256": "cfc57dea290785e5b654fd0067089807d9e7dec0e3a2d14d148068b28e45664b",
+    "archive": "mirrors.log.gz",
+    "archiveSha256": "3676927ddcc0c14a18c7c6b1484c92ed7a78a043b8ea5ec35418456065967318"
+  },
+  {
+    "source": "prior-evidence.json",
+    "sourceSha256": "9ebd7844a2e385e1386e0f8e5724b10f6d6935a34834267b39f292c5690484bb",
+    "archive": "prior-evidence.json",
+    "archiveSha256": "9ebd7844a2e385e1386e0f8e5724b10f6d6935a34834267b39f292c5690484bb"
+  },
+  {
+    "source": "readiness/diff-final.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/diff-final.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/diff-final.stdout",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/diff-final.stdout",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/ledger-final.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/ledger-final.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/ledger-final.stdout",
+    "sourceSha256": "ac3e4e3d5bab44b5834c784984de40b6e1f1d9bae844385529baeb8f2bc2438e",
+    "archive": "readiness/ledger-final.stdout",
+    "archiveSha256": "ac3e4e3d5bab44b5834c784984de40b6e1f1d9bae844385529baeb8f2bc2438e"
+  },
+  {
+    "source": "readiness/ledger-required.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/ledger-required.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/ledger-required.stdout",
+    "sourceSha256": "ac3e4e3d5bab44b5834c784984de40b6e1f1d9bae844385529baeb8f2bc2438e",
+    "archive": "readiness/ledger-required.stdout",
+    "archiveSha256": "ac3e4e3d5bab44b5834c784984de40b6e1f1d9bae844385529baeb8f2bc2438e"
+  },
+  {
+    "source": "readiness/ledger-tests-final.stderr",
+    "sourceSha256": "75e3bf46663a7b968b5b8142a9821062a68b63360f59a7d94142e7e0e86dab95",
+    "archive": "readiness/ledger-tests-final.stderr",
+    "archiveSha256": "75e3bf46663a7b968b5b8142a9821062a68b63360f59a7d94142e7e0e86dab95"
+  },
+  {
+    "source": "readiness/ledger-tests-final.stdout",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/ledger-tests-final.stdout",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/results.json",
+    "sourceSha256": "79472f8c8ba7dfe252ddab37de857e3e3ab6af4ad3fbf399e68eb8d6cd3a83fd",
+    "archive": "readiness/results.json",
+    "archiveSha256": "79472f8c8ba7dfe252ddab37de857e3e3ab6af4ad3fbf399e68eb8d6cd3a83fd"
+  },
+  {
+    "source": "readiness/threshold-final.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/threshold-final.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/threshold-final.stdout",
+    "sourceSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archive": "readiness/threshold-final.stdout",
+    "archiveSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630"
+  },
+  {
+    "source": "readiness/threshold-required.stderr",
+    "sourceSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "archive": "readiness/threshold-required.stderr",
+    "archiveSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "source": "readiness/threshold-required.stdout",
+    "sourceSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630",
+    "archive": "readiness/threshold-required.stdout",
+    "archiveSha256": "ccd5938228c5d897bd4ae0696ec7140a6dcbe6214ca5ce4b17d33d8954cc5630"
+  },
+  {
+    "source": "readiness.py",
+    "sourceSha256": "201357ba4e082e633eecd3b035038276f28cd3fbd88e20915c99f6a5aa196362",
+    "archive": "readiness.py",
+    "archiveSha256": "201357ba4e082e633eecd3b035038276f28cd3fbd88e20915c99f6a5aa196362"
+  },
+  {
+    "source": "review-fixed-command.json",
+    "sourceSha256": "3053008b6a893027f0917cc04dd1c2f57d6343b9c2afc53b3beb51f0fd4c8716",
+    "archive": "review-fixed-command.json",
+    "archiveSha256": "3053008b6a893027f0917cc04dd1c2f57d6343b9c2afc53b3beb51f0fd4c8716"
+  },
+  {
+    "source": "review-fixed-result.json",
+    "sourceSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7",
+    "archive": "review-fixed-result.json",
+    "archiveSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7"
+  },
+  {
+    "source": "review-fixed-summary.json",
+    "sourceSha256": "b86868cc9bccac61a541cc17b591c31ae2621d11e05d06cbfc4b6dee76f8ef47",
+    "archive": "review-fixed-summary.json",
+    "archiveSha256": "b86868cc9bccac61a541cc17b591c31ae2621d11e05d06cbfc4b6dee76f8ef47"
+  },
+  {
+    "source": "review-fixed-tests.json",
+    "sourceSha256": "83c4d1b3e59b198b3f56156bddac887fbcd90bec43fbc05fe5b673922864b0ba",
+    "archive": "review-fixed-tests.json",
+    "archiveSha256": "83c4d1b3e59b198b3f56156bddac887fbcd90bec43fbc05fe5b673922864b0ba"
+  },
+  {
+    "source": "review-fixed.log",
+    "sourceSha256": "23ff0d77c4909dfc4e706cddfeab58927977be21cd0edfc6396203bc02c5dd0e",
+    "archive": "review-fixed.log.gz",
+    "archiveSha256": "110edc366a3d9e7647064c4927fe23476b3026aa4be9c64681db70455bf47d9d"
+  },
+  {
+    "source": "review-green-command.json",
+    "sourceSha256": "59890b53bd8f171414a541532ed9886bac7a2a91924b3242e80e67dec011f991",
+    "archive": "review-green-command.json",
+    "archiveSha256": "59890b53bd8f171414a541532ed9886bac7a2a91924b3242e80e67dec011f991"
+  },
+  {
+    "source": "review-green-result.json",
+    "sourceSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7",
+    "archive": "review-green-result.json",
+    "archiveSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7"
+  },
+  {
+    "source": "review-green-summary.json",
+    "sourceSha256": "75a4194dce27637144247fe9184812f46f4f7d0d8ceb1eeebbf3be46190276de",
+    "archive": "review-green-summary.json",
+    "archiveSha256": "75a4194dce27637144247fe9184812f46f4f7d0d8ceb1eeebbf3be46190276de"
+  },
+  {
+    "source": "review-green-tests.json",
+    "sourceSha256": "dbf50d8e0d9d7948c926ba5b804959a687f516fe14a14c856df0fa3b288c0e1a",
+    "archive": "review-green-tests.json",
+    "archiveSha256": "dbf50d8e0d9d7948c926ba5b804959a687f516fe14a14c856df0fa3b288c0e1a"
+  },
+  {
+    "source": "review-green.log",
+    "sourceSha256": "f20188813ff6ea6d1ffe89e17e792842d867e8cccce303a0eb67762c2226c8a9",
+    "archive": "review-green.log.gz",
+    "archiveSha256": "9bba27fe25fd00aeccd86514d6135824ec9f444c88af2cf1770852f88c775f9b"
+  },
+  {
+    "source": "review.txt",
+    "sourceSha256": "c65409b03e810797332b7f5483a5fc472bee5e726382cf3a13605bf59fe817e9",
+    "archive": "review.txt",
+    "archiveSha256": "c65409b03e810797332b7f5483a5fc472bee5e726382cf3a13605bf59fe817e9"
+  },
+  {
+    "source": "run-final.py",
+    "sourceSha256": "1511f6f33cdf35cfffe9cffe26b02662fef87e301eb5b63940377e1d59ef586c",
+    "archive": "run-final.py",
+    "archiveSha256": "1511f6f33cdf35cfffe9cffe26b02662fef87e301eb5b63940377e1d59ef586c"
+  },
+  {
+    "source": "run.py",
+    "sourceSha256": "61ed714ad265c2541e7c2015a36c9d4730a25ce50db8da040d131fac71b43d35",
+    "archive": "run.py",
+    "archiveSha256": "61ed714ad265c2541e7c2015a36c9d4730a25ce50db8da040d131fac71b43d35"
+  },
+  {
+    "source": "source-before-review/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+    "sourceSha256": "dbe32f0756048353e90282f2774b1b9a286dfa34ac75c63d178a43ff562b0a61",
+    "archive": "source-before-review/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift.gz",
+    "archiveSha256": "e5099928164c5a68fa3cdb81be68793ac7815d1eb15be6b55861dd9ed500acfa"
+  },
+  {
+    "source": "source-before-review/packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "sourceSha256": "2b0c9801e01df4ec690eff085271661fef945c7061acb69d6d465ae007567e04",
+    "archive": "source-before-review/packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift.gz",
+    "archiveSha256": "2b0c0416c2c80b9e1d9307d4334ea1b0d871c6e1613e38b878f9b3413944b020"
+  },
+  {
+    "source": "source-before-review/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+    "sourceSha256": "dbe32f0756048353e90282f2774b1b9a286dfa34ac75c63d178a43ff562b0a61",
+    "archive": "source-before-review/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift.gz",
+    "archiveSha256": "e5099928164c5a68fa3cdb81be68793ac7815d1eb15be6b55861dd9ed500acfa"
+  },
+  {
+    "source": "source-before-review/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "sourceSha256": "2b0c9801e01df4ec690eff085271661fef945c7061acb69d6d465ae007567e04",
+    "archive": "source-before-review/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift.gz",
+    "archiveSha256": "2b0c0416c2c80b9e1d9307d4334ea1b0d871c6e1613e38b878f9b3413944b020"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+    "sourceSha256": "9bb830489fb4ba214ef6734c3d89b1612445b43bfa03938a41fb01254a4cc2b9",
+    "archive": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift.gz",
+    "archiveSha256": "bbc7ecbb199b745a35d8ac58d54d113eaaa6b9d992331e1775aa174bb14e0037"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift",
+    "sourceSha256": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
+    "archive": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift.gz",
+    "archiveSha256": "1d95548b23733c8a6a90e4d6c54b6b5d8e784928cc514ba110d8f8e4e3690d14"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift",
+    "sourceSha256": "87b9b9267418757e9980c9f2bd67fb6ee89106241e832595ae6210bda5e1098d",
+    "archive": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift.gz",
+    "archiveSha256": "298fe25ea08e9e54cb242d800af82ddc5f1b0781f34db788a5bb8c29e6c423a2"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift",
+    "sourceSha256": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
+    "archive": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift.gz",
+    "archiveSha256": "eeace10d675f5fe15b734620f430ff05b6feddd791cfff10e2e3cac99603091d"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift",
+    "sourceSha256": "63b08103e4795636786f66208471ece50bba5996da41011919672bca0b04b611",
+    "archive": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift.gz",
+    "archiveSha256": "de4f9ff5b792329330ac7b2a634db1b0fcb77ab423b400e2df5be57cd0d07ae1"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
+    "sourceSha256": "7a97aabd250a3d795f05ae727d34314b581fa5598b45de29791452d57f7c0bf4",
+    "archive": "source-before-review/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift.gz",
+    "archiveSha256": "fde7e461943b918d8567e9d142369907eb863650cff186df8a943dd9566bee5d"
+  },
+  {
+    "source": "source-before-review/packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlManagedHTTPTransport.swift",
+    "sourceSha256": "6d95918eac44e3d70f9f557044b3a6632f0b9992f3a2995e0cd6dd06053b38f0",
+    "archive": "source-before-review/packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlManagedHTTPTransport.swift.gz",
+    "archiveSha256": "65dc1fd4b1c74facd26b46ed6b3e1adc26245c92defd825ae157055f20bdc145"
+  },
+  {
+    "source": "source-before-review/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
+    "sourceSha256": "3ac097ccd3dc1c4d691e614f9e70e074da10ea881902fe8ba0eb166bd46b69a9",
+    "archive": "source-before-review/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift.gz",
+    "archiveSha256": "2fbfca666b39c1c904b5bc5ac471764fa568ca820ba3651da60ab35d695fc02c"
+  },
+  {
+    "source": "source-before-review/tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "sourceSha256": "1891a7f7c060fa3ed588e68f990cbdb7603318eb253df9ad66c727898a383d8e",
+    "archive": "source-before-review/tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift.gz",
+    "archiveSha256": "df8f497d105cbbf5f1e661dbae79c29fcdb5e97a44b1eb6fd95d075c86ddb7df"
+  },
+  {
+    "source": "source-before-review/tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+    "sourceSha256": "d83eb9d565e8e33f2d936e5e4d0493ec5a076a75125e570c32b815333a454377",
+    "archive": "source-before-review/tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+    "archiveSha256": "d83eb9d565e8e33f2d936e5e4d0493ec5a076a75125e570c32b815333a454377"
+  },
+  {
+    "source": "source-before-review/tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py",
+    "sourceSha256": "571ef8b27af2d20f069402656780093c502dcc22ffd27156c402d66f2e088482",
+    "archive": "source-before-review/tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py",
+    "archiveSha256": "571ef8b27af2d20f069402656780093c502dcc22ffd27156c402d66f2e088482"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/README.md",
+    "sourceSha256": "041c35a1d80b288e9fdd3b637f142ec8663e307b354ab8f70291bb84ba247962",
+    "archive": "source-before-review/tool/playback_network/README.md",
+    "archiveSha256": "041c35a1d80b288e9fdd3b637f142ec8663e307b354ab8f70291bb84ba247962"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/abr_accesslog.py",
+    "sourceSha256": "3fe0dd41bf6a647184472ce2d699cee7f726b1dc14e4acc90e90a78af846c5ca",
+    "archive": "source-before-review/tool/playback_network/abr_accesslog.py",
+    "archiveSha256": "3fe0dd41bf6a647184472ce2d699cee7f726b1dc14e4acc90e90a78af846c5ca"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/abr_device.py",
+    "sourceSha256": "baea817334c67352494bfcc62300c4dfaab0bb8db357c6fbf7515eb5352dd291",
+    "archive": "source-before-review/tool/playback_network/abr_device.py",
+    "archiveSha256": "baea817334c67352494bfcc62300c4dfaab0bb8db357c6fbf7515eb5352dd291"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/network_profile.py",
+    "sourceSha256": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1",
+    "archive": "source-before-review/tool/playback_network/network_profile.py",
+    "archiveSha256": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/prepare_fixture.py",
+    "sourceSha256": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9",
+    "archive": "source-before-review/tool/playback_network/prepare_fixture.py",
+    "archiveSha256": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/profiles.json",
+    "sourceSha256": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de",
+    "archive": "source-before-review/tool/playback_network/profiles.json",
+    "archiveSha256": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/test_abr_accesslog.py",
+    "sourceSha256": "4db402927de1b5705ae05abb960fea749971ab6a7cc70810021eca0f4c055881",
+    "archive": "source-before-review/tool/playback_network/test_abr_accesslog.py",
+    "archiveSha256": "4db402927de1b5705ae05abb960fea749971ab6a7cc70810021eca0f4c055881"
+  },
+  {
+    "source": "source-before-review/tool/playback_network/test_abr_policy.py",
+    "sourceSha256": "e0f016f84739558a985f568b0631e1a6bcb2bf41914f9060393cabb9d3e9f390",
+    "archive": "source-before-review/tool/playback_network/test_abr_policy.py",
+    "archiveSha256": "e0f016f84739558a985f568b0631e1a6bcb2bf41914f9060393cabb9d3e9f390"
+  },
+  {
+    "source": "source-before-review-identity.json",
+    "sourceSha256": "fd78f9b31864ef1eb3905fe7cc41c6277ba9e71205a289037d4b5ad81a19c657",
+    "archive": "source-before-review-identity.json",
+    "archiveSha256": "fd78f9b31864ef1eb3905fe7cc41c6277ba9e71205a289037d4b5ad81a19c657"
+  },
+  {
+    "source": "source-final/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+    "sourceSha256": "05fb55251f015151b72b52ce143808c8441e135550c8f6dfb791937a80a49273",
+    "archive": "source-final/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift.gz",
+    "archiveSha256": "7c9874f1884668b6e4e6a09dcfafbd8c76ea66dd88171ac03e67505003b9a92e"
+  },
+  {
+    "source": "source-final/packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "sourceSha256": "2b0c9801e01df4ec690eff085271661fef945c7061acb69d6d465ae007567e04",
+    "archive": "source-final/packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift.gz",
+    "archiveSha256": "2b0c0416c2c80b9e1d9307d4334ea1b0d871c6e1613e38b878f9b3413944b020"
+  },
+  {
+    "source": "source-final/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+    "sourceSha256": "05fb55251f015151b72b52ce143808c8441e135550c8f6dfb791937a80a49273",
+    "archive": "source-final/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift.gz",
+    "archiveSha256": "7c9874f1884668b6e4e6a09dcfafbd8c76ea66dd88171ac03e67505003b9a92e"
+  },
+  {
+    "source": "source-final/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "sourceSha256": "2b0c9801e01df4ec690eff085271661fef945c7061acb69d6d465ae007567e04",
+    "archive": "source-final/packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift.gz",
+    "archiveSha256": "2b0c0416c2c80b9e1d9307d4334ea1b0d871c6e1613e38b878f9b3413944b020"
+  },
+  {
+    "source": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+    "sourceSha256": "9bb830489fb4ba214ef6734c3d89b1612445b43bfa03938a41fb01254a4cc2b9",
+    "archive": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift.gz",
+    "archiveSha256": "bbc7ecbb199b745a35d8ac58d54d113eaaa6b9d992331e1775aa174bb14e0037"
+  },
+  {
+    "source": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift",
+    "sourceSha256": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
+    "archive": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift.gz",
+    "archiveSha256": "1d95548b23733c8a6a90e4d6c54b6b5d8e784928cc514ba110d8f8e4e3690d14"
+  },
+  {
+    "source": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift",
+    "sourceSha256": "87b9b9267418757e9980c9f2bd67fb6ee89106241e832595ae6210bda5e1098d",
+    "archive": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift.gz",
+    "archiveSha256": "298fe25ea08e9e54cb242d800af82ddc5f1b0781f34db788a5bb8c29e6c423a2"
+  },
+  {
+    "source": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift",
+    "sourceSha256": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
+    "archive": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift.gz",
+    "archiveSha256": "eeace10d675f5fe15b734620f430ff05b6feddd791cfff10e2e3cac99603091d"
+  },
+  {
+    "source": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift",
+    "sourceSha256": "63b08103e4795636786f66208471ece50bba5996da41011919672bca0b04b611",
+    "archive": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift.gz",
+    "archiveSha256": "de4f9ff5b792329330ac7b2a634db1b0fcb77ab423b400e2df5be57cd0d07ae1"
+  },
+  {
+    "source": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
+    "sourceSha256": "7a97aabd250a3d795f05ae727d34314b581fa5598b45de29791452d57f7c0bf4",
+    "archive": "source-final/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift.gz",
+    "archiveSha256": "fde7e461943b918d8567e9d142369907eb863650cff186df8a943dd9566bee5d"
+  },
+  {
+    "source": "source-final/packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlManagedHTTPTransport.swift",
+    "sourceSha256": "6d95918eac44e3d70f9f557044b3a6632f0b9992f3a2995e0cd6dd06053b38f0",
+    "archive": "source-final/packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlManagedHTTPTransport.swift.gz",
+    "archiveSha256": "65dc1fd4b1c74facd26b46ed6b3e1adc26245c92defd825ae157055f20bdc145"
+  },
+  {
+    "source": "source-final/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift",
+    "sourceSha256": "df9fead0b513d544b62d1d95434863a7927458e637dd2bfad9eb578dd8b9db62",
+    "archive": "source-final/tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift.gz",
+    "archiveSha256": "ef9f608a9efd1575ff281485a469385d9e32e726de36e5c2bc51d69ab73cd3c4"
+  },
+  {
+    "source": "source-final/tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift",
+    "sourceSha256": "1891a7f7c060fa3ed588e68f990cbdb7603318eb253df9ad66c727898a383d8e",
+    "archive": "source-final/tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift.gz",
+    "archiveSha256": "df8f497d105cbbf5f1e661dbae79c29fcdb5e97a44b1eb6fd95d075c86ddb7df"
+  },
+  {
+    "source": "source-final/tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+    "sourceSha256": "5b8aec6bb9e35b7085203b86d7d46769f292b97886124444c79cb751c27ce8d9",
+    "archive": "source-final/tool/consumer_fixtures/apple_flutter/main_example_tests.py",
+    "archiveSha256": "5b8aec6bb9e35b7085203b86d7d46769f292b97886124444c79cb751c27ce8d9"
+  },
+  {
+    "source": "source-final/tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py",
+    "sourceSha256": "571ef8b27af2d20f069402656780093c502dcc22ffd27156c402d66f2e088482",
+    "archive": "source-final/tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py",
+    "archiveSha256": "571ef8b27af2d20f069402656780093c502dcc22ffd27156c402d66f2e088482"
+  },
+  {
+    "source": "source-final/tool/playback_network/README.md",
+    "sourceSha256": "041c35a1d80b288e9fdd3b637f142ec8663e307b354ab8f70291bb84ba247962",
+    "archive": "source-final/tool/playback_network/README.md",
+    "archiveSha256": "041c35a1d80b288e9fdd3b637f142ec8663e307b354ab8f70291bb84ba247962"
+  },
+  {
+    "source": "source-final/tool/playback_network/abr_accesslog.py",
+    "sourceSha256": "3fe0dd41bf6a647184472ce2d699cee7f726b1dc14e4acc90e90a78af846c5ca",
+    "archive": "source-final/tool/playback_network/abr_accesslog.py",
+    "archiveSha256": "3fe0dd41bf6a647184472ce2d699cee7f726b1dc14e4acc90e90a78af846c5ca"
+  },
+  {
+    "source": "source-final/tool/playback_network/abr_device.py",
+    "sourceSha256": "baea817334c67352494bfcc62300c4dfaab0bb8db357c6fbf7515eb5352dd291",
+    "archive": "source-final/tool/playback_network/abr_device.py",
+    "archiveSha256": "baea817334c67352494bfcc62300c4dfaab0bb8db357c6fbf7515eb5352dd291"
+  },
+  {
+    "source": "source-final/tool/playback_network/network_profile.py",
+    "sourceSha256": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1",
+    "archive": "source-final/tool/playback_network/network_profile.py",
+    "archiveSha256": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1"
+  },
+  {
+    "source": "source-final/tool/playback_network/prepare_fixture.py",
+    "sourceSha256": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9",
+    "archive": "source-final/tool/playback_network/prepare_fixture.py",
+    "archiveSha256": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9"
+  },
+  {
+    "source": "source-final/tool/playback_network/profiles.json",
+    "sourceSha256": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de",
+    "archive": "source-final/tool/playback_network/profiles.json",
+    "archiveSha256": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de"
+  },
+  {
+    "source": "source-final/tool/playback_network/test_abr_accesslog.py",
+    "sourceSha256": "4db402927de1b5705ae05abb960fea749971ab6a7cc70810021eca0f4c055881",
+    "archive": "source-final/tool/playback_network/test_abr_accesslog.py",
+    "archiveSha256": "4db402927de1b5705ae05abb960fea749971ab6a7cc70810021eca0f4c055881"
+  },
+  {
+    "source": "source-final/tool/playback_network/test_abr_policy.py",
+    "sourceSha256": "e0f016f84739558a985f568b0631e1a6bcb2bf41914f9060393cabb9d3e9f390",
+    "archive": "source-final/tool/playback_network/test_abr_policy.py",
+    "archiveSha256": "e0f016f84739558a985f568b0631e1a6bcb2bf41914f9060393cabb9d3e9f390"
+  },
+  {
+    "source": "source-identity.json",
+    "sourceSha256": "ad7723a096ff54fff8780fd7397b972eb87beb91ba01a066252a0b886d3bd2dd",
+    "archive": "source-identity.json",
+    "archiveSha256": "ad7723a096ff54fff8780fd7397b972eb87beb91ba01a066252a0b886d3bd2dd"
+  },
+  {
+    "source": "targeted-command.json",
+    "sourceSha256": "f4a6d7cadf88d7dbe7617149d748408316d807d0904b25955501e4881bc41a7d",
+    "archive": "targeted-command.json",
+    "archiveSha256": "f4a6d7cadf88d7dbe7617149d748408316d807d0904b25955501e4881bc41a7d"
+  },
+  {
+    "source": "targeted-result.json",
+    "sourceSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7",
+    "archive": "targeted-result.json",
+    "archiveSha256": "1737ec804488fc748b83570260f647b72b611b1594727d101ab184900beeddd7"
+  },
+  {
+    "source": "targeted-summary.json",
+    "sourceSha256": "f087a765cff58b470c8736be203b7b2b176d5dedfbe1c0ec7943fbfa069e6498",
+    "archive": "targeted-summary.json",
+    "archiveSha256": "f087a765cff58b470c8736be203b7b2b176d5dedfbe1c0ec7943fbfa069e6498"
+  },
+  {
+    "source": "targeted-tests.json",
+    "sourceSha256": "83c4d1b3e59b198b3f56156bddac887fbcd90bec43fbc05fe5b673922864b0ba",
+    "archive": "targeted-tests.json",
+    "archiveSha256": "83c4d1b3e59b198b3f56156bddac887fbcd90bec43fbc05fe5b673922864b0ba"
+  },
+  {
+    "source": "targeted-typed-command.json",
+    "sourceSha256": "730febbeaaf76768bc96f2636bd6e2ac638f5ffe8d01e67f80921e2fadf72bee",
+    "archive": "targeted-typed-command.json",
+    "archiveSha256": "730febbeaaf76768bc96f2636bd6e2ac638f5ffe8d01e67f80921e2fadf72bee"
+  },
+  {
+    "source": "targeted-typed-result.json",
+    "sourceSha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe",
+    "archive": "targeted-typed-result.json",
+    "archiveSha256": "47b8b6b49d4695fe6e036bd916538aff4f46773e212ca0d429db80f3963e2cfe"
+  },
+  {
+    "source": "targeted-typed-summary.json",
+    "sourceSha256": "81206b5e58cf6b85e0cec88b15e1048e1f7a2d10685d32fb814828fea34edf72",
+    "archive": "targeted-typed-summary.json",
+    "archiveSha256": "81206b5e58cf6b85e0cec88b15e1048e1f7a2d10685d32fb814828fea34edf72"
+  },
+  {
+    "source": "targeted-typed-tests.json",
+    "sourceSha256": "49efa7bc48db99a70b9071559295da3f3d3b1af2931d65fc19b2ffea577e2b04",
+    "archive": "targeted-typed-tests.json",
+    "archiveSha256": "49efa7bc48db99a70b9071559295da3f3d3b1af2931d65fc19b2ffea577e2b04"
+  },
+  {
+    "source": "targeted-typed.log",
+    "sourceSha256": "00415a8715f74347cd81867765b2aa46a25f943d55d5e361d3daed155a94f7fb",
+    "archive": "targeted-typed.log.gz",
+    "archiveSha256": "80ce667746ceb12d6216ec0933bd720c339c35874f7c1910a9a1ecd35c4a3ac5"
+  },
+  {
+    "source": "targeted.log",
+    "sourceSha256": "bc320e157f95f73a6f6479c88584883777c3a243c79819402f1a44abf5db4cd7",
+    "archive": "targeted.log.gz",
+    "archiveSha256": "6677c5e900ab31e3507137329b42f3ef09567c81b930481ca69cadd4aaebe477"
+  },
+  {
+    "source": "update-records.py",
+    "sourceSha256": "c90b6f025fcb86d95ec26602ae4bf183d23c545589069f1716ae4a570a954d6f",
+    "archive": "update-records.py",
+    "archiveSha256": "c90b6f025fcb86d95ec26602ae4bf183d23c545589069f1716ae4a570a954d6f"
+  },
+  {
+    "source": "verify-archive.py",
+    "sourceSha256": "2ec40b69d56a00bc3c43fdac1897f769bce4174b3bc20ed2b79f185604491126",
+    "archive": "verify-archive.py",
+    "archiveSha256": "2ec40b69d56a00bc3c43fdac1897f769bce4174b3bc20ed2b79f185604491126"
+  }
+]

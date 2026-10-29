@@ -1,0 +1,12 @@
+[
+  {
+    "action": "xcodebuild -allowProvisioningUpdates",
+    "outcome": "auto-review-rejected-before-execution",
+    "reason": "May request/update Apple signing resources; explicit user authorization for those external updates is missing. Safer existing-local-signing attempt used."
+  },
+  {
+    "action": "xcodebuild -allowProvisioningUpdates",
+    "outcome": "explicit-user-authorized",
+    "scope": "Existing team JAKM34U2X8; test App development profiles and necessary development signing resources; connected iPhone local tests only, no publishing."
+  }
+]

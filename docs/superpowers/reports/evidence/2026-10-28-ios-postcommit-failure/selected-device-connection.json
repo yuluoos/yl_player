@@ -1,0 +1,54 @@
+{
+  "xcdevices.json": [
+    {
+      "ignored": false,
+      "modelCode": "iPhone17,3",
+      "simulator": false,
+      "modelName": "iPhone 16",
+      "operatingSystemVersion": "27.2 (24B119)",
+      "identifier": "00008140-000C49CC3493001C",
+      "platform": "com.apple.platform.iphoneos",
+      "architecture": "arm64e",
+      "interface": "network",
+      "available": true,
+      "name": "iPhone",
+      "modelUTI": "com.apple.iphone-16-1"
+    }
+  ],
+  "xcdevices-reconnected.json": [
+    {
+      "ignored": false,
+      "modelCode": "iPhone17,3",
+      "simulator": false,
+      "modelName": "iPhone 16",
+      "operatingSystemVersion": "27.2 (24B119)",
+      "identifier": "00008140-000C49CC3493001C",
+      "platform": "com.apple.platform.iphoneos",
+      "architecture": "arm64e",
+      "interface": "usb",
+      "available": true,
+      "name": "iPhone",
+      "modelUTI": "com.apple.iphone-16-1"
+    }
+  ],
+  "connectionBeforeReconnect": {
+    "authenticationType": "manualPairing",
+    "isMobileDeviceOnly": false,
+    "lastConnectionDate": "2026-10-28T17:13:00.000Z",
+    "localHostnames": [
+      "iPhone.coredevice.local",
+      "B14AAA39-3757-52F9-82CD-29E560A47EA9.coredevice.local",
+      "00008140-000C49CC3493001C.coredevice.local"
+    ],
+    "pairingState": "paired",
+    "potentialHostnames": [
+      "iPhone.coredevice.local",
+      "B14AAA39-3757-52F9-82CD-29E560A47EA9.coredevice.local",
+      "00008140-000C49CC3493001C.coredevice.local"
+    ],
+    "transportType": "localNetwork",
+    "tunnelIPAddress": "fd5a:bc50:115e::1",
+    "tunnelState": "connected",
+    "tunnelTransportProtocol": "tcp"
+  }
+}

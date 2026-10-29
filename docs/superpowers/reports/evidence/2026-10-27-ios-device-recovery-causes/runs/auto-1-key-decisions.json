@@ -1,0 +1,42 @@
+[
+  {
+    "allowed": true,
+    "attempts": 0,
+    "bufferAhead": 6.150877202,
+    "bytes": 1591383,
+    "elapsed": 25.60707800000091,
+    "generation": 0,
+    "overdue": 13,
+    "pendingDue": null,
+    "position": 22.849122798,
+    "qualifiedWindows": 0,
+    "reason": "windowStarted",
+    "remaining": 97.150877202,
+    "requests": 75,
+    "sawHigh": true,
+    "transfer": 25.4478615,
+    "width": 320,
+    "windowBitrate": null,
+    "windowRequests": null
+  },
+  {
+    "allowed": true,
+    "attempts": 0,
+    "bufferAhead": 10.065740790333333,
+    "bytes": 2093391,
+    "elapsed": 33.6737776666705,
+    "generation": 0,
+    "overdue": 15,
+    "pendingDue": null,
+    "position": 30.915592543,
+    "qualifiedWindows": 0,
+    "reason": "insufficientBandwidth",
+    "remaining": 89.084407457,
+    "requests": 97,
+    "sawHigh": true,
+    "transfer": 29.719839707000002,
+    "width": 320,
+    "windowBitrate": 940094.6833996797,
+    "windowRequests": 22
+  }
+]

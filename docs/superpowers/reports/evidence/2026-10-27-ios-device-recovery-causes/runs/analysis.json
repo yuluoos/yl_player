@@ -1,0 +1,184 @@
+[
+  {
+    "name": "auto-1",
+    "collectionPassed": true,
+    "position": 120.028396314,
+    "completed": true,
+    "width": 640,
+    "backendStatus": "completed",
+    "backendFailureCode": null,
+    "transitions": [
+      {
+        "elapsed": 0.19230262500059325,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.413401708334277,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 23.413398416669224,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 39.77031383333815,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "policy": {
+      "samples": 472,
+      "reasonCounts": {
+        "playbackIneligible": 11,
+        "insufficientBuffer": 46,
+        "highNotObserved": 11,
+        "highOutput": 291,
+        "windowStarted": 1,
+        "windowPending": 53,
+        "insufficientBandwidth": 1,
+        "nearEnd": 58
+      },
+      "attempts": 0,
+      "reservations": 0,
+      "tickets": 0,
+      "triggerExercised": false,
+      "windowBitrateMinimum": 940094.6833996797,
+      "windowBitrateMaximum": 940094.6833996797,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6609,
+      "publishedFrames": 2876,
+      "maximumPumpGapMs": 62.24287500663195,
+      "maximumPublishedFrameGapMs": 1482.0265000016661,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "signalLines": [],
+    "ownedProcessExited": true,
+    "binaryIdentityUnchanged": true,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto-2",
+    "collectionPassed": true,
+    "position": 120.024716001,
+    "completed": true,
+    "width": 640,
+    "backendStatus": "completed",
+    "backendFailureCode": null,
+    "transitions": [
+      {
+        "elapsed": 0.13862620833242545,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.430919999998878,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 23.404753833332506,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 39.75975962499797,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "policy": {
+      "samples": 473,
+      "reasonCounts": {
+        "playbackIneligible": 9,
+        "insufficientBuffer": 46,
+        "highNotObserved": 12,
+        "highOutput": 292,
+        "windowStarted": 1,
+        "windowPending": 54,
+        "firstQualifiedWindow": 1,
+        "nearEnd": 58
+      },
+      "attempts": 0,
+      "reservations": 0,
+      "tickets": 0,
+      "triggerExercised": false,
+      "windowBitrateMinimum": 1081971.0276994961,
+      "windowBitrateMaximum": 1081971.0276994961,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6638,
+      "publishedFrames": 2878,
+      "maximumPumpGapMs": 52.410583331948146,
+      "maximumPublishedFrameGapMs": 1467.6009583345149,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "signalLines": [],
+    "ownedProcessExited": true,
+    "binaryIdentityUnchanged": true,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "direct-control",
+    "collectionPassed": true,
+    "position": 120.024123221,
+    "completed": true,
+    "width": 640,
+    "backendStatus": null,
+    "backendFailureCode": null,
+    "transitions": [
+      {
+        "elapsed": 0.42100083333207294,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.832756791663996,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 24.06995841666503,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 40.109017374998075,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "policy": null,
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6756,
+      "publishedFrames": 2876,
+      "maximumPumpGapMs": 95.34474999964004,
+      "maximumPublishedFrameGapMs": 1278.8108750028186,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "signalLines": [],
+    "ownedProcessExited": true,
+    "binaryIdentityUnchanged": true,
+    "capabilityAccepted": false
+  }
+]

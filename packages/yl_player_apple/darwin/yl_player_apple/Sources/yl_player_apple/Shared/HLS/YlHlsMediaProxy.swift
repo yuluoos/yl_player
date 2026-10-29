@@ -53,6 +53,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     var upstreamError: Error?
     var reportedFailure: NativePlayerError?
     var httpStatus: Int?
+    #if DEBUG
+    var trace: YlHlsProxyRequestTrace?
+    #endif
 
     init(connection: NWConnection, method: String, range: String?, opaqueRetention: YlManagedBufferLedger.OpaqueHlsRetention? = nil) {
       self.opaqueRetention = opaqueRetention
@@ -61,6 +64,41 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       self.range = range
     }
   }
+
+  #if DEBUG
+  private static let diagnosticObserverLock = NSLock()
+  private static var diagnosticCapture: YlHlsProxyRequestCapture?
+  static var diagnosticRequestCapture: YlHlsProxyRequestCapture? {
+    diagnosticObserverLock.withLock { diagnosticCapture }
+  }
+  static var diagnosticRequestObserver: (([String: Any]) -> Void)? {
+    get { diagnosticObserverLock.withLock { diagnosticCapture?.observer } }
+    set { diagnosticObserverLock.withLock { diagnosticCapture = newValue.map(YlHlsProxyRequestCapture.init) } }
+  }
+  private let diagnosticProxyID = UUID().uuidString
+  private var diagnosticSequence = 0
+  private var diagnosticActiveTraces: [ObjectIdentifier: YlHlsProxyRequestTrace] = [:]
+
+  // Numeric, per-proxy debug observations only. No resource/credential identity,
+  // no retained event history and no change to transport or admission decisions.
+  private var diagnosticCounters: [String: Double] = [
+    "acceptedConnections": 0, "admittedRequests": 0,
+    "upstreamCompletions": 0, "receivedBodyBytes": 0, "closedWithActiveTask": 0,
+    "cancelledCompletions": 0, "failedCompletions": 0,
+    "lastAdmissionUptime": 0, "lastCompletionUptime": 0]
+  var diagnosticSnapshot: [String: Double] {
+    lock.withLock {
+      var result = diagnosticCounters
+      result["activeRequestTraces"] = Double(diagnosticActiveTraces.count)
+      result["activeConnections"] = Double(connections.count)
+      result["activeTasks"] = Double(taskRecords.count)
+      result["pendingSends"] = Double(taskRecords.values.reduce(0) { $0 + $1.pendingSends })
+      result["suspendedTasks"] = Double(connectionTasks.values.filter { $0.state == .suspended }.count)
+      result["cancelled"] = cancelled ? 1 : 0
+      return result
+    }
+  }
+  #endif
 
   let upstreamDiagnostics: YlHlsUpstreamDiagnostics
 
@@ -194,15 +232,24 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   }
 
   func cancelAll() {
+    #if DEBUG
+    var traces: [YlHlsProxyRequestTrace] = []
+    #endif
     let activeConnections = lock.withLock { () -> [NWConnection] in
       guard !cancelled else { return [] }
       cancelled = true
+      #if DEBUG
+      traces = Array(diagnosticActiveTraces.values)
+      #endif
       taskRecords.removeAll()
       connectionTasks.removeAll()
       let values = Array(connections.values)
       connections.removeAll()
       return values
     }
+    #if DEBUG
+    traces.forEach { $0.finish(outcome: 1) }
+    #endif
     upstreamDiagnostics.clear()
     listener.cancel()
     session.invalidateAndCancel()
@@ -218,6 +265,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let accepted = lock.withLock { () -> Bool in
       guard !cancelled else { return false }
       connections[identifier] = connection
+      #if DEBUG
+      diagnosticCounters["acceptedConnections", default: 0] += 1
+      #endif
       return true
     }
     guard accepted else {
@@ -297,7 +347,20 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       // Creating a task after URLSession invalidation raises an ObjC exception;
       // even the task factory and resume must belong to this admission fence.
       guard !cancelled, connections[ObjectIdentifier(connection)] === connection else { return false }
-      let task = session.dataTask(with: request)
+      #if DEBUG
+      let connectionID = ObjectIdentifier(connection)
+      diagnosticSequence += 1
+      let diagnosticTrace = Self.diagnosticRequestCapture?.makeTrace(
+        proxyID: diagnosticProxyID, requestID: diagnosticSequence,
+        didDeliver: { [weak self] in
+          _ = self?.lock.withLock { self?.diagnosticActiveTraces.removeValue(forKey: connectionID) }
+        })
+      var taskRequest = request
+      if let diagnosticTrace { taskRequest.setValue(diagnosticTrace.correlationID, forHTTPHeaderField: "X-Yl-Trace-Id") }
+      #else
+      let taskRequest = request
+      #endif
+      let task = session.dataTask(with: taskRequest)
       taskRecords[task.taskIdentifier] = TaskRecord(
         connection: connection,
         method: method,
@@ -306,6 +369,14 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       taskRecords[task.taskIdentifier]?.requestContext = headerPolicy.requestContext(for: destination, credentialsStripped: stripped)
       taskRecords[task.taskIdentifier]?.resourceKey = resourceKey
       connectionTasks[ObjectIdentifier(connection)] = task
+      #if DEBUG
+      if let diagnosticTrace {
+        taskRecords[task.taskIdentifier]?.trace = diagnosticTrace
+        diagnosticActiveTraces[connectionID] = diagnosticTrace
+      }
+      diagnosticCounters["admittedRequests", default: 0] += 1
+      diagnosticCounters["lastAdmissionUptime"] = ProcessInfo.processInfo.systemUptime
+      #endif
       task.resume()
       return true
     }
@@ -367,13 +438,27 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   }
 
   private func close(_ connection: NWConnection) {
+    #if DEBUG
+    var trace: YlHlsProxyRequestTrace?
+    #endif
     let task = lock.withLock { () -> URLSessionDataTask? in
       let identifier = ObjectIdentifier(connection)
+      #if DEBUG
+      trace = diagnosticActiveTraces[identifier]
+      #endif
       connections.removeValue(forKey: identifier)
       let task = connectionTasks.removeValue(forKey: identifier)
-      if let task { taskRecords.removeValue(forKey: task.taskIdentifier) }
+      if let task {
+        #if DEBUG
+        diagnosticCounters["closedWithActiveTask", default: 0] += 1
+        #endif
+        taskRecords.removeValue(forKey: task.taskIdentifier)
+      }
       return task
     }
+    #if DEBUG
+    trace?.finish(outcome: 1)
+    #endif
     task?.cancel()
     connection.cancel()
   }
@@ -396,6 +481,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       completionHandler(.cancel)
       return
     }
+    #if DEBUG
+    record.trace?.response(status: response.statusCode,
+      serverID: response.value(forHTTPHeaderField: "X-Yl-Request-Id").flatMap(Int.init))
+    #endif
     record.httpStatus = response.statusCode
     if !(200...299).contains(response.statusCode), record.reportedFailure == nil {
       let failure = YlHTTPFailure.error(status: response.statusCode)
@@ -424,12 +513,18 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     } else {
       headers["Transfer-Encoding"] = "chunked"
     }
+    #if DEBUG
+    let sendStarted = record.trace?.enqueue()
+    #endif
     sendHead(
       status: response.statusCode,
       headers: headers,
       to: record.connection
     ) { [weak self, weak dataTask] error in
       guard let self, let dataTask else { return }
+      #if DEBUG
+      record.trace?.sent(started: sendStarted, bytes: 0, failed: error != nil)
+      #endif
       self.responseSendDidComplete(
         error,
         task: dataTask,
@@ -447,6 +542,10 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   ) {
     guard let record = lock.withLock({ taskRecords[dataTask.taskIdentifier] }),
           record.method != "HEAD" else { return }
+    #if DEBUG
+    record.trace?.body(bytes: data.count)
+    lock.withLock { diagnosticCounters["receivedBodyBytes", default: 0] += Double(data.count) }
+    #endif
     trafficScope?.recordNetworkBytes(data.count)
     let payload: Data
     if record.usesChunkedTransfer {
@@ -458,12 +557,19 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     } else {
       payload = data
     }
+    #if DEBUG
+    let sendStarted = record.trace?.enqueue()
+    let sentBytes = data.count
+    #endif
     dataTask.suspend()
     lock.withLock { record.pendingSends += 1 }
     record.connection.send(
       content: payload,
       completion: .contentProcessed(retainingPayloadCompletion { [weak self, weak dataTask] error in
         guard let self, let dataTask else { return }
+        #if DEBUG
+        record.trace?.sent(started: sendStarted, bytes: sentBytes, failed: error != nil)
+        #endif
         self.responseSendDidComplete(
           error,
           task: dataTask,
@@ -508,13 +614,31 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     ))
   }
 
+  #if DEBUG
+  func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+    let trace = lock.withLock { taskRecords[task.taskIdentifier]?.trace }
+    trace?.metrics(metrics)
+  }
+  #endif
+
   func urlSession(
     _ session: URLSession,
     task: URLSessionTask,
     didCompleteWithError error: Error?
   ) {
     let outcome = lock.withLock { () -> (TaskRecord, Error?)? in
+      #if DEBUG
+      diagnosticCounters["upstreamCompletions", default: 0] += 1
+      diagnosticCounters["lastCompletionUptime"] = ProcessInfo.processInfo.systemUptime
+      if let error {
+        let cancelled = (error as NSError).domain == NSURLErrorDomain && (error as NSError).code == NSURLErrorCancelled
+        diagnosticCounters[cancelled ? "cancelledCompletions" : "failedCompletions", default: 0] += 1
+      }
+      #endif
       guard let record = taskRecords[task.taskIdentifier] else { return nil }
+      #if DEBUG
+      record.trace?.point("upstreamComplete")
+      #endif
       record.upstreamFinished = true
       record.upstreamError = error
       if let error, record.reportedFailure == nil {
@@ -561,6 +685,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       error: error
     ) {
     case .badGateway:
+      #if DEBUG
+      record.trace?.finish(outcome: 3)
+      #endif
       send(
         status: 502,
         body: Self.badGatewayBody(record.reportedFailure ?? error),
@@ -568,13 +695,23 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
         to: record.connection
       )
     case .finishChunked:
+      #if DEBUG
+      let sendStarted = record.trace?.enqueue()
+      #endif
       record.connection.send(
         content: Data("0\r\n\r\n".utf8),
-        completion: .contentProcessed(retainingPayloadCompletion { [weak self] _ in
+        completion: .contentProcessed(retainingPayloadCompletion { [weak self] error in
+          #if DEBUG
+          record.trace?.sent(started: sendStarted, bytes: 0, failed: error != nil)
+          record.trace?.finish(outcome: error != nil ? 2 : (record.reportedFailure == nil ? 0 : 3))
+          #endif
           self?.close(record.connection)
         })
       )
     case .close:
+      #if DEBUG
+      record.trace?.finish(outcome: error == nil && record.reportedFailure == nil ? 0 : 3)
+      #endif
       close(record.connection)
     }
   }
@@ -586,6 +723,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     resumeTask: Bool
   ) {
     if error != nil {
+      #if DEBUG
+      record.trace?.finish(outcome: 2)
+      #endif
       close(record.connection)
       return
     }
@@ -691,3 +831,135 @@ private extension NSLock {
     return try body()
   }
 }
+
+#if DEBUG
+/// One bounded record per admitted request, enabled only by an explicit observer.
+/// Completion is sealed before invoking the observer; late callbacks are ignored.
+final class YlHlsProxyRequestTrace {
+  private let lock = NSLock()
+  private var sealed = false
+  private var values: [String: Any]
+  private let observer: ([String: Any]) -> Void
+  let correlationID: String
+  init(proxyID: String, requestID: Int, observer: @escaping ([String: Any]) -> Void) {
+    self.observer = observer
+    let correlationID = UUID().uuidString
+    self.correlationID = correlationID
+    values = ["version": 2, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
+      "admission": ProcessInfo.processInfo.systemUptime,
+      "bodyBytes": 0.0, "sentBodyBytes": 0.0, "bodyCallbacks": 0.0,
+      "sendCount": 0.0, "sendCompletions": 0.0, "sendFailures": 0.0,
+      "sendWaitSum": 0.0, "sendWaitMax": 0.0]
+  }
+  private func update(_ action: (inout [String: Any], Double) -> Void) {
+    lock.withLock {
+      guard !sealed else { return }
+      action(&values, ProcessInfo.processInfo.systemUptime)
+    }
+  }
+  // Date pairs stay within the Foundation clock; never subtract them from uptime.
+  static func interval(from start: Date?, to end: Date?) -> Double? {
+    guard let start, let end else { return nil }
+    let seconds = end.timeIntervalSince(start)
+    return seconds.isFinite && seconds >= 0 ? seconds : nil
+  }
+  func metrics(_ metrics: URLSessionTaskMetrics) {
+    func duration(_ start: Date?, _ end: Date?) -> Any {
+      Self.interval(from: start, to: end).map { $0 as Any } ?? NSNull()
+    }
+    let transactions: [[String: Any]] = metrics.transactionMetrics.prefix(32).map { t in
+      let protocolCode: Int
+      switch t.networkProtocolName {
+      case "http/1.0", "http/1.1": protocolCode = 1
+      case "h2": protocolCode = 2
+      case "h3": protocolCode = 3
+      default: protocolCode = 0
+      }
+      return ["fetchSeconds": duration(t.fetchStartDate, t.responseEndDate),
+        "fetchToRequestSeconds": duration(t.fetchStartDate, t.requestStartDate),
+        "dnsSeconds": duration(t.domainLookupStartDate, t.domainLookupEndDate),
+        "connectSeconds": duration(t.connectStartDate, t.connectEndDate),
+        "tlsSeconds": duration(t.secureConnectionStartDate, t.secureConnectionEndDate),
+        "requestSeconds": duration(t.requestStartDate, t.requestEndDate),
+        "responseWaitSeconds": duration(t.requestEndDate, t.responseStartDate),
+        "responseSeconds": duration(t.responseStartDate, t.responseEndDate),
+        "reused": t.isReusedConnection ? 1 : 0, "protocolCode": protocolCode,
+        "fetchType": t.resourceFetchType.rawValue]
+    }
+    update { v, _ in
+      v["metrics"] = ["taskSeconds": duration(metrics.taskInterval.start, metrics.taskInterval.end),
+        "transactionCount": metrics.transactionMetrics.count, "redirectCount": metrics.redirectCount,
+        "truncated": metrics.transactionMetrics.count > 32 ? 1 : 0, "transactions": transactions]
+    }
+  }
+  func point(_ name: String) { update { $0[name] = $1 } }
+  func response(status: Int, serverID: Int?) {
+    update { v, now in
+      v["response"] = now; v["httpStatus"] = Double(status)
+      if let serverID, serverID > 0 && serverID <= 10000 { v["serverRequestID"] = Double(serverID) }
+    }
+  }
+  func body(bytes: Int) {
+    update { v, now in
+      if v["firstBody"] == nil { v["firstBody"] = now }
+      v["lastBody"] = now
+      v["bodyBytes"] = (v["bodyBytes"] as? Double ?? 0) + Double(bytes)
+      v["bodyCallbacks"] = (v["bodyCallbacks"] as? Double ?? 0) + 1
+    }
+  }
+  func enqueue() -> Double {
+    let now = ProcessInfo.processInfo.systemUptime
+    update { v, _ in
+      if v["firstSend"] == nil { v["firstSend"] = now }
+      v["lastSend"] = now; v["sendCount"] = (v["sendCount"] as? Double ?? 0) + 1
+    }
+    return now
+  }
+  func sent(started: Double?, bytes: Int, failed: Bool) {
+    update { v, now in
+      v["lastSendComplete"] = now
+      v["sendCompletions"] = (v["sendCompletions"] as? Double ?? 0) + 1
+      v["sendFailures"] = (v["sendFailures"] as? Double ?? 0) + (failed ? 1 : 0)
+      if !failed { v["sentBodyBytes"] = (v["sentBodyBytes"] as? Double ?? 0) + Double(bytes) }
+      if let started {
+        let wait = max(0, now - started)
+        v["sendWaitSum"] = (v["sendWaitSum"] as? Double ?? 0) + wait
+        v["sendWaitMax"] = max(v["sendWaitMax"] as? Double ?? 0, wait)
+      }
+    }
+  }
+  func finish(outcome: Int) {
+    let row = lock.withLock { () -> [String: Any]? in
+      guard !sealed else { return nil }
+      sealed = true; values["terminal"] = ProcessInfo.processInfo.systemUptime
+      values["outcome"] = Double(outcome)
+      return values
+    }
+    if let row { observer(row) }
+  }
+}
+#endif
+
+#if DEBUG
+/// Registration and stop share a lock. A sealed trace remains pending until its
+/// observer has returned, so the test writer cannot close before the last append.
+final class YlHlsProxyRequestCapture {
+  private let lock = NSLock()
+  private let pending = DispatchGroup()
+  private var active = true
+  let observer: ([String: Any]) -> Void
+  init(observer: @escaping ([String: Any]) -> Void) { self.observer = observer }
+  func makeTrace(proxyID: String, requestID: Int, didDeliver: @escaping () -> Void = {}) -> YlHlsProxyRequestTrace? {
+    lock.withLock {
+      guard active else { return nil }
+      pending.enter()
+      return YlHlsProxyRequestTrace(proxyID: proxyID, requestID: requestID) { [self] row in
+        defer { didDeliver(); pending.leave() }
+        observer(row)
+      }
+    }
+  }
+  func stop() { lock.withLock { active = false } }
+  func wait(timeout: TimeInterval) -> Bool { pending.wait(timeout: .now() + timeout) == .success }
+}
+#endif

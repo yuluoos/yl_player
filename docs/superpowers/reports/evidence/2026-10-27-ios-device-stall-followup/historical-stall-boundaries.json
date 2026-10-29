@@ -1,0 +1,161 @@
+{
+  "source": "2026-10-27-abr-frame-retention/physical-retry/auto-repeat",
+  "samples": [
+    {
+      "elapsed": 50.051018750004005,
+      "position": 47.191085536,
+      "rate": 1,
+      "timeControlStatus": 2,
+      "loadedRanges": [
+        {
+          "duration": 39.50666666666667,
+          "start": 17.493333333333332
+        }
+      ],
+      "framesPublished": 1131,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    },
+    {
+      "elapsed": 58.115123083334765,
+      "position": 55.255035297,
+      "rate": 1,
+      "timeControlStatus": 2,
+      "loadedRanges": [
+        {
+          "duration": 40.49066666666667,
+          "start": 23.498666666666665
+        }
+      ],
+      "framesPublished": 1324,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    },
+    {
+      "elapsed": 63.092692791666195,
+      "position": 60.232509385,
+      "rate": 1,
+      "timeControlStatus": 2,
+      "loadedRanges": [
+        {
+          "duration": 40.49066666666667,
+          "start": 23.498666666666665
+        }
+      ],
+      "framesPublished": 1444,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    },
+    {
+      "elapsed": 67.07075545833504,
+      "position": 63.899974913,
+      "rate": 1,
+      "timeControlStatus": 1,
+      "loadedRanges": [
+        {
+          "duration": 40.49066666666667,
+          "start": 23.498666666666665
+        }
+      ],
+      "framesPublished": 1532,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    },
+    {
+      "elapsed": 74.94515833333571,
+      "position": 63.899974913,
+      "rate": 1,
+      "timeControlStatus": 1,
+      "loadedRanges": [
+        {
+          "duration": 40.49066666666667,
+          "start": 23.498666666666665
+        }
+      ],
+      "framesPublished": 1532,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    },
+    {
+      "elapsed": 100.00961583333265,
+      "position": 63.899974913,
+      "rate": 0,
+      "timeControlStatus": 0,
+      "loadedRanges": [
+        {
+          "duration": 40.49066666666667,
+          "start": 23.498666666666665
+        }
+      ],
+      "framesPublished": 1532,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    },
+    {
+      "elapsed": 139.1063162499995,
+      "position": 63.899974913,
+      "rate": 0,
+      "timeControlStatus": 0,
+      "loadedRanges": [
+        {
+          "duration": 40.49066666666667,
+          "start": 23.498666666666665
+        }
+      ],
+      "framesPublished": 1532,
+      "clockAlignment": {
+        "afterUs": 325185.291665548,
+        "beforeUs": 256745.2500006766,
+        "serverUs": 611488
+      }
+    }
+  ],
+  "lastOriginResponse": {
+    "asset": "network-period-15/chunk-1-00004.m4s",
+    "assetSha256": "0644678cc0b4e2357813c4d10f4eeecdcedb164074ae4043ee0d05a0dbe95d08",
+    "bodyBytesWritten": 68293,
+    "endMs": 56404.245292,
+    "method": "GET",
+    "outcome": "complete",
+    "phaseBoundariesMs": [
+      0,
+      10000,
+      25000
+    ],
+    "phaseBytesWritten": [
+      0,
+      0,
+      68293
+    ],
+    "profile": "down-and-recover-v1",
+    "profileSha256": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+    "rangeEndExclusive": 68293,
+    "rangeStart": 0,
+    "requestId": 191,
+    "runId": "abr-accesslog",
+    "schemaVersion": 1,
+    "startMs": 56167.898917,
+    "status": 200,
+    "timelineMode": "first-get",
+    "timelineState": "active"
+  },
+  "conclusion": "Origin requests ended before the buffered end at 63.989s. Boundary evidence does not identify whether AVPlayer stopped issuing local requests or the local proxy stopped forwarding; no root cause assigned."
+}

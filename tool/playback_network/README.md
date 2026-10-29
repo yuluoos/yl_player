@@ -1,5 +1,52 @@
 # Reproducible HTTP network profiles
 
+The Apple recovery probe also records cumulative `textureClears` (new captures)
+and reports `replacementBoundaries` from actual published buffers on either side
+of an item generation change. A held texture is not a new frame. The publication
+gap and media-position delta are distinct; zero clears does not prove continuous
+playback or audio synchronization. Older frame files remain readable with
+`textureClears: null` in the boundary summary; missing observations are not zero.
+`generationsWithoutPublishedFrame` retains generations with no observed output.
+Recovery attribution uses installation completion (`elapsedAfter`) when available,
+not the start of asynchronous preparation. The high-width observation in the main
+row summary is AVPlayerItem geometry; use the frame file for actual buffer evidence.
+
+New native captures include `policySamplingVersion: 1`. Automatic runs preserve
+`policy-decisions.jsonl` from the exact input used by each policy evaluation:
+eligibility, buffer/remaining time, cumulative transfer counters, window bitrate,
+rejection reason, reservations and backoff. The reader checks qualified-window
+counter deltas and duration, eligibility, reservations and tickets; rejected inputs
+may retain unknown/negative values without becoming eligible. The receipt validates this trace and
+reports `policyObservation`. `triggerExercised` means a recovery ticket was issued;
+it does not prove installation, successful upshift, continuity or acceptance.
+Zero attempts is explicitly untriggered, even when the media reaches EOF.
+Historical captures without the version remain readable; exact decisions cannot
+be reconstructed retroactively from their less frequent main rows.
+
+The XCTest action log records package-owned `[YL-ABR]` failure codes plus iOS
+route/interruption/lifecycle notification types and numeric reasons, with probe
+elapsed time. It does not log audio device names, credentials or source URLs and
+does not resume playback in response to these notifications. Main rows retain
+backend status/failure code alongside AVPlayer item status, which alone may stay
+ready after the backend's stall watchdog fails the session.
+
+For an explicitly paired physical iPhone, the native diagnostic collector supports
+`--physical-device UDID --owned-host RFC1918_IPV4` instead of `--device SIMULATOR_UUID`.
+Build the test host and test bundle with development signing first (the example's
+test target normally disables signing; use `CODE_SIGNING_ALLOWED=YES` for this
+device build). The phone must permit local networking and reach the selected Mac
+interface. The listener binds only that explicit canonical private IPv4 address;
+wildcard, public, link-local, hostname and implicit LAN binding are rejected.
+The standalone server CLI and all non-device probes still bind loopback only.
+The native probe also checks the explicit host, port, path and capture token.
+
+Device observations are exported from this test app's random temporary directory
+with `devicectl`. Collection copies only the bounded allowlist of observation
+files. Cleanup checks the token, device kind, PID and full executable path before
+termination; an unverified cleanup makes the receipt fail. A successful device
+receipt proves collection and validation, not screen output, audio synchronization,
+or CAP-ABR acceptance. Keep failed signing, installation and capture attempts.
+
 P04 Task 1A tool slice. Python standard library only; no native build or player
 process required. Serves an owned two-rendition AVC/AAC fixture after checking
 every `SHA256SUMS` entry, and freezes those bytes in memory. The source has two
@@ -7,6 +54,13 @@ four-second Periods (320×180 / 350 kbit/s and 640×360 / 700 kbit/s), with AAC-
 The preparer repeats these ten Periods for a 40-second programme, preserving
 media bytes and assigning each Period unique URLs to avoid reusing cached media.
 Encoder/MPD bandwidth declarations are not observed transfer rates.
+
+For EOF/prebuffer recovery diagnostics only, `prepare_fixture.py --duration-seconds
+120 --output NEW_DIRECTORY` generates 30 Periods with a distinct manifest/inventory
+identity. Pass `--dart-define=YL_ABR_PROGRAMME_SECONDS=120` to the public capture.
+The default remains the byte-identical 40-second programme. Keep durations in
+separate experiments; a longer diagnostic cannot replace a frozen baseline or
+turn an earlier missing upshift into a pass. See the [capture protocol](capture-protocol.md).
 
 From the repository root:
 
@@ -194,12 +248,89 @@ observation rows. The normal profile is unchanged. An explicitly supplied
 `--profiles` file and `--profile` may define a separately identified diagnostic
 intervention; it must not replace the frozen baseline.
 
-Logs contain only scalar playback/geometry/bitrate/transfer counters, never
-access-log URLs or server addresses. The test discards published test pixel
+`--duration-seconds 120` selects the separate longer diagnostic. The optional
+`--direct-hls-control` uses AVPlayer directly with independently generated HTTP
+HLS playlists referencing the same media and MPD segment timelines. It bypasses
+the project's DASH loader/proxy/backend and is never production-path acceptance.
+Its master declares the same 414000/764000 aggregate rates, resolutions and
+codecs; media bytes are unchanged, and its extra playlists have their own frozen
+inventory identity. The managed probe keeps its preparation-before-AVPlayer
+initialization order. A previously built host must confirm transport and duration
+in every native row, or the collector rejects the attempt.
+
+For an explicitly labeled timing intervention, `--startup-delay-ms 1000` waits
+after managed preparation. Direct mode first GETs the owned MPD to arm the same
+server clock, then waits before starting AVPlayer. Only 0..2000 ms is accepted;
+default zero preserves normal startup. The native rows and receipt bind the delay.
+Compare the actual segment start times at the 10-second boundary, not just the
+CLI delay, since launch/decoder/scheduling timing still varies. Never silently
+use a delayed run in place of a frozen baseline or infer causality from unmatched
+weak-phase entry states.
+
+`--recovery-action seek-current` or `--recovery-action reload-source` is an
+explicit managed-only 120-second experiment. After 35 seconds, and only after
+high-to-low output with a recorded CoreMedia -12889 error while still low, the
+probe performs one exact seek to the current position or prepares the same source
+and invokes the existing `replaceActiveDash` transaction. This fixture-specific
+trigger is not a production recovery policy or a public penalty-box API.
+The pre-operation record is written before awaiting work; the final attempt
+records time, position, completion and whether the item changed. Reload completion
+means installation returned, not seek landing or seamless output. Error/access
+log counters restart with a new item; preceding rows remain intact. Sampling
+pauses during the operation, so gaps cannot measure black-screen duration.
+The collector binds the action to every row and rejects missing/failed attempts.
+Intervened rows cannot be summarized without an explicit expected action.
+`highOutputAfterInterventionObserved` refers only to the owned 640-pixel fixture;
+neither this observation nor a successful capture admits CAP-ABR. Default `none`
+keeps the original no-intervention behavior. Direct HLS and 40-second intervention
+requests are rejected rather than silently changing the experiment.
+
+`--recovery-action auto-reload` evaluates an experimental policy in the test
+host, not in the production backend. It is limited to the owned clear static
+DASH fixture, unconstrained auto playback. It requires previous high output,
+current low output, download-overdue history, at least 5 seconds continuously
+buffered from the current position (future ranges across gaps do not count) and
+20 seconds remaining, plus two consecutive 8-second windows with at least three
+new requests and transfer-byte/time deltas above 1.25 times the declared high
+rate. These are candidate decision parameters, not new acceptance thresholds or
+proof of available network capacity. The policy has no private penalty-box API.
+
+The source budget is two reservations, with 500/1000 ms backoff; cancellation,
+failure, successful frames and new item generations never refund it. Preparation
+rechecks ticket age, generation, item identity and current eligibility before
+installation. `--auto-scenario pause-first` explicitly pauses after the first
+ticket is issued and resumes two seconds later, exercising cancellation and
+retained budget. It is separately identified in every row and the receipt.
+The scenario explicitly invalidates the ticket on pause, so an early resume
+cannot revive it. A production dispatcher would have to connect this invalidation
+to every relevant intent change. These legacy diagnostic scenarios explicitly
+disable the production dispatcher, preserving their original experimental scope.
+Broader seek/constraint/DRM/network races still need production qualification.
+
+Frame sampling version 2 uses an independent approximately 16 ms main-actor
+pump during asynchronous preparation. `frame-samples.jsonl` records actual
+published buffers, item generations, player position/rate and pump timing.
+The old duplicate raster read is removed; the display callback consumes its
+retained buffer. The collector checks sample ordering and frame totals, and
+reports maximum publication/pump gaps without asserting continuity or audio
+synchronization. Main-thread blocking can still prevent sampling; these are
+application publication observations, not physical screen/audio measurements.
+Old 250 ms capture files remain historical evidence and do not meet this host
+identity contract. Failed/no-op automatic runs do not invent a recovery.
+
+Logs contain playback/geometry/bitrate/transfer counters, buffer ranges/flags,
+`downloadOverdue`, and the most recent 32 error-log events (total count retained).
+Error comments are bounded and URL-redacted; access-log URLs and server addresses
+are not recorded. A profile-identity-checked HEAD brackets the server clock after
+the first geometry appears. Earlier rows have no clock alignment.
+The test discards published test pixel
 buffers every poll. The output records actual down/up geometry changes and
 AVPlayer's reported bitrate; it does not reveal the private ABR decision
 algorithm, establish a recovery deadline, or certify CAP-ABR/physical output.
-Native completion requires programme completion and disposal. Full public
+`observedBitrate` is an empirical downloaded-media metric, not instantaneous
+recovery capacity; negative `indicatedBitrate` means unknown, not proof that a
+variant was excluded. Native completion requires the declared programme end
+(within 0.5 s), disposal and matching transport/duration/delay. Full public
 Flutter auto/caps/fixed acceptance remains a separate entry.
 
 Once the fresh output directory is created, setup failures (including missing
@@ -209,3 +340,295 @@ Executable identity compares resolved paths so `/tmp` and `/private/tmp` aliases
 identify the same host. Cleanup still requires the exact captured PID, start
 time and process identity; a different executable path is rejected. An absent
 or unverified launched host never becomes a successful cleanup claim.
+
+The macOS native publication tests depend on the real display clock. Record the
+display awake/sleep condition when investigating missing frames. Keep the display
+awake for foreground playback tests (for example, scope `caffeinate -u -d -i` to
+the test command); retain any prior sleep-condition failures and use the same
+binary and deadlines for the comparison. This is not background-playback acceptance.
+
+`trailingNoPublicationMs` is the observed interval from the last sample containing
+a published frame to the final frame-pump sample. It preserves terminal freezes
+that inter-frame maxima cannot show; it is not a new stall threshold, physical
+black-screen duration, or proof of output after capture ends. Valid frame
+observations are retained even if playback/EOF validation fails; the receipt
+continues to fail, and continuity/audio/physical acceptance remain false.
+
+Debug native captures may include `proxySamplingVersion=1`, a numeric `proxy`
+snapshot, and `sampleUptime` in the main rows. Admission/completion timestamps
+use the device's monotonic uptime, not origin-server elapsed time. Counters are
+scoped to the current loader and reset on item replacement; do not difference
+them across generations. Completion counts include cancellation callbacks after
+a local connection has already closed. They are not HTTP-success counts.
+`activeTasks`, `pendingSends` and `suspendedTasks` are sampled gauges of currently tracked records. A zero
+sample cannot rule out work between samples or detached callbacks after closure. No URL, headers or resource IDs
+are recorded by this snapshot. The observations do not alter proxy behavior.
+
+Frame rows additionally record `itemStatus` and `resumeSeekPending` in these
+builds. Their sampled transitions help bound exact-seek and first-buffer waits;
+`readyToPlay` is not assumed to precede the first pixel buffer. They do not
+measure decoder PTS, audible output, or justify bypassing the seek publication
+gate. Preserve the original publication gap even when the previous texture is
+retained, and compare diagnostic changes with the original built host when
+investigating observer overhead.
+
+`--candidate-preparation asset-metadata` is an owned, managed 120-second
+`auto-reload` experiment. It loads `playable`, `tracks` and `duration` on the
+candidate asset while the current item remains installed. `playable` alone can
+report loaded without reading resources and is not a preloading proof. The
+default `manifest-only` retains the previous preparation path. Native rows must
+echo the requested mode; an older host that ignores a nondefault mode fails
+collection instead of being counted as a successful experiment.
+
+Metadata preparation stops at the earlier of two seconds or the existing
+ticket expiry. On abort it cancels asset loading and explicitly discards the
+owned loader; calling `AVAsset.cancelLoading()` alone is not treated as proof
+that loader requests ended. Installation still revalidates the original ticket
+and current item, preserves the exact seek and does not refund reserved budget.
+Events distinguish manifest completion, warmup timestamps/outcome, current-item
+identity, frame/position progress and candidate proxy snapshots. Metadata loaded
+is not decoder preroll, first-frame availability, safe production integration,
+or seamless output acceptance. Normal and warmed trials must remain separately
+labelled, including failures and cancelled candidates.
+
+On iOS, an `audioRoute` signal with `reason=2` is an old-device-unavailable
+notification. AVPlayer may pause for this privacy event even with buffered data.
+The backend now mirrors it into paused transport intent and waits for explicit
+play; reconnecting a route never authorizes automatic resume. Keep the native
+signal and proxy snapshots together when diagnosing a terminal pause. A capture
+that does not reach EOF still fails collection: a correctly handled system pause
+is not an ABR or continuity pass. Do not attribute earlier buffered-exhaustion
+failures to route loss without their own event evidence. Synthetic route-notice
+regressions on a physical device are distinct from physical unplug/disconnect
+validation.
+
+`--candidate-preparation asset-preroll` adds a bounded owned-media experiment:
+create a muted, paused candidate player, wait for player/item readiness, seek
+exactly, then preroll at rate 1. It checks the original ticket and playback
+intent throughout, with the earlier of a two-second limit or ticket expiry.
+Aborts cancel seeks/prerolls/asset loading, detach the item and discard its loader.
+
+A prerolled item must never be transferred between players. The physical-device
+prototype raised an AVPlayerItem association exception even after detaching it.
+The retained experiment instead creates a **fresh item from the warmed asset**;
+normal exact resume seek is still required and decoder state is not transferred.
+Capture validation rejects installations without explicit completed preparation,
+old-item retention, candidate detachment, fresh-item adoption and non-reuse proof.
+This is opt-in diagnostic tooling, not production automatic recovery or latency
+acceptance. Failed preparation still spends its reserved attempt.
+
+`--auto-scenario pause-during-preparation` requires `asset-preroll` and invalidates
+the first ticket after actual candidate readiness, before its seek. The event
+records whether this point was reached. Resume after the diagnostic pause cannot
+revive that ticket; a second reservation uses the original longer backoff. This
+one injection does not cover every seek/preroll/credential/constraint race, and
+an unexercised injection must remain unverified.
+
+Metadata preparation also revalidates the original ticket before loading,
+throughout polling and before returning success. Revocation cancels the asset
+and its owned loader requests instead of waiting for the two-second deadline.
+`--auto-scenario pause-during-metadata` requires `asset-metadata`; it pauses and
+invalidates the first ticket after issuing the metadata loading operation.
+This injection alone does not prove a network request had already arrived;
+separate native tests hold actual resource-loader requests and verify cancellation.
+
+`--auto-scenario seek-during-preparation` requires `asset-preroll`; after actual
+candidate readiness it invalidates the first ticket and asks the existing backend
+to seek forward one second. Events record successful invocation and the target.
+The real frame trace must still be inspected for the landing and old-item retention.
+Neither scenario changes budgets, backoff, exact seek or capability acceptance.
+Native local-media tests separately cancel after seek and preroll calls are issued;
+these cover operation boundaries, not every asynchronous race or physical output.
+
+Automatic recovery eligibility now requires an unconstrained peak bitrate,
+zero preferred maximum resolution and no fixed video selection. Width-only,
+height-only and fixed-selection policies must not reserve recovery attempts even
+when the sampled bandwidth and buffer conditions otherwise qualify.
+
+`--auto-scenario caps-during-preparation` and `fixed-during-preparation` require
+`asset-preroll`. Once the first candidate becomes ready, the diagnostic invalidates
+its ticket and commits a separately prepared width-320 cap or fixed low track
+through the existing backend replacement path. Both candidates use the same
+manifest snapshot. The event records actual success and item replacement; rows
+record maximum resolution, fixed track ID and unconstrained-policy eligibility.
+Inspect all later rows and frames for preserved selection and compliant output.
+A new generation in these scenarios comes from the injected user policy, not an
+automatic recovery success. This is backend-path coverage, not the full public
+host auto/caps/fixed matrix or physical continuity acceptance.
+
+### Typed public-host policy cycle
+
+`abr_accesslog.py --public-policy-cycle --duration-seconds 120` runs the existing
+owned capture through `YlApplePlayerHost.load`, `setVideoConstraints`, and
+`selectVideoTrack`: initial auto, 320-width cap at 8 seconds, clear at 24 seconds,
+fixed low track at 50 seconds, and auto at 70 seconds. It requires managed DASH,
+no diagnostic recovery, no preparation experiment, and no startup delay. The
+frozen network profile, media duration, and capture deadlines stay unchanged.
+
+`public-policy-events.json` records each command and actual item/session change.
+The receipt requires all five ordered phases in the same session, accepted
+constraints/selection, at least three samples and three new-frame submissions
+per phase, only 320-wide new frames while capped/fixed, and a 640-wide new frame
+in each unrestricted phase. Missing commands, failed application, host failures,
+or missing frame evidence reject the run even if EOF was reached. The usual
+full frame-gap evidence is retained. This native typed-host matrix does not
+exercise the Dart messenger, automatic recovery competition, physical screen,
+or audio/subtitle continuity; it never marks capability acceptance.
+
+### Public-host preparation race (diagnostic)
+
+`--public-policy-race` uses the typed public host for both loading and the policy
+command. It requires `--duration-seconds 120 --recovery-action auto-reload
+--candidate-preparation asset-preroll` with `--auto-scenario
+caps-during-preparation` or `fixed-during-preparation`; it cannot be combined with
+`--public-policy-cycle`, direct HLS, or startup delay.
+
+The frozen policy must naturally issue one ticket. After the candidate reaches
+real AVPlayer readiness, the test awaits `setVideoConstraints` or
+`selectVideoTrack`. It does not manually invalidate the ticket: current host
+policy and item identity must reject the old candidate. No public-host recovery
+installation path is added. The collector requires a successful command in the
+same session, changed active item, cancellation and cleanup of the old candidate,
+retained source budget, sustained accepted policy, and only 320-wide new frames
+following command completion. It also retains the existing policy-window,
+frame, and EOF checks. Zero tickets fail race acceptance, even if playback ends.
+
+This is a diagnostic public command race, not a production automatic recovery or
+physical audiovisual continuity acceptance. Original-profile runs that never
+exercise a ticket remain failures for this race and retain their decision logs.
+
+The candidate deadline is monitored while the public command waits. Candidate
+cleanup records are fixed before joining the independent command task; expiry
+does not cancel the user command. Race acceptance additionally requires command
+completion and candidate cleanup within the original preparation/ticket deadline.
+
+### Public pause/seek preparation races
+
+`--public-policy-race` also accepts `pause-during-preparation` and
+`seek-during-preparation` with the same 120s/auto-reload/asset-preroll requirements.
+The diagnostic ticket now captures the host's acknowledged transport revision,
+read from the coordinator's existing restoration-intent counter. A successful
+pause or seek invalidates old authority even when the AVPlayer item is unchanged;
+failed admission does not change this counter. This is an internal read-only
+view, not a Pigeon API or an enabled production recovery policy.
+
+Pause holds for two seconds and requires stable position, paused state, zero rate
+and false playback intent before an explicit public `play`. Seek moves forward
+1000ms and requires subsequent published-buffer presentation times at or beyond
+the target (the existing 50ms tolerance). The test-only video-output factory
+records AVPlayerItemVideoOutput `itemTimeForDisplay`, associates it with each
+actually published buffer, and emits `framePresentationTimes`; player clock
+position alone is insufficient. Missing, stale or mismatched timestamp counts
+fail validation. Both paths
+require new frames/progress after the command, original preparation deadlines,
+retained same-source attempt budget, later 640-wide output, and no stale candidate
+installation. Main and policy samples must have monotonic UInt64 intent revisions;
+every event ticket binds to its issuing decision, and command-before/after
+revisions must match both streams. A revision change resets qualification
+windows and pending authority without refunding attempts. Later
+naturally reserved tickets remain subject to the original two-attempt budget;
+this diagnostic does not install public-host recovery candidates. Credential,
+physical-output and full production recovery acceptance remain separate.
+
+
+### Recovery credential provenance
+
+Policy sampling version 2 adds `credentialRevision` alongside transport intent.
+It is the count of distinct resources permanently stripped within the same user
+Load; repeated stripping is idempotent. It contains no URLs or credential values.
+Recovery preparation shares the active HLS loader's credential context and request
+metadata. A change resets qualification windows and revokes pending/in-flight
+authority without refunding the source attempt budget. Every candidate event binds
+both ticket revisions to its issuing decision. V2 rejects missing or mismatched
+authority; historical V1 remains separately identifiable, without upgrading its
+coverage. No production automatic recovery is enabled by this diagnostic policy.
+
+Local contracts combine actual AVPlayer candidate readiness with an owned
+cross-origin redirect/return request, and verify candidate cancellation, resource
+release and credential stripping through a separately prepared shared-context
+proxy. Synthetic bandwidth samples issue the test ticket. This is not a full
+public/Dart credential race, physical playback continuity or high-tier recovery
+acceptance; those remain separate pending checks.
+
+The final diagnostic installation is synchronous under the same context lock as
+`strip`, after both DASH loaders finish preflight. It never waits for network or
+reenters the context; background changes order before the fence (reject) or after
+actual item installation. V2 installed events require `credentialCommitAccepted`.
+This fence is exercised through actual backend item replacement, independently
+of the local readiness/redirect test; it does not enable production recovery.
+
+## Production iOS recovery capture
+
+Add `--production-recovery` to the physical-device, 120-second `auto-reload`,
+`normal`, `manifest-only` capture. This selects the typed public host with the
+production dispatcher enabled; the probe never installs a diagnostic candidate.
+Native production decisions and completed events share the existing strict
+policy/authority validation. Actual buffers must show high output after a real
+downshift and after any successful installation; EOF and final high output are
+required. System interruption signals invalidate this controlled capture.
+
+`--production-command pause-resume` sends a public Pause after reservation one,
+waits two seconds, then sends public Play. It requires multiple native paused
+samples with no position drift beyond 50 ms, no early install, no budget refund,
+and a real installation using reservation two and its 1000 ms backoff. This is a
+separate scenario, not a replacement for an unmodified original-profile run.
+Host proxy boundaries and resume-seek gates are recorded alongside actual frames.
+All receipts remain diagnostic evidence; production-path coverage does not by
+itself certify CAP-ABR, physical continuity or audio synchronization.
+
+生产候选提交前竞争可使用 `--production-recovery --production-command pause-prepared|seek-prepared|load-prepared`，仍限定真机、120秒、normal/auto-reload/manifest-only。内部默认nil钩子仅在真实候选准备完成后暂挂；公开命令负责取消，采集器不直接取消生产控制器、不改带宽或截止。第一候选必须在2秒准备期限内被取消且没有安装；暂停/跳转后必须消耗第二次预算并真实恢复高档。暂停需至少2秒、3个静止样本；跳转与新Load的首个实际帧PTS必须位于目标前后50ms内，后续帧不能落回目标之前50ms以外；首帧延迟单独报告，不据此授予物理连续性验收。
+
+新Load使用相同请求标签但必须产生新会话，旧候选取消和新预算分别审计，公开Load返回时新预算必须已归零；其高档帧属于新Load，不能宣称同会话自动恢复。`production-command-events.json`、按会话标识的策略决策和原始帧共同核验边界。所有受控通过仍不代表物理音画连续性或跨设备稳定性通过。
+
+## Read-only bandwidth diagnosis
+
+For a completed owned-fixture capture with exact policy decisions:
+
+```sh
+python3 -B tool/playback_network/bandwidth_diagnostics.py CAPTURE_DIRECTORY \
+  --profiles PROFILE_DOCUMENT.json > NEW_DIAGNOSTIC.json
+```
+
+This checks profile identity and request accounting, reuses the strict policy
+validator, and reports each phase's server write bytes, summed request durations,
+and the union of overlapping request intervals separately. A request crossing a
+phase boundary, failed/empty responses, and HEAD preflight remain counted in the
+excluded totals; they are not silently treated as successful phase samples.
+The configured ceiling and nominal request latency sum are configuration values,
+not measurements of link capacity or actual latency. Neither server goodput nor
+its interval union replaces the AVPlayer policy's bandwidth observation. The
+server and device clocks are not subtracted or assumed synchronized. The report
+cannot approve recovery, continuity, or capability acceptance, and never modifies
+raw captures or the original collector receipt.
+
+For causal comparisons, keep the original profile frozen and change one factor
+in a separately named diagnostic profile. Existing stall/headroom/zero-latency
+contrasts change several factors and do not isolate request delay alone.
+
+New DEBUG native probes explicitly enable `proxyRequestSamplingVersion: 1` and
+write `proxy-requests.jsonl` (bounded to 10000 records / 16 MiB). Production and
+ordinary debug sessions leave the observer disabled. One terminal record per
+admitted request uses a random proxy identifier and numeric task/server request
+IDs; URLs, credentials and arbitrary header strings are excluded. The fixture's
+`X-Yl-Request-Id` is metadata for correlation only and is not sent downstream.
+
+The reader preserves cancelled/failed records, rejects inconsistent or duplicate
+complete records, reports unmatched server media requests, and distinguishes
+upstream callback duration from server write duration and loopback send waits.
+All device boundaries use the same monotonic clock. Server intervals are compared
+as durations, never by subtracting timestamps from device timestamps. Their
+difference includes transport, scheduling and backpressure, not isolated RTT.
+Send completion is Network.framework content processing, not remote receipt,
+decoding, display, or audio synchronization; overlapping send waits remain sums.
+Legacy captures without the version are identifiable and are not retroactively
+claimed to include these boundaries.
+
+Cancellation before response delivery may never expose the server response ID.
+The opt-in trace therefore also sends a random UUID `X-Yl-Trace-Id`; the fixture
+logs only a single syntactically valid UUID and the reader cross-checks both IDs
+when present. This header is absent when tracing is disabled. Diagnostic capture
+has a stop/registration fence and a bounded drain; a sealed event is not considered
+delivered until its writer returns. Active trace ownership outlives transport task
+removal, including chunk tails. A drain failure fails the native probe, and missing
+request correlation adds an error to the collector receipt while retaining the
+partial diagnostic. Neither condition can silently produce a successful capture.

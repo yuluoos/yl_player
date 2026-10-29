@@ -1,0 +1,11 @@
+{
+  "frozen-auto-1": [
+    "2026-10-28 16:41:53.248490+0800 Runner[3227:745525] [YL-ABR] elapsed=53.917922 signal=audioRoute reason=1 interruption=-1 options=-1",
+    "2026-10-28 16:41:58.657684+0800 Runner[3227:745525] [YL-ABR] elapsed=59.327273 signal=audioRoute reason=2 interruption=-1 options=-1",
+    "2026-10-28 16:42:13.973238+0800 Runner[3227:745525] [YLPlayer][AVPlayer] event=stallTimeout player=991 item=2 positionMs=55174 frameGapMs=-1 timelineGapMs=-1 timeControl=0 itemStatus=1 rate=0.0 bufferEmpty=false likelyToKeepUp=true loadedEndMs=65984 headeredHls=true errorCodes=[] errorLogCode=0",
+    "2026-10-28 16:42:13.973728+0800 Runner[3227:745525] [YL-ABR] backendFailure category=network code=avplayer.stall_timeout"
+  ],
+  "route-baseline-control-0148": [
+    "2026-10-28 16:49:14.547082+0800 Runner[3243:751830] [YL-ABR] elapsed=81.915344 signal=audioRoute reason=1 interruption=-1 options=-1"
+  ]
+}

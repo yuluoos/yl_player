@@ -1,0 +1,62 @@
+[
+  {
+    "name": "baseline",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-penalty-20261027/baseline",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "none"
+    ],
+    "exitCode": 0,
+    "seconds": 135.21844950000013
+  },
+  {
+    "name": "seek",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-penalty-20261027/seek",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "seek-current"
+    ],
+    "exitCode": 0,
+    "seconds": 130.8290551249993
+  },
+  {
+    "name": "reload",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-penalty-20261027/reload",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "reload-source"
+    ],
+    "exitCode": 0,
+    "seconds": 128.65524379100316
+  }
+]

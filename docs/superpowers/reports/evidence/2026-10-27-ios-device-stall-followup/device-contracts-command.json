@@ -1,0 +1,16 @@
+[
+  "xcodebuild",
+  "test-without-building",
+  "-quiet",
+  "-xctestrun",
+  "/private/tmp/yl-continuity-device-build/Build/Products/Runner_iphoneos27.1-arm64.xctestrun",
+  "-destination",
+  "platform=iOS,id=00008140-000C49CC3493001C",
+  "-parallel-testing-enabled",
+  "NO",
+  "-resultBundlePath",
+  "/private/tmp/yl-device-followup/device-contracts.xcresult",
+  "-only-testing:RunnerTests/YlDashResourceLoaderTests",
+  "-only-testing:RunnerTests/YlAppleSessionTests",
+  "-only-testing:RunnerTests/YlApplePublicationTests"
+]

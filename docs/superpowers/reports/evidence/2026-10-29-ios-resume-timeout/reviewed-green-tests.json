@@ -1,0 +1,89 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.1s",
+                  "durationInSeconds" : 0.10285806655883789,
+                  "name" : "testAutomaticReplacementFailedLandingCannotPublishWrongTimeline()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testAutomaticReplacementFailedLandingCannotPublishWrongTimeline()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testAutomaticReplacementFailedLandingCannotPublishWrongTimeline",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.514801025390625,
+                  "name" : "testMissingRecoveryLandingCallbackFailsWithinConfiguredReadTimeout()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testMissingRecoveryLandingCallbackFailsWithinConfiguredReadTimeout()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testMissingRecoveryLandingCallbackFailsWithinConfiguredReadTimeout",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.036s",
+                  "durationInSeconds" : 0.035665035247802734,
+                  "name" : "testRecoveryDeadlineUsesExistingConfigurationAndLeavesOrdinarySeekUnchanged()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRecoveryDeadlineUsesExistingConfigurationAndLeavesOrdinarySeekUnchanged()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRecoveryDeadlineUsesExistingConfigurationAndLeavesOrdinarySeekUnchanged",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.06s",
+                  "durationInSeconds" : 0.06035494804382324,
+                  "name" : "testRecoveryLandingDeadlineOnlyCurrentOperationCanFail()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRecoveryLandingDeadlineOnlyCurrentOperationCanFail()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRecoveryLandingDeadlineOnlyCurrentOperationCanFail",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.023s",
+                  "durationInSeconds" : 0.022758007049560547,
+                  "name" : "testRetiredRecoveryLandingCannotFailLaterIntentOrLifecycle()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRetiredRecoveryLandingCannotFailLaterIntentOrLifecycle()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRetiredRecoveryLandingCannotFailLaterIntentOrLifecycle",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

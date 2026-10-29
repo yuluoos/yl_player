@@ -1,0 +1,31 @@
+{
+  "macos": {
+    "passed": 188,
+    "failed": 0,
+    "skipped": 0,
+    "classes": {
+      "YlApplePublicationTests": 7,
+      "YlAppleSessionTests": 14,
+      "YlAvPlayerNonblockingMetadataTests": 1,
+      "YlDashResourceLoaderTests": 85,
+      "YlNetworkByteSourceTests": 44,
+      "YlNetworkRequestPolicyTests": 30,
+      "YlPlatformServicesTests": 7
+    }
+  },
+  "device": {
+    "passed": 213,
+    "failed": 0,
+    "skipped": 0,
+    "classes": {
+      "YlApplePublicationTests": 7,
+      "YlAppleSessionTests": 14,
+      "YlAvPlayerNonblockingMetadataTests": 1,
+      "YlDashResourceLoaderTests": 86,
+      "YlLiveReconnectControllerTests": 24,
+      "YlNetworkByteSourceTests": 44,
+      "YlNetworkRequestPolicyTests": 30,
+      "YlPlatformServicesTests": 7
+    }
+  }
+}

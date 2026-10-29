@@ -40,6 +40,34 @@ def data():
 
 
 class SummaryTests(unittest.TestCase):
+    def test_extended_capture_cannot_accept_40_second_early_eof(self):
+        result, samples, requests = data()
+        result['programmeDurationSeconds'] = 120
+        report = summarize(result, samples, requests, exit_code=0)
+        self.assertFalse(report['captureComplete'])
+        samples[-1].update(positionUs=120000000, elapsedUs=121000000)
+        report = summarize(result, samples, requests, exit_code=0)
+        self.assertTrue(report['captureComplete'])
+        self.assertEqual(report['programmeDurationSeconds'], 120)
+        self.assertFalse(report['baselineComparable'])
+        for invalid in (True, 0, 41, 121, '120', 120.0):
+            result['programmeDurationSeconds'] = invalid
+            with self.subTest(invalid=invalid), self.assertRaises(ValueError):
+                summarize(result, samples, requests, exit_code=0)
+
+    def test_recovery_window_counts_video_chunks_not_audio_or_init(self):
+        result, samples, requests = data()
+        requests[-1].update(startMs=24000, endMs=25500)
+        report = summarize(result, samples, requests, exit_code=0)
+        self.assertEqual(report['lastVideoRequestEndMs'], 25500)
+        self.assertEqual(report['videoRequestTailAfterRecoveryMs'], 500)
+        requests[-1]['asset'] = 'network-period-8/init-1.m4s'
+        report = summarize(result, samples, requests, exit_code=0)
+        self.assertIsNone(report['lastVideoRequestEndMs'])
+        self.assertIsNone(report['videoRequestTailAfterRecoveryMs'])
+        requests[-1]['asset'] = 'network-period-8/chunk-2-00001.m4s'
+        self.assertIsNone(summarize(result, samples, requests, exit_code=0)['lastVideoRequestEndMs'])
+
     def setUp(self):
         self.assertIsNotNone(_summarize, 'capture summarizer not implemented')
 

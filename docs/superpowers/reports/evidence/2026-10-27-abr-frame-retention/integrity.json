@@ -1,0 +1,34 @@
+{
+  "rawArchiveEntriesVerified": 281,
+  "phaseSourceBindings": [
+    {
+      "run": "runs",
+      "sourcePhase": "source-simulator-phase",
+      "files": 6,
+      "matched": true
+    },
+    {
+      "run": "physical-initial",
+      "sourcePhase": "source-final",
+      "files": 7,
+      "matched": true
+    },
+    {
+      "run": "physical-retry",
+      "sourcePhase": "source-final",
+      "files": 7,
+      "matched": true
+    },
+    {
+      "run": "physical-controls",
+      "sourcePhase": "source-final",
+      "files": 7,
+      "matched": true
+    }
+  ],
+  "filesBeforeIntegrity": 321,
+  "resultBundles": 20,
+  "sourceMatches": true,
+  "releaseReady": false,
+  "published": false
+}

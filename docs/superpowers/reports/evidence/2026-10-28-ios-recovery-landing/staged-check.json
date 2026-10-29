@@ -1,0 +1,12 @@
+{
+  "command": [
+    "git",
+    "diff",
+    "--cached",
+    "--check",
+    "a240032b"
+  ],
+  "exitCode": 2,
+  "stdout": "docs/superpowers/reports/evidence/2026-10-28-ios-recovery-landing/more-tests.txt:141: new blank line at EOF.\ndocs/superpowers/reports/evidence/2026-10-28-ios-recovery-landing/relay-tests.txt:36: new blank line at EOF.\n",
+  "stderr": ""
+}

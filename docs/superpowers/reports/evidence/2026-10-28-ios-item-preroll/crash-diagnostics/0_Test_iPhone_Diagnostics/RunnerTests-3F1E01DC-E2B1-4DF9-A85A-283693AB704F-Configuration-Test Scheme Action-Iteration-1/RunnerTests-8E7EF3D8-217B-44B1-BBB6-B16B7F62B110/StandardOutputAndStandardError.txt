@@ -1,0 +1,64 @@
+2026-10-28 17:27:29.228660+0800 Runner[3309:780052] [User Defaults] CFPrefsPlistSource<0x105df8140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 23, Newest: 23, Index: 1079): Value for key AppleLanguages was (
+    "zh-Hans-US",
+    "en-US"
+). Expected (
+    "zh-Hans-US",
+    "en-US",
+    "zh-Hant-US"
+) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))
+2026-10-28 17:27:29.229404+0800 Runner[3309:780053] [User Defaults] CFPrefsPlistSource<0x105df8140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 23, Newest: 23, Index: 1079): Value for key AppleLanguages was (
+    "zh-Hans-US",
+    "en-US"
+). Expected (
+    "zh-Hans-US",
+    "en-US",
+    "zh-Hant-US"
+) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))
+2026-10-28 17:27:29.267131+0800 Runner[3309:780008] [ERROR:flutter/runtime/ptrace_check.cc(75)] Could not call ptrace(PT_TRACE_ME): Operation not permitted
+2026-10-28 17:27:29.267147+0800 Runner[3309:780008] Cannot create a FlutterEngine instance in debug mode without Flutter tooling or Xcode.
+
+To launch in debug mode in iOS 14+, run flutter run from Flutter tools, run from an IDE with a Flutter IDE plugin or run the iOS project from Xcode.
+Alternatively profile and release mode apps can be launched from the home screen.
+2026-10-28 17:27:29.280636+0800 Runner[3309:780008] [XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+Test Suite 'Selected tests' started at 2026-10-28 17:27:29.305.
+Test Suite 'RunnerTests.xctest' started at 2026-10-28 17:27:29.305.
+Test Suite 'YlDashResourceLoaderTests' started at 2026-10-28 17:27:29.305.
+Test Case '-[RunnerTests.YlDashResourceLoaderTests testFailedPreparationAndRevokedTicketNeverRefundSourceBudget]' started.
+Test Case '-[RunnerTests.YlDashResourceLoaderTests testFailedPreparationAndRevokedTicketNeverRefundSourceBudget]' passed (0.001 seconds).
+Test Case '-[RunnerTests.YlDashResourceLoaderTests testPrerollCandidateAbortsExpiredDeniedAndRevokedIntent]' started.
+2026-10-28 17:27:29.309053+0800 Runner[3309:780008] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489
+2026-10-28 17:27:29.309204+0800 Runner[3309:780066] [] <<<< FigApplicationStateMonitor >>>> signalled err=-19431 at <>:489
+2026-10-28 17:27:29.338987+0800 Runner[3309:780008] *** -[AVAssetResourceLoadingRequest finishLoadingWithError:] was sent to an instance of AVAssetResourceLoadingRequest that was already finished. Ignoring.
+Test Case '-[RunnerTests.YlDashResourceLoaderTests testPrerollCandidateAbortsExpiredDeniedAndRevokedIntent]' passed (0.034 seconds).
+Test Case '-[RunnerTests.YlDashResourceLoaderTests testPrerollCandidateHandsOffAndCancelsAfterRealReadiness]' started.
+freed pointer was not the last allocation2026-10-28 17:27:32.163326+0800 Runner[3312:780159] [User Defaults] CFPrefsPlistSource<0x105dfc140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 23, Newest: 23, Index: 1079): Value for key AppleLanguages was (
+    "zh-Hans-US",
+    "en-US"
+). Expected (
+    "zh-Hans-US",
+    "en-US",
+    "zh-Hant-US"
+) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))
+2026-10-28 17:27:32.164233+0800 Runner[3312:780160] [User Defaults] CFPrefsPlistSource<0x105dfc140> (Domain: kCFPreferencesAnyApplication, User: kCFPreferencesCurrentUser, ByHost: No, Container: (null), Contents Need Refresh: No (Cached: 23, Newest: 23, Index: 1079): Value for key AppleLanguages was (
+    "zh-Hans-US",
+    "en-US"
+). Expected (
+    "zh-Hans-US",
+    "en-US",
+    "zh-Hant-US"
+) (DeviceDataResetXPCServiceWorker(23855): 2026-07-02 03:20:12 (CST))
+2026-10-28 17:27:32.200580+0800 Runner[3312:780147] [ERROR:flutter/runtime/ptrace_check.cc(75)] Could not call ptrace(PT_TRACE_ME): Operation not permitted
+2026-10-28 17:27:32.200596+0800 Runner[3312:780147] Cannot create a FlutterEngine instance in debug mode without Flutter tooling or Xcode.
+
+To launch in debug mode in iOS 14+, run flutter run from Flutter tools, run from an IDE with a Flutter IDE plugin or run the iOS project from Xcode.
+Alternatively profile and release mode apps can be launched from the home screen.
+2026-10-28 17:27:32.214767+0800 Runner[3312:780147] [XPCErrors] non-launching port is incompatible with service identifier "com.apple.PointerUI.pointeruid.default-service"
+
+Restarting after unexpected exit, crash, or test timeout; summary will include totals from previous launches.
+
+Test Suite 'Selected tests' started at 2026-10-28 17:27:32.233.
+Test Suite 'RunnerTests.xctest' started at 2026-10-28 17:27:32.233.
+Test Suite 'RunnerTests.xctest' passed at 2026-10-28 17:27:32.233.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.000) seconds
+Test Suite 'Selected tests' passed at 2026-10-28 17:27:32.233.
+	 Executed 0 tests, with 0 failures (0 unexpected) in 0.000 (0.001) seconds

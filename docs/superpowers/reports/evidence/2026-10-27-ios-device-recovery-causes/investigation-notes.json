@@ -1,0 +1,35 @@
+{
+  "base": "5a7320e9",
+  "hypotheses": [
+    {
+      "id": "H1",
+      "claim": "Frozen recovery guard legitimately rejects low native transfer-window throughput",
+      "test": "Exact policy decisions in two physical auto runs; no threshold changes"
+    },
+    {
+      "id": "H2",
+      "claim": "Unintended pauses can arise from audio/application signals independently of network stalls",
+      "test": "Native route/interruption/lifecycle signals plus backend state/failure; never force resume"
+    },
+    {
+      "id": "H3",
+      "claim": "Server write timing differs from the AVPlayer observed path",
+      "test": "Same owned material/profile direct HLS control, plus original proxy code audit; no cause inferred solely from rate difference"
+    }
+  ],
+  "invariants": {
+    "bitrate": 955000,
+    "windows": 2,
+    "windowSeconds": 8,
+    "minNewRequests": 3,
+    "minBufferSeconds": 5,
+    "minRemainingSeconds": 20,
+    "maxAttempts": 2,
+    "backoffSeconds": [
+      0.5,
+      1
+    ],
+    "nativeObservationDeadline": 140,
+    "collectorDeadline": 240
+  }
+}

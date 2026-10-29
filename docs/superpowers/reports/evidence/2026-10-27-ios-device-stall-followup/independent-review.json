@@ -1,0 +1,12 @@
+{
+  "reviewer": "/root/continuity_review",
+  "scope": "Current diff from 8332c9e9, ten device observations, policy/continuity claims and report",
+  "finding": {
+    "priority": "P2",
+    "problem": "Empty main rows escaped with IndexError after frame summary moved earlier",
+    "fix": "Validate nonempty main rows and final object before indexing",
+    "regression": "review-empty-red.log -> review-empty-green.log"
+  },
+  "followup": "No new blocking findings; 20 accesslog and 109 network tests verified",
+  "finalLedgerAndArchive": "Verified separately by parent"
+}

@@ -1,0 +1,16 @@
+{
+  "rawProvenanceRecordsVerified": 255,
+  "completeBundlesVerified": 13,
+  "bundleFilesComparedToOriginal": true,
+  "finalSourceFilesVerified": 412,
+  "preReviewSourceDifferences": 10,
+  "all102RowStatesUnchanged": true,
+  "changedProductionFiles": [
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift"
+  ],
+  "allFiveRunsRetained": true,
+  "finalRuns": 2,
+  "finalStrictPassed": 1,
+  "originalFailureRetained": true,
+  "preReviewControlReassessedAsIncomplete": true
+}

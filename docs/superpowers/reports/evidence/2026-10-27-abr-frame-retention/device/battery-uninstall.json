@@ -1,0 +1,30 @@
+{
+  "info" : {
+    "arguments" : [
+      "devicectl",
+      "device",
+      "uninstall",
+      "app",
+      "--device",
+      "00008140-000C49CC3493001C",
+      "com.batterytesting.BatteryTesting.JAKM34U2X8",
+      "--json-output",
+      "/private/tmp/yl-continuity-device/battery-uninstall.json"
+    ],
+    "commandType" : "devicectl.device.uninstall.app",
+    "environment" : {
+      "TERM" : "dumb"
+    },
+    "jsonVersion" : 5,
+    "outcome" : "success",
+    "version" : "651.13.5"
+  },
+  "result" : {
+    "deviceIdentifier" : "B14AAA39-3757-52F9-82CD-29E560A47EA9",
+    "uninstalledApplications" : [
+      {
+        "bundleID" : "com.batterytesting.BatteryTesting.JAKM34U2X8"
+      }
+    ]
+  }
+}

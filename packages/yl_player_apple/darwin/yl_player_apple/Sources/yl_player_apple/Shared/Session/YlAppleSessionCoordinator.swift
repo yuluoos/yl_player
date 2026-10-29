@@ -3,6 +3,9 @@ import AVFoundation
 import CoreVideo
 import Foundation
 import YlFFmpegBridge
+#if os(iOS)
+import UIKit
+#endif
 
 final class YlAppleSessionCoordinator: NSObject {
   private final class PreparedRestorationRevision {
@@ -53,7 +56,25 @@ final class YlAppleSessionCoordinator: NSObject {
   private let avBackend: YlAvPlayerBackend
   private let slot: YlBackendSlot
   private let openCoordinator = YlOpenCoordinator()
+  private let dashRecovery: YlDashAutoRecoveryController
+  private var dashRecoveryTimer: Timer?
+  private var dashRecoveryObserver: NSObjectProtocol?
+  private var dashRecoveryRevision: UInt64 = 0
+  var diagnosticProxySnapshot: [String: Double] { avBackend.diagnosticProxySnapshot }
+  var diagnosticResumeSeekPending: Bool { avBackend.diagnosticResumeSeekPending }
+  var onDashRecoveryEvent: (([String: Any]) -> Void)? {
+    get { dashRecovery.onEvent }
+    set { dashRecovery.onEvent = newValue }
+  }
+  var onDashRecoveryDecision: (([String: Any]) -> Void)? {
+    get { dashRecovery.onDecision }
+    set { dashRecovery.onDecision = newValue }
+  }
+  var dashRecoveryDecision: [String: Any] { dashRecovery.policy.decision }
+  var dashRecoveryEvents: [[String: Any]] { dashRecovery.events }
+  var dashRecoveryAttempts: Int { dashRecovery.policy.attempts }
   private let capsCoordinator = YlOpenCoordinator(label: "dev.ylplayer.dash.caps")
+  private let afterDashRecoveryPreparation: ((YlOpenCancellationToken) -> Void)?
   private let beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)?
   private var committedDashSnapshot: YlDashManifestSnapshot?
   private let commandCoordinator: YlAsyncCommandCoordinator
@@ -63,6 +84,8 @@ final class YlAppleSessionCoordinator: NSObject {
   private(set) var lastQualityConstraint = YlAppleVideoConstraints.unconstrained
   private var synchronousIntentRevision: UInt64 = 0
   private var restorationIntentRevision: UInt64 = 0
+  /// Monotonic authority for acknowledged transport/track intents within this owner.
+  var acknowledgedTransportRevision: UInt64 { restorationIntentRevision }
   private var pendingSeekIntent: (revision: UInt64, positionMs: Int64)?
   private var pendingPauseIntent: UInt64?
   private var lastVolume: Float = 1
@@ -100,7 +123,11 @@ final class YlAppleSessionCoordinator: NSObject {
   init(playerId: Int64, services: YlPlatformServices,
        configuration: PlayerConfiguration, textureOwner: YlAppleTextureOwner, avPlayer: AVPlayer = AVPlayer(),
        commandCoordinator: YlAsyncCommandCoordinator = YlAsyncCommandCoordinator(),
+       automaticDashRecoveryEnabled: Bool = true,
+       dashRecoveryController: YlDashAutoRecoveryController = YlDashAutoRecoveryController(),
+       afterDashRecoveryPreparation: ((YlOpenCancellationToken) -> Void)? = nil,
        beforeDashCapsPreparation: ((YlOpenCancellationToken) throws -> Void)? = nil,
+       makeAvPlayerVideoOutput: @escaping ([String: Any]) -> AVPlayerItemVideoOutput = { AVPlayerItemVideoOutput(pixelBufferAttributes: $0) },
        beforeFallbackConstruction: ((YlPlaybackBackend) throws -> Void)? = nil,
        slotCompatibility: YlAppleCompatibility? = nil,
        bufferLedger: YlManagedBufferLedger = YlManagedBufferLedger(),
@@ -110,6 +137,8 @@ final class YlAppleSessionCoordinator: NSObject {
        hardwareEvidenceStage: YlHardwareEvidencePreparation = .init(),
        audioOwnership: YlPlayerAudioOwnership? = nil,
        emit: @escaping (YlAppleSessionIdentity, YlNativeBackendCallback) -> Void) {
+    self.dashRecovery = dashRecoveryController
+    self.afterDashRecoveryPreparation = afterDashRecoveryPreparation
     self.beforeDashCapsPreparation = beforeDashCapsPreparation
     self.audioOwnership = audioOwnership
     self.videoSessionFactory = videoSessionFactory
@@ -127,12 +156,21 @@ final class YlAppleSessionCoordinator: NSObject {
     self.configuration = configuration
     self.emit = emit
     let avBackend = YlAvPlayerBackend(playerId: playerId, services: services.borrowing(avTexture),
-      configuration: configuration, player: avPlayer, emit: { _ in })
+      configuration: configuration, player: avPlayer, makeVideoOutput: makeAvPlayerVideoOutput, emit: { _ in })
     self.avBackend = avBackend
     self.slot = YlBackendSlot(initial: avBackend, compatibility: slotCompatibility ?? services.compatibility)
     super.init()
     avBackend.onAirPlayChanged = { [weak self] in self?.onAirPlayChanged?() }
-    avBackend.onAutomaticFallback = { [weak self] in self?.capsCoordinator.cancelCurrent() }
+    avBackend.onAutomaticFallback = { [weak self] in self?.capsCoordinator.cancelCurrent(); self?.invalidateDashRecovery() }
+    avBackend.onDashRecoveryInvalidated = { [weak self] in self?.invalidateDashRecovery() }
+    #if os(iOS)
+    if services.platform == .ios && automaticDashRecoveryEnabled {
+      let timer = Timer(timeInterval: 0.25, repeats: true) { [weak self] _ in self?.pollDashRecovery() }
+      RunLoop.main.add(timer, forMode: .common); dashRecoveryTimer = timer
+      dashRecoveryObserver = NotificationCenter.default.addObserver(forName: UIApplication.willResignActiveNotification,
+        object: nil, queue: .main) { [weak self] _ in self?.invalidateDashRecovery() }
+    }
+    #endif
   }
 
   func load(_ recipe: YlAppleLoadRecipe, identity: YlAppleSessionIdentity,
@@ -153,6 +191,7 @@ final class YlAppleSessionCoordinator: NSObject {
       source.bufferScope = try bufferLedger.makeScope(maxBytes: source.boundedPlan?.maxBytes)
     } catch let error as NativePlayerError { completion(.failure(error)); return }
     catch { completion(.failure(YlManagedBufferLedger.unsupported())); return }
+    invalidateDashRecovery()
     startTraffic(source)
     beginOpen(source, decision: assessment, identity: identity, willCommit: willCommit,
       didCommit: didCommit, didRollback: didRollback, completion: completion)
@@ -266,6 +305,7 @@ final class YlAppleSessionCoordinator: NSObject {
 
   func execute(_ command: YlApplePlaybackCommand,
     completion: @escaping (Result<Void, NativePlayerError>) -> Void) {
+    invalidateDashRecovery()
     let policy: (YlAppleVideoConstraints, YlNativeVideoSelection)?
     switch command {
     case .constraints(let constraints): policy = (constraints, avBackend.videoSelection)
@@ -371,6 +411,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func stop() {
+    invalidateDashRecovery()
       stopTraffic()
       capsCoordinator.cancelCurrent()
       commandCoordinator.cancelCurrent()
@@ -490,6 +531,7 @@ final class YlAppleSessionCoordinator: NSObject {
         do {
           try self.commit(candidate, identity: identity, reactivating: false, loadVideoConstraints: loadConstraints)
           self.identity = identity
+          self.dashRecovery.useSource(identity)
           didCommit()
           self.activeEvents?.commit()
           if let activeTexture = self.activeTexture { self.textureOwner.commit(activeTexture) }
@@ -709,6 +751,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func deactivate() {
+    invalidateDashRecovery()
     capsCoordinator.cancelCurrent()
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
@@ -719,6 +762,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func handleMemoryWarning() {
+    invalidateDashRecovery()
     capsCoordinator.cancelCurrent()
     restorationGeneration &+= 1
     activeRestorationGeneration = nil
@@ -1156,6 +1200,7 @@ final class YlAppleSessionCoordinator: NSObject {
   }
 
   func restoreAfterHardwareDecoderRollback(forcePlay: Bool? = nil) {
+    invalidateDashRecovery()
     let shouldResumePlayback = forcePlay
       ?? hardwareRollbackPlaybackIntent
       ?? currentPlaybackIntent
@@ -1262,6 +1307,10 @@ final class YlAppleSessionCoordinator: NSObject {
   func dispose() {
     guard !disposed else { return }
     disposed = true
+    invalidateDashRecovery()
+    dashRecoveryTimer?.invalidate(); dashRecoveryTimer = nil
+    if let observer = dashRecoveryObserver { NotificationCenter.default.removeObserver(observer) }
+    dashRecoveryObserver = nil
     stopTraffic()
     capsCoordinator.cancelCurrent()
     committedHlsCredentials = nil
@@ -1316,5 +1365,52 @@ extension YlAppleSessionCoordinator {
       candidate.headers = [:]; candidate.credentials = [:]
       return .avPlayer(source: candidate)
     }
+  }
+}
+
+private extension YlAppleSessionCoordinator {
+  func invalidateDashRecovery() {
+    dashRecoveryRevision &+= 1
+    dashRecovery.invalidate()
+  }
+
+  func recoverySample() -> YlDashAutoRecoveryPolicy.Sample? {
+    guard !disposed, pendingLoadRequestId == nil, identity != nil,
+      activeRestorationGeneration == nil, slot.current === avBackend,
+      !capsCoordinator.hasCurrent, !commandCoordinator.hasCurrent,
+      lastQualityConstraint == .unconstrained,
+      let source = lastCommittedSource, route(for: source) == .dashHls,
+      !source.isLive, !source.airPlay, source.drm == nil,
+      let credentials = committedHlsCredentials, committedDashSnapshot != nil else { return nil }
+    return avBackend.dashRecoverySample(now: ProcessInfo.processInfo.systemUptime,
+      intentRevision: dashRecoveryRevision, credentialRevision: credentials.revision)
+  }
+
+  func pollDashRecovery() {
+    guard !disposed, pendingLoadRequestId == nil, let identity, let source = lastCommittedSource,
+          let credentials = committedHlsCredentials, let snapshot = committedDashSnapshot else { dashRecovery.invalidate(); return }
+    dashRecovery.useSource(identity)
+    let revision = dashRecoveryRevision
+    let credentialRevision = credentials.revision
+    dashRecovery.tick(recoverySample(), prepare: { [weak self] token in
+      guard let self else { throw YlOpenCancellationToken.cancellationError() }
+      // Reuse the committed immutable projection and its credential history.
+      // A fresh loader/asset resets AVPlayer's item without refetching a new MPD.
+      let candidate = YlPreparedOpen.headeredHls(source: source, prepared: try self.prepareHeaderedHls(source: source,
+        token: token, credentialContext: credentials, videoConstraints: .unconstrained, dashSnapshot: snapshot))
+      self.afterDashRecoveryPreparation?(token)
+      return candidate
+    }, currentSample: { [weak self] in self?.recoverySample() }, commit: { [weak self] candidate in
+      guard let self, self.identity == identity, self.dashRecoveryRevision == revision,
+        self.committedHlsCredentials === credentials, self.pendingLoadRequestId == nil,
+        self.slot.current === self.avBackend, self.avBackend.isActive,
+        case let .headeredHls(_, prepared) = candidate else { throw YlOpenCancellationToken.cancellationError() }
+      let generation = self.avBackend.dashRecoveryItemGeneration
+      let accepted = try credentials.withUnchangedRevision(credentialRevision) {
+        try self.avBackend.replaceActiveDash(source: source, prepared: prepared)
+      }
+      guard accepted else { throw YlOpenCancellationToken.cancellationError() }
+      return ["itemChanged": generation != self.avBackend.dashRecoveryItemGeneration, "credentialCommitAccepted": accepted]
+    })
   }
 }

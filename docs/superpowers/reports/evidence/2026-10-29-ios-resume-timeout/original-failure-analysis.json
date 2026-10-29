@@ -1,0 +1,52 @@
+{
+  "nativeExitCode": 0,
+  "passed": false,
+  "strictError": "invalid production recovery evidence",
+  "finalPosition": 120.030102741,
+  "finalWidth": 320,
+  "hostFailures": 0,
+  "attempts": 0,
+  "publishedPhases": [
+    {
+      "width": 320,
+      "elapsed": 0.799198124997929
+    },
+    {
+      "width": 640,
+      "elapsed": 6.2317402083317575
+    },
+    {
+      "width": 320,
+      "elapsed": 19.22143158333347
+    }
+  ],
+  "signalCount": 0,
+  "policyReasonCounts": {
+    "playbackIneligible": 2,
+    "insufficientBuffer": 33,
+    "highNotObserved": 15,
+    "highOutput": 52,
+    "windowStarted": 5,
+    "windowPending": 308,
+    "insufficientBandwidth": 9,
+    "nearEnd": 60
+  },
+  "windowBitrateMin": 514545.3554822385,
+  "windowBitrateMax": 676365.9697897197,
+  "continuity": {
+    "frameSamplingVersion": 2,
+    "sampleCount": 6520,
+    "publishedFrames": 2880,
+    "maximumPumpGapMs": 141.2782083352795,
+    "maximumPublishedFrameGapMs": 457.44879166886676,
+    "lastPublicationSampleElapsed": 121.17693316666555,
+    "observationEndElapsed": 121.5565319999987,
+    "trailingNoPublicationMs": 379.5988333331479,
+    "replacementBoundaries": [],
+    "generationsWithoutPublishedFrame": [],
+    "continuityAccepted": false,
+    "audioSynchronizationVerified": false,
+    "physicalOutputVerified": false
+  },
+  "originalReceiptUnchanged": true
+}

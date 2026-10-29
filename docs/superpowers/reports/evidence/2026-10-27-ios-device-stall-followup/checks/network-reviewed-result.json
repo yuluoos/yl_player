@@ -1,0 +1,17 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tool/playback_network",
+    "-p",
+    "test_*.py",
+    "-v"
+  ],
+  "exitCode": 0,
+  "tests": 109,
+  "log": "network-reviewed.log"
+}

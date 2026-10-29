@@ -1,0 +1,2851 @@
+[
+  {
+    "requirement": "CAP-ABR",
+    "platform": "android",
+    "mainEvidence": [
+      "p04",
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p04",
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "abr-recovery-20261027"
+    ],
+    "mergedEvidence": [
+      "p04",
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "abr-recovery-20261027"
+    ],
+    "mainNext": "complete-physical-api24-repeat-and-bound-output-qualification-after-120s-local-recovery-observed",
+    "abrNext": "qualify-extended-recovery-observation-on-physical-api24-and-complete-auto-caps-fixed-repeat-matrix",
+    "mergedNext": "qualify-physical-api24-repeat-auto-caps-fixed-and-bound-output-after-local-120s-recovery"
+  },
+  {
+    "requirement": "CAP-ABR",
+    "platform": "ios",
+    "mainEvidence": [
+      "p04",
+      "p01",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p04",
+      "p01",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "abr-recovery-20261027",
+      "abr-penalty-recovery-20261027",
+      "abr-auto-recovery-20261027",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-device-stall-followup-20261027",
+      "ios-request-boundary-20261027",
+      "ios-candidate-preparation-20261028",
+      "ios-route-pause-20261028",
+      "ios-item-preroll-20261028",
+      "ios-preparation-intent-20261028",
+      "ios-policy-intent-20261028",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-transaction-metrics-20261029"
+    ],
+    "mergedEvidence": [
+      "p04",
+      "p01",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "abr-recovery-20261027",
+      "abr-penalty-recovery-20261027",
+      "abr-auto-recovery-20261027",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-device-stall-followup-20261027",
+      "ios-request-boundary-20261027",
+      "ios-candidate-preparation-20261028",
+      "ios-route-pause-20261028",
+      "ios-item-preroll-20261028",
+      "ios-preparation-intent-20261028",
+      "ios-policy-intent-20261028",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-transaction-metrics-20261029"
+    ],
+    "mainNext": "resolve-reproduced-avplayer-recovery-no-upshift-and-run-full-bound-matrix",
+    "abrNext": "qualify-connection-persistence-original-high-recovery-pre-response-cancel-evidence-stability-physical-av",
+    "mergedNext": "qualify-connection-persistence-original-high-recovery-pre-response-cancel-evidence-stability-physical-av"
+  },
+  {
+    "requirement": "CAP-ABR",
+    "platform": "macos",
+    "mainEvidence": [
+      "p04",
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p04",
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-request-boundary-20261027",
+      "ios-candidate-preparation-20261028",
+      "ios-route-pause-20261028",
+      "ios-item-preroll-20261028",
+      "ios-preparation-intent-20261028",
+      "ios-policy-intent-20261028",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-credential-race-20261028",
+      "ios-load-lifecycle-20261028",
+      "ios-postcommit-failure-20261028",
+      "dart-credential-race-20261028"
+    ],
+    "mergedEvidence": [
+      "p04",
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-request-boundary-20261027",
+      "ios-candidate-preparation-20261028",
+      "ios-route-pause-20261028",
+      "ios-item-preroll-20261028",
+      "ios-preparation-intent-20261028",
+      "ios-policy-intent-20261028",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-credential-race-20261028",
+      "ios-load-lifecycle-20261028",
+      "ios-postcommit-failure-20261028",
+      "dart-credential-race-20261028"
+    ],
+    "mainNext": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification",
+    "abrNext": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification",
+    "mergedNext": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification"
+  },
+  {
+    "requirement": "CAP-DASH",
+    "platform": "android",
+    "mainEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+    "abrNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+    "mergedNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
+  },
+  {
+    "requirement": "CAP-DASH",
+    "platform": "ios",
+    "mainEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-device-stall-followup-20261027",
+      "ios-request-boundary-20261027",
+      "ios-candidate-preparation-20261028",
+      "ios-route-pause-20261028",
+      "ios-item-preroll-20261028",
+      "ios-preparation-intent-20261028",
+      "ios-policy-intent-20261028",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-credential-race-20261028",
+      "ios-load-lifecycle-20261028",
+      "ios-postcommit-failure-20261028",
+      "dart-credential-race-20261028"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-device-stall-followup-20261027",
+      "ios-request-boundary-20261027",
+      "ios-candidate-preparation-20261028",
+      "ios-route-pause-20261028",
+      "ios-item-preroll-20261028",
+      "ios-preparation-intent-20261028",
+      "ios-policy-intent-20261028",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-credential-race-20261028",
+      "ios-load-lifecycle-20261028",
+      "ios-postcommit-failure-20261028",
+      "dart-credential-race-20261028"
+    ],
+    "mainNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+    "abrNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+    "mergedNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
+  },
+  {
+    "requirement": "CAP-DASH",
+    "platform": "macos",
+    "mainEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-credential-race-20261028",
+      "ios-load-lifecycle-20261028",
+      "ios-postcommit-failure-20261028",
+      "dart-credential-race-20261028"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "abr-frame-retention-20261027",
+      "ios-device-recovery-causes-20261027",
+      "ios-public-policy-20261028",
+      "ios-public-race-20261028",
+      "ios-public-transport-20261028",
+      "ios-credential-race-20261028",
+      "ios-load-lifecycle-20261028",
+      "ios-postcommit-failure-20261028",
+      "dart-credential-race-20261028"
+    ],
+    "mainNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+    "abrNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+    "mergedNext": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
+  },
+  {
+    "requirement": "CAP-DECODE",
+    "platform": "android",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "qualify-exact-software-device-and-thermal-budget",
+    "abrNext": "qualify-exact-software-device-and-thermal-budget",
+    "mergedNext": "qualify-exact-software-device-and-thermal-budget"
+  },
+  {
+    "requirement": "CAP-DECODE",
+    "platform": "ios",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "qualify-exact-software-device-and-thermal-budget",
+    "abrNext": "qualify-exact-software-device-and-thermal-budget",
+    "mergedNext": "qualify-exact-software-device-and-thermal-budget"
+  },
+  {
+    "requirement": "CAP-DECODE",
+    "platform": "macos",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "qualify-exact-software-device-and-thermal-budget",
+    "abrNext": "qualify-exact-software-device-and-thermal-budget",
+    "mergedNext": "qualify-exact-software-device-and-thermal-budget"
+  },
+  {
+    "requirement": "CAP-DRM",
+    "platform": "android",
+    "mainEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "supply-licensed-media-and-physical-protection-chain",
+    "abrNext": "supply-licensed-media-and-physical-protection-chain",
+    "mergedNext": "supply-licensed-media-and-physical-protection-chain"
+  },
+  {
+    "requirement": "CAP-DRM",
+    "platform": "ios",
+    "mainEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "supply-licensed-media-and-physical-protection-chain",
+    "abrNext": "supply-licensed-media-and-physical-protection-chain",
+    "mergedNext": "supply-licensed-media-and-physical-protection-chain"
+  },
+  {
+    "requirement": "CAP-DRM",
+    "platform": "macos",
+    "mainEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "supply-licensed-media-and-physical-protection-chain",
+    "abrNext": "supply-licensed-media-and-physical-protection-chain",
+    "mergedNext": "supply-licensed-media-and-physical-protection-chain"
+  },
+  {
+    "requirement": "CAP-DV-MAP",
+    "platform": "android",
+    "mainEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "p07-dm-color-state-20261029",
+      "p07-dm-main-merge-20261029",
+      "p07-cm-frame-provenance-20261029",
+      "p07-cm-main-merge-20261029",
+      "p07-p8-decoded-state-20261029",
+      "p07-p8-main-merge-20261029",
+      "p07-compressed-cm4-20261029",
+      "p07-compressed-cm4-main-merge-20261029",
+      "p07-cm4-wire-contracts-20261029",
+      "p07-cm4-wire-main-merge-20261029"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "p07-dm-color-state-20261029",
+      "p07-dm-main-merge-20261029",
+      "p07-cm-frame-provenance-20261029",
+      "p07-cm-main-merge-20261029",
+      "p07-p8-decoded-state-20261029",
+      "p07-p8-main-merge-20261029",
+      "p07-compressed-cm4-20261029",
+      "p07-compressed-cm4-main-merge-20261029",
+      "p07-cm4-wire-contracts-20261029",
+      "p07-cm4-wire-main-merge-20261029"
+    ],
+    "mainNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+    "abrNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+    "mergedNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
+  },
+  {
+    "requirement": "CAP-DV-MAP",
+    "platform": "ios",
+    "mainEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "p07-dm-color-state-20261029",
+      "p07-dm-main-merge-20261029",
+      "p07-cm-frame-provenance-20261029",
+      "p07-cm-main-merge-20261029",
+      "p07-p8-decoded-state-20261029",
+      "p07-p8-main-merge-20261029",
+      "p07-compressed-cm4-20261029",
+      "p07-compressed-cm4-main-merge-20261029",
+      "p07-cm4-wire-contracts-20261029",
+      "p07-cm4-wire-main-merge-20261029"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "p07-dm-color-state-20261029",
+      "p07-dm-main-merge-20261029",
+      "p07-cm-frame-provenance-20261029",
+      "p07-cm-main-merge-20261029",
+      "p07-p8-decoded-state-20261029",
+      "p07-p8-main-merge-20261029",
+      "p07-compressed-cm4-20261029",
+      "p07-compressed-cm4-main-merge-20261029",
+      "p07-cm4-wire-contracts-20261029",
+      "p07-cm4-wire-main-merge-20261029"
+    ],
+    "mainNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+    "abrNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+    "mergedNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
+  },
+  {
+    "requirement": "CAP-DV-MAP",
+    "platform": "macos",
+    "mainEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "p07-dm-color-state-20261029",
+      "p07-dm-main-merge-20261029",
+      "p07-cm-frame-provenance-20261029",
+      "p07-cm-main-merge-20261029",
+      "p07-p8-decoded-state-20261029",
+      "p07-p8-main-merge-20261029",
+      "p07-compressed-cm4-20261029",
+      "p07-compressed-cm4-main-merge-20261029",
+      "p07-cm4-wire-contracts-20261029",
+      "p07-cm4-wire-main-merge-20261029"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "p07-dm-color-state-20261029",
+      "p07-dm-main-merge-20261029",
+      "p07-cm-frame-provenance-20261029",
+      "p07-cm-main-merge-20261029",
+      "p07-p8-decoded-state-20261029",
+      "p07-p8-main-merge-20261029",
+      "p07-compressed-cm4-20261029",
+      "p07-compressed-cm4-main-merge-20261029",
+      "p07-cm4-wire-contracts-20261029",
+      "p07-cm4-wire-main-merge-20261029"
+    ],
+    "mainNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+    "abrNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+    "mergedNext": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
+  },
+  {
+    "requirement": "CAP-DV-OUT",
+    "platform": "android",
+    "mainEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "specify-and-verify-physical-dv-chain",
+    "abrNext": "specify-and-verify-physical-dv-chain",
+    "mergedNext": "specify-and-verify-physical-dv-chain"
+  },
+  {
+    "requirement": "CAP-DV-OUT",
+    "platform": "ios",
+    "mainEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "specify-and-verify-physical-dv-chain",
+    "abrNext": "specify-and-verify-physical-dv-chain",
+    "mergedNext": "specify-and-verify-physical-dv-chain"
+  },
+  {
+    "requirement": "CAP-DV-OUT",
+    "platform": "macos",
+    "mainEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "specify-and-verify-physical-dv-chain",
+    "abrNext": "specify-and-verify-physical-dv-chain",
+    "mergedNext": "specify-and-verify-physical-dv-chain"
+  },
+  {
+    "requirement": "CAP-FORMAT",
+    "platform": "android",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "close-required-format-cells-on-one-build",
+    "abrNext": "close-required-format-cells-on-one-build",
+    "mergedNext": "close-required-format-cells-on-one-build"
+  },
+  {
+    "requirement": "CAP-FORMAT",
+    "platform": "ios",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "close-required-format-cells-on-one-build",
+    "abrNext": "close-required-format-cells-on-one-build",
+    "mergedNext": "close-required-format-cells-on-one-build"
+  },
+  {
+    "requirement": "CAP-FORMAT",
+    "platform": "macos",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "close-required-format-cells-on-one-build",
+    "abrNext": "close-required-format-cells-on-one-build",
+    "mergedNext": "close-required-format-cells-on-one-build"
+  },
+  {
+    "requirement": "CAP-JS",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-nine-script-media-handoff-and-cleanup",
+    "abrNext": "verify-nine-script-media-handoff-and-cleanup",
+    "mergedNext": "verify-nine-script-media-handoff-and-cleanup"
+  },
+  {
+    "requirement": "CAP-JS",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-nine-script-media-handoff-and-cleanup",
+    "abrNext": "verify-nine-script-media-handoff-and-cleanup",
+    "mergedNext": "verify-nine-script-media-handoff-and-cleanup"
+  },
+  {
+    "requirement": "CAP-JS",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-nine-script-media-handoff-and-cleanup",
+    "abrNext": "verify-nine-script-media-handoff-and-cleanup",
+    "mergedNext": "verify-nine-script-media-handoff-and-cleanup"
+  },
+  {
+    "requirement": "CAP-LIVE",
+    "platform": "android",
+    "mainEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "measure-three-protocols-and-freeze-mode-targets",
+    "abrNext": "measure-three-protocols-and-freeze-mode-targets",
+    "mergedNext": "measure-three-protocols-and-freeze-mode-targets"
+  },
+  {
+    "requirement": "CAP-LIVE",
+    "platform": "ios",
+    "mainEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "measure-three-protocols-and-freeze-mode-targets",
+    "abrNext": "measure-three-protocols-and-freeze-mode-targets",
+    "mergedNext": "measure-three-protocols-and-freeze-mode-targets"
+  },
+  {
+    "requirement": "CAP-LIVE",
+    "platform": "macos",
+    "mainEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p04",
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "measure-three-protocols-and-freeze-mode-targets",
+    "abrNext": "measure-three-protocols-and-freeze-mode-targets",
+    "mergedNext": "measure-three-protocols-and-freeze-mode-targets"
+  },
+  {
+    "requirement": "CAP-PERIOD",
+    "platform": "android",
+    "mainEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "finish-cross-period-output-and-device-matrix",
+    "abrNext": "finish-cross-period-output-and-device-matrix",
+    "mergedNext": "finish-cross-period-output-and-device-matrix"
+  },
+  {
+    "requirement": "CAP-PERIOD",
+    "platform": "ios",
+    "mainEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "finish-cross-period-output-and-device-matrix",
+    "abrNext": "finish-cross-period-output-and-device-matrix",
+    "mergedNext": "finish-cross-period-output-and-device-matrix"
+  },
+  {
+    "requirement": "CAP-PERIOD",
+    "platform": "macos",
+    "mainEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "finish-cross-period-output-and-device-matrix",
+    "abrNext": "finish-cross-period-output-and-device-matrix",
+    "mergedNext": "finish-cross-period-output-and-device-matrix"
+  },
+  {
+    "requirement": "CAP-RTMP",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+    "abrNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+    "mergedNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
+  },
+  {
+    "requirement": "CAP-RTMP",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+    "abrNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+    "mergedNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
+  },
+  {
+    "requirement": "CAP-RTMP",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+    "abrNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+    "mergedNext": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
+  },
+  {
+    "requirement": "CAP-SUB",
+    "platform": "android",
+    "mainEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+    "abrNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+    "mergedNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
+  },
+  {
+    "requirement": "CAP-SUB",
+    "platform": "ios",
+    "mainEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+    "abrNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+    "mergedNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
+  },
+  {
+    "requirement": "CAP-SUB",
+    "platform": "macos",
+    "mainEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+    "abrNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+    "mergedNext": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
+  },
+  {
+    "requirement": "ERR-01",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-html-empty-refresh-retains-current-channels",
+    "abrNext": "verify-html-empty-refresh-retains-current-channels",
+    "mergedNext": "verify-html-empty-refresh-retains-current-channels"
+  },
+  {
+    "requirement": "ERR-01",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-html-empty-refresh-retains-current-channels",
+    "abrNext": "verify-html-empty-refresh-retains-current-channels",
+    "mergedNext": "verify-html-empty-refresh-retains-current-channels"
+  },
+  {
+    "requirement": "ERR-01",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-html-empty-refresh-retains-current-channels",
+    "abrNext": "verify-html-empty-refresh-retains-current-channels",
+    "mergedNext": "verify-html-empty-refresh-retains-current-channels"
+  },
+  {
+    "requirement": "ERR-02",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-dns-classification-across-request-boundaries",
+    "abrNext": "verify-dns-classification-across-request-boundaries",
+    "mergedNext": "verify-dns-classification-across-request-boundaries"
+  },
+  {
+    "requirement": "ERR-02",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-dns-classification-across-request-boundaries",
+    "abrNext": "verify-dns-classification-across-request-boundaries",
+    "mergedNext": "verify-dns-classification-across-request-boundaries"
+  },
+  {
+    "requirement": "ERR-02",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-dns-classification-across-request-boundaries",
+    "abrNext": "verify-dns-classification-across-request-boundaries",
+    "mergedNext": "verify-dns-classification-across-request-boundaries"
+  },
+  {
+    "requirement": "ERR-03",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-forbidden-no-token-guess-or-repeat-retry",
+    "abrNext": "verify-forbidden-no-token-guess-or-repeat-retry",
+    "mergedNext": "verify-forbidden-no-token-guess-or-repeat-retry"
+  },
+  {
+    "requirement": "ERR-03",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-forbidden-no-token-guess-or-repeat-retry",
+    "abrNext": "verify-forbidden-no-token-guess-or-repeat-retry",
+    "mergedNext": "verify-forbidden-no-token-guess-or-repeat-retry"
+  },
+  {
+    "requirement": "ERR-03",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-forbidden-no-token-guess-or-repeat-retry",
+    "abrNext": "verify-forbidden-no-token-guess-or-repeat-retry",
+    "mergedNext": "verify-forbidden-no-token-guess-or-repeat-retry"
+  },
+  {
+    "requirement": "ERR-04",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-runtime-termination-and-budget-release",
+    "abrNext": "verify-runtime-termination-and-budget-release",
+    "mergedNext": "verify-runtime-termination-and-budget-release"
+  },
+  {
+    "requirement": "ERR-04",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-runtime-termination-and-budget-release",
+    "abrNext": "verify-runtime-termination-and-budget-release",
+    "mergedNext": "verify-runtime-termination-and-budget-release"
+  },
+  {
+    "requirement": "ERR-04",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-runtime-termination-and-budget-release",
+    "abrNext": "verify-runtime-termination-and-budget-release",
+    "mergedNext": "verify-runtime-termination-and-budget-release"
+  },
+  {
+    "requirement": "ERR-05",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-host-and-invalid-result-faults",
+    "abrNext": "verify-host-and-invalid-result-faults",
+    "mergedNext": "verify-host-and-invalid-result-faults"
+  },
+  {
+    "requirement": "ERR-05",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-host-and-invalid-result-faults",
+    "abrNext": "verify-host-and-invalid-result-faults",
+    "mergedNext": "verify-host-and-invalid-result-faults"
+  },
+  {
+    "requirement": "ERR-05",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-host-and-invalid-result-faults",
+    "abrNext": "verify-host-and-invalid-result-faults",
+    "mergedNext": "verify-host-and-invalid-result-faults"
+  },
+  {
+    "requirement": "ERR-06",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "restore-pinned-server-and-run-fault-matrix",
+    "abrNext": "restore-pinned-server-and-run-fault-matrix",
+    "mergedNext": "restore-pinned-server-and-run-fault-matrix"
+  },
+  {
+    "requirement": "ERR-06",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "restore-pinned-server-and-run-fault-matrix",
+    "abrNext": "restore-pinned-server-and-run-fault-matrix",
+    "mergedNext": "restore-pinned-server-and-run-fault-matrix"
+  },
+  {
+    "requirement": "ERR-06",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p04",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "restore-pinned-server-and-run-fault-matrix",
+    "abrNext": "restore-pinned-server-and-run-fault-matrix",
+    "mergedNext": "restore-pinned-server-and-run-fault-matrix"
+  },
+  {
+    "requirement": "ERR-07",
+    "platform": "android",
+    "mainEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-provider-denied-expired-timeout-and-key-rotation",
+    "abrNext": "verify-provider-denied-expired-timeout-and-key-rotation",
+    "mergedNext": "verify-provider-denied-expired-timeout-and-key-rotation"
+  },
+  {
+    "requirement": "ERR-07",
+    "platform": "ios",
+    "mainEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-provider-denied-expired-timeout-and-key-rotation",
+    "abrNext": "verify-provider-denied-expired-timeout-and-key-rotation",
+    "mergedNext": "verify-provider-denied-expired-timeout-and-key-rotation"
+  },
+  {
+    "requirement": "ERR-07",
+    "platform": "macos",
+    "mainEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-provider-denied-expired-timeout-and-key-rotation",
+    "abrNext": "verify-provider-denied-expired-timeout-and-key-rotation",
+    "mergedNext": "verify-provider-denied-expired-timeout-and-key-rotation"
+  },
+  {
+    "requirement": "ERR-08",
+    "platform": "android",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-required-hardware-and-resource-rejection",
+    "abrNext": "verify-required-hardware-and-resource-rejection",
+    "mergedNext": "verify-required-hardware-and-resource-rejection"
+  },
+  {
+    "requirement": "ERR-08",
+    "platform": "ios",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-required-hardware-and-resource-rejection",
+    "abrNext": "verify-required-hardware-and-resource-rejection",
+    "mergedNext": "verify-required-hardware-and-resource-rejection"
+  },
+  {
+    "requirement": "ERR-08",
+    "platform": "macos",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-required-hardware-and-resource-rejection",
+    "abrNext": "verify-required-hardware-and-resource-rejection",
+    "mergedNext": "verify-required-hardware-and-resource-rejection"
+  },
+  {
+    "requirement": "ERR-09",
+    "platform": "android",
+    "mainEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-valid-unsupported-dolby-against-original-input",
+    "abrNext": "verify-valid-unsupported-dolby-against-original-input",
+    "mergedNext": "verify-valid-unsupported-dolby-against-original-input"
+  },
+  {
+    "requirement": "ERR-09",
+    "platform": "ios",
+    "mainEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-valid-unsupported-dolby-against-original-input",
+    "abrNext": "verify-valid-unsupported-dolby-against-original-input",
+    "mergedNext": "verify-valid-unsupported-dolby-against-original-input"
+  },
+  {
+    "requirement": "ERR-09",
+    "platform": "macos",
+    "mainEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-valid-unsupported-dolby-against-original-input",
+    "abrNext": "verify-valid-unsupported-dolby-against-original-input",
+    "mergedNext": "verify-valid-unsupported-dolby-against-original-input"
+  },
+  {
+    "requirement": "ERR-10",
+    "platform": "android",
+    "mainEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-subtitle-only-failure-and-video-continuity",
+    "abrNext": "verify-subtitle-only-failure-and-video-continuity",
+    "mergedNext": "verify-subtitle-only-failure-and-video-continuity"
+  },
+  {
+    "requirement": "ERR-10",
+    "platform": "ios",
+    "mainEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-subtitle-only-failure-and-video-continuity",
+    "abrNext": "verify-subtitle-only-failure-and-video-continuity",
+    "mergedNext": "verify-subtitle-only-failure-and-video-continuity"
+  },
+  {
+    "requirement": "ERR-10",
+    "platform": "macos",
+    "mainEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-subtitle-only-failure-and-video-continuity",
+    "abrNext": "verify-subtitle-only-failure-and-video-continuity",
+    "mergedNext": "verify-subtitle-only-failure-and-video-continuity"
+  },
+  {
+    "requirement": "ERR-11",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-bounded-actual-source-attempt-summary",
+    "abrNext": "verify-bounded-actual-source-attempt-summary",
+    "mergedNext": "verify-bounded-actual-source-attempt-summary"
+  },
+  {
+    "requirement": "ERR-11",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-bounded-actual-source-attempt-summary",
+    "abrNext": "verify-bounded-actual-source-attempt-summary",
+    "mergedNext": "verify-bounded-actual-source-attempt-summary"
+  },
+  {
+    "requirement": "ERR-11",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-bounded-actual-source-attempt-summary",
+    "abrNext": "verify-bounded-actual-source-attempt-summary",
+    "mergedNext": "verify-bounded-actual-source-attempt-summary"
+  },
+  {
+    "requirement": "ERR-12",
+    "platform": "android",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-cross-module-cancel-and-stale-races",
+    "abrNext": "run-final-cross-module-cancel-and-stale-races",
+    "mergedNext": "run-final-cross-module-cancel-and-stale-races"
+  },
+  {
+    "requirement": "ERR-12",
+    "platform": "ios",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-cross-module-cancel-and-stale-races",
+    "abrNext": "run-final-cross-module-cancel-and-stale-races",
+    "mergedNext": "run-final-cross-module-cancel-and-stale-races"
+  },
+  {
+    "requirement": "ERR-12",
+    "platform": "macos",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-cross-module-cancel-and-stale-races",
+    "abrNext": "run-final-cross-module-cancel-and-stale-races",
+    "mergedNext": "run-final-cross-module-cancel-and-stale-races"
+  },
+  {
+    "requirement": "REG-API",
+    "platform": "android",
+    "mainEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "close-current-consumer-and-adapter-audit",
+    "abrNext": "close-current-consumer-and-adapter-audit",
+    "mergedNext": "close-current-consumer-and-adapter-audit"
+  },
+  {
+    "requirement": "REG-API",
+    "platform": "ios",
+    "mainEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "close-current-consumer-and-adapter-audit",
+    "abrNext": "close-current-consumer-and-adapter-audit",
+    "mergedNext": "close-current-consumer-and-adapter-audit"
+  },
+  {
+    "requirement": "REG-API",
+    "platform": "macos",
+    "mainEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p04",
+      "platform",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "close-current-consumer-and-adapter-audit",
+    "abrNext": "close-current-consumer-and-adapter-audit",
+    "mergedNext": "close-current-consumer-and-adapter-audit"
+  },
+  {
+    "requirement": "REG-AUDIO",
+    "platform": "android",
+    "mainEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-real-route-interruption-background-and-peers",
+    "abrNext": "verify-real-route-interruption-background-and-peers",
+    "mergedNext": "verify-real-route-interruption-background-and-peers"
+  },
+  {
+    "requirement": "REG-AUDIO",
+    "platform": "ios",
+    "mainEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-real-route-interruption-background-and-peers",
+    "abrNext": "verify-real-route-interruption-background-and-peers",
+    "mergedNext": "verify-real-route-interruption-background-and-peers"
+  },
+  {
+    "requirement": "REG-AUDIO",
+    "platform": "macos",
+    "mainEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-real-route-interruption-background-and-peers",
+    "abrNext": "verify-real-route-interruption-background-and-peers",
+    "mergedNext": "verify-real-route-interruption-background-and-peers"
+  },
+  {
+    "requirement": "REG-BUF",
+    "platform": "android",
+    "mainEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+    "abrNext": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+    "mergedNext": "verify-budgets-with-overlapping-sessions-and-rebuilds"
+  },
+  {
+    "requirement": "REG-BUF",
+    "platform": "ios",
+    "mainEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+    "abrNext": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+    "mergedNext": "verify-budgets-with-overlapping-sessions-and-rebuilds"
+  },
+  {
+    "requirement": "REG-BUF",
+    "platform": "macos",
+    "mainEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "p04",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+    "abrNext": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+    "mergedNext": "verify-budgets-with-overlapping-sessions-and-rebuilds"
+  },
+  {
+    "requirement": "REG-DEC",
+    "platform": "android",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-decoder-evidence-after-rebuild-and-fallback",
+    "abrNext": "verify-decoder-evidence-after-rebuild-and-fallback",
+    "mergedNext": "verify-decoder-evidence-after-rebuild-and-fallback"
+  },
+  {
+    "requirement": "REG-DEC",
+    "platform": "ios",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-decoder-evidence-after-rebuild-and-fallback",
+    "abrNext": "verify-decoder-evidence-after-rebuild-and-fallback",
+    "mergedNext": "verify-decoder-evidence-after-rebuild-and-fallback"
+  },
+  {
+    "requirement": "REG-DEC",
+    "platform": "macos",
+    "mainEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p03",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-decoder-evidence-after-rebuild-and-fallback",
+    "abrNext": "verify-decoder-evidence-after-rebuild-and-fallback",
+    "mergedNext": "verify-decoder-evidence-after-rebuild-and-fallback"
+  },
+  {
+    "requirement": "REG-DIAG",
+    "platform": "android",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-current-error-matrix-and-redaction-audit",
+    "abrNext": "run-current-error-matrix-and-redaction-audit",
+    "mergedNext": "run-current-error-matrix-and-redaction-audit"
+  },
+  {
+    "requirement": "REG-DIAG",
+    "platform": "ios",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-current-error-matrix-and-redaction-audit",
+    "abrNext": "run-current-error-matrix-and-redaction-audit",
+    "mergedNext": "run-current-error-matrix-and-redaction-audit"
+  },
+  {
+    "requirement": "REG-DIAG",
+    "platform": "macos",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-current-error-matrix-and-redaction-audit",
+    "abrNext": "run-current-error-matrix-and-redaction-audit",
+    "mergedNext": "run-current-error-matrix-and-redaction-audit"
+  },
+  {
+    "requirement": "REG-LIFE",
+    "platform": "android",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-replacement-cancel-and-release-races",
+    "abrNext": "run-final-replacement-cancel-and-release-races",
+    "mergedNext": "run-final-replacement-cancel-and-release-races"
+  },
+  {
+    "requirement": "REG-LIFE",
+    "platform": "ios",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-replacement-cancel-and-release-races",
+    "abrNext": "run-final-replacement-cancel-and-release-races",
+    "mergedNext": "run-final-replacement-cancel-and-release-races"
+  },
+  {
+    "requirement": "REG-LIFE",
+    "platform": "macos",
+    "mainEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p05",
+      "p06",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-replacement-cancel-and-release-races",
+    "abrNext": "run-final-replacement-cancel-and-release-races",
+    "mergedNext": "run-final-replacement-cancel-and-release-races"
+  },
+  {
+    "requirement": "REG-NET",
+    "platform": "android",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "run-final-request-redirect-and-budget-regressions",
+    "abrNext": "run-final-request-redirect-and-budget-regressions",
+    "mergedNext": "run-final-request-redirect-and-budget-regressions"
+  },
+  {
+    "requirement": "REG-NET",
+    "platform": "ios",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "ios-public-policy-20261028"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "ios-public-policy-20261028"
+    ],
+    "mainNext": "run-final-request-redirect-and-budget-regressions",
+    "abrNext": "run-final-request-redirect-and-budget-regressions",
+    "mergedNext": "run-final-request-redirect-and-budget-regressions"
+  },
+  {
+    "requirement": "REG-NET",
+    "platform": "macos",
+    "mainEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "ios-public-policy-20261028"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p05",
+      "p06",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "ios-public-policy-20261028"
+    ],
+    "mainNext": "run-final-request-redirect-and-budget-regressions",
+    "abrNext": "run-final-request-redirect-and-budget-regressions",
+    "mergedNext": "run-final-request-redirect-and-budget-regressions"
+  },
+  {
+    "requirement": "REG-OS",
+    "platform": "android",
+    "mainEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+    "abrNext": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+    "mergedNext": "supply-minimum-os-low-memory-32bit-and-intel-runs"
+  },
+  {
+    "requirement": "REG-OS",
+    "platform": "ios",
+    "mainEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+    "abrNext": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+    "mergedNext": "supply-minimum-os-low-memory-32bit-and-intel-runs"
+  },
+  {
+    "requirement": "REG-OS",
+    "platform": "macos",
+    "mainEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "platform",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+    "abrNext": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+    "mergedNext": "supply-minimum-os-low-memory-32bit-and-intel-runs"
+  },
+  {
+    "requirement": "REG-VIEW",
+    "platform": "android",
+    "mainEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-protected-hdr-subtitle-and-external-output",
+    "abrNext": "verify-protected-hdr-subtitle-and-external-output",
+    "mergedNext": "verify-protected-hdr-subtitle-and-external-output"
+  },
+  {
+    "requirement": "REG-VIEW",
+    "platform": "ios",
+    "mainEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-protected-hdr-subtitle-and-external-output",
+    "abrNext": "verify-protected-hdr-subtitle-and-external-output",
+    "mergedNext": "verify-protected-hdr-subtitle-and-external-output"
+  },
+  {
+    "requirement": "REG-VIEW",
+    "platform": "macos",
+    "mainEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p02",
+      "p06",
+      "p07",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "verify-protected-hdr-subtitle-and-external-output",
+    "abrNext": "verify-protected-hdr-subtitle-and-external-output",
+    "mergedNext": "verify-protected-hdr-subtitle-and-external-output"
+  },
+  {
+    "requirement": "PERF-BASELINE",
+    "platform": "all",
+    "mainEvidence": [
+      "p08",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p08",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p08",
+      "remaining-engineering",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "freeze-eligible-baselines-and-versioned-targets-before-optimization",
+    "abrNext": "freeze-eligible-baselines-and-versioned-targets-before-optimization",
+    "mergedNext": "freeze-eligible-baselines-and-versioned-targets-before-optimization"
+  },
+  {
+    "requirement": "RELEASE-CONSUMERS",
+    "platform": "all",
+    "mainEvidence": [
+      "p01",
+      "p04",
+      "p05",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "abrEvidence": [
+      "p01",
+      "p04",
+      "p05",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p01",
+      "p04",
+      "p05",
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028"
+    ],
+    "mainNext": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy",
+    "abrNext": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy",
+    "mergedNext": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy"
+  },
+  {
+    "requirement": "RELEASE-CI",
+    "platform": "all",
+    "mainEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "android-acceptance-deadlines-20261028"
+    ],
+    "abrEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027"
+    ],
+    "mergedEvidence": [
+      "p08",
+      "remaining-acceptance-20261026",
+      "remaining-main-merge-20261027",
+      "remaining-local-acceptance-20261028",
+      "android-acceptance-deadlines-20261028"
+    ],
+    "mainNext": "record-final-source-bound-remote-ci-results",
+    "abrNext": "record-final-source-bound-remote-ci-results",
+    "mergedNext": "record-final-source-bound-remote-ci-results"
+  }
+]

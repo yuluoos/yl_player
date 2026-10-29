@@ -1,0 +1,54 @@
+{
+  "passed": false,
+  "targetMs": 38041,
+  "commandCompleted": 37.824772291665795,
+  "firstPublishedFrames": [
+    {
+      "elapsed": 37.83395299999938,
+      "framePresentationTimes": [
+        37.041666666666664
+      ],
+      "frames": 1,
+      "generation": 0,
+      "itemStatus": 1,
+      "position": 37.044555959,
+      "rate": 1,
+      "resumeSeekPending": false,
+      "textureClears": 0,
+      "timeControlStatus": 2,
+      "width": 320
+    },
+    {
+      "elapsed": 37.938477624998995,
+      "framePresentationTimes": [
+        38
+      ],
+      "frames": 1,
+      "generation": 0,
+      "itemStatus": 1,
+      "position": 38.041,
+      "rate": 1,
+      "resumeSeekPending": false,
+      "textureClears": 0,
+      "timeControlStatus": 2,
+      "width": 320
+    },
+    {
+      "elapsed": 38.04027150000002,
+      "framePresentationTimes": [
+        38.041666666666664
+      ],
+      "frames": 1,
+      "generation": 0,
+      "itemStatus": 1,
+      "position": 38.05048925,
+      "rate": 1,
+      "resumeSeekPending": false,
+      "textureClears": 0,
+      "timeControlStatus": 2,
+      "width": 320
+    }
+  ],
+  "reason": "automatic selection did not gate pending user seek; stale frame published after command acknowledgement",
+  "originalReceiptPreserved": true
+}

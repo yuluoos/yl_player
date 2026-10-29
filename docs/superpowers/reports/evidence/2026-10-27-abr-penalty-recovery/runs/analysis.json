@@ -1,0 +1,169 @@
+[
+  {
+    "name": "baseline",
+    "passed": true,
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": false,
+      "upshiftAfterDownshiftObserved": false,
+      "lastObservedBitrate": 1480170,
+      "lastIndicatedBitrate": 414000,
+      "framesPublished": 471,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    },
+    "attempt": null,
+    "firstPostActionHighElapsed": null,
+    "firstPostActionHighPosition": null,
+    "sampledFrameGapAcrossAction": null,
+    "largestPositionBackwardStep": 0,
+    "maximumSampleGap": 0.31275841666501947,
+    "finalPosition": 120.053061881,
+    "penaltyEvents": [
+      {
+        "timestamp": "2026-10-27 03:01:04.631083-0700",
+        "message": "<SEGPUMP> MoveAlternateToPenaltyBox: 0x119118000: alternate <FigAlternate( 1):[0x113e87200] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box"
+      }
+    ]
+  },
+  {
+    "name": "seek",
+    "passed": true,
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": true,
+      "upshiftAfterDownshiftObserved": false,
+      "lastObservedBitrate": 1509391,
+      "lastIndicatedBitrate": 414000,
+      "framesPublished": 472,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    },
+    "attempt": {
+      "action": "seek-current",
+      "completed": true,
+      "elapsed": 35.146625499997754,
+      "elapsedAfter": 35.29789995833198,
+      "itemChanged": false,
+      "positionAfterCall": 34.395216687,
+      "positionBefore": 34.393838729
+    },
+    "firstPostActionHighElapsed": null,
+    "firstPostActionHighPosition": null,
+    "sampledFrameGapAcrossAction": 0.40540612499899,
+    "largestPositionBackwardStep": 0,
+    "maximumSampleGap": 0.40540612499899,
+    "finalPosition": 120.016079837,
+    "penaltyEvents": [
+      {
+        "timestamp": "2026-10-27 03:03:16.927098-0700",
+        "message": "<SEGPUMP> MoveAlternateToPenaltyBox: 0x11b110000: alternate <FigAlternate( 1):[0x115cf4f00] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box"
+      }
+    ]
+  },
+  {
+    "name": "reload",
+    "passed": true,
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320,
+        640
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": true,
+      "upshiftAfterDownshiftObserved": true,
+      "lastObservedBitrate": 1916739,
+      "lastIndicatedBitrate": 764000,
+      "framesPublished": 471,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    },
+    "attempt": {
+      "action": "reload-source",
+      "completed": true,
+      "elapsed": 35.02658158332997,
+      "elapsedAfter": 35.318543333331036,
+      "itemChanged": true,
+      "positionAfterCall": 0,
+      "positionBefore": 34.411315543
+    },
+    "firstPostActionHighElapsed": 41.16998591666561,
+    "firstPostActionHighPosition": 40.031288552,
+    "sampledFrameGapAcrossAction": 0.5438936249993276,
+    "largestPositionBackwardStep": 0,
+    "maximumSampleGap": 0.5438936249993276,
+    "finalPosition": 120.059340897,
+    "penaltyEvents": [
+      {
+        "timestamp": "2026-10-27 03:05:26.253625-0700",
+        "message": "<SEGPUMP> MoveAlternateToPenaltyBox: 0x1088ef800: alternate <FigAlternate( 1):[0x117ffc500] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box"
+      }
+    ]
+  },
+  {
+    "name": "reload-repeat",
+    "passed": true,
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320,
+        640
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": true,
+      "highOutputAfterInterventionObserved": true,
+      "upshiftAfterDownshiftObserved": true,
+      "lastObservedBitrate": 1800459,
+      "lastIndicatedBitrate": 764000,
+      "framesPublished": 472,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    },
+    "attempt": {
+      "action": "reload-source",
+      "completed": true,
+      "elapsed": 35.0614333750018,
+      "elapsedAfter": 35.42313637500047,
+      "itemChanged": true,
+      "positionAfterCall": 0,
+      "positionBefore": 34.060756662
+    },
+    "firstPostActionHighElapsed": 41.543207208334934,
+    "firstPostActionHighPosition": 40.028890301,
+    "sampledFrameGapAcrossAction": 0.6139538333336532,
+    "largestPositionBackwardStep": 0,
+    "maximumSampleGap": 0.6139538333336532,
+    "finalPosition": 120.018799138,
+    "penaltyEvents": [
+      {
+        "timestamp": "2026-10-27 03:09:27.497502-0700",
+        "message": "<SEGPUMP> MoveAlternateToPenaltyBox: 0x1142d3800: alternate <FigAlternate( 1):[0x1143da080] [Peak 764000] [640x360] [AudioGroup audio] [avc1.42c01e,mp4a.40.2]> [] is in the penalty box"
+      }
+    ]
+  }
+]

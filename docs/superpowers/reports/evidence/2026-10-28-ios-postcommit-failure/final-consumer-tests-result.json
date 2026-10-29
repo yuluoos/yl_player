@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tool/consumer_fixtures/apple_flutter"
+  ],
+  "exitCode": 0
+}

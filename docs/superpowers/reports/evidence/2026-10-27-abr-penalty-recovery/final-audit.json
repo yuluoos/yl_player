@@ -1,0 +1,17 @@
+{
+  "baselineCommit": "fa636df47e0cc8279a57dc28e4fe86edf5bda517",
+  "previousArchiveFilesVerified": 242,
+  "rawArchiveFilesVerified": 99,
+  "repeatSourceIdentityMatches": true,
+  "sourceMatches": true,
+  "releaseReady": false,
+  "ledgerStructureExit": 0,
+  "ledgerRequireReadyExit": 1,
+  "thresholdRequireReadyExit": 1,
+  "networkTests": 89,
+  "benchmarkTests": 294,
+  "macosContractTests": 6,
+  "nativeDiagnosticRuns": 4,
+  "productChanges": false,
+  "note": "Original failures and initial invalid ledger field retained; no complete CAP-ABR acceptance, no publication."
+}

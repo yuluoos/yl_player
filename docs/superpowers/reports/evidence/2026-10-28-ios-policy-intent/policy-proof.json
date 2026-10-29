@@ -1,0 +1,478 @@
+{
+  "auto-control": {
+    "capturePassed": true,
+    "end": 120.020066468,
+    "events": [
+      {
+        "attempt": 1,
+        "due": 37.18975166666496,
+        "elapsed": 37.215797666664,
+        "elapsedAfter": 37.362084291671636,
+        "generation": 0,
+        "itemChanged": true,
+        "manifestPreparedElapsed": 37.360059291662765,
+        "outcome": "installed",
+        "positionBefore": 36.816189604,
+        "preparationCompletedElapsed": 37.36010337500193,
+        "textureClearsAfter": 1,
+        "textureClearsBefore": 1
+      }
+    ],
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6521,
+      "publishedFrames": 2880,
+      "maximumPumpGapMs": 94.62166666344274,
+      "maximumPublishedFrameGapMs": 311.38608332548756,
+      "lastPublicationSampleElapsed": 120.59973470833211,
+      "observationEndElapsed": 120.77678033332631,
+      "trailingNoPublicationMs": 177.04562499420717,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 37.327474208330386,
+          "elapsedAfter": 37.482315833331086,
+          "publicationGapMs": 154.84162500069942,
+          "positionDeltaMs": 33.04051399999963,
+          "textureClears": 0
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "policy": {
+      "samples": 465,
+      "reasonCounts": {
+        "playbackIneligible": 1,
+        "insufficientBuffer": 38,
+        "highNotObserved": 11,
+        "highOutput": 292,
+        "windowStarted": 1,
+        "windowPending": 60,
+        "firstQualifiedWindow": 1,
+        "reserved": 1,
+        "backoff": 1,
+        "ticketReady": 1,
+        "nearEnd": 58
+      },
+      "attempts": 1,
+      "reservations": 1,
+      "tickets": 1,
+      "triggerExercised": true,
+      "windowBitrateMinimum": 1220636.6895982565,
+      "windowBitrateMaximum": 1979226.952165639,
+      "capabilityAccepted": false
+    },
+    "windows": [
+      {
+        "bitrate": 1220636.6895982565,
+        "reason": "firstQualifiedWindow"
+      },
+      {
+        "bitrate": 1979226.952165639,
+        "reason": "reserved"
+      }
+    ],
+    "finalProxy": {
+      "acceptedConnections": 233,
+      "activeConnections": 0,
+      "activeTasks": 0,
+      "admittedRequests": 233,
+      "cancelled": 0,
+      "cancelledCompletions": 0,
+      "closedWithActiveTask": 0,
+      "failedCompletions": 0,
+      "lastAdmissionUptime": 79645.81265183334,
+      "lastCompletionUptime": 79645.83608000001,
+      "pendingSends": 0,
+      "receivedBodyBytes": 4963572,
+      "suspendedTasks": 0,
+      "upstreamCompletions": 233
+    }
+  },
+  "caps": {
+    "capturePassed": true,
+    "end": 120.029654521,
+    "events": [
+      {
+        "attempt": 1,
+        "due": 33.38962920833728,
+        "elapsed": 33.4065340833331,
+        "elapsedAfter": 33.800494666662416,
+        "generation": 0,
+        "manifestPreparedElapsed": 33.55630399999791,
+        "outcome": "preparationFailed",
+        "policyCandidatePreparedElapsed": 33.58209691666707,
+        "policyChangeApplied": true,
+        "policyChangedItem": true,
+        "policyChangeElapsed": 33.76479950000066,
+        "policyFixedTrackId": null,
+        "policyMaximumHeight": 100000,
+        "policyMaximumWidth": 320,
+        "positionBefore": 32.901909986,
+        "preparationCompletedElapsed": 33.80047895833559,
+        "preparationPauseApplied": false,
+        "textureClearsAfter": 2,
+        "textureClearsBefore": 1,
+        "warmupCompletedElapsed": 33.80040979165642,
+        "warmupDetached": true,
+        "warmupFramesAfter": 799,
+        "warmupFramesBefore": 794,
+        "warmupOldItemRetained": false,
+        "warmupOutcome": "cancelled",
+        "warmupPositionAfter": 33.259072,
+        "warmupPositionBefore": 33.078319445,
+        "warmupProxyAfter": {
+          "acceptedConnections": 8,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 8,
+          "cancelled": 1,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 79310.228833375,
+          "lastCompletionUptime": 79310.22422254167,
+          "pendingSends": 0,
+          "receivedBodyBytes": 58210,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 6
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "waitingReady",
+        "warmupStartedElapsed": 33.5821089999954
+      }
+    ],
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6538,
+      "publishedFrames": 2881,
+      "maximumPumpGapMs": 94.92729166231584,
+      "maximumPublishedFrameGapMs": 324.5606666605454,
+      "lastPublicationSampleElapsed": 120.72937104167067,
+      "observationEndElapsed": 120.97660416665894,
+      "trailingNoPublicationMs": 247.23312498827,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 33.75840516666358,
+          "elapsedAfter": 33.870400375002646,
+          "publicationGapMs": 111.99520833906718,
+          "positionDeltaMs": 4.462161000006404,
+          "textureClears": 1
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "policy": {
+      "samples": 465,
+      "reasonCounts": {
+        "playbackIneligible": 338,
+        "insufficientBuffer": 4,
+        "highNotObserved": 29,
+        "highOutput": 29,
+        "windowStarted": 1,
+        "windowPending": 60,
+        "firstQualifiedWindow": 1,
+        "reserved": 1,
+        "backoff": 1,
+        "ticketReady": 1
+      },
+      "attempts": 1,
+      "reservations": 1,
+      "tickets": 1,
+      "triggerExercised": true,
+      "windowBitrateMinimum": 1575520.017405229,
+      "windowBitrateMaximum": 1734576.3884747708,
+      "capabilityAccepted": false
+    },
+    "windows": [
+      {
+        "bitrate": 1575520.017405229,
+        "reason": "firstQualifiedWindow"
+      },
+      {
+        "bitrate": 1734576.3884747708,
+        "reason": "reserved"
+      }
+    ],
+    "finalProxy": {
+      "acceptedConnections": 240,
+      "activeConnections": 0,
+      "activeTasks": 0,
+      "admittedRequests": 240,
+      "cancelled": 0,
+      "cancelledCompletions": 0,
+      "closedWithActiveTask": 0,
+      "failedCompletions": 0,
+      "lastAdmissionUptime": 79387.19595870834,
+      "lastCompletionUptime": 79387.29980975001,
+      "pendingSends": 0,
+      "receivedBodyBytes": 3018591,
+      "suspendedTasks": 0,
+      "upstreamCompletions": 240
+    },
+    "policyProof": {
+      "injected": true,
+      "oldCandidateCancelled": true,
+      "postRows": 337,
+      "policyPreserved": true,
+      "publishedFramesAfterPolicy": 2082,
+      "publishedWidths": [
+        320
+      ],
+      "widthCompliant": true,
+      "generationsAfterPolicy": [
+        1
+      ],
+      "noAutomaticInstallation": true,
+      "oneBudgetSpent": true,
+      "capabilityAccepted": false
+    }
+  },
+  "fixed": {
+    "capturePassed": true,
+    "end": 120.029935178,
+    "events": [
+      {
+        "attempt": 1,
+        "due": 33.41846770833945,
+        "elapsed": 33.45730391667166,
+        "elapsedAfter": 33.88741720833059,
+        "generation": 0,
+        "manifestPreparedElapsed": 33.60610733334033,
+        "outcome": "preparationFailed",
+        "policyCandidatePreparedElapsed": 33.63216795833432,
+        "policyChangeApplied": true,
+        "policyChangedItem": true,
+        "policyChangeElapsed": 33.83273079167702,
+        "policyFixedTrackId": "dash-video-w320-h180-b350000",
+        "policyMaximumHeight": 0,
+        "policyMaximumWidth": 0,
+        "positionBefore": 32.927786339,
+        "preparationCompletedElapsed": 33.88739445833198,
+        "preparationPauseApplied": false,
+        "textureClearsAfter": 2,
+        "textureClearsBefore": 1,
+        "warmupCompletedElapsed": 33.88735679167439,
+        "warmupDetached": true,
+        "warmupFramesAfter": 798,
+        "warmupFramesBefore": 794,
+        "warmupOldItemRetained": false,
+        "warmupOutcome": "cancelled",
+        "warmupPositionAfter": 33.301862,
+        "warmupPositionBefore": 33.103452184,
+        "warmupProxyAfter": {
+          "acceptedConnections": 9,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 9,
+          "cancelled": 1,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 79439.781693625,
+          "lastCompletionUptime": 79439.77842695834,
+          "pendingSends": 0,
+          "receivedBodyBytes": 95273,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 7
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "waitingReady",
+        "warmupStartedElapsed": 33.63217737500963
+      }
+    ],
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6528,
+      "publishedFrames": 2879,
+      "maximumPumpGapMs": 91.05070833174977,
+      "maximumPublishedFrameGapMs": 331.31420833524317,
+      "lastPublicationSampleElapsed": 120.81144883333764,
+      "observationEndElapsed": 120.88240162500006,
+      "trailingNoPublicationMs": 70.95279166242108,
+      "replacementBoundaries": [
+        {
+          "generationBefore": 0,
+          "generationAfter": 1,
+          "elapsedBefore": 33.795972291671205,
+          "elapsedAfter": 33.99149841666804,
+          "publicationGapMs": 195.52612499683164,
+          "positionDeltaMs": 34.622016999996674,
+          "textureClears": 1
+        }
+      ],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "policy": {
+      "samples": 464,
+      "reasonCounts": {
+        "playbackIneligible": 337,
+        "insufficientBuffer": 5,
+        "highNotObserved": 28,
+        "highOutput": 29,
+        "windowStarted": 1,
+        "windowPending": 60,
+        "firstQualifiedWindow": 1,
+        "reserved": 1,
+        "backoff": 1,
+        "ticketReady": 1
+      },
+      "attempts": 1,
+      "reservations": 1,
+      "tickets": 1,
+      "triggerExercised": true,
+      "windowBitrateMinimum": 1705503.7382291867,
+      "windowBitrateMaximum": 2006721.750563017,
+      "capabilityAccepted": false
+    },
+    "windows": [
+      {
+        "bitrate": 2006721.750563017,
+        "reason": "firstQualifiedWindow"
+      },
+      {
+        "bitrate": 1705503.7382291867,
+        "reason": "reserved"
+      }
+    ],
+    "finalProxy": {
+      "acceptedConnections": 240,
+      "activeConnections": 0,
+      "activeTasks": 0,
+      "admittedRequests": 240,
+      "cancelled": 0,
+      "cancelledCompletions": 0,
+      "closedWithActiveTask": 0,
+      "failedCompletions": 0,
+      "lastAdmissionUptime": 79516.76437716668,
+      "lastCompletionUptime": 79516.78711920834,
+      "pendingSends": 0,
+      "receivedBodyBytes": 3018591,
+      "suspendedTasks": 0,
+      "upstreamCompletions": 240
+    },
+    "policyProof": {
+      "injected": true,
+      "oldCandidateCancelled": true,
+      "postRows": 336,
+      "policyPreserved": true,
+      "publishedFramesAfterPolicy": 2081,
+      "publishedWidths": [
+        320
+      ],
+      "widthCompliant": true,
+      "generationsAfterPolicy": [
+        1
+      ],
+      "noAutomaticInstallation": true,
+      "oneBudgetSpent": true,
+      "capabilityAccepted": false
+    }
+  },
+  "original-control": {
+    "capturePassed": true,
+    "end": 120.022917323,
+    "events": [],
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6632,
+      "publishedFrames": 2878,
+      "maximumPumpGapMs": 71.98033333406784,
+      "maximumPublishedFrameGapMs": 1337.978583324002,
+      "lastPublicationSampleElapsed": 122.75724337498832,
+      "observationEndElapsed": 122.91617116666748,
+      "trailingNoPublicationMs": 158.9277916791616,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "policy": {
+      "samples": 473,
+      "reasonCounts": {
+        "playbackIneligible": 10,
+        "insufficientBuffer": 46,
+        "highNotObserved": 11,
+        "highOutput": 288,
+        "windowStarted": 1,
+        "windowPending": 58,
+        "firstQualifiedWindow": 1,
+        "nearEnd": 58
+      },
+      "attempts": 0,
+      "reservations": 0,
+      "tickets": 0,
+      "triggerExercised": false,
+      "windowBitrateMinimum": 1021052.2901248274,
+      "windowBitrateMaximum": 1021052.2901248274,
+      "capabilityAccepted": false
+    },
+    "windows": [
+      {
+        "bitrate": 1021052.2901248274,
+        "reason": "firstQualifiedWindow"
+      }
+    ],
+    "finalProxy": {
+      "acceptedConnections": 344,
+      "activeConnections": 0,
+      "activeTasks": 0,
+      "admittedRequests": 344,
+      "cancelled": 0,
+      "cancelledCompletions": 4,
+      "closedWithActiveTask": 4,
+      "failedCompletions": 0,
+      "lastAdmissionUptime": 79775.68712729168,
+      "lastCompletionUptime": 79775.81559562501,
+      "pendingSends": 0,
+      "receivedBodyBytes": 6962139,
+      "suspendedTasks": 0,
+      "upstreamCompletions": 344
+    }
+  }
+}

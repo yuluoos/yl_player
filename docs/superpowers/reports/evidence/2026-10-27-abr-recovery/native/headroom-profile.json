@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "recovery-headroom-diagnostic-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 50000,
+          "latencyMs": 200
+        },
+        {
+          "atMs": 25000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 40
+        }
+      ]
+    }
+  ]
+}

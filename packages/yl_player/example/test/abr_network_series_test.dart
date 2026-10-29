@@ -13,6 +13,7 @@ void main() {
     );
     expect(series.samples, hasLength(1));
     expect(series.samples.single['rebufferCount'], isNull);
+    expect(series.samples.single['estimatedBitrate'], isNull);
     expect(series.samples.single['height'], isNull);
     expect(jsonEncode(series.samples), isNot(contains('current')));
   });
@@ -38,6 +39,7 @@ void main() {
           displaySize: YlPixelSize(640, 360),
         ),
         metrics: const YlPlaybackMetrics(
+          estimatedBitrate: 1234567,
           rebufferCount: 2,
           rebufferDuration: Duration(milliseconds: 500),
         ),
@@ -48,6 +50,7 @@ void main() {
     expect(series.samples.single['height'], 360);
     expect(series.samples.single['selectedBitrate'], 700000);
     expect(series.samples.single['rebufferUs'], 500000);
+    expect(series.samples.single['estimatedBitrate'], 1234567);
     expect(jsonEncode(series.samples), isNot(contains('secret-url')));
   });
   test('capture fails on overflow or reversed time instead of truncating', () {

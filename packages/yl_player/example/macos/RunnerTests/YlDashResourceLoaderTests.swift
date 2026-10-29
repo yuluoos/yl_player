@@ -4,6 +4,9 @@ import AVFoundation
 import CoreImage
 import Network
 import XCTest
+#if os(iOS)
+import UIKit
+#endif
 
 private final class DashLoaderProtocol: URLProtocol {
   static let lock = NSLock()
@@ -53,68 +56,1929 @@ private final class DashLoadingRequest: YlHlsLoadingRequest {
   func finishLoading(with error: NativePlayerError) { self.error = error; finishCount += 1 }
 }
 
+// Experimental policy for the owned 320/640 fixture only. No production hook.
+private enum AbrDiagnosticRecoveryEligibility {
+  static func permitsPolicy(peakBitRate: Double, maximumResolution: CGSize, fixedTrackId: String?) -> Bool {
+    peakBitRate == 0 && maximumResolution == .zero && fixedTrackId == nil
+  }
+}
+
+private struct AbrDiagnosticRecoveryPolicy {
+  struct Sample {
+    let time: Double, generation: Int, allowed: Bool, width: Int
+    let position: Double, remaining: Double, bufferAhead: Double
+    let bytes: Int64, transfer: Double, requests: Int, overdue: Int
+    var intentRevision: UInt64 = 0
+    var credentialRevision: UInt64 = 0
+  }
+  struct Ticket { let id: UUID, generation: Int, attempt: Int, due: Double; let intentRevision: UInt64; let credentialRevision: UInt64 }
+  private(set) var attempts = 0
+  private(set) var decision: [String: Any] = [:]
+  private var generation: Int?
+  private var intentRevision: UInt64?
+  private var credentialRevision: UInt64?
+  private var sawHigh = false
+  private var anchor: Sample?
+  private var windows = 0
+  private var last: Sample?
+  private var pending: Ticket?
+  private var inFlight: Ticket?
+  static func contiguousAhead(position: Double, ranges: [(Double, Double)]) -> Double {
+    guard position.isFinite, position >= 0 else { return 0 }
+    var end = position
+    for range in ranges.filter({ $0.0.isFinite && $0.1.isFinite && $0.1 >= $0.0 }).sorted(by: { $0.0 < $1.0 }) {
+      if range.1 < position { continue }
+      if range.0 > end { break }
+      end = max(end, range.1)
+    }
+    return max(0, end - position)
+  }
+  mutating func invalidateIntent() {
+    pending = nil; inFlight = nil; anchor = nil; windows = 0; last = nil
+  }
+  private func eligible(_ s: Sample) -> Bool {
+    s.allowed && s.time.isFinite && s.position.isFinite && s.remaining.isFinite &&
+      s.bufferAhead.isFinite && s.transfer.isFinite && s.time >= 0 && s.position >= 0 &&
+      s.transfer >= 0 && s.bytes >= 0 && s.requests >= 0 && s.remaining >= 20 && s.bufferAhead >= 5
+  }
+  mutating func observe(_ s: Sample) -> Ticket? {
+    var reason = "invalidSample"
+    var windowBitrate: Double?
+    var windowRequests: Int?
+    func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
+    defer {
+      decision = ["elapsed": finite(s.time), "generation": s.generation, "intentRevision": s.intentRevision, "credentialRevision": s.credentialRevision, "allowed": s.allowed,
+        "width": s.width, "position": finite(s.position), "remaining": finite(s.remaining),
+        "bufferAhead": finite(s.bufferAhead), "bytes": s.bytes, "transfer": finite(s.transfer),
+        "requests": s.requests, "overdue": s.overdue, "reason": reason, "attempts": attempts,
+        "qualifiedWindows": windows, "sawHigh": sawHigh,
+        "windowBitrate": windowBitrate.map(finite) ?? NSNull(),
+        "windowRequests": windowRequests as Any? ?? NSNull(),
+        "pendingDue": pending.map { finite($0.due) } ?? NSNull()]
+    }
+    if generation != s.generation {
+      generation = s.generation; sawHigh = false; anchor = nil; windows = 0
+      pending = nil; inFlight = nil; last = nil
+    }
+    if intentRevision != s.intentRevision { intentRevision = s.intentRevision; invalidateIntent() }
+    if credentialRevision != s.credentialRevision { credentialRevision = s.credentialRevision; invalidateIntent() }
+    guard eligible(s), last.map({ s.time > $0.time && s.position >= $0.position }) ?? true else {
+      if !s.allowed { reason = "playbackIneligible" }
+      else if s.bufferAhead.isFinite && s.bufferAhead < 5 { reason = "insufficientBuffer" }
+      else if s.remaining.isFinite && s.remaining < 20 { reason = "nearEnd" }
+      else if eligible(s) { reason = "nonMonotonic" }
+      anchor = nil; windows = 0; pending = nil; inFlight = nil; last = nil; return nil
+    }
+    last = s
+    if s.width == 640 { reason = "highOutput"; sawHigh = true; anchor = nil; windows = 0; pending = nil; return nil }
+    guard sawHigh, s.width == 320, s.overdue > 0 else { reason = !sawHigh ? "highNotObserved" : (s.width != 320 ? "notLowOutput" : "noOverdue"); anchor = nil; windows = 0; pending = nil; return nil }
+    if let pending {
+      guard s.time >= pending.due else { reason = "backoff"; return nil }
+      reason = "ticketReady"
+      self.pending = nil; inFlight = pending; return pending
+    }
+    guard inFlight == nil, attempts < 2 else { reason = inFlight != nil ? "inFlight" : "budgetExhausted"; return nil }
+    guard let start = anchor else { reason = "windowStarted"; anchor = s; return nil }
+    guard s.bytes >= start.bytes, s.transfer >= start.transfer, s.requests >= start.requests else {
+      reason = "countersReset"; anchor = s; windows = 0; return nil
+    }
+    guard s.time - start.time >= 8 else { reason = "windowPending"; return nil }
+    anchor = s
+    let duration = s.transfer - start.transfer
+    let bitrate = duration > 0 ? Double(s.bytes - start.bytes) * 8 / duration : 0
+    windowBitrate = bitrate; windowRequests = s.requests - start.requests
+    guard s.position > start.position, s.requests - start.requests >= 3,
+          bitrate.isFinite, bitrate >= 764_000 * 1.25 else {
+      reason = s.position <= start.position ? "noProgress" : (s.requests - start.requests < 3 ? "insufficientRequests" : "insufficientBandwidth")
+      windows = 0; return nil
+    }
+    windows += 1
+    guard windows >= 2 else { reason = "firstQualifiedWindow"; return nil }
+    reason = "reserved"
+    attempts += 1; windows = 0; anchor = nil
+    pending = Ticket(id: UUID(), generation: s.generation, attempt: attempts,
+      due: s.time + (attempts == 1 ? 0.5 : 1.0), intentRevision: s.intentRevision, credentialRevision: s.credentialRevision)
+    return nil
+  }
+  func authorizes(_ ticket: Ticket, _ s: Sample) -> Bool {
+    eligible(s) && s.width == 320 && s.generation == ticket.generation && s.intentRevision == ticket.intentRevision && s.credentialRevision == ticket.credentialRevision &&
+      inFlight?.id == ticket.id && s.time >= ticket.due && s.time <= ticket.due + 5
+  }
+  mutating func finish(_ ticket: Ticket) {
+    guard inFlight?.id == ticket.id else { return }
+    inFlight = nil; anchor = nil; windows = 0
+  }
+}
+
+private final class AbrHeldMetadataLoader: NSObject, AVAssetResourceLoaderDelegate {
+  private let lock = NSLock()
+  private var pending: [AVAssetResourceLoadingRequest] = []
+  private let started: XCTestExpectation, cancelled: XCTestExpectation
+  private var didStart = false, didCancel = false
+  private var ownerCancels = 0, terminatedRequests = 0
+  var cancellationState: (pending: Int, owner: Int, terminated: Int) {
+    lock.lock(); defer { lock.unlock() }; return (pending.count, ownerCancels, terminatedRequests)
+  }
+  func cancelAll() {
+    lock.lock(); let requests = pending; pending.removeAll(); ownerCancels += 1
+    let first = !didCancel; didCancel = true; lock.unlock()
+    for request in requests { request.finishLoading(with: URLError(.cancelled)) }
+    lock.lock(); terminatedRequests += requests.filter { $0.isFinished }.count; lock.unlock()
+    if first { cancelled.fulfill() }
+  }
+  init(started: XCTestExpectation, cancelled: XCTestExpectation) {
+    self.started = started; self.cancelled = cancelled
+  }
+  func resourceLoader(_ loader: AVAssetResourceLoader, shouldWaitForLoadingOfRequestedResource request: AVAssetResourceLoadingRequest) -> Bool {
+    lock.lock(); pending.append(request)
+    let first = !didStart; didStart = true; lock.unlock()
+    if first { started.fulfill() }
+    return true
+  }
+  func resourceLoader(_ loader: AVAssetResourceLoader, didCancel request: AVAssetResourceLoadingRequest) {
+    lock.lock(); pending.removeAll { $0 === request }; terminatedRequests += 1
+    let first = !didCancel; didCancel = true; lock.unlock()
+    if first { cancelled.fulfill() }
+  }
+}
+
+// Owned diagnostic experiment only; never a production recovery hook.
+private enum AbrDiagnosticCandidatePreparation {
+  static func prepareReplacement(originURL: URL, headers: [String: String], credentials: [String: String],
+    credentialContext: YlHlsCredentialContext) throws -> YlPreparedHlsAsset {
+    try YlPreparedHlsAsset(originURL: originURL, isDash: true, headers: headers,
+      credentials: credentials, configuration: .init(map: [:]), cancellationToken: .init(), credentialContext: credentialContext)
+  }
+
+  @MainActor static func loadMetadata(_ asset: AVURLAsset, deadlineUptime: Double,
+    allowed: () -> Bool = { true }, onStarted: () -> Void = {},
+    cancelPending: () -> Void) async -> String {
+    // AVAsset cancellation alone does not guarantee that an owned resource
+    // loader has terminated its requests. Every abort releases both owners.
+    func abort(_ outcome: String) -> String {
+      asset.cancelLoading(); cancelPending(); return outcome
+    }
+    guard deadlineUptime.isFinite else { return abort("failed") }
+    guard !Task.isCancelled, allowed() else { return abort("cancelled") }
+    guard ProcessInfo.processInfo.systemUptime < deadlineUptime else { return abort("timedOut") }
+    let keys = ["playable", "tracks", "duration"]
+    asset.loadValuesAsynchronously(forKeys: keys, completionHandler: {})
+    onStarted() // Diagnostic injection only after the loading operation is issued.
+    while !Task.isCancelled {
+      guard allowed() else { return abort("cancelled") }
+      guard ProcessInfo.processInfo.systemUptime < deadlineUptime else {
+        return abort("timedOut")
+      }
+      var allLoaded = true
+      for key in keys {
+        var error: NSError?
+        switch asset.statusOfValue(forKey: key, error: &error) {
+        case .loaded: break
+        case .failed:
+          return abort("failed")
+        case .cancelled:
+          return abort("cancelled")
+        case .unknown, .loading: allLoaded = false
+        @unknown default:
+          return abort("failed")
+        }
+      }
+      if allLoaded {
+        guard !Task.isCancelled, allowed() else { return abort("cancelled") }
+        guard ProcessInfo.processInfo.systemUptime < deadlineUptime else { return abort("timedOut") }
+        if asset.isPlayable { return "loaded" }
+        return abort("unplayable")
+      }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    return abort("cancelled")
+  }
+}
+
+// Completion callbacks may arrive on AVFoundation queues after cancellation.
+private final class AbrPrerollCompletion: @unchecked Sendable {
+  private let lock = NSLock()
+  private var value: Bool?
+  func finish(_ result: Bool) { lock.lock(); value = result; lock.unlock() }
+  var result: Bool? { lock.lock(); defer { lock.unlock() }; return value }
+}
+
+// Diagnostic only: the final backend still performs its exact resume seek.
+private enum AbrDiagnosticPreroll {
+  @MainActor static func prepare(_ asset: AVURLAsset, position: CMTime, deadlineUptime: Double,
+    allowed: () -> Bool, onReady: @escaping @MainActor () async -> Void = {},
+    onOperationStarted: (String) -> Void = { _ in }, cancelPending: () -> Void) async
+    -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool, readyCommand: Task<Void, Never>?) {
+    var candidate: AVPlayer?
+    var readyCommand: Task<Void, Never>?
+    var stage = "beforeLoading"
+    func finish(_ outcome: String, item: AVPlayerItem? = nil)
+      -> (outcome: String, item: AVPlayerItem?, detached: Bool, stage: String, reusesPrerolledItem: Bool, readyCommand: Task<Void, Never>?) {
+      let reusesPrerolledItem = item != nil && item === candidate?.currentItem
+      candidate?.pause(); candidate?.cancelPendingPrerolls()
+      candidate?.currentItem?.cancelPendingSeeks()
+      candidate?.replaceCurrentItem(with: nil)
+      if item == nil { asset.cancelLoading(); cancelPending() }
+      return (outcome, item, candidate?.currentItem == nil, stage, reusesPrerolledItem, readyCommand)
+    }
+    func rejection() -> String? {
+      if Task.isCancelled || !allowed() { return "cancelled" }
+      if ProcessInfo.processInfo.systemUptime >= deadlineUptime { return "timedOut" }
+      return nil
+    }
+    guard deadlineUptime.isFinite, CMTimeGetSeconds(position).isFinite,
+      CMTimeGetSeconds(position) >= 0 else { return finish("failed") }
+    if let reason = rejection() { return finish(reason) }
+    let player = AVPlayer()
+    player.isMuted = true; player.allowsExternalPlayback = false
+    let item = AVPlayerItem(asset: asset)
+    item.preferredForwardBufferDuration = 10
+    item.preferredPeakBitRate = 0
+    candidate = player
+    player.replaceCurrentItem(with: item)
+    stage = "waitingReady"
+    while player.status != .readyToPlay || item.status != .readyToPlay {
+      if let reason = rejection() { return finish(reason) }
+      if player.status == .failed || item.status == .failed { return finish("failed") }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    if let reason = rejection() { return finish(reason) }
+    let commandCompletion = AbrPrerollCompletion()
+    // Public commands have independent ownership. Keep enforcing the candidate's
+    // deadline while they wait; the caller joins this task after recording cleanup.
+    readyCommand = Task { @MainActor in
+      await onReady()
+      commandCompletion.finish(true)
+    }
+    while commandCompletion.result == nil {
+      if let reason = rejection() { return finish(reason) }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    if let reason = rejection() { return finish(reason) }
+    stage = "seeking"
+    let seek = AbrPrerollCompletion()
+    player.seek(to: position, toleranceBefore: .zero, toleranceAfter: .zero) { seek.finish($0) }
+    onOperationStarted(stage)
+    while seek.result == nil {
+      if let reason = rejection() { return finish(reason) }
+      if player.status == .failed || item.status == .failed { return finish("failed") }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    guard seek.result == true else { return finish("seekFailed") }
+    if let reason = rejection() { return finish(reason) }
+    // SDK contract: preroll throws unless the player is ready and rate is zero.
+    guard player.status == .readyToPlay, item.status == .readyToPlay, player.rate == 0 else {
+      return finish("failed")
+    }
+    stage = "preroll"
+    let preroll = AbrPrerollCompletion()
+    player.preroll(atRate: 1) { preroll.finish($0) }
+    onOperationStarted(stage)
+    while preroll.result == nil {
+      if let reason = rejection() { return finish(reason) }
+      if player.status == .failed || item.status == .failed { return finish("failed") }
+      try? await Task.sleep(nanoseconds: 10_000_000)
+    }
+    if let reason = rejection() { return finish(reason) }
+    guard preroll.result == true else { return finish("prerollFailed") }
+    stage = "ready"
+    // A detached, prerolled AVPlayerItem still raised a cross-player association
+    // exception on the physical device. Never transfer it. Only share the asset;
+    // a fresh item must perform the backend's normal exact resume seek again.
+    return finish("ready", item: AVPlayerItem(asset: asset))
+  }
+}
+
+private enum AbrDiagnosticCaptureURL {
+  static func permits(_ url: URL, ownedHost: String?) -> Bool {
+    guard url.scheme == "http", url.user == nil, url.password == nil,
+      url.query == nil, url.fragment == nil, url.path == "/manifest.mpd",
+      let port = url.port, (1...65535).contains(port) else { return false }
+    guard let ownedHost else { return url.host == "127.0.0.1" }
+    guard url.host == ownedHost else { return false }
+    let parts = ownedHost.split(separator: ".", omittingEmptySubsequences: false)
+    let octets = parts.compactMap { Int($0) }
+    guard parts.count == 4, octets.count == 4,
+      zip(parts, octets).allSatisfy({ String($0.1) == $0.0 && (0...255).contains($0.1) }) else { return false }
+    return octets[0] == 10 || (octets[0] == 172 && (16...31).contains(octets[1]))
+      || (octets[0] == 192 && octets[1] == 168)
+  }
+}
+
 final class YlDashResourceLoaderTests: XCTestCase {
+  @MainActor func testDelayedItemReadinessPreservesAcknowledgedPause() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    let player = AVPlayer(), output = AppleTestTexture()
+    var tick: (() -> Void)?, states = [YlNativeState]()
+    let backend = YlAvPlayerBackend(playerId: 995,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      emit: { if case .state(let state) = $0.event { states.append(state) } })
+    defer { backend.dispose() }
+    try backend.open(.init(uri: media.absoluteString, kind: .file, formatHint: .mp4))
+    try await AppleHostCharacterizations.waitFor { states.last?.status == "ready" }
+    XCTAssertFalse(backend.playbackIntent, "Initial readiness does not request playback")
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return !output.frames.isEmpty }, timeout: 5)
+    try backend.pause()
+    try await AppleHostCharacterizations.waitFor { states.last?.status == "paused" }
+    let item = try XCTUnwrap(player.currentItem)
+    XCTAssertEqual(item.status, .readyToPlay)
+    let paused = CMTimeGetSeconds(player.currentTime())
+    // Deliver an unchanged ready status after the pause, as a queued KVO callback can.
+    item.willChangeValue(forKey: "status")
+    item.didChangeValue(forKey: "status")
+    await withCheckedContinuation { continuation in
+      DispatchQueue.main.async { continuation.resume() }
+    }
+    XCTAssertEqual(states.last?.status, "paused")
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(player.rate, 0)
+    XCTAssertEqual(CMTimeGetSeconds(player.currentTime()), paused, accuracy: 0.05)
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return CMTimeGetSeconds(player.currentTime()) > paused + 0.1 }, timeout: 5)
+    XCTAssertTrue(backend.playbackIntent)
+  }
+
+  #if os(iOS)
+  @MainActor func testAudioRouteLossPausesIntentWithoutNetworkTimeoutAndRequiresExplicitResume() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    let center = NotificationCenter(), player = AVPlayer(), output = AppleTestTexture()
+    var tick: (() -> Void)?, states = [YlNativeState](), failures = [String]()
+    let backend = YlAvPlayerBackend(playerId: 994,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+      notificationCenter: center,
+      emit: {
+        if case .state(let state) = $0.event { states.append(state) }
+        if case .failure(let error) = $0.event { failures.append(error.code) }
+      })
+    defer { backend.dispose() }
+    try backend.open(.init(uri: media.absoluteString, kind: .file, formatHint: .mp4))
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return !output.frames.isEmpty }, timeout: 5)
+    func route(_ reason: AVAudioSession.RouteChangeReason) {
+      center.post(name: AVAudioSession.routeChangeNotification, object: nil,
+        userInfo: [AVAudioSessionRouteChangeReasonKey: reason.rawValue])
+    }
+    route(.newDeviceAvailable); route(.override)
+    XCTAssertTrue(backend.playbackIntent, "A new route or override is not a disconnect pause")
+    player.pause() // Reproduce AVPlayer's system pause; the private center isolates the notification.
+    route(.oldDeviceUnavailable)
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(states.last?.status, "paused")
+    let paused = CMTimeGetSeconds(player.currentTime())
+    try await Task.sleep(nanoseconds: 16_000_000_000) // Cross the unchanged default 15-second watchdog.
+    tick?()
+    XCTAssertTrue(failures.isEmpty)
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(states.last?.status, "paused")
+    XCTAssertEqual(CMTimeGetSeconds(player.currentTime()), paused, accuracy: 0.05)
+    route(.newDeviceAvailable)
+    XCTAssertFalse(backend.playbackIntent, "Reconnecting a route must not resume playback")
+    try backend.play()
+    try await AppleHostCharacterizations.waitFor({ tick?(); return CMTimeGetSeconds(player.currentTime()) > paused + 0.1 }, timeout: 5)
+    XCTAssertTrue(backend.playbackIntent)
+    var reboundStates = [YlNativeState]()
+    backend.bindCallbacks { if case .state(let state) = $0.event { reboundStates.append(state) } }
+    route(.oldDeviceUnavailable)
+    XCTAssertFalse(backend.playbackIntent)
+    XCTAssertEqual(reboundStates.last?.status, "paused")
+    backend.deactivate()
+    let count = reboundStates.count
+    route(.oldDeviceUnavailable)
+    XCTAssertEqual(reboundStates.count, count, "Inactive output must ignore shared route changes")
+    backend.dispose()
+    route(.oldDeviceUnavailable)
+    XCTAssertEqual(reboundStates.count, count)
+  }
+  #endif
+
+  @MainActor func testPrerollCandidateCreatesFreshItemAndCancelsAfterRealReadiness() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var cleanups = 0
+    let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media),
+      position: CMTime(value: 1, timescale: 1), deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+      allowed: { true }, cancelPending: { cleanups += 1 })
+    XCTAssertEqual(result.outcome, "ready"); XCTAssertEqual(result.stage, "ready")
+    XCTAssertTrue(result.detached); XCTAssertFalse(result.reusesPrerolledItem); XCTAssertEqual(cleanups, 0)
+    let item = try XCTUnwrap(result.item)
+    let receiving = AVPlayer()
+    defer { receiving.pause(); receiving.replaceCurrentItem(with: nil) }
+    receiving.isMuted = true; receiving.replaceCurrentItem(with: item)
+    let landed = await receiving.seek(to: CMTime(value: 1, timescale: 1), toleranceBefore: .zero, toleranceAfter: .zero)
+    XCTAssertTrue(landed)
+    receiving.play()
+    try await AppleHostCharacterizations.waitFor({ CMTimeGetSeconds(receiving.currentTime()) >= 1.1 }, timeout: 5)
+    var allowed = true, readyCalls = 0
+    let cancelled = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media), position: .zero,
+      deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, allowed: { allowed },
+      onReady: { readyCalls += 1; allowed = false }, cancelPending: { cleanups += 1 })
+    XCTAssertEqual(readyCalls, 1); XCTAssertEqual(cancelled.outcome, "cancelled")
+    XCTAssertTrue(cancelled.detached); XCTAssertNil(cancelled.item); XCTAssertEqual(cleanups, 1)
+  }
+
+  @MainActor func testPrerollRevalidatesIntentAndDeadlineAfterAsyncReadyCommand() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    for expire in [false, true] {
+      var allowed = true, invoked = false, cleanups = 0
+      var commandFinished = false, cleanedWhileCommandPending = false
+      let release = Task { @MainActor in
+        if expire {
+          try? await Task.sleep(nanoseconds: 2_200_000_000)
+          cleanedWhileCommandPending = cleanups == 1 && !commandFinished
+          commandFinished = true
+        }
+      }
+      defer { release.cancel() }
+      let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media), position: .zero,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, allowed: { allowed },
+        onReady: {
+          invoked = true
+          if expire {
+            while !commandFinished { try? await Task.sleep(nanoseconds: 10_000_000) }
+          } else { await Task.yield(); allowed = false; commandFinished = true }
+        }, cancelPending: { cleanups += 1 })
+      await release.value
+      await result.readyCommand?.value
+      if expire { XCTAssertTrue(cleanedWhileCommandPending, "Deadline must detach and cancel while the public command is still pending") }
+      XCTAssertTrue(invoked, "Must exercise the callback after actual readiness")
+      XCTAssertEqual(result.outcome, expire ? "timedOut" : "cancelled")
+      XCTAssertEqual(result.stage, "waitingReady")
+      XCTAssertTrue(result.detached); XCTAssertNil(result.item); XCTAssertEqual(cleanups, 1)
+    }
+  }
+
+  func testProductionRecoveryControllerCommitsWithinPreparationDeadline() async throws {
+    var now = 0.0
+    let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, _ in })
+    let committed = expectation(description: "current candidate committed")
+    let source = YlAppleSourceDescriptor(uri: "https://owned.example/movie.mpd", kind: .network, formatHint: .dash)
+    for t in [0.0, 1, 9, 17, 17.5] {
+      now = t
+      controller.tick(productionSample(t, high: t == 0), prepare: { _ in .avPlayer(source: source) },
+        currentSample: { self.productionSample(now) }, commit: { _ in committed.fulfill(); return [:] })
+    }
+    await fulfillment(of: [committed], timeout: 3)
+    XCTAssertEqual(controller.events.count, 1)
+    XCTAssertEqual(controller.events.first?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.policy.attempts, 1)
+  }
+
+  func testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget() async throws {
+    for action in ["cancel", "deadline", "credential"] {
+      var now = 0.0, credential: UInt64 = 0
+      var deadline: (() -> Void)?
+      let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, callback in deadline = callback })
+      let finalized = expectation(description: "candidate finalized " + action)
+      controller.onEvent = { _ in finalized.fulfill() }
+      let started = expectation(description: "held preparation " + action)
+      let released = expectation(description: "cancelled preparation " + action)
+      let barrier = DispatchSemaphore(value: 0)
+      var installs = 0
+      let source = YlAppleSourceDescriptor(uri: "https://owned.example/movie.mpd", kind: .network, formatHint: .dash)
+      for t in [0.0, 1, 9, 17, 17.5] {
+        now = t
+        controller.tick(productionSample(t, high: t == 0), prepare: { token in
+          token.onCancel { barrier.signal() }; started.fulfill()
+          _ = barrier.wait(timeout: .now() + 3); released.fulfill()
+          return .avPlayer(source: source)
+        }, currentSample: { self.productionSample(now, credential: credential) }, commit: { _ in installs += 1; return [:] })
+      }
+      await fulfillment(of: [started], timeout: 2)
+      if action == "cancel" { controller.invalidate() }
+      else if action == "deadline" { now = 19.501; deadline?() }
+      else { credential = 1; barrier.signal() }
+      await fulfillment(of: [released], timeout: 2)
+      await fulfillment(of: [finalized], timeout: 2)
+      XCTAssertEqual(controller.events.count, 1)
+      XCTAssertEqual(installs, 0, action)
+      XCTAssertEqual(controller.policy.attempts, 1, action)
+      XCTAssertNotEqual(controller.events.first?["outcome"] as? String, "installed", action)
+      controller.resetForSource()
+      XCTAssertEqual(controller.policy.attempts, 0)
+    }
+  }
+
+  @MainActor func testProductionLoadCommitsRecoveryBudgetBeforeReturningAndFailureKeepsIt() async throws {
+    let server = try DashHTTPServer(), data = mpd
+    defer { server.close() }
+    server.handler = { request in
+      (200, [:], request.path == "/bad.mpd" ? Data("<MPD type=\"dynamic\"/>".utf8) : data)
+    }
+    let controller = YlDashAutoRecoveryController()
+    let host = YlApplePlayerHost(playerId: 992, suffix: "production-budget",
+      options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { AppleClockDisplay(onTick: $0) }),
+      callbacks: AppleRecordingCallbacks(), automaticDashRecoveryEnabled: false, dashRecoveryController: controller)
+    defer { host.close() }
+    try host.attach()
+    let first = try await host.load(request: AppleHostFixture.request("reused", url: server.url("/movie.mpd").absoluteString, format: .dash))
+    for t in [0.0, 1, 9, 17] {
+      controller.tick(productionSample(t, high: t == 0), prepare: { _ in XCTFail("No ticket before backoff"); throw YlOpenCancellationToken.cancellationError() },
+        currentSample: { nil }, commit: { _ in XCTFail("No installation"); return [:] })
+    }
+    XCTAssertEqual(host.dashRecoveryAttempts, 1)
+    do {
+      _ = try await host.load(request: AppleHostFixture.request("failed", url: server.url("/bad.mpd").absoluteString, format: .dash))
+      XCTFail("Malformed candidate must not commit")
+    } catch {}
+    XCTAssertEqual(host.dashRecoveryAttempts, 1, "Failed Load keeps the surviving source budget")
+    let second = try await host.load(request: AppleHostFixture.request("reused", url: server.url("/movie.mpd").absoluteString, format: .dash))
+    XCTAssertNotEqual(first.sessionId, second.sessionId)
+    XCTAssertEqual(host.dashRecoveryAttempts, 0, "New committed session cannot expose the old budget before the next timer tick")
+    XCTAssertTrue(host.dashRecoveryEvents.isEmpty)
+  }
+
+  func testProductionRecoveryBudgetUsesCommittedSessionNotReusedRequestLabel() {
+    let controller = YlDashAutoRecoveryController()
+    let first = YlAppleSessionIdentity(sessionId: "first", loadRequestId: "reused")
+    controller.useSource(first)
+    for t in [0.0, 1, 9, 17] {
+      controller.tick(productionSample(t, high: t == 0), prepare: { _ in XCTFail("No ticket before backoff"); throw YlOpenCancellationToken.cancellationError() },
+        currentSample: { nil }, commit: { _ in XCTFail("No installation"); return [:] })
+    }
+    XCTAssertEqual(controller.policy.attempts, 1)
+    controller.invalidate(); controller.useSource(first)
+    XCTAssertEqual(controller.policy.attempts, 1)
+    controller.useSource(.init(sessionId: "second", loadRequestId: "reused"))
+    XCTAssertEqual(controller.policy.attempts, 0, "A new committed Load owns a fresh budget even if its public label is reused")
+  }
+
+  func testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit() throws {
+    for counter in ["bytes", "transfer", "requests"] {
+      func regressed(_ time: Double, to value: Double) -> YlDashAutoRecoveryPolicy.Sample {
+        productionSample(time, requests: counter == "requests" ? Int(value) : nil,
+          bytes: counter == "bytes" ? Int64(value * 250_000) : nil, transfer: counter == "transfer" ? value : nil)
+      }
+      var pending = YlDashAutoRecoveryPolicy()
+      for t in [0.0, 1, 9, 17] { _ = pending.observe(productionSample(t, high: t == 0)) }
+      XCTAssertNil(pending.observe(regressed(17.5, to: 0)), counter)
+      XCTAssertEqual(pending.attempts, 1)
+      XCTAssertEqual(pending.decision["reason"] as? String, "countersReset")
+      var inflight = YlDashAutoRecoveryPolicy()
+      for t in [0.0, 1, 9, 17] { _ = inflight.observe(productionSample(t, high: t == 0)) }
+      let ticket = try XCTUnwrap(inflight.observe(productionSample(17.5)))
+      XCTAssertFalse(inflight.authorizes(ticket, regressed(18, to: 0)), counter)
+      var window = YlDashAutoRecoveryPolicy()
+      for t in [0.0, 1, 5] { _ = window.observe(productionSample(t, high: t == 0)) }
+      _ = window.observe(regressed(6, to: 4)) // Above the window anchor, below the immediately preceding sample.
+      XCTAssertEqual(window.decision["reason"] as? String, "countersReset")
+      _ = window.observe(productionSample(9))
+      XCTAssertEqual(window.decision["qualifiedWindows"] as? Int, 0)
+    }
+  }
+
+  private func productionSample(_ time: Double, high: Bool = false, bandwidth: Double = 1_500_000,
+    allowed: Bool = true, generation: UInt64 = 0, intent: UInt64 = 0, credential: UInt64 = 0,
+    buffer: Double = 10, remaining: Double = 90, requests: Int? = nil,
+    bytes: Int64? = nil, transfer: Double? = nil) -> YlDashAutoRecoveryPolicy.Sample {
+    let low = YlDashAutoRecoveryPolicy.Variant(id: "low", width: 426, height: 240, bandwidth: 400_000)
+    let upper = YlDashAutoRecoveryPolicy.Variant(id: "upper", width: 960, height: 540, bandwidth: bandwidth)
+    return .init(time: time, generation: generation, allowed: allowed, catalog: [low, upper], current: high ? upper : low,
+      position: time, remaining: remaining, bufferAhead: buffer, bytes: bytes ?? Int64(time * 250_000), transfer: transfer ?? time,
+      requests: requests ?? Int(time), overdue: 1, intentRevision: intent, credentialRevision: credential)
+  }
+
+  func testProductionRecoveryUsesDynamicBandwidthAndTwoWindows() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    XCTAssertNil(p.observe(productionSample(0, high: true)))
+    XCTAssertNil(p.observe(productionSample(1)))
+    XCTAssertNil(p.observe(productionSample(9)))
+    XCTAssertEqual(p.attempts, 0)
+    XCTAssertNil(p.observe(productionSample(17)))
+    XCTAssertEqual(p.attempts, 1)
+    XCTAssertNil(p.observe(productionSample(17.49)))
+    let ticket = try XCTUnwrap(p.observe(productionSample(17.5)))
+    XCTAssertEqual(ticket.due, 17.5)
+    XCTAssertTrue(p.authorizes(ticket, productionSample(18)))
+    // 2 Mbps cannot qualify a 2 Mbps target with the unchanged 1.25 headroom.
+    var insufficient = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17, 25, 33] {
+      XCTAssertNil(insufficient.observe(productionSample(t, high: t == 0, bandwidth: 2_000_000)))
+    }
+    XCTAssertEqual(insufficient.attempts, 0)
+  }
+
+  func testProductionRecoveryCancellationKeepsBackoffAndSourceBudget() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    let first = try XCTUnwrap(p.observe(productionSample(17.5)))
+    p.invalidateIntent()
+    XCTAssertFalse(p.authorizes(first, productionSample(18)))
+    for t in [18.0, 26, 34] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    XCTAssertEqual(p.attempts, 2)
+    XCTAssertNil(p.observe(productionSample(34.99, intent: 1)))
+    let second = try XCTUnwrap(p.observe(productionSample(35, intent: 1)))
+    XCTAssertEqual(second.due, 35)
+    p.finish(second)
+    for t in [36.0, 44, 52, 60] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    XCTAssertEqual(p.attempts, 2)
+    p = YlDashAutoRecoveryPolicy()
+    XCTAssertEqual(p.attempts, 0)
+  }
+
+  func testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    let ticket = try XCTUnwrap(p.observe(productionSample(17.5)))
+    for s in [productionSample(18, high: true), productionSample(18, allowed: false),
+      productionSample(18, generation: 1), productionSample(18, intent: 1), productionSample(18, credential: 1),
+      productionSample(18, buffer: 4.999), productionSample(18, remaining: 19.999),
+      productionSample(22.501), productionSample(18, bandwidth: 1_600_000)] {
+      XCTAssertFalse(p.authorizes(ticket, s))
+    }
+    XCTAssertTrue(p.authorizes(ticket, productionSample(22.5)))
+  }
+
+  func testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17, 25] { XCTAssertNil(p.observe(productionSample(t))) }
+    XCTAssertEqual(p.attempts, 0)
+    p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17, 25] { _ = p.observe(productionSample(t, high: t == 0, requests: 1)) }
+    XCTAssertEqual(p.attempts, 0)
+    p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    XCTAssertEqual(p.attempts, 1)
+    XCTAssertNil(p.observe(productionSample(17.4, high: true)))
+    XCTAssertNil(p.observe(productionSample(17.6)))
+    XCTAssertEqual(p.attempts, 1)
+  }
+
+  func testFailedPreparationAndRevokedTicketNeverRefundSourceBudget() throws {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: true, width: width, position: time,
+        remaining: 120 - time, bufferAhead: 10, bytes: Int64(time * 200_000),
+        transfer: time, requests: Int(time * 4), overdue: 1)
+    }
+    _ = policy.observe(sample(0, width: 640))
+    for time in [1.0, 9, 17] { XCTAssertNil(policy.observe(sample(time))) }
+    let first = try XCTUnwrap(policy.observe(sample(17.5)))
+    XCTAssertEqual(first.attempt, 1); XCTAssertEqual(first.due, 17.5)
+    policy.invalidateIntent(); policy.finish(first)
+    XCTAssertFalse(policy.authorizes(first, sample(18)))
+    XCTAssertEqual(policy.attempts, 1)
+    for time in [20.0, 28, 36] { XCTAssertNil(policy.observe(sample(time))) }
+    XCTAssertNil(policy.observe(sample(36.99)))
+    let second = try XCTUnwrap(policy.observe(sample(37)))
+    XCTAssertEqual(second.attempt, 2); XCTAssertEqual(second.due, 37)
+    policy.finish(second) // The second preparation failed; its budget stays spent.
+    for time in 38...99 { XCTAssertNil(policy.observe(sample(Double(time)))) }
+    XCTAssertEqual(policy.attempts, 2)
+    XCTAssertEqual(policy.decision["reason"] as? String, "budgetExhausted")
+  }
+
+  @MainActor func testPrerollCandidateAbortsExpiredDeniedAndRevokedIntent() async {
+    let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+    for (deadline, allowed, expected) in [(ProcessInfo.processInfo.systemUptime - 1, true, "timedOut"),
+                                         (ProcessInfo.processInfo.systemUptime + 2, false, "cancelled")] {
+      var cleanups = 0
+      let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: absent), position: .zero,
+        deadlineUptime: deadline, allowed: { allowed }, cancelPending: { cleanups += 1 })
+      XCTAssertEqual(result.outcome, expected); XCTAssertNil(result.item)
+      XCTAssertTrue(result.detached); XCTAssertEqual(cleanups, 1)
+    }
+    for mode in ["intent", "task", "deadline"] {
+      let started = expectation(description: "preroll enters loader: " + mode)
+      let cancelled = expectation(description: "abort releases loader: " + mode)
+      let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+      let asset = AVURLAsset(url: URL(string: "yl-preroll-test://owned/\(UUID().uuidString)/master.m3u8")!)
+      asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.preroll.cancel-test"))
+      var intent = true
+      let loading = Task { @MainActor in
+        await AbrDiagnosticPreroll.prepare(asset, position: .zero,
+          deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+          allowed: { intent }, cancelPending: { held.cancelAll() })
+      }
+      await fulfillment(of: [started], timeout: 1)
+      if mode == "intent" { intent = false }
+      if mode == "task" { loading.cancel() }
+      let result = await loading.value
+      XCTAssertEqual(result.outcome, mode == "deadline" ? "timedOut" : "cancelled")
+      XCTAssertNil(result.item); XCTAssertTrue(result.detached)
+      await fulfillment(of: [cancelled], timeout: 1)
+      XCTAssertEqual(held.cancellationState.pending, 0)
+      XCTAssertEqual(held.cancellationState.owner, 1)
+      XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+      withExtendedLifetime(held) {}
+    }
+  }
+
+  @MainActor func testMetadataPreparationReleasesRequestsWhenIntentIsRevoked() async {
+    let started = expectation(description: "real metadata request entered")
+    let cancelled = expectation(description: "revocation terminates metadata requests")
+    let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+    let asset = AVURLAsset(url: URL(string: "yl-intent-test://owned/\(UUID().uuidString)/master.m3u8")!)
+    asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.metadata.intent"))
+    var allowed = true
+    let operation = Task { @MainActor in
+      await AbrDiagnosticCandidatePreparation.loadMetadata(asset,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+        allowed: { allowed }, cancelPending: { held.cancelAll() })
+    }
+    await fulfillment(of: [started], timeout: 1)
+    allowed = false
+    await fulfillment(of: [cancelled], timeout: 1)
+    let result = await operation.value
+    XCTAssertEqual(result, "cancelled", "Revoked intent must cancel, not wait for the deadline")
+    XCTAssertEqual(held.cancellationState.pending, 0)
+    XCTAssertEqual(held.cancellationState.owner, 1)
+    XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+    withExtendedLifetime(held) {}
+  }
+
+  @MainActor func testMetadataPreparationRejectsDeniedIntentAndTaskCancellation() async {
+    var cleanups = 0, starts = 0
+    let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+    let denied = await AbrDiagnosticCandidatePreparation.loadMetadata(AVURLAsset(url: absent),
+      deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, allowed: { false },
+      onStarted: { starts += 1 }, cancelPending: { cleanups += 1 })
+    XCTAssertEqual(denied, "cancelled"); XCTAssertEqual(starts, 0); XCTAssertEqual(cleanups, 1)
+    let started = expectation(description: "task-cancel metadata request entered")
+    let cancelled = expectation(description: "task cancellation terminates requests")
+    let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+    let asset = AVURLAsset(url: URL(string: "yl-task-test://owned/\(UUID().uuidString)/master.m3u8")!)
+    asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.metadata.task"))
+    let operation = Task { @MainActor in
+      await AbrDiagnosticCandidatePreparation.loadMetadata(asset,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, cancelPending: { held.cancelAll() })
+    }
+    await fulfillment(of: [started], timeout: 1)
+    operation.cancel()
+    await fulfillment(of: [cancelled], timeout: 1)
+    let result = await operation.value
+    XCTAssertEqual(result, "cancelled"); XCTAssertEqual(held.cancellationState.pending, 0)
+    XCTAssertEqual(held.cancellationState.owner, 1); XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+    withExtendedLifetime(held) {}
+  }
+
+  @MainActor func testPrerollPreparationCancelsAfterSeekAndPrerollAreIssued() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent(
+      "flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    for target in ["seeking", "preroll"] {
+      var allowed = true, injected = 0, cleanups = 0
+      let result = await AbrDiagnosticPreroll.prepare(AVURLAsset(url: media),
+        position: CMTime(value: 1, timescale: 1), deadlineUptime: ProcessInfo.processInfo.systemUptime + 2,
+        allowed: { allowed }, onOperationStarted: { stage in
+          if stage == target { injected += 1; allowed = false }
+        }, cancelPending: { cleanups += 1 })
+      XCTAssertEqual(injected, 1, target); XCTAssertEqual(result.stage, target)
+      XCTAssertEqual(result.outcome, "cancelled"); XCTAssertTrue(result.detached)
+      XCTAssertNil(result.item); XCTAssertFalse(result.reusesPrerolledItem); XCTAssertEqual(cleanups, 1)
+    }
+  }
+
+  @MainActor func testCandidateMetadataPreparationRejectsExpiredAndFailedAssets() async {
+    let absent = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".mp4")
+    let expiredAsset = AVURLAsset(url: absent)
+    var expiredCleanups = 0
+    let expired = await AbrDiagnosticCandidatePreparation.loadMetadata(expiredAsset,
+      deadlineUptime: ProcessInfo.processInfo.systemUptime - 1, cancelPending: { expiredCleanups += 1 })
+    XCTAssertEqual(expiredCleanups, 1)
+    XCTAssertEqual(expired, "timedOut")
+    var error: NSError?
+    XCTAssertEqual(expiredAsset.statusOfValue(forKey: "playable", error: &error), .cancelled,
+      "An expired candidate must be cancelled, never reported as loaded")
+    var failedCleanups = 0
+    let failed = await AbrDiagnosticCandidatePreparation.loadMetadata(AVURLAsset(url: absent),
+      deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, cancelPending: { failedCleanups += 1 })
+    XCTAssertEqual(failedCleanups, 1)
+    XCTAssertEqual(failed, "failed")
+
+    let started = expectation(description: "metadata loading entered real resource loader")
+    let cancelled = expectation(description: "deadline cancels pending loading request")
+    let held = AbrHeldMetadataLoader(started: started, cancelled: cancelled)
+    let asset = AVURLAsset(url: URL(string: "yl-warmup-test://owned/master.m3u8")!)
+    asset.resourceLoader.setDelegate(held, queue: DispatchQueue(label: "yl.warmup.deadline-test"))
+    let loading = Task { @MainActor in
+      await AbrDiagnosticCandidatePreparation.loadMetadata(asset,
+        deadlineUptime: ProcessInfo.processInfo.systemUptime + 2, cancelPending: { held.cancelAll() })
+    }
+    await fulfillment(of: [started], timeout: 1)
+    let timedOut = await loading.value
+    XCTAssertEqual(timedOut, "timedOut")
+    await fulfillment(of: [cancelled], timeout: 1)
+    XCTAssertEqual(held.cancellationState.pending, 0)
+    XCTAssertEqual(held.cancellationState.owner, 1)
+    XCTAssertGreaterThan(held.cancellationState.terminated, 0)
+    withExtendedLifetime(held) {}
+  }
+
+  func testDeviceCaptureRequiresExplicitOwnedPrivateURL() {
+    func permits(_ text: String, _ host: String? = nil) -> Bool {
+      AbrDiagnosticCaptureURL.permits(URL(string: text)!, ownedHost: host)
+    }
+    XCTAssertTrue(permits("http://127.0.0.1:1234/manifest.mpd"))
+    XCTAssertTrue(permits("http://192.168.50.196:1234/manifest.mpd", "192.168.50.196"))
+    XCTAssertFalse(permits("http://192.168.50.196:1234/manifest.mpd"))
+    for host in ["8.8.8.8", "0.0.0.0", "169.254.1.1", "localhost", "172.32.1.1"] {
+      XCTAssertFalse(permits("http://\(host):1234/manifest.mpd", host))
+    }
+    XCTAssertFalse(permits("http://192.168.50.196:1234/manifest.mpd", "192.168.50.197"))
+    XCTAssertFalse(permits("http://user@127.0.0.1:1234/manifest.mpd"))
+    XCTAssertFalse(permits("http://127.0.0.1:1234/manifest.mpd?other=1"))
+    XCTAssertFalse(permits("http://127.0.0.1/manifest.mpd"))
+  }
+
+  @MainActor func testPublicTransportRevisionOnlyAdvancesForAcknowledgedCommands() async throws {
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    let loaded = try await fixture.host.load(request: AppleHostFixture.request("intent-revision"))
+    let initial = fixture.host.acknowledgedTransportRevision
+    XCTAssertThrowsError(try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: -1)))
+    XCTAssertThrowsError(try fixture.host.pause(command: .init(sessionId: "retired")))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial)
+    try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 1000))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 1)
+    try fixture.host.pause(command: .init(sessionId: loaded.sessionId))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 2)
+    try fixture.host.setVolume(volume: 0.5)
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 2)
+    try fixture.host.seekTo(command: .init(sessionId: loaded.sessionId, positionMs: 0))
+    XCTAssertEqual(fixture.host.acknowledgedTransportRevision, initial + 3, "Returning to the old position cannot revive old authority")
+  }
+
+  func testCredentialCommitFenceOrdersInstallationAndBackgroundStripping() throws {
+    let context = YlHlsCredentialContext()
+    let before = context.revision
+    context.strip("first") // A redirect after the caller sampled, before commit.
+    var installed = false
+    XCTAssertFalse(context.withUnchangedRevision(before) { installed = true })
+    XCTAssertFalse(installed)
+    let attempted = DispatchSemaphore(value:0), finished = DispatchSemaphore(value:0)
+    let done = expectation(description:"background stripping completes after commit")
+    XCTAssertTrue(context.withUnchangedRevision(1) {
+      DispatchQueue.global().async {
+        attempted.signal(); context.strip("second"); finished.signal(); done.fulfill()
+      }
+      XCTAssertEqual(attempted.wait(timeout:.now()+1),.success)
+      XCTAssertEqual(finished.wait(timeout:.now()+0.05),.timedOut,"Credential change cannot interleave inside accepted installation")
+      installed = true
+    })
+    wait(for:[done],timeout:2)
+    XCTAssertTrue(installed); XCTAssertEqual(context.revision,2)
+    struct CommitFailure: Error {}
+    XCTAssertThrowsError(try context.withUnchangedRevision(2) { throw CommitFailure() })
+    context.strip("third"); XCTAssertEqual(context.revision,3,"Thrown commit must release the fence")
+  }
+
+  @MainActor func testCredentialFenceCoversActualDashBackendItemInstallation() throws {
+    let context = YlHlsCredentialContext(), data = mpd
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) },context:context)
+    let candidate = try prepare(DashLoaderProtocol.configuration { $0.respond(data) },context:context)
+    defer { candidate.discard() }
+    let player = AVPlayer()
+    let attempted = DispatchSemaphore(value:0), finished = DispatchSemaphore(value:0)
+    let done = expectation(description:"strip completes after backend item commit")
+    var replacing = false
+    let backend = YlAvPlayerBackend(playerId:995,
+      services:.init(platform:.current,textureOutput:AppleTestTexture(),makeDisplayDriver:{ _ in AppleTestDisplay() }),
+      configuration:.init(map:["audioPolicy":"appManaged"]),player:player,
+      makePlayerItem:{ asset in
+        if replacing {
+          DispatchQueue.global().async {
+            attempted.signal(); context.strip("changed-at-install"); finished.signal(); done.fulfill()
+          }
+          XCTAssertEqual(attempted.wait(timeout:.now()+1),.success)
+          XCTAssertEqual(finished.wait(timeout:.now()+0.05),.timedOut)
+        }
+        return AVPlayerItem(asset:asset)
+      },emit:{ _ in })
+    defer { backend.dispose() }
+    let source = YlAppleSourceDescriptor(uri:origin.absoluteString,kind:.network,formatHint:.dash)
+    try backend.stagePreparedHls(source:source,prepared:original,resume:false)
+    try backend.activate()
+    let oldItem = try XCTUnwrap(player.currentItem)
+    replacing = true
+    XCTAssertTrue(try context.withUnchangedRevision(0) { try backend.replaceActiveDash(source:source,prepared:candidate) })
+    XCTAssertTrue(player.currentItem !== oldItem)
+    wait(for:[done],timeout:2)
+    XCTAssertEqual(context.revision,1)
+  }
+
+  func testCredentialRevisionIsConcurrentIdempotentAndLoadScoped() {
+    let context = YlHlsCredentialContext()
+    DispatchQueue.concurrentPerform(iterations: 256) { context.strip("resource-\($0 % 16)") }
+    XCTAssertEqual(context.revision,16)
+    for index in 0..<16 { XCTAssertTrue(context.isStripped("resource-\(index)")) }
+    XCTAssertEqual(YlHlsCredentialContext().revision,0)
+  }
+
+  func testRecoveryCredentialRevisionRevokesTicketAndPreservesBudget() throws {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320, revision: UInt64 = 0) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: true, width: width, position: time,
+        remaining: 120-time, bufferAhead: 10, bytes: Int64(time*200_000), transfer: time,
+        requests: Int(time*4), overdue: 1, credentialRevision: revision)
+    }
+    for (time,width) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(time,width:width)) }
+    let old = try XCTUnwrap(policy.observe(sample(17.5)))
+    XCTAssertFalse(policy.authorizes(old,sample(17.6,revision:1)), "Credential stripping revokes authority without an item or transport change")
+    _ = policy.observe(sample(18,revision:1))
+    policy.finish(old)
+    XCTAssertEqual(policy.attempts,1)
+    _ = policy.observe(sample(26,revision:1)); _ = policy.observe(sample(34,revision:1))
+    XCTAssertNil(policy.observe(sample(34.99,revision:1)))
+    let next = try XCTUnwrap(policy.observe(sample(35,revision:1)))
+    XCTAssertEqual(next.attempt,2); XCTAssertTrue(policy.authorizes(next,sample(35.1,revision:1)))
+    XCTAssertFalse(policy.authorizes(old,sample(35.1,revision:1)))
+  }
+
+  @MainActor func testPreparedRecoveryCandidateSharesCredentialStrippingAcrossRedirect() async throws {
+    let server = try DashHTTPServer(), other = try DashHTTPServer()
+    defer { server.close(); other.close() }
+    let data = mpd
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200,[:],data) }
+      if request.path == "/seg-1.m4s" { return (302,["Location":other.url("/hop").absoluteString],Data()) }
+      return (200,[:],Data([1,2,3]))
+    }
+    other.handler = { _ in (302,["Location":server.url("/return").absoluteString],Data()) }
+    let context = YlHlsCredentialContext()
+    let current = try YlPreparedHlsAsset(originURL:server.url("/movie.mpd"),isDash:true,
+      headers:["Authorization":"fixture","Cookie":"fixture","X-Client":"ordinary"],credentials:["X-Session":"fixture"],
+      configuration:.init(map:[:]),cancellationToken:.init(),credentialContext:context)
+    defer { current.discard() }
+    let candidate = try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL:server.url("/movie.mpd"),
+      headers:["Authorization":"fixture","Cookie":"fixture","X-Client":"ordinary"],credentials:["X-Session":"fixture"],credentialContext:context)
+    defer { candidate.discard() }
+    let cancelledCandidate = try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL:server.url("/movie.mpd"),
+      headers:["X-Client":"ordinary"],credentials:["X-Session":"fixture"],credentialContext:context)
+    defer { cancelledCandidate.discard() }
+    func segment(_ prepared:YlPreparedHlsAsset) throws -> URL {
+      let master = read(prepared.loader,prepared.asset.url)
+      let video = read(prepared.loader,try child(master.received))
+      return try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("http:") }.flatMap { URL(string:String($0)) })
+    }
+    let oldURL = try segment(current), candidateURL = try segment(candidate)
+    XCTAssertEqual(context.revision,0)
+    var policy = AbrDiagnosticRecoveryPolicy()
+    var epoch = ProcessInfo.processInfo.systemUptime
+    func sample(_ time: Double, width: Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time:time,generation:0,allowed:true,width:width,position:time,remaining:120-time,
+        bufferAhead:10,bytes:Int64(time*200_000),transfer:time,requests:Int(time*4),overdue:1,
+        credentialRevision:context.revision)
+    }
+    for (time,width) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(time,width:width)) }
+    let ticket = try XCTUnwrap(policy.observe(sample(17.5)))
+    epoch = ProcessInfo.processInfo.systemUptime
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url: frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/format_matrix/mp4-avc-aac.mp4")
+    var redirectsCompleted = false, cleanups = 0
+    let prepared = await AbrDiagnosticPreroll.prepare(AVURLAsset(url:media),position:.zero,
+      deadlineUptime:epoch+2,allowed:{ policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)) },
+      onReady:{
+        do {
+          let (_,response) = try await URLSession.shared.data(from:oldURL)
+          XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,200); redirectsCompleted = true
+        } catch { XCTFail("Owned redirect request failed") }
+      },cancelPending:{ cleanups += 1; cancelledCandidate.discard() })
+    await prepared.readyCommand?.value
+    XCTAssertTrue(redirectsCompleted); XCTAssertEqual(prepared.outcome,"cancelled")
+    XCTAssertTrue(prepared.detached); XCTAssertNil(prepared.item); XCTAssertEqual(cleanups,1)
+    XCTAssertFalse(policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)))
+    XCTAssertEqual(policy.attempts,1,"A credential change never refunds the source budget")
+    XCTAssertThrowsError(try cancelledCandidate.takeLoader(),"Revocation must consume and cancel the candidate loader")
+    XCTAssertEqual(cancelledCandidate.loader.diagnosticProxySnapshot["cancelled"],1)
+    XCTAssertTrue(context.isStripped(server.url("/seg-1.m4s").absoluteString))
+    XCTAssertEqual(context.revision,1)
+    XCTAssertTrue(candidate.loader.credentialContext === context, "A prepared recovery must keep its user Load credential history")
+    let (_,nextResponse) = try await URLSession.shared.data(from:candidateURL)
+    XCTAssertEqual((nextResponse as? HTTPURLResponse)?.statusCode,200)
+    let requests = server.requests.filter { $0.path == "/seg-1.m4s" }
+    XCTAssertEqual(requests.count,2); XCTAssertEqual(requests.first?.headers["authorization"],"fixture")
+    XCTAssertNil(requests.last?.headers["authorization"]); XCTAssertNil(requests.last?.headers["cookie"])
+    XCTAssertNil(requests.last?.headers["x-session"]); XCTAssertEqual(requests.last?.headers["x-client"],"ordinary")
+    for r in other.requests + server.requests.filter({ $0.path == "/return" }) {
+      XCTAssertNil(r.headers["authorization"]); XCTAssertNil(r.headers["cookie"]); XCTAssertNil(r.headers["x-session"])
+    }
+    XCTAssertEqual(context.revision,1,"Repeated stripping of the same resource is idempotent")
+    XCTAssertEqual(YlHlsCredentialContext().revision,0,"A different user Load has its own history")
+  }
+
+  func testRecoveryTicketRejectsAcknowledgedIntentRevisionWithoutItemChange() throws {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320, revision: UInt64 = 0) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: true, width: width,
+        position: time, remaining: 120 - time, bufferAhead: 10,
+        bytes: Int64(time * 200_000), transfer: time, requests: Int(time * 4), overdue: 1,
+        intentRevision: revision)
+    }
+    for (time, width) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(time,width:width)) }
+    let ticket = try XCTUnwrap(policy.observe(sample(17.5)))
+    XCTAssertTrue(policy.authorizes(ticket, sample(17.6)))
+    XCTAssertFalse(policy.authorizes(ticket, sample(17.6, revision: 1)), "An acknowledged forward seek keeps the item but revokes its old ticket")
+    _ = policy.observe(sample(18, revision: 1))
+    XCTAssertFalse(policy.authorizes(ticket, sample(18.1, revision: 2)), "Pause/resume or a second seek cannot revive old authority")
+    XCTAssertEqual(policy.attempts, 1, "Changing accepted intent never refunds source budget")
+    _ = policy.observe(sample(26, revision: 1)); _ = policy.observe(sample(34, revision: 1))
+    XCTAssertEqual(policy.attempts, 2)
+    XCTAssertNil(policy.observe(sample(34.99, revision: 1)))
+    let next = try XCTUnwrap(policy.observe(sample(35, revision: 1)))
+    XCTAssertEqual(next.attempt, 2)
+    XCTAssertTrue(policy.authorizes(next, sample(35.1, revision: 1)))
+  }
+
+  func testAutomaticRecoveryCandidateBudgetAndSafety() {
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(20, 25)]), 0)
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(0, 12), (20, 25)]), 2)
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: 10, ranges: [(12, 18), (0, 12)]), 8)
+    XCTAssertEqual(AbrDiagnosticRecoveryPolicy.contiguousAhead(position: .nan, ranges: [(0, 20)]), 0)
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, generation: Int = 0, allowed: Bool = true, width: Int = 320,
+                bytes: Int64? = nil) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: generation, allowed: allowed, width: width,
+        position: time, remaining: 120 - time, bufferAhead: 10,
+        bytes: bytes ?? Int64(time * 200_000), transfer: time, requests: Int(time * 4), overdue: 1)
+    }
+    XCTAssertNil(policy.observe(sample(0, width: 640)))
+    XCTAssertNil(policy.observe(sample(1)))
+    XCTAssertNil(policy.observe(sample(9)))
+    XCTAssertNil(policy.observe(sample(17))) // reserve, not execute
+    XCTAssertEqual(policy.attempts, 1)
+    XCTAssertNil(policy.observe(sample(17.49)))
+    let first = policy.observe(sample(17.5))!
+    XCTAssertTrue(policy.authorizes(first, sample(17.6)))
+    XCTAssertFalse(policy.authorizes(first, sample(17.6, allowed: false)))
+    XCTAssertFalse(policy.authorizes(first, sample(17.6, generation: 1)))
+    policy.invalidateIntent()
+    XCTAssertFalse(policy.authorizes(first, sample(17.7)), "Resume cannot resurrect a cancelled ticket")
+    policy.finish(first)
+    XCTAssertNil(policy.observe(sample(18, generation: 1, width: 640)))
+    XCTAssertNil(policy.observe(sample(19, generation: 1)))
+    XCTAssertNil(policy.observe(sample(27, generation: 1)))
+    XCTAssertNil(policy.observe(sample(35, generation: 1)))
+    XCTAssertEqual(policy.attempts, 2)
+    XCTAssertNil(policy.observe(sample(35.99, generation: 1)))
+    let second = policy.observe(sample(36, generation: 1))!
+    policy.finish(second)
+    for time in 37...90 { XCTAssertNil(policy.observe(sample(Double(time), generation: 1))) }
+    XCTAssertEqual(policy.attempts, 2, "Successful frames/new item never refund source budget")
+    var cancelled = AbrDiagnosticRecoveryPolicy()
+    _ = cancelled.observe(sample(0, width: 640)); _ = cancelled.observe(sample(1))
+    _ = cancelled.observe(sample(9)); _ = cancelled.observe(sample(17))
+    XCTAssertNil(cancelled.observe(sample(17.5, allowed: false)))
+    XCTAssertEqual(cancelled.attempts, 1, "Paused/cancelled reservation remains charged")
+    var weak = AbrDiagnosticRecoveryPolicy()
+    _ = weak.observe(sample(0, width: 640))
+    for time in 1...80 { XCTAssertNil(weak.observe(sample(Double(time), bytes: Int64(time * 20_000)))) }
+    XCTAssertEqual(weak.attempts, 0)
+  }
+
+  func testAutomaticRecoveryCannotReserveUnderDimensionCapsOrFixedSelection() {
+    let cases: [(String, Double, CGSize, String?, Int)] = [
+      ("automatic", 0, .zero, nil, 1),
+      ("bitrate", 500_000, .zero, nil, 0),
+      ("width", 0, CGSize(width: 320, height: 100_000), nil, 0),
+      ("height", 0, CGSize(width: 100_000, height: 180), nil, 0),
+      ("fixed", 0, .zero, "low-track", 0),
+    ]
+    for (name, peak, resolution, fixed, expectedAttempts) in cases {
+      var policy = AbrDiagnosticRecoveryPolicy()
+      let allowed = AbrDiagnosticRecoveryEligibility.permitsPolicy(
+        peakBitRate: peak, maximumResolution: resolution, fixedTrackId: fixed)
+      for time in [0.0, 1, 9, 17, 17.5] {
+        _ = policy.observe(.init(time: time, generation: 0, allowed: allowed,
+          width: time == 0 ? 640 : 320, position: time + 10, remaining: 110 - time,
+          bufferAhead: 10, bytes: Int64(time * 200_000), transfer: time,
+          requests: Int(time * 4), overdue: 1))
+      }
+      XCTAssertEqual(policy.attempts, expectedAttempts, name)
+    }
+  }
+
+  func testAutomaticRecoveryExplainsUntriggeredWindows() {
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time: Double, width: Int = 320, allowed: Bool = true, buffer: Double = 10) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time: time, generation: 0, allowed: allowed, width: width, position: time,
+        remaining: 120 - time, bufferAhead: buffer, bytes: Int64(time * 90_000),
+        transfer: time, requests: Int(time * 4), overdue: 1)
+    }
+    XCTAssertNil(policy.observe(sample(0, width: 640)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "highOutput")
+    XCTAssertNil(policy.observe(sample(1)))
+    XCTAssertNil(policy.observe(sample(9)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "insufficientBandwidth")
+    XCTAssertEqual(policy.decision["windowBitrate"] as? Double, 720_000)
+    XCTAssertEqual(policy.attempts, 0)
+    XCTAssertNil(policy.observe(sample(10, buffer: 4)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "insufficientBuffer")
+    XCTAssertNil(policy.observe(sample(11, allowed: false)))
+    XCTAssertEqual(policy.decision["reason"] as? String, "playbackIneligible")
+    XCTAssertEqual(policy.decision["attempts"] as? Int, 0)
+  }
+
   @MainActor
   func testActualOwnedDashAdaptiveObservation() async throws {
     let env = ProcessInfo.processInfo.environment
     guard let rawURL = env["YL_ABR_PROBE_URL"], let rawDirectory = env["YL_ABR_PROBE_DIRECTORY"] else { return }
     let url = try XCTUnwrap(URL(string: rawURL))
-    XCTAssertEqual(url.host, "127.0.0.1")
+    let token = try XCTUnwrap(env["YL_ABR_PROBE_TOKEN"])
+    #if os(iOS) && !targetEnvironment(simulator)
+    guard env["YL_ABR_PROBE_DEVICE"] == "1", let ownedHost = env["YL_ABR_PROBE_OWNED_HOST"],
+      AbrDiagnosticCaptureURL.permits(url, ownedHost: ownedHost),
+      token.range(of: "^[a-f0-9]{32}$", options: .regularExpression) != nil else {
+      XCTFail("Physical capture requires explicit owned private source and token"); return
+    }
+    let captureDeviceKind = "physical"
+    let directory = FileManager.default.temporaryDirectory.appendingPathComponent("yl-abr-\(token)", isDirectory: true)
+    XCTAssertFalse(FileManager.default.fileExists(atPath: directory.path))
+    try FileManager.default.createDirectory(at: directory, withIntermediateDirectories: false)
+    #else
+    guard env["YL_ABR_PROBE_DEVICE"] != "1", AbrDiagnosticCaptureURL.permits(url, ownedHost: nil) else {
+      XCTFail("Local capture requires loopback source"); return
+    }
+    let captureDeviceKind = "local"
     let directory = URL(fileURLWithPath: rawDirectory)
+    #endif
+    let proxyBoundaryFile = try AbrProxyBoundaryFile(directory.appendingPathComponent("proxy-requests.jsonl"))
+    YlHlsMediaProxy.diagnosticRequestObserver = { proxyBoundaryFile.append($0) }
+    let proxyBoundaryCapture = try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture)
+    defer {
+      YlHlsMediaProxy.diagnosticRequestObserver = nil
+      proxyBoundaryCapture.stop()
+      XCTAssertTrue(proxyBoundaryCapture.wait(timeout: 2), "Request boundary delivery did not drain")
+      proxyBoundaryFile.close()
+      XCTAssertFalse(proxyBoundaryFile.failed)
+    }
     let processProof: [String: Any] = ["pid": ProcessInfo.processInfo.processIdentifier,
-      "executable": ProcessInfo.processInfo.arguments[0], "token": try XCTUnwrap(env["YL_ABR_PROBE_TOKEN"])]
+      "executable": ProcessInfo.processInfo.arguments[0], "token": token, "deviceKind": captureDeviceKind]
     try JSONSerialization.data(withJSONObject: processProof, options: [.sortedKeys])
       .write(to: directory.appendingPathComponent("process.json"), options: .atomic)
-    let prepared = try await Task.detached {
-      try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
-        configuration: .init(map: [:]), cancellationToken: .init())
-    }.value
+    let direct = env["YL_ABR_PROBE_DIRECT_HLS"] == "1"
+    let programmeSeconds = try XCTUnwrap(Int(env["YL_ABR_PROBE_SECONDS"] ?? "40"))
+    XCTAssertTrue([40, 120].contains(programmeSeconds))
+    let startupDelayMs = try XCTUnwrap(Int(env["YL_ABR_PROBE_STARTUP_DELAY_MS"] ?? "0"))
+    XCTAssertTrue((0...2000).contains(startupDelayMs))
+    let recoveryAction = env["YL_ABR_PROBE_RECOVERY_ACTION"] ?? "none"
+    let autoScenario = env["YL_ABR_PROBE_AUTO_SCENARIO"] ?? "normal"
+    guard ["normal", "pause-first", "pause-during-preparation", "pause-during-metadata", "seek-during-preparation", "caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), autoScenario == "normal" || recoveryAction == "auto-reload" else {
+      XCTFail("Invalid automatic recovery scenario"); return
+    }
+    guard ["none", "seek-current", "reload-source", "auto-reload"].contains(recoveryAction),
+          recoveryAction == "none" || (!direct && programmeSeconds == 120) else {
+      XCTFail("Invalid recovery diagnostic"); return
+    }
+    let candidatePreparation = env["YL_ABR_PROBE_CANDIDATE_PREPARATION"] ?? "manifest-only"
+    guard ["manifest-only", "asset-metadata", "asset-preroll"].contains(candidatePreparation),
+      candidatePreparation == "manifest-only" || (recoveryAction == "auto-reload" && !direct && programmeSeconds == 120) else {
+      XCTFail("Invalid candidate preparation diagnostic"); return
+    }
+    guard autoScenario != "pause-during-metadata" || candidatePreparation == "asset-metadata" else {
+      XCTFail("Metadata intent injection requires metadata preparation"); return
+    }
+    guard !["pause-during-preparation", "seek-during-preparation", "caps-during-preparation", "fixed-during-preparation"].contains(autoScenario) || candidatePreparation == "asset-preroll" else {
+      XCTFail("Mid-preparation pause requires preroll"); return
+    }
+    let publicPolicyCycle = env["YL_ABR_PROBE_PUBLIC_POLICY_CYCLE"] == "1"
+    guard !publicPolicyCycle || (!direct && programmeSeconds == 120 && recoveryAction == "none"
+      && autoScenario == "normal" && candidatePreparation == "manifest-only" && startupDelayMs == 0) else {
+      XCTFail("Public policy cycle requires managed 120s without diagnostic recovery"); return
+    }
+    let publicPolicyRace = env["YL_ABR_PROBE_PUBLIC_POLICY_RACE"] == "1"
+    guard !publicPolicyRace || (!publicPolicyCycle && !direct && programmeSeconds == 120
+      && recoveryAction == "auto-reload" && candidatePreparation == "asset-preroll" && startupDelayMs == 0
+      && ["caps-during-preparation", "fixed-during-preparation", "pause-during-preparation", "seek-during-preparation"].contains(autoScenario)) else {
+      XCTFail("Public policy race requires managed caps/fixed preroll diagnostic"); return
+    }
+    let productionRecovery = env["YL_ABR_PROBE_PRODUCTION_RECOVERY"] == "1"
+    guard !productionRecovery || (captureDeviceKind == "physical" && !direct && !publicPolicyCycle && !publicPolicyRace
+      && programmeSeconds == 120 && recoveryAction == "auto-reload" && candidatePreparation == "manifest-only"
+      && autoScenario == "normal" && startupDelayMs == 0) else { XCTFail("Invalid production recovery capture"); return }
+    let productionCommand = env["YL_ABR_PROBE_PRODUCTION_COMMAND"] ?? "none"
+    guard ["none", "pause-resume", "pause-prepared", "seek-prepared", "load-prepared"].contains(productionCommand), productionCommand == "none" || productionRecovery else {
+      XCTFail("Invalid production command scenario"); return
+    }
+    var productionCommandEvents: [String: Any] = [:]
+    var productionObservedEvents: [[String: Any]] = []
+    let productionBarrier = DispatchSemaphore(value: 0)
+    defer { productionBarrier.signal() }
+    // The serial preparation queue invokes this only after a real candidate exists.
+    // The main queue issues public commands; the production deadline remains 2s.
+    var productionPreparedCallback: ((YlOpenCancellationToken) -> Void)?
+    var productionCommandTask: Task<Void, Never>?
+    defer { productionCommandTask?.cancel() }
+    let productionEpoch = ProcessInfo.processInfo.systemUptime
+    var productionPolicyFile: FileHandle?
+    var productionPolicyWriteFailed = false
+    if productionRecovery {
+      let path = directory.appendingPathComponent("policy-decisions.jsonl")
+      _ = FileManager.default.createFile(atPath: path.path, contents: nil)
+      productionPolicyFile = try FileHandle(forWritingTo: path)
+    }
+    defer { try? productionPolicyFile?.close() }
+    func productionEvent(_ input: [String: Any]) -> [String: Any] {
+      var result = input
+      for key in ["elapsed", "elapsedAfter", "due", "preparationDeadline"] {
+        if let value = result[key] as? Double { result[key] = value - productionEpoch }
+      }
+      return result
+    }
+    // Preserve the historical managed probe's preparation-before-player order.
+    let prepared: YlPreparedHlsAsset?
+    if direct || publicPolicyCycle || publicPolicyRace || productionRecovery {
+      prepared = nil
+      if startupDelayMs > 0 {
+        // Explicitly arm the same first-GET clock before the diagnostic delay.
+        let (_, response) = try await URLSession.shared.data(from: url)
+        XCTAssertEqual((response as? HTTPURLResponse)?.statusCode, 200)
+      }
+    } else {
+      do {
+        prepared = try await Task.detached {
+          try YlPreparedHlsAsset(originURL: url, isDash: true, headers: [:],
+            configuration: .init(map: [:]), cancellationToken: .init())
+        }.value
+      } catch {
+        let native = error as? NativePlayerError
+        NSLog("[YL-ABR] preparationFailure category=%@ code=%@", native?.category ?? "unknown", native?.code ?? "unknown")
+        throw error
+      }
+    }
+    if startupDelayMs > 0 { try await Task.sleep(nanoseconds: UInt64(startupDelayMs) * 1_000_000) }
     let player = AVPlayer()
+    var warmedItem: AVPlayerItem?
     let output = AppleTestTexture()
+    let presentationTimes = AbrPublishedFrameTimes()
     var tick: (() -> Void)?
     var states: [YlNativeState] = []
-    let backend = YlAvPlayerBackend(playerId: 991,
-      services: .init(platform: .current, textureOutput: output,
-        makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
-      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
-      emit: { if case .state(let state) = $0.event { states = [state] } })
-    defer { backend.dispose() }
+    var backendFailure: String?
+    var backend: YlAvPlayerBackend?
+    var publicHost: YlApplePlayerHost?
+    let publicCallbacks = AppleRecordingCallbacks()
+    var publicSessionId: String?
+    var policyPhase = "initial-auto"
+    var publicPolicyEvents: [[String: Any]] = []
     let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network, formatHint: .dash)
-    try backend.stagePreparedHls(source: source, prepared: prepared, resume: false)
-    try backend.activate()
-    try backend.play()
+    var directOutput: AVPlayerItemVideoOutput?
+    var directCompleted = false
+    var endTask: Task<Void, Never>?
+    defer { endTask?.cancel(); publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil) }
+    if productionCommand.hasSuffix("-prepared") {
+      productionPreparedCallback = { token in
+        let preparedAt = ProcessInfo.processInfo.systemUptime - productionEpoch
+        DispatchQueue.main.async {
+          guard productionCommandTask == nil else { productionBarrier.signal(); return }
+          productionCommandTask = Task { @MainActor in
+            defer { productionBarrier.signal() }
+            do {
+              let host = try XCTUnwrap(publicHost), session = try XCTUnwrap(publicSessionId)
+              let item = player.currentItem, position = CMTimeGetSeconds(player.currentTime())
+              let target = Int64(position * 1000) + 1000
+              productionCommandEvents = ["sessionId": session, "scenario": productionCommand,
+                "candidatePrepared": preparedAt, "commandStarted": ProcessInfo.processInfo.systemUptime - productionEpoch,
+                "attemptsAtCommand": host.dashRecoveryAttempts, "positionBefore": position, "targetMs": target]
+              if productionCommand == "pause-prepared" {
+                try host.pause(command: .init(sessionId: session))
+                productionCommandEvents["pausePosition"] = CMTimeGetSeconds(player.currentTime())
+                productionCommandEvents["pauseAcknowledged"] = !host.playbackIntent && player.rate == 0
+              } else if productionCommand == "seek-prepared" {
+                try host.seekTo(command: .init(sessionId: session, positionMs: target))
+              } else {
+                let loaded = try await host.load(request: AppleHostFixture.request("public-policy-cycle",
+                  url: url.absoluteString, format: .dash, autoplay: true, start: target))
+                publicSessionId = loaded.sessionId
+                productionCommandEvents["newSessionId"] = loaded.sessionId
+                productionCommandEvents["newAttempts"] = host.dashRecoveryAttempts
+                XCTAssertEqual(host.dashRecoveryAttempts, 0, "Successful Load returns its own recovery budget")
+              }
+              productionCommandEvents["commandCompleted"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+              productionCommandEvents["tokenCancelled"] = token.isCancelled
+              productionCommandEvents["itemUnchanged"] = player.currentItem === item
+              productionCommandEvents["oldEvents"] = productionObservedEvents
+              productionCommandEvents["released"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+              productionBarrier.signal()
+              if productionCommand == "pause-prepared" {
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                productionCommandEvents["beforeResumePosition"] = CMTimeGetSeconds(player.currentTime())
+                productionCommandEvents["beforeResumeAttempts"] = host.dashRecoveryAttempts
+                productionCommandEvents["itemUnchangedBeforeResume"] = player.currentItem === item
+                try await host.play(command: .init(sessionId: session))
+                productionCommandEvents["resumeCompleted"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+                productionCommandEvents["resumed"] = host.playbackIntent
+              }
+            } catch { productionCommandEvents["failed"] = true }
+            do { try JSONSerialization.data(withJSONObject: productionCommandEvents, options: [.sortedKeys])
+              .write(to: directory.appendingPathComponent("production-command-events.json"), options: .atomic) }
+            catch { productionPolicyWriteFailed = true }
+          }
+        }
+        _ = productionBarrier.wait(timeout: .now() + 3)
+      }
+    }
+    if publicPolicyCycle || publicPolicyRace || productionRecovery {
+      let host = YlApplePlayerHost(playerId: 991, suffix: "abr-public-policy",
+        options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
+        services: .init(platform: .current, textureOutput: output,
+          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }), callbacks: publicCallbacks, avPlayer: player, automaticDashRecoveryEnabled: productionRecovery,
+        afterDashRecoveryPreparation: productionPreparedCallback,
+        makeAvPlayerVideoOutput: { AbrTimestampVideoOutput(attributes: $0, times: presentationTimes) })
+      publicHost = host
+      if productionRecovery {
+        host.onDashRecoveryEvent = { event in productionObservedEvents.append(productionEvent(event)) }
+        host.onDashRecoveryDecision = { [weak host] decision in
+          var row = decision
+          row["sessionId"] = publicSessionId ?? ""
+          for key in ["elapsed", "pendingDue"] {
+            if let value = row[key] as? Double { row[key] = value - productionEpoch }
+          }
+          do { try productionPolicyFile?.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])) }
+          catch { productionPolicyWriteFailed = true }
+          if productionCommand == "pause-resume", productionCommandTask == nil,
+            decision["reason"] as? String == "reserved", decision["attempts"] as? Int == 1 {
+            productionCommandTask = Task { @MainActor [weak host] in
+              do {
+                let host = try XCTUnwrap(host), sessionId = try XCTUnwrap(publicSessionId)
+                let item = player.currentItem
+                productionCommandEvents = ["sessionId": sessionId, "reservationAttempts": host.dashRecoveryAttempts,
+                  "pauseStarted": ProcessInfo.processInfo.systemUptime - productionEpoch]
+                try host.pause(command: .init(sessionId: sessionId))
+                productionCommandEvents["pauseAcknowledged"] = !host.playbackIntent && player.rate == 0
+                productionCommandEvents["pausePosition"] = CMTimeGetSeconds(player.currentTime())
+                try await Task.sleep(nanoseconds: 2_000_000_000)
+                productionCommandEvents["beforeResumePosition"] = CMTimeGetSeconds(player.currentTime())
+                productionCommandEvents["beforeResumeAttempts"] = host.dashRecoveryAttempts
+                productionCommandEvents["itemUnchangedBeforeResume"] = player.currentItem === item
+                productionCommandEvents["installedBeforeResume"] = host.dashRecoveryEvents.contains { $0["outcome"] as? String == "installed" }
+                try await host.play(command: .init(sessionId: sessionId))
+                productionCommandEvents["resumed"] = host.playbackIntent
+                productionCommandEvents["resumeCompleted"] = ProcessInfo.processInfo.systemUptime - productionEpoch
+              } catch { productionCommandEvents["failed"] = true }
+              do {
+                try JSONSerialization.data(withJSONObject: productionCommandEvents, options: [.sortedKeys])
+                  .write(to: directory.appendingPathComponent("production-command-events.json"), options: .atomic)
+              } catch { productionPolicyWriteFailed = true }
+            }
+          }
+        }
+      }
+      try host.attach()
+      do {
+        let loaded = try await host.load(request: AppleHostFixture.request("public-policy-cycle",
+          url: url.absoluteString, format: .dash, autoplay: true))
+        publicSessionId = loaded.sessionId
+      } catch {
+        let code = (error as? PigeonError)?.code ?? "unknown"
+        NSLog("[YL-ABR] publicHostLoadFailure code=%@", code)
+        try JSONSerialization.data(withJSONObject: ["stage": "load", "code": code], options: [.sortedKeys])
+          .write(to: directory.appendingPathComponent("public-policy-failure.json"), options: .atomic)
+        throw error
+      }
+    } else if direct {
+      // System-only control: same owned media/timelines/constraints; bypass the
+      // project's manifest loader, loopback media proxy and backend policies.
+      let item = AVPlayerItem(url: url.deletingLastPathComponent().appendingPathComponent("direct-master.m3u8"))
+      item.preferredForwardBufferDuration = 10
+      item.preferredPeakBitRate = 0
+      let pixels = AVPlayerItemVideoOutput(pixelBufferAttributes: [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA])
+      item.add(pixels); directOutput = pixels
+      let ended = NotificationCenter.default.notifications(named: .AVPlayerItemDidPlayToEndTime, object: item)
+      endTask = Task { @MainActor in
+        for await _ in ended { directCompleted = true; break }
+      }
+      player.replaceCurrentItem(with: item); player.play()
+    } else {
+      let value = YlAvPlayerBackend(playerId: 991,
+        services: .init(platform: .current, textureOutput: output,
+          makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+        makePlayerItem: { asset in
+          if let item = warmedItem, item.asset === asset {
+            warmedItem = nil
+            return item
+          }
+          return AVPlayerItem(asset: asset)
+        },
+        emit: {
+          if case .state(let state) = $0.event { states = [state] }
+          if case .failure(let error) = $0.event {
+            backendFailure = error.code
+            NSLog("[YL-ABR] backendFailure category=%@ code=%@", error.category, error.code)
+          }
+        })
+      backend = value
+      try value.stagePreparedHls(source: source, prepared: XCTUnwrap(prepared), resume: false)
+      try value.activate(); try value.play()
+    }
     _ = FileManager.default.createFile(atPath: directory.appendingPathComponent("rows.jsonl").path, contents: nil)
     let file = try FileHandle(forWritingTo: directory.appendingPathComponent("rows.jsonl"))
     defer { try? file.close() }
-    let started = ProcessInfo.processInfo.systemUptime
+    let started = productionRecovery ? productionEpoch : ProcessInfo.processInfo.systemUptime
+    #if os(iOS)
+    let previousIdleTimer = UIApplication.shared.isIdleTimerDisabled
+    UIApplication.shared.isIdleTimerDisabled = true
+    defer { UIApplication.shared.isIdleTimerDisabled = previousIdleTimer }
+    let notificationCenter = NotificationCenter.default
+    let signalsURL = directory.appendingPathComponent("signals.jsonl")
+    _ = FileManager.default.createFile(atPath: signalsURL.path, contents: nil)
+    let signalsFile = try FileHandle(forWritingTo: signalsURL)
+    defer { try? signalsFile.close() }
+    var signalWriteFailed = false
+    var signalTokens: [NSObjectProtocol] = []
+    for (name, kind) in [(AVAudioSession.routeChangeNotification, "audioRoute"),
+                         (AVAudioSession.interruptionNotification, "audioInterruption"),
+                         (UIApplication.willResignActiveNotification, "willResignActive"),
+                         (UIApplication.didBecomeActiveNotification, "didBecomeActive"),
+                         (UIApplication.didEnterBackgroundNotification, "didEnterBackground"),
+                         (UIApplication.willEnterForegroundNotification, "willEnterForeground")] {
+      signalTokens.append(notificationCenter.addObserver(forName: name, object: nil, queue: .main) { notification in
+        let reason = (notification.userInfo?[AVAudioSessionRouteChangeReasonKey] as? NSNumber)?.intValue ?? -1
+        let interruption = (notification.userInfo?[AVAudioSessionInterruptionTypeKey] as? NSNumber)?.intValue ?? -1
+        let options = (notification.userInfo?[AVAudioSessionInterruptionOptionKey] as? NSNumber)?.intValue ?? -1
+        NSLog("[YL-ABR] elapsed=%.6f signal=%@ reason=%ld interruption=%ld options=%ld",
+          ProcessInfo.processInfo.systemUptime - started, kind, reason, interruption, options)
+        let row: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
+          "signal": kind, "reason": reason, "interruption": interruption, "options": options,
+          "applicationState": UIApplication.shared.applicationState.rawValue]
+        do { try signalsFile.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])) }
+        catch { signalWriteFailed = true }
+      })
+    }
+    defer { signalTokens.forEach(notificationCenter.removeObserver) }
+    #endif
+    let policyURL = directory.appendingPathComponent("policy-decisions.jsonl")
+    var policyFile: FileHandle?
+    if recoveryAction == "auto-reload" && !productionRecovery {
+      _ = FileManager.default.createFile(atPath: policyURL.path, contents: nil)
+      policyFile = try FileHandle(forWritingTo: policyURL)
+    }
+    defer { try? policyFile?.close() }
     var completed = false
     var frameCount = 0
+    var frameGeneration = 0
+    var frameItem = player.currentItem
+    let frameURL = directory.appendingPathComponent("frame-samples.jsonl")
+    _ = FileManager.default.createFile(atPath: frameURL.path, contents: nil)
+    let frameFile = try FileHandle(forWritingTo: frameURL)
+    defer { try? frameFile.close() }
+    var frameWriteFailed = false
+    let framePump = Task { @MainActor in
+      while !Task.isCancelled {
+        if player.currentItem !== frameItem { frameGeneration += 1; frameItem = player.currentItem }
+        tick?() // displayLinkTick owns and consumes its retained raster buffer.
+        var width = output.frames.last.map { CVPixelBufferGetWidth($0) } ?? 0
+        var count = output.frames.count
+        let framePresentationTimes: [Any] = output.frames.map {
+          presentationTimes.take($0).map { $0 as Any } ?? NSNull()
+        }
+        output.frames.removeAll(keepingCapacity: true)
+        if let pixels = directOutput, pixels.hasNewPixelBuffer(forItemTime: player.currentTime()),
+           let buffer = pixels.copyPixelBuffer(forItemTime: player.currentTime(), itemTimeForDisplay: nil) {
+          width = CVPixelBufferGetWidth(buffer); count += 1
+        }
+        frameCount += count
+        let position = CMTimeGetSeconds(player.currentTime())
+        let sample: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
+          "generation": frameGeneration, "frames": count, "width": width, "textureClears": output.clears,
+          "framePresentationTimes": framePresentationTimes,
+          "position": position.isFinite ? position : 0, "rate": player.rate,
+          "timeControlStatus": player.timeControlStatus.rawValue,
+          "itemStatus": player.currentItem?.status.rawValue ?? -1,
+          "resumeSeekPending": backend?.diagnosticResumeSeekPending ?? publicHost?.diagnosticResumeSeekPending ?? false]
+        do { try frameFile.write(contentsOf: JSONSerialization.data(withJSONObject: sample, options: [.sortedKeys]) + Data([10])) }
+        catch { frameWriteFailed = true; return }
+        try? await Task.sleep(nanoseconds: 16_000_000)
+      }
+    }
+    defer { framePump.cancel() }
+    var clockAlignment: [String: Double]?
+    var sawHigh = false
+    var sawDownshift = false
+    var recoveryAttempt: [String: Any]?
+    var automaticPolicy = AbrDiagnosticRecoveryPolicy()
+    var automaticEvents: [[String: Any]] = []
+    var resumeTask: Task<Void, Never>?
+    var publicResume: [String: Any]?
+    defer { resumeTask?.cancel() }
+    func currentCredentialContext() -> YlHlsCredentialContext? {
+      ((player.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)?.credentialContext
+    }
+    func automaticSample() -> AbrDiagnosticRecoveryPolicy.Sample {
+      let item = player.currentItem
+      let position = CMTimeGetSeconds(player.currentTime())
+      let logs = item?.accessLog()?.events ?? []
+      let buffered = AbrDiagnosticRecoveryPolicy.contiguousAhead(position: position,
+        ranges: (item?.loadedTimeRanges ?? []).map {
+          (CMTimeGetSeconds($0.timeRangeValue.start), CMTimeGetSeconds(CMTimeRangeGetEnd($0.timeRangeValue)))
+        })
+      return .init(time: ProcessInfo.processInfo.systemUptime - started, generation: frameGeneration,
+        allowed: (backend != nil || publicHost?.playbackIntent == true) && item?.status == .readyToPlay && player.rate > 0 &&
+          AbrDiagnosticRecoveryEligibility.permitsPolicy(peakBitRate: item?.preferredPeakBitRate ?? -1,
+            maximumResolution: item?.preferredMaximumResolution ?? CGSize(width: -1, height: -1),
+            fixedTrackId: publicHost?.initialState.videoSelection?.fixedTrackId ?? backend?.videoSelection.fixedTrackId) && item?.isPlaybackLikelyToKeepUp == true,
+        width: Int(item?.presentationSize.width ?? 0), position: position,
+        remaining: Double(programmeSeconds) - position, bufferAhead: buffered,
+        bytes: logs.reduce(0) { $0 + $1.numberOfBytesTransferred },
+        transfer: logs.reduce(0) { $0 + $1.transferDuration },
+        requests: logs.reduce(0) { $0 + $1.numberOfMediaRequests },
+        overdue: logs.reduce(0) { $0 + $1.downloadOverdue },
+        intentRevision: publicHost?.acknowledgedTransportRevision ?? 0,
+        credentialRevision: currentCredentialContext()?.revision ?? 0)
+    }
     while ProcessInfo.processInfo.systemUptime - started < 140 {
-      tick?(); _ = backend.copyPixelBuffer()
-      frameCount += output.frames.count
-      output.frames.removeAll(keepingCapacity: true)
       let item = try XCTUnwrap(player.currentItem)
+      if item.presentationSize.width == 640 { sawHigh = true }
+      if sawHigh && item.presentationSize.width == 320 { sawDownshift = true }
       func finite(_ value: Double) -> Any { value.isFinite ? value as Any : NSNull() }
+      if clockAlignment == nil, item.presentationSize.width > 0 {
+        var request = URLRequest(url: url); request.httpMethod = "HEAD"
+        let before = (ProcessInfo.processInfo.systemUptime - started) * 1_000_000
+        let (_, response) = try await URLSession.shared.data(for: request)
+        let after = (ProcessInfo.processInfo.systemUptime - started) * 1_000_000
+        let http = try XCTUnwrap(response as? HTTPURLResponse)
+        XCTAssertEqual(http.value(forHTTPHeaderField: "X-Yl-Run-Id"), "abr-accesslog")
+        XCTAssertEqual(http.value(forHTTPHeaderField: "X-Yl-Profile-Sha256"), env["YL_ABR_PROBE_PROFILE_SHA256"])
+        let server = try XCTUnwrap(Double(http.value(forHTTPHeaderField: "X-Yl-Elapsed-Us") ?? ""))
+        clockAlignment = ["beforeUs": before, "afterUs": after, "serverUs": server]
+      }
+      let errors: [[String: Any]] = (item.errorLog()?.events ?? []).suffix(32).map {
+        let comment = String(($0.errorComment ?? "").prefix(512)).replacingOccurrences(
+          of: #"[A-Za-z][A-Za-z0-9+.-]*://[^\s]+"#, with: "<url>", options: .regularExpression)
+        return ["domain": $0.errorDomain, "code": $0.errorStatusCode, "comment": comment]
+      }
       let logs: [[String: Any]] = (item.accessLog()?.events ?? []).map {
         ["observedBitrate": finite($0.observedBitrate), "indicatedBitrate": finite($0.indicatedBitrate),
          "switchBitrate": finite($0.switchBitrate), "transferDuration": finite($0.transferDuration),
          "bytes": $0.numberOfBytesTransferred, "requests": $0.numberOfMediaRequests,
-         "segmentsDuration": finite($0.segmentsDownloadedDuration), "stalls": $0.numberOfStalls]
+         "segmentsDuration": finite($0.segmentsDownloadedDuration), "stalls": $0.numberOfStalls, "downloadOverdue": $0.downloadOverdue]
       }
+      let publicState = publicHost?.initialState
+      let fixedTrackId = publicState?.videoSelection?.fixedTrackId ?? backend?.videoSelection.fixedTrackId
+      let reachedEnd = publicState.map { $0.status == .completed } ?? (direct ? directCompleted : states.last?.status == "completed")
       let row: [String: Any] = ["elapsed": ProcessInfo.processInfo.systemUptime - started,
         "position": finite(CMTimeGetSeconds(player.currentTime())), "rate": player.rate,
         "status": item.status.rawValue, "width": item.presentationSize.width,
         "height": item.presentationSize.height, "peak": item.preferredPeakBitRate,
+        "maximumWidth": item.preferredMaximumResolution.width,
+        "maximumHeight": item.preferredMaximumResolution.height,
+        "fixedTrackId": fixedTrackId as Any? ?? NSNull(),
+        "unconstrainedPolicy": AbrDiagnosticRecoveryEligibility.permitsPolicy(
+          peakBitRate: item.preferredPeakBitRate, maximumResolution: item.preferredMaximumResolution,
+          fixedTrackId: fixedTrackId),
         "forwardBuffer": item.preferredForwardBufferDuration, "logs": logs,
-        "completed": states.last?.status == "completed", "framesPublished": frameCount]
+        "errors": errors, "errorLogEventCount": item.errorLog()?.events.count ?? 0,
+        "bufferEmpty": item.isPlaybackBufferEmpty, "bufferFull": item.isPlaybackBufferFull,
+        "likelyToKeepUp": item.isPlaybackLikelyToKeepUp, "timeControlStatus": player.timeControlStatus.rawValue,
+        "loadedRanges": item.loadedTimeRanges.map { ["start": finite(CMTimeGetSeconds($0.timeRangeValue.start)), "duration": finite(CMTimeGetSeconds($0.timeRangeValue.duration))] },
+        "clockAlignment": clockAlignment as Any? ?? NSNull(), "startupDelayMs": startupDelayMs,
+        "publicPolicyCycle": publicPolicyCycle, "publicPolicyRace": publicPolicyRace, "policyPhase": policyPhase,
+        "publicIntentRevision": publicHost?.acknowledgedTransportRevision as Any? ?? NSNull(),
+        "publicPlaybackIntent": publicHost?.playbackIntent as Any? ?? NSNull(),
+        "publicResume": publicResume as Any? ?? NSNull(),
+        "sessionId": publicHost?.sessionId as Any? ?? NSNull(),
+        "acceptedMaximumWidth": publicHost?.acceptedVideoConstraints.maxWidth as Any? ?? NSNull(),
+        "acceptedMaximumHeight": publicHost?.acceptedVideoConstraints.maxHeight as Any? ?? NSNull(),
+        "acceptedMaximumBitrate": publicHost?.acceptedVideoConstraints.maxBitrate as Any? ?? NSNull(),
+        "hostStatus": publicState.map { String(describing: $0.status) } as Any? ?? NSNull(),
+        "hostFailureCount": publicCallbacks.failures.count,
+        "candidatePreparation": candidatePreparation,
+        "recoveryAction": recoveryAction, "recoveryAttempt": recoveryAttempt as Any? ?? NSNull(),
+        "frameSamplingVersion": 2, "automaticAttempts": productionRecovery ? (publicHost?.dashRecoveryAttempts ?? 0) : automaticPolicy.attempts,
+        "automaticEvents": productionRecovery ? (publicHost?.dashRecoveryEvents.map(productionEvent) ?? []) : automaticEvents,
+        "productionRecovery": productionRecovery, "productionCommand": productionCommand,
+        "productionCommandEvents": productionCommandEvents,
+        "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
+        "proxyRequestSamplingVersion": 2, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "sampleUptime": ProcessInfo.processInfo.systemUptime,
+        "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
+        "backendFailureCode": backendFailure as Any? ?? NSNull(),
+        "completed": reachedEnd, "framesPublished": frameCount,
+        "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
       try file.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10]))
-      if states.last?.status == "completed" { completed = true; break }
+      if reachedEnd { completed = true; break }
+      if publicPolicyCycle, let host = publicHost, let sessionId = publicSessionId {
+        let schedule: [(String, Double)] = [("caps", 8), ("clear-caps", 24), ("fixed", 50), ("restore-auto", 70)]
+        let index = publicPolicyEvents.count
+        if index < schedule.count, ProcessInfo.processInfo.systemUptime - started >= schedule[index].1 {
+          let phase = schedule[index].0
+          var event: [String: Any] = ["phase": phase, "elapsed": ProcessInfo.processInfo.systemUptime - started,
+            "applied": false, "sessionId": sessionId]
+          let beforeItem = player.currentItem
+          publicPolicyEvents.append(event)
+          let eventsURL = directory.appendingPathComponent("public-policy-events.json")
+          func writeEvents() throws {
+            try JSONSerialization.data(withJSONObject: publicPolicyEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
+          }
+          try writeEvents()
+          do {
+            if phase == "caps" || phase == "clear-caps" {
+              try await host.setVideoConstraints(command: .init(sessionId: sessionId,
+                constraints: .init(maxWidth: phase == "caps" ? 320 : nil)))
+            } else {
+              let id = phase == "fixed" ? "dash-video-w320-h180-b350000" : nil
+              try await host.selectVideoTrack(command: .init(sessionId: sessionId, trackId: id))
+            }
+            event["applied"] = true
+            event["itemChanged"] = player.currentItem !== beforeItem
+            event["sessionId"] = host.sessionId
+            event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+            policyPhase = phase
+          } catch {
+            event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+            publicPolicyEvents[index] = event; try writeEvents(); throw error
+          }
+          publicPolicyEvents[index] = event; try writeEvents()
+        }
+      }
       XCTAssertNotEqual(item.status, .failed)
       if item.status == .failed { break }
+      // Explicit experiment only: never install a wall-clock/error-code retry
+      // in production. Preserve pre-operation rows even if preparation fails.
+      if ["seek-current", "reload-source"].contains(recoveryAction), recoveryAttempt == nil, sawDownshift,
+         item.presentationSize.width == 320,
+         ProcessInfo.processInfo.systemUptime - started >= 35,
+         item.errorLog()?.events.contains(where: { $0.errorDomain == "CoreMediaErrorDomain" && $0.errorStatusCode == -12889 }) == true {
+        let before = CMTimeGetSeconds(player.currentTime())
+        var attempt: [String: Any] = ["action": recoveryAction,
+          "elapsed": ProcessInfo.processInfo.systemUptime - started,
+          "positionBefore": before, "completed": false, "itemChanged": false]
+        // Write before awaiting so failures cannot erase the attempted action.
+        try JSONSerialization.data(withJSONObject: attempt, options: [.sortedKeys])
+          .write(to: directory.appendingPathComponent("recovery-attempt.json"), options: .atomic)
+        if recoveryAction == "seek-current" {
+          let finished = await player.seek(to: player.currentTime(), toleranceBefore: .zero, toleranceAfter: .zero)
+          attempt["completed"] = finished
+          attempt["itemChanged"] = player.currentItem !== item
+        } else {
+          let credentials = try XCTUnwrap(currentCredentialContext())
+          let replacement = try await Task.detached {
+            try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL: url,
+              headers: source.headers, credentials: source.credentials, credentialContext: credentials)
+          }.value
+          try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
+          attempt["completed"] = true // installation only; landing/output checked in later rows
+          attempt["itemChanged"] = player.currentItem !== item
+        }
+        attempt["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+        attempt["positionAfterCall"] = finite(CMTimeGetSeconds(player.currentTime()))
+        recoveryAttempt = attempt
+        try JSONSerialization.data(withJSONObject: attempt, options: [.sortedKeys])
+          .write(to: directory.appendingPathComponent("recovery-attempt.json"), options: .atomic)
+      }
+      var recoveryTicket: AbrDiagnosticRecoveryPolicy.Ticket?
+      if let policyFile {
+        recoveryTicket = automaticPolicy.observe(automaticSample())
+        try policyFile.write(contentsOf: JSONSerialization.data(withJSONObject: automaticPolicy.decision, options: [.sortedKeys]) + Data([10]))
+      }
+      if let ticket = recoveryTicket {
+        let before = automaticSample()
+        var event: [String: Any] = ["attempt": ticket.attempt, "elapsed": before.time,
+          "due": ticket.due, "generation": ticket.generation, "ticketIntentRevision": ticket.intentRevision, "ticketCredentialRevision": ticket.credentialRevision, "positionBefore": before.position,
+          "outcome": "preparing", "textureClearsBefore": output.clears]
+        automaticEvents.append(event)
+        let eventsURL = directory.appendingPathComponent("automatic-events.json")
+        try JSONSerialization.data(withJSONObject: automaticEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
+        if autoScenario == "pause-first", ticket.attempt == 1 {
+          try backend?.pause()
+          automaticPolicy.invalidateIntent() // Resume cannot revive this ticket.
+          resumeTask = Task { @MainActor in
+            do { try await Task.sleep(nanoseconds: 2_000_000_000); try backend?.play() }
+            catch { /* Cancellation never restarts disposed output. */ }
+          }
+        }
+        do {
+          let credentials = try XCTUnwrap(currentCredentialContext())
+          let replacement = try await Task.detached {
+            try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL: url,
+              headers: source.headers, credentials: source.credentials, credentialContext: credentials)
+          }.value
+          event["manifestPreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+          var policyCandidate: YlPreparedHlsAsset?
+          var policyFixedId: String?
+          defer { policyCandidate?.discard() } // Transferred loader ownership is not cancelled.
+          if !publicPolicyRace, ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
+            let snapshot = try XCTUnwrap(replacement.loader.dashSnapshot)
+            if autoScenario == "fixed-during-preparation" {
+              policyFixedId = try XCTUnwrap(replacement.loader.videoCatalog?.tracks(
+                at: Int64(CMTimeGetSeconds(player.currentTime()) * 1_000_000)).first { $0.width == 320 }?.id)
+            }
+            let fixedId = policyFixedId
+            let constraints: YlAppleVideoConstraints = autoScenario == "caps-during-preparation"
+              ? .init(maxWidth: 320, maxHeight: nil, maxBitrate: nil) : .unconstrained
+            let context = replacement.loader.credentialContext
+            policyCandidate = try await Task.detached {
+              try YlPreparedHlsAsset(originURL: url, isDash: true, videoConstraints: constraints,
+                fixedTrackId: fixedId, headers: [:], configuration: .init(map: [:]),
+                cancellationToken: .init(), dashSnapshot: snapshot, credentialContext: context)
+            }.value
+            event["policyCandidatePreparedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+          }
+          var preparationSucceeded = true
+          var freshPreparedItem: AVPlayerItem?
+          defer { warmedItem = nil }
+          if candidatePreparation == "asset-metadata" {
+            // An already invalidated ticket must not start speculative loading.
+            if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item {
+              let warmupStarted = ProcessInfo.processInfo.systemUptime
+              event["warmupStartedElapsed"] = warmupStarted - started
+              event["warmupProxyBefore"] = replacement.loader.diagnosticProxySnapshot
+              event["warmupFramesBefore"] = frameCount
+              event["warmupPositionBefore"] = finite(CMTimeGetSeconds(player.currentTime()))
+              let outcome = await AbrDiagnosticCandidatePreparation.loadMetadata(replacement.asset,
+                deadlineUptime: min(warmupStarted + 2, started + ticket.due + 5),
+                allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
+                onStarted: {
+                  if autoScenario == "pause-during-metadata", ticket.attempt == 1 {
+                    automaticPolicy.invalidateIntent()
+                    do {
+                      try XCTUnwrap(backend).pause()
+                      event["metadataPauseApplied"] = true
+                      event["metadataPauseElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                      resumeTask = Task { @MainActor in
+                        do { try await Task.sleep(nanoseconds: 2_000_000_000); try backend?.play() }
+                        catch { /* Cancellation cannot resume disposed output. */ }
+                      }
+                    } catch { event["metadataPauseApplied"] = false }
+                  }
+                }, cancelPending: { replacement.discard() })
+              event["warmupOutcome"] = outcome
+              event["warmupCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+              event["warmupProxyAfter"] = replacement.loader.diagnosticProxySnapshot
+              event["warmupFramesAfter"] = frameCount
+              event["warmupPositionAfter"] = finite(CMTimeGetSeconds(player.currentTime()))
+              event["warmupOldItemRetained"] = player.currentItem === item
+              preparationSucceeded = outcome == "loaded"
+            } else { event["warmupOutcome"] = "skippedIneligible" }
+          }
+          if candidatePreparation == "asset-preroll" {
+            let warmupStarted = ProcessInfo.processInfo.systemUptime
+            event["warmupStartedElapsed"] = warmupStarted - started
+            event["warmupProxyBefore"] = replacement.loader.diagnosticProxySnapshot
+            event["warmupFramesBefore"] = frameCount
+            event["warmupPositionBefore"] = finite(CMTimeGetSeconds(player.currentTime()))
+            event["preparationPauseApplied"] = false
+            let warmupDeadline = min(warmupStarted + 2, started + ticket.due + 5)
+            event["warmupDeadlineElapsed"] = warmupDeadline - started
+            let prepared = await AbrDiagnosticPreroll.prepare(replacement.asset, position: player.currentTime(),
+              deadlineUptime: warmupDeadline,
+              allowed: { automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item },
+              onReady: {
+                if publicPolicyRace, ticket.attempt == 1 {
+                  event["publicCommandReady"] = true
+                  event["publicCommandManuallyInvalidated"] = false
+                  event["publicCommandStartedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  event["publicCommandApplied"] = false
+                  do {
+                    let host = try XCTUnwrap(publicHost), sessionId = try XCTUnwrap(publicSessionId)
+                    event["publicCommandIntentBefore"] = host.acknowledgedTransportRevision
+                    let commandPosition = CMTimeGetSeconds(player.currentTime())
+                    event["publicCommandPositionBefore"] = finite(commandPosition)
+                    if autoScenario == "pause-during-preparation" {
+                      try host.pause(command: .init(sessionId: sessionId))
+                      event["publicPausePosition"] = finite(CMTimeGetSeconds(player.currentTime()))
+                      let pausedElapsed = ProcessInfo.processInfo.systemUptime - started
+                      resumeTask = Task { @MainActor in
+                        do {
+                          try await Task.sleep(nanoseconds: 2_000_000_000)
+                          let begin = ProcessInfo.processInfo.systemUptime - started
+                          try await host.play(command: .init(sessionId: sessionId))
+                          publicResume = ["applied": true, "startedElapsed": begin,
+                            "completedElapsed": ProcessInfo.processInfo.systemUptime - started,
+                            "pausedElapsed": pausedElapsed, "sessionId": host.sessionId as Any? ?? NSNull(),
+                            "itemUnchanged": player.currentItem === item,
+                            "oldTicketAuthorized": automaticPolicy.authorizes(ticket, automaticSample())]
+                        } catch { publicResume = ["applied": false] }
+                      }
+                    } else if autoScenario == "seek-during-preparation" {
+                      let target = Int64(commandPosition * 1000) + 1000
+                      event["publicSeekTargetMs"] = target
+                      try host.seekTo(command: .init(sessionId: sessionId, positionMs: target))
+                    } else if autoScenario == "caps-during-preparation" {
+                      try await host.setVideoConstraints(command: .init(sessionId: sessionId,
+                        constraints: .init(maxWidth: 320)))
+                    } else {
+                      try await host.selectVideoTrack(command: .init(sessionId: sessionId,
+                        trackId: "dash-video-w320-h180-b350000"))
+                    }
+                    event["publicCommandIntentAfter"] = host.acknowledgedTransportRevision
+                    event["publicCommandApplied"] = true
+                    event["publicCommandSessionId"] = host.sessionId
+                    event["publicCommandItemChanged"] = player.currentItem !== item
+                  } catch { event["publicCommandApplied"] = false }
+                  event["publicCommandCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  // No invalidateIntent(): actual host policy/item identity must revoke eligibility.
+                }
+                if !publicPolicyRace, ["caps-during-preparation", "fixed-during-preparation"].contains(autoScenario), ticket.attempt == 1 {
+                  automaticPolicy.invalidateIntent()
+                  do {
+                    let target = try XCTUnwrap(backend)
+                    try target.replaceActiveDash(source: source, prepared: XCTUnwrap(policyCandidate),
+                      selection: .init(fixedTrackId: policyFixedId, reason: "user"))
+                    event["policyChangeApplied"] = true
+                    event["policyChangeElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                    event["policyChangedItem"] = player.currentItem !== item
+                    event["policyFixedTrackId"] = target.videoSelection.fixedTrackId as Any? ?? NSNull()
+                    event["policyMaximumWidth"] = player.currentItem?.preferredMaximumResolution.width ?? -1
+                    event["policyMaximumHeight"] = player.currentItem?.preferredMaximumResolution.height ?? -1
+                  } catch { event["policyChangeApplied"] = false }
+                }
+                if !publicPolicyRace, autoScenario == "seek-during-preparation", ticket.attempt == 1 {
+                  automaticPolicy.invalidateIntent()
+                  let target = Int64(CMTimeGetSeconds(player.currentTime()) * 1_000) + 1_000
+                  event["preparationSeekTargetMs"] = target
+                  do {
+                    try XCTUnwrap(backend).seek(toMs: target)
+                    event["preparationSeekApplied"] = true
+                    event["preparationSeekElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  } catch { event["preparationSeekApplied"] = false }
+                }
+                if !publicPolicyRace, autoScenario == "pause-during-preparation", ticket.attempt == 1 {
+                  try? backend?.pause(); automaticPolicy.invalidateIntent()
+                  event["preparationPauseApplied"] = true
+                  event["preparationPauseElapsed"] = ProcessInfo.processInfo.systemUptime - started
+                  resumeTask = Task { @MainActor in
+                    do { try await Task.sleep(nanoseconds: 2_000_000_000); try backend?.play() }
+                    catch { /* Cancellation cannot resume disposed output. */ }
+                  }
+                }
+              }, cancelPending: { replacement.discard() })
+            event["warmupOutcome"] = prepared.outcome
+            event["warmupStage"] = prepared.stage
+            event["warmupDetached"] = prepared.detached
+            event["warmupReusesPrerolledItem"] = prepared.reusesPrerolledItem
+            event["warmupCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+            event["warmupProxyAfter"] = replacement.loader.diagnosticProxySnapshot
+            event["warmupFramesAfter"] = frameCount
+            event["warmupPositionAfter"] = finite(CMTimeGetSeconds(player.currentTime()))
+            event["warmupOldItemRetained"] = player.currentItem === item
+            // Candidate cleanup is already recorded, even if a public command
+            // is still finishing. Its late completion cannot change the outcome.
+            await prepared.readyCommand?.value
+            preparationSucceeded = prepared.outcome == "ready" && prepared.detached && !prepared.reusesPrerolledItem && prepared.item != nil
+            freshPreparedItem = prepared.item
+          }
+          event["preparationCompletedElapsed"] = ProcessInfo.processInfo.systemUptime - started
+          if !preparationSucceeded {
+            replacement.discard(); event["outcome"] = "preparationFailed"
+          } else if publicPolicyRace {
+            replacement.asset.cancelLoading(); replacement.discard()
+            event["outcome"] = "cancelled"
+            event["publicUnexpectedInstallEligibility"] = automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item
+          } else if automaticPolicy.authorizes(ticket, automaticSample()) && player.currentItem === item && currentCredentialContext() === credentials {
+            // This owned backend has no reentrant credential callbacks. Both
+            // DASH loaders have completed preflight; no network wait is allowed
+            // in the synchronous replacement. Background strip linearizes
+            // either before this fence (reject) or after installation.
+            let committed = try credentials.withUnchangedRevision(ticket.credentialRevision) {
+              warmedItem = freshPreparedItem
+              try XCTUnwrap(backend).replaceActiveDash(source: source, prepared: replacement)
+            }
+            event["credentialCommitAccepted"] = committed
+            if committed {
+              if let freshPreparedItem { event["freshPreparedItemInstalled"] = player.currentItem === freshPreparedItem }
+              event["outcome"] = "installed"; event["itemChanged"] = player.currentItem !== item
+            } else {
+              replacement.asset.cancelLoading(); replacement.discard(); event["outcome"] = "cancelled"
+            }
+          } else {
+            replacement.asset.cancelLoading(); replacement.discard(); event["outcome"] = "cancelled"
+          }
+        } catch { event["outcome"] = "preparationFailed" } // bounded retry, original error rows retained
+        event["elapsedAfter"] = ProcessInfo.processInfo.systemUptime - started
+        event["textureClearsAfter"] = output.clears
+        automaticEvents[automaticEvents.count - 1] = event
+        automaticPolicy.finish(ticket)
+        try JSONSerialization.data(withJSONObject: automaticEvents, options: [.sortedKeys]).write(to: eventsURL, options: .atomic)
+      }
       try await Task.sleep(nanoseconds: 250_000_000)
     }
     XCTAssertTrue(completed)
-    backend.dispose()
+    framePump.cancel(); await framePump.value
+    XCTAssertFalse(frameWriteFailed)
+    XCTAssertFalse(productionPolicyWriteFailed)
+    if productionCommand.hasSuffix("-prepared") {
+      XCTAssertEqual(productionCommandEvents["tokenCancelled"] as? Bool, true)
+      XCTAssertNil(productionCommandEvents["failed"])
+      XCTAssertEqual((productionCommandEvents["oldEvents"] as? [[String: Any]])?.first?["outcome"] as? String, "cancelled")
+    }
+    if productionCommand == "pause-resume" {
+      XCTAssertEqual(productionCommandEvents["pauseAcknowledged"] as? Bool, true)
+      XCTAssertEqual(productionCommandEvents["resumed"] as? Bool, true)
+      XCTAssertEqual(publicHost?.dashRecoveryAttempts, 2)
+    }
+    #if os(iOS)
+    XCTAssertFalse(signalWriteFailed)
+    #endif
+    XCTAssertGreaterThanOrEqual(CMTimeGetSeconds(player.currentTime()), Double(programmeSeconds) - 0.5)
+    publicHost?.close(); backend?.dispose(); player.pause(); player.replaceCurrentItem(with: nil)
     XCTAssertNil(player.currentItem)
   }
 
@@ -548,6 +2412,460 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(firstFrames, 0)
     XCTAssertEqual(failures.map(\.code), ["decoder.quality_constraint_unsupported"])
     XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+  }
+
+  @MainActor func testConfirmedCapsFrameFailureCannotBecomeSilentAfterSeek() async throws {
+    let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 640, height: 360)
+    var failures: [String] = []
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+        if case .failure(let error) = $0.event { failures.append(error.code) }
+      })
+    defer { backend.dispose() }
+    let data = mpd
+    let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+      videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil), headers: [:],
+      configuration: .init(map: [:]), cancellationToken: .init(), sessionConfiguration: DashLoaderProtocol.configuration { $0.respond(data) })
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
+    try backend.activate()
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Current caps violation is synchronously rejected and latched")
+    try backend.seek(toMs: 1000)
+    try XCTUnwrap(player.seekCompletion)(true)
+    let drained = expectation(description: "confirmed terminal delivered")
+    DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+    XCTAssertEqual(failures, ["decoder.quality_constraint_unsupported"], "Seek must not suppress a confirmed terminal latch and silently block output")
+  }
+
+  @MainActor func testSeekRevisionRejectsInFlightRasterCopyAndStaleFixedFailure() async throws {
+    for fixed in [false, true] {
+      let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: fixed ? 640 : 320, height: fixed ? 360 : 180)
+      var failures: [String] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error.code) }
+        })
+      defer { backend.dispose() }
+      let data = mpd
+      try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash),
+        prepared: prepare(DashLoaderProtocol.configuration { $0.respond(data) }), resume: false)
+      try backend.activate()
+      if fixed {
+        let track = try XCTUnwrap(backend.confirmedVideoTracks.first { $0.width == 320 })
+        backend.acceptVideoSelection(.init(fixedTrackId: track.id, reason: "user"))
+        // Commit a fixed landing before the background copy snapshots FramePolicy.
+        try backend.seek(toMs: 0); try XCTUnwrap(player.seekCompletion)(true)
+        let fixedReady = expectation(description: "fixed policy ready")
+        DispatchQueue.main.async { fixedReady.fulfill() }; await fulfillment(of: [fixedReady], timeout: 1)
+        XCTAssertEqual(backend.videoSelection.fixedTrackId, track.id)
+      }
+      let entered = expectation(description: "raster copy entered"), released = DispatchSemaphore(value: 0)
+      defer { released.signal() }
+      pixels.beforeCopy = { entered.fulfill(); XCTAssertEqual(released.wait(timeout: .now()+3), .success) }
+      let copy = Task.detached { backend.copyPixelBuffer()?.takeRetainedValue() != nil }
+      await fulfillment(of: [entered], timeout: 1)
+      try backend.seek(toMs: 1000)
+      player.measuredTime = CMTime(seconds: 1, preferredTimescale: 1000)
+      try XCTUnwrap(player.seekCompletion)(true)
+      let landed = expectation(description: "seek landed")
+      DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+      released.signal()
+      let copied = await copy.value
+      XCTAssertFalse(copied, "Old raster copy cannot cross a complete seek transition")
+      let drained = expectation(description: "old errors drained")
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertFalse(failures.contains("decoder.quality_constraint_unsupported"), "A stale fixed buffer cannot terminate the new landing")
+    }
+  }
+
+  @MainActor func testRetiredRecoveryLandingCannotFailLaterIntentOrLifecycle() async throws {
+    for action in ["seek", "replacement", "stop", "deactivate", "dispose"] {
+      let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 320, height: 180)
+      var failures: [String] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error.code) }
+        })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      func candidate() throws -> YlPreparedHlsAsset {
+        try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:], configuration: .init(map: [:]),
+          cancellationToken: .init(), dashSnapshot: snapshot)
+      }
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+      player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+      try backend.replaceActiveDash(source: source, prepared: candidate())
+      let retired = try XCTUnwrap(player.seekCompletion)
+      switch action {
+      case "seek": try backend.seek(toMs: 20_000)
+      case "replacement": try backend.replaceActiveDash(source: source, prepared: candidate())
+      case "stop": backend.stop()
+      case "deactivate": backend.deactivate()
+      default: backend.dispose()
+      }
+      retired(false); retired(true)
+      let drained = expectation(description: "retired landing " + action)
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertTrue(failures.isEmpty, action)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Retired completion has no publication authority: " + action)
+      if action == "seek" || action == "replacement" {
+        player.measuredTime = try XCTUnwrap(player.requestedSeek)
+        try XCTUnwrap(player.seekCompletion)(true)
+        let landed = expectation(description: "current landing " + action)
+        DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+        XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue(), action)
+        XCTAssertTrue(failures.isEmpty)
+      }
+    }
+  }
+
+  @MainActor func testRecoveryCommitRefusalKeepsOldOutputAndSecondAttemptBudget() async throws {
+    let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 320, height: 180)
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: { _ in })
+    defer { backend.dispose() }
+    let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+    let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+    let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+    func candidate() throws -> YlPreparedHlsAsset {
+      try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:], configuration: .init(map: [:]),
+        cancellationToken: .init(), dashSnapshot: snapshot)
+    }
+    try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate(); try backend.play()
+    player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+    let oldItem = player.currentItem, oldGeneration = backend.dashRecoveryItemGeneration
+    XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    let first = try candidate(), second = try candidate()
+    var now = 0.0, deadlines: [() -> Void] = [], commits = 0, preparations = 0
+    let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, callback in deadlines.append(callback) })
+    controller.useSource(.init(sessionId: "source", loadRequestId: "same"))
+    let refused = expectation(description: "audio ownership refused commit")
+    controller.onEvent = { _ in refused.fulfill() }
+    backend.beforeAudioOutput = { throw NativePlayerError(category: "resource", code: "ios.audio_session_failed", message: "Controlled audio refusal") }
+    func tick(_ time: Double, prepared: YlPreparedHlsAsset, held: (() -> Void)? = nil) {
+      now = time
+      controller.tick(productionSample(time, high: time == 0), prepare: { _ in
+        preparations += 1; held?(); return .headeredHls(source: source, prepared: prepared)
+      }, currentSample: { self.productionSample(now) }, commit: { candidate in
+        commits += 1
+        guard case let .headeredHls(_, prepared) = candidate else { throw YlOpenCancellationToken.cancellationError() }
+        let before = backend.dashRecoveryItemGeneration
+        try backend.replaceActiveDash(source: source, prepared: prepared)
+        return ["itemChanged": before != backend.dashRecoveryItemGeneration]
+      })
+    }
+    for t in [0.0, 1, 9, 17, 17.5] { tick(t, prepared: first) }
+    await fulfillment(of: [refused], timeout: 3)
+    XCTAssertTrue(player.currentItem === oldItem); XCTAssertEqual(backend.dashRecoveryItemGeneration, oldGeneration)
+    XCTAssertEqual(CMTimeGetSeconds(player.currentTime()), 12)
+    XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Refused commit preserves usable old output")
+    XCTAssertNil(first.loader.dashSnapshot, "Rejected candidate releases its loader")
+    XCTAssertEqual(controller.events.first?["failureCode"] as? String, "ios.audio_session_failed")
+    XCTAssertNotEqual(controller.events.first?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.policy.attempts, 1); XCTAssertEqual(commits, 1)
+    backend.beforeAudioOutput = {}
+    let started = expectation(description: "second preparation held"), installed = expectation(description: "second installed")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    controller.onEvent = { _ in installed.fulfill() }
+    for t in [20.0, 28, 36, 36.99] { tick(t, prepared: second) }
+    XCTAssertEqual(controller.policy.attempts, 2); XCTAssertEqual(preparations, 1)
+    tick(37, prepared: second, held: { started.fulfill(); XCTAssertEqual(release.wait(timeout: .now()+3), .success) })
+    await fulfillment(of: [started], timeout: 1)
+    XCTAssertEqual(deadlines.count, 2); deadlines[0]()
+    XCTAssertEqual(controller.events.count, 1, "Old deadline cannot cancel the second ticket")
+    release.signal(); await fulfillment(of: [installed], timeout: 3)
+    XCTAssertEqual(controller.events.last?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.events.last?["due"] as? Double, 37)
+    XCTAssertFalse(player.currentItem === oldItem); XCTAssertEqual(commits, 2)
+    for t in 38...70 { tick(Double(t), prepared: second) }
+    XCTAssertEqual(controller.policy.attempts, 2); XCTAssertEqual(preparations, 2)
+    XCTAssertEqual(controller.events.count, 2, "Commit failure never refunds a reservation")
+  }
+
+  @MainActor func testRetiredSourceDeadlineCannotCancelFreshSourceRecovery() async throws {
+    var now = 0.0, deadlines: [() -> Void] = [], commits = 0
+    let controller = YlDashAutoRecoveryController(clock: { now }, schedule: { _, callback in deadlines.append(callback) })
+    let source = YlAppleSourceDescriptor(uri: "https://owned.example/movie.mpd", kind: .network, formatHint: .dash)
+    let oldStarted = expectation(description: "old preparation"), newStarted = expectation(description: "new preparation")
+    let oldRelease = DispatchSemaphore(value: 0), newRelease = DispatchSemaphore(value: 0)
+    defer { oldRelease.signal(); newRelease.signal() }
+    func reserve(_ identity: String, started: XCTestExpectation, release: DispatchSemaphore) {
+      controller.useSource(.init(sessionId: identity, loadRequestId: "reused"))
+      for t in [0.0, 1, 9, 17, 17.5] {
+        now = t
+        controller.tick(productionSample(t, high: t == 0), prepare: { token in
+          token.onCancel { release.signal() }; started.fulfill()
+          XCTAssertEqual(release.wait(timeout: .now()+3), .success)
+          return .avPlayer(source: source)
+        }, currentSample: { self.productionSample(now) }, commit: { _ in commits += 1; return [:] })
+      }
+    }
+    reserve("old", started: oldStarted, release: oldRelease)
+    await fulfillment(of: [oldStarted], timeout: 1)
+    reserve("new", started: newStarted, release: newRelease)
+    await fulfillment(of: [newStarted], timeout: 1)
+    XCTAssertTrue(controller.events.isEmpty); XCTAssertEqual(controller.policy.attempts, 1)
+    XCTAssertEqual(deadlines.count, 2); deadlines[0]()
+    XCTAssertTrue(controller.events.isEmpty, "Old source deadline cannot cancel a fresh source ticket")
+    let installed = expectation(description: "fresh source installed")
+    controller.onEvent = { _ in installed.fulfill() }; newRelease.signal()
+    await fulfillment(of: [installed], timeout: 2)
+    XCTAssertEqual(controller.events.count, 1); XCTAssertEqual(commits, 1)
+    XCTAssertEqual(controller.events.first?["outcome"] as? String, "installed")
+    XCTAssertEqual(controller.policy.attempts, 1)
+  }
+
+  @MainActor func testRecoveryLandingDeadlineOnlyCurrentOperationCanFail() async throws {
+    for action in ["rebind", "success", "failure", "seek-success", "seek-timeout", "replacement", "stop", "deactivate", "dispose", "pause"] {
+      let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 320, height: 180)
+      var deadlines: [(Double, () -> Void)] = [], failures: [NativePlayerError] = [], reboundFailures: [NativePlayerError] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged", "network": ["readTimeoutMs": 1234]]),
+        player: player, makeVideoOutput: { _ in pixels }, scheduleRuntimeResumeTimeout: { deadlines.append(($0, $1)) }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error) }
+        })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      func candidate() throws -> YlPreparedHlsAsset {
+        try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:], configuration: .init(map: [:]),
+          cancellationToken: .init(), dashSnapshot: snapshot)
+      }
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+      player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+      try backend.replaceActiveDash(source: source, prepared: candidate())
+      XCTAssertEqual(deadlines.count, 1); XCTAssertEqual(deadlines[0].0, 1.234)
+      let firstCallback = try XCTUnwrap(player.seekCompletion)
+      switch action {
+      case "rebind": backend.bindCallbacks {
+        if case .failure(let error) = $0.event { reboundFailures.append(error) }
+      }
+      case "success": firstCallback(true)
+      case "failure": firstCallback(false)
+      case "seek-success", "seek-timeout": try backend.seek(toMs: 20_000)
+      case "replacement": try backend.replaceActiveDash(source: source, prepared: candidate())
+      case "stop": backend.stop()
+      case "deactivate": backend.deactivate()
+      case "dispose": backend.dispose()
+      default: try backend.pause()
+      }
+      let drained = expectation(description: "intent " + action)
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      deadlines[0].1()
+      if action == "rebind" {
+        XCTAssertEqual(deadlines.count, 1, "Rebinding cannot extend the original deadline")
+        XCTAssertEqual(reboundFailures.map(\.code), ["source.seek_failed"])
+        XCTAssertTrue(failures.isEmpty, "Retired subscribers do not receive the current failure")
+        deadlines[0].1(); XCTAssertEqual(reboundFailures.count, 1)
+      }
+      XCTAssertEqual(failures.count, ["failure", "pause"].contains(action) ? 1 : 0, action)
+      if action.hasPrefix("seek-") || action == "replacement" {
+        XCTAssertEqual(deadlines.count, 2); XCTAssertEqual(deadlines[1].0, 1.234)
+        XCTAssertTrue(backend.diagnosticResumeSeekPending)
+        XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+        if action == "seek-success" {
+          player.measuredTime = try XCTUnwrap(player.requestedSeek)
+          try XCTUnwrap(player.seekCompletion)(true)
+          let landed = expectation(description: "latest landing")
+          DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+        }
+        deadlines[1].1()
+        XCTAssertEqual(failures.count, action == "seek-success" ? 0 : 1)
+      }
+      for deadline in deadlines { deadline.1() }
+      let shouldFail = ["failure", "pause", "seek-timeout", "replacement"].contains(action)
+      XCTAssertEqual(failures.map(\.code), shouldFail ? ["source.seek_failed"] : [], action)
+      if ["pause", "seek-timeout", "replacement"].contains(action) {
+        XCTAssertEqual(failures.first?.diagnostic, "AVPlayer(phase=resumeSeek, timeoutMs=1234)")
+      }
+      if action == "success" || action == "seek-success" {
+        XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      } else {
+        XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      }
+      XCTAssertFalse(backend.diagnosticResumeSeekPending)
+    }
+  }
+
+  @MainActor func testRecoveryDeadlineUsesExistingConfigurationAndLeavesOrdinarySeekUnchanged() async throws {
+    for configured in [0, 250, 15_000, 120_000] {
+      let player = DashCatalogClockPlayer()
+      var deadlines: [Double] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged", "network": ["readTimeoutMs": configured]]),
+        player: player, scheduleRuntimeResumeTimeout: { delay, _ in deadlines.append(delay) }, emit: { _ in })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+      try backend.seek(toMs: 12_000)
+      XCTAssertTrue(deadlines.isEmpty, "Ordinary public seek gains no new deadline")
+      let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:],
+        configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+      try backend.replaceActiveDash(source: source, prepared: replacement)
+      XCTAssertEqual(deadlines, [Double(min(configured, 60_000)) / 1000])
+    }
+  }
+
+  @MainActor func testMissingRecoveryLandingCallbackFailsWithinConfiguredReadTimeout() async throws {
+    for scenario in ["paused", "playing", "seek-paused", "seek-playing"] {
+      let publicSeek = scenario.hasPrefix("seek-")
+      let player = DashCatalogClockPlayer(), pixels = DashPixelOutput(width: 320, height: 180)
+      var failures: [NativePlayerError] = [], states: [YlNativeState] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: AppleTestTexture(), makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged", "network": ["readTimeoutMs": 100]]),
+        player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error) }
+          if case .state(let state) = $0.event { states.append(state) }
+        })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false); try backend.activate()
+      if scenario.hasSuffix("playing") { try backend.play() }
+      player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+      let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:],
+        configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+      try backend.replaceActiveDash(source: source, prepared: replacement)
+      if publicSeek { try backend.seek(toMs: 20_000) }
+      let withheld = try XCTUnwrap(player.seekCompletion)
+      XCTAssertTrue(backend.diagnosticResumeSeekPending)
+      try await Task.sleep(nanoseconds: 350_000_000)
+      XCTAssertEqual(failures.map(\.code), ["source.seek_failed"], "A paused missing callback must not wait indefinitely")
+      XCTAssertEqual(states.last?.status, "error")
+      XCTAssertFalse(backend.diagnosticResumeSeekPending)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      withheld(true)
+      let drained = expectation(description: "late callback after timeout")
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertEqual(failures.count, 1)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "Late success cannot revive expired output")
+    }
+  }
+
+  @MainActor func testAutomaticReplacementFailedLandingCannotPublishWrongTimeline() async throws {
+    for publicSeek in [false, true] {
+      let player = DashCatalogClockPlayer(), output = AppleTestTexture(), pixels = DashPixelOutput(width: 320, height: 180)
+      var failures: [NativePlayerError] = [], states: [YlNativeState] = []
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { _ in AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: {
+          if case .failure(let error) = $0.event { failures.append(error) }
+          if case .state(let state) = $0.event { states.append(state) }
+        })
+      defer { backend.dispose() }
+      let data = mpd, source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false)
+      try backend.activate()
+      player.measuredTime = CMTime(seconds: 12, preferredTimescale: 1000)
+      player.resetClockOnReplacement = true
+      let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true, headers: [:],
+        configuration: .init(map: [:]), cancellationToken: .init(), dashSnapshot: snapshot)
+      try backend.replaceActiveDash(source: source, prepared: replacement)
+      if publicSeek { try backend.seek(toMs: 20_000) }
+      XCTAssertEqual(CMTimeGetSeconds(try XCTUnwrap(player.requestedSeek)), publicSeek ? 20 : 12)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+      let failedLanding = try XCTUnwrap(player.seekCompletion)
+      failedLanding(false)
+      let drained = expectation(description: "failed landing delivered")
+      DispatchQueue.main.async { drained.fulfill() }; await fulfillment(of: [drained], timeout: 1)
+      XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "A failed recovery landing cannot open output at the new item's zero position")
+      XCTAssertEqual(failures.map(\.code), ["source.seek_failed"])
+      XCTAssertEqual(states.last?.status, "error")
+      failedLanding(false)
+      let duplicate = expectation(description: "duplicate drained")
+      DispatchQueue.main.async { duplicate.fulfill() }; await fulfillment(of: [duplicate], timeout: 1)
+      XCTAssertEqual(failures.count, 1, "Only the current landing can terminate once")
+    }
+  }
+
+  @MainActor func testAutomaticUserSeekBlocksOldFramesUntilLatestLanding() async throws {
+    let player = DashCatalogClockPlayer(), output = AppleTestTexture(), pixels = DashPixelOutput(width: 320, height: 180)
+    var tick: (() -> Void)?
+    let backend = YlAvPlayerBackend(playerId: 99,
+      services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), player: player, makeVideoOutput: { _ in pixels }, emit: { _ in })
+    defer { backend.dispose() }
+    let data = mpd
+    try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash),
+      prepared: prepare(DashLoaderProtocol.configuration { $0.respond(data) }), resume: false)
+    try backend.activate(); try backend.play(); tick?()
+    let count = output.frames.count
+    XCTAssertGreaterThan(count, 0)
+    try backend.seek(toMs: 1000)
+    let first = try XCTUnwrap(player.seekCompletion)
+    tick?(); XCTAssertEqual(output.frames.count, count, "Automatic selection cannot publish the old timeline while seek is pending")
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
+    try backend.seek(toMs: 2000)
+    let latest = try XCTUnwrap(player.seekCompletion)
+    first(true)
+    let staleDrained = expectation(description: "stale callback drained")
+    DispatchQueue.main.async { staleDrained.fulfill() }; await fulfillment(of: [staleDrained], timeout: 1)
+    XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue(), "An older seek callback cannot reopen publication")
+    player.measuredTime = CMTime(seconds: 2, preferredTimescale: 1000); pixels.measuredItemTime = player.measuredTime
+    latest(true)
+    let landed = expectation(description: "latest callback drained")
+    DispatchQueue.main.async { landed.fulfill() }; await fulfillment(of: [landed], timeout: 1)
+    tick?(); XCTAssertEqual(output.frames.count, count + 1)
+  }
+
+  @MainActor
+  func testSameSessionAutomaticReplacementRetainsFrameOnlyWithoutChangedIntent() async throws {
+    // A same-URI new load is not the same session. A seek or quality change
+    // must not keep a frame from the old timeline/policy visible.
+    for mode in ["same", "new-session", "uri", "manifest", "caps", "fixed", "seek", "pause"] {
+      let player = DashCatalogClockPlayer(), output = AppleTestTexture()
+      let pixels = DashPixelOutput(width: 320, height: 180)
+      var tick: (() -> Void)?
+      let backend = YlAvPlayerBackend(playerId: 99,
+        services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), player: player,
+        makeVideoOutput: { _ in pixels }, emit: { _ in })
+      defer { backend.dispose() }
+      let source = YlAppleSourceDescriptor(uri: origin.absoluteString, kind: .network, formatHint: .dash)
+      let data = mpd
+      let original = try prepare(DashLoaderProtocol.configuration { $0.respond(data) })
+      let snapshot = try XCTUnwrap(original.loader.dashSnapshot)
+      try backend.stagePreparedHls(source: source, prepared: original, resume: false)
+      try backend.activate(); try backend.play()
+      tick?()
+      XCTAssertFalse(output.frames.isEmpty, mode)
+      player.measuredTime = CMTime(value: 1_000_500, timescale: 1_000_000)
+      var replacementSource = source
+      if mode == "new-session" { replacementSource.managedRequestIntent = .init() }
+      if mode == "uri" { replacementSource.uri = "https://origin.test/other.mpd" }
+      if mode == "seek" { try backend.seek(toMs: 2_000) }
+      if mode == "pause" { try backend.pause() }
+      let changed = YlDashManifestSnapshot(data: data + Data([10]), effectiveURL: snapshot.effectiveURL,
+        credentialsStripped: snapshot.credentialsStripped)
+      let replacement = try YlPreparedHlsAsset(originURL: origin, isDash: true,
+        videoConstraints: mode == "caps" ? .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil) : .unconstrained,
+        fixedTrackId: mode == "fixed" ? "dash-video-w320-h180-b1000" : nil,
+        headers: [:], configuration: .init(map: [:]), cancellationToken: .init(),
+        dashSnapshot: mode == "manifest" ? changed : snapshot)
+      let clears = output.clears, frames = output.frames.count, oldItem = player.currentItem
+      try backend.replaceActiveDash(source: replacementSource, prepared: replacement,
+        selection: mode == "fixed" ? .init(fixedTrackId: "dash-video-w320-h180-b1000", reason: "user") : nil)
+      XCTAssertFalse(player.currentItem === oldItem, mode)
+      XCTAssertEqual(output.clears - clears, mode == "same" ? 0 : 1, mode)
+      tick?()
+      XCTAssertEqual(output.frames.count, frames, "Retaining a frame cannot publish before seek landing: \(mode)")
+      backend.stop()
+      XCTAssertGreaterThan(output.clears, clears, "Stop always clears retained output: \(mode)")
+    }
   }
 
   @MainActor
@@ -1617,6 +3935,181 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  func testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, ["X-Yl-Request-Id": "19"], Data([1, 2])) }
+    let entered = expectation(description: "terminal observer entered")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    YlHlsMediaProxy.diagnosticRequestObserver = { _ in
+      entered.fulfill(); _ = release.wait(timeout: .now() + 4)
+    }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let done = expectation(description: "downstream finished")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, _ in done.fulfill() }.resume()
+    wait(for: [entered], timeout: 3)
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 1)
+    let capture = try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture)
+    capture.stop()
+    XCTAssertNil(capture.makeTrace(proxyID: "stopped", requestID: 99))
+    proxy.cancelAll()
+    XCTAssertFalse(capture.wait(timeout: 0.01), "Sealed is not the same as delivered")
+    release.signal()
+    XCTAssertTrue(capture.wait(timeout: 2))
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 0)
+    wait(for: [done], timeout: 3)
+  }
+
+  func testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let entered = expectation(description: "upstream entered")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    server.handler = { _ in
+      entered.fulfill(); _ = release.wait(timeout: .now() + 4)
+      return (200, ["X-Yl-Request-Id": "18"], Data([1, 2]))
+    }
+    let capturedLock = NSLock(); var captured: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in capturedLock.withLock { captured.append(row) } }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let done = expectation(description: "cancelled downstream")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, error in
+      XCTAssertNotNil(error); done.fulfill()
+    }.resume()
+    wait(for: [entered], timeout: 3)
+    proxy.cancelAll(); release.signal()
+    wait(for: [done], timeout: 3)
+    let rows = capturedLock.withLock { captured }
+    XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows.first?["outcome"] as? Double, 1)
+    XCTAssertNil(rows.first?["response"])
+    XCTAssertNil(rows.first?["upstreamComplete"])
+  }
+
+  func testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion() {
+    var rows: [[String: Any]] = []
+    let trace = YlHlsProxyRequestTrace(proxyID: "test-proxy", requestID: 1) { rows.append($0) }
+    trace.response(status: 200, serverID: -1)
+    trace.body(bytes: 8)
+    let start = trace.enqueue()
+    trace.finish(outcome: 1)
+    trace.sent(started: start, bytes: 8, failed: false)
+    trace.point("upstreamComplete")
+    trace.finish(outcome: 0)
+    XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows[0]["outcome"] as? Double, 1)
+    XCTAssertEqual(rows[0]["sendCount"] as? Double, 1)
+    XCTAssertEqual(rows[0]["sendCompletions"] as? Double, 0)
+    XCTAssertNil(rows[0]["serverRequestID"])
+    XCTAssertNil(rows[0]["upstreamComplete"])
+    XCTAssertEqual(rows[0]["sentBodyBytes"] as? Double, 0)
+  }
+
+  func testProxyTransactionDurationPreservesUnavailableAndInvalidDates() {
+    let start = Date(timeIntervalSince1970: 100)
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: nil, to: start))
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: nil))
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: start.addingTimeInterval(-1)))
+    XCTAssertNil(YlHlsProxyRequestTrace.interval(from: start, to: Date(timeIntervalSince1970: .infinity)))
+    XCTAssertEqual(YlHlsProxyRequestTrace.interval(from: start, to: start), 0)
+    XCTAssertEqual(YlHlsProxyRequestTrace.interval(from: start, to: start.addingTimeInterval(2)), 2)
+  }
+
+  func testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, ["X-Yl-Request-Id": "17"], Data([1, 2, 3, 4])) }
+    let boundary = expectation(description: "one request boundary")
+    let capturedLock = NSLock()
+    var captured: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in
+      capturedLock.withLock { captured.append(row) }; boundary.fulfill()
+    }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/private?token=secret"),
+      headers: ["Authorization": "secret"], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let bodyDone = expectation(description: "proxied body")
+    // Keep the downstream connection alive until proxy EOF. URLSession may
+    // close as soon as Content-Length bytes arrive, before upstream completion.
+    let url = try proxy.proxyURL(for: server.url("/private?token=secret"))
+    let client = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
+    defer { client.cancel() }
+    let ready = expectation(description: "downstream ready")
+    client.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+    client.start(queue: DispatchQueue(label: "proxy.metrics.test.client"))
+    wait(for: [ready], timeout: 2)
+    var payload = Data()
+    func receive() {
+      client.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, complete, error in
+        XCTAssertNil(error)
+        if let data { payload.append(data) }
+        if complete || error != nil {
+          XCTAssertEqual(Data(payload.suffix(4)), Data([1, 2, 3, 4])); bodyDone.fulfill()
+        } else { receive() }
+      }
+    }
+    receive()
+    client.send(content: Data("GET \(url.path) HTTP/1.1\r\nHost: owned\r\n\r\n".utf8),
+      completion: .contentProcessed { XCTAssertNil($0) })
+    wait(for: [bodyDone, boundary], timeout: 4)
+    let rows = capturedLock.withLock { captured }
+    XCTAssertEqual(rows.count, 1)
+    guard let row = rows.first else { return }
+    XCTAssertEqual(row["serverRequestID"] as? Double, 17)
+    XCTAssertEqual(row["bodyBytes"] as? Double, 4)
+    XCTAssertEqual(row["sentBodyBytes"] as? Double, 4)
+    XCTAssertEqual(row["outcome"] as? Double, 0)
+    let metrics = try XCTUnwrap(row["metrics"] as? [String: Any])
+    let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
+    XCTAssertEqual(transactions.count, 1)
+    XCTAssertEqual(metrics["transactionCount"] as? Int, 1)
+    XCTAssertNotNil(transactions.first?["responseSeconds"] as? Double)
+    for (before, after) in [("admission", "response"), ("response", "firstBody"),
+      ("firstBody", "lastBody"), ("lastBody", "upstreamComplete"),
+      ("lastSendComplete", "terminal"), ("upstreamComplete", "terminal")] {
+      XCTAssertLessThanOrEqual(try XCTUnwrap(row[before] as? Double), try XCTUnwrap(row[after] as? Double))
+    }
+    let serialized = String(decoding: try JSONSerialization.data(withJSONObject: row), as: UTF8.self)
+    for secret in ["secret", "private", "Authorization", "http:"] { XCTAssertFalse(serialized.contains(secret)) }
+    proxy.cancelAll()
+    XCTAssertEqual(capturedLock.withLock { captured.count }, 1)
+  }
+
+  func testProxyBoundarySnapshotTracksRealRequestAndCancellationWithoutResourceIdentity() throws {
+    let server = try DashHTTPServer()
+    defer { server.close() }
+    server.handler = { _ in (200, [:], Data([1, 2, 3, 4])) }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/private?token=secret"),
+      headers: ["Authorization": "secret"], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    XCTAssertEqual(proxy.diagnosticSnapshot["admittedRequests"], 0)
+    let done = expectation(description: "real proxied bytes")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/private?token=secret"))) { body, _, error in
+      XCTAssertNil(error); XCTAssertEqual(body, Data([1, 2, 3, 4])); done.fulfill()
+    }.resume()
+    wait(for: [done], timeout: 4)
+    let deadline = Date().addingTimeInterval(2)
+    while (proxy.diagnosticSnapshot["activeTasks"] != 0 || proxy.diagnosticSnapshot["upstreamCompletions"] != 1) && Date() < deadline {
+      RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+    }
+    let snapshot = proxy.diagnosticSnapshot
+    XCTAssertEqual(snapshot["acceptedConnections"], 1)
+    XCTAssertEqual(snapshot["admittedRequests"], 1)
+    XCTAssertEqual(snapshot["upstreamCompletions"], 1)
+    XCTAssertEqual(snapshot["receivedBodyBytes"], 4)
+    XCTAssertEqual(snapshot["activeTasks"], 0)
+    XCTAssertEqual(snapshot["pendingSends"], 0)
+    XCTAssertGreaterThan(snapshot["lastAdmissionUptime"] ?? 0, 0)
+    XCTAssertTrue(snapshot.keys.allSatisfy { !$0.contains("secret") && !$0.contains("private") })
+    proxy.cancelAll()
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeConnections"], 0)
+    XCTAssertEqual(proxy.diagnosticSnapshot["cancelled"], 1)
+    XCTAssertEqual(proxy.diagnosticSnapshot["admittedRequests"], 1)
+  }
+
   func testProxyCancellationCannotInvalidateSessionDuringTaskAdmission() throws {
     let entered = expectation(description: "proxy reached URLSession task creation")
     let session = AdmissionRecordingSession(entered: entered)
@@ -1822,6 +4315,238 @@ final class YlDashResourceLoaderTests: XCTestCase {
     while loader != nil && Date() < deadline { RunLoop.current.run(until: Date().addingTimeInterval(0.01)) }
     XCTAssertNil(loader)
     XCTAssertNoThrow(try ledger.makeScope(maxBytes: 1024))
+  }
+
+  @MainActor func testPublicLoadCredentialHistorySurvivesRollbackAndResetsOnlyOnCommit() async throws {
+    let server = try DashHTTPServer(), other = try DashHTTPServer(), data = mpd
+    defer { server.close(); other.close() }
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200,[:],data) }
+      if request.path == "/bad.mpd" { return (200,[:],Data("<MPD type=\"dynamic\"/>".utf8)) }
+      if request.path == "/seg-1.m4s" && request.headers["range"] == "bytes=1-2" { return (302,["Location":other.url("/hop").absoluteString],Data()) }
+      return (200,[:],Data([1,2,3]))
+    }
+    other.handler = { _ in (302,["Location":server.url("/returned").absoluteString],Data()) }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    func request(_ id:String,_ token:String,_ path:String = "/movie.mpd") -> AppleLoadRequest {
+      var request = AppleHostFixture.request(id,url:server.url(path).absoluteString,format:.dash)
+      request.source.request = .init(headers:["X-Client":"ordinary"],credentials:["Authorization":token,"Cookie":token,"X-Session":token])
+      return request
+    }
+    func loader() throws -> YlHlsResourceLoader {
+      try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    }
+    func segment(_ loader:YlHlsResourceLoader) throws -> URL {
+      let root = read(loader,try loader.encodedAssetURL())
+      let video = read(loader,try child(root.received))
+      return try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("http:") }.flatMap { URL(string:String($0)) })
+    }
+    func fetch(_ url:URL) async throws -> URLResponse {
+      // Distinguish the controlled redirect from AVPlayer's own read-ahead.
+      var request = URLRequest(url:url); request.setValue("bytes=1-2",forHTTPHeaderField:"Range")
+      return try await URLSession.shared.data(for:request).1
+    }
+    let first = try await fixture.host.load(request:request("first","first-fixture"))
+    let oldItem = try XCTUnwrap(fixture.av.currentItem), oldLoader = try loader()
+    let oldURL = try segment(oldLoader)
+    let response = try await fetch(oldURL)
+    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,200)
+    XCTAssertTrue(oldLoader.credentialContext.isStripped(server.url("/seg-1.m4s").absoluteString))
+    let oldRevision = oldLoader.credentialContext.revision
+    do { _ = try await fixture.host.load(request:request("failed","failed-fixture","/bad.mpd")); XCTFail("Malformed candidate committed") }
+    catch let error as PigeonError { XCTAssertEqual(error.code,"container.dash_dynamic_unsupported") }
+    XCTAssertEqual(fixture.host.sessionId,first.sessionId); XCTAssertTrue(fixture.av.currentItem === oldItem)
+    XCTAssertTrue(try loader() === oldLoader)
+    _ = try await fetch(oldURL)
+    let afterRollback = try XCTUnwrap(server.requests.last { $0.path == "/seg-1.m4s" && $0.headers["range"] == "bytes=1-2" })
+    XCTAssertNil(afterRollback.headers["authorization"]); XCTAssertNil(afterRollback.headers["cookie"])
+    XCTAssertNil(afterRollback.headers["x-session"]); XCTAssertEqual(afterRollback.headers["x-client"],"ordinary")
+    let second = try await fixture.host.load(request:request("second","second-fixture"))
+    let newLoader = try loader()
+    XCTAssertNotEqual(first.sessionId,second.sessionId)
+    XCTAssertFalse(newLoader.credentialContext === oldLoader.credentialContext)
+    XCTAssertEqual(newLoader.credentialContext.revision,0)
+    _ = try await fetch(segment(newLoader))
+    let afterCommit = try XCTUnwrap(server.requests.last { $0.path == "/seg-1.m4s" && $0.headers["range"] == "bytes=1-2" })
+    XCTAssertEqual(afterCommit.headers["authorization"],"second-fixture")
+    XCTAssertEqual(afterCommit.headers["cookie"],"second-fixture"); XCTAssertEqual(afterCommit.headers["x-session"],"second-fixture")
+    XCTAssertEqual(oldLoader.credentialContext.revision,oldRevision)
+    XCTAssertEqual(oldLoader.diagnosticProxySnapshot["cancelled"],1)
+    for r in other.requests + server.requests.filter({ $0.path == "/returned" }) {
+      XCTAssertNil(r.headers["authorization"]); XCTAssertNil(r.headers["cookie"]); XCTAssertNil(r.headers["x-session"])
+    }
+  }
+
+  @MainActor func testCommittedMediaFailureRetainsCredentialHistoryThroughRestorationAndFreshLoad() async throws {
+    let server = try DashHTTPServer(), other = try DashHTTPServer(), data = mpd
+    defer { server.close(); other.close() }
+    server.handler = { request in
+      if request.path == "/movie.mpd" { return (200,["Content-Type":"application/dash+xml"],data) }
+      if request.path == "/init.mp4" { return (302,["Location":other.url("/hop").absoluteString],Data()) }
+      return (410,["Content-Type":"video/mp4"],Data())
+    }
+    other.handler = { _ in (302,["Location":server.url("/gone.mp4").absoluteString],Data()) }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    try fixture.host.attach()
+    func request(_ id:String,_ secret:String) -> AppleLoadRequest {
+      var value = AppleHostFixture.request(id,url:server.url("/movie.mpd").absoluteString,format:.dash)
+      value.source.request = .init(headers:["X-Client":"ordinary","X-Fixture-Load":id],credentials:["Authorization":secret,"Cookie":secret,"X-Session":secret])
+      return value
+    }
+    func loader() throws -> YlHlsResourceLoader {
+      try XCTUnwrap((fixture.av.currentItem?.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    }
+    func initURL(_ loader:YlHlsResourceLoader) throws -> URL {
+      let root = read(loader,try loader.encodedAssetURL()), video = read(loader,try child(root.received))
+      let line = try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("#EXT-X-MAP:") })
+      return try XCTUnwrap(line.split(separator:"\"").dropFirst().first.flatMap { URL(string:String($0)) })
+    }
+    // A successful Load reply acknowledges installation, not asynchronous media readiness.
+    let accepted = try await fixture.host.load(request:request("failing","first-fixture"))
+    let failedItem = try XCTUnwrap(fixture.av.currentItem), failedLoader = try loader()
+    try await AppleHostCharacterizations.waitFor({ failedItem.status == .failed && fixture.callbacks.failures.contains { $0.sessionId == accepted.sessionId } },timeout:5)
+    XCTAssertEqual(fixture.host.sessionId,accepted.sessionId)
+    XCTAssertTrue(fixture.av.currentItem === failedItem)
+    XCTAssertTrue(failedLoader.credentialContext.isStripped(server.url("/init.mp4").absoluteString))
+    let failure = try XCTUnwrap(fixture.callbacks.failures.first { $0.sessionId == accepted.sessionId })
+    XCTAssertEqual(failure.sessionId,accepted.sessionId)
+    let revision = failedLoader.credentialContext.revision
+    fixture.host.suspend(); fixture.host.resume()
+    try await AppleHostCharacterizations.waitFor { fixture.av.currentItem != nil && fixture.av.currentItem !== failedItem }
+    let restored = try loader()
+    XCTAssertEqual(fixture.host.sessionId,accepted.sessionId)
+    XCTAssertTrue(restored.credentialContext === failedLoader.credentialContext)
+    // Distinguish this evidence request from AVPlayer read-ahead and retries.
+    var probe = URLRequest(url:try initURL(restored)); probe.setValue("bytes=1-2",forHTTPHeaderField:"Range")
+    let (_,response) = try await URLSession.shared.data(for:probe)
+    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,410)
+    let retried = try XCTUnwrap(server.requests.last { $0.path == "/init.mp4" && $0.headers["range"] == "bytes=1-2" })
+    for key in ["authorization","cookie","x-session"] { XCTAssertNil(retried.headers[key]) }
+    XCTAssertEqual(retried.headers["x-client"],"ordinary")
+    XCTAssertEqual(restored.credentialContext.revision,revision)
+    let fresh = try await fixture.host.load(request:request("fresh","second-fixture"))
+    let freshLoader = try loader()
+    XCTAssertNotEqual(fresh.sessionId,accepted.sessionId)
+    XCTAssertFalse(freshLoader.credentialContext === failedLoader.credentialContext)
+    try await AppleHostCharacterizations.waitFor { server.requests.contains { $0.path == "/init.mp4" && $0.headers["authorization"] == "second-fixture" } }
+    let sent = try XCTUnwrap(server.requests.first { $0.path == "/init.mp4" && $0.headers["authorization"] == "second-fixture" })
+    XCTAssertEqual(sent.headers["cookie"],"second-fixture"); XCTAssertEqual(sent.headers["x-session"],"second-fixture")
+    // Complete this loader's init chain even if AVPlayer cancels read-ahead
+    // after another media request fails. The loader remains owned by this Load.
+    var freshProbe = URLRequest(url:try initURL(freshLoader)); freshProbe.setValue("bytes=2-3",forHTTPHeaderField:"Range")
+    let (_,freshResponse) = try await URLSession.shared.data(for:freshProbe)
+    XCTAssertEqual((freshResponse as? HTTPURLResponse)?.statusCode,410)
+    try await AppleHostCharacterizations.waitFor({ server.requests.contains { $0.path == "/gone.mp4" && $0.headers["x-fixture-load"] == "fresh" } },timeout:5)
+    for marker in ["failing","fresh"] {
+      XCTAssertTrue(other.requests.contains { $0.path == "/hop" && $0.headers["x-fixture-load"] == marker })
+      XCTAssertTrue(server.requests.contains { $0.path == "/gone.mp4" && $0.headers["x-fixture-load"] == marker })
+    }
+    XCTAssertThrowsError(try fixture.host.pause(command:.init(sessionId:accepted.sessionId)))
+    XCTAssertEqual(failedLoader.diagnosticProxySnapshot["cancelled"],1)
+    XCTAssertEqual(restored.diagnosticProxySnapshot["cancelled"],1)
+    XCTAssertEqual(failedLoader.credentialContext.revision,revision)
+    for r in other.requests + server.requests.filter({ $0.path == "/gone.mp4" }) {
+      for key in ["authorization","cookie","x-session"] { XCTAssertNil(r.headers[key]) }
+    }
+  }
+
+  @MainActor func testHeldBodyServerHandlesSplitHeadersAndContinuesUntilPeerEOF() async throws {
+    let server = try DashHeldBodyServer(manifest:mpd,body:Data(repeating:1,count:128),redirect:URL(string:"http://127.0.0.1:1/revoke")!)
+    defer { server.close() }
+    let connection = NWConnection(host:"127.0.0.1",port:NWEndpoint.Port(rawValue:UInt16(server.url("/").port!))!,using:.tcp)
+    defer { connection.cancel() }
+    let ready = expectation(description:"client ready"), received = expectation(description:"partial response")
+    let headerComplete = AbrPrerollCompletion()
+    connection.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+    connection.start(queue:DispatchQueue.global()); await fulfillment(of:[ready],timeout:2)
+    connection.receive(minimumIncompleteLength:1,maximumLength:4096) { data,_,_,error in
+      XCTAssertNil(error); XCTAssertNotNil(data)
+      XCTAssertEqual(headerComplete.result,true,"Server must not dispatch an incomplete request header")
+      received.fulfill()
+    }
+    connection.send(content:Data("GET /ini".utf8),completion:.contentProcessed { _ in })
+    try await Task.sleep(nanoseconds:100_000_000)
+    headerComplete.finish(true)
+    connection.send(content:Data("t.mp4 HTTP/1.1\r\nHost: owned\r\nX-Fixture-Hold: 1\r\n\r\n".utf8),completion:.contentProcessed { _ in })
+    await fulfillment(of:[received],timeout:2)
+    connection.send(content:Data("trailing-client-bytes".utf8),completion:.contentProcessed { _ in })
+    try await Task.sleep(nanoseconds:100_000_000)
+    connection.cancel()
+    try await AppleHostCharacterizations.waitFor({ server.peerClosed==1 },timeout:2)
+    XCTAssertEqual(server.heldCount,1)
+  }
+
+  @MainActor func testSameDashCandidateRevocationCancelsPartiallyReceivedUpstream() async throws {
+    let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
+    let app = try XCTUnwrap(Bundle(url:frameworks.appendingPathComponent("App.framework")))
+    let media = try XCTUnwrap(app.resourceURL).appendingPathComponent("flutter_assets/assets/test_media/dash_timeline/avc/init-0.m4s")
+    let other = try DashHTTPServer(); other.handler = { _ in (200,[:],Data([1,2,3])) }
+    let segmentBytes = try Data(contentsOf:media.deletingLastPathComponent().appendingPathComponent("chunk-0-00001.m4s"))
+    let initBytes = try Data(contentsOf:media)
+    let server = try DashHeldBodyServer(manifest:mpd,body:initBytes,redirect:other.url("/revoked"),
+      normalBodies:["/init.mp4":initBytes,"/seg-1.m4s":segmentBytes,"/seg-2.m4s":segmentBytes])
+    defer { server.close(); other.close() }
+    let fixture = AppleHostFixture(); defer { fixture.host.close() }
+    var request = AppleHostFixture.request("committed",url:server.url("/movie.mpd").absoluteString,format:.dash)
+    request.source.request = .init(headers:[:],credentials:["Authorization":"fixture"])
+    let accepted = try await fixture.host.load(request:request)
+    let acceptedItem = try XCTUnwrap(fixture.av.currentItem)
+    let active = try XCTUnwrap((acceptedItem.asset as? AVURLAsset)?.resourceLoader.delegate as? YlHlsResourceLoader)
+    let context = active.credentialContext
+    // Fixture-only header stalls candidate traffic, never the committed item's traffic.
+    let candidate = try AbrDiagnosticCandidatePreparation.prepareReplacement(originURL:server.url("/movie.mpd"),headers:["X-Fixture-Hold":"1"],credentials:["Authorization":"fixture"],credentialContext:context)
+    defer { candidate.discard() }
+    let control = try YlHlsMediaProxy(originURL:server.url("/movie.mpd"),headers:[:],credentials:["Authorization":"fixture"],configuration:.init(map:[:]),credentialContext:context)
+    defer { control.cancelAll() }
+    var policy = AbrDiagnosticRecoveryPolicy()
+    func sample(_ time:Double,width:Int = 320) -> AbrDiagnosticRecoveryPolicy.Sample {
+      .init(time:time,generation:0,allowed:true,width:width,position:time,remaining:120-time,bufferAhead:10,
+        bytes:Int64(time*200_000),transfer:time,requests:Int(time*4),overdue:1,credentialRevision:context.revision)
+    }
+    for (t,w) in [(0.0,640),(1.0,320),(9.0,320),(17.0,320)] { _ = policy.observe(sample(t,width:w)) }
+    let ticket = try XCTUnwrap(policy.observe(sample(17.5))), epoch = ProcessInfo.processInfo.systemUptime
+    var observedPartial = false, redirected = false, cleanup = 0
+    let revoke = Task { @MainActor in
+      do {
+        try await AppleHostCharacterizations.waitFor({
+          candidate.loader.diagnosticProxySnapshot["receivedBodyBytes",default:0]>0 &&
+          candidate.loader.diagnosticProxySnapshot["activeTasks",default:0]>0
+        },timeout:1.5)
+        let beforeRevoke = candidate.loader.diagnosticProxySnapshot
+        observedPartial = beforeRevoke["receivedBodyBytes",default:0]>0 && beforeRevoke["activeTasks",default:0]>0
+        let evidence = try JSONSerialization.data(withJSONObject:beforeRevoke,options:[.sortedKeys])
+        let attachment = XCTAttachment(data:evidence,uniformTypeIdentifier:"public.json")
+        attachment.name = "candidate-before-revocation"; attachment.lifetime = .keepAlways
+        XCTContext.runActivity(named:"Actual candidate transfer before revocation") { $0.add(attachment) }
+        guard observedPartial else { return }
+        let (_,response) = try await URLSession.shared.data(from:control.proxyURL(for:server.url("/revoke")))
+        redirected = (response as? HTTPURLResponse)?.statusCode == 200
+      } catch { XCTFail("Owned candidate did not reach partial upstream transfer and redirect") }
+    }
+    defer { revoke.cancel() }
+    let result = await AbrDiagnosticPreroll.prepare(candidate.asset,position:.zero,deadlineUptime:epoch+2,
+      allowed:{ policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)) },
+      cancelPending:{ cleanup += 1; candidate.discard() })
+    await revoke.value
+    XCTAssertTrue(observedPartial); XCTAssertTrue(redirected)
+    XCTAssertEqual(result.outcome,"cancelled"); XCTAssertTrue(result.detached); XCTAssertNil(result.item)
+    XCTAssertEqual(cleanup,1); XCTAssertEqual(policy.attempts,1)
+    try await AppleHostCharacterizations.waitFor({
+      let snap = candidate.loader.diagnosticProxySnapshot
+      return snap["activeTasks"]==0 && snap["activeConnections"]==0 && snap["pendingSends"]==0 &&
+        snap["cancelledCompletions",default:0]>0 && snap["upstreamCompletions"]==snap["admittedRequests"] &&
+        server.peerClosed>0 && server.peerClosed==server.heldCount
+    },timeout:2)
+    XCTAssertThrowsError(try candidate.takeLoader())
+    XCTAssertEqual(fixture.host.sessionId,accepted.sessionId); XCTAssertTrue(fixture.av.currentItem === acceptedItem)
+    let root = read(active,try active.encodedAssetURL()); XCTAssertNil(root.error)
+    let video = read(active,try child(root.received))
+    let segmentURL = try XCTUnwrap(String(decoding:video.received,as:UTF8.self).split(separator:"\n").first { $0.hasPrefix("http:") }.flatMap { URL(string:String($0)) })
+    let (continued,response) = try await URLSession.shared.data(from:segmentURL)
+    XCTAssertEqual((response as? HTTPURLResponse)?.statusCode,200); XCTAssertEqual(continued,segmentBytes)
+    XCTAssertEqual(active.diagnosticProxySnapshot["cancelled"],0)
+    XCTAssertFalse(policy.authorizes(ticket,sample(17.5+ProcessInfo.processInfo.systemUptime-epoch)))
+    XCTAssertTrue(other.requests.allSatisfy { $0.headers["authorization"] == nil })
   }
 
   func testActualMPDRedirectCrossOriginReturnAndProxyRangesNeverRestoreCredentials() throws {
@@ -2163,6 +4888,7 @@ private final class ResidualRatePlayer: AVPlayer {
 
 private final class DashPixelOutput: AVPlayerItemVideoOutput, @unchecked Sendable {
   let buffer: CVPixelBuffer
+  var beforeCopy: (() -> Void)?
   var measuredItemTime = CMTime.zero
   override func itemTime(forHostTime hostTimeInSeconds: CFTimeInterval) -> CMTime { measuredItemTime }
   init(width: Int, height: Int) {
@@ -2173,7 +4899,7 @@ private final class DashPixelOutput: AVPlayerItemVideoOutput, @unchecked Sendabl
     super.init(pixelBufferAttributes: nil)
   }
   override func hasNewPixelBuffer(forItemTime itemTime: CMTime) -> Bool { true }
-  override func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { buffer }
+  override func copyPixelBuffer(forItemTime itemTime: CMTime, itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? { beforeCopy?(); return buffer }
 }
 
 // The decoder allocation boundary is controlled; source preparation, FFmpeg
@@ -3235,5 +5961,155 @@ extension YlDashSampleSourceNativeTests {
     backend.emitState()
     XCTAssertEqual(harness.states.last?.videoTracks.first(where: \.isSelected)?.bitrate, 650000)
     XCTAssertEqual(harness.states.last?.audioTracks.filter(\.isSelected).count, 1)
+  }
+}
+
+// Test-only timestamps from AVPlayerItemVideoOutput, bound to buffers actually
+// published by the backend. Player.currentTime() is not frame presentation time.
+private final class AbrPublishedFrameTimes: @unchecked Sendable {
+  private let lock = NSLock()
+  private var values: [ObjectIdentifier: (CVPixelBuffer, Double)] = [:]
+  func record(_ buffer: CVPixelBuffer, time: CMTime) {
+    lock.lock(); defer { lock.unlock() }
+    if values.count >= 64 { values.removeAll(keepingCapacity: true) }
+    let key = ObjectIdentifier(buffer)
+    let seconds = CMTimeGetSeconds(time)
+    values.removeValue(forKey: key)
+    if time.isValid && seconds.isFinite && seconds >= 0 { values[key] = (buffer, seconds) }
+  }
+  func take(_ buffer: CVPixelBuffer) -> Double? {
+    lock.lock(); defer { lock.unlock() }
+    return values.removeValue(forKey: ObjectIdentifier(buffer))?.1
+  }
+}
+
+private final class AbrTimestampVideoOutput: AVPlayerItemVideoOutput, @unchecked Sendable {
+  private let times: AbrPublishedFrameTimes
+  init(attributes: [String: Any], times: AbrPublishedFrameTimes) {
+    self.times = times
+    super.init(pixelBufferAttributes: attributes)
+  }
+  override func copyPixelBuffer(forItemTime itemTime: CMTime,
+    itemTimeForDisplay outItemTimeForDisplay: UnsafeMutablePointer<CMTime>?) -> CVPixelBuffer? {
+    var displayTime = CMTime.invalid
+    let buffer = super.copyPixelBuffer(forItemTime: itemTime, itemTimeForDisplay: &displayTime)
+    outItemTimeForDisplay?.pointee = displayTime
+    if let buffer { times.record(buffer, time: displayTime) }
+    return buffer
+  }
+}
+
+private final class DashHeldBodyServer {
+  private let listener: NWListener
+  private let lock = NSLock()
+  private var connections: [ObjectIdentifier:NWConnection] = [:]
+  private var heldConnections = Set<ObjectIdentifier>()
+  private var stopped = false, closed = 0, held = 0
+  private let manifest: Data, body: Data, redirect: URL, normalBodies: [String:Data]
+  var heldCount: Int { lock.lock(); defer { lock.unlock() }; return held }
+  var peerClosed: Int { lock.lock(); defer { lock.unlock() }; return closed }
+  func url(_ path:String) -> URL { URL(string:"http://127.0.0.1:\(listener.port!.rawValue)\(path)")! }
+  init(manifest:Data,body:Data,redirect:URL,normalBodies:[String:Data] = [:]) throws {
+    self.manifest = manifest; self.body = body; self.redirect = redirect; self.normalBodies = normalBodies
+    listener = try NWListener(using:.tcp,on:.any)
+    let ready = DispatchSemaphore(value:0)
+    listener.stateUpdateHandler = { if case .ready = $0 { ready.signal() } }
+    listener.newConnectionHandler = { [weak self] connection in
+      guard let self else { connection.cancel(); return }
+      self.lock.lock()
+      guard !self.stopped else { self.lock.unlock(); connection.cancel(); return }
+      self.connections[ObjectIdentifier(connection)] = connection
+      connection.start(queue:DispatchQueue.global())
+      self.lock.unlock()
+      self.receiveHeader(connection,buffer:Data())
+    }
+    listener.start(queue:DispatchQueue(label:"yl.test.held-body"))
+    guard ready.wait(timeout:.now()+3) == .success else { listener.cancel(); throw NSError(domain:"HeldBody",code:1) }
+  }
+  private func finish(_ connection:NWConnection,peer:Bool = false) {
+    lock.lock(); let id = ObjectIdentifier(connection)
+    connections.removeValue(forKey:id)
+    if heldConnections.remove(id) != nil && peer { closed += 1 }
+    lock.unlock(); connection.cancel()
+  }
+  private func receiveHeader(_ connection:NWConnection,buffer:Data) {
+    connection.receive(minimumIncompleteLength:1,maximumLength:4096) { [weak self] bytes,_,complete,error in
+      guard let self else { connection.cancel(); return }
+      var data = buffer; if let bytes { data.append(bytes) }
+      guard data.count<=16384 else { self.finish(connection); return }
+      if let end = data.range(of:Data([13,10,13,10])) {
+        self.respond(connection,header:String(decoding:data[..<end.upperBound],as:UTF8.self))
+      } else if complete || error != nil { self.finish(connection) }
+      else { self.receiveHeader(connection,buffer:data) }
+    }
+  }
+  private func observeEOF(_ connection:NWConnection) {
+    connection.receive(minimumIncompleteLength:1,maximumLength:1024) { [weak self] _,_,complete,error in
+      guard let self else { connection.cancel(); return }
+      if complete || error != nil { self.finish(connection,peer:true) }
+      else { self.observeEOF(connection) }
+    }
+  }
+  private func respond(_ connection:NWConnection,header:String) {
+    let lines = header.components(separatedBy:"\r\n")
+    let path = lines[0].split(separator:" ").dropFirst().first.map(String.init) ?? ""
+    var headers: [String:String] = [:]
+    for line in lines.dropFirst() {
+      if let colon = line.firstIndex(of:":") { headers[String(line[..<colon]).lowercased()] = line[line.index(after:colon)...].trimmingCharacters(in:.whitespaces) }
+    }
+    if path == "/revoke" {
+      connection.send(content:Data("HTTP/1.1 302 Found\r\nContent-Length: 0\r\nLocation: \(redirect.absoluteString)\r\nConnection: close\r\n\r\n".utf8),completion:.contentProcessed { [weak self] _ in self?.finish(connection) })
+      return
+    }
+    let payload = path == "/movie.mpd" ? manifest : (normalBodies[path] ?? body)
+    let hold = path != "/movie.mpd" && (normalBodies.isEmpty || headers["x-fixture-hold"] == "1")
+    lock.lock()
+    guard !stopped, connections[ObjectIdentifier(connection)] != nil else { lock.unlock(); connection.cancel(); return }
+    if hold { held += 1; heldConnections.insert(ObjectIdentifier(connection)) }
+    lock.unlock()
+    let contentType = path == "/movie.mpd" ? "application/dash+xml" : "video/mp4"
+    let response = "HTTP/1.1 200 OK\r\nContent-Type: \(contentType)\r\nContent-Length: \(payload.count)\r\nConnection: close\r\n\r\n"
+    if hold {
+      connection.send(content:Data(response.utf8)+payload.prefix(64),completion:.contentProcessed { _ in })
+      observeEOF(connection)
+    } else {
+      connection.send(content:Data(response.utf8)+payload,completion:.contentProcessed { [weak self] _ in self?.finish(connection) })
+    }
+  }
+  func close() {
+    lock.lock(); stopped = true; let pending = Array(connections.values); connections.removeAll(); lock.unlock()
+    listener.cancel(); pending.forEach { $0.cancel() }
+  }
+  deinit { close() }
+}
+
+private final class AbrProxyBoundaryFile: @unchecked Sendable {
+  private let lock = NSLock()
+  private var file: FileHandle?
+  private var bytes = 0
+  private var rows = 0
+  private var writeFailed = false
+  var failed: Bool { lock.withLock { writeFailed } }
+  init(_ url: URL) throws {
+    _ = FileManager.default.createFile(atPath: url.path, contents: nil)
+    file = try FileHandle(forWritingTo: url)
+  }
+  func append(_ row: [String: Any]) {
+    lock.withLock {
+      guard let file else { writeFailed = true; return }
+      do {
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])
+        guard rows < 10000, bytes + data.count <= 16 * 1024 * 1024 else {
+          writeFailed = true; return
+        }
+        try file.write(contentsOf: data); rows += 1; bytes += data.count
+      } catch { writeFailed = true }
+    }
+  }
+  func close() {
+    lock.withLock {
+      do { try file?.close() } catch { writeFailed = true }
+      file = nil
+    }
   }
 }

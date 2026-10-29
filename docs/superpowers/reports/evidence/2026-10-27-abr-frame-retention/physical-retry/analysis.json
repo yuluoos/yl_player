@@ -1,0 +1,172 @@
+[
+  {
+    "name": "baseline",
+    "passed": false,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 7567,
+      "publishedFrames": 2596,
+      "maximumPumpGapMs": 624.2922500023269,
+      "maximumPublishedFrameGapMs": 5682.190416671801,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 1.0060366249963408,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 5.549834791665489,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 19.533102416666225,
+        "width": 320,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 108.195072957,
+    "lastWidth": 320,
+    "completed": false,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto",
+    "passed": false,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 7596,
+      "publishedFrames": 1825,
+      "maximumPumpGapMs": 716.1972499961848,
+      "maximumPublishedFrameGapMs": 458.44162499997765,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.2442659166699741,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.658475291667855,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 18.65903695833549,
+        "width": 320,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 76.164625332,
+    "lastWidth": 320,
+    "completed": false,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto-repeat",
+    "passed": false,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 7670,
+      "publishedFrames": 1532,
+      "maximumPumpGapMs": 45.27991666691378,
+      "maximumPublishedFrameGapMs": 1505.3471666615224,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.22507708333432674,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.429287333332468,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 23.50858645833796,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 26.864883208334504,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 63.899974913,
+    "lastWidth": 640,
+    "completed": false,
+    "capabilityAccepted": false
+  },
+  {
+    "name": "auto-pause",
+    "passed": true,
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true,
+    "events": [],
+    "frames": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6627,
+      "publishedFrames": 2878,
+      "maximumPumpGapMs": 52.63770832971204,
+      "maximumPublishedFrameGapMs": 1608.576999999059,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "transitions": [
+      {
+        "elapsed": 0.22710599999845726,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 4.45490987499943,
+        "width": 640,
+        "generation": 0
+      },
+      {
+        "elapsed": 23.702417624997906,
+        "width": 320,
+        "generation": 0
+      },
+      {
+        "elapsed": 41.18768954166444,
+        "width": 640,
+        "generation": 0
+      }
+    ],
+    "lastPosition": 120.048775069,
+    "lastWidth": 640,
+    "completed": true,
+    "capabilityAccepted": false
+  }
+]

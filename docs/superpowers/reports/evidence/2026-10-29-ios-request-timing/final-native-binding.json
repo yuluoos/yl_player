@@ -1,0 +1,42 @@
+{
+  "sourceFilesVerified": 412,
+  "scope": {
+    "macos": {
+      "passed": 222,
+      "failed": 0,
+      "skipped": 0,
+      "classes": {
+        "YlAppleHlsIntentTests": 2,
+        "YlAppleHlsProbeTests": 4,
+        "YlApplePublicationTests": 7,
+        "YlAppleSessionTests": 14,
+        "YlAppleTypedBackendTests": 2,
+        "YlAvPlayerNonblockingMetadataTests": 1,
+        "YlDashResourceLoaderTests": 109,
+        "YlHeaderedProgressivePlaybackTests": 2,
+        "YlNetworkByteSourceTests": 44,
+        "YlNetworkRequestPolicyTests": 30,
+        "YlPlatformServicesTests": 7
+      }
+    },
+    "device": {
+      "passed": 247,
+      "failed": 0,
+      "skipped": 0,
+      "classes": {
+        "YlAppleHlsIntentTests": 2,
+        "YlAppleHlsProbeTests": 4,
+        "YlApplePublicationTests": 7,
+        "YlAppleSessionTests": 14,
+        "YlAppleTypedBackendTests": 2,
+        "YlAvPlayerNonblockingMetadataTests": 1,
+        "YlDashResourceLoaderTests": 110,
+        "YlHeaderedProgressivePlaybackTests": 2,
+        "YlLiveReconnectControllerTests": 24,
+        "YlNetworkByteSourceTests": 44,
+        "YlNetworkRequestPolicyTests": 30,
+        "YlPlatformServicesTests": 7
+      }
+    }
+  }
+}

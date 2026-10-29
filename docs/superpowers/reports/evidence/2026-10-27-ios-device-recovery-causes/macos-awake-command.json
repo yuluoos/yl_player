@@ -1,0 +1,22 @@
+[
+  "xcodebuild",
+  "test-without-building",
+  "-quiet",
+  "-workspace",
+  "packages/yl_player/example/macos/Runner.xcworkspace",
+  "-scheme",
+  "Runner",
+  "-configuration",
+  "Debug",
+  "-destination",
+  "platform=macOS,arch=arm64",
+  "-derivedDataPath",
+  "/private/tmp/yl-continuity-macos",
+  "-parallel-testing-enabled",
+  "NO",
+  "-resultBundlePath",
+  "/private/tmp/yl-device-cause/macos-contracts-awake.xcresult",
+  "-only-testing:RunnerTests/YlDashResourceLoaderTests",
+  "-only-testing:RunnerTests/YlAppleSessionTests",
+  "-only-testing:RunnerTests/YlApplePublicationTests"
+]

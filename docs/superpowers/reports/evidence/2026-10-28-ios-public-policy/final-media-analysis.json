@@ -1,0 +1,464 @@
+[
+  {
+    "name": "reviewed-original",
+    "passed": true,
+    "lastPosition": 120.02778945,
+    "completed": true,
+    "phaseObservation": {
+      "phasesVerified": [
+        "initial-auto",
+        "caps",
+        "clear-caps",
+        "fixed",
+        "restore-auto"
+      ],
+      "phases": [
+        {
+          "phase": "initial-auto",
+          "rows": 32,
+          "publishedFrames": 183,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "caps",
+          "rows": 62,
+          "publishedFrames": 373,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "clear-caps",
+          "rows": 100,
+          "publishedFrames": 601,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "fixed",
+          "rows": 77,
+          "publishedFrames": 469,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "restore-auto",
+          "rows": 204,
+          "publishedFrames": 1250,
+          "widths": [
+            320,
+            640
+          ]
+        }
+      ],
+      "sameSession": true,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "continuityAccepted": false
+    },
+    "boundaries": [
+      {
+        "generationBefore": 0,
+        "generationAfter": 1,
+        "elapsedBefore": 8.142147833335912,
+        "elapsedAfter": 8.422827750007855,
+        "publicationGapMs": 280.6799166719429,
+        "positionDeltaMs": 20.04196299999972,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 1,
+        "generationAfter": 2,
+        "elapsedBefore": 24.187878916665795,
+        "elapsedAfter": 24.788141166660353,
+        "publicationGapMs": 600.2622499945574,
+        "positionDeltaMs": 43.359253999998515,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 2,
+        "generationAfter": 3,
+        "elapsedBefore": 50.12511633333634,
+        "elapsedAfter": 50.279905749994214,
+        "publicationGapMs": 154.78941665787715,
+        "positionDeltaMs": 18.901008000000274,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 3,
+        "generationAfter": 4,
+        "elapsedBefore": 70.04450316666043,
+        "elapsedAfter": 70.35573620833748,
+        "publicationGapMs": 311.2330416770419,
+        "positionDeltaMs": 45.16078000000334,
+        "textureClears": 1
+      }
+    ],
+    "maximumPublishedFrameGapMs": 600.2622499945574,
+    "signals": []
+  },
+  {
+    "name": "reviewed-zero-latency",
+    "passed": false,
+    "lastPosition": 26.545854144,
+    "completed": false,
+    "phaseObservation": null,
+    "boundaries": [
+      {
+        "generationBefore": 0,
+        "generationAfter": 1,
+        "elapsedBefore": 8.106726250000065,
+        "elapsedAfter": 8.384186291659717,
+        "publicationGapMs": 277.4600416596513,
+        "positionDeltaMs": 21.92467099999984,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 1,
+        "generationAfter": 2,
+        "elapsedBefore": 24.229729208323988,
+        "elapsedAfter": 24.36882670833438,
+        "publicationGapMs": 139.09750001039356,
+        "positionDeltaMs": 7.0314839999987555,
+        "textureClears": 1
+      }
+    ],
+    "maximumPublishedFrameGapMs": 1981.8995416571852,
+    "signals": [
+      {
+        "applicationState": 0,
+        "elapsed": 28.282844000001205,
+        "interruption": -1,
+        "options": -1,
+        "reason": -1,
+        "signal": "willResignActive"
+      },
+      {
+        "applicationState": 2,
+        "elapsed": 28.908871291656396,
+        "interruption": -1,
+        "options": -1,
+        "reason": -1,
+        "signal": "didEnterBackground"
+      }
+    ]
+  },
+  {
+    "name": "foreground-zero-latency",
+    "passed": true,
+    "lastPosition": 120.012933014,
+    "completed": true,
+    "phaseObservation": {
+      "phasesVerified": [
+        "initial-auto",
+        "caps",
+        "clear-caps",
+        "fixed",
+        "restore-auto"
+      ],
+      "phases": [
+        {
+          "phase": "initial-auto",
+          "rows": 32,
+          "publishedFrames": 183,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "caps",
+          "rows": 62,
+          "publishedFrames": 329,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "clear-caps",
+          "rows": 100,
+          "publishedFrames": 615,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "fixed",
+          "rows": 77,
+          "publishedFrames": 472,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "restore-auto",
+          "rows": 207,
+          "publishedFrames": 1277,
+          "widths": [
+            320,
+            640
+          ]
+        }
+      ],
+      "sameSession": true,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "continuityAccepted": false
+    },
+    "boundaries": [
+      {
+        "generationBefore": 0,
+        "generationAfter": 1,
+        "elapsedBefore": 8.099948624992976,
+        "elapsedAfter": 8.358157083333936,
+        "publicationGapMs": 258.2084583409596,
+        "positionDeltaMs": 19.974147999999303,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 1,
+        "generationAfter": 2,
+        "elapsedBefore": 24.239897916660993,
+        "elapsedAfter": 24.35991291666869,
+        "publicationGapMs": 120.01500000769738,
+        "positionDeltaMs": 8.9168550000025,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 2,
+        "generationAfter": 3,
+        "elapsedBefore": 50.14324491666048,
+        "elapsedAfter": 50.278940416668775,
+        "publicationGapMs": 135.69550000829622,
+        "positionDeltaMs": 16.182948000000863,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 3,
+        "generationAfter": 4,
+        "elapsedBefore": 70.09179533332644,
+        "elapsedAfter": 70.24563933332684,
+        "publicationGapMs": 153.84400000039022,
+        "positionDeltaMs": 7.341291000003025,
+        "textureClears": 1
+      }
+    ],
+    "maximumPublishedFrameGapMs": 1964.9304166669026,
+    "signals": []
+  },
+  {
+    "name": "pause-fixed-original",
+    "passed": true,
+    "lastPosition": 120.024520068,
+    "completed": true,
+    "phaseObservation": {
+      "phasesVerified": [
+        "initial-auto",
+        "caps",
+        "clear-caps",
+        "fixed",
+        "restore-auto"
+      ],
+      "phases": [
+        {
+          "phase": "initial-auto",
+          "rows": 32,
+          "publishedFrames": 183,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "caps",
+          "rows": 62,
+          "publishedFrames": 372,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "clear-caps",
+          "rows": 100,
+          "publishedFrames": 599,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "fixed",
+          "rows": 78,
+          "publishedFrames": 474,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "restore-auto",
+          "rows": 203,
+          "publishedFrames": 1247,
+          "widths": [
+            320,
+            640
+          ]
+        }
+      ],
+      "sameSession": true,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "continuityAccepted": false
+    },
+    "boundaries": [
+      {
+        "generationBefore": 0,
+        "generationAfter": 1,
+        "elapsedBefore": 8.121890750000603,
+        "elapsedAfter": 8.39601920833229,
+        "publicationGapMs": 274.1284583316883,
+        "positionDeltaMs": 6.559713999999772,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 1,
+        "generationAfter": 2,
+        "elapsedBefore": 24.167862375004916,
+        "elapsedAfter": 24.772530083326274,
+        "publicationGapMs": 604.6677083213581,
+        "positionDeltaMs": 7.104235999999986,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 2,
+        "generationAfter": 3,
+        "elapsedBefore": 50.078317624997,
+        "elapsedAfter": 50.25049833333469,
+        "publicationGapMs": 172.1807083376916,
+        "positionDeltaMs": 17.86226499999799,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 3,
+        "generationAfter": 4,
+        "elapsedBefore": 70.27678083333012,
+        "elapsedAfter": 70.46575849999499,
+        "publicationGapMs": 188.9776666648686,
+        "positionDeltaMs": 18.158753999998112,
+        "textureClears": 1
+      }
+    ],
+    "maximumPublishedFrameGapMs": 604.6677083213581,
+    "signals": []
+  },
+  {
+    "name": "pause-fixed-zero-latency",
+    "passed": true,
+    "lastPosition": 120.030292073,
+    "completed": true,
+    "phaseObservation": {
+      "phasesVerified": [
+        "initial-auto",
+        "caps",
+        "clear-caps",
+        "fixed",
+        "restore-auto"
+      ],
+      "phases": [
+        {
+          "phase": "initial-auto",
+          "rows": 32,
+          "publishedFrames": 183,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "caps",
+          "rows": 62,
+          "publishedFrames": 306,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "clear-caps",
+          "rows": 100,
+          "publishedFrames": 613,
+          "widths": [
+            320,
+            640
+          ]
+        },
+        {
+          "phase": "fixed",
+          "rows": 78,
+          "publishedFrames": 475,
+          "widths": [
+            320
+          ]
+        },
+        {
+          "phase": "restore-auto",
+          "rows": 211,
+          "publishedFrames": 1298,
+          "widths": [
+            320,
+            640
+          ]
+        }
+      ],
+      "sameSession": true,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false,
+      "continuityAccepted": false
+    },
+    "boundaries": [
+      {
+        "generationBefore": 0,
+        "generationAfter": 1,
+        "elapsedBefore": 8.102900875004707,
+        "elapsedAfter": 8.397452958335634,
+        "publicationGapMs": 294.5520833309274,
+        "positionDeltaMs": 4.366232999999831,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 1,
+        "generationAfter": 2,
+        "elapsedBefore": 24.23659479166963,
+        "elapsedAfter": 24.35592495833407,
+        "publicationGapMs": 119.33016666444018,
+        "positionDeltaMs": 25.88200900000004,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 2,
+        "generationAfter": 3,
+        "elapsedBefore": 50.06171808333602,
+        "elapsedAfter": 50.2337744999968,
+        "publicationGapMs": 172.0564166607801,
+        "positionDeltaMs": 50.53507299999893,
+        "textureClears": 1
+      },
+      {
+        "generationBefore": 3,
+        "generationAfter": 4,
+        "elapsedBefore": 70.18907954166934,
+        "elapsedAfter": 70.36115991666156,
+        "publicationGapMs": 172.08037499221973,
+        "positionDeltaMs": 43.754876999997805,
+        "textureClears": 1
+      }
+    ],
+    "maximumPublishedFrameGapMs": 2849.5079166750656,
+    "signals": []
+  }
+]

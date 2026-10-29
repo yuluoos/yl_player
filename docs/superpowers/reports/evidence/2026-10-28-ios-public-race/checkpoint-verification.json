@@ -1,0 +1,26 @@
+{
+  "nativeScope": {
+    "final-device": {
+      "passed": 203,
+      "failed": 0,
+      "skipped": 0,
+      "sourcePhase": "before-deadline-fix"
+    },
+    "final-macos": {
+      "passed": 178,
+      "failed": 0,
+      "skipped": 0,
+      "sourcePhase": "before-deadline-fix"
+    },
+    "deadline-fixed-macos": {
+      "passed": 178,
+      "failed": 0,
+      "skipped": 0,
+      "sourcePhase": "deadline-fixed"
+    }
+  },
+  "finalSourceFilesVerified": 21,
+  "finalIosBuildPassed": true,
+  "finalIosRuntimePendingForeground": true,
+  "finalMediaPendingForeground": true
+}

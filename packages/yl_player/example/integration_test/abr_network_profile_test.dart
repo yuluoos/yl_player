@@ -25,6 +25,14 @@ void main() {
         'mediaHash': const String.fromEnvironment('YL_ABR_MEDIA_SHA256'),
       });
       final clock = Stopwatch();
+      // An opt-in diagnostic programme; the frozen baseline remains 40 seconds.
+      const programmeSeconds = int.fromEnvironment(
+        'YL_ABR_PROGRAMME_SECONDS',
+        defaultValue: 40,
+      );
+      if (programmeSeconds != 40 && programmeSeconds != 120) {
+        throw const FormatException('Unsupported ABR programme duration');
+      }
       final probe = FirstFrameProbe(nowUs: () => clock.elapsedMicroseconds);
       YlPlayerController? player;
       AbrNetworkSeries? series;
@@ -103,7 +111,7 @@ void main() {
           if (player.state.failure != null) throw StateError('Playback failed');
           if (player.state.status == YlPlaybackStatus.completed) {
             if (player.state.timeline.position <
-                const Duration(milliseconds: 39500)) {
+                const Duration(milliseconds: programmeSeconds * 1000 - 500)) {
               throw StateError('Owned programme ended early');
             }
             outcome = 'completed';
@@ -157,6 +165,7 @@ void main() {
             'physicalOutputVerified': false,
             'baselineComparable': false,
             'sampleIntervalMs': 250,
+            'programmeDurationSeconds': programmeSeconds,
             'clockRelation': clockAlignment == null ? 'load-vs-first-get-unsynchronized' : 'profile-head-bracket',
             'clockAlignment': clockAlignment,
           })}',

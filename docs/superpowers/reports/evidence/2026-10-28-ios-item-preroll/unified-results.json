@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/yl-item-preroll/run-native.py",
+      "device"
+    ],
+    "exitCode": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/yl-item-preroll/run-native.py",
+      "macos"
+    ],
+    "exitCode": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/yl-item-preroll/run-checks.py"
+    ],
+    "exitCode": 0
+  }
+]

@@ -1,0 +1,489 @@
+{
+  "sourceFilesVerified": 37,
+  "platforms": {
+    "macos": {
+      "passed": 3,
+      "failed": 0,
+      "cases": {
+        "manifest": {
+          "trace": [
+            "old:primary:/movie.mpd",
+            "old:secondary:/hop/movie.mpd",
+            "old:primary:/returned/movie.mpd",
+            "winner:primary:/movie.mpd",
+            "winner-committed",
+            "winner:primary:/init-0.m4s",
+            "winner:primary:/chunk-0-00001.m4s",
+            "winner:secondary:/hop/init-0.m4s",
+            "winner:primary:/returned/init-0.m4s",
+            "old-released",
+            "old-handler-completed",
+            "winner:primary:/chunk-0-00002.m4s",
+            "winner:primary:/chunk-0-00003.m4s",
+            "winner-fresh-request-after-old",
+            "winner:primary:/chunk-0-00004.m4s",
+            "winner-first-frame"
+          ],
+          "requests": [
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/movie.mpd",
+              "load": "old",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/returned/movie.mpd",
+              "load": "old",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/init-0.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00001.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/returned/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00002.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00003.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00004.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            }
+          ],
+          "winnerFirstFrame": true,
+          "winnerProgressAfterRelease": true,
+          "winnerFreshRequestAfterOld": true
+        },
+        "media": {
+          "trace": [
+            "old:primary:/movie.mpd",
+            "old:primary:/init-0.m4s",
+            "old:primary:/chunk-0-00001.m4s",
+            "old:secondary:/hop/init-0.m4s",
+            "winner:primary:/movie.mpd",
+            "winner-committed",
+            "winner:primary:/init-0.m4s",
+            "winner:primary:/chunk-0-00001.m4s",
+            "winner:secondary:/hop/init-0.m4s",
+            "winner:primary:/returned/init-0.m4s",
+            "old-released",
+            "old-handler-completed",
+            "winner:primary:/chunk-0-00002.m4s",
+            "winner:primary:/chunk-0-00003.m4s",
+            "winner-fresh-request-after-old",
+            "winner-first-frame",
+            "winner:primary:/chunk-0-00004.m4s"
+          ],
+          "requests": [
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/init-0.m4s",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00001.m4s",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/init-0.m4s",
+              "load": "old",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/init-0.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00001.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/returned/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00002.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00003.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00004.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            }
+          ],
+          "winnerFirstFrame": true,
+          "winnerProgressAfterRelease": true,
+          "winnerFreshRequestAfterOld": true
+        }
+      },
+      "logSha256": "620aa9ba0bfc6ec0a7a9db01a22705f3a7aed3b1ac10201d6a67a7d8c127cb1c"
+    },
+    "ios": {
+      "passed": 3,
+      "failed": 0,
+      "cases": {
+        "manifest": {
+          "trace": [
+            "old:primary:/movie.mpd",
+            "old:secondary:/hop/movie.mpd",
+            "old:primary:/returned/movie.mpd",
+            "winner:primary:/movie.mpd",
+            "winner-committed",
+            "winner:primary:/init-0.m4s",
+            "winner:primary:/chunk-0-00001.m4s",
+            "winner:secondary:/hop/init-0.m4s",
+            "winner:primary:/returned/init-0.m4s",
+            "old-released",
+            "old-handler-completed",
+            "winner:primary:/chunk-0-00002.m4s",
+            "winner:primary:/chunk-0-00003.m4s",
+            "winner-fresh-request-after-old",
+            "winner:primary:/chunk-0-00004.m4s",
+            "winner-first-frame"
+          ],
+          "requests": [
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/movie.mpd",
+              "load": "old",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/returned/movie.mpd",
+              "load": "old",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/init-0.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00001.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/returned/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00002.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00003.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00004.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            }
+          ],
+          "winnerFirstFrame": true,
+          "winnerProgressAfterRelease": true,
+          "winnerFreshRequestAfterOld": true
+        },
+        "media": {
+          "trace": [
+            "old:primary:/movie.mpd",
+            "old:primary:/init-0.m4s",
+            "old:primary:/chunk-0-00001.m4s",
+            "old:secondary:/hop/init-0.m4s",
+            "winner:primary:/movie.mpd",
+            "winner-committed",
+            "winner:primary:/init-0.m4s",
+            "winner:primary:/chunk-0-00001.m4s",
+            "winner:secondary:/hop/init-0.m4s",
+            "winner:primary:/returned/init-0.m4s",
+            "old-released",
+            "old-handler-completed",
+            "winner:primary:/chunk-0-00002.m4s",
+            "winner:primary:/chunk-0-00003.m4s",
+            "winner-fresh-request-after-old",
+            "winner-first-frame",
+            "winner:primary:/chunk-0-00004.m4s"
+          ],
+          "requests": [
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/init-0.m4s",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00001.m4s",
+              "load": "old",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/init-0.m4s",
+              "load": "old",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/movie.mpd",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/init-0.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00001.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "secondary",
+              "path": "/hop/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/returned/init-0.m4s",
+              "load": "winner",
+              "authorization": false,
+              "cookie": false,
+              "sessionCredential": false
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00002.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00003.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            },
+            {
+              "origin": "primary",
+              "path": "/chunk-0-00004.m4s",
+              "load": "winner",
+              "authorization": true,
+              "cookie": true,
+              "sessionCredential": true
+            }
+          ],
+          "winnerFirstFrame": true,
+          "winnerProgressAfterRelease": true,
+          "winnerFreshRequestAfterOld": true
+        }
+      },
+      "logSha256": "e1a0fbd6e108c4c8e0ea90c350287316064170acda88282745bf226535592a7e"
+    }
+  }
+}

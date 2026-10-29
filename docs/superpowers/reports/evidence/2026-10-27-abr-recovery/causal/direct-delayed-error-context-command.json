@@ -1,0 +1,20 @@
+{
+  "command": [
+    "xcrun",
+    "simctl",
+    "spawn",
+    "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+    "log",
+    "show",
+    "--start",
+    "2026-10-27 02:35:24",
+    "--end",
+    "2026-10-27 02:35:30",
+    "--style",
+    "json",
+    "--predicate",
+    "processIdentifier == 51283 AND subsystem == \"com.apple.coremedia\""
+  ],
+  "exitCode": 0,
+  "stderr": "getpwuid_r did not find a match for uid 501\n"
+}

@@ -1,0 +1,18 @@
+{
+  "manifestEntriesVerified": 377,
+  "completeXcresultBundlesVerified": 15,
+  "bundleFilesComparedToOriginal": true,
+  "nativeContractEvidenceReused": false,
+  "newNativeMediaBundles": 5,
+  "rawProvenanceEntriesVerified": 351,
+  "all102RowStatesUnchanged": true,
+  "changedProductionFiles": [
+    "packages/yl_player_apple/README.md",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryController.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlOpenCoordinator.swift"
+  ]
+}

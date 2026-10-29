@@ -1,0 +1,87 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertEqual failed: (\"2\") is not equal to (\"1\") - Automatic selection cannot publish the old timeline while seek is pending",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 2422
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertNil failed: \"<CVPixelBuffer 0x7c1de05360 width=320 height=180 bytesPerRow=1280 pixelFormat=BGRA iosurface=0x0 surfaceid=0 attributes={\n    PixelFormatDescription =     {\n        BitsPerBlock = 32;\n        BitsPerComponent = 8;\n        BlackBlock = {length = 4, bytes = 0x000000ff};\n        CGBitmapContextCompatibility = 1;\n        CGBitmapInfo = 8196;\n        CGImageCompatibility = 1;\n        ComponentRange = FullRange;\n        ContainsAlpha = 1;\n        ContainsGrayscale = 0;\n        ContainsRGB = 1;\n        ContainsYCbCr = 0;\n        FillExtendedPixelsCallback = {length = 24, bytes = 0x00000000000000007025ec96010000000000000000000000};\n        IOSurfaceCoreAnimationCompatibility = 1;\n        IOSurfaceOpenGLFBOCompatibility = 1;\n        IOSurfaceOpenGLTextureCompatibility = 1;\n        OpenGLCompatibility = 1;\n        OpenGLFormat = 32993;\n        OpenGLInternalFormat = 32856;\n        OpenGLTextureCacheCompatibility = 1;\n        OpenGLType = 33639;\n        PixelFormat = 1111970369;\n    };\n} propagatedAttachments={\n} nonPropagatedAttachments={\n}>\"",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 2423
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertNil failed: \"<CVPixelBuffer 0x7c1de05360 width=320 height=180 bytesPerRow=1280 pixelFormat=BGRA iosurface=0x0 surfaceid=0 attributes={\n    PixelFormatDescription =     {\n        BitsPerBlock = 32;\n        BitsPerComponent = 8;\n        BlackBlock = {length = 4, bytes = 0x000000ff};\n        CGBitmapContextCompatibility = 1;\n        CGBitmapInfo = 8196;\n        CGImageCompatibility = 1;\n        ComponentRange = FullRange;\n        ContainsAlpha = 1;\n        ContainsGrayscale = 0;\n        ContainsRGB = 1;\n        ContainsYCbCr = 0;\n        FillExtendedPixelsCallback = {length = 24, bytes = 0x00000000000000007025ec96010000000000000000000000};\n        IOSurfaceCoreAnimationCompatibility = 1;\n        IOSurfaceOpenGLFBOCompatibility = 1;\n        IOSurfaceOpenGLTextureCompatibility = 1;\n        OpenGLCompatibility = 1;\n        OpenGLFormat = 32993;\n        OpenGLInternalFormat = 32856;\n        OpenGLTextureCacheCompatibility = 1;\n        OpenGLType = 33639;\n        PixelFormat = 1111970369;\n    };\n} propagatedAttachments={\n} nonPropagatedAttachments={\n}>\" - An older seek callback cannot reopen publication",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 2429
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"3\") is not equal to (\"2\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 2434
+                      }
+                    }
+                  ],
+                  "duration" : "0.24s",
+                  "durationInSeconds" : 0.24055206775665283,
+                  "name" : "testAutomaticUserSeekBlocksOldFramesUntilLatestLanding()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testAutomaticUserSeekBlocksOldFramesUntilLatestLanding()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testAutomaticUserSeekBlocksOldFramesUntilLatestLanding",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

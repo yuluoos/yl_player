@@ -173,3 +173,28 @@ plugin registration still uses native video surfaces. Choose once per engine,
 before creating players. This option uses Flutter's SDR texture pipeline and is
 not an HDR presentation mode. FairPlay retains its separate secure native view;
 this option does not change protected playback or audio/background policies.
+
+## iOS same-source DASH recovery
+
+For the AVPlayer-backed clear DASH VOD projection, an unconstrained automatic
+selection can rebuild the current item after an observed high-to-low transition
+with overdue downloads. This runs only during foreground playback at normal
+speed, with at least 5 seconds of contiguous buffer and 20 seconds remaining.
+Two consecutive 8-second windows must each include at least three media requests
+and measured throughput at least 1.25 times the highest available variant's
+combined video/audio bandwidth. Unknown or ambiguous output geometry is ineligible.
+
+Each committed Load owns at most two reservations, delayed by at least 500 and
+1000 ms. Cancellation and failure consume the reservation; replacing an item or
+issuing playback commands does not refund it. A new committed session receives a
+new budget even when a caller reuses a Load request label. Preparation is bounded
+to 2 seconds, and commit rechecks the session, item, intent, eligibility and
+credential revision. Pause, seek, track/policy commands, a new Load, deactivation
+and foreground loss cancel pending work. Audio-route removal still pauses playback.
+
+Recovery reuses the committed manifest snapshot and credential history, retains
+the old item during preparation, and seeks the replacement to the current
+position. It does not enable recovery for direct HLS, live, DRM, AirPlay, fixed
+selection, constrained selection, or the managed DASH program backend. Publication
+of new video frames is measured separately from physical audio/video continuity;
+release acceptance remains subject to the release ledger.

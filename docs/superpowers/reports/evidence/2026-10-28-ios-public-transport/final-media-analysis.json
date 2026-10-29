@@ -1,0 +1,4750 @@
+[
+  {
+    "phase": "media",
+    "name": "pause",
+    "passed": false,
+    "completed": true,
+    "position": 120.02482391,
+    "signals": [],
+    "event": {
+      "attempt": 1,
+      "due": 37.230343666669796,
+      "elapsed": 37.25066649999644,
+      "elapsedAfter": 37.54726658333675,
+      "generation": 0,
+      "manifestPreparedElapsed": 37.40408687500167,
+      "outcome": "preparationFailed",
+      "positionBefore": 36.825455727,
+      "preparationCompletedElapsed": 37.547227708331775,
+      "preparationPauseApplied": false,
+      "publicCommandApplied": true,
+      "publicCommandCompletedElapsed": 37.504406874999404,
+      "publicCommandIntentAfter": 1,
+      "publicCommandIntentBefore": 0,
+      "publicCommandItemChanged": false,
+      "publicCommandManuallyInvalidated": false,
+      "publicCommandPositionBefore": 37.079900091,
+      "publicCommandReady": true,
+      "publicCommandSessionId": "apple-991-s1",
+      "publicCommandStartedElapsed": 37.504306541668484,
+      "publicPausePosition": 37.079982717,
+      "textureClearsAfter": 0,
+      "textureClearsBefore": 0,
+      "warmupCompletedElapsed": 37.54716366666253,
+      "warmupDeadlineElapsed": 39.40412812499562,
+      "warmupDetached": true,
+      "warmupFramesAfter": 890,
+      "warmupFramesBefore": 888,
+      "warmupOldItemRetained": true,
+      "warmupOutcome": "cancelled",
+      "warmupPositionAfter": 37.080268504,
+      "warmupPositionBefore": 36.979761158,
+      "warmupProxyAfter": {
+        "acceptedConnections": 9,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 9,
+        "cancelled": 1,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 96612.10989437501,
+        "lastCompletionUptime": 96612.10811675001,
+        "pendingSends": 0,
+        "receivedBodyBytes": 97892,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 7
+      },
+      "warmupProxyBefore": {
+        "acceptedConnections": 0,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 0,
+        "cancelled": 0,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 0,
+        "lastCompletionUptime": 0,
+        "pendingSends": 0,
+        "receivedBodyBytes": 0,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 0
+      },
+      "warmupReusesPrerolledItem": false,
+      "warmupStage": "waitingReady",
+      "warmupStartedElapsed": 37.40412812499562
+    },
+    "automaticEvents": [
+      {
+        "attempt": 1,
+        "due": 37.230343666669796,
+        "elapsed": 37.25066649999644,
+        "elapsedAfter": 37.54726658333675,
+        "generation": 0,
+        "manifestPreparedElapsed": 37.40408687500167,
+        "outcome": "preparationFailed",
+        "positionBefore": 36.825455727,
+        "preparationCompletedElapsed": 37.547227708331775,
+        "preparationPauseApplied": false,
+        "publicCommandApplied": true,
+        "publicCommandCompletedElapsed": 37.504406874999404,
+        "publicCommandIntentAfter": 1,
+        "publicCommandIntentBefore": 0,
+        "publicCommandItemChanged": false,
+        "publicCommandManuallyInvalidated": false,
+        "publicCommandPositionBefore": 37.079900091,
+        "publicCommandReady": true,
+        "publicCommandSessionId": "apple-991-s1",
+        "publicCommandStartedElapsed": 37.504306541668484,
+        "publicPausePosition": 37.079982717,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "warmupCompletedElapsed": 37.54716366666253,
+        "warmupDeadlineElapsed": 39.40412812499562,
+        "warmupDetached": true,
+        "warmupFramesAfter": 890,
+        "warmupFramesBefore": 888,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "cancelled",
+        "warmupPositionAfter": 37.080268504,
+        "warmupPositionBefore": 36.979761158,
+        "warmupProxyAfter": {
+          "acceptedConnections": 9,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 9,
+          "cancelled": 1,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 96612.10989437501,
+          "lastCompletionUptime": 96612.10811675001,
+          "pendingSends": 0,
+          "receivedBodyBytes": 97892,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 7
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "waitingReady",
+        "warmupStartedElapsed": 37.40412812499562
+      },
+      {
+        "attempt": 2,
+        "due": 56.8621892916708,
+        "elapsed": 56.91509616666008,
+        "elapsedAfter": 58.33920420832874,
+        "generation": 0,
+        "manifestPreparedElapsed": 57.054992833334836,
+        "outcome": "cancelled",
+        "positionBefore": 54.45892126,
+        "preparationCompletedElapsed": 58.33852033333096,
+        "preparationPauseApplied": false,
+        "publicUnexpectedInstallEligibility": true,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "warmupCompletedElapsed": 58.338468375004595,
+        "warmupDeadlineElapsed": 59.05499691666046,
+        "warmupDetached": true,
+        "warmupFramesAfter": 1341,
+        "warmupFramesBefore": 1311,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "ready",
+        "warmupPositionAfter": 55.883225166,
+        "warmupPositionBefore": 54.599731485,
+        "warmupProxyAfter": {
+          "acceptedConnections": 72,
+          "activeConnections": 2,
+          "activeTasks": 1,
+          "admittedRequests": 71,
+          "cancelled": 0,
+          "cancelledCompletions": 2,
+          "closedWithActiveTask": 2,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 96632.907475375,
+          "lastCompletionUptime": 96632.90121537501,
+          "pendingSends": 0,
+          "receivedBodyBytes": 1177650,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 70
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "ready",
+        "warmupStartedElapsed": 57.05499691666046
+      }
+    ],
+    "resume": {
+      "applied": true,
+      "completedElapsed": 39.508469833337585,
+      "itemUnchanged": true,
+      "oldTicketAuthorized": false,
+      "pausedElapsed": 37.50440408333088,
+      "sessionId": "apple-991-s1",
+      "startedElapsed": 39.50645216666453
+    },
+    "attempts": 2,
+    "postCommandFrames": 1990,
+    "postCommandWidths": [
+      320
+    ],
+    "ptsCount": 0,
+    "invalidPTSRows": 1990,
+    "ptsMinimum": null,
+    "seekTarget": null,
+    "policy": {
+      "samples": 463,
+      "reasonCounts": {
+        "playbackIneligible": 8,
+        "insufficientBuffer": 36,
+        "highNotObserved": 12,
+        "highOutput": 49,
+        "windowStarted": 2,
+        "windowPending": 120,
+        "firstQualifiedWindow": 2,
+        "reserved": 2,
+        "backoff": 4,
+        "ticketReady": 2,
+        "budgetExhausted": 168,
+        "nearEnd": 58
+      },
+      "attempts": 2,
+      "reservations": 2,
+      "tickets": 2,
+      "triggerExercised": true,
+      "windowBitrateMinimum": 2493669.4481082424,
+      "windowBitrateMaximum": 2977217.974523915,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6603,
+      "publishedFrames": 2880,
+      "maximumPumpGapMs": 50.643291673623025,
+      "maximumPublishedFrameGapMs": 2089.394833339611,
+      "lastPublicationSampleElapsed": 122.41909608333663,
+      "observationEndElapsed": 122.66537312499713,
+      "trailingNoPublicationMs": 246.27704166050535,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "validatorFailure": "Traceback (most recent call last):\n  File \"/private/tmp/yl-public-transport/final-analysis.py\", line 25, in <module>\n    try:abr_accesslog.summarize_public_transport(rows,frames,abr_accesslog.summarize_policy(decisions,expected_attempts=rows[-1]['automaticAttempts']));failure=None\n        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 335, in summarize_public_transport\n    require(type(e.get('ticketIntentRevision')) is int and e['ticketIntentRevision']==before)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 311, in require\n    if not value: raise ValueError('incomplete public transport race evidence')\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: incomplete public transport race evidence\n",
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  },
+  {
+    "phase": "media",
+    "name": "seek",
+    "passed": false,
+    "completed": true,
+    "position": 120.018813059,
+    "signals": [],
+    "event": {
+      "attempt": 1,
+      "due": 37.19732945834403,
+      "elapsed": 37.217134166668984,
+      "elapsedAfter": 37.597413083334686,
+      "generation": 0,
+      "manifestPreparedElapsed": 37.37039995833766,
+      "outcome": "preparationFailed",
+      "positionBefore": 36.806188364,
+      "preparationCompletedElapsed": 37.5973919583339,
+      "preparationPauseApplied": false,
+      "publicCommandApplied": true,
+      "publicCommandCompletedElapsed": 37.48147900000913,
+      "publicCommandIntentAfter": 1,
+      "publicCommandIntentBefore": 0,
+      "publicCommandItemChanged": false,
+      "publicCommandManuallyInvalidated": false,
+      "publicCommandPositionBefore": 37.071055366,
+      "publicCommandReady": true,
+      "publicCommandSessionId": "apple-991-s1",
+      "publicCommandStartedElapsed": 37.48136754166626,
+      "publicSeekTargetMs": 38071,
+      "textureClearsAfter": 0,
+      "textureClearsBefore": 0,
+      "warmupCompletedElapsed": 37.59735991667549,
+      "warmupDeadlineElapsed": 39.37042708334047,
+      "warmupDetached": true,
+      "warmupFramesAfter": 890,
+      "warmupFramesBefore": 887,
+      "warmupOldItemRetained": true,
+      "warmupOutcome": "cancelled",
+      "warmupPositionAfter": 38.071,
+      "warmupPositionBefore": 36.960133383,
+      "warmupProxyAfter": {
+        "acceptedConnections": 14,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 14,
+        "cancelled": 1,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 96743.79158420835,
+        "lastCompletionUptime": 96743.78961225001,
+        "pendingSends": 0,
+        "receivedBodyBytes": 176827,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 12
+      },
+      "warmupProxyBefore": {
+        "acceptedConnections": 0,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 0,
+        "cancelled": 0,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 0,
+        "lastCompletionUptime": 0,
+        "pendingSends": 0,
+        "receivedBodyBytes": 0,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 0
+      },
+      "warmupReusesPrerolledItem": false,
+      "warmupStage": "waitingReady",
+      "warmupStartedElapsed": 37.37042708334047
+    },
+    "automaticEvents": [
+      {
+        "attempt": 1,
+        "due": 37.19732945834403,
+        "elapsed": 37.217134166668984,
+        "elapsedAfter": 37.597413083334686,
+        "generation": 0,
+        "manifestPreparedElapsed": 37.37039995833766,
+        "outcome": "preparationFailed",
+        "positionBefore": 36.806188364,
+        "preparationCompletedElapsed": 37.5973919583339,
+        "preparationPauseApplied": false,
+        "publicCommandApplied": true,
+        "publicCommandCompletedElapsed": 37.48147900000913,
+        "publicCommandIntentAfter": 1,
+        "publicCommandIntentBefore": 0,
+        "publicCommandItemChanged": false,
+        "publicCommandManuallyInvalidated": false,
+        "publicCommandPositionBefore": 37.071055366,
+        "publicCommandReady": true,
+        "publicCommandSessionId": "apple-991-s1",
+        "publicCommandStartedElapsed": 37.48136754166626,
+        "publicSeekTargetMs": 38071,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "warmupCompletedElapsed": 37.59735991667549,
+        "warmupDeadlineElapsed": 39.37042708334047,
+        "warmupDetached": true,
+        "warmupFramesAfter": 890,
+        "warmupFramesBefore": 887,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "cancelled",
+        "warmupPositionAfter": 38.071,
+        "warmupPositionBefore": 36.960133383,
+        "warmupProxyAfter": {
+          "acceptedConnections": 14,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 14,
+          "cancelled": 1,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 96743.79158420835,
+          "lastCompletionUptime": 96743.78961225001,
+          "pendingSends": 0,
+          "receivedBodyBytes": 176827,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 12
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "waitingReady",
+        "warmupStartedElapsed": 37.37042708334047
+      },
+      {
+        "attempt": 2,
+        "due": 55.06915958333411,
+        "elapsed": 55.115929999999935,
+        "elapsedAfter": 56.681569333333755,
+        "generation": 0,
+        "manifestPreparedElapsed": 55.309382416671724,
+        "outcome": "cancelled",
+        "positionBefore": 55.506137607,
+        "preparationCompletedElapsed": 56.68100604167557,
+        "preparationPauseApplied": false,
+        "publicUnexpectedInstallEligibility": true,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "warmupCompletedElapsed": 56.68095475000155,
+        "warmupDeadlineElapsed": 57.30938625000999,
+        "warmupDetached": true,
+        "warmupFramesAfter": 1347,
+        "warmupFramesBefore": 1314,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "ready",
+        "warmupPositionAfter": 57.071975198,
+        "warmupPositionBefore": 55.700430202,
+        "warmupProxyAfter": {
+          "acceptedConnections": 65,
+          "activeConnections": 2,
+          "activeTasks": 2,
+          "admittedRequests": 65,
+          "cancelled": 0,
+          "cancelledCompletions": 2,
+          "closedWithActiveTask": 2,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 96762.88042375,
+          "lastCompletionUptime": 96762.87786191667,
+          "pendingSends": 0,
+          "receivedBodyBytes": 1098965,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 63
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "ready",
+        "warmupStartedElapsed": 55.30938625000999
+      }
+    ],
+    "resume": null,
+    "attempts": 2,
+    "postCommandFrames": 1967,
+    "postCommandWidths": [
+      320
+    ],
+    "ptsCount": 0,
+    "invalidPTSRows": 1967,
+    "ptsMinimum": null,
+    "seekTarget": 38.071,
+    "policy": {
+      "samples": 452,
+      "reasonCounts": {
+        "playbackIneligible": 1,
+        "insufficientBuffer": 36,
+        "highOutput": 62,
+        "windowStarted": 2,
+        "windowPending": 120,
+        "firstQualifiedWindow": 2,
+        "reserved": 2,
+        "backoff": 4,
+        "ticketReady": 2,
+        "budgetExhausted": 164,
+        "nearEnd": 57
+      },
+      "attempts": 2,
+      "reservations": 2,
+      "tickets": 2,
+      "triggerExercised": true,
+      "windowBitrateMinimum": 1339106.1988081664,
+      "windowBitrateMaximum": 2509115.588605243,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6444,
+      "publishedFrames": 2857,
+      "maximumPumpGapMs": 111.7227083304897,
+      "maximumPublishedFrameGapMs": 311.5803750115447,
+      "lastPublicationSampleElapsed": 119.5850507083378,
+      "observationEndElapsed": 119.84874450000643,
+      "trailingNoPublicationMs": 263.6937916686293,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "validatorFailure": "Traceback (most recent call last):\n  File \"/private/tmp/yl-public-transport/final-analysis.py\", line 25, in <module>\n    try:abr_accesslog.summarize_public_transport(rows,frames,abr_accesslog.summarize_policy(decisions,expected_attempts=rows[-1]['automaticAttempts']));failure=None\n        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 335, in summarize_public_transport\n    require(type(e.get('ticketIntentRevision')) is int and e['ticketIntentRevision']==before)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 311, in require\n    if not value: raise ValueError('incomplete public transport race evidence')\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: incomplete public transport race evidence\n",
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  },
+  {
+    "phase": "review-media",
+    "name": "pause",
+    "passed": false,
+    "completed": true,
+    "position": 120.025113733,
+    "signals": [],
+    "event": {
+      "attempt": 1,
+      "due": 37.25675112499448,
+      "elapsed": 37.2810928333347,
+      "elapsedAfter": 37.55707812499895,
+      "generation": 0,
+      "manifestPreparedElapsed": 37.418669208331266,
+      "outcome": "preparationFailed",
+      "positionBefore": 36.86699356,
+      "preparationCompletedElapsed": 37.55706395833113,
+      "preparationPauseApplied": false,
+      "publicCommandApplied": true,
+      "publicCommandCompletedElapsed": 37.51901775000442,
+      "publicCommandIntentAfter": 1,
+      "publicCommandIntentBefore": 0,
+      "publicCommandItemChanged": false,
+      "publicCommandManuallyInvalidated": false,
+      "publicCommandPositionBefore": 37.10578693,
+      "publicCommandReady": true,
+      "publicCommandSessionId": "apple-991-s1",
+      "publicCommandStartedElapsed": 37.518900750001194,
+      "publicPausePosition": 37.105865682,
+      "textureClearsAfter": 0,
+      "textureClearsBefore": 0,
+      "ticketIntentRevision": 0,
+      "warmupCompletedElapsed": 37.55702312500216,
+      "warmupDeadlineElapsed": 39.41870079166256,
+      "warmupDetached": true,
+      "warmupFramesAfter": 891,
+      "warmupFramesBefore": 888,
+      "warmupOldItemRetained": true,
+      "warmupOutcome": "cancelled",
+      "warmupPositionAfter": 37.106135971,
+      "warmupPositionBefore": 37.005609,
+      "warmupProxyAfter": {
+        "acceptedConnections": 9,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 9,
+        "cancelled": 1,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 97614.82083145835,
+        "lastCompletionUptime": 97614.81816929167,
+        "pendingSends": 0,
+        "receivedBodyBytes": 97892,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 7
+      },
+      "warmupProxyBefore": {
+        "acceptedConnections": 0,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 0,
+        "cancelled": 0,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 0,
+        "lastCompletionUptime": 0,
+        "pendingSends": 0,
+        "receivedBodyBytes": 0,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 0
+      },
+      "warmupReusesPrerolledItem": false,
+      "warmupStage": "waitingReady",
+      "warmupStartedElapsed": 37.41870079166256
+    },
+    "automaticEvents": [
+      {
+        "attempt": 1,
+        "due": 37.25675112499448,
+        "elapsed": 37.2810928333347,
+        "elapsedAfter": 37.55707812499895,
+        "generation": 0,
+        "manifestPreparedElapsed": 37.418669208331266,
+        "outcome": "preparationFailed",
+        "positionBefore": 36.86699356,
+        "preparationCompletedElapsed": 37.55706395833113,
+        "preparationPauseApplied": false,
+        "publicCommandApplied": true,
+        "publicCommandCompletedElapsed": 37.51901775000442,
+        "publicCommandIntentAfter": 1,
+        "publicCommandIntentBefore": 0,
+        "publicCommandItemChanged": false,
+        "publicCommandManuallyInvalidated": false,
+        "publicCommandPositionBefore": 37.10578693,
+        "publicCommandReady": true,
+        "publicCommandSessionId": "apple-991-s1",
+        "publicCommandStartedElapsed": 37.518900750001194,
+        "publicPausePosition": 37.105865682,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "ticketIntentRevision": 0,
+        "warmupCompletedElapsed": 37.55702312500216,
+        "warmupDeadlineElapsed": 39.41870079166256,
+        "warmupDetached": true,
+        "warmupFramesAfter": 891,
+        "warmupFramesBefore": 888,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "cancelled",
+        "warmupPositionAfter": 37.106135971,
+        "warmupPositionBefore": 37.005609,
+        "warmupProxyAfter": {
+          "acceptedConnections": 9,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 9,
+          "cancelled": 1,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 97614.82083145835,
+          "lastCompletionUptime": 97614.81816929167,
+          "pendingSends": 0,
+          "receivedBodyBytes": 97892,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 7
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "waitingReady",
+        "warmupStartedElapsed": 37.41870079166256
+      },
+      {
+        "attempt": 2,
+        "due": 56.88645554166578,
+        "elapsed": 56.93157266666822,
+        "elapsedAfter": 58.42167133332987,
+        "generation": 0,
+        "manifestPreparedElapsed": 57.07497220832738,
+        "outcome": "cancelled",
+        "positionBefore": 54.488620629,
+        "preparationCompletedElapsed": 58.42077070834057,
+        "preparationPauseApplied": false,
+        "publicUnexpectedInstallEligibility": true,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "ticketIntentRevision": 1,
+        "warmupCompletedElapsed": 58.42067774999305,
+        "warmupDeadlineElapsed": 59.07497508333472,
+        "warmupDetached": true,
+        "warmupFramesAfter": 1344,
+        "warmupFramesBefore": 1311,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "ready",
+        "warmupPositionAfter": 55.978672442,
+        "warmupPositionBefore": 54.632909901,
+        "warmupProxyAfter": {
+          "acceptedConnections": 72,
+          "activeConnections": 2,
+          "activeTasks": 2,
+          "admittedRequests": 72,
+          "cancelled": 0,
+          "cancelledCompletions": 2,
+          "closedWithActiveTask": 3,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 97635.68087504167,
+          "lastCompletionUptime": 97635.67437229167,
+          "pendingSends": 0,
+          "receivedBodyBytes": 1173554,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 70
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "ready",
+        "warmupStartedElapsed": 57.07497508333472
+      }
+    ],
+    "resume": {
+      "applied": true,
+      "completedElapsed": 39.52508608333301,
+      "itemUnchanged": true,
+      "oldTicketAuthorized": false,
+      "pausedElapsed": 37.51899462500296,
+      "sessionId": "apple-991-s1",
+      "startedElapsed": 39.52351324999472
+    },
+    "attempts": 2,
+    "postCommandFrames": 1989,
+    "postCommandWidths": [
+      320
+    ],
+    "ptsCount": 1989,
+    "invalidPTSRows": 0,
+    "ptsMinimum": 37.125,
+    "seekTarget": null,
+    "policy": {
+      "samples": 462,
+      "reasonCounts": {
+        "playbackIneligible": 8,
+        "insufficientBuffer": 36,
+        "highNotObserved": 11,
+        "highOutput": 50,
+        "windowStarted": 2,
+        "windowPending": 120,
+        "firstQualifiedWindow": 2,
+        "reserved": 2,
+        "backoff": 4,
+        "ticketReady": 2,
+        "budgetExhausted": 168,
+        "nearEnd": 57
+      },
+      "attempts": 2,
+      "reservations": 2,
+      "tickets": 2,
+      "triggerExercised": true,
+      "intentSamples": [
+        {
+          "elapsed": 0.003908041660906747,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 0.3320512083300855,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 0.5861884166661184,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 0.8388996666617459,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.0953465000056894,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.354842250002548,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.6113643333374057,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.8698040416638833,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.1315479166660225,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.3865026666608173,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.6404023333307123,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.8955751250032336,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.1488130416692,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.4022999166627415,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.670357833339949,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.926652791662491,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.184800166665809,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.440934958329308,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.698255124996649,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.959878249996109,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.216593708333676,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.4729171250073705,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.738330666659749,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.99934475000191,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 6.261187916665222,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 6.5154400000028545,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 6.7697953333408805,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.0343459583382355,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.293538416663068,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.548101249994943,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.81421395833604,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.076013291662093,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.332421291663195,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.592438249994302,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.855434041674016,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.11630591667199,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.377941458340501,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.638923874998,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.898193000000902,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.155474541665171,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.410878124996088,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.674017083336366,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.936284458337468,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.196931124999537,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.457335958330077,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.716506249998929,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.978487083339132,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.235475499997847,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.492167000003974,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.754449916668818,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.016661958332406,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.27740087499842,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.539970124998945,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.796939874999225,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.052088791664573,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.317069500000798,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.580352083328762,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.84346654167166,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.105970125005115,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.36731608332775,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.624092791666044,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.883669125003507,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.145320291660028,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.40869129166822,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.669464249993325,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.931449958326994,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.195623916661134,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.452396791661158,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.71052420833439,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.970851874997607,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.232627624995075,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.493911333338474,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.751628124999115,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.014392333338037,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.277389708338887,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.53693662499427,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.799440500006313,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.059933500000625,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.316858083329862,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.578950166673167,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.84341937499994,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.10462962499878,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.3618951249955,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.619147291668924,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.880408833327238,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.14211433332821,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.407386541672167,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.6680217916728,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.92581429166603,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.190386749993195,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.448004499994568,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.710426250007004,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.97406954166945,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.235757999995258,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.492943125005695,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.75219412500155,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.014254416673793,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.2763481666625,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.53348937499686,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.795739416673314,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.05796695833851,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.319068833327037,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.576333000004524,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.839025624998612,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.10260304166877,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.362995833333116,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.619403291668277,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.885537333335378,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.148592666664626,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.40817604167387,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.670579833327793,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.93334958332707,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.193223374997615,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.450044333338155,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.713290583327762,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.973334791662637,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.23836670833407,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.501926958328113,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.76168612499896,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.019005374997505,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.281178708333755,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.541030833337572,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.79913275000581,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.06476595833374,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.32797500000743,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.59099308332952,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.848545916669536,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.106371666668565,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.36750679166289,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.629641333332984,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.893760541672236,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.15197833333514,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.409487041673856,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.67038533333107,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.933387458338984,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.19571524999628,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.45432254167099,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.71329387500009,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.97703958333295,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.23887520833523,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.4960382499994,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.75675112499448,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 37.01947745833604,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 37.27975549999974,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 37.81692349999503,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.073659291665535,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.33538150000095,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.592569416665356,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.8620987500035,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.1326432916685,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.39033041665971,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.64816729167069,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.92138733333559,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.17867245833622,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.43855420833279,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.69975337499636,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.96036416666175,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 41.22171295832959,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 41.4774755416729,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 41.74220633333607,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.00408987500123,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.26740616666211,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.53036049999355,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.79441679167212,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.05894458333205,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.31512454166659,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.585059166667634,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.84817566667334,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.11033195833443,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.37293158333341,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.6351696250058,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.89873808332777,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.162526250001974,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.423783374993945,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.68111691666127,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.945122499993886,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.208539041661425,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.46231366666325,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.72059733333299,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.98811616667081,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 47.248231749996194,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 47.50956087499799,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 47.7736081250041,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.03573070833227,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.300741416664096,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.55905141666881,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.821901999996044,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.08356229166384,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.347364291665144,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.60849858332949,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.864418625002145,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.12619862500287,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.39084479166195,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.64854787499644,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.91170583333587,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.176567166665336,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.43554237499484,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.696918791669304,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.961399833337055,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.22475224999653,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.485686291664024,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.74708070833003,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.00652866666496,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.27023837500019,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.53285562500241,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.79560100000526,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.05108824999479,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.30881283333292,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.56951133333496,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.83242045833322,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 55.097035041661,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 55.35943483332812,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 55.62138191667327,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 55.88645554166578,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.14841462500044,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.40519216666871,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.66681604167388,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.93041770833952,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 58.68186666666588,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 58.94049774999439,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.20393362500181,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.461305624994566,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.71972408333386,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.98307616666716,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.247447625006316,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.51119962500525,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.77320933333249,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.031119791659876,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.29172112500237,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.54882275000273,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.81012650000048,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.07356608333066,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.33478629167075,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.59144220832968,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.84871449999628,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.1127944583277,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.37531149999995,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.63750458332652,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.89634679166193,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.15905133333581,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.4213359583373,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.6817089166725,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.94449358333077,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.20611966666183,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.46402054166538,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.72133133333409,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.98368895833846,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 66.24577770833275,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 66.5046063750051,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 66.76902166666696,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.03487229166785,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.29323612499866,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.55649420832924,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.82256020834029,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.08451754166163,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.34568866666814,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.60538641666062,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.8694517499971,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.13018258333614,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.3924912083312,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.64856433332898,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.91433379166119,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.18025783332996,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.43706079166441,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.6985252500017,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.96132670833322,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.22730233334005,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.48846583333216,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.74922004166001,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.01587979166652,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.27833354166069,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.53667699999642,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.79949754166591,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.06502999999793,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.32867191666446,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.58553024999856,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.84891762500047,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.1126141249988,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.37651662499411,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.63905908333254,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.9019252500002,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.166146916672,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.43129604167189,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.69370004166558,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.95210116666567,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.20954695832916,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.47930954166804,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.73887112499506,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.99952533333271,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.26363324999693,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.5213149166666,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.7870206249936,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.04898462499841,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.31383408333932,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.56896591666737,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.83499529166147,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.09846608333464,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.36268608333194,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.62365475000115,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.8876094166626,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.14850766667223,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.41304879167001,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.67409620832768,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.93310100000235,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.19731204166601,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.4528404166631,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.71089195834065,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.97370066666917,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.23849929166317,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.4956740833295,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.75246066667023,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.01541812499636,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.27980933334038,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.54187504167203,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.79977416666225,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.06215666666685,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.32553787500365,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.58806954167085,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.84920637500181,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.109976416672,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.37359654167085,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.63325787500071,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.89441812499717,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.15947220833914,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.42217558332777,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.68211866666388,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.94475862500258,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.20771858333319,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.46979070833186,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.72947520833986,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.99427450000076,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.25610237500223,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.51896629166731,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.78038337499311,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.04258791667235,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.30774141666188,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.57025566666562,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.83074491666048,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.09532779167057,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.35963391666883,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.61787604166602,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.88049854166456,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.14482779166428,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.4070551666664,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.67077429166238,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.93557229166618,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.19678524999472,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.4510029166704,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.71097266666766,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.97485804166354,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.23873008333612,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.49709624999377,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.76307612500386,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.02708362499834,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.2894944583386,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.5484582916688,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.8109371666651,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.07391808333341,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.33527141666855,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.5972161666723,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.8612264583353,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.1215325416706,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.3815747500048,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.64189012499992,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.90045400000236,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.16628912500164,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.42511312500574,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.6816304166714,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.946908958329,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.20999062499322,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.47347529167018,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.73400962499727,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.99672166667006,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.25799025000015,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.51905654167058,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.78360133332899,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.04612445832754,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.31121004166198,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.57127116667107,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.83634383333265,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.09892920833954,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.36180112500733,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.62265458333422,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.88922804166214,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.1496991666645,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.41362404167012,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.67890341667226,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.94162529167079,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.20478483333136,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.46081695833709,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.72798604166019,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.99258216666931,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.24992570834002,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.50629283333546,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.76901341666235,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.03182441667013,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.2941239583306,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.55861070833635,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.81672683333454,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.08084054166102,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.34441966666782,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.60164145832823,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.86494762499933,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.12784945833846,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.38630258332705,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.64662650000537,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.9110642500018,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.17331266666588,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.43888087499363,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.69680304166104,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.96030579166836,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.22494733333588,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.4836217083357,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.74569366667129,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.0110513749969,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.27611008333042,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.53781275000074,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.80043545833905,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.06562437499815,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.3251297083334,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.58973958333081,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.8498034166696,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.1128567916603,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.36984341667267,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.63272574999428,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.89235379167076,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.14983145832957,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.40727424999932,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.66979966666258,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.92757820832776,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.18451187500614,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.47145516666933,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.73590749999858,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.99877999999444,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.26488570834044,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.52949383333907,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.79198179166997,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.0483547916665,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.31118483333557,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.57691366666404,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.84006316667364,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.10589308333874,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.37133204167185,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.6342715833307,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.90024687499681,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.16524483333342,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.42839187500067,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.69246745832788,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.94989849999547,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.20763587500551,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.47169237499475,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.73702558333753,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.99839954166964,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 120.26452795833757,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 120.52859687499586,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 120.79051104166138,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 121.04975612499402,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 121.31085133332817,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 121.57534062500054,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 121.83627475000685,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 122.10173125000438,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 122.36130533333926,
+          "intentRevision": 1
+        }
+      ],
+      "ticketAuthorities": [
+        {
+          "attempt": 1,
+          "elapsed": 37.27975549999974,
+          "intentRevision": 0
+        },
+        {
+          "attempt": 2,
+          "elapsed": 56.93041770833952,
+          "intentRevision": 1
+        }
+      ],
+      "windowBitrateMinimum": 2334891.7138665095,
+      "windowBitrateMaximum": 2982404.930778879,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6582,
+      "publishedFrames": 2880,
+      "maximumPumpGapMs": 49.69520833401475,
+      "maximumPublishedFrameGapMs": 2072.7177083317656,
+      "lastPublicationSampleElapsed": 122.41751425000257,
+      "observationEndElapsed": 122.61226529166743,
+      "trailingNoPublicationMs": 194.75104166485835,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "validatorFailure": "Traceback (most recent call last):\n  File \"/private/tmp/yl-public-transport/final-analysis.py\", line 25, in <module>\n    try:abr_accesslog.summarize_public_transport(rows,frames,abr_accesslog.summarize_policy(decisions,expected_attempts=rows[-1]['automaticAttempts']));failure=None\n        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 384, in summarize_public_transport\n    require(len(published)>=3 and all(f['width'] in (320,640) for f in published) and any(f['width']==640 for f in published))\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 311, in require\n    if not value: raise ValueError('incomplete public transport race evidence')\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: incomplete public transport race evidence\n",
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  },
+  {
+    "phase": "review-media",
+    "name": "seek",
+    "passed": false,
+    "completed": true,
+    "position": 120.027289743,
+    "signals": [],
+    "event": {
+      "attempt": 1,
+      "due": 37.19802470832656,
+      "elapsed": 37.21828849999292,
+      "elapsedAfter": 37.57771599999978,
+      "generation": 0,
+      "manifestPreparedElapsed": 37.35777987499023,
+      "outcome": "preparationFailed",
+      "positionBefore": 36.806171846,
+      "preparationCompletedElapsed": 37.577698583336314,
+      "preparationPauseApplied": false,
+      "publicCommandApplied": true,
+      "publicCommandCompletedElapsed": 37.46925629166071,
+      "publicCommandIntentAfter": 1,
+      "publicCommandIntentBefore": 0,
+      "publicCommandItemChanged": false,
+      "publicCommandManuallyInvalidated": false,
+      "publicCommandPositionBefore": 37.057724242,
+      "publicCommandReady": true,
+      "publicCommandSessionId": "apple-991-s1",
+      "publicCommandStartedElapsed": 37.46913529167068,
+      "publicSeekTargetMs": 38057,
+      "textureClearsAfter": 0,
+      "textureClearsBefore": 0,
+      "ticketIntentRevision": 0,
+      "warmupCompletedElapsed": 37.5776680833369,
+      "warmupDeadlineElapsed": 39.3578073749959,
+      "warmupDetached": true,
+      "warmupFramesAfter": 890,
+      "warmupFramesBefore": 887,
+      "warmupOldItemRetained": true,
+      "warmupOutcome": "cancelled",
+      "warmupPositionAfter": 38.057,
+      "warmupPositionBefore": 36.946418047,
+      "warmupProxyAfter": {
+        "acceptedConnections": 8,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 8,
+        "cancelled": 1,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 97745.42137858334,
+        "lastCompletionUptime": 97745.46023108334,
+        "pendingSends": 0,
+        "receivedBodyBytes": 95715,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 8
+      },
+      "warmupProxyBefore": {
+        "acceptedConnections": 0,
+        "activeConnections": 0,
+        "activeTasks": 0,
+        "admittedRequests": 0,
+        "cancelled": 0,
+        "cancelledCompletions": 0,
+        "closedWithActiveTask": 0,
+        "failedCompletions": 0,
+        "lastAdmissionUptime": 0,
+        "lastCompletionUptime": 0,
+        "pendingSends": 0,
+        "receivedBodyBytes": 0,
+        "suspendedTasks": 0,
+        "upstreamCompletions": 0
+      },
+      "warmupReusesPrerolledItem": false,
+      "warmupStage": "waitingReady",
+      "warmupStartedElapsed": 37.3578073749959
+    },
+    "automaticEvents": [
+      {
+        "attempt": 1,
+        "due": 37.19802470832656,
+        "elapsed": 37.21828849999292,
+        "elapsedAfter": 37.57771599999978,
+        "generation": 0,
+        "manifestPreparedElapsed": 37.35777987499023,
+        "outcome": "preparationFailed",
+        "positionBefore": 36.806171846,
+        "preparationCompletedElapsed": 37.577698583336314,
+        "preparationPauseApplied": false,
+        "publicCommandApplied": true,
+        "publicCommandCompletedElapsed": 37.46925629166071,
+        "publicCommandIntentAfter": 1,
+        "publicCommandIntentBefore": 0,
+        "publicCommandItemChanged": false,
+        "publicCommandManuallyInvalidated": false,
+        "publicCommandPositionBefore": 37.057724242,
+        "publicCommandReady": true,
+        "publicCommandSessionId": "apple-991-s1",
+        "publicCommandStartedElapsed": 37.46913529167068,
+        "publicSeekTargetMs": 38057,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "ticketIntentRevision": 0,
+        "warmupCompletedElapsed": 37.5776680833369,
+        "warmupDeadlineElapsed": 39.3578073749959,
+        "warmupDetached": true,
+        "warmupFramesAfter": 890,
+        "warmupFramesBefore": 887,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "cancelled",
+        "warmupPositionAfter": 38.057,
+        "warmupPositionBefore": 36.946418047,
+        "warmupProxyAfter": {
+          "acceptedConnections": 8,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 8,
+          "cancelled": 1,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 97745.42137858334,
+          "lastCompletionUptime": 97745.46023108334,
+          "pendingSends": 0,
+          "receivedBodyBytes": 95715,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 8
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "waitingReady",
+        "warmupStartedElapsed": 37.3578073749959
+      },
+      {
+        "attempt": 2,
+        "due": 55.020741250002175,
+        "elapsed": 55.06727487499302,
+        "elapsedAfter": 56.033964958332945,
+        "generation": 0,
+        "manifestPreparedElapsed": 55.22918624999875,
+        "outcome": "cancelled",
+        "positionBefore": 55.463716709,
+        "preparationCompletedElapsed": 56.03318004166067,
+        "preparationPauseApplied": false,
+        "publicUnexpectedInstallEligibility": true,
+        "textureClearsAfter": 0,
+        "textureClearsBefore": 0,
+        "ticketIntentRevision": 1,
+        "warmupCompletedElapsed": 56.03313574999629,
+        "warmupDeadlineElapsed": 57.22919066666509,
+        "warmupDetached": true,
+        "warmupFramesAfter": 1332,
+        "warmupFramesBefore": 1312,
+        "warmupOldItemRetained": true,
+        "warmupOutcome": "ready",
+        "warmupPositionAfter": 56.430455319,
+        "warmupPositionBefore": 55.626492606,
+        "warmupProxyAfter": {
+          "acceptedConnections": 55,
+          "activeConnections": 2,
+          "activeTasks": 2,
+          "admittedRequests": 54,
+          "cancelled": 0,
+          "cancelledCompletions": 1,
+          "closedWithActiveTask": 1,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 97763.9660155,
+          "lastCompletionUptime": 97763.95016620833,
+          "pendingSends": 0,
+          "receivedBodyBytes": 563927,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 52
+        },
+        "warmupProxyBefore": {
+          "acceptedConnections": 0,
+          "activeConnections": 0,
+          "activeTasks": 0,
+          "admittedRequests": 0,
+          "cancelled": 0,
+          "cancelledCompletions": 0,
+          "closedWithActiveTask": 0,
+          "failedCompletions": 0,
+          "lastAdmissionUptime": 0,
+          "lastCompletionUptime": 0,
+          "pendingSends": 0,
+          "receivedBodyBytes": 0,
+          "suspendedTasks": 0,
+          "upstreamCompletions": 0
+        },
+        "warmupReusesPrerolledItem": false,
+        "warmupStage": "ready",
+        "warmupStartedElapsed": 55.22919066666509
+      }
+    ],
+    "resume": null,
+    "attempts": 2,
+    "postCommandFrames": 1967,
+    "postCommandWidths": [
+      320
+    ],
+    "ptsCount": 1967,
+    "invalidPTSRows": 0,
+    "ptsMinimum": 38.041666666666664,
+    "seekTarget": 38.057,
+    "policy": {
+      "samples": 454,
+      "reasonCounts": {
+        "playbackIneligible": 1,
+        "insufficientBuffer": 35,
+        "highOutput": 62,
+        "windowStarted": 2,
+        "windowPending": 120,
+        "firstQualifiedWindow": 2,
+        "reserved": 2,
+        "backoff": 4,
+        "ticketReady": 2,
+        "budgetExhausted": 166,
+        "nearEnd": 58
+      },
+      "attempts": 2,
+      "reservations": 2,
+      "tickets": 2,
+      "triggerExercised": true,
+      "intentSamples": [
+        {
+          "elapsed": 0.004018333333078772,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 0.32912183333246503,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 0.5833108333317796,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 0.8386011666589184,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.091680916666519,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.3516375000035623,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.6108094166702358,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 1.8718632499949308,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.1301452916668495,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.3837957499927143,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.6384030416666064,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 2.892105499995523,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.1464855416706996,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.3998809166660067,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.652351083335816,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 3.9072892916592536,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.16129904166155,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.4301123333279975,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.686539708331111,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 4.946339041664032,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.200470666663023,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.457379375002347,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.713982833331102,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 5.974016041669529,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 6.233462666670675,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 6.49037491666968,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 6.7489622499997495,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.009466958334087,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.270493374991929,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.524873458329239,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 7.790754791669315,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.051411333333817,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.30780095832597,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.563846499993815,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 8.825577833325951,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.08608554166858,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.345845333329635,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.601381000000401,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 9.862418291668291,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.121140624993131,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.376694583334029,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.633130250003887,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 10.895399583328981,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.150714416668052,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.409722374999546,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.671604416667833,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 11.925952999998117,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.191253458324354,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.447451833329978,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.7028001666622,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 12.959460291662253,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.215287458326202,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.470219833325245,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.739120666665258,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 13.99967079165799,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.262095124999178,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.517392958325217,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 14.772319041658193,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.03888933332928,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.300508375003119,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.563373583325301,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 15.820479125002748,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.07810595832416,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.342745791669586,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.607066291660885,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 16.86899087499478,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.12581549999595,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.38614779166528,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.644661291662487,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 17.910446083333227,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.173975375000737,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.42889854166424,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.68451341666514,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 18.94841545833333,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.21162141665991,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.46823233332543,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.73285508333356,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 19.99001487500209,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.253288833337137,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.516804124999908,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 20.781702499996754,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.04549958332791,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.30770662499708,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.571882000003825,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 21.829243125001085,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.090620541668613,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.35517566667113,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.616922583329142,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 22.880649708327837,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.145174999997835,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.407782499998575,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.663672374997986,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 23.925854458328104,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.189352958332165,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.44325829166337,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.70177545833576,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 24.965995041668066,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.227831416661502,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.488141541660298,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 25.75228074999177,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.01396741667122,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.276478083324037,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.535744833337958,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 26.796018083332456,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.055833291669842,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.317119333325536,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.577367458332446,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 27.839174083332182,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.100038958335062,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.35725770832505,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.617194583333912,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 28.875086833329988,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.131808833335526,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.390558541665087,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.653803083332605,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 29.916979291665484,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.178200374997687,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.433711874997243,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.69665570833604,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 30.959614291670732,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.216766541663674,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.479380124990712,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 31.739881874993443,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.00245670833101,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.263969291670946,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.52017433333094,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 32.77868337499967,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.04026424999756,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.297879333331366,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.55663066665875,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 33.817371083336184,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.078126541659,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.33719108333753,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.59788158333686,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 34.85967249999521,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.116963249995024,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.37896954166354,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.63860674999887,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 35.90318287500122,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.16198016666749,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.43391633333522,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.69802470832656,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 36.961376208331785,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 37.21727966667095,
+          "intentRevision": 0
+        },
+        {
+          "elapsed": 37.835732416657265,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.10585233333404,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.368895541658276,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.6237608333322,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 38.88439470833691,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.147248875000514,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.408087000003434,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.67068804166047,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 39.92888158332789,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.18661737500224,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.444972333323676,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.70565008332778,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 40.970421666657785,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 41.22727895833668,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 41.486842124999384,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 41.74648654166958,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.008635833335575,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.27165841666283,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.5293659583258,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 42.78760845832585,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.04995154165954,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.3080487499974,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.571962000001804,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 43.83327683333482,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.09745412500342,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.35502991666726,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.610243583330885,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 44.870273416658165,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.134640208329074,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.392996958325966,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.64699683332583,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 45.90901166666299,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.1741640833352,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.436860208326834,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.69972658333427,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 46.965172500000335,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 47.22823024999525,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 47.48386929166736,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 47.74697308332543,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.00834279166884,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.27304808332701,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.53402949999145,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 48.7997037916648,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.05796395833022,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.32068941666512,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.583027541666524,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 49.84635716666526,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.108618833328364,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.37278399999195,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.6312808333314,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 50.89272337500006,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.150565666670445,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.408580958333914,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.6656451250019,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 51.93056220833387,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.194067208329216,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.45663366666122,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.721283333332394,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 52.978082375004306,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.23942275000445,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.50347916666942,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 53.76230758332531,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.020741250002175,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.283144250002806,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.54615362499317,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 54.805996333336225,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 55.06614183333295,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.298724833337474,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.55598570832808,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 56.815308333330904,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 57.077435375002096,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 57.3427885833371,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 57.600080499993055,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 57.86159454166773,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 58.1249344166572,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 58.38921395833313,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 58.64791200000036,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 58.90936224999314,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.16819104166643,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.425626541662496,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.68807249999372,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 59.9496003749955,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.20923912500439,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.47131687500223,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.734754541670554,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 60.99546687499969,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.26057450000371,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.524469083335134,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 61.78177783332649,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.04802149999887,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.30938762499136,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.57251016666123,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 62.83671408332884,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.099832666659495,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.36236716665735,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.633190666660084,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 63.89854329166701,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.1617399166571,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.42409841666813,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.68625429166423,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 64.94816095833085,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.2085530833283,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.46888562499953,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.72987254166219,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 65.99190520832781,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 66.25647258333629,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 66.52008999999089,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 66.78130762500223,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.04627399999299,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.30832233333786,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.57366879166511,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 67.83462466666242,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.09464991666027,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.35174433332577,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.60738391666382,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 68.86951575000421,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.1269101666694,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.38411991666362,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.63809999999648,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 69.89945658332726,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.16266724999878,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.4230811666639,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.67725841666106,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 70.93694666666852,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.19523320833105,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.45824979167082,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.71641366666881,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 71.9782009999908,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.23936999999569,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.5013046249951,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 72.75791058332834,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.01486320832919,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.27330587500182,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.53670495832921,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 73.79440045832598,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.05608300000313,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.31397995832958,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.57706412499829,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 74.83931845832558,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.0994212916703,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.36173895833781,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.62302670833014,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 75.88790349999908,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.14952420833288,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.40910366666503,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.66944629166392,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 76.92826200000127,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.19274791666248,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.45342087499739,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.71476566666388,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 77.97171874999185,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.22812724999676,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.48629833332961,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 78.74669058332802,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.00718749999942,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.2680587083305,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.53061124999658,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 79.80017912499898,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.06429883332748,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.32095070833748,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.58494791666453,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 80.84482374999789,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.109097916662,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.37135512499663,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.62898033333477,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 81.8897495833371,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.15287424999406,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.40923566666606,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.6672767916607,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 82.92947970832756,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.19313029166369,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.45669491666195,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.71852829166164,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 83.98218812499545,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.24621191665938,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.50994674999674,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 84.76908808332519,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.02622391666227,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.28278254166071,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.5443834583275,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 85.80229008333117,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.06011379166739,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.32030945832958,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.58278879166755,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 86.84038854166283,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.10484941666073,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.36323495833494,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.6336977500032,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 87.89189408332459,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.15631091666,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.42197779165872,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.68357429165917,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 88.94784341666673,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.208084541664,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.4719659583352,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.73170566666522,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 89.99282908333407,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.25491366666392,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.51969495833328,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 90.78100479165732,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.0428142916644,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.30828450000263,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.5673497083335,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 91.82929591665743,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.0941171250015,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.35832529165782,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.61598554166267,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 92.88739229166822,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.15056574999471,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.4094999999943,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.67235399999481,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 93.93202062499768,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.19394916667079,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.45559770833643,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.71232174999022,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 94.97422670833475,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.23183187500399,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.48997300000337,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 95.75394149999192,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.01643679165863,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.28061058332969,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.5376379583322,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 96.80178112500289,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.05990462499904,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.32412462499633,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.58758320832567,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 97.84876745833026,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.1055686250038,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.36283970833756,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.61847137499717,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 98.87641141666973,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.13355991666322,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.39570966667088,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.6580789166619,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 99.91543891666515,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.17479908332461,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.4473367916653,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.70705887499207,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 100.9727827500028,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.23092208332673,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.49422374999267,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 101.75423341666465,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.01669408332964,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.28042112500407,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.54175079165725,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 102.80350329166686,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.0676428333245,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.33021258332883,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.58742991666077,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 103.85112220833253,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.10985875000188,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.37272091666819,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.6296897916618,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 104.89975979166047,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.16299179165799,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.42679504166881,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.68834304166376,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 105.95279545833182,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.20954729166988,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.46632279166079,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.7225233749923,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 106.98499091666599,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.24717345833778,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.50991325000359,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 107.77259412499552,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.03440712500014,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.29966099999729,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.56233279166918,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 108.8249443333334,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.082588916659,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.34713745833142,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.60314837499755,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 109.86093933333177,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.1193725833291,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.38161183333432,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.63822870832519,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 110.90043333332869,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.16193099999509,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.42686320832581,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.6830223333236,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 111.94148833333747,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.19968237499415,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.46799904166255,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.72641929166275,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 112.98387312499108,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.24623708332365,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.50713029166218,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 113.77019237499917,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.02767224999843,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.28748470832943,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.55225845833775,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 114.8105162083375,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.07525020833418,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.33874929166632,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.59773024999595,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 115.86387320833455,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.12616870833153,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.38551604165696,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.64290266665921,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 116.90750862499408,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.17234970832942,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.43293087500206,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.6933256249904,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 117.95754016666615,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.21660829166649,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.48063495833776,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 118.73825262500031,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.00160483333457,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.26310283332714,
+          "intentRevision": 1
+        },
+        {
+          "elapsed": 119.52321050000319,
+          "intentRevision": 1
+        }
+      ],
+      "ticketAuthorities": [
+        {
+          "attempt": 1,
+          "elapsed": 37.21727966667095,
+          "intentRevision": 0
+        },
+        {
+          "attempt": 2,
+          "elapsed": 55.06614183333295,
+          "intentRevision": 1
+        }
+      ],
+      "windowBitrateMinimum": 1923605.6538058552,
+      "windowBitrateMaximum": 3039278.9550166405,
+      "capabilityAccepted": false
+    },
+    "continuity": {
+      "frameSamplingVersion": 2,
+      "sampleCount": 6436,
+      "publishedFrames": 2857,
+      "maximumPumpGapMs": 112.74412499915343,
+      "maximumPublishedFrameGapMs": 327.9847499943571,
+      "lastPublicationSampleElapsed": 119.57954012499249,
+      "observationEndElapsed": 119.774350291671,
+      "trailingNoPublicationMs": 194.8101666785078,
+      "replacementBoundaries": [],
+      "generationsWithoutPublishedFrame": [],
+      "continuityAccepted": false,
+      "audioSynchronizationVerified": false,
+      "physicalOutputVerified": false
+    },
+    "validatorFailure": "Traceback (most recent call last):\n  File \"/private/tmp/yl-public-transport/final-analysis.py\", line 25, in <module>\n    try:abr_accesslog.summarize_public_transport(rows,frames,abr_accesslog.summarize_policy(decisions,expected_attempts=rows[-1]['automaticAttempts']));failure=None\n        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 384, in summarize_public_transport\n    require(len(published)>=3 and all(f['width'] in (320,640) for f in published) and any(f['width']==640 for f in published))\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/abr_accesslog.py\", line 311, in require\n    if not value: raise ValueError('incomplete public transport race evidence')\n                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nValueError: incomplete public transport race evidence\n",
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  }
+]

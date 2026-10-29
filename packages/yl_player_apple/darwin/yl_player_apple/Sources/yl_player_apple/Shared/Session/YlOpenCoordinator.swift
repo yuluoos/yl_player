@@ -85,6 +85,8 @@ final class YlOpenCoordinator {
     return operation.generation
   }
 
+  var hasCurrent: Bool { lock.withLock { current != nil } }
+
   func cancelCurrent() {
     let operation = lock.withLock { current }
     guard let operation else { return }

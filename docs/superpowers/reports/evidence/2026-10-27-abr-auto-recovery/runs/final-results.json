@@ -1,0 +1,24 @@
+[
+  {
+    "name": "auto-final-pause",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/abr_accesslog.py",
+      "--products",
+      "/private/tmp/yl-remaining-20261026-ios/Build/Products",
+      "--directory",
+      "/private/tmp/yl-auto-20261027/auto-final-pause",
+      "--device",
+      "B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+      "--duration-seconds",
+      "120",
+      "--recovery-action",
+      "auto-reload",
+      "--auto-scenario",
+      "pause-first"
+    ],
+    "exitCode": 0,
+    "seconds": 134.9960777919987
+  }
+]

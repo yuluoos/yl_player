@@ -1,0 +1,14 @@
+{
+  "manifestEntriesVerified": 590,
+  "completeXcresultBundlesVerified": 21,
+  "bundleFilesComparedToOriginal": true,
+  "nativeContractEvidenceReused": false,
+  "newNativeMediaBundles": 11,
+  "rawProvenanceEntriesVerified": 552,
+  "all102RowStatesUnchanged": true,
+  "changedProductionFiles": [
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift"
+  ]
+}

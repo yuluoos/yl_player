@@ -1,0 +1,75 @@
+[
+  {
+    "diagnosticOnly": true,
+    "capabilityAccepted": false,
+    "errors": [],
+    "exitCode": 0,
+    "fixture": {
+      "fixedMissingAtMs": null,
+      "durationSeconds": 120,
+      "periodCount": 30,
+      "assetCount": 481,
+      "sourceManifestSha256": "1c9d2979524b0d1939fc6f2eefd83694cc6b832172dd22c725d44e2b8b47edbe",
+      "manifestSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+      "inventorySha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0"
+    },
+    "profileSha256": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320
+      ],
+      "downshiftObserved": true,
+      "upshiftAfterDownshiftObserved": false,
+      "lastObservedBitrate": 1391437,
+      "lastIndicatedBitrate": 414000,
+      "framesPublished": 472,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    },
+    "ownedProcessExited": true,
+    "binaryIdentityUnchanged": true,
+    "passed": true
+  },
+  {
+    "diagnosticOnly": true,
+    "capabilityAccepted": false,
+    "errors": [],
+    "exitCode": 0,
+    "fixture": {
+      "fixedMissingAtMs": null,
+      "durationSeconds": 120,
+      "periodCount": 30,
+      "assetCount": 481,
+      "sourceManifestSha256": "1c9d2979524b0d1939fc6f2eefd83694cc6b832172dd22c725d44e2b8b47edbe",
+      "manifestSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+      "inventorySha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0"
+    },
+    "profileSha256": "a594236ddb63aa7c854d962fad1a6e56d5f7ccdae5f20f4a11b99deb7685ac92",
+    "observation": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320,
+        640
+      ],
+      "downshiftObserved": true,
+      "upshiftAfterDownshiftObserved": true,
+      "lastObservedBitrate": 3349769,
+      "lastIndicatedBitrate": 764000,
+      "framesPublished": 474,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    },
+    "ownedProcessExited": true,
+    "binaryIdentityUnchanged": true,
+    "passed": true
+  }
+]

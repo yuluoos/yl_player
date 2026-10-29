@@ -1,0 +1,30 @@
+[
+  {
+    "name": "ledger",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "required",
+    "command": [
+      "python3",
+      "-B",
+      "tool/release_readiness/check.py",
+      "--require-ready"
+    ],
+    "exitCode": 1
+  },
+  {
+    "name": "diff",
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "exitCode": 0
+  }
+]

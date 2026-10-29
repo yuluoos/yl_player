@@ -1,0 +1,1 @@
+最终记录定向复核通过，无重要问题。报告限定顺序Load，未声明Dart并发、高档或物理连续性通过；102行状态不变、iOS CAP-ABR引用20项、SHA一致、releaseReady=false。两平台Dart日志与哈希、原生214/189摘要一致；SDK缓存/ARM iproxy/包装指纹一致。主流程已完成4份完整xcresult逐文件对比原bundle，161条raw-provenance校验成功。

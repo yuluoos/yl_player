@@ -19,6 +19,8 @@ def require(condition):
 def summarize(result, samples, requests, *, exit_code, server_summary=None):
     require(isinstance(result, dict) and result.get('schemaVersion') == 1)
     require(type(exit_code) is int)
+    duration_seconds = result.get('programmeDurationSeconds', 40)
+    require(type(duration_seconds) is int and duration_seconds in (40, 120))
     run = result.get('runId')
     require(isinstance(run, str) and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}', run))
     require(result.get('mode') in ('auto', 'caps', 'fixed'))
@@ -54,6 +56,8 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
                 type(sample.get('failed')) is bool and isinstance(sample.get('status'), str))
         for key in ['width', 'height', 'selectedWidth', 'selectedHeight', 'selectedBitrate', 'rebufferCount', 'rebufferUs']:
             require(key in sample and (sample[key] is None or number(sample[key])))
+        for key in ['estimatedBitrate', 'bufferedPositionUs']:
+            require(sample.get(key) is None or number(sample[key]))
         geometry = ((sample['width'], sample['height'])
                     if sample['width'] is not None and sample['height'] is not None else None)
         if geometry is not None and last_geometry is not None and geometry != last_geometry:
@@ -87,6 +91,7 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
 
     media_phases = set()
     weak_low_request, recovery_high_request = None, None
+    last_video_end_ms = None
     for row in requests:
         require(isinstance(row, dict) and row.get('schemaVersion') == 1 and row.get('runId') == run and
                 row.get('profile') == result['profileId'] and row.get('profileSha256') == result['profileHash'] and
@@ -124,6 +129,7 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
             if row['bodyBytesWritten'] > 0 and row['outcome'] == 'complete':
                 media_phases.add('initial' if row['startMs'] < 10000 else 'weak' if row['startMs'] < 25000 else 'recovery')
             if match.group(1) in ('0', '1') and row['bodyBytesWritten'] > 0 and row['outcome'] == 'complete':
+                last_video_end_ms = max(last_video_end_ms or 0, row['endMs'])
                 if rendition == '0' and 10000 <= row['startMs'] < 25000:
                     value = round((row['startMs']-10000)*1000)
                     weak_low_request = value if weak_low_request is None else min(value, weak_low_request)
@@ -146,7 +152,7 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
     # A partial failure can legitimately have no samples or no manifest.
     completed = (exit_code == 0 and result['outcome'] == 'completed' and result['cleaned'] and
                  bool(samples) and samples[-1]['status'] == 'completed' and
-                 samples[-1]['positionUs'] >= 39500000 and manifest_seen and
+                 samples[-1]['positionUs'] >= duration_seconds * 1000000 - 500000 and manifest_seen and
                  result.get('firstFrameUs') is not None and
                  not any(s['failed'] for s in samples) and server_complete)
     def delta(key):
@@ -171,6 +177,12 @@ def summarize(result, samples, requests, *, exit_code, server_summary=None):
             if down is not None and up is None and geometry == (640, 360) and lo >= 25000000:
                 up = dict(min=lo-25000000, max=hi-25000000)
     return dict(schemaVersion=1, runId=run, mode=result['mode'], captureComplete=bool(completed),
+                programmeDurationSeconds=duration_seconds,
+                lastVideoRequestEndMs=last_video_end_ms,
+                # Endpoint span, not continuous transfer time or a claim that
+                # the private estimator had sufficient recovery samples.
+                videoRequestTailAfterRecoveryMs=(max(0, last_video_end_ms - 25000)
+                                                  if last_video_end_ms is not None else None),
                 downshiftLatencyUs=down, upshiftLatencyUs=up,
                 weakLowRequestLatencyUs=weak_low_request, recoveryHighRequestLatencyUs=recovery_high_request,
                 adaptationObserved=bool(completed and not violations and down is not None and up is not None and

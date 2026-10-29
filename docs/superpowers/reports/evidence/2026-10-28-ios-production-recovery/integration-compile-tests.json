@@ -1,0 +1,98 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.0011s",
+                  "durationInSeconds" : 0.0010859966278076172,
+                  "name" : "testProductionRecoveryCancellationKeepsBackoffAndSourceBudget()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryCancellationKeepsBackoffAndSourceBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryCancellationKeepsBackoffAndSourceBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.16s",
+                  "durationInSeconds" : 0.15903699398040771,
+                  "name" : "testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00094s",
+                  "durationInSeconds" : 0.0009388923645019531,
+                  "name" : "testProductionRecoveryControllerCommitsWithinPreparationDeadline()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryControllerCommitsWithinPreparationDeadline()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryControllerCommitsWithinPreparationDeadline",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00058s",
+                  "durationInSeconds" : 0.0005810260772705078,
+                  "name" : "testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00055s",
+                  "durationInSeconds" : 0.0005459785461425781,
+                  "name" : "testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00064s",
+                  "durationInSeconds" : 0.0006389617919921875,
+                  "name" : "testProductionRecoveryUsesDynamicBandwidthAndTwoWindows()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryUsesDynamicBandwidthAndTwoWindows()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryUsesDynamicBandwidthAndTwoWindows",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

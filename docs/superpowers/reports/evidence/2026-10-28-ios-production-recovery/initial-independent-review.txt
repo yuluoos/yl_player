@@ -1,0 +1,29 @@
+Independent integrated review — iOS production DASH recovery
+Date: 2026-10-28
+Reviewer: production_recovery_review (independent subagent)
+Base: 83deb9ed; candidate: uncommitted working tree, reviewed read-only.
+Scope: all changed production Swift, controller/policy additions, all three native test copies, Python capture/validators/tests, README and implementation plan. No device tests, publishing, repository edits, or release actions performed.
+
+Status: CHANGES REQUESTED pending one P2 safety-boundary fix and final evidence/ledger audit.
+
+P2: Native counter regressions bypass pending-ticket and commit authorization.
+File: packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift
+Reviewed locations: observe lines 77-95; authorizes lines 115-117.
+Repro: feed normal high at t=0 then low samples t=1,9,17 to reserve attempt one. At t=17.5 provide allowed low sample with valid buffer/remaining but bytes=0, transfer=0, requests=0. Pending branch returns a ticket before any counter check; authorizes accepts the regressed counters. Similarly a counter decrease inside a window which remains above its anchor is not detected, and fresh commit samples are not compared with last observed position/time/counters. This violates the plan requirement that native counter rollback cannot trigger recovery and permits installation based on evidence from before a reset. Fix by validating adjacent same-item samples before pending/inFlight branches and applying non-regression to commit-time authorization; retain consumed budget. Add tests for within-window, backoff, and in-flight/commit rollback.
+
+Other reviewed paths:
+- Identity reset uses full committed session identity and preserves reservations across item replacements/commands.
+- Main-queue commit verifies current sample, session, intent, credential revision, current AV backend and active state.
+- Public transport/policy commands, Load, stop/dispose, deactivation and foreground loss invalidate work.
+- Preparation deadline, ticket expiry and stale-operation disposal prevent late installation.
+- Immutable manifest projection and current-source credentials are reused; new Load owns independent context.
+- Credential lock's replacement call tree: no confirmed same-instance reverse lock or synchronous credential reentry found; prepared/active loaders have completed preflight before commit.
+- Audio maximum bandwidth in compiler catalog is populated and conservative across periods; ambiguous output geometry disables eligibility.
+- Production capture explicitly enables public-host dispatcher and disables legacy diagnostic installation.
+- No changes found that lower the stated trigger thresholds or claim physical A/V continuity.
+
+Evidence inspected (reused, not rerun): final-macos-contracts-result.json and final-ios-build-result.json both exitCode 0; local-checks.json has zero exits for network tests, consumer tests, current/historical target consistency and historical source parity. git diff --check passed during review. Native example copies are identical; canonical fixture differs by expected generated wrapper/import treatment, whose consistency check passed.
+
+Evidence caveat: production summarizer proves initial high/downshift using rows (AVPlayer presentationSize), with actual buffer high required after downshift and after installation. It does not currently require actual published buffers for the initial high and low stages. If the final report claims actual-frame high-low-high, verify all three phases from frame-samples or strengthen validator. This is an evidence wording/check detail, separate from the counter safety finding.
+
+Final review of targeted fix, final device runs, report and release ledger remains pending; historical listener/address/audio-route failures must be preserved. This review does not grant CAP-ABR or physical continuity acceptance.

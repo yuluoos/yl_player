@@ -1,0 +1,66 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1793244719.033,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793244687.211,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertNil failed: \"Ticket(id: D486CD81-196B-4F6C-8D54-B8A5F8166BB8, generation: 0, attempt: 1, due: 17.5, intentRevision: 0, credentialRevision: 0, catalog: [yl_player_apple.YlDashAutoRecoveryPolicy.Variant(id: \"low\", width: 426, height: 240, bandwidth: 400000.0), yl_player_apple.YlDashAutoRecoveryPolicy.Variant(id: \"upper\", width: 960, height: 540, bandwidth: 1500000.0)])\" - bytes",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlDashResourceLoaderTests/testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit",
+      "testName" : "testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "3 runs of 1 test failed with XCTAssertEqual failed: (\"Optional(1)\") is not equal to (\"Optional(0)\")"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "3 runs of 1 test failed with XCTAssertEqual failed: (\"Optional(\"windowPending\")\") is not equal to (\"Optional(\"countersReset\")\")"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "100% of failures",
+      "text" : "3 runs of 1 test failed with XCTAssertEqual failed: (\"Optional(\"ticketReady\")\") is not equal to (\"Optional(\"countersReset\")\")"
+    }
+  ],
+  "totalTestCount" : 1
+}

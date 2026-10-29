@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/yl-preparation-intent/run-native.py",
+      "device"
+    ],
+    "exitCode": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/yl-preparation-intent/run-native.py",
+      "macos"
+    ],
+    "exitCode": 0
+  },
+  {
+    "command": [
+      "python3",
+      "-B",
+      "/private/tmp/yl-preparation-intent/run-checks.py"
+    ],
+    "exitCode": 0
+  }
+]

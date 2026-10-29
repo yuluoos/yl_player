@@ -1,0 +1,34 @@
+{
+  "sourceFilesVerified": 22,
+  "sourceHashes": {
+    "tool/playback_network/abr_accesslog.py": "ecbeeb19c52b002c7acd558c98d8c0d5cff4f78f2ce118b5193206ab03072afd",
+    "tool/playback_network/abr_device.py": "baea817334c67352494bfcc62300c4dfaab0bb8db357c6fbf7515eb5352dd291",
+    "tool/playback_network/network_profile.py": "786b803eff21cd42b89f6a9018a8399e194aa4c7ad35735c2f2d5a96658f81b1",
+    "tool/playback_network/profiles.json": "6bafbb19072bb7d38f90f81248811a78eb118a82f01b3d34464c850041c6f3de",
+    "tool/playback_network/prepare_fixture.py": "fd2c6c19a43d10cc65f122901a382b2e737f7146d43a7a5153d34f717ad0f1d9",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlDashResourceLoaderTests.swift": "04eb0ed0182d001e1c137124f2ba3e8fc0660853f376c8fa6cc26e574d5af1c2",
+    "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift": "6128d3af52ca53d1303716f03a53eb43af1dbcd706430f1ddd5b4cbcbe64f260",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "9bb830489fb4ba214ef6734c3d89b1612445b43bfa03938a41fb01254a4cc2b9",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "87b9b9267418757e9980c9f2bd67fb6ee89106241e832595ae6210bda5e1098d",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
+    "tool/playback_network/test_abr_accesslog.py": "4db402927de1b5705ae05abb960fea749971ab6a7cc70810021eca0f4c055881",
+    "packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift": "6128d3af52ca53d1303716f03a53eb43af1dbcd706430f1ddd5b4cbcbe64f260",
+    "tool/consumer_fixtures/apple_flutter/main_example_tests.py": "69603da7c8f0810b53e4103c08f8f3b4ea33e50ee279b95a146dcbe51ac1a7fe",
+    "tool/playback_network/README.md": "9259604b155f5ee156360425fd1f910fbdbbd37ae63f1e20820dc86523714034",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlApplePlayerHost.swift": "63b08103e4795636786f66208471ece50bba5996da41011919672bca0b04b611",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlAppleSessionCoordinator.swift": "7a97aabd250a3d795f05ae727d34314b581fa5598b45de29791452d57f7c0bf4",
+    "tool/consumer_fixtures/apple_flutter/RunnerTests/YlNetworkRequestPolicyTests.swift": "1891a7f7c060fa3ed588e68f990cbdb7603318eb253df9ad66c727898a383d8e",
+    "packages/yl_player/example/ios/RunnerTests/YlNetworkRequestPolicyTests.swift": "2b0c9801e01df4ec690eff085271661fef945c7061acb69d6d465ae007567e04",
+    "packages/yl_player/example/macos/RunnerTests/YlNetworkRequestPolicyTests.swift": "2b0c9801e01df4ec690eff085271661fef945c7061acb69d6d465ae007567e04",
+    "packages/yl_player_media_core/darwin/yl_player_media_core/Sources/yl_player_media_core/Network/YlManagedHTTPTransport.swift": "6d95918eac44e3d70f9f557044b3a6632f0b9992f3a2995e0cd6dd06053b38f0",
+    "tool/consumer_fixtures/apple_flutter/test_runtime_evidence.py": "571ef8b27af2d20f069402656780093c502dcc22ffd27156c402d66f2e088482",
+    "tool/playback_network/test_abr_policy.py": "fd349d78a9c62138eef261c735a6e6cb769f65045fa9327263298592fd94757c"
+  },
+  "sameBinary": true,
+  "productsStillMatch": true,
+  "ownedProcessesExited": true,
+  "mediaRuns": [
+    "review-media/pause",
+    "review-media/seek"
+  ]
+}

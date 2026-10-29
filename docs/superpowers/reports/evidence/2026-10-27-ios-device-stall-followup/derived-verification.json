@@ -1,0 +1,30 @@
+{
+  "oldSummaryFieldsUnchanged": [
+    "frozen-auto",
+    "stall-auto",
+    "disconnect-auto",
+    "frozen-pause",
+    "headroom-baseline",
+    "headroom-auto",
+    "headroom-pause",
+    "latency-baseline",
+    "latency-auto",
+    "latency-pause"
+  ],
+  "originalStallDerivedFrames": {
+    "frameSamplingVersion": 2,
+    "sampleCount": 7670,
+    "publishedFrames": 1532,
+    "maximumPumpGapMs": 45.27991666691378,
+    "maximumPublishedFrameGapMs": 1505.3471666615224,
+    "lastPublicationSampleElapsed": 66.74412183333334,
+    "observationEndElapsed": 140.14394841666945,
+    "trailingNoPublicationMs": 73399.82658333611,
+    "replacementBoundaries": [],
+    "generationsWithoutPublishedFrame": [],
+    "continuityAccepted": false,
+    "audioSynchronizationVerified": false,
+    "physicalOutputVerified": false
+  },
+  "rawReceiptsRewritten": false
+}

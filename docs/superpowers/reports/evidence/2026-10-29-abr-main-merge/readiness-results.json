@@ -1,0 +1,22 @@
+[
+  {
+    "name": "ledger",
+    "exitCode": 0,
+    "expected": 0
+  },
+  {
+    "name": "ledger-required",
+    "exitCode": 1,
+    "expected": 1
+  },
+  {
+    "name": "threshold",
+    "exitCode": 0,
+    "expected": 0
+  },
+  {
+    "name": "threshold-required",
+    "exitCode": 1,
+    "expected": 1
+  }
+]

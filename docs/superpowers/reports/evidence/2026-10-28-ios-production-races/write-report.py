@@ -1,0 +1,60 @@
+from pathlib import Path
+import json,hashlib,sys
+sys.path.insert(0,'tool/release_readiness');from check import source_snapshot
+r=Path('/private/tmp/yl-production-races');analysis=json.loads((r/'reviewed-media-analysis.json').read_text());results=analysis['results'];scope=json.loads((r/'final-native-scope.json').read_text());assert scope['macos']['passed']==211 and scope['device']['passed']==236
+source=source_snapshot(Path.cwd());(r/'final-production-source.json').write_text(json.dumps(source,indent=2)+'\n')
+lines=[]
+for name,label in [('reviewed-seek-prepared','候选已准备→公开跳转'),('reviewed-load-prepared','候选已准备→新Load'),('reviewed-pause-prepared','候选已准备→暂停恢复'),('reviewed-original','原配置自然恢复'),('reviewed-normal-1','正常恢复第1轮'),('reviewed-normal-2','正常恢复第2轮'),('reviewed-normal-3','正常恢复第3轮')]:
+ d=results[name];gaps='/'.join(f"{b['publicationGapMs']:.3f}" for b in d['continuity']['replacementBoundaries']) or '无替换';lines.append(f"| {label} | {d['finalPosition']:.6f} | {d['attempts']} / {d['production']['installed']} | {gaps} |")
+seek=results['reviewed-seek-prepared'];load=results['reviewed-load-prepared'];pause=results['reviewed-pause-prepared'];normal=[results[f'reviewed-normal-{i}'] for i in range(1,4)]
+p=Path('docs/superpowers/reports/2026-10-28-ios-production-races.md')
+p.write_text(f'''# iOS 生产恢复真机竞争与重复高档验证
+
+基线 `942fc481`，分支 `codex/abr-recovery`，承接[生产接入报告](2026-10-28-ios-production-recovery.md)。沿用用户授权的集中验收，不发布、推送、合并或打标签。
+
+## 已确认修复
+
+1. **新 Load 返回时仍暴露旧恢复预算。** 生产协调器原先只在250ms轮询时按新会话重置。真机旧候选已取消、新会话已返回，但 `newAttempts=1`。现在成功提交并设置新身份后、对外提交/返回前同步切换恢复控制器来源；失败Load保留原会话预算。真实公开Load的确定性合约先以1!=0红灯复现，修复后通过。
+2. **自动选档的公开跳转仍发布旧帧。** 原帧门控只在固定选轨时阻断pending user seek。原始真机失败在37.824772秒确认跳转到38.041秒，37.833953秒仍发布PTS37.041667。现在所有pending user seek均阻断新帧发布；锁内快照单调Seek修订号并在复制后复核，防止跨线程旧复制越过完整跳转。旧固定帧的异步错误也绑定修订号；已在当前权限下确认且锁定的画质限制错误保持终止通知，避免静默无帧。
+
+四个确定性边界保留红灯和绿灯：pending Seek、跨线程旧复制、旧固定帧错误的定向变异、已锁定画质错误不得被Seek吞掉。固定分支先完成固定选轨落点再挂起复制，变异红灯证明真实进入该路径。画质错误通知风险是在本轮修复过程中发现并消除的附带回归，不冒充旧基线已有缺陷。
+
+内部默认nil诊断钩子在真实候选准备完成后暂挂；公开暂停、跳转或Load触发取消，测试不直接取消恢复控制器、不伪造带宽。原生产双8秒窗口、每窗口3请求、目标音视频带宽1.25倍、缓冲5秒、剩余20秒、每源2次预算、500/1000ms退避、准备2秒截止、票据5秒、120秒素材及140/240秒期限全部不变。
+
+## 原始失败与证据校验
+
+初次磁盘耗尽阻止写入测试文件。清理仅涉及本任务可重建Android编译缓存及与已提交完整归档逐文件相同的临时xcresult副本，验证过程见 `space-recovery.json`；历史失败和完整归档未删除。第一轮暂停通过后，冻结检查因README变更在下一轮启动前停止；异常与两阶段快照保留。
+
+早期 `media/load-prepared` 收据在旧检查器下为passed，但原始 `newAttempts=1`暴露返回时预算问题。该收据原样保留，`load-original-reassessment.json`用加强后的原返回时预算门槛明确拒绝，不追认通过。`media/final-seek-prepared`旧帧轮原始收据为失败，整段虽然最终恢复640并到EOF，也不能抵消旧帧。早期通过轮次不替代最终制品复测。
+
+复审还发现跳转检查仅限制PTS下界，首帧跳到远处仍可误过。先以目标17秒、首帧70秒负例复现，再要求首帧实际PTS位于目标±50ms，后续帧不得退回目标前50ms之外；首帧延迟单独报告，不据此冻结产品性能门槛。消费者首次回归发现更新用例数量时误改H264 subtype，已恢复原值并保留失败日志及补测结果，不改变允许跳过条件。最终设备合约启动脚本首次引用错误的历史命令路径，尚未启动原生测试即失败；原脚本及失败记录保留，修正路径后执行完整矩阵。
+
+## 最终同制品真机采集
+
+以下7轮采用同一冻结源码和同一制品，均完成EOF且最终640，真实帧/公开命令/票据权限/预算门槛通过；没有记录前后台或音频路由干扰。每轮完整结果及所有先前失败独立保存。表中预算与安装只指最终会话；新Load使用相同请求标签但产生新会话，旧候选取消1次、新会话返回预算0，不能计为同会话自动恢复。
+
+| 场景 | EOF位置（秒） | 最终预算 / 自动安装 | item变化处新帧空档（ms） |
+| --- | --- | --- | --- |
+{chr(10).join(lines)}
+
+跳转首发布延迟{seek['command']['firstPublicationDelayMs']:.3f}ms，首个及后续实际PTS通过目标检查；暂停恢复首发布延迟{pause['command']['firstPublicationDelayMs']:.3f}ms。两者第一次已准备候选被取消，第二次1000ms退避安装恢复高档，预算未退款。新Load首发布延迟{load['command']['firstPublicationDelayMs']:.3f}ms，返回预算{load['commandMarker']['newAttempts']}；这是新Load路径，帧边界包含主动换源的影响。
+
+三轮正常恢复均真实触发一次安装，严格结果3/3，恢复高档后到EOF没有再次发布低档帧；持续高档观测跨度分别{', '.join(f"{x['finalHighSpanSeconds']:.3f}" for x in normal)}秒。全部轮次计入，不筛选更好样本。这只证明本机、固定素材和受控网络的三次观测，不证明跨设备、生产网络或AVPlayer内部penalty box决策的普遍稳定性。
+
+每轮完整continuityObservation保留全程最大帧空档、替换边界、PTS和纹理清空，不能把替换局部数值当作全程连续性，不能把主动暂停/Load空档算成自动恢复停顿。所有 `physicalOutputVerified`、`audioSynchronizationVerified`、`continuityAccepted`、`capabilityAccepted`仍为false；缺少校准后的真实屏幕/声音同步观测，本轮不授予物理音画连续性验收。
+
+## 统一验收与台账
+
+最终受影响原生矩阵重新执行并按唯一用例身份核对：iPhone236/236、macOS211/211，0失败0跳过；增加了真实headered MP4/MOV、HLS probe/intent和typed backend覆盖，因为通用Seek发布保护影响全部AVPlayer来源。网络工具130/130；消费者46项中45通过、1项因本地历史focused evidence缺失跳过。当前目标、历史目标和历史源一致性通过。原生完整summary的告警保留，绿灯不等于无告警。Dart/Pigeon接口未改，历史[Dart凭据竞争证据](2026-10-28-dart-credential-race.md)只作引用，不冒充本轮重跑。
+
+当前生产源码哈希 `{source['sha256']}`。独立综合复审及定向补审已覆盖Load原子预算、首帧证据、pending Seek和跨线程权限；最终证据与台账核对记录见independent-review.txt。发布台账/阈值结构检查、15项台账回归通过；两个--require-ready仍退出1，sourceMatches=true、releaseReady=false。
+
+CAP-ABR/iOS继续partial/not_run，全部102行implementation/verification/acceptance状态不变。其他提交后失败、公开命令及生命周期交错、更多设备/最低系统版本、生产网络稳定性、校准物理音画连续性及缺设备/授权资源项保留未完成；旧终末停顿不重新列为待办。当前3类竞争和3轮正常恢复不等于穷尽并发时序或整体能力通过。
+
+[完整证据](evidence/2026-10-28-ios-production-races/README.md)保留完整xcresult、源码阶段快照、同制品证明、原始失败/收据与严格重评、策略/访问/代理/帧/系统信号以及逐字节归档校验。历史23组5736个清单文件核对未变；CAP-ABR直接引用仍为20项，以本报告替换最近直接引用，旧总表项与报告链路保留。
+''')
+i=Path('tool/release_readiness/inventory.json');d=json.loads(i.read_text());d['source']=source;d['evidence']['ios-production-races-20261028']=dict(kind='report',path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest())
+for row in d['rows']:
+ if row['requirement']=='CAP-ABR' and row['platform']=='ios':
+  row['evidence']=[('ios-production-races-20261028' if v=='ios-production-recovery-20261028' else v) for v in row['evidence']];row['nextAction']='qualify-other-commit-failures-command-lifecycle-races-multidevice-network-stability-and-physical-av-continuity'
+i.write_text(json.dumps(d,ensure_ascii=False,indent=2)+'\n');print(source['sha256'])

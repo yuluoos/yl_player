@@ -1,0 +1,1 @@
+First archive verification exited 1: TypeError: 'PosixPath' object is not subscriptable at archiveParts reassembly (base[p['path']]). Corrected to base / p['path']; archive bytes were not modified by the failed verifier. Full per-file comparison rerun required.

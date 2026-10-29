@@ -1,0 +1,13 @@
+{
+  "commandTargets": [
+    "packages/yl_player/test/apple_player_controller_test.dart",
+    "packages/yl_player/test/player_controller_test.dart"
+  ],
+  "sha256": {
+    "packages/yl_player/test/apple_player_controller_test.dart": "236278109d362fe737314d4984d13d793a4142773b02970409baa58b182d3460",
+    "packages/yl_player/test/player_controller_test.dart": "801054dc2c31c9a0228bf02f97674930d8ebaff903e3c5c1f626f71a6782bf58",
+    "packages/yl_player/lib/src/player_controller.dart": "5dcf4eabaddb60865fc0a40c2d6b0f23d6caffcc82426644125149c03a62239e"
+  },
+  "passed": 29,
+  "contextSnapshotNote": "final-unit-source.dart records the integration work context; these two Dart unit files were the actual command targets."
+}

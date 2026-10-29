@@ -1,0 +1,5 @@
+from pathlib import Path
+import subprocess,json,hashlib,os
+r=Path('/private/tmp/yl-postcommit-failure');cwd=Path('packages/yl_player/example').resolve();cmd=['/Users/yy2021_8689/flutter/bin/cache/dart-sdk/bin/dart','--packages=/Users/yy2021_8689/flutter/packages/flutter_tools/.dart_tool/package_config.json',str(r/'flutter_arm_iproxy.dart'),'test','integration_test/apple_dash_credential_failure_test.dart','-d','00008140-000C49CC3493001C','--no-pub','--reporter','expanded'];env=os.environ.copy();env['FLUTTER_ROOT']='/Users/yy2021_8689/flutter';name='arm-dart-ios';(r/(name+'-command.json')).write_text(json.dumps(dict(command=cmd,cwd=str(cwd),environment={'FLUTTER_ROOT':env['FLUTTER_ROOT']}),indent=2)+'\n')
+with (r/(name+'.log')).open('w') as f:p=subprocess.run(cmd,cwd=cwd,env=env,stdout=f,stderr=subprocess.STDOUT)
+log=(r/(name+'.log')).read_bytes();(r/(name+'-result.json')).write_text(json.dumps(dict(exitCode=p.returncode,logSha256=hashlib.sha256(log).hexdigest(),testsPassed=b'All tests passed!' in log),indent=2)+'\n');print(name,p.returncode,flush=True)

@@ -1,0 +1,14 @@
+{
+  "baseline": "2a552cb8",
+  "command": [
+    "git",
+    "diff",
+    "2a552cb8",
+    "--",
+    "packages",
+    "tool"
+  ],
+  "diffSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "productionSourceHash": "745362ff8d58a76ae2fe185ba8b91708b15c04a687f00ef3925363f02b463ba7",
+  "unchangedBoundSourceFiles": 26
+}

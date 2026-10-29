@@ -1,0 +1,71 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "duration" : "Ran for 1.8 seconds",
+  "durationInSeconds" : 1.7557560205459595,
+  "hasMediaAttachments" : false,
+  "hasPerformanceMetrics" : false,
+  "testDescription" : "Test case with 1 run",
+  "testIdentifier" : "YlDashResourceLoaderTests/testSameDashCandidateRevocationCancelsPartiallyReceivedUpstream()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testSameDashCandidateRevocationCancelsPartiallyReceivedUpstream",
+  "testName" : "testSameDashCandidateRevocationCancelsPartiallyReceivedUpstream()",
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ],
+  "testResult" : "Failed",
+  "testRuns" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "name" : "",
+                  "nodeType" : "Source Code Reference",
+                  "sourceLocation" : {
+                    "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/AppleHostCharacterizations.swift",
+                    "lineNumber" : 333
+                  }
+                }
+              ],
+              "name" : "XCTAssertTrue failed - Expected native condition before deadline",
+              "nodeType" : "Test Case Run",
+              "result" : "Failed",
+              "sourceLocation" : {
+                "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/AppleHostCharacterizations.swift",
+                "lineNumber" : 333
+              }
+            }
+          ],
+          "duration" : "1秒",
+          "durationInSeconds" : 1.7557560205459595,
+          "name" : "Test Scheme Action",
+          "nodeIdentifier" : "1",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testSameDashCandidateRevocationCancelsPartiallyReceivedUpstream",
+          "nodeType" : "Test Plan Configuration",
+          "result" : "Failed"
+        }
+      ],
+      "details" : "macOS 27.0.1",
+      "duration" : "1秒",
+      "durationInSeconds" : 1.7557560205459595,
+      "name" : "MacBook Pro",
+      "nodeIdentifier" : "00008103-000571C03CD9001E",
+      "nodeType" : "Device",
+      "result" : "Failed"
+    }
+  ]
+}

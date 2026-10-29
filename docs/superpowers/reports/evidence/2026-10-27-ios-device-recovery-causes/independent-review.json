@@ -1,0 +1,17 @@
+{
+  "reviewer": "/root/continuity_review",
+  "scope": "Diagnostic Swift fixtures, policy/physical evidence tools and report; final ledger/archive checked separately by parent",
+  "findings": [
+    {
+      "priority": "P2",
+      "problem": "Ineligible tickets/windows could be called triggered",
+      "resolution": "Native eligibility/width/overdue guard validation plus counterexamples"
+    },
+    {
+      "priority": "P2",
+      "problem": "Legitimate rejected null/negative input rejected as corruption",
+      "resolution": "Preserve rejected inputs under native guard priority"
+    }
+  ],
+  "followup": "7 policy tests passed; report matches observations; no new blocking findings"
+}

@@ -1,0 +1,4 @@
+独立综合复审 /root/credential_review：1个P2，无P1。
+最后一次凭据版本读取与replaceActiveDash的实际item安装之间存在TOCTOU，后台strip可能穿过。
+本地MP4 readiness+真实DASH redirect组合不等于同一个DASH候选的inflight网络取消或完整public/Dart/Load隔离。
+本轮已实现同锁同步提交，并保存fence-red/fence-green，定向复核待完成；不提升完整恢复验收。

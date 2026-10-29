@@ -1,0 +1,27 @@
+{
+  "command": [
+    "xcodebuild",
+    "test-without-building",
+    "-quiet",
+    "CODE_SIGNING_ALLOWED=NO",
+    "ENABLE_TESTABILITY=YES",
+    "-sdk",
+    "iphonesimulator",
+    "-workspace",
+    "packages/yl_player/example/ios/Runner.xcworkspace",
+    "-scheme",
+    "Runner",
+    "-destination",
+    "platform=iOS Simulator,id=B4B1FA2D-8FFC-490D-8E1E-29EE3FEB5EB8",
+    "-parallel-testing-enabled",
+    "NO",
+    "-derivedDataPath",
+    "/private/tmp/yl-continuity-ios",
+    "-resultBundlePath",
+    "/private/tmp/yl-continuity-ios-contracts.xcresult",
+    "-only-testing:RunnerTests/YlDashResourceLoaderTests",
+    "-only-testing:RunnerTests/YlAppleSessionTests",
+    "-only-testing:RunnerTests/YlApplePublicationTests"
+  ],
+  "exitCode": 0
+}
