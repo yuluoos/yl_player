@@ -215,6 +215,9 @@ class FixtureServer(ThreadingHTTPServer):
             raise ValueError("invalid connection mode")
         self.connection_mode = connection_mode
         self.connection_ids = {}
+        self.lifecycle_origin = now()
+        self.lifecycle_connections = {}
+        self.lifecycle_rejections = []
         host = owned_bind_host(owned_host)
         if run_id is not None and not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}', run_id):
             raise ValueError('invalid run id')
@@ -239,11 +242,17 @@ class FixtureServer(ThreadingHTTPServer):
             if self.active >= 8 or self.requests >= 10000:
                 # Bounded threads/log; overload is not a shaped media request.
                 self.rejected_requests += 1
+                if len(self.lifecycle_rejections) < 32:
+                    self.lifecycle_rejections.append(dict(elapsed=self.shaper.now()-self.lifecycle_origin,
+                        reason='activeLimit' if self.active >= 8 else 'connectionLimit', active=self.active))
                 self.shutdown_request(request)
                 return
             self.active += 1
             self.requests += 1
             self.connection_ids[request] = self.requests
+            self.lifecycle_connections[self.requests] = dict(connectionId=self.requests,
+                acceptedSeconds=self.shaper.now()-self.lifecycle_origin, closedSeconds=None,
+                activeAtAdmission=self.active, requestIds=[], unrecordedRequests=0, closeReason=None)
             self.active_sockets.add(request)
             self.handlers.notify_all()
         super().process_request(request, client_address)
@@ -253,10 +262,32 @@ class FixtureServer(ThreadingHTTPServer):
             super().process_request_thread(request, client_address)
         finally:
             with self.handlers:
+                row = self.lifecycle_connections[self.connection_ids[request]]
+                row['closedSeconds'] = self.shaper.now()-self.lifecycle_origin
+                if row['closeReason'] is None: row['closeReason'] = 'handlerEnded'
                 self.active -= 1
                 self.active_sockets.discard(request)
                 self.connection_ids.pop(request, None)
                 self.handlers.notify_all()
+
+    def interrupt_connection(self, connection, reason):
+        with self.handlers:
+            self._mark_close(connection, reason)
+        interrupt_socket(connection)
+
+    def _mark_close(self, connection, reason):
+        row = self.lifecycle_connections.get(self.connection_ids.get(connection))
+        if row is not None and row['closedSeconds'] is None and row['closeReason'] is None:
+            row['closeReason'] = reason
+
+    def connection_lifecycle(self):
+        # Snapshot after server_close for complete evidence; no addresses/headers.
+        import copy
+        with self.handlers:
+            return copy.deepcopy(dict(version=1, acceptedCount=self.requests,
+                rejectedCount=self.rejected_requests,
+                droppedRejections=self.rejected_requests-len(self.lifecycle_rejections),
+                connections=list(self.lifecycle_connections.values()), rejections=self.lifecycle_rejections))
 
     def wait_handlers(self):
         with self.handlers:
@@ -266,12 +297,14 @@ class FixtureServer(ThreadingHTTPServer):
         self.shaper.stopped.set()
         with self.handlers:
             for connection in self.active_sockets:
+                self._mark_close(connection, 'serverShutdown')
                 interrupt_socket(connection)
         super().server_close()
 
     def handle_error(self, request, client_address):
         # Never print incoming URLs/headers or exception text.
-        pass
+        with self.handlers:
+            self._mark_close(request, 'handlerError')
 
 
 def interrupt_socket(connection):
@@ -292,7 +325,8 @@ class Handler(BaseHTTPRequestHandler):
         super().setup()
         # Inactivity timeout alone does not bound a slowly trickling header.
         self.connection_timer = threading.Timer(
-            self.server.connection_timeout, interrupt_socket, args=(self.request,))
+            self.server.connection_timeout, self.server.interrupt_connection,
+            args=(self.request, 'absoluteDeadline'))
         self.connection_timer.daemon = True
         self.connection_timer.start()
 
@@ -313,11 +347,16 @@ class Handler(BaseHTTPRequestHandler):
         # A persistent socket must not bypass the existing 10,000-record budget.
         with self.server.records_lock:
             if self.server.next_record_id >= 10000:
+                with self.server.handlers:
+                    self.server.lifecycle_connections[self.connection_id]['unrecordedRequests'] += 1
+                    self.server._mark_close(self.request, 'requestRecordLimit')
                 self.close_connection = True
                 return
             self.server.next_record_id += 1
             request_id = self.server.next_record_id
         self.connection_request_index += 1
+        with self.server.handlers:
+            self.server.lifecycle_connections[self.connection_id]['requestIds'].append(request_id)
         s = self.server.shaper
         try:
             name = unquote(urlsplit(self.path).path).removeprefix('/')

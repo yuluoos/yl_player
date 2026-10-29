@@ -1,0 +1,1616 @@
+{
+  "baselineCommit": "a31b624af8f828a90e83c8050d588b9683404c2b",
+  "blockers": [
+    {
+      "evidence": [
+        "p04",
+        "p01",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "abr-recovery-20261027"
+      ],
+      "implementation": "partial",
+      "nextAction": "qualify-physical-api24-repeat-auto-caps-fixed-and-bound-output-after-local-120s-recovery",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "CAP-ABR",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "abr-recovery-20261027",
+        "abr-penalty-recovery-20261027",
+        "abr-auto-recovery-20261027",
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027",
+        "ios-device-stall-followup-20261027",
+        "ios-request-boundary-20261027",
+        "ios-candidate-preparation-20261028",
+        "ios-route-pause-20261028",
+        "ios-item-preroll-20261028",
+        "ios-preparation-intent-20261028",
+        "ios-policy-intent-20261028",
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028",
+        "abr-main-merge-20261029",
+        "ios-recovery-cause-20261029"
+      ],
+      "implementation": "partial",
+      "nextAction": "qualify-repeat-second-recovery-original-stability-historical-transactions-lifecycle-races-and-physical-av",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "CAP-ABR",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p04",
+        "p01",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027",
+        "ios-request-boundary-20261027",
+        "ios-candidate-preparation-20261028",
+        "ios-route-pause-20261028",
+        "ios-item-preroll-20261028",
+        "ios-preparation-intent-20261028",
+        "ios-policy-intent-20261028",
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028",
+        "ios-load-lifecycle-20261028",
+        "ios-postcommit-failure-20261028",
+        "dart-credential-race-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "repeat-current-public-auto-caps-fixed-matrix-and-complete-output-baseline-qualification",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-ABR",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "CAP-DASH",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027",
+        "ios-device-stall-followup-20261027",
+        "ios-request-boundary-20261027",
+        "ios-candidate-preparation-20261028",
+        "ios-route-pause-20261028",
+        "ios-item-preroll-20261028",
+        "ios-preparation-intent-20261028",
+        "ios-policy-intent-20261028",
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028",
+        "ios-load-lifecycle-20261028",
+        "ios-postcommit-failure-20261028",
+        "dart-credential-race-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "CAP-DASH",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "abr-frame-retention-20261027",
+        "ios-device-recovery-causes-20261027",
+        "ios-public-policy-20261028",
+        "ios-public-race-20261028",
+        "ios-public-transport-20261028",
+        "ios-credential-race-20261028",
+        "ios-load-lifecycle-20261028",
+        "ios-postcommit-failure-20261028",
+        "dart-credential-race-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-DASH",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "qualify-exact-software-device-and-thermal-budget",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "CAP-DECODE",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "qualify-exact-software-device-and-thermal-budget",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "CAP-DECODE",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "qualify-exact-software-device-and-thermal-budget",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "CAP-DECODE",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "supply-licensed-media-and-physical-protection-chain",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "CAP-DRM",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "supply-licensed-media-and-physical-protection-chain",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "CAP-DRM",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "supply-licensed-media-and-physical-protection-chain",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "CAP-DRM",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "p07-dm-color-state-20261029",
+        "p07-dm-main-merge-20261029",
+        "p07-cm-frame-provenance-20261029",
+        "p07-cm-main-merge-20261029",
+        "p07-p8-decoded-state-20261029",
+        "p07-p8-main-merge-20261029",
+        "p07-compressed-cm4-20261029",
+        "p07-compressed-cm4-main-merge-20261029",
+        "p07-cm4-wire-contracts-20261029",
+        "p07-cm4-wire-main-merge-20261029"
+      ],
+      "implementation": "partial",
+      "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "CAP-DV-MAP",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "p07-dm-color-state-20261029",
+        "p07-dm-main-merge-20261029",
+        "p07-cm-frame-provenance-20261029",
+        "p07-cm-main-merge-20261029",
+        "p07-p8-decoded-state-20261029",
+        "p07-p8-main-merge-20261029",
+        "p07-compressed-cm4-20261029",
+        "p07-compressed-cm4-main-merge-20261029",
+        "p07-cm4-wire-contracts-20261029",
+        "p07-cm4-wire-main-merge-20261029"
+      ],
+      "implementation": "partial",
+      "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "CAP-DV-MAP",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "p07-dm-color-state-20261029",
+        "p07-dm-main-merge-20261029",
+        "p07-cm-frame-provenance-20261029",
+        "p07-cm-main-merge-20261029",
+        "p07-p8-decoded-state-20261029",
+        "p07-p8-main-merge-20261029",
+        "p07-compressed-cm4-20261029",
+        "p07-compressed-cm4-main-merge-20261029",
+        "p07-cm4-wire-contracts-20261029",
+        "p07-cm4-wire-main-merge-20261029"
+      ],
+      "implementation": "partial",
+      "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "CAP-DV-MAP",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "specify-and-verify-physical-dv-chain",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "CAP-DV-OUT",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "specify-and-verify-physical-dv-chain",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "CAP-DV-OUT",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "specify-and-verify-physical-dv-chain",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "CAP-DV-OUT",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "close-required-format-cells-on-one-build",
+      "platform": "android",
+      "reason": "failed",
+      "requirement": "CAP-FORMAT",
+      "verification": "failed"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "close-required-format-cells-on-one-build",
+      "platform": "ios",
+      "reason": "failed",
+      "requirement": "CAP-FORMAT",
+      "verification": "failed"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "close-required-format-cells-on-one-build",
+      "platform": "macos",
+      "reason": "failed",
+      "requirement": "CAP-FORMAT",
+      "verification": "failed"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-nine-script-media-handoff-and-cleanup",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "CAP-JS",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-nine-script-media-handoff-and-cleanup",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "CAP-JS",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-nine-script-media-handoff-and-cleanup",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-JS",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p04",
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "measure-three-protocols-and-freeze-mode-targets",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "CAP-LIVE",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p04",
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "measure-three-protocols-and-freeze-mode-targets",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "CAP-LIVE",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p04",
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "measure-three-protocols-and-freeze-mode-targets",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-LIVE",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "finish-cross-period-output-and-device-matrix",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "CAP-PERIOD",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "finish-cross-period-output-and-device-matrix",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "CAP-PERIOD",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "finish-cross-period-output-and-device-matrix",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-PERIOD",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "CAP-RTMP",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "CAP-RTMP",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-RTMP",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "CAP-SUB",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "CAP-SUB",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "CAP-SUB",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-html-empty-refresh-retains-current-channels",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-01",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-html-empty-refresh-retains-current-channels",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-01",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-html-empty-refresh-retains-current-channels",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-01",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-dns-classification-across-request-boundaries",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-02",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-dns-classification-across-request-boundaries",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-02",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-dns-classification-across-request-boundaries",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-02",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-03",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-03",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-03",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-runtime-termination-and-budget-release",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-04",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-runtime-termination-and-budget-release",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-04",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-runtime-termination-and-budget-release",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-04",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-host-and-invalid-result-faults",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-05",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-host-and-invalid-result-faults",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-05",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-host-and-invalid-result-faults",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-05",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p04",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "restore-pinned-server-and-run-fault-matrix",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-06",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p04",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "restore-pinned-server-and-run-fault-matrix",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-06",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p04",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "restore-pinned-server-and-run-fault-matrix",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-06",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "ERR-07",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "ERR-07",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-provider-denied-expired-timeout-and-key-rotation",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "ERR-07",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-required-hardware-and-resource-rejection",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-08",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-required-hardware-and-resource-rejection",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-08",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-required-hardware-and-resource-rejection",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-08",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "verify-valid-unsupported-dolby-against-original-input",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "ERR-09",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "verify-valid-unsupported-dolby-against-original-input",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "ERR-09",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p07",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "verify-valid-unsupported-dolby-against-original-input",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "ERR-09",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-subtitle-only-failure-and-video-continuity",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-10",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-subtitle-only-failure-and-video-continuity",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-10",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p02",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-subtitle-only-failure-and-video-continuity",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-10",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-bounded-actual-source-attempt-summary",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-11",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-bounded-actual-source-attempt-summary",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-11",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-bounded-actual-source-attempt-summary",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-11",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-cross-module-cancel-and-stale-races",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "ERR-12",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-cross-module-cancel-and-stale-races",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "ERR-12",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-cross-module-cancel-and-stale-races",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "ERR-12",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p04",
+        "platform",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "close-current-consumer-and-adapter-audit",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "REG-API",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p04",
+        "platform",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "close-current-consumer-and-adapter-audit",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "REG-API",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p04",
+        "platform",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "close-current-consumer-and-adapter-audit",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "REG-API",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-real-route-interruption-background-and-peers",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "REG-AUDIO",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-real-route-interruption-background-and-peers",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "REG-AUDIO",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-real-route-interruption-background-and-peers",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "REG-AUDIO",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p03",
+        "p04",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "REG-BUF",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "p04",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "REG-BUF",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "p04",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "REG-BUF",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "REG-DEC",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "REG-DEC",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p03",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "REG-DEC",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-current-error-matrix-and-redaction-audit",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "REG-DIAG",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-current-error-matrix-and-redaction-audit",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "REG-DIAG",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-current-error-matrix-and-redaction-audit",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "REG-DIAG",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-replacement-cancel-and-release-races",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "REG-LIFE",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-replacement-cancel-and-release-races",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "REG-LIFE",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p05",
+        "p06",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-replacement-cancel-and-release-races",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "REG-LIFE",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-request-redirect-and-budget-regressions",
+      "platform": "android",
+      "reason": "not_run",
+      "requirement": "REG-NET",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "ios-public-policy-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-request-redirect-and-budget-regressions",
+      "platform": "ios",
+      "reason": "not_run",
+      "requirement": "REG-NET",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p05",
+        "p06",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "ios-public-policy-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "run-final-request-redirect-and-budget-regressions",
+      "platform": "macos",
+      "reason": "not_run",
+      "requirement": "REG-NET",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "platform",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "REG-OS",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "platform",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "REG-OS",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "platform",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "supply-minimum-os-low-memory-32bit-and-intel-runs",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "REG-OS",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p02",
+        "p06",
+        "p07",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "verify-protected-hdr-subtitle-and-external-output",
+      "platform": "android",
+      "reason": "external_missing",
+      "requirement": "REG-VIEW",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p02",
+        "p06",
+        "p07",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "verify-protected-hdr-subtitle-and-external-output",
+      "platform": "ios",
+      "reason": "external_missing",
+      "requirement": "REG-VIEW",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p02",
+        "p06",
+        "p07",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "verify-protected-hdr-subtitle-and-external-output",
+      "platform": "macos",
+      "reason": "external_missing",
+      "requirement": "REG-VIEW",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p08",
+        "remaining-engineering",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "partial",
+      "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization",
+      "platform": "all",
+      "reason": "external_missing",
+      "requirement": "PERF-BASELINE",
+      "verification": "external_missing"
+    },
+    {
+      "evidence": [
+        "p01",
+        "p04",
+        "p05",
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028"
+      ],
+      "implementation": "implemented",
+      "nextAction": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy",
+      "platform": "all",
+      "reason": "not_run",
+      "requirement": "RELEASE-CONSUMERS",
+      "verification": "not_run"
+    },
+    {
+      "evidence": [
+        "p08",
+        "remaining-acceptance-20261026",
+        "remaining-main-merge-20261027",
+        "remaining-local-acceptance-20261028",
+        "android-acceptance-deadlines-20261028"
+      ],
+      "implementation": "unreviewed",
+      "nextAction": "record-final-source-bound-remote-ci-results",
+      "platform": "all",
+      "reason": "not_run",
+      "requirement": "RELEASE-CI",
+      "verification": "not_run"
+    }
+  ],
+  "currentPasses": 0,
+  "currentSourceHash": "62f46a459838b35bc85052dc3e73909658e04474cc8695c66bd9a67787a6648e",
+  "implementationCounts": {
+    "implemented": 67,
+    "not_implemented": 0,
+    "partial": 34,
+    "unreviewed": 1
+  },
+  "releaseReady": false,
+  "requirementGroups": 33,
+  "rowCount": 102,
+  "schemaVersion": 1,
+  "sourceHash": "62f46a459838b35bc85052dc3e73909658e04474cc8695c66bd9a67787a6648e",
+  "sourceMatches": true,
+  "verificationCounts": {
+    "external_missing": 30,
+    "failed": 3,
+    "not_run": 69,
+    "passed": 0,
+    "skipped": 0
+  }
+}

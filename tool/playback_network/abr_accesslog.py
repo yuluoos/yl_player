@@ -1015,6 +1015,15 @@ def run(args):
         if log:log.close()
         if server:
             try:
+                from connection_lifecycle import summarize_lifecycle
+                lifecycle = server.connection_lifecycle()
+                (out/'connection-lifecycle.json').write_text(json.dumps(lifecycle,indent=2)+'\n')
+                receipt['connectionLifecycleObservation'] = summarize_lifecycle(lifecycle,read_rows(out/'requests.jsonl'))
+                if not receipt['connectionLifecycleObservation']['complete']:
+                    receipt['errors'].append('connection lifecycle evidence incomplete')
+            except (OSError,ValueError,KeyError,TypeError):
+                receipt['errors'].append('connection lifecycle evidence invalid')
+            try:
                 from network_profile import summarize_connections
                 receipt['connectionObservation'] = summarize_connections(
                     read_rows(out/'requests.jsonl'), receipt['connectionMode'])

@@ -888,6 +888,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-budget-metrics.md",
       "sha256": "1387d414232f469a038b48cdfdfc934288307e3d24c7863540c9c1dd2bfeefd3",
       "kind": "report"
+    },
+    "ios-recovery-cause-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-recovery-cause.md",
+      "sha256": "343223a672690c18711082225b80e4841c9a668396997d9a45ac98916c0853e7",
+      "kind": "report"
     }
   },
   "rows": [
@@ -932,10 +937,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-budget-metrics-20261029"
+        "ios-recovery-cause-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-historical-partial-transactions-original-stability-post-budget-high-recovery-fast-cancel-and-physical-av"
+      "nextAction": "qualify-repeat-second-recovery-original-stability-historical-transactions-lifecycle-races-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",

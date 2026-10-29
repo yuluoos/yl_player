@@ -665,3 +665,18 @@ native window decisions (the budget guard executes before window qualification).
 All original EOF/final-high, authority, transaction and continuity checks remain.
 The budget observation may survive a later final-high failure; that receipt still
 fails. This does not certify physical screen/audio continuity.
+
+The collector also preserves `connection-lifecycle.json`: server-local elapsed
+admission/handler-completion times, accepted connection IDs and their parsed
+GET/HEAD request IDs, explicit admission rejections, and locally observed
+shutdown/deadline/error reasons. It retains at most 10,000 accepted connections
+and the first 32 rejection samples plus the full rejection count. No addresses,
+URLs or headers are included. `handlerEnded` does not identify peer FIN/reset or
+a URLSession retry. Connections without a parsed media request are retained.
+The clock starts at listener construction, independently of the first-GET
+profile origin. Do not subtract these timestamps from AVPlayer/Foundation times.
+Parsed requests discarded by the existing 10,000-record limit have an explicit
+`unrecordedRequests` count and are not classified as unparsed connections.
+Missing request links, discarded requests, unfinished handlers or truncated rejection samples prevent
+complete lifecycle evidence; none of this relaxes transaction completeness,
+recovery budget, final high output or physical continuity gates.
