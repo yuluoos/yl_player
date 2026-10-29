@@ -166,8 +166,19 @@ class ServerTests(unittest.TestCase):
                          (206, b'0123456789', 'bytes 10-19/300'))
         self.assertEqual(self.request(method='HEAD')[2], b'')
         records = self.records()
+        self.assertEqual(headers['X-Yl-Request-Id'], str(records[1]['requestId']))
         self.assertEqual([r['bodyBytesWritten'] for r in records], [300, 10, 0])
         self.assertTrue(all(r['outcome'] == 'complete' for r in records))
+
+    def test_proxy_trace_metadata_accepts_only_one_opaque_uuid(self):
+        self.start()
+        token = '87654321-1234-1234-1234-123456789abc'
+        self.request(headers={'X-Yl-Trace-Id': token})
+        self.request(headers={'X-Yl-Trace-Id': 'https://private?token=secret'})
+        rows = self.records()
+        self.assertEqual(rows[0]['proxyTraceID'], token)
+        self.assertNotIn('proxyTraceID', rows[1])
+        self.assertNotIn('secret', self.log.getvalue())
 
     def test_direct_hls_control_is_served_with_playlist_mime_type(self):
         body = b'#EXTM3U\n#EXT-X-ENDLIST\n'

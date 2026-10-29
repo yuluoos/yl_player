@@ -308,6 +308,9 @@ class Handler(BaseHTTPRequestHandler):
                    status=None, bodyBytesWritten=0, outcome='complete',
                    phaseBoundariesMs=[step['atMs'] for step in s.profile.steps],
                    phaseBytesWritten=[0]*len(s.profile.steps))
+        trace_ids = self.headers.get_all('X-Yl-Trace-Id', [])
+        if len(trace_ids) == 1 and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', trace_ids[0]):
+            row['proxyTraceID'] = trace_ids[0]
         with self.server.records_lock:
             self.server.next_record_id += 1
             row['requestId'] = self.server.next_record_id
@@ -342,6 +345,7 @@ class Handler(BaseHTTPRequestHandler):
                 # Client brackets this header with its own monotonic clock.
                 # It is profile time, never source-to-display latency.
                 self.send_header('X-Yl-Elapsed-Us', str(round(s.elapsed() * 1_000_000)))
+            self.send_header('X-Yl-Request-Id', str(row['requestId']))
             self.send_header('X-Yl-Profile-Id', s.profile.id)
             self.send_header('X-Yl-Profile-Sha256', s.profile.sha256)
             if self.server.run_id is not None:

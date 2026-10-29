@@ -1,0 +1,80 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.1s",
+                  "durationInSeconds" : 0.10180497169494629,
+                  "name" : "testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.014s",
+                  "durationInSeconds" : 0.01400601863861084,
+                  "name" : "testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.017s",
+                  "durationInSeconds" : 0.0174790620803833,
+                  "name" : "testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00056s",
+                  "durationInSeconds" : 0.0005589723587036133,
+                  "name" : "testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

@@ -1208,6 +1208,16 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let captureDeviceKind = "local"
     let directory = URL(fileURLWithPath: rawDirectory)
     #endif
+    let proxyBoundaryFile = try AbrProxyBoundaryFile(directory.appendingPathComponent("proxy-requests.jsonl"))
+    YlHlsMediaProxy.diagnosticRequestObserver = { proxyBoundaryFile.append($0) }
+    let proxyBoundaryCapture = try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture)
+    defer {
+      YlHlsMediaProxy.diagnosticRequestObserver = nil
+      proxyBoundaryCapture.stop()
+      XCTAssertTrue(proxyBoundaryCapture.wait(timeout: 2), "Request boundary delivery did not drain")
+      proxyBoundaryFile.close()
+      XCTAssertFalse(proxyBoundaryFile.failed)
+    }
     let processProof: [String: Any] = ["pid": ProcessInfo.processInfo.processIdentifier,
       "executable": ProcessInfo.processInfo.arguments[0], "token": token, "deviceKind": captureDeviceKind]
     try JSONSerialization.data(withJSONObject: processProof, options: [.sortedKeys])
@@ -1645,7 +1655,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "productionRecovery": productionRecovery, "productionCommand": productionCommand,
         "productionCommandEvents": productionCommandEvents,
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
-        "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
+        "proxyRequestSamplingVersion": 1, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
         "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
@@ -3924,6 +3934,115 @@ final class YlDashResourceLoaderTests: XCTestCase {
     }
   }
 
+  func testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, ["X-Yl-Request-Id": "19"], Data([1, 2])) }
+    let entered = expectation(description: "terminal observer entered")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    YlHlsMediaProxy.diagnosticRequestObserver = { _ in
+      entered.fulfill(); _ = release.wait(timeout: .now() + 4)
+    }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let done = expectation(description: "downstream finished")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, _ in done.fulfill() }.resume()
+    wait(for: [entered], timeout: 3)
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 1)
+    let capture = try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture)
+    capture.stop()
+    XCTAssertNil(capture.makeTrace(proxyID: "stopped", requestID: 99))
+    proxy.cancelAll()
+    XCTAssertFalse(capture.wait(timeout: 0.01), "Sealed is not the same as delivered")
+    release.signal()
+    XCTAssertTrue(capture.wait(timeout: 2))
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 0)
+    wait(for: [done], timeout: 3)
+  }
+
+  func testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let entered = expectation(description: "upstream entered")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    server.handler = { _ in
+      entered.fulfill(); _ = release.wait(timeout: .now() + 4)
+      return (200, ["X-Yl-Request-Id": "18"], Data([1, 2]))
+    }
+    let capturedLock = NSLock(); var captured: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in capturedLock.withLock { captured.append(row) } }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let done = expectation(description: "cancelled downstream")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, error in
+      XCTAssertNotNil(error); done.fulfill()
+    }.resume()
+    wait(for: [entered], timeout: 3)
+    proxy.cancelAll(); release.signal()
+    wait(for: [done], timeout: 3)
+    let rows = capturedLock.withLock { captured }
+    XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows.first?["outcome"] as? Double, 1)
+    XCTAssertNil(rows.first?["response"])
+    XCTAssertNil(rows.first?["upstreamComplete"])
+  }
+
+  func testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion() {
+    var rows: [[String: Any]] = []
+    let trace = YlHlsProxyRequestTrace(proxyID: "test-proxy", requestID: 1) { rows.append($0) }
+    trace.response(status: 200, serverID: -1)
+    trace.body(bytes: 8)
+    let start = trace.enqueue()
+    trace.finish(outcome: 1)
+    trace.sent(started: start, bytes: 8, failed: false)
+    trace.point("upstreamComplete")
+    trace.finish(outcome: 0)
+    XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows[0]["outcome"] as? Double, 1)
+    XCTAssertEqual(rows[0]["sendCount"] as? Double, 1)
+    XCTAssertEqual(rows[0]["sendCompletions"] as? Double, 0)
+    XCTAssertNil(rows[0]["serverRequestID"])
+    XCTAssertNil(rows[0]["upstreamComplete"])
+    XCTAssertEqual(rows[0]["sentBodyBytes"] as? Double, 0)
+  }
+
+  func testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { _ in (200, ["X-Yl-Request-Id": "17"], Data([1, 2, 3, 4])) }
+    let boundary = expectation(description: "one request boundary")
+    let capturedLock = NSLock()
+    var captured: [[String: Any]] = []
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in
+      capturedLock.withLock { captured.append(row) }; boundary.fulfill()
+    }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/private?token=secret"),
+      headers: ["Authorization": "secret"], configuration: .init(map: [:]))
+    defer { proxy.cancelAll() }
+    let bodyDone = expectation(description: "proxied body")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/private?token=secret"))) { body, _, error in
+      XCTAssertNil(error); XCTAssertEqual(body, Data([1, 2, 3, 4])); bodyDone.fulfill()
+    }.resume()
+    wait(for: [bodyDone, boundary], timeout: 4)
+    let rows = capturedLock.withLock { captured }
+    XCTAssertEqual(rows.count, 1)
+    guard let row = rows.first else { return }
+    XCTAssertEqual(row["serverRequestID"] as? Double, 17)
+    XCTAssertEqual(row["bodyBytes"] as? Double, 4)
+    XCTAssertEqual(row["sentBodyBytes"] as? Double, 4)
+    XCTAssertEqual(row["outcome"] as? Double, 0)
+    for (before, after) in [("admission", "response"), ("response", "firstBody"),
+      ("firstBody", "lastBody"), ("lastBody", "upstreamComplete"),
+      ("lastSendComplete", "terminal"), ("upstreamComplete", "terminal")] {
+      XCTAssertLessThanOrEqual(try XCTUnwrap(row[before] as? Double), try XCTUnwrap(row[after] as? Double))
+    }
+    let serialized = String(decoding: try JSONSerialization.data(withJSONObject: row), as: UTF8.self)
+    for secret in ["secret", "private", "Authorization", "http:"] { XCTAssertFalse(serialized.contains(secret)) }
+    proxy.cancelAll()
+    XCTAssertEqual(capturedLock.withLock { captured.count }, 1)
+  }
+
   func testProxyBoundarySnapshotTracksRealRequestAndCancellationWithoutResourceIdentity() throws {
     let server = try DashHTTPServer()
     defer { server.close() }
@@ -5927,4 +6046,35 @@ private final class DashHeldBodyServer {
     listener.cancel(); pending.forEach { $0.cancel() }
   }
   deinit { close() }
+}
+
+private final class AbrProxyBoundaryFile: @unchecked Sendable {
+  private let lock = NSLock()
+  private var file: FileHandle?
+  private var bytes = 0
+  private var rows = 0
+  private var writeFailed = false
+  var failed: Bool { lock.withLock { writeFailed } }
+  init(_ url: URL) throws {
+    _ = FileManager.default.createFile(atPath: url.path, contents: nil)
+    file = try FileHandle(forWritingTo: url)
+  }
+  func append(_ row: [String: Any]) {
+    lock.withLock {
+      guard let file else { writeFailed = true; return }
+      do {
+        let data = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])
+        guard rows < 10000, bytes + data.count <= 16 * 1024 * 1024 else {
+          writeFailed = true; return
+        }
+        try file.write(contentsOf: data); rows += 1; bytes += data.count
+      } catch { writeFailed = true }
+    }
+  }
+  func close() {
+    lock.withLock {
+      do { try file?.close() } catch { writeFailed = true }
+      file = nil
+    }
+  }
 }

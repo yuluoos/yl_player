@@ -276,7 +276,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "87b9b9267418757e9980c9f2bd67fb6ee89106241e832595ae6210bda5e1098d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "a94dca2285e226820b599d324fa62f1f5341f3bd88c2aa41b67f967e2a86d93c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
@@ -599,7 +599,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "ef8efb1a895004ee9f0c8187582ebb661724573ef0a607ecb678761588c03dd6"
+    "sha256": "065ce58bc68f36cda909d432e985df6abae4af79208c8b284852c312580c423b"
   },
   "evidence": {
     "p01": {
@@ -786,6 +786,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-29-ios-original-bandwidth.md",
       "sha256": "90b765a311c8a1b6dd9afb7ca01fc12c9e125145be20d6f7b0dfe27001ed506e"
+    },
+    "ios-request-timing-20261029": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-29-ios-request-timing.md",
+      "sha256": "d33f5bd1aaf2cd41f8a0a4c9ab88b26a1d7de6de4cbe7122c069e8bdc2c624d7"
     }
   },
   "rows": [
@@ -829,10 +834,10 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-original-bandwidth-20261029"
+        "ios-request-timing-20261029"
       ],
       "acceptance": null,
-      "nextAction": "diagnose-original-request-boundaries-qualify-high-recovery-other-postcommit-races-multidevice-physical-av-continuity"
+      "nextAction": "isolate-upstream-transaction-costs-qualify-original-high-recovery-postcommit-races-multidevice-physical-av-continuity"
     },
     {
       "requirement": "CAP-ABR",

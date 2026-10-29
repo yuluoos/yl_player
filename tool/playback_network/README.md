@@ -604,3 +604,31 @@ raw captures or the original collector receipt.
 For causal comparisons, keep the original profile frozen and change one factor
 in a separately named diagnostic profile. Existing stall/headroom/zero-latency
 contrasts change several factors and do not isolate request delay alone.
+
+New DEBUG native probes explicitly enable `proxyRequestSamplingVersion: 1` and
+write `proxy-requests.jsonl` (bounded to 10000 records / 16 MiB). Production and
+ordinary debug sessions leave the observer disabled. One terminal record per
+admitted request uses a random proxy identifier and numeric task/server request
+IDs; URLs, credentials and arbitrary header strings are excluded. The fixture's
+`X-Yl-Request-Id` is metadata for correlation only and is not sent downstream.
+
+The reader preserves cancelled/failed records, rejects inconsistent or duplicate
+complete records, reports unmatched server media requests, and distinguishes
+upstream callback duration from server write duration and loopback send waits.
+All device boundaries use the same monotonic clock. Server intervals are compared
+as durations, never by subtracting timestamps from device timestamps. Their
+difference includes transport, scheduling and backpressure, not isolated RTT.
+Send completion is Network.framework content processing, not remote receipt,
+decoding, display, or audio synchronization; overlapping send waits remain sums.
+Legacy captures without the version are identifiable and are not retroactively
+claimed to include these boundaries.
+
+Cancellation before response delivery may never expose the server response ID.
+The opt-in trace therefore also sends a random UUID `X-Yl-Trace-Id`; the fixture
+logs only a single syntactically valid UUID and the reader cross-checks both IDs
+when present. This header is absent when tracing is disabled. Diagnostic capture
+has a stop/registration fence and a bounded drain; a sealed event is not considered
+delivered until its writer returns. Active trace ownership outlives transport task
+removal, including chunk tails. A drain failure fails the native probe, and missing
+request correlation adds an error to the collector receipt while retaining the
+partial diagnostic. Neither condition can silently produce a successful capture.

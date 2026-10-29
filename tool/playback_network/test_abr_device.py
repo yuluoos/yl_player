@@ -56,9 +56,11 @@ class DeviceCaptureTests(unittest.TestCase):
             out=Path(tmp); export=out/'device-export'; export.mkdir()
             (export/'rows.jsonl').write_text('{}\n'); (export/'frame-samples.jsonl').write_text('{}\n')
             (export/'process.json').write_text('{}')
+            (export/'proxy-requests.jsonl').write_text('{"version":1}\n')
             with patch('abr_device.invoke'):
                 abr_device.collect('device', 'bundle', out, 'a'*32)
             self.assertEqual((out/'rows.jsonl').read_text(), '{}\n')
+            self.assertEqual((out/'proxy-requests.jsonl').read_text(), '{"version":1}\n')
             duplicate=export/'duplicate'; duplicate.mkdir();(duplicate/'rows.jsonl').write_text('{}')
             with patch('abr_device.invoke'), self.assertRaises(ValueError):
                 abr_device.collect('device', 'bundle', out, 'a'*32)
