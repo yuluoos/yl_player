@@ -1,0 +1,126 @@
+{
+  "base": "ac482e573b4f0a2cb25e8e012eec8fe24698dc19",
+  "environment": {
+    "YL_RUN_CM4_WIRE": "1",
+    "YL_DOVI_INSPECTOR": "/private/tmp/yl-p07-wire/patched/target/release/yl-dovi-stream-inspector",
+    "YL_DOVI_LONG_CM4_FIXTURE": "/private/tmp/yl-p07-wire/patched/target/release/examples/long_cm4_fixture",
+    "YL_DOVI_RAW_CM4_FIXTURE": "/private/tmp/yl-p07-wire/patched/target/release/examples/raw_cm4_cases",
+    "YL_DOVI_UPSTREAM_INSPECTOR": "/private/tmp/yl-p07-wire/upstream/target/release/yl-dovi-stream-inspector",
+    "YL_RUN_DECODE_PROBE": "1",
+    "YL_RUN_P8_PROVENANCE": "1",
+    "YL_RUN_CM4_PROVENANCE": "1",
+    "YL_DOVI_CM_FIXTURE": "/private/tmp/yl-p07-wire/patched/target/release/examples/cm_state_fixture",
+    "YL_DOVI_CM4_FIXTURE": "/private/tmp/yl-p07-wire/patched/target/release/examples/compressed_cm4_fixture"
+  },
+  "checks": [
+    {
+      "name": "dolby-tests",
+      "command": [
+        "/private/tmp/yl-p07-dm-state/venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tool/dolby_reference",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exit": 0,
+      "expected": 0,
+      "seconds": 36.625
+    },
+    {
+      "name": "readiness-tests",
+      "command": [
+        "/private/tmp/yl-p07-dm-state/venv/bin/python",
+        "-B",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tool/playback_benchmark",
+        "-p",
+        "test_release_readiness.py",
+        "-v"
+      ],
+      "exit": 0,
+      "expected": 0,
+      "seconds": 1.097
+    },
+    {
+      "name": "readiness",
+      "command": [
+        "/private/tmp/yl-p07-dm-state/venv/bin/python",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit": 0,
+      "expected": 0,
+      "seconds": 0.288
+    },
+    {
+      "name": "readiness-required",
+      "command": [
+        "/private/tmp/yl-p07-dm-state/venv/bin/python",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1,
+      "seconds": 0.237
+    },
+    {
+      "name": "thresholds",
+      "command": [
+        "/private/tmp/yl-p07-dm-state/venv/bin/python",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py"
+      ],
+      "exit": 0,
+      "expected": 0,
+      "seconds": 0.078
+    },
+    {
+      "name": "thresholds-required",
+      "command": [
+        "/private/tmp/yl-p07-dm-state/venv/bin/python",
+        "-B",
+        "tool/playback_benchmark/threshold_registry.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1,
+      "seconds": 0.076
+    },
+    {
+      "name": "diff",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "expected": 0,
+      "seconds": 0.732
+    },
+    {
+      "name": "product-diff",
+      "command": [
+        "git",
+        "diff",
+        "HEAD",
+        "--",
+        "packages",
+        "pubspec.yaml",
+        "pubspec.lock",
+        ".github"
+      ],
+      "exit": 0,
+      "expected": 0,
+      "seconds": 0.042
+    }
+  ]
+}

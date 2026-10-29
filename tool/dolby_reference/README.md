@@ -105,3 +105,9 @@ header interpretation are not replaced by mapping-ID lookup.
 ## CM 块状态与解码帧
 
 `--dm-blocks` 在 schema 5 盘点中区分已知静态继承和逐包动态块；`decoded_alignment.py --metadata` 将这些来源与颜色头/mapping 绑定到实际 BL/EL 解码帧。原模式兼容，完整有效元数据及像素映射标记不提升。见 [DM_BLOCK_STATE.md](DM_BLOCK_STATE.md)。
+
+## Trace 文件完整发布
+
+`stream_inventory.py --trace` 与 `decoded_alignment.py --trace` 共用同目录暂存发布：先写完、flush/fsync 并关闭权限 0600 的文件，再通过 POSIX 硬链接独占创建最终路径。已有文件、目录、符号链接（含悬空链接）或并发创建的目标均拒绝覆盖；写入或 flush 失败不留下最终 trace，正常异常路径清理临时目录。不支持硬链接的文件系统明确失败，不回退到覆盖或非原子写入。
+
+该保证只针对 trace 文件的完整发布；stdout 摘要与文件不是跨介质事务，断电后的目录项持久性、进程被强制终止后的临时目录清理不在保证内。消费者仍需检查 CLI 退出码与摘要中的 trace 哈希；这些改变不提升元数据、画质或物理输出资格。

@@ -8,6 +8,7 @@ import re
 import shutil
 import struct
 import tempfile
+from trace_publication import publish_trace
 from stream_inventory import (MAX_MEDIA, MAX_PACKET, MAX_PACKETS, InspectionError,
                               digest, file_digest, inspect, integer, layer_nal_kind,
                               nal_length_size, require, run_bounded)
@@ -149,7 +150,7 @@ def main():
     try:
         trace=io.BytesIO();result=decode(a.media,a.sha256,a.inspector,a.decoder,a.ffprobe,trace_sink=trace,include_metadata=a.metadata)
         if a.trace is not None:
-            with a.trace.open('xb') as output: output.write(trace.getvalue())
+            publish_trace(a.trace, trace.getvalue())
         print(json.dumps(result,sort_keys=True,indent=2));return 0
     except (InspectionError,OSError,ValueError,KeyError,TypeError,RuntimeError):
         print('{"code":"dolby.decoded_alignment_failed","mapping_quality":"external_missing"}');return 2

@@ -1,0 +1,53 @@
+{
+  "inputs": {
+    "/private/tmp/yl-p07-wire/retained-synthetic_media.mp4": "a1743d147970360d028654ef7f81fd90bdc45919dca1c8ee61c4ed380dbe4802",
+    "/private/tmp/yl-p07-wire/patched/target/release/yl-dovi-stream-inspector": "87afe6dcc4a6c77922df3e1dcf2ab4cf50740c32372346ccf3c967c20a32e5ce",
+    "/private/tmp/yl-p07-wire/retained-decoder": "4c56f879325185faaa0e006fc784b399c0b7ffd30893e1b43b048a5e789f1baa"
+  },
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/dolby_reference/stream_inventory.py",
+        "--media",
+        "/private/tmp/yl-p07-wire/retained-synthetic_media.mp4",
+        "--sha256",
+        "a1743d147970360d028654ef7f81fd90bdc45919dca1c8ee61c4ed380dbe4802",
+        "--inspector",
+        "/private/tmp/yl-p07-wire/patched/target/release/yl-dovi-stream-inspector",
+        "--trace",
+        "/private/tmp/yl-p07-publication/stream_inventory.jsonl",
+        "--dm-blocks"
+      ],
+      "exit": 0,
+      "repeat_exit": 2,
+      "trace_sha256": "4dd74b60db2b6bb9c7a0ec30617607474f8e48d5b7d539444606d450146703e5",
+      "rows": 12,
+      "mode": "0o600"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/tool/dolby_reference/decoded_alignment.py",
+        "--media",
+        "/private/tmp/yl-p07-wire/retained-synthetic_media.mp4",
+        "--sha256",
+        "a1743d147970360d028654ef7f81fd90bdc45919dca1c8ee61c4ed380dbe4802",
+        "--inspector",
+        "/private/tmp/yl-p07-wire/patched/target/release/yl-dovi-stream-inspector",
+        "--trace",
+        "/private/tmp/yl-p07-publication/decoded_alignment.jsonl",
+        "--metadata",
+        "--decoder",
+        "/private/tmp/yl-p07-wire/retained-decoder"
+      ],
+      "exit": 0,
+      "repeat_exit": 2,
+      "trace_sha256": "1826169a223de52acc2015356c560f32e1f87c0c9f1a70dcbf8411f1deef400e",
+      "rows": 12,
+      "mode": "0o600"
+    }
+  ]
+}

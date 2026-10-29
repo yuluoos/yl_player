@@ -15,6 +15,7 @@ import selectors
 import subprocess
 import tempfile
 import time
+from trace_publication import publish_trace
 
 MAX_MEDIA = 512 * 1024 * 1024
 MAX_PACKET = 8 * 1024 * 1024
@@ -370,13 +371,7 @@ def main():
         trace = io.BytesIO()
         result = inspect(args.media,args.sha256,args.inspector,args.ffprobe,trace_sink=trace,include_layers=args.layers,include_mapping=args.mapping,include_dm_color=args.dm_color,include_dm_blocks=args.dm_blocks)
         if args.trace is not None:
-            fd = os.open(args.trace,os.O_WRONLY | os.O_CREAT | os.O_EXCL,0o600)
-            try:
-                with os.fdopen(fd,'wb') as output:
-                    output.write(trace.getvalue())
-            except BaseException:
-                args.trace.unlink(missing_ok=True)
-                raise
+            publish_trace(args.trace, trace.getvalue())
         print(json.dumps(result,sort_keys=True,indent=2))
         return 0
     except (InspectionError, OSError, ValueError, KeyError, TypeError):

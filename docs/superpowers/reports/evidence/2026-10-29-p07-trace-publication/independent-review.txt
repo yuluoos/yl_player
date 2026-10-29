@@ -1,0 +1,7 @@
+独立审查代理：/root/trace_publication_review；fresh context，read-only。
+结论：未发现需要修复的 P0–P3 问题，可接受 trace 发布边界改动。
+核查基线 ac482e573b4f0a2cb25e8e012eec8fe24698dc19、当前分支与全部 5 个候选源码哈希。
+独立运行 8 项发布测试通过；额外核验 fsync/link 失败无最终文件/暂存残留、已有目录内容保持。
+归档 128 项（127 通过/1 CGL 跳过）、readiness 15 项、两份 12 行 trace 哈希和 3 条 CAP-DV-MAP 引用一致。
+不判断 stdout 文件原子事务、断电目录持久性、SIGKILL 暂存清理、设备/CGL/物理 DV/远程 CI/另一聊天 iOS；主执行者接受这些明确边界，保留未验收状态。
+审查者未重跑全套、未操作设备；无延后 Minor 项。

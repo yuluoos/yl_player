@@ -1,0 +1,57 @@
+{
+  "absent_display_metadata_rpus": 0,
+  "cm_counts": {
+    "2.9": 12,
+    "4.0": 12
+  },
+  "compressed_dm_color_rpus": 6,
+  "container_coverage": "finite_box_extents_and_declared_samples",
+  "declared_sample_count": 12,
+  "decoded_frame_alignment_verified": false,
+  "display_metadata_transitions": 9,
+  "dm_block_scope": "known_static_inheritance_and_current_packet_dynamic_blocks",
+  "dm_block_state_resolved": true,
+  "dm_color_scope": "static_color_fields_same_id_same_configuration",
+  "dm_color_state_resolved": true,
+  "effective_metadata_resolved": false,
+  "el_type_counts": {
+    "none": 12
+  },
+  "first_packet_rpu_sha256": "f67a7772e59ac6d4ea84f5800b5f449631bc12296b7aea2bdc67883d18d77fe4",
+  "inherited_static_block_instances": 12,
+  "inspection": "signalled_rpu_inventory",
+  "inspector_sha256": "87afe6dcc4a6c77922df3e1dcf2ab4cf50740c32372346ccf3c967c20a32e5ce",
+  "level_counts": {
+    "1": 9,
+    "10": 3,
+    "11": 9,
+    "254": 6,
+    "3": 9,
+    "5": 3,
+    "6": 3,
+    "8": 6,
+    "9": 9
+  },
+  "mapping_quality": "external_missing",
+  "mapping_reference_ids_resolved": true,
+  "media_sha256": "a1743d147970360d028654ef7f81fd90bdc45919dca1c8ee61c4ed380dbe4802",
+  "nal_length_size": 4,
+  "native_dv_signal": "external_missing",
+  "packet_count": 12,
+  "presentation_reordered_packets": 7,
+  "presentation_trace_sha256": "4dd74b60db2b6bb9c7a0ec30617607474f8e48d5b7d539444606d450146703e5",
+  "previous_mapping_rpus": 6,
+  "profile_counts": {
+    "8": 12
+  },
+  "pts_range": [
+    0,
+    22528
+  ],
+  "rpu_count": 12,
+  "rpus_with_unparsed_bits": 0,
+  "scene_refresh_flag_count": 0,
+  "schema_version": 5,
+  "time_base": "1/12288",
+  "unique_rpu_hashes": 4
+}

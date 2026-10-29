@@ -868,6 +868,11 @@
       "path": "docs/superpowers/reports/2026-10-29-abr-main-merge.md",
       "sha256": "99db490e52bec6c9e2b433d068c0550ea5ddd341549561daddf42aeaeb2896e2",
       "kind": "report"
+    },
+    "p07-trace-publication-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-p07-trace-publication.md",
+      "sha256": "8cfb5717936892d771b6270e3bb7264b6b14ad8e95bfd77f181f318ef1b4608b",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1118,7 +1123,8 @@
         "p07-compressed-cm4-20261029",
         "p07-compressed-cm4-main-merge-20261029",
         "p07-cm4-wire-contracts-20261029",
-        "p07-cm4-wire-main-merge-20261029"
+        "p07-cm4-wire-main-merge-20261029",
+        "p07-trace-publication-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -1143,7 +1149,8 @@
         "p07-compressed-cm4-20261029",
         "p07-compressed-cm4-main-merge-20261029",
         "p07-cm4-wire-contracts-20261029",
-        "p07-cm4-wire-main-merge-20261029"
+        "p07-cm4-wire-main-merge-20261029",
+        "p07-trace-publication-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
@@ -1168,7 +1175,8 @@
         "p07-compressed-cm4-20261029",
         "p07-compressed-cm4-main-merge-20261029",
         "p07-cm4-wire-contracts-20261029",
-        "p07-cm4-wire-main-merge-20261029"
+        "p07-cm4-wire-main-merge-20261029",
+        "p07-trace-publication-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-effective-mapping-and-supply-independent-target-frame-pairs-and-tolerance"
