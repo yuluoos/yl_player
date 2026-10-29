@@ -6,3 +6,6 @@ edition = "2024"
 [dependencies]
 dolby_vision = { path = "../dovi_tool-614c816b6446dcd1dbaf433403d499a6026fbb5a/dolby_vision", features = ["serde"] }
 serde_json = "=1.0.150"
+
+[dev-dependencies]
+bitvec_helpers = { version = "=4.0.2", default-features = false, features = ["bitstream-io"] }

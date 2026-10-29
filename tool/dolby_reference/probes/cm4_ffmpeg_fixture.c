@@ -7,6 +7,16 @@
 #include <stdio.h>
 #define FIELD(s, f) printf("\"" #f "\":%u,", (unsigned)(s).f)
 #define LAST(s, f) printf("\"" #f "\":%u", (unsigned)(s).f)
+/* Keep FFmpeg's exact signed rational representation, never round to floats. */
+static void primaries(const char *prefix, const AVColorPrimariesDesc *p) {
+    const AVCIExy points[4] = {p->prim.r, p->prim.g, p->prim.b, p->wp};
+    const char *names[4] = {"red", "green", "blue", "white"};
+    for (int i=0;i<4;i++) {
+        printf(",\"%s_primary_%s_x\":[%d,%d],\"%s_primary_%s_y\":[%d,%d]",
+               prefix,names[i],points[i].x.num,points[i].x.den,
+               prefix,names[i],points[i].y.num,points[i].y.den);
+    }
+}
 static int block(const AVDOVIDmData *b) {
     printf("{\"level\":%u,\"payload\":{", b->level);
     switch (b->level) {
@@ -25,8 +35,14 @@ static int block(const AVDOVIDmData *b) {
         for (int i=0;i<6;i++) printf("\"saturation_vector_field%d\":%u,",i,b->l8.saturation_vector_field[i]);
         for (int i=0;i<6;i++) printf("\"hue_vector_field%d\":%u%s",i,b->l8.hue_vector_field[i],i==5?"":",");
         break;
-    case 9: LAST(b->l9,source_primary_index); break;
-    case 10: FIELD(b->l10,target_display_index); FIELD(b->l10,target_max_pq); FIELD(b->l10,target_min_pq); LAST(b->l10,target_primary_index); break;
+    case 9:
+        LAST(b->l9,source_primary_index);
+        if (b->l9.source_primary_index==255) primaries("source",&b->l9.source_display_primaries);
+        break;
+    case 10:
+        FIELD(b->l10,target_display_index); FIELD(b->l10,target_max_pq); FIELD(b->l10,target_min_pq); LAST(b->l10,target_primary_index);
+        if (b->l10.target_primary_index==255) primaries("target",&b->l10.target_display_primaries);
+        break;
     case 11:
         FIELD(b->l11,content_type); FIELD(b->l11,whitepoint); FIELD(b->l11,reference_mode_flag);
         printf("\"reserved_byte2\":%u,\"reserved_byte3\":%u",

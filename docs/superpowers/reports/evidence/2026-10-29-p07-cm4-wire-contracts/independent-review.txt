@@ -1,0 +1,5 @@
+独立复审者 /root/cm4_wire_review；fresh context、只读，无子代理/设备/其他聊天操作。结论：未发现可操作缺陷。
+
+独立确认当前源码与 candidate-source.json 全部哈希一致。12帧 FFmpeg/decoded trace 的 PTS及全部传输字段精确一致；signed16/32767 未被解释为物理色域。六类原始负例经过真实 parser；upstream compressed L254在 dm_block_state.py:96 拒绝，duplicate L8 target两种解析器结果均在:90拒绝，不是缺前序/configuration失败掩盖。其余四类两种parser均拒绝。默认/研究Rust各7通过；全套120项119通过1既有跳过。dev依赖、解析核心不变及资格不提升说明与证据一致。
+
+覆盖限制：限生成媒体和六类负例；未重跑长片/设备，未新增验证 CLI 输出文件发布路径。报告进行中标记由协调者在复审后据实更新并同步哈希。无文件修改。

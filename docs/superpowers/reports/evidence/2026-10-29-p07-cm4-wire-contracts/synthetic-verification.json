@@ -1,0 +1,85 @@
+{
+  "kind": "synthetic_cm4_wire_only",
+  "frames": 12,
+  "long_l9_frames": 6,
+  "long_l10_frames": 6,
+  "all_fields_match_independent_ffmpeg": true,
+  "raw_cases": [
+    {
+      "name": "full_missing_l254",
+      "file": "full_missing_l254.rpus",
+      "patched_parse": false,
+      "upstream_parse": false,
+      "sha256": "6f7da2ae1412f1c19bfd9fa42bb6153e962a53b6063be406d045bf9e35e96ac1"
+    },
+    {
+      "name": "compressed_static_l254",
+      "file": "compressed_static_l254.rpus",
+      "patched_parse": false,
+      "upstream_parse": true,
+      "sha256": "96a5e277ef0b8cf54b013d2e0fb1891d3182f6e5c7b75685956099e4ba72b6e5"
+    },
+    {
+      "name": "compressed_static_l10",
+      "file": "compressed_static_l10.rpus",
+      "patched_parse": false,
+      "upstream_parse": false,
+      "sha256": "f9f85fbdee59d0adc642605abb152aa67789b7b12cb0f35dde3af2a0b874cf6b"
+    },
+    {
+      "name": "duplicate_l3",
+      "file": "duplicate_l3.rpus",
+      "patched_parse": false,
+      "upstream_parse": false,
+      "sha256": "15662b9e9195ff43872de2c02f2fe70c4164e5a9a015b3af1675abfe4a20002e"
+    },
+    {
+      "name": "unknown_l216",
+      "file": "unknown_l216.rpus",
+      "patched_parse": false,
+      "upstream_parse": false,
+      "sha256": "146723d63e0fe2b854b93304d0b08d53aede91e237b22cb8543de211e9b17a9d"
+    },
+    {
+      "name": "duplicate_l8_target",
+      "file": "duplicate_l8_target.rpus",
+      "patched_parse": true,
+      "upstream_parse": true,
+      "sha256": "d2314356c9378752f3f20f49332d4a121574aa1d96109589cbfecc7a7cea51a8"
+    }
+  ],
+  "identities": {
+    "source": {
+      "sha256": "2ff2e9b9319a2d5cce07d739ed65b4867d4bc6b628d550fb8567b41dc4ced526",
+      "bytes": 5703
+    },
+    "synthetic_media": {
+      "sha256": "a1743d147970360d028654ef7f81fd90bdc45919dca1c8ee61c4ed380dbe4802",
+      "bytes": 7389
+    },
+    "raw_rpus": {
+      "sha256": "8df812d7ca96fbdd1b2159c2efb2dbbd8ac7b343c9c21010ae6389e888bd907d",
+      "bytes": 1686
+    },
+    "mux": {
+      "sha256": "5b110f13a301c5d8a1a0970950c26a81dad089b4eb4ae068b07b9dc17d07bcca",
+      "bytes": 35152
+    },
+    "decoder": {
+      "sha256": "4c56f879325185faaa0e006fc784b399c0b7ffd30893e1b43b048a5e789f1baa",
+      "bytes": 35952
+    },
+    "oracle": {
+      "sha256": "82b6b547ece47ebe4893cfd53eebe8fb7af186488b75de1a3bc14e4bb7634ebc",
+      "bytes": 35160
+    },
+    "inspector": {
+      "sha256": "87afe6dcc4a6c77922df3e1dcf2ab4cf50740c32372346ccf3c967c20a32e5ce",
+      "bytes": 746752
+    },
+    "fixture": {
+      "sha256": "aadafdacaf0ab5509f723252dda617ba19c6b0b1372d3c750e2c4fbe7bcb3732",
+      "bytes": 660192
+    }
+  }
+}

@@ -61,7 +61,9 @@ records, static L6/L10/L254 inheritance, reset, dynamic expiration, and L8's
 strict errors/CRC checks and reads public `AVDOVIMetadata` side data. It shares
 neither the Python resolver nor the patched library. Tests compare per-PTS block
 identities and transmitted fields; extra optional L8 fields in FFmpeg must be
-zero. L9/L10 comparisons here cover their short forms. This probe is a bounded
+zero. The original suite covers L9/L10 short forms; the optional
+[wire suite](CM4_WIRE_CONTRACTS.md) adds long forms and raw parser negatives.
+This probe is a bounded
 test oracle for the generated fixture, not a general metadata exporter.
 
 ## Still open

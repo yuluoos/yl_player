@@ -64,7 +64,14 @@ class CompressedCm4Tests(test_p8_provenance.P8ProvenanceTests):
             self.assertEqual([key(b) for b in actual],[key(b) for b in expected])
             for a,b in zip(actual,expected,strict=True):
                 payload={k:v for k,v in b['payload'].items() if k!='length'}
-                self.assertEqual({k:a['payload'][k] for k in payload},payload)
+                for key,value in payload.items():
+                    if '_primary_' in key and key.endswith(('_x','_y')):
+                        # FFmpeg n8.0.1 reads signed 16-bit / 32767; libdovi
+                        # preserves the u16 wire word. Compare without floats.
+                        signed=value if value<32768 else value-65536
+                        self.assertEqual(a['payload'][key],[signed,32767])
+                    else:
+                        self.assertEqual(a['payload'][key],value)
                 self.assertTrue(all(v==0 for k,v in a['payload'].items() if k not in payload))
 
     def test_unmodified_parser_refuses_raw_compressed_cm4(self):
