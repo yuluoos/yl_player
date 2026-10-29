@@ -3993,102 +3993,57 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertNotEqual(tokens[0], tokens[3], "Tokens must not link separate proxies")
   }
 
-  func testQueuedProxyCancellationNeverReachesServerOrPoisonsNextRequest() throws {
-    let server = try DashHTTPServer(); defer { server.close() }
-    let held = expectation(description: "first request owns only upstream slot")
-    let release = DispatchSemaphore(value: 0); defer { release.signal() }
-    server.handler = { request in
-      if request.path == "/held" {
-        held.fulfill()
-        XCTAssertEqual(release.wait(timeout: .now() + 8), .success)
-      }
-      return (200, [:], Data([1, 2]))
-    }
-    let capturedLock = NSLock(); var captured: [[String: Any]] = []
-    let cancelled = expectation(description: "queued request settled without HTTP request")
-    YlHlsMediaProxy.diagnosticRequestObserver = { row in
-      capturedLock.withLock { captured.append(row) }
-      if row["requestID"] as? Double == 2 { cancelled.fulfill() }
-    }
-    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
-    // Real Foundation and sockets. Only this owned test limits the pool to one;
-    // neither production transport nor media acceptance configuration changes.
-    let proxy = try YlHlsMediaProxy(originURL: server.url("/held"), headers: [:],
-      configuration: .init(map: [:]), sessionFactory: { configuration, delegate, queue in
-        configuration.httpMaximumConnectionsPerHost = 1
-        return URLSession(configuration: configuration, delegate: delegate, delegateQueue: queue)
-      })
-    defer { proxy.cancelAll() }
-    let firstDone = expectation(description: "held request completes")
-    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/held"))) { data, _, error in
-      XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); firstDone.fulfill()
-    }.resume()
-    wait(for: [held], timeout: 3)
-    let url = try proxy.proxyURL(for: server.url("/cancelled"))
+  private func halfClosedClient(_ url: URL, done: XCTestExpectation) -> NWConnection {
     let client = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
-    defer { client.cancel() }
-    let ready = expectation(description: "queued downstream ready")
+    let ready = expectation(description: "half closed client ready")
     client.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
     client.start(queue: .global()); wait(for: [ready], timeout: 2)
-    let request = "GET \(url.path) HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n"
-    // Send the complete GET and EOF together: admission and cancellation run
-    // back-to-back without a test polling delay. The held slot prevents the
-    // admitted task from reaching the owned HTTP server first.
-    let closeRequested = ProcessInfo.processInfo.systemUptime
-    client.send(content: Data(request.utf8), contentContext: .finalMessage, isComplete: true,
-      completion: .contentProcessed { error in XCTAssertNil(error) })
-    wait(for: [cancelled], timeout: 2)
-    let row = try XCTUnwrap(capturedLock.withLock { captured.first { $0["requestID"] as? Double == 2 } })
-    XCTAssertEqual(row["outcome"] as? Double, 1)
-    XCTAssertEqual(row["cancelCause"] as? Int, 2)
-    XCTAssertEqual(row["taskOutcome"] as? Int, 1)
-    XCTAssertEqual(row["bodyBytes"] as? Double, 0)
-    XCTAssertEqual(row["sendCount"] as? Double, 0)
-    XCTAssertNil(row["response"]); XCTAssertNil(row["serverRequestID"])
-    let metrics = try XCTUnwrap(row["metrics"] as? [String: Any])
-    let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
-    // Queued before a connection slot may have zero transactions. A nonempty
-    // transaction still must not contain a recorded request-start date.
-    for transaction in transactions {
-      let states = try XCTUnwrap(transaction["durationStates"] as? [String: Int])
-      XCTAssertTrue([2, 3].contains(try XCTUnwrap(states["fetchToRequestSeconds"])))
+    var payload = Data()
+    func read() {
+      client.receive(minimumIncompleteLength: 1, maximumLength: 4096) { data, _, complete, error in
+        XCTAssertNil(error)
+        if let data { payload.append(data) }
+        if complete || error != nil {
+          XCTAssertEqual(Data(payload.suffix(2)), Data([1, 2])); done.fulfill()
+        } else { read() }
+      }
     }
-    XCTAssertEqual(server.requests.map(\.path), ["/held"])
-    release.signal(); wait(for: [firstDone], timeout: 3)
-    XCTAssertEqual(server.requests.map(\.path), ["/held"], "Releasing the slot must not send the cancelled request")
-    let afterDone = expectation(description: "explicit same-resource request succeeds")
-    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/cancelled"))) { data, _, error in
-      XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); afterDone.fulfill()
-    }.resume()
-    wait(for: [afterDone], timeout: 3)
-    XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
-    XCTAssertEqual(server.requests.map(\.path), ["/held", "/cancelled"])
-    XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
-    XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 0)
-    XCTAssertNil(proxy.upstreamDiagnostics.latestFailure)
-    let allRows = capturedLock.withLock { captured }
-    XCTAssertEqual(allRows.count, 3)
-    let followup = try XCTUnwrap(allRows.first { $0["requestID"] as? Double == 3 })
-    let cancelledToken = try XCTUnwrap(row["resourceToken"] as? String)
-    XCTAssertEqual(followup["resourceToken"] as? String, cancelledToken)
-    XCTAssertEqual(followup["taskOutcome"] as? Int, 0)
-    let followupID = try XCTUnwrap(followup["correlationID"] as? String)
-    XCTAssertNotEqual(followupID, row["correlationID"] as? String)
-    let serverTraceIDs = server.requests.compactMap { $0.headers["x-yl-trace-id"] }
-    XCTAssertFalse(serverTraceIDs.contains(try XCTUnwrap(row["correlationID"] as? String)))
-    XCTAssertEqual(serverTraceIDs.count, 2)
-    XCTAssertEqual(serverTraceIDs.last, followupID)
-    let evidence: [String: Any] = ["scenario": "owned-single-slot-cancel-then-explicit-same-url",
-      "followupTrace": followup,
-      "trace": row, "closeRequested": closeRequested, "parsedServerTraceIDs": serverTraceIDs,
-      "parsedServerPaths": server.requests.map(\.path), "physicalOutputVerified": false,
-      "capabilityAccepted": false]
-    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: evidence, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
-    attachment.name = "queued-cancellation-evidence"; attachment.lifetime = .keepAlways
-    XCTContext.runActivity(named: "Real queued cancellation without server request") { $0.add(attachment) }
+    read()
+    client.send(content: Data("GET \(url.path) HTTP/1.1\r\nHost: owned\r\nConnection: close\r\n\r\n".utf8),
+      contentContext: .finalMessage, isComplete: true, completion: .contentProcessed { XCTAssertNil($0) })
+    return client
   }
 
-  func testHalfClosedClientCanReceiveDirectResponseButProxyCancels() throws {
+  func testQueuedHalfClosedRequestReceivesResponseAfterSlotRelease() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let held = expectation(description: "first upstream slot held")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    server.handler = { request in
+      if request.path == "/held" { held.fulfill(); XCTAssertEqual(release.wait(timeout: .now() + 6), .success) }
+      return (200, [:], Data([1, 2]))
+    }
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/held"), headers: [:], configuration: .init(map: [:]), sessionFactory: { config, delegate, queue in
+      config.httpMaximumConnectionsPerHost = 1
+      return URLSession(configuration: config, delegate: delegate, delegateQueue: queue)
+    })
+    defer { proxy.cancelAll() }
+    let firstDone = expectation(description: "first body")
+    let first = halfClosedClient(try proxy.proxyURL(for: server.url("/held")), done: firstDone); defer { first.cancel() }
+    wait(for: [held], timeout: 2)
+    let secondDone = expectation(description: "queued half closed body")
+    let second = halfClosedClient(try proxy.proxyURL(for: server.url("/queued")), done: secondDone); defer { second.cancel() }
+    let admitted = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in proxy.diagnosticSnapshot["activeTasks"] == 2 }, object: nil)
+    wait(for: [admitted], timeout: 2)
+    XCTAssertEqual(server.requests.map(\.path), ["/held"])
+    release.signal(); wait(for: [firstDone, secondDone], timeout: 3)
+    XCTAssertEqual(server.requests.map(\.path), ["/held", "/queued"])
+    let drained = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+      proxy.diagnosticSnapshot["activeConnections"] == 0 && proxy.diagnosticSnapshot["activeTasks"] == 0 && proxy.diagnosticSnapshot["connectionDeadlines"] == 0
+    }, object: nil)
+    wait(for: [drained], timeout: 2)
+  }
+
+  func testHalfClosedClientReceivesCompleteDirectAndProxyResponses() throws {
     let server = try DashHTTPServer(); defer { server.close() }
     server.handler = { _ in (200, [:], Data([1, 2, 3, 4])) }
     let lock = NSLock(); var traces: [[String: Any]] = []
@@ -4123,6 +4078,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         }
       }
       read()
+      if proxied { DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) { release.signal() } }
       connection.send(content: Data("GET \(url.path) HTTP/1.1\r\nHost: owned\r\nConnection: close\r\n\r\n".utf8),
         contentContext: .finalMessage, isComplete: true, completion: .contentProcessed { XCTAssertNil($0) })
       wait(for: [received], timeout: 4)
@@ -4132,10 +4088,11 @@ final class YlDashResourceLoaderTests: XCTestCase {
       } else {
         XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
         let row = try XCTUnwrap(lock.withLock { traces.first })
-        XCTAssertEqual(row["cancelCause"] as? Int, 2)
-        XCTAssertEqual(row["outcome"] as? Double, 1)
-        // Characterization of an OPEN defect, not acceptance of half-close support.
-        // Do not assert byte count: upstream response and EOF can race.
+        XCTAssertEqual(row["cancelCause"] as? Int, 0)
+        XCTAssertEqual(row["outcome"] as? Double, 0)
+        XCTAssertFalse(receiveFailed)
+        XCTAssertEqual(Data(payload.suffix(4)), Data([1, 2, 3, 4]))
+        // A response delayed beyond write EOF must still be delivered.
       }
       observations.append(["proxied": proxied, "receivedBytes": payload.count,
         "receivedExpectedBody": Data(payload.suffix(4)) == Data([1, 2, 3, 4]),
@@ -4149,79 +4106,53 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTContext.runActivity(named: "Write EOF does not establish loss of response interest") { $0.add(attachment) }
   }
 
-  func testUnoccupiedProxyCancellationPreservesTransportAndServerEvidence() throws {
-    // Characterize the real EOF race with the production connection limit and
-    // no preceding task. A held response prevents success before cancellation;
-    // it does not occupy a connection before the tested request is admitted.
+  func testProxyDeadlineReclaimsSilentClosedAndNonReadingClients() throws {
     var samples: [[String: Any]] = []
-    for attempt in 0..<6 {
+    for mode in 0..<4 {
       let server = try DashHTTPServer(); defer { server.close() }
-      let release = DispatchSemaphore(value: 0)
-      defer { release.signal(); release.signal() }
+      let entered = mode == 2 ? nil : expectation(description: "upstream entered")
+      let release = DispatchSemaphore(value: 0); defer { release.signal() }
       server.handler = { _ in
-        XCTAssertEqual(release.wait(timeout: .now() + 5), .success)
-        return (200, [:], Data([1, 2]))
+        entered?.fulfill()
+        if mode != 3 { _ = release.wait(timeout: .now() + 6) }
+        return (200, [:], mode == 3 ? Data(repeating: 7, count: 8 * 1024 * 1024) : Data([1, 2]))
       }
       let lock = NSLock(); var rows: [[String: Any]] = []
-      let cancelled = expectation(description: "unoccupied cancellation settled")
-      YlHlsMediaProxy.diagnosticRequestObserver = { row in
-        lock.withLock { rows.append(row) }
-        if row["requestID"] as? Double == 1 { cancelled.fulfill() }
-      }
+      YlHlsMediaProxy.diagnosticRequestObserver = { row in lock.withLock { rows.append(row) } }
       defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
-      let origin = server.url("/same-resource")
-      let proxy = try YlHlsMediaProxy(originURL: origin, headers: [:], configuration: .init(map: [:]))
+      let proxy = try YlHlsMediaProxy(originURL: server.url("/held"), headers: [:],
+        configuration: .init(map: ["connectTimeoutMs": 80, "readTimeoutMs": 420]), sessionFactory: { config, delegate, queue in
+          // Force the independent proxy deadline, not Foundation's timeout.
+          config.timeoutIntervalForRequest = 30; config.timeoutIntervalForResource = 30
+          return URLSession(configuration: config, delegate: delegate, delegateQueue: queue)
+        })
       defer { proxy.cancelAll() }
-      XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
-      let url = try proxy.proxyURL(for: origin)
+      let url = try proxy.proxyURL(for: server.url("/held"))
       let client = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
       defer { client.cancel() }
-      let ready = expectation(description: "unoccupied client ready")
+      let ready = expectation(description: "deadline client ready")
       client.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+      let started = ProcessInfo.processInfo.systemUptime
       client.start(queue: .global()); wait(for: [ready], timeout: 2)
-      let request = "GET \(url.path) HTTP/1.1\r\nHost: owned\r\nConnection: close\r\n\r\n"
-      client.send(content: Data(request.utf8), contentContext: .finalMessage, isComplete: true,
-        completion: .contentProcessed { XCTAssertNil($0) })
-      wait(for: [cancelled], timeout: 3)
-      // Observer entry precedes delivery cleanup; wait for both before inspecting ownership.
-      XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
-      let row = try XCTUnwrap(lock.withLock { rows.first })
-      XCTAssertEqual(row["cancelCause"] as? Int, 2)
-      XCTAssertEqual(row["outcome"] as? Double, 1)
-      XCTAssertEqual(row["taskOutcome"] as? Int, 1)
-      XCTAssertEqual(row["bodyBytes"] as? Double, 0)
-      XCTAssertEqual(row["sentBodyBytes"] as? Double, 0)
-      let metrics = try XCTUnwrap(row["metrics"] as? [String: Any])
-      XCTAssertEqual(metrics["version"] as? Int, 3)
-      XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
-      XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 0)
-      release.signal(); release.signal()
-      let done = expectation(description: "same resource succeeds after unoccupied cancellation")
-      URLSession.shared.dataTask(with: url) { data, _, error in
-        XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); done.fulfill()
-      }.resume()
-      wait(for: [done], timeout: 3)
+      let request = mode == 2 ? "GET /" : "GET \(url.path) HTTP/1.1\r\nHost: owned\r\n\r\n"
+      client.send(content: Data(request.utf8), completion: .contentProcessed { XCTAssertNil($0) })
+      if let entered { wait(for: [entered], timeout: 2) }
+      if mode == 1 { client.cancel() }
+      let drained = XCTNSPredicateExpectation(predicate: NSPredicate { _, _ in
+        proxy.diagnosticSnapshot["activeConnections"] == 0 && proxy.diagnosticSnapshot["activeTasks"] == 0 && proxy.diagnosticSnapshot["connectionDeadlines"] == 0
+      }, object: nil)
+      wait(for: [drained], timeout: 2)
+      XCTAssertLessThan(ProcessInfo.processInfo.systemUptime - started, 2.5)
       XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
       let captured = lock.withLock { rows }
-      XCTAssertEqual(captured.count, 2)
-      let followup = try XCTUnwrap(captured.first { $0["requestID"] as? Double == 2 })
-      XCTAssertEqual(followup["taskOutcome"] as? Int, 0)
-      XCTAssertEqual(followup["resourceToken"] as? String, row["resourceToken"] as? String)
-      let followupID = try XCTUnwrap(followup["correlationID"] as? String)
-      XCTAssertNotEqual(followupID, row["correlationID"] as? String)
-      let parsed = server.requests.compactMap { $0.headers["x-yl-trace-id"] }
-      XCTAssertEqual(parsed.filter { $0 == followupID }.count, 1)
-      // Snapshot, not proof that a cancelled request can never arrive later.
-      // Do not require no server request or a fixed transaction count: the
-      // unoccupied transport race may legitimately reach either boundary.
-      samples.append(["attempt": attempt, "trace": row, "followupTrace": followup,
-        "parsedServerTraceIDs": parsed, "snapshotAfterExplicitFollowup": true])
+      XCTAssertEqual(captured.count, mode == 2 ? 0 : 1)
+      if mode == 0 { XCTAssertEqual(captured.first?["cancelCause"] as? Int, 4) }
+      samples.append(["mode": mode, "elapsed": ProcessInfo.processInfo.systemUptime - started,
+        "snapshot": proxy.diagnosticSnapshot, "traces": captured])
     }
-    let evidence: [String: Any] = ["scenario": "unoccupied-default-pool-cancel-then-explicit-same-url",
-      "samples": samples, "capabilityAccepted": false, "physicalOutputVerified": false]
-    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: evidence, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
-    attachment.name = "unoccupied-cancellation-evidence"; attachment.lifetime = .keepAlways
-    XCTContext.runActivity(named: "Cancellation without a preceding occupied slot") { $0.add(attachment) }
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: ["samples": samples, "capabilityAccepted": false], options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "bounded-connection-reclamation"; attachment.lifetime = .keepAlways
+    XCTContext.runActivity(named: "Independent deadline reclaims stalled exchanges") { $0.add(attachment) }
   }
 
   func testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse() throws {
@@ -4236,7 +4167,10 @@ final class YlDashResourceLoaderTests: XCTestCase {
       let capturedLock = NSLock(); var captured: [[String: Any]] = []
       YlHlsMediaProxy.diagnosticRequestObserver = { row in capturedLock.withLock { captured.append(row) } }
       defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
-      let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: [:]))
+      let proxy = try YlHlsMediaProxy(originURL: server.url("/media"), headers: [:], configuration: .init(map: ["connectTimeoutMs": 80, "readTimeoutMs": 420]), sessionFactory: { config, delegate, queue in
+        config.timeoutIntervalForRequest = 30; config.timeoutIntervalForResource = 30
+        return URLSession(configuration: config, delegate: delegate, delegateQueue: queue)
+      })
       defer { proxy.cancelAll() }
       let done = expectation(description: "cancelled downstream")
       let client = URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/media"))) { _, _, error in
@@ -4252,7 +4186,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
       XCTAssertEqual(rows.count, 1)
       XCTAssertEqual(rows.first?["outcome"] as? Double, 1)
       if downstream {
-        XCTAssertTrue([2, 3].contains(rows.first?["cancelCause"] as? Int ?? -1))
+        XCTAssertTrue([3, 4].contains(rows.first?["cancelCause"] as? Int ?? -1))
       } else { XCTAssertEqual(rows.first?["cancelCause"] as? Int, 1) }
       XCTAssertNil(rows.first?["response"])
       XCTAssertNil(rows.first?["upstreamComplete"])

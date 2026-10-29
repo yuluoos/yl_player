@@ -99,6 +99,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       var result = diagnosticCounters
       result["activeRequestTraces"] = Double(diagnosticActiveTraces.count)
       result["activeConnections"] = Double(connections.count)
+      result["connectionDeadlines"] = Double(connectionDeadlines.count)
       result["activeTasks"] = Double(taskRecords.count)
       result["pendingSends"] = Double(taskRecords.values.reduce(0) { $0 + $1.pendingSends })
       result["suspendedTasks"] = Double(connectionTasks.values.filter { $0.state == .suspended }.count)
@@ -126,6 +127,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   private let credentialContext: YlHlsCredentialContext
   private var taskRecords: [Int: TaskRecord] = [:]
   private var connectionTasks: [ObjectIdentifier: URLSessionDataTask] = [:]
+  private var connectionDeadlines: [ObjectIdentifier: DispatchSourceTimer] = [:]
   private var cancelled = false
   private var listeningPort: NWEndpoint.Port?
 
@@ -253,6 +255,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       connectionTasks.removeAll()
       let values = Array(connections.values)
       connections.removeAll()
+      connectionDeadlines.values.forEach { $0.cancel() }
+      connectionDeadlines.removeAll()
       return values
     }
     #if DEBUG
@@ -273,6 +277,18 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     let accepted = lock.withLock { () -> Bool in
       guard !cancelled else { return false }
       connections[identifier] = connection
+      // EOF closes only the client's write side. Independently bound the whole
+      // exchange, including a stalled downstream send or a silent full close.
+      let timer = DispatchSource.makeTimerSource(queue: .global(qos: .utility))
+      let lifetime = (TimeInterval(max(1, configuration.connectTimeoutMs)) +
+        TimeInterval(max(1, configuration.readTimeoutMs))) / 1_000
+      timer.schedule(deadline: .now() + lifetime)
+      timer.setEventHandler { [weak self, weak connection] in
+        guard let self, let connection else { return }
+        self.close(connection)
+      }
+      connectionDeadlines[identifier] = timer
+      timer.resume()
       #if DEBUG
       diagnosticCounters["acceptedConnections", default: 0] += 1
       #endif
@@ -307,11 +323,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       }
       if requestData.range(of: Data("\r\n\r\n".utf8)) != nil {
         guard self.handle(requestData, on: connection) else { return }
-        if isComplete {
-          self.close(connection, diagnosticCancelCause: 2)
-        } else {
-          self.monitorDisconnect(connection)
-        }
+        // A complete request followed by FIN still permits a response.
+        if !isComplete { self.monitorDisconnect(connection) }
       } else if isComplete {
         self.close(connection, diagnosticCancelCause: 2)
       } else {
@@ -400,9 +413,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     connection.receive(minimumIncompleteLength: 1, maximumLength: 1_024) {
       [weak self, weak connection] _, _, isComplete, error in
       guard let self, let connection else { return }
-      if error != nil || isComplete {
-        self.close(connection, diagnosticCancelCause: error == nil ? 2 : 3)
-      } else {
+      if error != nil {
+        self.close(connection, diagnosticCancelCause: 3)
+      } else if !isComplete {
         self.monitorDisconnect(connection)
       }
     }
@@ -459,6 +472,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       trace = diagnosticActiveTraces[identifier]?.trace
       #endif
       connections.removeValue(forKey: identifier)
+      connectionDeadlines.removeValue(forKey: identifier)?.cancel()
       let task = connectionTasks.removeValue(forKey: identifier)
       if let task {
         #if DEBUG

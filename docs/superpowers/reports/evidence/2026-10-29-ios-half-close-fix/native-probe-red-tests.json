@@ -1,0 +1,79 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertEqual failed: (\"Optional(2)\") is not equal to (\"Optional(0)\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 4137
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"Optional(1.0)\") is not equal to (\"Optional(0.0)\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 4138
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0 bytes\") is not equal to (\"4 bytes\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 4140
+                      }
+                    }
+                  ],
+                  "duration" : "0.26s",
+                  "durationInSeconds" : 0.25737297534942627,
+                  "name" : "testHalfClosedClientReceivesCompleteDirectAndProxyResponses()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testHalfClosedClientReceivesCompleteDirectAndProxyResponses()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testHalfClosedClientReceivesCompleteDirectAndProxyResponses",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}
