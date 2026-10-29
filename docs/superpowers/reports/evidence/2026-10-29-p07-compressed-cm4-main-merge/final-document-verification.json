@@ -1,0 +1,40 @@
+{
+  "implementation_commit": "11d1ee6919d147f0e1a450e786e27a9eb5227b9c",
+  "candidate_files": 73,
+  "candidate_matches": true,
+  "original_evidence_matches": true,
+  "qualification_rows_unchanged": true,
+  "source_snapshot_unchanged": true,
+  "report_sha256": "4947fe9e468c66f52b5e204b1968a06132f2535cf1e5c458172ca71199489773",
+  "inventory_sha256": "6fe7c4176f64718e2389e321536f481b0b9f7aa28c053dfab4471627e3fb6bc0",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "expected": 0
+    }
+  ]
+}
