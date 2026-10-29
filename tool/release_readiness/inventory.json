@@ -948,6 +948,11 @@
       "path": "docs/superpowers/reports/2026-10-29-native-timeout-overflow.md",
       "sha256": "fd15e02b360d89da3faf3494abd4bb708485e1d5aca980b87c221c7fe073fb96",
       "kind": "report"
+    },
+    "final-media-budget-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-final-media-budget.md",
+      "sha256": "e5d3d958d31362487bceb8873b9bdda800a533cf7eb42870ea221b5131cfa655",
+      "kind": "report"
     }
   },
   "rows": [
@@ -992,10 +997,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "native-timeout-overflow-20261029"
+        "final-media-budget-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-long-media-continuity-and-historical-dual-transaction-root-cause"
+      "nextAction": "qualify-exhausted-budget-natural-recovery-continuity-and-historical-dual-transactions"
     },
     {
       "requirement": "CAP-ABR",

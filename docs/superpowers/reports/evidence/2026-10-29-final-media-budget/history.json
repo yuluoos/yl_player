@@ -1,0 +1,232 @@
+[
+  {
+    "group": "2026-10-27-abr-recovery",
+    "manifestSha256": "8531c9f8d8f24f63cdbcb75c2d31df535b830677445d6a545457674ac26c1569",
+    "files": 242
+  },
+  {
+    "group": "2026-10-27-abr-penalty-recovery",
+    "manifestSha256": "e447f0c799a2026dca3f35d6f9530b5c1071ca25aca9947d02d60e9b5428e422",
+    "files": 112
+  },
+  {
+    "group": "2026-10-27-abr-auto-recovery",
+    "manifestSha256": "ad5b7ca7387829329aecdf7e949c5a6373fb90b92c6426998ec22329072f76bf",
+    "files": 146
+  },
+  {
+    "group": "2026-10-27-abr-frame-retention",
+    "manifestSha256": "1483efbf4a3c5a3d34475226c7396321322850613c519348a4e45654407ae272",
+    "files": 322
+  },
+  {
+    "group": "2026-10-27-ios-device-recovery-causes",
+    "manifestSha256": "d3aa9b94a18f266df8e26dfadc555ba1b3440600e7d1635e97adf0c4a8db3052",
+    "files": 177
+  },
+  {
+    "group": "2026-10-27-ios-device-stall-followup",
+    "manifestSha256": "e59e030542abf3923d6f392adfa9a83b5f97d76ce8f689d17c179fd84476e7ab",
+    "files": 297
+  },
+  {
+    "group": "2026-10-26-remaining-acceptance",
+    "manifestSha256": "9154029237fe59ce4b45c2ff9bd3063c8ed8ef6f65f0fc43ec50f441ec8d97d6",
+    "files": 495
+  },
+  {
+    "group": "2026-10-27-remaining-main-merge",
+    "manifestSha256": "2ec3f0a141b17f86afb6a3bc28fcdc19cb48dc99b80654accd515b237f8d7d5f",
+    "files": 31
+  },
+  {
+    "group": "2026-10-27-ios-request-boundary",
+    "manifestSha256": "b83a95442d3e51b01bd2a90e47daa0b4f0579b26d34361b6709cd2bd65202175",
+    "files": 249
+  },
+  {
+    "group": "2026-10-28-ios-candidate-preparation",
+    "manifestSha256": "5e1ae13cd304657e3a21069032253f4c55f777d836eb00fd1ef14e9fc53292ad",
+    "files": 344
+  },
+  {
+    "group": "2026-10-28-ios-route-pause",
+    "manifestSha256": "82328f89455a8b4004a9d5a6d1afd17ea411d9f3f837db5ef33d239931ef4bd3",
+    "files": 286
+  },
+  {
+    "group": "2026-10-28-ios-item-preroll",
+    "manifestSha256": "f63a5884c6d9b6414435b005591e6b2250d4388154d3364864e1efb83a99e467",
+    "files": 309
+  },
+  {
+    "group": "2026-10-28-ios-preparation-intent",
+    "manifestSha256": "6d13d30e45eba8f2a8b85e79097024f3b7db24b95e02dfae5dd567a9ae1916bb",
+    "files": 212
+  },
+  {
+    "group": "2026-10-28-ios-policy-intent",
+    "manifestSha256": "16eca1c6b2be1bfb03e5c51440aa35868d5180128034900bf310980cec3f26e8",
+    "files": 213
+  },
+  {
+    "group": "2026-10-28-ios-public-policy",
+    "manifestSha256": "fa68d2e3f072cd49a16d15c719f96bfbe7cd0bcbd0194e652d085f54286a2b25",
+    "files": 586
+  },
+  {
+    "group": "2026-10-28-ios-public-race",
+    "manifestSha256": "a5c5a7201494cf63d3e5cc0d2458caea8cbee052466d395e432a4a05e9cedd52",
+    "files": 270
+  },
+  {
+    "group": "2026-10-28-ios-public-transport",
+    "manifestSha256": "848a66e2baba349dd6e6d8e6d4389b388dc6caf239d414048fc709dd32361bec",
+    "files": 265
+  },
+  {
+    "group": "2026-10-28-ios-credential-race",
+    "manifestSha256": "2c7646ae6992f6d910966994cb2e485d1c5e41981a7eea09f6de0e8d72508b76",
+    "files": 176
+  },
+  {
+    "group": "2026-10-28-ios-load-lifecycle",
+    "manifestSha256": "e686bc0beb757db75e60a44d4d9972dcab99b83665a48f6d7a0546c7bcdd8902",
+    "files": 173
+  },
+  {
+    "group": "2026-10-28-ios-postcommit-failure",
+    "manifestSha256": "9b2cc471108eff129073f9d53eb8ded94c76ad82f111496fff30cc110cb23426",
+    "files": 170
+  },
+  {
+    "group": "2026-10-28-dart-credential-race",
+    "manifestSha256": "dae057cbf8500b0672e1ac96b8da061d8a6d86b6c8f09ac8979357641dc4af98",
+    "files": 119
+  },
+  {
+    "group": "2026-10-28-abr-original-recovery",
+    "manifestSha256": "dabc0a9e512105188c0f6d657bb476cd4798f0b08404094fe515323e4d377d54",
+    "files": 165
+  },
+  {
+    "group": "2026-10-28-ios-production-recovery",
+    "manifestSha256": "1a2c0cc1c9617bfc9206cc3e7882a9d1b7c9fdb44ef0835a4e547f73a3515dca",
+    "files": 377
+  },
+  {
+    "group": "2026-10-28-ios-production-races",
+    "manifestSha256": "b3fd89fb601c07ec8e314c16f54d9ed65cf888f05412e51b805543e0fa480d41",
+    "files": 590
+  },
+  {
+    "group": "2026-10-28-ios-recovery-landing",
+    "manifestSha256": "2f9c347b42be2a064337f650aab8f3ac99558f03e0eb4c0ca6b90f30c37aeb15",
+    "files": 93
+  },
+  {
+    "group": "2026-10-29-ios-resume-timeout",
+    "manifestSha256": "98d6cc741c1311b560b4ae443e25ea13a94a797a12a781e05a147b2d85013cd8",
+    "files": 288
+  },
+  {
+    "group": "2026-10-29-ios-original-bandwidth",
+    "manifestSha256": "c86a81fde6f5433d60ae3e0710de18fdbb9929c13f88b60b017da9dc07e68608",
+    "files": 121
+  },
+  {
+    "group": "2026-10-29-ios-request-timing",
+    "manifestSha256": "5ab31169231a5f180f0b7f84bd7a72fa6f6aac400dd6429035ff5efe56b93f86",
+    "files": 269
+  },
+  {
+    "group": "2026-10-29-ios-transaction-metrics",
+    "manifestSha256": "3edd9d6cc87596e25a9a9ae934635cb7a9486a641ecee5ace9f0c8d09644bca0",
+    "files": 162
+  },
+  {
+    "group": "2026-10-29-abr-main-merge",
+    "manifestSha256": "a4a195c644a3c332e8140ea8577caf4e1819c31b7e2c1609bbf1a909f967dd92",
+    "files": 31
+  },
+  {
+    "group": "2026-10-29-ios-connection-persistence",
+    "manifestSha256": "e53fb5eb3171cf1be43a2fdefb902e3e76494577555bb77dc1d3c81ea4fe7afe",
+    "files": 121
+  },
+  {
+    "group": "2026-10-29-ios-server-timing",
+    "manifestSha256": "0b0c0829841b1a9c21fc459b53c63229f2b43aebc9d9fe636858bb008638b481",
+    "files": 120
+  },
+  {
+    "group": "2026-10-29-ios-production-exercise",
+    "manifestSha256": "1894fe3f32b9f237973d49aaa99b248ca7b32d5a6d5f028a4216c478470d7842",
+    "files": 208
+  },
+  {
+    "group": "2026-10-29-ios-budget-metrics",
+    "manifestSha256": "225d21d48f60e1266764b66aa68f647315ca8f27be4dbb750c001184a6e0b98d",
+    "files": 155
+  },
+  {
+    "group": "2026-10-29-ios-recovery-cause",
+    "manifestSha256": "dc1761cabc66cf2f89eda91beaa24b5b79b560ef2dd6cb6d0bcc006885c6ee34",
+    "files": 106
+  },
+  {
+    "group": "2026-10-29-ios-cancel-settlement",
+    "manifestSha256": "891895f10808f42126cc956a96cb60a4e3a0d3ce25400b621145c85f488ee5c5",
+    "files": 186
+  },
+  {
+    "group": "2026-10-29-ios-fast-cancel",
+    "manifestSha256": "c4650c58e8f35256271aa8a7b0e6527053073fdc43ccda5a21442e17a153733d",
+    "files": 205
+  },
+  {
+    "group": "2026-10-29-ios-queued-cancel",
+    "manifestSha256": "45a58d91219df0948a0a083e1651c0f39b66d93dbea9c7140a9e6c922d2416cb",
+    "files": 207
+  },
+  {
+    "group": "2026-10-29-ios-resource-correlation",
+    "manifestSha256": "3066cbde6b36e0f89e65817e23eb2679fbd8b6e58faa455e4427d14e8198e6df",
+    "files": 211
+  },
+  {
+    "group": "2026-10-29-ios-same-resource-retry",
+    "manifestSha256": "bba6bc6ce1bb2d9ab68964637648eeb0b1be8698829767594de1caab854d7b09",
+    "files": 207
+  },
+  {
+    "group": "2026-10-29-ios-failure-observations",
+    "manifestSha256": "97ac5034d57cd5327863fe21c470ffe5001172c31d4898d541ad8a199c109e19",
+    "files": 122
+  },
+  {
+    "group": "2026-10-29-ios-transaction-bytes",
+    "manifestSha256": "bbc21e0d310ce0116b042372bb00eb2b77d4cd4ea2daa999a6606c187a91a8c8",
+    "files": 175
+  },
+  {
+    "group": "2026-10-29-ios-cancel-byte-boundaries",
+    "manifestSha256": "114dce3c3f80d16a49290fc5dc6d5395957a38ba80afd1c45f00a44ce91380cb",
+    "files": 198
+  },
+  {
+    "group": "2026-10-29-ios-half-close",
+    "manifestSha256": "36ecee5c841601005f09546f8165473f2b56a4dce5d42240fcbae0c0b6c20216",
+    "files": 84
+  },
+  {
+    "group": "2026-10-29-ios-half-close-fix",
+    "manifestSha256": "fea2257648e158504d0652ed0574a6d91e773f6e5ae8509d431dcc9d2db49315",
+    "files": 168
+  },
+  {
+    "group": "2026-10-29-native-timeout-overflow",
+    "manifestSha256": "15272f7286b726c97040514b58af1cb0c42cd3cd9c2205a2ece05f29b9da9740",
+    "files": 82
+  }
+]
