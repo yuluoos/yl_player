@@ -1,0 +1,6 @@
+{
+  "captureToFinalChangedFiles": [
+    "tool/playback_network/test_network_profile.py"
+  ],
+  "reason": "Move unittest.main below the new test class so direct and discovery entry points both execute all 29 cases; server/collector/native code unchanged."
+}

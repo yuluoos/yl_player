@@ -1,0 +1,731 @@
+test_auto_budget_receipt_does_not_require_or_invent_a_recovery (test_abr_accesslog.AccessLogTests.test_auto_budget_receipt_does_not_require_or_invent_a_recovery) ... ok
+test_candidate_preparation_is_explicit_and_limited_to_owned_auto_probe (test_abr_accesslog.AccessLogTests.test_candidate_preparation_is_explicit_and_limited_to_owned_auto_probe) ... ok
+test_candidate_preparation_requires_native_echo_and_rejects_mixed_modes (test_abr_accesslog.AccessLogTests.test_candidate_preparation_requires_native_echo_and_rejects_mixed_modes) ... ok
+test_control_receipt_requires_native_transport_duration_and_full_completion (test_abr_accesslog.AccessLogTests.test_control_receipt_requires_native_transport_duration_and_full_completion) ... ok
+test_detects_recovered_output_but_never_admits_capability (test_abr_accesslog.AccessLogTests.test_detects_recovered_output_but_never_admits_capability) ... ok
+test_frame_boundary_reports_stall_and_retention_without_counting_held_frame (test_abr_accesslog.AccessLogTests.test_frame_boundary_reports_stall_and_retention_without_counting_held_frame) ... ok
+test_high_before_operation_and_missing_final_attempt_cannot_claim_recovery (test_abr_accesslog.AccessLogTests.test_high_before_operation_and_missing_final_attempt_cannot_claim_recovery) ... ok
+test_independent_frame_samples_measure_publication_not_audio_acceptance (test_abr_accesslog.AccessLogTests.test_independent_frame_samples_measure_publication_not_audio_acceptance) ... ok
+test_intent_scenarios_require_their_actual_preparation_path (test_abr_accesslog.AccessLogTests.test_intent_scenarios_require_their_actual_preparation_path) ... ok
+test_mid_preparation_pause_requires_preroll (test_abr_accesslog.AccessLogTests.test_mid_preparation_pause_requires_preroll) ... ok
+test_missing_completion_frames_invalid_time_and_nonzero_cap_fail (test_abr_accesslog.AccessLogTests.test_missing_completion_frames_invalid_time_and_nonzero_cap_fail) ... ok
+test_policy_scenarios_require_preroll_preparation (test_abr_accesslog.AccessLogTests.test_policy_scenarios_require_preroll_preparation) ... ok
+test_preparation_window_cannot_be_attributed_to_installed_recovery (test_abr_accesslog.AccessLogTests.test_preparation_window_cannot_be_attributed_to_installed_recovery) ... ok
+test_prepared_load_requires_one_committed_session_boundary_and_new_budget (test_abr_accesslog.AccessLogTests.test_prepared_load_requires_one_committed_session_boundary_and_new_budget) ... ok
+test_prepared_pause_requires_native_paused_rows_and_keeps_budget (test_abr_accesslog.AccessLogTests.test_prepared_pause_requires_native_paused_rows_and_keeps_budget) ... ok
+test_prepared_production_race_requires_cancelled_candidate_and_actual_pts (test_abr_accesslog.AccessLogTests.test_prepared_production_race_requires_cancelled_candidate_and_actual_pts) ... ok
+test_preroll_install_requires_fresh_item_and_completed_preparation (test_abr_accesslog.AccessLogTests.test_preroll_install_requires_fresh_item_and_completed_preparation) ... ok
+test_preroll_requires_owned_auto_and_native_echo (test_abr_accesslog.AccessLogTests.test_preroll_requires_owned_auto_and_native_echo) ... ok
+test_preserves_downshift_without_claiming_recovery_or_cause (test_abr_accesslog.AccessLogTests.test_preserves_downshift_without_claiming_recovery_or_cause) ... ok
+test_production_pause_keeps_budget_and_requires_real_paused_samples (test_abr_accesslog.AccessLogTests.test_production_pause_keeps_budget_and_requires_real_paused_samples) ... ok
+test_production_recovery_requires_physical_public_normal_capture (test_abr_accesslog.AccessLogTests.test_production_recovery_requires_physical_public_normal_capture) ... ok
+test_production_recovery_requires_real_public_install_and_high_frames (test_abr_accesslog.AccessLogTests.test_production_recovery_requires_real_public_install_and_high_frames) ... ok
+test_public_policy_cycle_rejects_conflicting_or_short_capture (test_abr_accesslog.AccessLogTests.test_public_policy_cycle_rejects_conflicting_or_short_capture) ... ok
+test_public_policy_cycle_requires_every_committed_phase_and_actual_frames (test_abr_accesslog.AccessLogTests.test_public_policy_cycle_requires_every_committed_phase_and_actual_frames) ... ok
+test_public_race_requires_actual_candidate_command_cancellation_and_retained_policy (test_abr_accesslog.AccessLogTests.test_public_race_requires_actual_candidate_command_cancellation_and_retained_policy) ... ok
+test_public_race_requires_owned_preroll_and_explicit_policy_scenario (test_abr_accesslog.AccessLogTests.test_public_race_requires_owned_preroll_and_explicit_policy_scenario) ... ok
+test_public_transport_race_requires_acknowledged_revision_and_actual_effects (test_abr_accesslog.AccessLogTests.test_public_transport_race_requires_acknowledged_revision_and_actual_effects) ... ok
+test_recovery_intervention_is_bound_and_not_natural_adaptation (test_abr_accesslog.AccessLogTests.test_recovery_intervention_is_bound_and_not_natural_adaptation) ... ok
+test_terminal_no_publication_is_not_hidden_by_last_interframe_gap (test_abr_accesslog.AccessLogTests.test_terminal_no_publication_is_not_hidden_by_last_interframe_gap) ... ok
+test_matching_identity_is_terminated_and_verified (test_abr_accesslog.CleanupTests.test_matching_identity_is_terminated_and_verified) ... ok
+test_missing_and_changed_identity_never_signals (test_abr_accesslog.CleanupTests.test_missing_and_changed_identity_never_signals) ... ok
+test_direct_control_duration_and_identity_survive_failure_before_launch (test_abr_accesslog.FailureReceiptTests.test_direct_control_duration_and_identity_survive_failure_before_launch) ... ok
+test_empty_main_rows_fail_closed_without_escaping (test_abr_accesslog.FailureReceiptTests.test_empty_main_rows_fail_closed_without_escaping) ... FAIL
+test_failed_playback_retains_valid_frame_observation_without_passing (test_abr_accesslog.FailureReceiptTests.test_failed_playback_retains_valid_frame_observation_without_passing) ... FAIL
+test_preflight_failures_keep_a_failed_receipt_without_running_a_host (test_abr_accesslog.FailureReceiptTests.test_preflight_failures_keep_a_failed_receipt_without_running_a_host) ... ok
+test_exit_after_final_sleep_cannot_be_accepted_past_deadline (test_abr_accesslog.NativeDeadlineTests.test_exit_after_final_sleep_cannot_be_accepted_past_deadline) ... ok
+test_timely_exit_preserves_actual_failure_code (test_abr_accesslog.NativeDeadlineTests.test_timely_exit_preserves_actual_failure_code) ... ok
+test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected (test_abr_accesslog.ProcessProofTests.test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected) ... ERROR
+test_cleanup_rejects_nonobject_proof_and_process_entries (test_abr_device.DeviceCaptureTests.test_cleanup_rejects_nonobject_proof_and_process_entries) ... ok
+test_device_cleanup_requires_matching_pid_and_executable (test_abr_device.DeviceCaptureTests.test_device_cleanup_requires_matching_pid_and_executable) ... ok
+test_export_copies_only_one_complete_owned_file_set (test_abr_device.DeviceCaptureTests.test_export_copies_only_one_complete_owned_file_set) ... ok
+test_listener_requires_explicit_literal_private_address (test_abr_device.DeviceCaptureTests.test_listener_requires_explicit_literal_private_address) ... ok
+test_nonobject_device_rows_keep_failed_receipt (test_abr_device.DeviceCaptureTests.test_nonobject_device_rows_keep_failed_receipt) ... ok
+test_physical_preflight_binds_device_kind_and_rejects_public_listener (test_abr_device.DeviceCaptureTests.test_physical_preflight_binds_device_kind_and_rejects_public_listener) ... ok
+test_completed_window_rejection_matches_guard_priority_and_threshold (test_abr_policy.PolicyEvidenceTests.test_completed_window_rejection_matches_guard_priority_and_threshold) ... ok
+test_credential_revision_rejects_cross_revision_windows_and_tickets (test_abr_policy.PolicyEvidenceTests.test_credential_revision_rejects_cross_revision_windows_and_tickets) ... ok
+test_ineligible_window_or_ticket_cannot_claim_trigger (test_abr_policy.PolicyEvidenceTests.test_ineligible_window_or_ticket_cannot_claim_trigger) ... ok
+test_intent_revision_rejects_cross_revision_windows_and_tickets (test_abr_policy.PolicyEvidenceTests.test_intent_revision_rejects_cross_revision_windows_and_tickets) ... ok
+test_invalid_shapes_and_budget_fail_closed (test_abr_policy.PolicyEvidenceTests.test_invalid_shapes_and_budget_fail_closed) ... ok
+test_reservation_and_ticket_preserve_frozen_limits (test_abr_policy.PolicyEvidenceTests.test_reservation_and_ticket_preserve_frozen_limits) ... ok
+test_ticket_without_reservation_is_not_evidence (test_abr_policy.PolicyEvidenceTests.test_ticket_without_reservation_is_not_evidence) ... ok
+test_trace_version_rejects_unknown_bool_or_mixed_versions (test_abr_policy.PolicyEvidenceTests.test_trace_version_rejects_unknown_bool_or_mixed_versions) ... ok
+test_untriggered_is_not_exercised (test_abr_policy.PolicyEvidenceTests.test_untriggered_is_not_exercised) ... ok
+test_v2_policy_requires_credential_and_intent_ticket_binding (test_abr_policy.PolicyEvidenceTests.test_v2_policy_requires_credential_and_intent_ticket_binding) ... ok
+test_valid_rejections_preserve_invalid_inputs (test_abr_policy.PolicyEvidenceTests.test_valid_rejections_preserve_invalid_inputs) ... ok
+test_artifact_limit_and_failed_attempt_without_logs_are_retained (test_aggregate_experiment.ExperimentTests.test_artifact_limit_and_failed_attempt_without_logs_are_retained) ... ok
+test_cli_plan_and_incomplete_summary_are_reproducible (test_aggregate_experiment.ExperimentTests.test_cli_plan_and_incomplete_summary_are_reproducible) ... ok
+test_deleted_trial_duplicate_id_or_malformed_provenance_is_rejected (test_aggregate_experiment.ExperimentTests.test_deleted_trial_duplicate_id_or_malformed_provenance_is_rejected) ... ok
+test_missing_tampered_and_mixed_artifacts_are_retained_as_invalid (test_aggregate_experiment.ExperimentTests.test_missing_tampered_and_mixed_artifacts_are_retained_as_invalid) ... ok
+test_nearest_rank_percentiles_are_grouped_by_mode_and_cache (test_aggregate_experiment.ExperimentTests.test_nearest_rank_percentiles_are_grouped_by_mode_and_cache) ... ok
+test_path_escape_and_symlink_do_not_read_outside_archive (test_aggregate_experiment.ExperimentTests.test_path_escape_and_symlink_do_not_read_outside_archive) ... ok
+test_policy_failure_does_not_enter_percentiles (test_aggregate_experiment.ExperimentTests.test_policy_failure_does_not_enter_percentiles) ... ok
+test_predeclared_matrix_keeps_unrun_rows_and_empty_percentiles (test_aggregate_experiment.ExperimentTests.test_predeclared_matrix_keeps_unrun_rows_and_empty_percentiles) ... ok
+test_timeout_failed_and_unexercised_runs_remain_in_denominator (test_aggregate_experiment.ExperimentTests.test_timeout_failed_and_unexercised_runs_remain_in_denominator) ... ok
+test_unknown_metrics_not_zero_and_input_files_unchanged (test_aggregate_experiment.ExperimentTests.test_unknown_metrics_not_zero_and_input_files_unchanged) ... ok
+test_valid_hashes_cannot_mix_run_mode_or_platform_identity (test_aggregate_experiment.ExperimentTests.test_valid_hashes_cannot_mix_run_mode_or_platform_identity) ... ok
+test_all_protocols_and_unrun_attempts_remain_in_denominator (test_aggregate_live.AggregateLiveTests.test_all_protocols_and_unrun_attempts_remain_in_denominator) ... ok
+test_array_null_scalar_results_are_invalid_trials_not_experiment_crashes (test_aggregate_live.AggregateLiveTests.test_array_null_scalar_results_are_invalid_trials_not_experiment_crashes) ... ok
+test_duplicate_missing_and_traversal_trials_rejected (test_aggregate_live.AggregateLiveTests.test_duplicate_missing_and_traversal_trials_rejected) ... ok
+test_raw_log_join_failure_retention_and_percentiles (test_aggregate_live.AggregateLiveTests.test_raw_log_join_failure_retention_and_percentiles) ... ok
+test_cross_boundary_failure_and_head_are_counted_not_qualified (test_bandwidth_diagnostics.BandwidthDiagnosticsTests.test_cross_boundary_failure_and_head_are_counted_not_qualified) ... ok
+test_input_is_not_mutated_and_empty_capture_is_rejected (test_bandwidth_diagnostics.BandwidthDiagnosticsTests.test_input_is_not_mutated_and_empty_capture_is_rejected) ... ok
+test_overlapping_requests_keep_sum_and_union_distinct (test_bandwidth_diagnostics.BandwidthDiagnosticsTests.test_overlapping_requests_keep_sum_and_union_distinct) ... ok
+test_phase_boundary_endpoint_belongs_to_completed_earlier_phase (test_bandwidth_diagnostics.BandwidthDiagnosticsTests.test_phase_boundary_endpoint_belongs_to_completed_earlier_phase) ... ok
+test_rejects_mixed_profile_duplicate_ids_and_invalid_timings (test_bandwidth_diagnostics.BandwidthDiagnosticsTests.test_rejects_mixed_profile_duplicate_ids_and_invalid_timings) ... ok
+test_sum_counts_nested_intervals_without_double_counting_union (test_bandwidth_diagnostics.BandwidthDiagnosticsTests.test_sum_counts_nested_intervals_without_double_counting_union) ... ok
+test_finite_stream_cleanup_and_first_get_clock (test_live_fixture.LiveFixtureTests.test_finite_stream_cleanup_and_first_get_clock) ... ERROR
+test_shutdown_interrupts_zero_bandwidth (test_live_fixture.LiveFixtureTests.test_shutdown_interrupts_zero_bandwidth) ... ERROR
+test_source_identity_is_checked_before_starting_children (test_live_fixture.LiveFixtureTests.test_source_identity_is_checked_before_starting_children) ... ok
+test_connection_limit_refuses_extra_clients (test_live_relay.RelayTests.test_connection_limit_refuses_extra_clients) ... ERROR
+test_idle_connection_drops_at_boundary_and_reconnect_does_not_reset (test_live_relay.RelayTests.test_idle_connection_drops_at_boundary_and_reconnect_does_not_reset) ... ERROR
+test_invalid_identity_protocol_and_endpoint_refused_before_listening (test_live_relay.RelayTests.test_invalid_identity_protocol_and_endpoint_refused_before_listening) ... ok
+test_skipped_disconnect_window_closes_old_connection_but_allows_reconnect (test_live_relay.RelayTests.test_skipped_disconnect_window_closes_old_connection_but_allows_reconnect) ... ERROR
+test_stalled_connection_and_shutdown_are_bounded (test_live_relay.RelayTests.test_stalled_connection_and_shutdown_are_bounded) ... ERROR
+test_transparent_http_and_rtmp_bytes_and_private_trace (test_live_relay.RelayTests.test_transparent_http_and_rtmp_bytes_and_private_trace) ... ERROR
+test_complete_mode_sequence_retains_unknown_metrics_and_declared_hash (test_live_summary.LiveSummaryTests.test_complete_mode_sequence_retains_unknown_metrics_and_declared_hash) ... ok
+test_each_mode_baseline_covers_full_observation_window (test_live_summary.LiveSummaryTests.test_each_mode_baseline_covers_full_observation_window) ... ok
+test_failure_before_create_preserves_empty_capture (test_live_summary.LiveSummaryTests.test_failure_before_create_preserves_empty_capture) ... ok
+test_failure_timeout_nonzero_exit_cleanup_and_uncovered_phase_stay_visible (test_live_summary.LiveSummaryTests.test_failure_timeout_nonzero_exit_cleanup_and_uncovered_phase_stay_visible) ... ok
+test_missing_progress_wrong_mode_and_pause_violation_fail (test_live_summary.LiveSummaryTests.test_missing_progress_wrong_mode_and_pause_violation_fail) ... ok
+test_old_session_mixed_profile_missing_rows_and_forged_byte_sum_rejected (test_live_summary.LiveSummaryTests.test_old_session_mixed_profile_missing_rows_and_forged_byte_sum_rejected) ... ok
+test_partial_buffer_telemetry_is_not_a_comparable_maximum (test_live_summary.LiveSummaryTests.test_partial_buffer_telemetry_is_not_a_comparable_maximum) ... ok
+test_reconnected_epoch_needs_consecutive_playing_progress (test_live_summary.LiveSummaryTests.test_reconnected_epoch_needs_consecutive_playing_progress) ... ok
+test_active_clock_header_is_bracketable_and_head_does_not_arm (test_network_profile.ServerTests.test_active_clock_header_is_bracketable_and_head_does_not_arm) ... ERROR
+test_admission_limit_is_counted_without_unbounded_log_growth (test_network_profile.ServerTests.test_admission_limit_is_counted_without_unbounded_log_growth) ... ERROR
+test_deferred_clock_arms_once_and_head_identifies_run_without_starting (test_network_profile.ServerTests.test_deferred_clock_arms_once_and_head_identifies_run_without_starting) ... ERROR
+test_direct_hls_control_is_served_with_playlist_mime_type (test_network_profile.ServerTests.test_direct_hls_control_is_served_with_playlist_mime_type) ... ERROR
+test_drop_mid_body_logs_only_completed_writes (test_network_profile.ServerTests.test_drop_mid_body_logs_only_completed_writes) ... ERROR
+test_get_range_head_and_actual_byte_log (test_network_profile.ServerTests.test_get_range_head_and_actual_byte_log) ... ERROR
+test_incomplete_headers_have_absolute_connection_deadline (test_network_profile.ServerTests.test_incomplete_headers_have_absolute_connection_deadline) ... ERROR
+test_inventory_rejects_tampering_symlinks_and_duplicates (test_network_profile.ServerTests.test_inventory_rejects_tampering_symlinks_and_duplicates) ... ok
+test_owned_fixture_inventory_and_versioned_profiles (test_network_profile.ServerTests.test_owned_fixture_inventory_and_versioned_profiles) ... ok
+test_parallel_requests_share_bandwidth_and_have_unique_ids (test_network_profile.ServerTests.test_parallel_requests_share_bandwidth_and_have_unique_ids) ... ERROR
+test_proxy_trace_metadata_accepts_only_one_opaque_uuid (test_network_profile.ServerTests.test_proxy_trace_metadata_accepts_only_one_opaque_uuid) ... ERROR
+test_query_and_headers_never_enter_trace (test_network_profile.ServerTests.test_query_and_headers_never_enter_trace) ... ERROR
+test_shutdown_wakes_incomplete_header_reader (test_network_profile.ServerTests.test_shutdown_wakes_incomplete_header_reader) ... ERROR
+test_suffix_open_range_and_invalid_range (test_network_profile.ServerTests.test_suffix_open_range_and_invalid_range) ... ERROR
+test_trace_accounts_successful_writes_in_each_profile_phase (test_network_profile.ServerTests.test_trace_accounts_successful_writes_in_each_profile_phase) ... ERROR
+test_unknown_and_traversal_paths_are_not_served_or_logged (test_network_profile.ServerTests.test_unknown_and_traversal_paths_are_not_served_or_logged) ... ERROR
+test_disconnect_terminates_active_transfer_then_recovers (test_network_profile.ShapingTests.test_disconnect_terminates_active_transfer_then_recovers) ... ok
+test_invalid_profiles_reject_ambiguous_or_unbounded_values (test_network_profile.ShapingTests.test_invalid_profiles_reject_ambiguous_or_unbounded_values) ... ok
+test_latency_is_request_scoped_but_drop_interrupts_wait (test_network_profile.ShapingTests.test_latency_is_request_scoped_but_drop_interrupts_wait) ... ok
+test_permanent_stall_stops_at_deadline (test_network_profile.ShapingTests.test_permanent_stall_stops_at_deadline) ... ok
+test_repeated_virtual_runs_are_identical (test_network_profile.ShapingTests.test_repeated_virtual_runs_are_identical) ... ok
+test_stall_and_recovery_do_not_accumulate_burst_credit (test_network_profile.ShapingTests.test_stall_and_recovery_do_not_accumulate_burst_credit) ... ok
+test_transfer_crosses_rate_boundary_without_resetting_timeline (test_network_profile.ShapingTests.test_transfer_crosses_rate_boundary_without_resetting_timeline) ... ok
+test_direct_hls_control_preserves_media_and_declared_renditions (test_prepare_fixture.FixtureTests.test_direct_hls_control_preserves_media_and_declared_renditions) ... ok
+test_extended_diagnostic_is_explicit_bounded_and_preserves_frozen_default (test_prepare_fixture.FixtureTests.test_extended_diagnostic_is_explicit_bounded_and_preserves_frozen_default) ... ok
+test_long_programme_preserves_media_addresses_and_has_unique_periods (test_prepare_fixture.FixtureTests.test_long_programme_preserves_media_addresses_and_has_unique_periods) ... ok
+test_missing_variant_only_disappears_after_two_compatible_periods (test_prepare_fixture.FixtureTests.test_missing_variant_only_disappears_after_two_compatible_periods) ... ok
+test_regeneration_is_byte_identical (test_prepare_fixture.FixtureTests.test_regeneration_is_byte_identical) ... ok
+test_cancelled_pending_body_can_follow_completed_header_send (test_proxy_boundaries.ProxyBoundaryTests.test_cancelled_pending_body_can_follow_completed_header_send) ... ok
+test_cancelled_unbound_request_remains_partial_not_success (test_proxy_boundaries.ProxyBoundaryTests.test_cancelled_unbound_request_remains_partial_not_success) ... ok
+test_input_is_preserved_and_failed_send_does_not_claim_all_bytes (test_proxy_boundaries.ProxyBoundaryTests.test_input_is_preserved_and_failed_send_does_not_claim_all_bytes) ... ok
+test_join_uses_request_identity_and_durations_not_cross_clock_offsets (test_proxy_boundaries.ProxyBoundaryTests.test_join_uses_request_identity_and_durations_not_cross_clock_offsets) ... ok
+test_missing_duplicate_or_malformed_complete_evidence_is_rejected (test_proxy_boundaries.ProxyBoundaryTests.test_missing_duplicate_or_malformed_complete_evidence_is_rejected) ... ok
+test_partial_diagnostic_is_preserved_but_receipt_gets_failure (test_proxy_boundaries.ProxyBoundaryTests.test_partial_diagnostic_is_preserved_but_receipt_gets_failure) ... ok
+test_request_correlation_survives_cancellation_before_response (test_proxy_boundaries.ProxyBoundaryTests.test_request_correlation_survives_cancellation_before_response) ... ok
+test_unmatched_media_is_reported_and_manifest_is_not_proxy_traffic (test_proxy_boundaries.ProxyBoundaryTests.test_unmatched_media_is_reported_and_manifest_is_not_proxy_traffic) ... ok
+test_v2_metrics_required_and_bound_to_probe_version (test_proxy_boundaries.ProxyVersionTests.test_v2_metrics_required_and_bound_to_probe_version) ... ok
+test_versions_fail_closed_and_legacy_is_explicit (test_proxy_boundaries.ProxyVersionTests.test_versions_fail_closed_and_legacy_is_explicit) ... ok
+test_bracketed_clock_quantifies_observed_adaptation_without_claiming_physical_output (test_summarize_capture.SummaryTests.test_bracketed_clock_quantifies_observed_adaptation_without_claiming_physical_output) ... ok
+test_caps_checks_requests_and_geometry_independently (test_summarize_capture.SummaryTests.test_caps_checks_requests_and_geometry_independently) ... ok
+test_cli_roundtrip_and_truncated_capture_exit (test_summarize_capture.SummaryTests.test_cli_roundtrip_and_truncated_capture_exit) ... ok
+test_counter_resets_or_preloaded_network_dont_claim_recovery (test_summarize_capture.SummaryTests.test_counter_resets_or_preloaded_network_dont_claim_recovery) ... ok
+test_extended_capture_cannot_accept_40_second_early_eof (test_summarize_capture.SummaryTests.test_extended_capture_cannot_accept_40_second_early_eof) ... ok
+test_failure_exit_cleanup_or_lost_rows_cannot_be_a_complete_capture (test_summarize_capture.SummaryTests.test_failure_exit_cleanup_or_lost_rows_cannot_be_a_complete_capture) ... ok
+test_fixed_auto_after_ack_is_detected_before_first_high_frame (test_summarize_capture.SummaryTests.test_fixed_auto_after_ack_is_detected_before_first_high_frame) ... ok
+test_fixed_cannot_count_initial_low_frame_as_a_downgrade (test_summarize_capture.SummaryTests.test_fixed_cannot_count_initial_low_frame_as_a_downgrade) ... ok
+test_missing_native_metrics_and_unsynchronized_clocks_stay_unavailable (test_summarize_capture.SummaryTests.test_missing_native_metrics_and_unsynchronized_clocks_stay_unavailable) ... ok
+test_missing_request_rows_and_missing_server_shutdown_fail_closed (test_summarize_capture.SummaryTests.test_missing_request_rows_and_missing_server_shutdown_fail_closed) ... ok
+test_mixed_runs_hashes_duplicate_requests_or_reversed_time_rejected (test_summarize_capture.SummaryTests.test_mixed_runs_hashes_duplicate_requests_or_reversed_time_rejected) ... ok
+test_phase_coverage_uses_writes_not_a_request_ending_after_recovery (test_summarize_capture.SummaryTests.test_phase_coverage_uses_writes_not_a_request_ending_after_recovery) ... ok
+test_recovery_window_counts_video_chunks_not_audio_or_init (test_summarize_capture.SummaryTests.test_recovery_window_counts_video_chunks_not_audio_or_init) ... ok
+test_unobserved_fixed_or_changed_auto_mode_is_not_policy_success (test_summarize_capture.SummaryTests.test_unobserved_fixed_or_changed_auto_mode_is_not_policy_success) ... ok
+test_cannot_omit_a_cohort_or_invent_a_metric_to_freeze (test_targets.TargetsTests.test_cannot_omit_a_cohort_or_invent_a_metric_to_freeze) ... ok
+test_freeze_requires_measured_complete_baseline_and_explicit_limits (test_targets.TargetsTests.test_freeze_requires_measured_complete_baseline_and_explicit_limits) ... ok
+test_missing_metrics_failed_trials_and_insufficient_samples_never_pass (test_targets.TargetsTests.test_missing_metrics_failed_trials_and_insufficient_samples_never_pass) ... ok
+test_new_build_identity_allowed_but_device_profile_and_media_must_match (test_targets.TargetsTests.test_new_build_identity_allowed_but_device_profile_and_media_must_match) ... ok
+test_empty_and_bounded_truncation_are_explicit (test_transaction_metrics.TransactionMetricsTests.test_empty_and_bounded_truncation_are_explicit) ... ok
+test_missing_and_partial_metrics_are_not_zero_or_complete (test_transaction_metrics.TransactionMetricsTests.test_missing_and_partial_metrics_are_not_zero_or_complete) ... ok
+test_preserves_unavailable_dns_tls_and_network_partition (test_transaction_metrics.TransactionMetricsTests.test_preserves_unavailable_dns_tls_and_network_partition) ... ok
+test_rejects_corrupt_values_and_identity_leaks (test_transaction_metrics.TransactionMetricsTests.test_rejects_corrupt_values_and_identity_leaks) ... ok
+test_task_and_redirect_counts_bound_observed_transactions (test_transaction_metrics.TransactionMetricsTests.test_task_and_redirect_counts_bound_observed_transactions) ... ok
+test_zero_duration_is_valid_when_observed (test_transaction_metrics.TransactionMetricsTests.test_zero_duration_is_valid_when_observed) ... ok
+
+======================================================================
+ERROR: test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected (test_abr_accesslog.ProcessProofTests.test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_abr_accesslog.py", line 693, in test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected
+    observed = observe_owned(root, 'owned-token', 'owned-sleep')
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/abr_accesslog.py", line 750, in observe_owned
+    identity = process_identity(pid)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/abr_accesslog.py", line 708, in process_identity
+    result = subprocess.run(['ps', '-p', str(pid), '-o', 'lstart=', '-o', 'comm='],
+                            capture_output=True, text=True, timeout=5)
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 555, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1039, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                        pass_fds, cwd, env,
+                        ^^^^^^^^^^^^^^^^^^^
+    ...<5 lines>...
+                        gid, gids, uid, umask,
+                        ^^^^^^^^^^^^^^^^^^^^^^
+                        start_new_session, process_group)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/subprocess.py", line 1990, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 1] Operation not permitted: 'ps'
+
+======================================================================
+ERROR: test_finite_stream_cleanup_and_first_get_clock (test_live_fixture.LiveFixtureTests.test_finite_stream_cleanup_and_first_get_clock)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_fixture.py", line 29, in test_finite_stream_cleanup_and_first_get_clock
+    fixture = LiveFixture('flv', SOURCE, Path(temp) / 'run', 'cleanup', shutil.which('ffmpeg'))
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/live_fixture.py", line 143, in __init__
+    self.server = Server(('127.0.0.1', port), Handler)
+                  ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_shutdown_interrupts_zero_bandwidth (test_live_fixture.LiveFixtureTests.test_shutdown_interrupts_zero_bandwidth)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_fixture.py", line 60, in test_shutdown_interrupts_zero_bandwidth
+    fixture = LiveFixture('flv', SOURCE, Path(temp) / 'run', 'stall', shutil.which('ffmpeg'), profile=profile)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/live_fixture.py", line 143, in __init__
+    self.server = Server(('127.0.0.1', port), Handler)
+                  ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_connection_limit_refuses_extra_clients (test_live_relay.RelayTests.test_connection_limit_refuses_extra_clients)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 142, in test_connection_limit_refuses_extra_clients
+    port = await self.start(peer, max_connections=1)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 42, in start
+    self.peer = await asyncio.start_server(serve, '127.0.0.1', 0)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/streams.py", line 84, in start_server
+    return await loop.create_server(factory, host, port, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 1638, in create_server
+    raise OSError(err.errno, msg) from None
+PermissionError: [Errno 1] error while attempting to bind on address ('127.0.0.1', 0): [errno 1] operation not permitted
+
+======================================================================
+ERROR: test_idle_connection_drops_at_boundary_and_reconnect_does_not_reset (test_live_relay.RelayTests.test_idle_connection_drops_at_boundary_and_reconnect_does_not_reset)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 85, in test_idle_connection_drops_at_boundary_and_reconnect_does_not_reset
+    port = await self.start(peer, [
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        dict(atMs=180, bytesPerSecond=1000000, latencyMs=0)])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 42, in start
+    self.peer = await asyncio.start_server(serve, '127.0.0.1', 0)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/streams.py", line 84, in start_server
+    return await loop.create_server(factory, host, port, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 1638, in create_server
+    raise OSError(err.errno, msg) from None
+PermissionError: [Errno 1] error while attempting to bind on address ('127.0.0.1', 0): [errno 1] operation not permitted
+
+======================================================================
+ERROR: test_skipped_disconnect_window_closes_old_connection_but_allows_reconnect (test_live_relay.RelayTests.test_skipped_disconnect_window_closes_old_connection_but_allows_reconnect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 109, in test_skipped_disconnect_window_closes_old_connection_but_allows_reconnect
+    port = await self.start(peer, [
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<2 lines>...
+        dict(atMs=180, bytesPerSecond=1000000, latencyMs=0)])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 42, in start
+    self.peer = await asyncio.start_server(serve, '127.0.0.1', 0)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/streams.py", line 84, in start_server
+    return await loop.create_server(factory, host, port, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 1638, in create_server
+    raise OSError(err.errno, msg) from None
+PermissionError: [Errno 1] error while attempting to bind on address ('127.0.0.1', 0): [errno 1] operation not permitted
+
+======================================================================
+ERROR: test_stalled_connection_and_shutdown_are_bounded (test_live_relay.RelayTests.test_stalled_connection_and_shutdown_are_bounded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 72, in test_stalled_connection_and_shutdown_are_bounded
+    port = await self.start(peer, [dict(atMs=0, bytesPerSecond=0, latencyMs=0)])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 42, in start
+    self.peer = await asyncio.start_server(serve, '127.0.0.1', 0)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/streams.py", line 84, in start_server
+    return await loop.create_server(factory, host, port, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 1638, in create_server
+    raise OSError(err.errno, msg) from None
+PermissionError: [Errno 1] error while attempting to bind on address ('127.0.0.1', 0): [errno 1] operation not permitted
+
+======================================================================
+ERROR: test_transparent_http_and_rtmp_bytes_and_private_trace (test_live_relay.RelayTests.test_transparent_http_and_rtmp_bytes_and_private_trace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 53, in test_transparent_http_and_rtmp_bytes_and_private_trace
+    port = await self.start(echo)
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_live_relay.py", line 42, in start
+    self.peer = await asyncio.start_server(serve, '127.0.0.1', 0)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/streams.py", line 84, in start_server
+    return await loop.create_server(factory, host, port, **kwds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 1638, in create_server
+    raise OSError(err.errno, msg) from None
+PermissionError: [Errno 1] error while attempting to bind on address ('127.0.0.1', 0): [errno 1] operation not permitted
+
+======================================================================
+ERROR: test_active_clock_header_is_bracketable_and_head_does_not_arm (test_network_profile.ServerTests.test_active_clock_header_is_bracketable_and_head_does_not_arm)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 152, in test_active_clock_header_is_bracketable_and_head_does_not_arm
+    self.start(clock=clock, start_on_first_get=True, run_id='clock-run')
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_admission_limit_is_counted_without_unbounded_log_growth (test_network_profile.ServerTests.test_admission_limit_is_counted_without_unbounded_log_growth)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 278, in test_admission_limit_is_counted_without_unbounded_log_growth
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_deferred_clock_arms_once_and_head_identifies_run_without_starting (test_network_profile.ServerTests.test_deferred_clock_arms_once_and_head_identifies_run_without_starting)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 317, in test_deferred_clock_arms_once_and_head_identifies_run_without_starting
+    self.start(clock=clock, start_on_first_get=True, run_id='capture-1')
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_direct_hls_control_is_served_with_playlist_mime_type (test_network_profile.ServerTests.test_direct_hls_control_is_served_with_playlist_mime_type)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 188, in test_direct_hls_control_is_served_with_playlist_mime_type
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_drop_mid_body_logs_only_completed_writes (test_network_profile.ServerTests.test_drop_mid_body_logs_only_completed_writes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 249, in test_drop_mid_body_logs_only_completed_writes
+    self.start([step(rate=1000), step(1100, 0, disconnect=True)], clock)
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_get_range_head_and_actual_byte_log (test_network_profile.ServerTests.test_get_range_head_and_actual_byte_log)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 162, in test_get_range_head_and_actual_byte_log
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_incomplete_headers_have_absolute_connection_deadline (test_network_profile.ServerTests.test_incomplete_headers_have_absolute_connection_deadline)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 286, in test_incomplete_headers_have_absolute_connection_deadline
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_parallel_requests_share_bandwidth_and_have_unique_ids (test_network_profile.ServerTests.test_parallel_requests_share_bandwidth_and_have_unique_ids)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 258, in test_parallel_requests_share_bandwidth_and_have_unique_ids
+    self.start([step(rate=10000)])
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_proxy_trace_metadata_accepts_only_one_opaque_uuid (test_network_profile.ServerTests.test_proxy_trace_metadata_accepts_only_one_opaque_uuid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 174, in test_proxy_trace_metadata_accepts_only_one_opaque_uuid
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_query_and_headers_never_enter_trace (test_network_profile.ServerTests.test_query_and_headers_never_enter_trace)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 211, in test_query_and_headers_never_enter_trace
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_shutdown_wakes_incomplete_header_reader (test_network_profile.ServerTests.test_shutdown_wakes_incomplete_header_reader)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 294, in test_shutdown_wakes_incomplete_header_reader
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_suffix_open_range_and_invalid_range (test_network_profile.ServerTests.test_suffix_open_range_and_invalid_range)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 202, in test_suffix_open_range_and_invalid_range
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_trace_accounts_successful_writes_in_each_profile_phase (test_network_profile.ServerTests.test_trace_accounts_successful_writes_in_each_profile_phase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 194, in test_trace_accounts_successful_writes_in_each_profile_phase
+    self.start([step(rate=1000), step(100, 1000)], clock=Clock())
+    ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+ERROR: test_unknown_and_traversal_paths_are_not_served_or_logged (test_network_profile.ServerTests.test_unknown_and_traversal_paths_are_not_served_or_logged)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 219, in test_unknown_and_traversal_paths_are_not_served_or_logged
+    self.start()
+    ~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_network_profile.py", line 123, in start
+    self.server = net.make_server(self.root, p, self.log, port=0, **kwargs, **options)
+                  ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 388, in make_server
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/network_profile.py", line 217, in __init__
+    super().__init__((host, port), Handler)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 457, in __init__
+    self.server_bind()
+    ~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/http/server.py", line 148, in server_bind
+    socketserver.TCPServer.server_bind(self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/socketserver.py", line 478, in server_bind
+    self.socket.bind(self.server_address)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+PermissionError: [Errno 1] Operation not permitted
+
+======================================================================
+FAIL: test_empty_main_rows_fail_closed_without_escaping (test_abr_accesslog.FailureReceiptTests.test_empty_main_rows_fail_closed_without_escaping)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_abr_accesslog.py", line 614, in test_empty_main_rows_fail_closed_without_escaping
+    self.assertEqual(receipt['exitCode'], 65)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 65
+
+======================================================================
+FAIL: test_failed_playback_retains_valid_frame_observation_without_passing (test_abr_accesslog.FailureReceiptTests.test_failed_playback_retains_valid_frame_observation_without_passing)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_abr_accesslog.py", line 621, in test_failed_playback_retains_valid_frame_observation_without_passing
+    self.assertEqual(receipt['exitCode'], 65)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: None != 65
+
+----------------------------------------------------------------------
+Ran 155 tests in 2.535s
+
+FAILED (failures=2, errors=22)

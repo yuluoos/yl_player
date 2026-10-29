@@ -196,7 +196,11 @@ class FixtureServer(ThreadingHTTPServer):
     daemon_threads = False
     request_queue_size = 8
 
-    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None):
+    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None, connection_mode="close"):
+        if connection_mode not in ("close", "http11-close", "http11-keepalive"):
+            raise ValueError("invalid connection mode")
+        self.connection_mode = connection_mode
+        self.connection_ids = {}
         host = owned_bind_host(owned_host)
         if run_id is not None and not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,79}', run_id):
             raise ValueError('invalid run id')
@@ -225,6 +229,7 @@ class FixtureServer(ThreadingHTTPServer):
                 return
             self.active += 1
             self.requests += 1
+            self.connection_ids[request] = self.requests
             self.active_sockets.add(request)
             self.handlers.notify_all()
         super().process_request(request, client_address)
@@ -236,6 +241,7 @@ class FixtureServer(ThreadingHTTPServer):
             with self.handlers:
                 self.active -= 1
                 self.active_sockets.discard(request)
+                self.connection_ids.pop(request, None)
                 self.handlers.notify_all()
 
     def wait_handlers(self):
@@ -265,6 +271,9 @@ class Handler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.0'  # One request/connection, no hidden keepalive.
 
     def setup(self):
+        self.protocol_version = "HTTP/1.0" if self.server.connection_mode == "close" else "HTTP/1.1"
+        self.connection_id = self.server.connection_ids[self.request]
+        self.connection_request_index = 0
         self.request.settimeout(2)
         super().setup()
         # Inactivity timeout alone does not bound a slowly trickling header.
@@ -287,6 +296,14 @@ class Handler(BaseHTTPRequestHandler):
         self.serve(head=False)
 
     def serve(self, head):
+        # A persistent socket must not bypass the existing 10,000-record budget.
+        with self.server.records_lock:
+            if self.server.next_record_id >= 10000:
+                self.close_connection = True
+                return
+            self.server.next_record_id += 1
+            request_id = self.server.next_record_id
+        self.connection_request_index += 1
         s = self.server.shaper
         try:
             name = unquote(urlsplit(self.path).path).removeprefix('/')
@@ -300,6 +317,8 @@ class Handler(BaseHTTPRequestHandler):
             active = self.server.started
         started = s.elapsed()
         row = dict(schemaVersion=1, profile=s.profile.id,
+                   connectionMode=self.server.connection_mode, connectionId=self.connection_id,
+                   connectionRequestIndex=self.connection_request_index, requestId=request_id,
                    runId=self.server.run_id, timelineMode=self.server.timeline_mode,
                    timelineState='active' if active else 'pending',
                    profileSha256=s.profile.sha256, asset=None,
@@ -311,9 +330,6 @@ class Handler(BaseHTTPRequestHandler):
         trace_ids = self.headers.get_all('X-Yl-Trace-Id', [])
         if len(trace_ids) == 1 and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', trace_ids[0]):
             row['proxyTraceID'] = trace_ids[0]
-        with self.server.records_lock:
-            self.server.next_record_id += 1
-            row['requestId'] = self.server.next_record_id
         try:
             status, start, end = 200, 0, len(body) if body is not None else 0
             if body is None:
@@ -338,7 +354,8 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header('Content-Length', str(end - start))
             self.send_header('Accept-Ranges', 'bytes')
             self.send_header('Cache-Control', 'no-store')
-            self.send_header('Connection', 'close')
+            persistent = self.server.connection_mode == 'http11-keepalive' and not self.close_connection
+            self.send_header('Connection', 'keep-alive' if persistent else 'close')
             self.send_header('X-Yl-Timeline-Mode', self.server.timeline_mode)
             self.send_header('X-Yl-Timeline-State', 'active' if active else 'pending')
             if active:
@@ -380,12 +397,32 @@ class Handler(BaseHTTPRequestHandler):
             with self.server.records_lock:
                 self.server.log.write(json.dumps(row, sort_keys=True) + '\n')
                 self.server.log.flush()
-            self.close_connection = True
+            if self.server.connection_mode != 'http11-keepalive' or row['outcome'] != 'complete':
+                self.close_connection = True
 
 
 def make_server(root, profile, log, port=0, now=time.monotonic, sleep=time.sleep,
-                start_on_first_get=False, run_id=None, owned_host=None):
-    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host)
+                start_on_first_get=False, run_id=None, owned_host=None, connection_mode="close"):
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host, connection_mode)
+
+
+def summarize_connections(rows, expected_mode):
+    def require(ok):
+        if not ok: raise ValueError('invalid connection evidence')
+    require(expected_mode in ('close', 'http11-close', 'http11-keepalive'))
+    require(isinstance(rows,list) and 0 < len(rows) <= 10000)
+    connections={}
+    for row in rows:
+        require(isinstance(row,dict) and row.get('connectionMode')==expected_mode)
+        ident,index=row.get('connectionId'),row.get('connectionRequestIndex')
+        require(type(ident) is int and 1 <= ident <= 10000 and type(index) is int and 1 <= index <= 10000)
+        entries=connections.setdefault(ident,[]);entries.append(index)
+    for indices in connections.values():
+        require(indices==list(range(1,len(indices)+1)))
+        require(expected_mode=='http11-keepalive' or len(indices)==1)
+    return dict(mode=expected_mode, requests=len(rows), connectionsWithRequests=len(connections),
+        reusedRequests=len(rows)-len(connections), maximumRequestsPerConnection=max(map(len,connections.values())),
+        capabilityAccepted=False)
 
 
 def main():
@@ -396,6 +433,7 @@ def main():
     parser.add_argument('--profile', default='down-and-recover-v1')
     parser.add_argument('--port', type=int, default=18779)
     parser.add_argument('--log', type=Path, required=True)
+    parser.add_argument('--connection-mode', choices=('close','http11-close','http11-keepalive'), default='close')
     parser.add_argument('--start-on-first-get', action='store_true')
     parser.add_argument('--run-id')
     args = parser.parse_args()
@@ -404,9 +442,9 @@ def main():
         parser.error('unknown profile')
     with args.log.open('x') as log:
         server = make_server(args.root, profiles[args.profile], log, args.port,
-                             start_on_first_get=args.start_on_first_get, run_id=args.run_id)
+                             start_on_first_get=args.start_on_first_get, run_id=args.run_id, connection_mode=args.connection_mode)
         print(json.dumps(dict(url=f'http://127.0.0.1:{server.server_port}/manifest.mpd',
-                              profile=args.profile,
+                              profile=args.profile, connectionMode=server.connection_mode,
                               runId=server.run_id, timelineMode=server.timeline_mode,
                               profileSha256=server.shaper.profile.sha256,
                               assetCount=len(server.assets))), flush=True)

@@ -844,6 +844,9 @@ def run(args):
         auto_scenario = getattr(args, 'auto_scenario', 'normal')
         if auto_scenario not in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
             raise ValueError('invalid automatic recovery scenario')
+        receipt['connectionMode'] = getattr(args, 'connection_mode', 'close')
+        if receipt['connectionMode'] not in ('close','http11-close','http11-keepalive'):
+            raise ValueError('invalid connection mode')
         receipt['autoScenario'] = auto_scenario
         preparation_mode = candidate_preparation(args)
         receipt['candidatePreparation'] = preparation_mode
@@ -884,7 +887,7 @@ def run(args):
         if physical_device: destination='platform=iOS,id='+physical_device
         log=(out/'requests.jsonl').open('w');output=(out/'xcode.log').open('w')
         server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog',
-                           owned_host=host if physical_device else None)
+                           owned_host=host if physical_device else None, connection_mode=receipt['connectionMode'])
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
         target.setdefault('EnvironmentVariables',{}).update(
             YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://{host}:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
@@ -994,6 +997,13 @@ def run(args):
         if server:server.shutdown();server.server_close()
         if thread:thread.join(timeout=5)
         if log:log.close()
+        if server:
+            try:
+                from network_profile import summarize_connections
+                receipt['connectionObservation'] = summarize_connections(
+                    read_rows(out/'requests.jsonl'), receipt['connectionMode'])
+            except (OSError,ValueError,KeyError,TypeError):
+                receipt['errors'].append('connection evidence incomplete')
         if output:output.close()
         receipt['binaryIdentityUnchanged']=False
         if before is not None:
@@ -1014,6 +1024,7 @@ def main():
     p.add_argument('--device',help='Explicit iOS Simulator UUID; omit for native arm64 macOS')
     p.add_argument('--physical-device', help='Explicit paired iPhone UDID; requires --owned-host')
     p.add_argument('--owned-host', help='Explicit owned RFC1918 IPv4 interface for physical-device capture')
+    p.add_argument('--connection-mode',choices=('close','http11-close','http11-keepalive'),default='close')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)
     p.add_argument('--startup-delay-ms',type=int,default=0,
