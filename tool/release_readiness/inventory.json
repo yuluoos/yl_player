@@ -903,6 +903,11 @@
       "path": "docs/superpowers/reports/2026-10-29-ios-fast-cancel.md",
       "sha256": "ac9df5a49869f210df38d78ceb0daf377d29777bab3dc7a373af5c47023ba10a",
       "kind": "report"
+    },
+    "ios-queued-cancel-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-queued-cancel.md",
+      "sha256": "c44c8d00dc2ca054dfc926847efb200162f4470843d32108f818ab927f2a3592",
+      "kind": "report"
     }
   },
   "rows": [
@@ -947,10 +952,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "ios-fast-cancel-20261029"
+        "ios-queued-cancel-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-fast-cancel-server-correlation-original-stability-historical-transactions-lifecycle-races-and-physical-av"
+      "nextAction": "qualify-avplayer-cancel-trigger-server-correlation-original-stability-historical-transactions-and-physical-av"
     },
     {
       "requirement": "CAP-ABR",

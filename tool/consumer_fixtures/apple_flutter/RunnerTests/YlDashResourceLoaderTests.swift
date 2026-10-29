@@ -3961,6 +3961,89 @@ final class YlDashResourceLoaderTests: XCTestCase {
     wait(for: [done], timeout: 3)
   }
 
+  func testQueuedProxyCancellationNeverReachesServerOrPoisonsNextRequest() throws {
+    let server = try DashHTTPServer(); defer { server.close() }
+    let held = expectation(description: "first request owns only upstream slot")
+    let release = DispatchSemaphore(value: 0); defer { release.signal() }
+    server.handler = { request in
+      if request.path == "/held" {
+        held.fulfill()
+        XCTAssertEqual(release.wait(timeout: .now() + 8), .success)
+      }
+      return (200, [:], Data([1, 2]))
+    }
+    let capturedLock = NSLock(); var captured: [[String: Any]] = []
+    let cancelled = expectation(description: "queued request settled without HTTP request")
+    YlHlsMediaProxy.diagnosticRequestObserver = { row in
+      capturedLock.withLock { captured.append(row) }
+      if row["requestID"] as? Double == 2 { cancelled.fulfill() }
+    }
+    defer { YlHlsMediaProxy.diagnosticRequestObserver = nil }
+    // Real Foundation and sockets. Only this owned test limits the pool to one;
+    // neither production transport nor media acceptance configuration changes.
+    let proxy = try YlHlsMediaProxy(originURL: server.url("/held"), headers: [:],
+      configuration: .init(map: [:]), sessionFactory: { configuration, delegate, queue in
+        configuration.httpMaximumConnectionsPerHost = 1
+        return URLSession(configuration: configuration, delegate: delegate, delegateQueue: queue)
+      })
+    defer { proxy.cancelAll() }
+    let firstDone = expectation(description: "held request completes")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/held"))) { data, _, error in
+      XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); firstDone.fulfill()
+    }.resume()
+    wait(for: [held], timeout: 3)
+    let url = try proxy.proxyURL(for: server.url("/cancelled"))
+    let client = NWConnection(host: "127.0.0.1", port: NWEndpoint.Port(rawValue: UInt16(url.port!))!, using: .tcp)
+    defer { client.cancel() }
+    let ready = expectation(description: "queued downstream ready")
+    client.stateUpdateHandler = { if case .ready = $0 { ready.fulfill() } }
+    client.start(queue: .global()); wait(for: [ready], timeout: 2)
+    let request = "GET \(url.path) HTTP/1.1\r\nHost: 127.0.0.1\r\nConnection: close\r\n\r\n"
+    // Send the complete GET and EOF together: admission and cancellation run
+    // back-to-back without a test polling delay. The held slot prevents the
+    // admitted task from reaching the owned HTTP server first.
+    let closeRequested = ProcessInfo.processInfo.systemUptime
+    client.send(content: Data(request.utf8), contentContext: .finalMessage, isComplete: true,
+      completion: .contentProcessed { error in XCTAssertNil(error) })
+    wait(for: [cancelled], timeout: 2)
+    let row = try XCTUnwrap(capturedLock.withLock { captured.first { $0["requestID"] as? Double == 2 } })
+    XCTAssertEqual(row["outcome"] as? Double, 1)
+    XCTAssertEqual(row["cancelCause"] as? Int, 2)
+    XCTAssertEqual(row["taskOutcome"] as? Int, 1)
+    XCTAssertEqual(row["bodyBytes"] as? Double, 0)
+    XCTAssertEqual(row["sendCount"] as? Double, 0)
+    XCTAssertNil(row["response"]); XCTAssertNil(row["serverRequestID"])
+    let metrics = try XCTUnwrap(row["metrics"] as? [String: Any])
+    let transactions = try XCTUnwrap(metrics["transactions"] as? [[String: Any]])
+    // Queued before a connection slot may have zero transactions. A nonempty
+    // transaction still must not contain a recorded request-start date.
+    for transaction in transactions {
+      let states = try XCTUnwrap(transaction["durationStates"] as? [String: Int])
+      XCTAssertTrue([2, 3].contains(try XCTUnwrap(states["fetchToRequestSeconds"])))
+    }
+    XCTAssertEqual(server.requests.map(\.path), ["/held"])
+    release.signal(); wait(for: [firstDone], timeout: 3)
+    let afterDone = expectation(description: "proxy remains usable after queued cancellation")
+    URLSession.shared.dataTask(with: try proxy.proxyURL(for: server.url("/after"))) { data, _, error in
+      XCTAssertNil(error); XCTAssertEqual(data, Data([1, 2])); afterDone.fulfill()
+    }.resume()
+    wait(for: [afterDone], timeout: 3)
+    XCTAssertTrue(try XCTUnwrap(YlHlsMediaProxy.diagnosticRequestCapture).wait(timeout: 2))
+    XCTAssertEqual(server.requests.map(\.path), ["/held", "/after"])
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeTasks"], 0)
+    XCTAssertEqual(proxy.diagnosticSnapshot["activeRequestTraces"], 0)
+    XCTAssertNil(proxy.upstreamDiagnostics.latestFailure)
+    let serverTraceIDs = server.requests.compactMap { $0.headers["x-yl-trace-id"] }
+    XCTAssertFalse(serverTraceIDs.contains(try XCTUnwrap(row["correlationID"] as? String)))
+    let evidence: [String: Any] = ["scenario": "owned-single-upstream-slot-cancellation",
+      "trace": row, "closeRequested": closeRequested, "parsedServerTraceIDs": serverTraceIDs,
+      "parsedServerPaths": server.requests.map(\.path), "physicalOutputVerified": false,
+      "capabilityAccepted": false]
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: evidence, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "queued-cancellation-evidence"; attachment.lifetime = .keepAlways
+    XCTContext.runActivity(named: "Real queued cancellation without server request") { $0.add(attachment) }
+  }
+
   func testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse() throws {
     for downstream in [false, true] {
       let server = try DashHTTPServer(); defer { server.close() }

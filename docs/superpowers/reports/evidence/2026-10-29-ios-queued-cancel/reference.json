@@ -1,0 +1,5 @@
+{
+  "source": "https://developer.apple.com/documentation/foundation/urlsessionconfiguration/httpmaximumconnectionsperhost",
+  "summary": "Apple documents a per-session HTTP/1.1 connection limit; HTTP/2+ ignores it. Owned test only sets 1; production retains its configuration.",
+  "checked": "2026-10-29"
+}

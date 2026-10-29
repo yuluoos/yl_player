@@ -1,0 +1,1 @@
+独立复审 queued_cancel_review：新增真实URLSession单名额GET+EOF测试及注册表无P1/P2。核对0.088208ms/0事务快取消及探索版1事务缺requestStart附件，确认先收到taskCancelled再释放占用、capture等observer返回、/after成功且服务器无/cancelled。不能从该受控条件确认历史AVPlayer内部原因。
