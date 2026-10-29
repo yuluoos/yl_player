@@ -11,3 +11,5 @@
 合并后生产源码指纹：`83c8ad3fe1693f53b58ff238ccee7d24615eea80c80cc5f59b3f65595e8c7bb3`。发布台账重新绑定该指纹；要求sourceMatches=true、releaseReady=false，台账与性能--require-ready保持退出1。清理仅针对codex/abr-recovery和本聊天的remaining-acceptance工作树；另一工作树保持不动。清理前保存忽略目录中的实施笔记到主目录.superpowers/archived-abr-recovery-c7fad9c2，生成缓存可重新构建；完整验收原件已提交且临时原始采集仍保留。不推送、不发布。
 
 全量git diff --check命中一份历史原始XCTest日志的CRLF尾空格；该文件与工作分支逐字节一致，保留原件不改写。源码及报告范围检查通过，完整诊断与限定范围记录见diff-check.json。
+
+清理结果：合并提交c3478144已包含c7fad9c2及main原有历史。codex/abr-recovery分支已安全删除。应用archive_worktree拒绝删除remaining-acceptance，理由为“The task's primary checkout cannot be removed.”；保留该目录并切为合并版本的detached HEAD，不强制移除当前聊天主工作目录。另一工作树未动。
