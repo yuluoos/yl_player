@@ -1,0 +1,12 @@
+{
+  "binary": "/private/tmp/yl-p07-cm4/patched/target/release/yl-dovi-stream-inspector",
+  "sha256": "b509da193193a72c74a683ae1428820980fb0c336bf7d85ad99e66cb8da0ea01",
+  "libdovi_commit": "614c816b6446dcd1dbaf433403d499a6026fbb5a",
+  "archive_sha256": "23e6e0b8262f03ed999d0170a304eac5ba544ea5a5497adf2db7b33026d957c1",
+  "parser_variant": "compressed_cm4_research",
+  "overlay_sha256": "a6e1463cd58cdfd0e1cf70a972d560c5c33b4558c97e7a98cd47eb9f9f6a4e92",
+  "overlay_files": {
+    "dolby_vision/src/rpu/extension_metadata/cmv40.rs": "e4021d6744121f676ec61d3287b9261741af9bd3c176a6e18fb5f26883a3dc57",
+    "dolby_vision/src/rpu/vdr_dm_data.rs": "c23a8ccc42566cd2834dd31dc943df36dac28023e6235f1e6a60e096fa53da6f"
+  }
+}

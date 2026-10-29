@@ -1,0 +1,40 @@
+{
+  "candidate_files": 73,
+  "candidate_matches": true,
+  "qualification_rows_unchanged": true,
+  "source_snapshot_unchanged": true,
+  "report_sha256": "77d50af19141c7e4d44739fc653e7ea2df7f63c4257be37e16d5bcfe98a46171",
+  "inventory_sha256": "4767140bbb5a2951c3729ddacbca28a87e35ef26c2f8a22b04817654a940f878",
+  "checks": [
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py"
+      ],
+      "exit": 0,
+      "expected": 0
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tool/release_readiness/check.py",
+        "--require-ready"
+      ],
+      "exit": 1,
+      "expected": 1
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "expected": 0
+    }
+  ],
+  "base": "0e919ee759ea1fab1018f40520cef6cc2b267637",
+  "main": "0e919ee759ea1fab1018f40520cef6cc2b267637"
+}

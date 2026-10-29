@@ -1,0 +1,26 @@
+{
+  "dolby_vision/src/rpu/extension_metadata/cmv40.rs": {
+    "before": "3436d76b23dd5a88b00ad688f166b90ce1fb35f70efaaab924cabecfa2796afa",
+    "after": "e4021d6744121f676ec61d3287b9261741af9bd3c176a6e18fb5f26883a3dc57",
+    "edits": [
+      [
+        "    pub fn validate(&self) -> Result<()> {\n        let blocks",
+        "    pub fn validate(&self) -> Result<()> {\n        self.validate_context(false)\n    }\n\n    // Local research overlay: compressed CM4 carries dynamic blocks only.\n    pub(crate) fn validate_compressed(&self) -> Result<()> {\n        self.validate_context(true)\n    }\n\n    fn validate_context(&self, compressed: bool) -> Result<()> {\n        let blocks"
+      ],
+      [
+        "        ensure!(level254_count == 1, \"There must be one L254 metadata block\");",
+        "        if compressed {\n            ensure!(blocks.iter().all(|b| matches!(b.level(), 3 | 8 | 9 | 11)),\n                    \"Compressed CM4 supports dynamic L3/L8/L9/L11 only\");\n            ensure!(level254_count == 0, \"Compressed CM4 must inherit L254\");\n        } else {\n            ensure!(level254_count == 1, \"There must be one L254 metadata block\");\n        }"
+      ]
+    ]
+  },
+  "dolby_vision/src/rpu/vdr_dm_data.rs": {
+    "before": "6e7a4c0708b0913fcc795699d33e6e4980bd8664b1acb776626ad56d8ff6d0f3",
+    "after": "c23a8ccc42566cd2834dd31dc943df36dac28023e6235f1e6a60e096fa53da6f",
+    "edits": [
+      [
+        "            cmv40.validate().with_context(|| CmV40DmData::VERSION)?;",
+        "            match cmv40 {\n                DmData::V40(blocks) if self.compressed => blocks.validate_compressed(),\n                _ => cmv40.validate(),\n            }.with_context(|| CmV40DmData::VERSION)?;"
+      ]
+    ]
+  }
+}

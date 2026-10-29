@@ -114,7 +114,8 @@ hashes against the no-RPU source. Those pixels have no Dolby transform applied:
 they verify provenance, not mapping quality or a certified P8 playback result.
 
 The actual-video chain is now tested with **synthetic compressed metadata**;
-real captured compressed/use_previous media is still missing. Compressed CM4
-dynamic blocks without L254 remain unsupported by the pinned parser. Full DM,
+real captured compressed/use_previous media is still missing. The default pinned parser still rejects compressed CM4 dynamic blocks without
+L254; an explicit, hash-checked research overlay now supports a bounded subset
+with independent FFmpeg field checks (see [COMPRESSED_CM4.md](COMPRESSED_CM4.md)). Full DM,
 trim/NLQ mapping, independent target generation/tolerances and physical output
 remain open. Both output schemas and all qualification flags are unchanged.

@@ -1,0 +1,47 @@
+{
+  "kind": "synthetic_compressed_cm4_transport_only",
+  "frames": 12,
+  "compressed": 6,
+  "inherited_static_instances": 12,
+  "all_transmitted_fields_match_independent_ffmpeg": true,
+  "upstream_refuses_same_rpus": true,
+  "identities": {
+    "source": {
+      "sha256": "2ff2e9b9319a2d5cce07d739ed65b4867d4bc6b628d550fb8567b41dc4ced526",
+      "bytes": 5703
+    },
+    "synthetic_media": {
+      "sha256": "b8831aa51c03cad3d411a7b70bd385c1e3a469c2889663f103fa4c6347b072da",
+      "bytes": 7233
+    },
+    "raw_rpus": {
+      "sha256": "ff4e700abe50d99c3c714ca1637edff01e46f26fc62662151eeec5d56e44e52a",
+      "bytes": 1530
+    },
+    "mux": {
+      "sha256": "5b110f13a301c5d8a1a0970950c26a81dad089b4eb4ae068b07b9dc17d07bcca",
+      "bytes": 35152
+    },
+    "decoder": {
+      "sha256": "4c56f879325185faaa0e006fc784b399c0b7ffd30893e1b43b048a5e789f1baa",
+      "bytes": 35952
+    },
+    "oracle": {
+      "sha256": "0edbc3b0e16429dac0c559337e59eb3089935ae3b15a84a0f37b1058ad3d938e",
+      "bytes": 35128
+    },
+    "inspector": {
+      "sha256": "b509da193193a72c74a683ae1428820980fb0c336bf7d85ad99e66cb8da0ea01",
+      "bytes": 746752
+    },
+    "fixture": {
+      "sha256": "1534711b9e0c96efd96818bec5738db537eab0fac7167a3ce7d1b1c0f896ef50",
+      "bytes": 659584
+    }
+  },
+  "modules": [
+    "62.3.100",
+    "62.11.100",
+    "60.8.100"
+  ]
+}

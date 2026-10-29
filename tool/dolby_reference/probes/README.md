@@ -80,3 +80,12 @@ YL_DOLBY_CGL_PROBE_ROOT="$PWD/.superpowers/sdd/2026-09-26-remaining-07-dolby/bui
 实际主机macOS27.0/26A428、Apple M1、OpenGL4.1 Metal - 91.7，使用CGL/OpenGL后端，驱动字符串中的Metal不代表libplacebo直接Metal后端。shader格式rgba32f、位对齐目标rgba16；上游执行了纹理读回、浮点颜色/传递函数往返、缩放/渲染/帧队列及10-bit高低位对齐检查。Dolby合成fixture只dispatch了reshape/decode shader：没有增强层、没有真实流、没有独立像素golden，不能证明FEL或CM映射画质。
 
 原始EGL测试13通过/1跳过记录保留，本次另记CGL实验，不改写成14通过。compute_queues及max_ssbo_size均0，峰值检测和H.274会报告能力错误；GL_KHR_debug缺失，planar/DMA-BUF/host-pointer等条件分支未覆盖。日志及OpenGL弃用警告均保留。iOS/Android及最低系统运行未通过：本次ADB无设备，已配对iPhone16的通道不可用，模拟器不替代实体设备。
+
+## Explicit compressed CM4 research overlay
+
+The default inspector still uses the unmodified pinned libdovi source. Add
+`--compressed-cm4` to `build_stream_inspector.py` only for the research variant.
+`build-receipt.json` records the archive, parser variant, overlay hash and both
+modified source hashes. A source/context/hash mismatch fails before any patch
+write or compile; all builds run Rust contracts for their chosen variant.
+See [COMPRESSED_CM4.md](../COMPRESSED_CM4.md) for usage and qualification limits.

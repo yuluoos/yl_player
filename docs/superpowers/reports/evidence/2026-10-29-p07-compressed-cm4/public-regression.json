@@ -1,0 +1,139 @@
+[
+  {
+    "name": "p5",
+    "frames": 6314,
+    "metadata_exactly_matches_previous_decoded_trace": true,
+    "summary": {
+      "schema_version": 5,
+      "inspection": "signalled_rpu_inventory",
+      "media_sha256": "87fe0115f3002a621d2380a9f91852ef91a15854a446efe26de8744f77ef5346",
+      "rpu_count": 6314,
+      "profile_counts": {
+        "5": 6314
+      },
+      "el_type_counts": {
+        "none": 6314
+      },
+      "cm_counts": {
+        "2.9": 6314
+      },
+      "level_counts": {
+        "1": 6314,
+        "2": 6314,
+        "4": 6314,
+        "5": 6314,
+        "6": 6314
+      },
+      "previous_mapping_rpus": 0,
+      "rpus_with_unparsed_bits": 0,
+      "absent_display_metadata_rpus": 0,
+      "scene_refresh_flag_count": 72,
+      "display_metadata_transitions": 5107,
+      "unique_rpu_hashes": 4641,
+      "time_base": "1/24000",
+      "pts_range": [
+        0,
+        6313000
+      ],
+      "presentation_reordered_packets": 5392,
+      "presentation_trace_sha256": "1beee716115fe0e8cdd65f18a415c89d92c6c15738e344040bebd46e82e69f4e",
+      "first_packet_rpu_sha256": "5d70cf29f0bd6f52f9567b0d101283397bddcf7bd55d39a9e47bf0893c3719b4",
+      "effective_metadata_resolved": false,
+      "decoded_frame_alignment_verified": false,
+      "mapping_quality": "external_missing",
+      "native_dv_signal": "external_missing",
+      "layer_inventory": {
+        "encoding": "single_track_unspec63_wrapped_el",
+        "base_vcl_nals": 6314,
+        "enhancement_vcl_nals": 0,
+        "enhancement_nals": 0,
+        "packets_with_enhancement_vcl": 0,
+        "p7_packets_without_enhancement_vcl": 0,
+        "decoded_layer_pairing_verified": false
+      },
+      "mapping_reference_ids_resolved": true,
+      "dm_color_state_resolved": true,
+      "compressed_dm_color_rpus": 0,
+      "dm_color_scope": "static_color_fields_same_id_same_configuration",
+      "dm_block_state_resolved": true,
+      "dm_block_scope": "known_static_inheritance_and_current_packet_dynamic_blocks",
+      "inherited_static_block_instances": 0,
+      "inspector_sha256": "b509da193193a72c74a683ae1428820980fb0c336bf7d85ad99e66cb8da0ea01",
+      "packet_count": 6314,
+      "declared_sample_count": 6314,
+      "container_coverage": "finite_box_extents_and_declared_samples",
+      "nal_length_size": 4
+    }
+  },
+  {
+    "name": "fel",
+    "frames": 2908,
+    "metadata_exactly_matches_previous_decoded_trace": true,
+    "summary": {
+      "schema_version": 5,
+      "inspection": "signalled_rpu_inventory",
+      "media_sha256": "419fc183988cb57b0cac2907a01d9f43b1a5ec34012b4c0655574d77678ee4fa",
+      "rpu_count": 2908,
+      "profile_counts": {
+        "7": 2908
+      },
+      "el_type_counts": {
+        "FEL": 2908
+      },
+      "cm_counts": {
+        "2.9": 2908,
+        "4.0": 2908
+      },
+      "level_counts": {
+        "1": 2908,
+        "2": 2908,
+        "3": 2908,
+        "4": 2908,
+        "5": 2908,
+        "6": 2908,
+        "8": 2908,
+        "9": 2908,
+        "254": 2908
+      },
+      "previous_mapping_rpus": 0,
+      "rpus_with_unparsed_bits": 0,
+      "absent_display_metadata_rpus": 0,
+      "scene_refresh_flag_count": 34,
+      "display_metadata_transitions": 2727,
+      "unique_rpu_hashes": 1283,
+      "time_base": "1/24000",
+      "pts_range": [
+        0,
+        2909907
+      ],
+      "presentation_reordered_packets": 2114,
+      "presentation_trace_sha256": "cc32ffcd8d299a4441e29642cbd3567d090b5a75890072f8bd55bafd912a25d2",
+      "first_packet_rpu_sha256": "51575d38871a9d41b9c38993408c168834c0461a5d65cb5a9596ca1602bbf534",
+      "effective_metadata_resolved": false,
+      "decoded_frame_alignment_verified": false,
+      "mapping_quality": "external_missing",
+      "native_dv_signal": "external_missing",
+      "layer_inventory": {
+        "encoding": "single_track_unspec63_wrapped_el",
+        "base_vcl_nals": 2908,
+        "enhancement_vcl_nals": 2908,
+        "enhancement_nals": 9578,
+        "packets_with_enhancement_vcl": 2908,
+        "p7_packets_without_enhancement_vcl": 0,
+        "decoded_layer_pairing_verified": false
+      },
+      "mapping_reference_ids_resolved": true,
+      "dm_color_state_resolved": true,
+      "compressed_dm_color_rpus": 0,
+      "dm_color_scope": "static_color_fields_same_id_same_configuration",
+      "dm_block_state_resolved": true,
+      "dm_block_scope": "known_static_inheritance_and_current_packet_dynamic_blocks",
+      "inherited_static_block_instances": 0,
+      "inspector_sha256": "b509da193193a72c74a683ae1428820980fb0c336bf7d85ad99e66cb8da0ea01",
+      "packet_count": 2908,
+      "declared_sample_count": 2908,
+      "container_coverage": "finite_box_extents_and_declared_samples",
+      "nal_length_size": 4
+    }
+  }
+]

@@ -92,8 +92,8 @@ def signalled_blocks(value, index):
                                source_packet_index=index, payload=copy.deepcopy(payload),
                                payload_sha256=digest(encoded(payload))))
         observed_levels[cm] = sorted(counts)
-        # The pinned libdovi cannot emit a nonempty CM4 container without L254.
-        if cm == '4.0': require(counts[254] == 1)
+        # Full CM4 declares its static version; compressed CM4 inherits it.
+        if cm == '4.0': require(counts[254] == (0 if value['display_metadata']['compressed'] else 1))
     require(value['cm_levels'] == observed_levels)
     return blocks
 
@@ -109,6 +109,8 @@ def resolve(values):
         compressed = color['signalled_compressed']
         if compressed:
             require(not any(block['static'] for block in current))
+            if value['display_metadata'].get('cmv40_metadata') is not None:
+                require(any(block['level'] == 254 for block in static))
         else:
             static = [block for block in current if block['static']]
         active = sorted(static + [block for block in current if not block['static']],

@@ -1,0 +1,28 @@
+{
+  "tool/dolby_reference/decoded_alignment.py": {
+    "sha256": "bb74ebce86bb488989286adf2c09a1fa2e7b6b37c30934fb69e6b05c3d0ee981",
+    "matches_base": true
+  },
+  "tool/dolby_reference/probes/decode_layers.c": {
+    "sha256": "e60ad1422bacbc8a182b35893291beacfb3b1987601f77ae61837a0a5e177d64",
+    "matches_base": true
+  },
+  "tool/dolby_reference/probes/mux_rpu_fixture.c": {
+    "sha256": "c1ea9cc6e025b2ae352bce995558510c5600c7c5a1a500fbb10987316e1ad7b5",
+    "matches_base": true
+  },
+  "tool/dolby_reference/dm_color_state.py": {
+    "sha256": "760ce52acfef6bb8dabe4f013afeca667c1af685664837d30ff9cd26b781b5ff",
+    "matches_base": true
+  },
+  "tool/dolby_reference/mapping_references.py": {
+    "sha256": "dd5a06551c9ce25be28b182400ae7be90ebb4200fea3cae3cf7068cce3006d69",
+    "matches_base": true
+  },
+  "tool/dolby_reference/stream_inventory.py": {
+    "sha256": "c00c222d7aff9643c2279a12ee385f90eb794fb7ca5e39ef6921b677a96291c1",
+    "matches_base": true
+  },
+  "qualification_rows_unchanged": true,
+  "source_snapshot_unchanged": true
+}

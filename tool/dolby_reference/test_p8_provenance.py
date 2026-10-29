@@ -17,13 +17,14 @@ from stream_inventory import InspectionError, file_digest, nal_length_size
 @unittest.skipUnless(os.environ.get('YL_RUN_P8_PROVENANCE') == '1',
                      'opt-in P8 provenance requires host FFmpeg and pinned Rust inspector/fixture')
 class P8ProvenanceTests(unittest.TestCase):
+    fixture_environment = 'YL_DOVI_CM_FIXTURE'
     @classmethod
     def setUpClass(cls):
         cls.temporary = tempfile.TemporaryDirectory(prefix='yl-p8-provenance-')
         cls.addClassCleanup(cls.temporary.cleanup)
         cls.root = Path(cls.temporary.name)
         cls.inspector = Path(os.environ['YL_DOVI_INSPECTOR']).resolve(strict=True)
-        cls.fixture = Path(os.environ['YL_DOVI_CM_FIXTURE']).resolve(strict=True)
+        cls.fixture = Path(os.environ[cls.fixture_environment]).resolve(strict=True)
         probes = Path(__file__).with_name('probes')
         spec = importlib.util.spec_from_file_location('build_decode_probe', probes/'build_decode_probe.py')
         builder = importlib.util.module_from_spec(spec); spec.loader.exec_module(builder)

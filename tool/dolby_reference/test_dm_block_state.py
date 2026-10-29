@@ -89,6 +89,24 @@ class DmBlockStateTests(unittest.TestCase):
         for values in [[record(compressed=True)], [record([l6()]),record(identifier=1,compressed=True)]]:
             with self.assertRaises(InspectionError):resolve(values)
 
+    def test_compressed_cm4_dynamic_blocks_use_inherited_l254(self):
+        l3={'Level3':dict(min_pq_offset=2048,max_pq_offset=2049,avg_pq_offset=2050)}
+        l9={'Level9':dict(length=1,source_primary_index=0)}
+        r=resolve([record([l6()], [l254(),l9]),record([l1()], [l3],compressed=True),
+                   record([l1()], [l254()]),record([l1()], [l9],compressed=True)])
+        self.assertEqual([(b['level'],b['source_packet_index']) for b in r[1]['blocks']],
+                         [(1,1),(6,0),(3,1),(254,0)])
+        self.assertEqual([(b['level'],b['source_packet_index']) for b in r[3]['blocks']],
+                         [(1,3),(9,3),(254,2)])
+
+    def test_compressed_cm4_requires_known_version_and_expires_at_reset(self):
+        l9={'Level9':dict(length=1,source_primary_index=0)}
+        for values in ([record([l6()]),record([l1()],[l9],compressed=True)],
+                       [record([l6()],[l254()]),record([l1()]),record([l1()],[l9],compressed=True)],
+                       [record([l6()],[l254()]),record([l1()],[l254(),l9],compressed=True)],
+                       [record([l1()],[l9])]):
+            with self.assertRaises(InspectionError):resolve(list(values))
+
     def test_schema_five_reorders_only_after_source_resolution(self):
         rows=[dict(packet_index=0,pts=2,dts=0,rpu_sha256='a'*64),dict(packet_index=1,pts=1,dts=1,rpu_sha256='b'*64)]
         trace=io.BytesIO();result=summarize(rows,[record([l1(),l6()]),record([l1()],compressed=True)],

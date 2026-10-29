@@ -12,7 +12,7 @@
 
 完整记录同时清空旧静态和动态块；压缩记录不能携带静态块。继承必须满足已有颜色头契约：同 ID、同配置、有完整前序状态、新调用无历史、明确序列头及 DM、无未知剩余位。只接受固定 libdovi 的已知字段、长度和数量；类型不符、CM 版本内 level 错位、重复单例或重复 L2 target_max_pq/L8/L10 target_display_index、超过块数量上限均退出 2。L8 的 10/12/13/19/25 字节、L9 的 1/17 字节、L10 的 5/21 字节保留各自实际字段集合，不为缺字段补零。target 只作块身份，不表示它已匹配独立目标或执行目标映射。
 
-**固定库的压缩 CM4 缺口仍在。** `CmV40DmData::validate` 要求非空 CM4 容器有一个 L254，而 L254 在压缩 DM 中属于禁止携带的静态块。因此本子集可保留前序完整 CM4 的静态块，并接受后续省略 CM4 容器的压缩记录；携带 CM4 动态块但无 L254 的压缩记录不能由当前固定库验证，携带 L254 又会被本状态器拒绝。本轮不修改该上游限制，也不宣称完整压缩 CM4 支持。
+**默认固定库的压缩 CM4 限制仍在；可显式启用研究补丁。** 原始 `CmV40DmData::validate` 要求每个 CM4 容器有一个 L254，而压缩 DM 禁止携带静态 L254。默认构建保持原样。`build_stream_inspector.py --compressed-cm4` 在经输入/输出哈希核验的提取副本上应用上下文校验补丁：完整 CM4 仍需一个 L254；压缩 CM4 仅接受动态 L3/L8/L9/L11。状态器进一步要求前序同 ID/同配置的完整 CM4 已提供 L254；完整记录重置后不复用旧版本。详见 [显式研究支持与边界](COMPRESSED_CM4.md)。
 
 `decoded_alignment.py --metadata` 在原始媒体哈希校验、包编号、PTS/POC、BL/EL 完整覆盖核验内，输出 schema 2，把 mapping 引用、颜色头和 CM 块来源随包绑定到实际软件解码帧。`metadata_inventory_trace_sha256` 绑定中间盘点，最终 `trace_sha256` 绑定帧像素哈希和全部元数据来源；默认无此参数时仍为旧 schema 1。
 
@@ -25,6 +25,6 @@ python3 -B tool/dolby_reference/decoded_alignment.py \
   --decoder "$decoder" --metadata --trace "$new_decoded_trace"
 ```
 
-有限输入和进程上界沿用盘点/解码工具；每 CM 容器最多 16 块，单例及重复 target 另有限制。输入、状态与解码核验失败在写 trace 前返回，已有路径拒绝覆盖。解码工具支持原有 P5/P7 媒体范围；合成 P8 RPU 序列只测试解析与继承，不伪装视频解码或真实压缩样本。
+有限输入和进程上界沿用盘点/解码工具；每 CM 容器最多 16 块，单例及重复 target 另有限制。输入、状态与解码核验失败在写 trace 前返回，已有路径拒绝覆盖。解码工具支持同质 P5/P8 单层与 P7 双层；生成 P8 视频已验证实际解码来源，但仍不是捕获的真实压缩片源。
 
 `dm_block_state_resolved=true` / `dm_color_state_resolved=true` / `mapping_reference_ids_resolved=true` 均是有限子集标记；`effective_metadata_resolved=false`、`mapping_quality=external_missing`、`native_dv_signal=external_missing` 保持。真实压缩视频、跨 ID/缺头/默认 DM、完整 CM/trim/NLQ/重采样/目标映射、独立目标/容差和物理 DV 仍未完成。
