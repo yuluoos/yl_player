@@ -30,6 +30,7 @@ python3 -B -m unittest discover -s tool/dolby_reference -p 'test_*.py'
 python3 -B tool/dolby_reference/inventory.py
 python3 -B tool/protected_output/sync_apple_probe.py --check
 python3 tool/test_android_scripts.py
+python3 -B -m unittest tool.test_android_integration_runner
 python3 -B -m unittest tool.test_native_apple_scripts
 python3 -B -m unittest tool.test_player_v2_gate
 if [ "$mode" = all ]; then

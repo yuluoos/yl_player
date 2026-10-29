@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 1,
+  "serial": "yl-runner-unavailable",
+  "suite": "integration_test/state_update_cadence_test.dart",
+  "limits": {
+    "runSeconds": 3.0,
+    "adbSeconds": 1.0,
+    "cleanupSeconds": 2.0
+  },
+  "elapsedSeconds": 1.3128552079999736,
+  "primaryExitCode": 1,
+  "exitCode": 1,
+  "signal": null,
+  "errorType": null,
+  "commands": [
+    {
+      "kind": "api",
+      "command": [
+        "/opt/homebrew/bin/adb",
+        "-s",
+        "yl-runner-unavailable",
+        "shell",
+        "getprop",
+        "ro.build.version.sdk"
+      ],
+      "timedOut": false,
+      "exitCode": 1,
+      "pid": 14042,
+      "groupRetired": true
+    },
+    {
+      "kind": "failure-logcat",
+      "command": [
+        "/opt/homebrew/bin/adb",
+        "-s",
+        "yl-runner-unavailable",
+        "logcat",
+        "-d"
+      ],
+      "timedOut": true,
+      "exitCode": 143,
+      "pid": 14044,
+      "groupRetired": true
+    }
+  ],
+  "cleanup": {
+    "complete": true,
+    "foregroundRestored": true,
+    "errors": [],
+    "groups": [
+      {
+        "pgid": 14042,
+        "leaderReturnCode": 1,
+        "remaining": false
+      },
+      {
+        "pgid": 14044,
+        "leaderReturnCode": -15,
+        "remaining": false
+      }
+    ]
+  }
+}

@@ -22,11 +22,15 @@ class AndroidScriptsTest(unittest.TestCase):
         self.log = Path(self.temp.name) / "calls"
         self.env = dict(os.environ, PATH=f"{self.bin}:{os.environ['PATH']}",
                         TEST_ROOT=str(self.root), CALL_LOG=str(self.log), TMPDIR=self.temp.name,
-                        YL_ANDROID_DEVICE_ID="emulator-5580")
+                        YL_ANDROID_DEVICE_ID="emulator-5580",
+                        YL_ADB=str(self.bin / "adb"), YL_FLUTTER=str(self.bin / "flutter"))
         # These tests own their API/skip scenarios, regardless of caller stage flags.
         self.env.pop("YL_ANDROID_SKIP_JVM", None)
         self.env.pop("YL_ANDROID_API", None)
-        for name in ("check_native_android.sh", "run_android_integration.sh",
+        for name in ("YL_ANDROID_RUN_TIMEOUT_SECONDS", "YL_ANDROID_ADB_TIMEOUT_SECONDS",
+                     "YL_ANDROID_CLEANUP_TIMEOUT_SECONDS"):
+            self.env.pop(name, None)
+        for name in ("check_native_android.sh", "run_android_integration.sh", "run_android_integration.py",
                      "boot_ci_android_emulator.sh"):
             shutil.copy(SCRIPTS / name, self.root / "tool" / name)
         self.executable(self.bin / "git", 'test "$1" = -C\ntest "$2" = "$TEST_ROOT/tool"\nprintf "%s\\n" "$TEST_ROOT"')

@@ -671,6 +671,11 @@
       "path": "docs/superpowers/reports/2026-10-28-remaining-local-acceptance.md",
       "sha256": "9c68fe50ace545eb074585156eae48fc758ec929f66215117213bbb0b6120763",
       "kind": "report"
+    },
+    "android-acceptance-deadlines-20261028": {
+      "path": "docs/superpowers/reports/2026-10-28-android-acceptance-deadlines.md",
+      "sha256": "72db9e7daa6c2a62f6cf3b1df94e105369c64416b9b9706d9f4c1148baea1c8a",
+      "kind": "report"
     }
   },
   "rows": [
@@ -2171,7 +2176,8 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-acceptance-deadlines-20261028"
       ],
       "acceptance": null,
       "nextAction": "record-final-source-bound-remote-ci-results"
