@@ -1,0 +1,35 @@
+{
+  "testIdentifier" : "YlOpenedMediaTests/testDtsMp4CenterChannelReachesBothStereoChannelsAndResetIsReusable()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlOpenedMediaTests/testDtsMp4CenterChannelReachesBothStereoChannelsAndResetIsReusable",
+  "testName" : "testDtsMp4CenterChannelReachesBothStereoChannelsAndResetIsReusable()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793301281.68,
+          "title" : "XCTAssertEqual failed: threw error \"Playback operation failed.\" - An actual 512-sample DTS frame fits a 100ms window despite larger decode scratch"
+        }
+      ],
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

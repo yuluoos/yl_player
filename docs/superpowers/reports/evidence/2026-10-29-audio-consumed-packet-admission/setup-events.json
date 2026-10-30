@@ -1,0 +1,29 @@
+{
+  "base": "16869125d2eb42969b63e494f42432e1be8b51b9",
+  "branch": "codex/audio-consumed-packet-admission",
+  "initial_config_attempt": {
+    "exit": 1,
+    "reason": "flutter build macos --config-only run from repo root: lib/main.dart absent",
+    "resolution": "same command from packages/yl_player/example passed"
+  },
+  "initial_xcresult_read": {
+    "exit": 1,
+    "reason": "sandbox prevented xcresulttool TestReport cache write",
+    "resolution": "scoped escalation read original result, no test rerun"
+  },
+  "red": {
+    "passed": 1,
+    "failed": 3,
+    "skipped": 0
+  },
+  "green": {
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  },
+  "intermediate_inventory_refresh": {
+    "exit": 2,
+    "cause": "Operator script used references instead of evidence; no inventory write occurred before KeyError, following stale-source check refused the inventory",
+    "resolution": "Used actual evidence key, refreshed source/report identities, structural check exit 0"
+  }
+}

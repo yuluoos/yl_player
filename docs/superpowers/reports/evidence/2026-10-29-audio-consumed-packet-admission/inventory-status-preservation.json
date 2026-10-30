@@ -1,0 +1,30 @@
+{
+  "rows": 102,
+  "unchangedStatusAndAcceptance": true,
+  "onlyAddedReferenceRows": [
+    {
+      "requirement": "CAP-FORMAT",
+      "platform": "ios",
+      "implementation": "partial",
+      "verification": "failed",
+      "acceptance": null,
+      "nextAction": "close-required-format-cells-on-one-build"
+    },
+    {
+      "requirement": "CAP-FORMAT",
+      "platform": "macos",
+      "implementation": "partial",
+      "verification": "failed",
+      "acceptance": null,
+      "nextAction": "close-required-format-cells-on-one-build"
+    },
+    {
+      "requirement": "PERF-BASELINE",
+      "platform": "all",
+      "implementation": "partial",
+      "verification": "external_missing",
+      "acceptance": null,
+      "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"
+    }
+  ]
+}

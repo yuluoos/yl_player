@@ -1,0 +1,42 @@
+[
+  {
+    "name": "ios-config",
+    "command": [
+      "/Users/yy2021_8689/flutter/bin/flutter",
+      "build",
+      "ios",
+      "--simulator",
+      "--debug",
+      "--config-only",
+      "--no-pub"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example",
+    "exit": 0,
+    "seconds": 9.897
+  },
+  {
+    "name": "ios-build",
+    "command": [
+      "xcodebuild",
+      "build-for-testing",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "ARCHS=arm64",
+      "ONLY_ACTIVE_ARCH=YES",
+      "-quiet",
+      "-sdk",
+      "iphonesimulator",
+      "-workspace",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/ios/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-derivedDataPath",
+      "/private/tmp/yl-audio-admission/derived-ios",
+      "-destination",
+      "generic/platform=iOS Simulator"
+    ],
+    "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+    "exit": 0,
+    "seconds": 64.868
+  }
+]

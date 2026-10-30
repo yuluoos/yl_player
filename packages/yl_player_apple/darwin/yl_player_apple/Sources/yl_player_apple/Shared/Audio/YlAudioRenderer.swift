@@ -634,8 +634,12 @@ final class YlAudioRenderer: YlAudioRendering {
       durationUs: estimate.durationUs,
       byteCount: estimate.byteCount
     )
+    let exceedsTotalDuration = estimate.durationUs > effectiveDurationLimit
     lock.unlock()
-    if let boundedPlan, estimate.durationUs > boundedPlan.maxDurationUs || estimate.byteCount > boundedPlan.maxBytes {
+    // Queue drainage cannot make an individual packet fit a smaller total
+    // window. Fail before conversion instead of retrying forever on an empty queue.
+    if exceedsTotalDuration { throw YlManagedBufferLedger.unsupported() }
+    if let boundedPlan, estimate.byteCount > boundedPlan.maxBytes {
       throw YlManagedBufferLedger.unsupported()
     }
     guard estimatedCapacity == .scheduled else {
@@ -729,7 +733,10 @@ final class YlAudioRenderer: YlAudioRendering {
     )
     guard exactCapacity == .scheduled else {
       lock.unlock()
-      return exactCapacity
+      // Conversion has consumed compressed input and advanced codec state.
+      // Backpressure would make the pipeline retry that same packet after
+      // dropping this PCM. Fail explicitly, as the terminal path does above.
+      throw YlManagedBufferLedger.unsupported()
     }
     let token = completionGeneration
     let shouldRestartOutput = YlAppleCompatibility.current.batchesAudioInput && playbackRequested && scheduledBufferCount == 0
@@ -1061,6 +1068,13 @@ final class YlAudioRenderer: YlAudioRendering {
     }
   }
 
+  // Caller holds lock; admission and impossible-packet rejection share one rule.
+  private var effectiveDurationLimit: Int64 {
+    boundedPlan?.maxDurationUs ?? Int64(
+      (Double(maxScheduledDurationUs) * Double(YlAppleCompatibility.current.scalesAudioDuration ? playbackRate : 1)).rounded(.up)
+    )
+  }
+
   private func capacityResult(
     durationUs: Int64,
     byteCount: Int
@@ -1070,10 +1084,7 @@ final class YlAudioRenderer: YlAudioRendering {
       return .wouldExceedBytes
     }
     let nextDuration = scheduledDuration.addingReportingOverflow(max(0, durationUs))
-    let rateAdjustedDurationLimit = boundedPlan?.maxDurationUs ?? Int64(
-      (Double(maxScheduledDurationUs) * Double(YlAppleCompatibility.current.scalesAudioDuration ? playbackRate : 1)).rounded(.up)
-    )
-    if nextDuration.overflow || nextDuration.partialValue > rateAdjustedDurationLimit {
+    if nextDuration.overflow || nextDuration.partialValue > effectiveDurationLimit {
       return .wouldExceedDuration
     }
     return .scheduled

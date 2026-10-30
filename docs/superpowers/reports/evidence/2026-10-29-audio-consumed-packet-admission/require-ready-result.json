@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python3",
+    "-B",
+    "tool/release_readiness/check.py",
+    "--require-ready"
+  ],
+  "exit": 1,
+  "expectedExit": 1,
+  "reason": "Existing acceptance gaps retained; structural validity is not release readiness"
+}

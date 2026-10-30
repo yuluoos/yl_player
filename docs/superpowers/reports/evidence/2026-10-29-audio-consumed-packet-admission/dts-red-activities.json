@@ -1,0 +1,57 @@
+{
+  "testIdentifier" : "YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding",
+  "testName" : "testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793301114.779,
+          "title" : "XCTAssertGreaterThanOrEqual failed: (\"1\") is less than (\"10666\") - Container duration 1 must not under-reserve decoded PCM"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793301115.003,
+          "title" : "XCTAssertGreaterThanOrEqual failed: (\"10000\") is less than (\"10666\") - Container duration 10000 must not under-reserve decoded PCM"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793301115.004,
+          "title" : "XCTAssertLessThanOrEqual failed: (\"9223372036854775807\") is greater than (\"170667\") - Untrusted duration must not enlarge the 8192-frame / 48 kHz decoder bound"
+        }
+      ],
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

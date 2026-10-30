@@ -25,11 +25,62 @@ final class YlDtsAudioConverter: YlAudioPacketConverting {
 
   func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
     guard let format else { return .init(durationUs: 0, byteCount: 0) }
-    // DTS packets can carry up to 8192 PCM samples. Reserve before advancing the
-    // decoder so renderer backpressure never consumes a packet it cannot queue.
-    return .init(durationUs: packet.durationUs > 0 ? packet.durationUs
-      : Int64((Double(maximumFrames) * 1_000_000 / format.sampleRate).rounded(.up)),
+    // Reserve sample storage at the decoder cap, but derive a complete core
+    // frame's time from its header: container durations may round down to ms.
+    let maximumDuration = Int64((Double(maximumFrames) * 1_000_000 / format.sampleRate).rounded(.up))
+    return .init(durationUs: min(Self.coreDurationUs(packet.data) ?? maximumDuration, maximumDuration),
       byteCount: maximumFrames * 2 * MemoryLayout<Float>.size)
+  }
+
+  /// Inspect only a bounded header, without advancing codec state. A pure core
+  /// frame has blocks of 32 samples. Follow the DCA core framing fields used by
+  /// FFmpeg's dca parser; independent HD extensions retain the decoder cap.
+  private static func coreDurationUs(_ data: Data) -> Int64? {
+    guard data.count >= 14 else { return nil }
+    var header = Array(data.prefix(14))
+    let sync = header.prefix(4).reduce(UInt32(0)) { ($0 << 8) | UInt32($1) }
+    let packed: Bool
+    switch sync {
+    case 0x7ffe8001, 0xfe7f0180: packed = false
+    case 0x1fffe800, 0xff1f00e8: packed = true
+    default: return nil
+    }
+    if sync == 0xfe7f0180 || sync == 0xff1f00e8 {
+      for index in stride(from: 0, to: header.count, by: 2) { header.swapAt(index, index + 1) }
+    }
+    if packed {
+      var normalized = [UInt8]()
+      var accumulator: UInt32 = 0
+      var available = 0
+      for index in stride(from: 0, to: header.count, by: 2) {
+        let word = (UInt32(header[index]) << 8) | UInt32(header[index + 1])
+        accumulator = (accumulator << 14) | (word & 0x3fff)
+        available += 14
+        while available >= 8 {
+          available -= 8
+          normalized.append(UInt8((accumulator >> available) & 255))
+        }
+        accumulator &= (1 << available) - 1
+      }
+      header = normalized
+    }
+    func bits(_ offset: Int, _ count: Int) -> Int {
+      (offset..<(offset + count)).reduce(0) { value, bit in
+        (value << 1) | Int((header[bit / 8] >> (7 - bit % 8)) & 1)
+      }
+    }
+    let blocks = bits(39, 7) + 1
+    let frameBytes = bits(46, 14) + 1
+    let wireBytes = packed ? ((frameBytes * 8 + 13) / 14) * 2 : frameBytes
+    let rates = [0, 8000, 16000, 32000, 0, 0, 11025, 22050, 44100, 0, 0, 12000, 24000, 48000, 96000, 192000]
+    let coreRate = rates[bits(66, 4)]
+    // Refuse truncated frames, extra substreams, invalid block/rate fields and
+    // embedded extensions rather than treating a prefix as the full output.
+    guard bits(33, 5) == 31, blocks % 8 == 0, frameBytes >= 96,
+          wireBytes == data.count, bits(60, 6) < 16, coreRate > 0,
+          bits(75, 1) == 0, bits(83, 1) == 0 else { return nil }
+    let numerator = Int64(blocks * 32) * 1_000_000
+    return (numerator + Int64(coreRate) - 1) / Int64(coreRate)
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {

@@ -1,0 +1,74 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1793301779.063,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793301760.366,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertEqual failed: (\"170667\") is not equal to (\"10667\") - 512 samples must fit the existing 100ms window regardless of container rounding",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding",
+      "testName" : "testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()"
+    },
+    {
+      "failureText" : "XCTAssertThrowsError failed: did not throw an error",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever",
+      "testName" : "testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "8 runs of 1 test failed with XCTAssertEqual failed: (\"0\") is not equal to (\"1\")"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "4 runs of 1 test failed with XCTAssertEqual failed: (\"170667\") is not equal to (\"10667\") - 512 samples must fit the existing 100ms window regardless of container rounding"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "4 runs of 1 test failed with XCTAssertEqual failed: (\"0\") is not equal to (\"32000\")"
+    }
+  ],
+  "totalTestCount" : 2
+}

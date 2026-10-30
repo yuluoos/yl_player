@@ -1,0 +1,26 @@
+{
+  "reviewer": "/root/audio_admission_review",
+  "mode": "independent read-only source and existing-evidence review; no reviewer-run build/device",
+  "initialResult": "No actionable findings for consumed-input failure handling",
+  "intermediateFinding": {
+    "priority": "P2",
+    "problem": "8192-frame DTS duration at 32kHz/0.25x exceeds effective empty-queue window; permanent retry",
+    "status": "closed after core framing admission plus impossible single-packet duration rejection"
+  },
+  "finalResult": "No remaining actionable findings",
+  "verified": {
+    "uniquePassingCases": 142,
+    "failed": 0,
+    "skipped": 0,
+    "sourceHashes": 6,
+    "reusedUnchangedCases": 776,
+    "combinedIdentities": 918,
+    "iosSimulatorArm64BuildOnly": "Flutter config-only and build-for-testing exit0, receipt/log independently reviewed; no iOS runtime or minimum OS qualification"
+  },
+  "boundaries": [
+    "Combined evidence is not a single 918-case final-candidate run",
+    "QoS warnings remain; no zero-warning claim",
+    "No physical-output or DTS-HD/XLL qualification",
+    "Queued-overflow ledger and pending-then-overflow combinations statically reviewed, not separately executed"
+  ]
+}

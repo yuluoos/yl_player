@@ -229,10 +229,10 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioCompletionPolicy.swift": "201f374d0cf2563d52cb59bd040bc6400e15a9e6f319669b5a2eeabb4858b321",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioOwnershipCoordinator.swift": "43ea3c7612111d4038c07827bcea0ee4fd8ac4b6bbcc429d85ec1977de6d0a6c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioPipeline.swift": "6a861ef4478c13fcb1501a4ffdd0e645488a1bec1a5fda10b87175a530e4e0db",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "fa7a52ebf2465455019ba1d1e841b429bf10b61b110df75ba20bbaac4c9a262f",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "4739f1082c941da96e91594b42551ef8926b11059d55f8844a52a65375e9c3e9",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioSessionDriving.swift": "627cc82c1d28587b41605d2b6b5dd1fd1aaea3a8c35804035534ee1786188deb",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioTerminalState.swift": "db205b02848ed0f86b15ade78b6cafb70918d85c7690cdea73b18dfb5f97d5a0",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlDtsAudioConverter.swift": "80b7e5f1f7732f94cab9d9b049fec8a5737a722b427a2fa55486875a913d3ae3",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlDtsAudioConverter.swift": "640150fb2617e8aa717240c19ae5c138fa521c6b39307c145613d84cad4ccff9",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlFLACConfiguration.swift": "ba97ed7b4d11149a325066e643dda68c8ef5250c6c5e8578486a1ac4e4705409",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlOpusAudioConverter.swift": "e20d27fe6ac340f0147164f33eb337eee44c6abed7b9818dba722645c4b35754",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlVorbisAudioConverter.swift": "6c0dc2e1bf16811cf35c893cfe09a326621f9f76b5bac1b3f97c496ca9714a2c",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "83c8ad3fe1693f53b58ff238ccee7d24615eea80c80cc5f59b3f65595e8c7bb3"
+    "sha256": "d5013c8138a598c460af49e1da4c6690594813ec6646a674e4b287eb164deee5"
   },
   "evidence": {
     "p01": {
@@ -873,6 +873,11 @@
       "path": "docs/superpowers/reports/2026-10-29-p07-trace-publication.md",
       "sha256": "8cfb5717936892d771b6270e3bb7264b6b14ad8e95bfd77f181f318ef1b4608b",
       "kind": "report"
+    },
+    "audio-consumed-packet-20261029": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-29-audio-consumed-packet-admission.md",
+      "sha256": "aedc174b5a008b824572d3c01950f3f66b3623424e472c7b930aa860f9248c36"
     }
   },
   "rows": [
@@ -1249,7 +1254,8 @@
         "p03",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "audio-consumed-packet-20261029"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -1263,7 +1269,8 @@
         "p03",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "audio-consumed-packet-20261029"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -2432,7 +2439,8 @@
         "remaining-engineering",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "audio-consumed-packet-20261029"
       ],
       "acceptance": null,
       "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"
