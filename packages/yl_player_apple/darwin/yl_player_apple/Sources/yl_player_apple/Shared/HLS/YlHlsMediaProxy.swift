@@ -245,13 +245,15 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
 
   func cancelAll() {
     #if DEBUG
-    var traces: [YlHlsProxyRequestTrace] = []
+    var deliveries: [() -> Void] = []
     #endif
     let activeConnections = lock.withLock { () -> [NWConnection] in
       guard !cancelled else { return [] }
       cancelled = true
       #if DEBUG
-      traces = diagnosticActiveTraces.values.map(\.trace)
+      deliveries = diagnosticActiveTraces.values.compactMap {
+        $0.trace.prepareFinish(outcome: 1, cancelCause: 1)
+      }
       #endif
       taskRecords.removeAll()
       connectionTasks.removeAll()
@@ -262,7 +264,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       return values
     }
     #if DEBUG
-    traces.forEach { $0.finish(outcome: 1, cancelCause: 1) }
+    deliveries.forEach { $0() }
     #endif
     upstreamDiagnostics.clear()
     listener.cancel()
@@ -469,12 +471,13 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   private func close(_ connection: NWConnection, diagnosticCancelCause: Int = 4,
     diagnosticCancelSource: Int = 0, diagnosticError: NWError? = nil) {
     #if DEBUG
-    var trace: YlHlsProxyRequestTrace?
+    var deliver: (() -> Void)?
     #endif
     let task = lock.withLock { () -> URLSessionDataTask? in
       let identifier = ObjectIdentifier(connection)
       #if DEBUG
-      trace = diagnosticActiveTraces[identifier]?.trace
+      deliver = diagnosticActiveTraces[identifier]?.trace.prepareFinish(outcome: 1,
+        cancelCause: diagnosticCancelCause, cancelSource: diagnosticCancelSource, error: diagnosticError)
       #endif
       connections.removeValue(forKey: identifier)
       connectionDeadlines.removeValue(forKey: identifier)?.cancel()
@@ -488,8 +491,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       return task
     }
     #if DEBUG
-    trace?.finish(outcome: 1, cancelCause: diagnosticCancelCause,
-      cancelSource: diagnosticCancelSource, error: diagnosticError)
+    deliver?()
     #endif
     task?.cancel()
     connection.cancel()
@@ -1020,6 +1022,14 @@ final class YlHlsProxyRequestTrace {
   // 3 admitted-request monitor receive. This is the first recorded terminal
   // callback, not proof of the underlying peer's intent or physical ordering.
   func finish(outcome: Int, cancelCause: Int = 4, cancelSource: Int = 0, error: NWError? = nil) {
+    let deliver = prepareFinish(outcome: outcome, cancelCause: cancelCause,
+      cancelSource: cancelSource, error: error)
+    deliver?()
+  }
+  // Fix the terminal fact while the caller still owns its lifecycle lock.
+  // Delivery can re-enter the proxy and must happen after that lock is released.
+  func prepareFinish(outcome: Int, cancelCause: Int = 4, cancelSource: Int = 0,
+    error: NWError? = nil) -> (() -> Void)? {
     let row = lock.withLock { () -> [String: Any]? in
       guard !sealed && !downstreamFinished else { return nil }
       downstreamFinished = true
@@ -1043,7 +1053,8 @@ final class YlHlsProxyRequestTrace {
       }
       return completedRow()
     }
-    if let row { observer(row) }
+    guard let row else { return nil }
+    return { self.observer(row) }
   }
 }
 #endif

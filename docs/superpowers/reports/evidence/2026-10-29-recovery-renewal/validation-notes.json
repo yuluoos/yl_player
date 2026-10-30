@@ -1,0 +1,38 @@
+{
+  "affectedPython": {
+    "command": "PYTHONPATH=tool/playback_network python3 -m unittest test_budget_renewal test_abr_policy test_abr_accesslog test_budget_exhaustion test_abr_device",
+    "toolChunk": "935364",
+    "tests": 67,
+    "passed": 63,
+    "permissionBlocked": 4,
+    "rawLogAvailable": false
+  },
+  "permissionRetry": {
+    "toolChunk": "1d0a60",
+    "passed": 4,
+    "failed": 0,
+    "rawLogAvailable": false,
+    "tests": [
+      "test_abr_accesslog.FailureReceiptTests.test_empty_main_rows_fail_closed_without_escaping",
+      "test_abr_accesslog.FailureReceiptTests.test_failed_playback_retains_valid_frame_observation_without_passing",
+      "test_abr_accesslog.FailureReceiptTests.test_proxy_metrics_failure_keeps_independent_frame_observation",
+      "test_abr_accesslog.ProcessProofTests.test_same_executable_through_path_alias_is_owned_but_other_path_is_rejected"
+    ]
+  },
+  "reviewFix": {
+    "tests": 9,
+    "passed": 9,
+    "logs": [
+      "renewal-review-red.log.gz",
+      "renewal-review-green.log.gz"
+    ]
+  },
+  "fixtureParity": {
+    "tests": 1,
+    "passed": 1,
+    "initialInvocationError": "ModuleNotFoundError: media_delivery_fixture_adapter from repository root; corrected working directory to tool/consumer_fixtures/apple_flutter"
+  },
+  "originalReceiptPassed": false,
+  "offlineChecksPassed": 9,
+  "capabilityAccepted": false
+}

@@ -1,0 +1,252 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008140-000C49CC3493001C",
+      "deviceName" : "iPhone",
+      "modelName" : "iPhone 16",
+      "osBuildNumber" : "24B119",
+      "osVersion" : "27.2",
+      "platform" : "iOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.0015s",
+                  "durationInSeconds" : 0.0014829635620117188,
+                  "name" : "testProductionRecoveryBudgetUsesCommittedSessionNotReusedRequestLabel()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryBudgetUsesCommittedSessionNotReusedRequestLabel()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryBudgetUsesCommittedSessionNotReusedRequestLabel",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0005s",
+                  "durationInSeconds" : 0.0005000829696655273,
+                  "name" : "testProductionRecoveryCancellationKeepsBackoffAndSourceBudget()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryCancellationKeepsBackoffAndSourceBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryCancellationKeepsBackoffAndSourceBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0058s",
+                  "durationInSeconds" : 0.005807042121887207,
+                  "name" : "testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryControllerCancelsHeldCandidateAndPreservesBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0006s",
+                  "durationInSeconds" : 0.0006020069122314453,
+                  "name" : "testProductionRecoveryControllerCommitsWithinPreparationDeadline()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryControllerCommitsWithinPreparationDeadline()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryControllerCommitsWithinPreparationDeadline",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00036s",
+                  "durationInSeconds" : 0.00036406517028808594,
+                  "name" : "testProductionRecoveryHighProofRequiresConsecutivePublishedFrames()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryHighProofRequiresConsecutivePublishedFrames()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryHighProofRequiresConsecutivePublishedFrames",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00038s",
+                  "durationInSeconds" : 0.00038301944732666016,
+                  "name" : "testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryNeedsHighHistoryProgressRequestsAndNaturalHighCancels",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00048s",
+                  "durationInSeconds" : 0.0004820823669433594,
+                  "name" : "testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRejectsCounterRegressionInWindowBackoffAndCommit",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00035s",
+                  "durationInSeconds" : 0.0003489255905151367,
+                  "name" : "testProductionRecoveryRejectsShortOldOrUninstalledHighProof()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryRejectsShortOldOrUninstalledHighProof()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRejectsShortOldOrUninstalledHighProof",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00033s",
+                  "durationInSeconds" : 0.0003319978713989258,
+                  "name" : "testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00039s",
+                  "durationInSeconds" : 0.00039196014404296875,
+                  "name" : "testProductionRecoveryRenewsOnceAfterPublishedHighAndStopsAtFour()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryRenewsOnceAfterPublishedHighAndStopsAtFour()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryRenewsOnceAfterPublishedHighAndStopsAtFour",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00033s",
+                  "durationInSeconds" : 0.0003330707550048828,
+                  "name" : "testProductionRecoveryUsesDynamicBandwidthAndTwoWindows()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProductionRecoveryUsesDynamicBandwidthAndTwoWindows()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryUsesDynamicBandwidthAndTwoWindows",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.22s",
+                  "durationInSeconds" : 0.2245349884033203,
+                  "name" : "testProxyCancellationCannotInvalidateSessionDuringTaskAdmission()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyCancellationCannotInvalidateSessionDuringTaskAdmission()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyCancellationCannotInvalidateSessionDuringTaskAdmission",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0008s",
+                  "durationInSeconds" : 0.0007959604263305664,
+                  "name" : "testProxyCancellationCauseIsFixedBeforeDeferredObserverDelivery()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyCancellationCauseIsFixedBeforeDeferredObserverDelivery()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyCancellationCauseIsFixedBeforeDeferredObserverDelivery",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00098s",
+                  "durationInSeconds" : 0.0009829998016357422,
+                  "name" : "testProxyPreparedCancellationStillWaitsForTaskSettlement()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyPreparedCancellationStillWaitsForTaskSettlement()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyPreparedCancellationStillWaitsForTaskSettlement",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.038s",
+                  "durationInSeconds" : 0.037513017654418945,
+                  "name" : "testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "Thread running at User-interactive quality-of-service class waiting on a lower QoS thread running at Utility quality-of-service class. Investigate ways to avoid priority inversions",
+                      "nodeType" : "Runtime Warning",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+                        "lineNumber" : 4359
+                      }
+                    }
+                  ],
+                  "duration" : "0.62s",
+                  "durationInSeconds" : 0.6177070140838623,
+                  "name" : "testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.021s",
+                  "durationInSeconds" : 0.021273016929626465,
+                  "name" : "testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00038s",
+                  "durationInSeconds" : 0.0003839731216430664,
+                  "name" : "testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00032s",
+                  "durationInSeconds" : 0.00032198429107666016,
+                  "name" : "testProxyTransactionDurationPreservesUnavailableAndInvalidDates()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyTransactionDurationPreservesUnavailableAndInvalidDates()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyTransactionDurationPreservesUnavailableAndInvalidDates",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0073s",
+                  "durationInSeconds" : 0.007345080375671387,
+                  "name" : "testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.029s",
+                  "durationInSeconds" : 0.029217004776000977,
+                  "name" : "testRecoveryCommitRefusalKeepsOldOutputAndSecondAttemptBudget()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRecoveryCommitRefusalKeepsOldOutputAndSecondAttemptBudget()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRecoveryCommitRefusalKeepsOldOutputAndSecondAttemptBudget",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0015s",
+                  "durationInSeconds" : 0.0014619827270507812,
+                  "name" : "testRetiredSourceDeadlineCannotCancelFreshSourceRecovery()",
+                  "nodeIdentifier" : "YlDashResourceLoaderTests/testRetiredSourceDeadlineCannotCancelFreshSourceRecovery()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testRetiredSourceDeadlineCannotCancelFreshSourceRecovery",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlDashResourceLoaderTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

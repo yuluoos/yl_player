@@ -184,10 +184,19 @@ Two consecutive 8-second windows must each include at least three media requests
 and measured throughput at least 1.25 times the highest available variant's
 combined video/audio bandwidth. Unknown or ambiguous output geometry is ineligible.
 
-Each committed Load owns at most two reservations, delayed by at least 500 and
-1000 ms. Cancellation and failure consume the reservation; replacing an item or
-issuing playback commands does not refund it. A new committed session receives a
-new budget even when a caller reuses a Load request label. Preparation is bounded
+Each committed Load initially allows two reservations and can unlock one further
+round of two, for a lifetime maximum of four. After a successful installation,
+renewal requires at least 48 consecutive actual high-rendition texture publications
+spanning two seconds, with advancing position and no publication gap above 0.5s.
+Intent/credential changes discard the publication window. Presentation size alone
+cannot renew the budget. Every reservation is at least 30 seconds after the last;
+bandwidth qualification continues during cooldown. Ticket backoff remains 500 ms
+for the first source attempt and 1000 ms thereafter.
+
+Cancellation and failure consume the reservation; replacing an item or issuing
+playback commands never refunds it. Four exhausted reservations prohibit further
+automatic reconstruction. A new committed session receives a new budget even
+when a caller reuses a Load request label. Preparation is bounded
 to 2 seconds, and commit rechecks the session, item, intent, eligibility and
 credential revision. Pause, seek, track/policy commands, a new Load, deactivation
 and foreground loss cancel pending work. Audio-route removal still pauses playback.

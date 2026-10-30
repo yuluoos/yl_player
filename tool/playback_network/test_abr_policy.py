@@ -123,7 +123,8 @@ class PolicyEvidenceTests(unittest.TestCase):
         self.assertIsNone(fn([{}, {}]))
         self.assertEqual(fn([{'policySamplingVersion': 1}] * 2), 1)
         self.assertEqual(fn([{'policySamplingVersion': 2}] * 2), 2)
-        for rows in [[{'policySamplingVersion': 3}], [{'policySamplingVersion': 1}, {'policySamplingVersion': 2}], [{'policySamplingVersion': True}],
+        self.assertEqual(fn([{'policySamplingVersion': 3}] * 2), 3)
+        for rows in [[{'policySamplingVersion': 4}], [{'policySamplingVersion': 1}, {'policySamplingVersion': 2}], [{'policySamplingVersion': True}],
                      [{'policySamplingVersion': 1}, {}], [{'policySamplingVersion': None}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): fn(rows)
 

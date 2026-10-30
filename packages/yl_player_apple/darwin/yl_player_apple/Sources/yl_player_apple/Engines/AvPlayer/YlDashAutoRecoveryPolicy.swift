@@ -12,6 +12,9 @@ struct YlDashAutoRecoveryPolicy {
     let bytes: Int64, transfer: Double, requests: Int, overdue: Int
     var intentRevision: UInt64 = 0
     var credentialRevision: UInt64 = 0
+    var highFrameCount = 0
+    var highFrameSeconds = 0.0
+    var highFrameStart: Double?
   }
   struct Ticket {
     let id: UUID, generation: UInt64, attempt: Int, due: Double
@@ -19,6 +22,9 @@ struct YlDashAutoRecoveryPolicy {
     let catalog: [Variant]
   }
   private(set) var attempts = 0
+  private(set) var roundLimit = 2
+  private var lastReservation: Double?
+  private var lastInstallation: Double?
   private(set) var decision: [String: Any] = [:]
   private var generation: UInt64?
   private var intentRevision: UInt64?
@@ -61,6 +67,11 @@ struct YlDashAutoRecoveryPolicy {
         "width": s.current?.width ?? 0, "position": finite(s.position), "remaining": finite(s.remaining),
         "bufferAhead": finite(s.bufferAhead), "bytes": s.bytes, "transfer": finite(s.transfer),
         "requests": s.requests, "overdue": s.overdue, "reason": reason, "attempts": attempts,
+        "budgetVersion": 2, "roundLimit": roundLimit,
+        "lastReservation": lastReservation.map(finite) ?? NSNull(),
+        "lastInstallation": lastInstallation.map(finite) ?? NSNull(),
+        "highFrameCount": s.highFrameCount, "highFrameSeconds": s.highFrameSeconds,
+        "highFrameStart": s.highFrameStart.map(finite) ?? NSNull(),
         "qualifiedWindows": windows, "sawHigh": sawHigh,
         "windowBitrate": windowBitrate.map(finite) ?? NSNull(),
         "windowRequests": windowRequests as Any? ?? NSNull(),
@@ -83,7 +94,14 @@ struct YlDashAutoRecoveryPolicy {
     }
     let previous = last
     last = s
-    if s.current == target { reason = "highOutput"; sawHigh = true; anchor = nil; windows = 0; pending = nil; return nil }
+    if s.current == target {
+      reason = "highOutput"; sawHigh = true; anchor = nil; windows = 0; pending = nil
+      if attempts == 2, let installed = lastInstallation, let start = s.highFrameStart,
+         start >= installed, s.highFrameCount >= 48, s.highFrameSeconds >= 2 {
+        roundLimit = 4
+      }
+      return nil
+    }
     guard sawHigh, let target, let current = s.current, current.bandwidth < target.bandwidth, s.overdue > 0 else { reason = !sawHigh ? "highNotObserved" : (s.overdue == 0 ? "noOverdue" : "notLowOutput"); anchor = nil; windows = 0; pending = nil; return nil }
     if let previous, s.bytes < previous.bytes || s.transfer < previous.transfer || s.requests < previous.requests {
       reason = "countersReset"
@@ -95,12 +113,16 @@ struct YlDashAutoRecoveryPolicy {
       reason = "ticketReady"
       self.pending = nil; inFlight = pending; return pending
     }
-    guard inFlight == nil, attempts < 2 else { reason = inFlight != nil ? "inFlight" : "budgetExhausted"; return nil }
+    guard inFlight == nil, attempts < roundLimit else { reason = inFlight != nil ? "inFlight" : "budgetExhausted"; return nil }
     guard let start = anchor else { reason = "windowStarted"; anchor = s; return nil }
     guard s.bytes >= start.bytes, s.transfer >= start.transfer, s.requests >= start.requests else {
       reason = "countersReset"; anchor = s; windows = 0; return nil
     }
-    guard s.time - start.time >= 8 else { reason = "windowPending"; return nil }
+    if windows == 2, let reserved = lastReservation, s.time >= reserved + 30,
+       s.time - start.time < 8 {
+      reason = "reserved"; reserve(s); return nil
+    }
+    guard s.time - start.time >= 8 else { reason = windows == 2 ? "cooldown" : "windowPending"; return nil }
     anchor = s
     let duration = s.transfer - start.transfer
     let bitrate = duration > 0 ? Double(s.bytes - start.bytes) * 8 / duration : 0
@@ -110,13 +132,18 @@ struct YlDashAutoRecoveryPolicy {
       reason = s.position <= start.position ? "noProgress" : (s.requests - start.requests < 3 ? "insufficientRequests" : "insufficientBandwidth")
       windows = 0; return nil
     }
-    windows += 1
+    windows = min(2, windows + 1)
     guard windows >= 2 else { reason = "firstQualifiedWindow"; return nil }
+    if let reserved = lastReservation, s.time < reserved + 30 { reason = "cooldown"; return nil }
     reason = "reserved"
+    reserve(s)
+    return nil
+  }
+  private mutating func reserve(_ s: Sample) {
     attempts += 1; windows = 0; anchor = nil
+    lastReservation = s.time
     pending = Ticket(id: UUID(), generation: s.generation, attempt: attempts,
       due: s.time + (attempts == 1 ? 0.5 : 1.0), intentRevision: s.intentRevision, credentialRevision: s.credentialRevision, catalog: s.catalog)
-    return nil
   }
   func authorizes(_ ticket: Ticket, _ s: Sample) -> Bool {
     eligible(s) && last.map {
@@ -125,8 +152,35 @@ struct YlDashAutoRecoveryPolicy {
     } == true && s.catalog == ticket.catalog && s.current.map { $0.bandwidth < (target?.bandwidth ?? 0) } == true && s.generation == ticket.generation && s.intentRevision == ticket.intentRevision && s.credentialRevision == ticket.credentialRevision &&
       inFlight?.id == ticket.id && s.time >= ticket.due && s.time <= ticket.due + 5
   }
-  mutating func finish(_ ticket: Ticket) {
+  mutating func finish(_ ticket: Ticket, installedAt: Double? = nil) {
     guard inFlight?.id == ticket.id else { return }
+    if let installedAt { lastInstallation = installedAt }
     inFlight = nil; anchor = nil; windows = 0
+  }
+}
+
+/// Consecutive texture publications, not presentationSize or timer samples.
+struct YlDashPublishedOutputWindow {
+  private(set) var count = 0
+  private(set) var start: Double?
+  private var lastTime = 0.0, lastPosition = 0.0
+  private var generation: UInt64 = 0
+  private var width = 0, height = 0
+
+  mutating func observe(time: Double, position: Double, generation: UInt64,
+    width: Int, height: Int, playing: Bool) {
+    guard playing, time.isFinite, position.isFinite else { self = .init(); return }
+    if count == 0 || self.generation != generation || self.width != width || self.height != height ||
+       time <= lastTime || time - lastTime > 0.5 || position <= lastPosition {
+      count = 0; start = time
+    }
+    count += 1; lastTime = time; lastPosition = position
+    self.generation = generation; self.width = width; self.height = height
+  }
+
+  func evidence(now: Double, generation: UInt64, width: Int, height: Int) -> (count: Int, seconds: Double, start: Double?) {
+    guard let start, self.generation == generation, self.width == width, self.height == height,
+      now >= lastTime, now - lastTime <= 0.5 else { return (0, 0, nil) }
+    return (count, lastTime - start, start)
   }
 }

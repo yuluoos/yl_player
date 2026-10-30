@@ -1,0 +1,51 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "modelName" : "iPhone 16",
+        "osBuildNumber" : "24B119",
+        "osVersion" : "27.2",
+        "platform" : "iOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 1,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 1,
+  "finishTime" : 1793337090.449,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793337045.524,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "Failed to load the test bundle. (Underlying Error: The bundle “RunnerTests” couldn’t be loaded. The bundle couldn’t be loaded. Try reinstalling the bundle. dlopen(/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests, 0x0109): tried: '/System/Developer/usr/lib/RunnerTests' (no such file), '/System/Developer/usr/lib/RunnerTests' (no such file), '/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests' (missing code signature in <3090ABB4-E8B9-37F2-AABF-8907A74B35BD> '/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests'), '/private/preboot/Cryptexes/OS/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests' (no such file), '/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests' (missing code signature in <3090ABB4-E8B9-37F2-AABF-8907A74B35BD> '/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests'), '/System/Developer/usr/lib/RunnerTests' (no such file), '/System/Developer/usr/lib/RunnerTests' (no such file), '/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests' (missing code signature in <3090ABB4-E8B9-37F2-AABF-8907A74B35BD> '/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests'), '/private/preboot/Cryptexes/OS/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests' (no such file), '/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests' (missing code signature in <3090ABB4-E8B9-37F2-AABF-8907A74B35BD> '/private/var/containers/Bundle/Application/125C3DF2-63EE-4078-9566-B8B9F0A4A157/Runner.app/PlugIns/RunnerTests.xctest/RunnerTests'))",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "Runner (3198) encountered an error",
+      "testName" : "Runner (3198) encountered an error"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+
+  ],
+  "totalTestCount" : 1
+}

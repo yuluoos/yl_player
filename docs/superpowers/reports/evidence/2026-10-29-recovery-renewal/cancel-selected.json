@@ -1,0 +1,11 @@
+[
+  "YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+  "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+  "YlDashResourceLoaderTests/testProxyRequestTimingSealsCancellationAndIgnoresLateSendCompletion()",
+  "YlDashResourceLoaderTests/testProxyCancellationCauseIsFixedBeforeDeferredObserverDelivery()",
+  "YlDashResourceLoaderTests/testProxyPreparedCancellationStillWaitsForTaskSettlement()",
+  "YlDashResourceLoaderTests/testProxyTransactionDurationPreservesUnavailableAndInvalidDates()",
+  "YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+  "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+  "YlDashResourceLoaderTests/testProxyCancellationCannotInvalidateSessionDuringTaskAdmission()"
+]

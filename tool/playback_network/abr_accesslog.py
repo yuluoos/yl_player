@@ -16,6 +16,7 @@ from xml.parsers.expat import ExpatError
 from network_profile import load_profiles, make_server, owned_bind_host
 from prepare_fixture import create
 import abr_device
+from budget_renewal import summarize_policy_v3, summarize_budget_renewal
 
 
 def production_sessions(rows):
@@ -65,10 +66,12 @@ def summarize_production_race(rows, frames, policy):
     else:
         require(e.get('itemUnchanged') is True and len(sessions)==1)
         events=rows[-1].get('automaticEvents')
-        require(isinstance(events,list) and len(events)==2 and events[0]==first)
+        maximum=rows[-1].get('automaticAttempts') if policy_trace_version(rows)==3 else 2
+        require(type(maximum) is int and 2<=maximum<=4 and isinstance(events,list) and len(events)==maximum and events[0]==first)
+        require([v.get('attempt') for v in events]==list(range(1,maximum+1)))
         require(events[1].get('attempt')==2 and events[1].get('outcome')=='installed' and events[1]['elapsed']>times[3])
-        require(rows[-1].get('automaticAttempts')==2 and policy.get('attempts')==policy.get('reservations')==policy.get('tickets')==2)
-        require([a.get('attempt') for a in policy.get('ticketAuthorities',[])]==[1,2])
+        require(rows[-1].get('automaticAttempts')==maximum and policy.get('attempts')==policy.get('reservations')==policy.get('tickets')==maximum)
+        require([a.get('attempt') for a in policy.get('ticketAuthorities',[])]==list(range(1,maximum+1)))
     start=times[2]
     if command=='pause-prepared':
         require(e.get('pauseAcknowledged') is True and e.get('resumed') is True and e.get('itemUnchangedBeforeResume') is True)
@@ -108,10 +111,12 @@ def summarize_production_command(rows, policy):
         r.get('hostStatus') == 'paused' and abs(r['position']-e['pausePosition']) <= .05 and
         r.get('automaticAttempts') == 1 and not r.get('automaticEvents') for r in paused))
     events = rows[-1].get('automaticEvents')
-    require(rows[-1].get('automaticAttempts') == 2 and isinstance(events, list) and len(events) == 1)
+    maximum = rows[-1].get('automaticAttempts') if policy_trace_version(rows)==3 else 2
+    require(type(maximum) is int and 2<=maximum<=4 and isinstance(events,list) and len(events)==maximum-1)
     require(events[0].get('attempt') == 2 and events[0].get('outcome') == 'installed' and events[0]['elapsed'] > e['resumeCompleted'])
-    require(isinstance(policy, dict) and policy.get('reservations') == 2 and policy.get('tickets') == 1 and policy.get('attempts') == 2)
-    require([t.get('attempt') for t in policy.get('ticketAuthorities', [])] == [2])
+    require(rows[-1].get('automaticAttempts')==maximum and [v.get('attempt') for v in events]==list(range(2,maximum+1)))
+    require(isinstance(policy,dict) and policy.get('reservations')==maximum and policy.get('tickets')==maximum-1 and policy.get('attempts')==maximum)
+    require([t.get('attempt') for t in policy.get('ticketAuthorities',[])]==list(range(2,maximum+1)))
     return dict(cancelledReservationPreserved=True, secondAttemptInstalled=True, pausedSamples=len(paused), capabilityAccepted=False)
 
 
@@ -127,6 +132,9 @@ def production_recovery(args):
     exhausted = getattr(args, 'require_budget_exhaustion', False)
     if type(exhausted) is not bool or (exhausted and (not enabled or not required or command not in ('pause-resume','pause-prepared'))):
         raise ValueError('budget exhaustion requires same-source production cancellation and installation')
+    renewal = getattr(args, 'require_budget_renewal', False)
+    if type(renewal) is not bool or (renewal and (exhausted or not enabled or not required or command not in ('pause-resume','pause-prepared'))):
+        raise ValueError('budget renewal requires same-source production cancellation and installation; cannot combine with budget exhaustion')
     if not enabled: return False
     if (not getattr(args, 'physical_device', None) or getattr(args, 'duration_seconds', None) != 120 or
         getattr(args, 'recovery_action', None) != 'auto-reload' or getattr(args, 'auto_scenario', None) != 'normal' or
@@ -175,7 +183,7 @@ def policy_trace_version(rows):
     if not any(isinstance(row, dict) and 'policySamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('policySamplingVersion')) is int and
-               row['policySamplingVersion'] in (1,2) and row['policySamplingVersion'] == rows[0]['policySamplingVersion'] for row in rows):
+               row['policySamplingVersion'] in (1,2,3) and row['policySamplingVersion'] == rows[0]['policySamplingVersion'] for row in rows):
         raise ValueError('inconsistent or unsupported policy sampling version')
     return rows[0]['policySamplingVersion']
 
@@ -313,7 +321,7 @@ def summarize_policy(rows, *, expected_attempts):
 
 def validate_recovery_authority(rows, policy):
     """V2 binds every observed candidate to its transport/credential authority."""
-    if policy_trace_version(rows) != 2: return
+    if policy_trace_version(rows) not in (2,3): return
     def require(value):
         if not value: raise ValueError('invalid recovery credential authority')
     require(isinstance(policy,dict))
@@ -352,14 +360,15 @@ def summarize(rows, *, expected_duration_seconds=None, expected_transport=None, 
             previous = 0
             load_race=rows[-1].get('productionCommand')=='load-prepared'
             sessions=production_sessions(rows) if load_race else None
+            maximum = 4 if policy_trace_version(rows) == 3 else 2
             final = rows[-1].get('automaticEvents')
-            require(isinstance(final, list) and len(final) <= 2)
+            require(isinstance(final, list) and len(final) <= maximum)
             prior_session=None
             for row in rows:
                 if load_race and row['sessionId']!=prior_session: previous=0
                 prior_session=row.get('sessionId')
                 budget = row.get('automaticAttempts')
-                require(type(budget) is int and previous <= budget <= 2)
+                require(type(budget) is int and previous <= budget <= maximum)
                 previous = budget
                 expected = rows[-1]['productionCommandEvents']['oldEvents'] if load_race and row['sessionId']==sessions[0] else final
                 events = row.get('automaticEvents')
@@ -854,6 +863,7 @@ def run(args):
 
         receipt['productionInstallRequired'] = getattr(args, 'require_production_install', False)
         receipt['budgetExhaustionRequired'] = getattr(args, 'require_budget_exhaustion', False)
+        receipt['budgetRenewalRequired'] = getattr(args, 'require_budget_renewal', False)
         cycle = public_policy_cycle(args)
         race = public_policy_race(args)
         receipt['publicPolicyRace'] = race
@@ -976,7 +986,15 @@ def run(args):
             receipt['triggeredFaultObservation']=summarize_trigger(server.shaper.snapshot(),
                 json.loads((out/'fault-trigger.json').read_text()),rows,read_rows(out/'frame-samples.jsonl'))
         policy_version = policy_trace_version(rows)
-        if recovery_action == 'auto-reload' and policy_version in (1,2):
+        if receipt['budgetExhaustionRequired'] and policy_version == 3:
+            receipt['budgetRequirementFailure']='--require-budget-exhaustion requires historical policy v2; use --require-budget-renewal for v3'
+            raise ValueError(receipt['budgetRequirementFailure'])
+        if receipt['budgetRenewalRequired'] and policy_version != 3:
+            receipt['budgetRequirementFailure']='--require-budget-renewal requires policy v3'
+            raise ValueError(receipt['budgetRequirementFailure'])
+        if policy_version == 3 and not production:
+            raise ValueError('policy v3 requires production capture')
+        if recovery_action == 'auto-reload' and policy_version in (1,2,3):
             decisions=read_rows(out/'policy-decisions.jsonl')
             if production and getattr(args,'production_command','none')=='load-prepared':
                 sessions=production_sessions(rows); summaries={}
@@ -987,11 +1005,18 @@ def run(args):
                     if index==0:
                         selected[-1]['automaticEvents']=rows[-1]['productionCommandEvents']['oldEvents']
                         selected[-1]['automaticAttempts']=1
-                    summaries[session]=summarize_policy([d for d in decisions if d['sessionId']==session],expected_attempts=selected[-1]['automaticAttempts'])
+                    session_decisions=[d for d in decisions if d['sessionId']==session]
+                    summaries[session]=(summarize_policy_v3(session_decisions,expected_attempts=selected[-1]['automaticAttempts'],
+                        events=selected[-1]['automaticEvents'],frames=read_rows(out/'frame-samples.jsonl')) if policy_version==3 else
+                        summarize_policy(session_decisions,expected_attempts=selected[-1]['automaticAttempts']))
                     validate_recovery_authority(selected,summaries[session])
                 receipt['policyObservation']={'sessions':summaries,'capabilityAccepted':False}
             else:
-                receipt['policyObservation'] = summarize_policy(decisions, expected_attempts=rows[-1]['automaticAttempts'])
+                if policy_version==3 and any(d.get('sessionId')!=rows[-1].get('sessionId') for d in decisions):
+                    raise ValueError('unbound v3 policy session')
+                receipt['policyObservation'] = (summarize_policy_v3(decisions, expected_attempts=rows[-1]['automaticAttempts'],
+                    events=rows[-1]['automaticEvents'],frames=read_rows(out/'frame-samples.jsonl')) if policy_version==3 else
+                    summarize_policy(decisions, expected_attempts=rows[-1]['automaticAttempts']))
                 validate_recovery_authority(rows,receipt['policyObservation'])
         # Keep valid publication evidence even when playback never reaches EOF.
         receipt['continuityObservation'] = summarize_frames(read_rows(out/'frame-samples.jsonl'),
@@ -1011,6 +1036,10 @@ def run(args):
             if read_rows(out/'signals.jsonl'): raise ValueError('budget capture interrupted')
             receipt['budgetExhaustionObservation'] = summarize_budget_exhaustion(rows, read_rows(out/'frame-samples.jsonl'),
                 read_rows(out/'policy-decisions.jsonl'))
+        if receipt['budgetRenewalRequired']:
+            if read_rows(out/'signals.jsonl'): raise ValueError('budget capture interrupted')
+            receipt['budgetRenewalObservation'] = summarize_budget_renewal(rows,read_rows(out/'frame-samples.jsonl'),
+                read_rows(out/'policy-decisions.jsonl'),receipt['policyObservation'])
         if production:
             receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'),
                 require_install=receipt['productionInstallRequired'])
@@ -1104,7 +1133,9 @@ def main():
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--production-command', choices=('none', 'pause-resume', 'pause-prepared', 'seek-prepared', 'load-prepared'), default='none')
-    p.add_argument('--require-budget-exhaustion', action='store_true', help='require a second downshift after attempt two, eligible windows and no third reservation')
+    budget_requirements = p.add_mutually_exclusive_group()
+    budget_requirements.add_argument('--require-budget-renewal', action='store_true', help='require v3 exhausted first round, real high-frame renewal, and successful attempt three after a second downshift')
+    budget_requirements.add_argument('--require-budget-exhaustion', action='store_true', help='require a second downshift after attempt two, eligible windows and no third reservation')
     p.add_argument('--require-production-install', action='store_true', help='fail unless same-session production recovery actually installs; incompatible with new Load')
     p.add_argument('--production-recovery', action='store_true', help='observe automatic production public-host recovery; no diagnostic installation')
     p.add_argument('--public-policy-race', action='store_true',

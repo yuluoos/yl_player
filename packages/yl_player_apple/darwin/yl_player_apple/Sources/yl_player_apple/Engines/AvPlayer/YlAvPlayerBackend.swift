@@ -242,6 +242,9 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   private var resetting = false
   private var disposed = false
   private var firstFrameSent = false
+  private var recoveryOutputWindow = YlDashPublishedOutputWindow()
+  private var recoveryOutputIntent: UInt64?
+  private var recoveryOutputCredential: UInt64?
   private var playRequested = false
   // AVPlayer rate observations may arrive after pause/item retirement. Native
   // output cannot recreate playback intent once this backend is inactive.
@@ -1238,6 +1241,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     // Current-Period reconciliation can synchronously install automatic output.
     guard generation == itemGeneration else { return }
     services.textureOutput.publish(buffer)
+    recoveryOutputWindow.observe(time: ProcessInfo.processInfo.systemUptime,
+      position: CMTimeGetSeconds(player.currentTime()), generation: generation,
+      width: CVPixelBufferGetWidth(buffer), height: CVPixelBufferGetHeight(buffer),
+      playing: active && playRequested && player.rate > 0 && pendingUserSeek == nil && pendingRuntimeResume == nil)
     framePublished = true
     if !firstFrameSent {
       firstFrameSent = true
@@ -1773,6 +1780,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
   /// Ambiguous geometry or a non-legacy DASH path has no recovery authority.
   var dashRecoveryItemGeneration: UInt64 { itemGeneration }
   func dashRecoverySample(now: Double, intentRevision: UInt64, credentialRevision: UInt64) -> YlDashAutoRecoveryPolicy.Sample? {
+    if recoveryOutputIntent != intentRevision || recoveryOutputCredential != credentialRevision {
+      recoveryOutputWindow = .init()
+      recoveryOutputIntent = intentRevision; recoveryOutputCredential = credentialRevision
+    }
     guard let item = player.currentItem, let source = lastSource,
       let catalog = dashVideoCatalog, hlsResourceLoader != nil,
       !source.isLive, !source.airPlay, source.drm == nil,
@@ -1808,12 +1819,17 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       && qualityConstraint == .unconstrained && videoSelection.fixedTrackId == nil
       && item.preferredPeakBitRate == 0 && item.preferredMaximumResolution == .zero
       && !player.isExternalPlaybackActive
+    if !allowed { recoveryOutputWindow = .init() }
+    let target = variants.max { $0.bandwidth < $1.bandwidth }
+    let proof = target.map { recoveryOutputWindow.evidence(now: now, generation: itemGeneration,
+      width: $0.width, height: $0.height) } ?? (count: 0, seconds: 0, start: nil)
     return .init(time: now, generation: itemGeneration, allowed: allowed,
       catalog: variants, current: current, position: position, remaining: duration - position,
       bufferAhead: YlDashAutoRecoveryPolicy.contiguousAhead(position: position, ranges: item.loadedTimeRanges.map {
         (CMTimeGetSeconds($0.timeRangeValue.start), CMTimeGetSeconds(CMTimeRangeGetEnd($0.timeRangeValue)))
       }), bytes: bytes, transfer: logs.reduce(0) { $0 + $1.transferDuration }, requests: requests, overdue: overdue,
-      intentRevision: intentRevision, credentialRevision: credentialRevision)
+      intentRevision: intentRevision, credentialRevision: credentialRevision,
+      highFrameCount: proof.count, highFrameSeconds: proof.seconds, highFrameStart: proof.start)
   }
 
   private func emitStateDelta() {

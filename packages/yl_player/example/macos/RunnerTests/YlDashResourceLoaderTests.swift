@@ -712,15 +712,92 @@ final class YlDashResourceLoaderTests: XCTestCase {
     p.invalidateIntent()
     XCTAssertFalse(p.authorizes(first, productionSample(18)))
     for t in [18.0, 26, 34] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    XCTAssertEqual(p.attempts, 1)
+    XCTAssertEqual(p.decision["reason"] as? String, "cooldown")
+    for t in [42.0, 46.99, 47] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
     XCTAssertEqual(p.attempts, 2)
-    XCTAssertNil(p.observe(productionSample(34.99, intent: 1)))
-    let second = try XCTUnwrap(p.observe(productionSample(35, intent: 1)))
-    XCTAssertEqual(second.due, 35)
+    XCTAssertNil(p.observe(productionSample(47.99, intent: 1)))
+    let second = try XCTUnwrap(p.observe(productionSample(48, intent: 1)))
+    XCTAssertEqual(second.due, 48)
     p.finish(second)
-    for t in [36.0, 44, 52, 60] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    for t in [49.0, 57, 65, 73] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
     XCTAssertEqual(p.attempts, 2)
     p = YlDashAutoRecoveryPolicy()
     XCTAssertEqual(p.attempts, 0)
+  }
+
+  func testProductionRecoveryRenewsOnceAfterPublishedHighAndStopsAtFour() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    func high(_ time: Double, start: Double) -> YlDashAutoRecoveryPolicy.Sample {
+      var s = productionSample(time, high: true)
+      s.highFrameCount = 60; s.highFrameSeconds = 2; s.highFrameStart = start
+      return s
+    }
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    p.finish(try XCTUnwrap(p.observe(productionSample(17.5))), installedAt: 17.6)
+    _ = p.observe(high(20, start: 18))
+    XCTAssertEqual(p.roundLimit, 2)
+    for t in [21.0, 29, 37, 45, 47] { _ = p.observe(productionSample(t)) }
+    p.finish(try XCTUnwrap(p.observe(productionSample(48))), installedAt: 48.1)
+    XCTAssertEqual(p.attempts, 2)
+    _ = p.observe(high(51, start: 49))
+    XCTAssertEqual(p.roundLimit, 4)
+    XCTAssertEqual(p.attempts, 2, "Renewal never refunds source reservations")
+    for t in [52.0, 60, 68, 76, 77] { _ = p.observe(productionSample(t)) }
+    let third = try XCTUnwrap(p.observe(productionSample(78)))
+    XCTAssertEqual(third.attempt, 3)
+    p.finish(third, installedAt: 78.1)
+    _ = p.observe(high(81, start: 79))
+    for t in [82.0, 90, 98, 106, 107] { _ = p.observe(productionSample(t)) }
+    p.finish(try XCTUnwrap(p.observe(productionSample(108))), installedAt: 108.1)
+    _ = p.observe(high(111, start: 109))
+    p.invalidateIntent()
+    for t in [112.0, 120, 128, 136] { XCTAssertNil(p.observe(productionSample(t, intent: 1))) }
+    XCTAssertEqual(p.attempts, 4)
+    XCTAssertEqual(p.decision["reason"] as? String, "budgetExhausted")
+  }
+
+  func testProductionRecoveryRejectsShortOldOrUninstalledHighProof() throws {
+    var p = YlDashAutoRecoveryPolicy()
+    for t in [0.0, 1, 9, 17] { _ = p.observe(productionSample(t, high: t == 0)) }
+    p.finish(try XCTUnwrap(p.observe(productionSample(17.5))))
+    for t in [18.0, 26, 34, 42, 47] { _ = p.observe(productionSample(t)) }
+    let second = try XCTUnwrap(p.observe(productionSample(48)))
+    let pending = p
+    for invalid in ["no-install", "short", "few", "old", "missing"] {
+      var policy = pending
+      policy.finish(second, installedAt: invalid == "no-install" ? nil : 48.1)
+      var s = productionSample(51, high: true)
+      s.highFrameCount = invalid == "few" ? 47 : 60
+      s.highFrameSeconds = invalid == "short" ? 1.999 : 2
+      s.highFrameStart = invalid == "missing" ? nil : (invalid == "old" ? 48 : 49)
+      _ = policy.observe(s)
+      XCTAssertEqual(policy.roundLimit, 2, invalid)
+      XCTAssertEqual(policy.attempts, 2, invalid)
+    }
+  }
+
+  func testProductionRecoveryHighProofRequiresConsecutivePublishedFrames() {
+    var window = YlDashPublishedOutputWindow()
+    for index in 0..<48 {
+      window.observe(time: Double(index)/24, position: Double(index)/24,
+        generation: 1, width: 640, height: 360, playing: true)
+    }
+    XCTAssertLessThan(window.evidence(now: 2, generation: 1, width: 640, height: 360).seconds, 2)
+    window.observe(time: 2, position: 2, generation: 1, width: 640, height: 360, playing: true)
+    let proof = window.evidence(now: 2, generation: 1, width: 640, height: 360)
+    XCTAssertEqual(proof.count, 49); XCTAssertEqual(proof.seconds, 2)
+    XCTAssertEqual(window.evidence(now: 2.501, generation: 1, width: 640, height: 360).count, 0)
+    XCTAssertEqual(window.evidence(now: 2, generation: 2, width: 640, height: 360).count, 0)
+    XCTAssertEqual(window.evidence(now: 2, generation: 1, width: 320, height: 180).count, 0)
+    for invalid in ["pause", "gap", "position", "generation", "size"] {
+      var broken = window
+      broken.observe(time: invalid == "gap" ? 2.501 : 2.04,
+        position: invalid == "position" ? 2 : 2.04,
+        generation: invalid == "generation" ? 2 : 1,
+        width: invalid == "size" ? 320 : 640, height: 360, playing: invalid != "pause")
+      XCTAssertLessThanOrEqual(broken.count, 1, invalid)
+    }
   }
 
   func testProductionRecoveryRejectsStaleUnsafeAndExpiredCommit() throws {
@@ -1470,7 +1547,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         host.onDashRecoveryDecision = { [weak host] decision in
           var row = decision
           row["sessionId"] = publicSessionId ?? ""
-          for key in ["elapsed", "pendingDue"] {
+          for key in ["elapsed", "pendingDue", "lastReservation", "lastInstallation", "highFrameStart"] {
             if let value = row[key] as? Double { row[key] = value - productionEpoch }
           }
           do { try productionPolicyFile?.write(contentsOf: JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])) }
@@ -1756,7 +1833,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
         "autoScenario": autoScenario, "textureClears": output.clears, "captureDeviceKind": captureDeviceKind,
         "proxyRequestSamplingVersion": 7, "proxySamplingVersion": 1, "proxy": backend?.diagnosticProxySnapshot ?? publicHost?.diagnosticProxySnapshot ?? [:],
         "sampleUptime": ProcessInfo.processInfo.systemUptime,
-        "policySamplingVersion": 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
+        "policySamplingVersion": productionRecovery ? 3 : 2, "backendStatus": states.last?.status as Any? ?? NSNull(),
         "backendFailureCode": backendFailure as Any? ?? NSNull(),
         "completed": reachedEnd, "framesPublished": frameCount,
         "transport": direct ? "direct-hls-control" : "managed-dash", "programmeDurationSeconds": programmeSeconds]
@@ -2670,17 +2747,17 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let started = expectation(description: "second preparation held"), installed = expectation(description: "second installed")
     let release = DispatchSemaphore(value: 0); defer { release.signal() }
     controller.onEvent = { _ in installed.fulfill() }
-    for t in [20.0, 28, 36, 36.99] { tick(t, prepared: second) }
+    for t in [20.0, 28, 36, 44, 47, 47.99] { tick(t, prepared: second) }
     XCTAssertEqual(controller.policy.attempts, 2); XCTAssertEqual(preparations, 1)
-    tick(37, prepared: second, held: { started.fulfill(); XCTAssertEqual(release.wait(timeout: .now()+3), .success) })
+    tick(48, prepared: second, held: { started.fulfill(); XCTAssertEqual(release.wait(timeout: .now()+3), .success) })
     await fulfillment(of: [started], timeout: 1)
     XCTAssertEqual(deadlines.count, 2); deadlines[0]()
     XCTAssertEqual(controller.events.count, 1, "Old deadline cannot cancel the second ticket")
     release.signal(); await fulfillment(of: [installed], timeout: 3)
     XCTAssertEqual(controller.events.last?["outcome"] as? String, "installed")
-    XCTAssertEqual(controller.events.last?["due"] as? Double, 37)
+    XCTAssertEqual(controller.events.last?["due"] as? Double, 48)
     XCTAssertFalse(player.currentItem === oldItem); XCTAssertEqual(commits, 2)
-    for t in 38...70 { tick(Double(t), prepared: second) }
+    for t in 49...80 { tick(Double(t), prepared: second) }
     XCTAssertEqual(controller.policy.attempts, 2); XCTAssertEqual(preparations, 2)
     XCTAssertEqual(controller.events.count, 2, "Commit failure never refunds a reservation")
   }
@@ -4407,6 +4484,42 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertNil(rows[0]["serverRequestID"])
     XCTAssertNil(rows[0]["upstreamComplete"])
     XCTAssertEqual(rows[0]["sentBodyBytes"] as? Double, 0)
+  }
+
+  func testProxyCancellationCauseIsFixedBeforeDeferredObserverDelivery() throws {
+    let ownership = NSLock()
+    var rows: [[String: Any]] = []
+    let trace = YlHlsProxyRequestTrace(proxyID: "owned", requestID: 1) { row in
+      let unlocked = ownership.try()
+      XCTAssertTrue(unlocked, "Observer must run after releasing proxy ownership")
+      if unlocked { ownership.unlock() }
+      rows.append(row)
+    }
+    trace.attachTask()
+    trace.taskCompleted(outcome: 1)
+    ownership.lock()
+    let deliver = trace.prepareFinish(outcome: 1, cancelCause: 1)
+    XCTAssertTrue(rows.isEmpty)
+    ownership.unlock()
+    trace.finish(outcome: 1, cancelCause: 4)
+    XCTAssertTrue(rows.isEmpty, "Competing close cannot deliver or overwrite the reserved terminal row")
+    try XCTUnwrap(deliver)()
+    XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows[0]["cancelCause"] as? Int, 1)
+  }
+
+  func testProxyPreparedCancellationStillWaitsForTaskSettlement() {
+    var rows: [[String: Any]] = []
+    let trace = YlHlsProxyRequestTrace(proxyID: "owned", requestID: 1) { rows.append($0) }
+    trace.attachTask()
+    XCTAssertNil(trace.prepareFinish(outcome: 1, cancelCause: 1))
+    trace.finish(outcome: 1, cancelCause: 3, cancelSource: 1, error: .posix(.ECONNRESET))
+    XCTAssertTrue(rows.isEmpty)
+    trace.taskCompleted(outcome: 1)
+    trace.taskCompleted(outcome: 1)
+    XCTAssertEqual(rows.count, 1)
+    XCTAssertEqual(rows[0]["cancelCause"] as? Int, 1)
+    XCTAssertEqual(rows[0]["taskOutcome"] as? Int, 1)
   }
 
   func testProxyTransactionDurationPreservesUnavailableAndInvalidDates() {

@@ -759,4 +759,35 @@ Exit zero means the diagnostic was produced, not that playback passed. Global
 and `physicalOutputVerified` stay false. Zero Foundation byte counts do not prove
 that a cancelled request was never sent. These observations do not replace or
 rewrite the original receipt, explain AVPlayer's private penalty policy, or
-change the two-reservation recovery budget.
+change the recovery budget selected by the production implementation.
+
+Production recovery captures now use `policySamplingVersion: 3`; legacy diagnostic
+captures stay at v2. The independent v3 policy reader requires `budgetVersion: 2`,
+`roundLimit`, `lastReservation`, `lastInstallation`, `highFrameCount`,
+`highFrameSeconds` and `highFrameStart` on every decision. Times use capture
+elapsed seconds. Attempts never decrease: the initial limit is two, and exactly
+one new high-output publication window after a successful install can extend the
+limit to four. The proof requires at least 48 actual publications over two seconds,
+with advancing position, one generation and dimensions, and no gap above 0.5s.
+The collector checks the proof against publication samples, allowing 50ms only at
+sampled window boundaries; it does not treat geometry alone as publication proof.
+
+Every reservation is at least 30 seconds after the preceding reservation.
+Cooldown continues collecting the original consecutive eight-second bandwidth
+windows (three requests, 955000bps, buffer five seconds and remaining twenty
+seconds). Two qualified windows are retained while cooling; a bad window clears
+them. Once cooldown ends, a fresh eligible sample may reserve from retained
+windows with null `windowBitrate`/`windowRequests`. Cancellation and preparation
+failure still spend their reservation. The original ticket backoff, preparation
+deadline and authority/credential checks remain in force.
+
+Use `--require-budget-renewal` with `--production-recovery`,
+`--require-production-install` and `--production-command pause-resume` (or
+`pause-prepared`) for the new repeated-downshift experiment. It requires attempt
+two to install, actual high-frame renewal, a second published downshift on that
+item, and a successful attempt-three installation followed by published high
+frames, without a source or authority reset. The original EOF, final-high,
+transaction and continuity readers still run. This flag is mutually exclusive
+with `--require-budget-exhaustion`; that historical v2 requirement still demands
+no third reservation and explicitly rejects v3 captures. Existing historical
+receipts are unchanged. Neither path certifies physical screen/audio continuity.

@@ -59,12 +59,14 @@ final class YlDashAutoRecoveryController {
     }, completion: { [weak self] result in
       guard let self, self.activeTicket?.id == ticket.id else { return }
       self.activeTicket = nil
-      self.policy.finish(ticket)
-      event["elapsedAfter"] = self.clock()
+      let completedAt = self.clock()
+      event["elapsedAfter"] = completedAt
       switch result {
       case .success:
+        self.policy.finish(ticket, installedAt: completedAt)
         event["outcome"] = "installed"
       case .failure(let error):
+        self.policy.finish(ticket)
         event["outcome"] = error.code == YlOpenCancellationToken.cancellationError().code ? "cancelled" : "preparationFailed"
         event["failureCode"] = error.code
       }
