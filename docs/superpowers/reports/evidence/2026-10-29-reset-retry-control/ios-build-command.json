@@ -1,0 +1,20 @@
+[
+  "xcodebuild",
+  "build-for-testing",
+  "-quiet",
+  "-workspace",
+  "packages/yl_player/example/ios/Runner.xcworkspace",
+  "-scheme",
+  "Runner",
+  "-configuration",
+  "Debug",
+  "-destination",
+  "platform=iOS,id=00008140-000C49CC3493001C",
+  "-derivedDataPath",
+  "/private/tmp/yl-reset-retry-control/ios-build",
+  "-allowProvisioningUpdates",
+  "DEVELOPMENT_TEAM=JAKM34U2X8",
+  "CODE_SIGNING_ALLOWED=YES",
+  "-parallel-testing-enabled",
+  "NO"
+]

@@ -1,0 +1,661 @@
+{
+  "budget-throttle": {
+    "highResets": [],
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "interpretation": "After means admission strictly after recorded termination in device uptime; already outstanding requests and other proxy lifetimes are separate. No requests proves only absence in this capture, not a private penalty timer or future behavior.",
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "C56FF9B6-CA1B-4C50-852B-57E0F59CC2D6",
+        "requestID": 56,
+        "outcome": 2,
+        "cancelSource": 0,
+        "errorDomain": 0,
+        "errorCode": 0
+      }
+    ],
+    "secondPhaseHighFailures": [],
+    "postLastInstallErrorCounts": [
+      0
+    ],
+    "postLastInstallWidths": [
+      0,
+      320,
+      640
+    ],
+    "passed": false
+  },
+  "budget-mild": {
+    "highResets": [
+      {
+        "proxyID": "97C35E8A-7027-4130-9690-73BFAD50F379",
+        "requestID": 57,
+        "source": 1,
+        "sameProxyLaterHighRequests": [],
+        "sameProxySameAssetRetries": [],
+        "otherProxyLaterHighRequests": [
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 11
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 12
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 14
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 17
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 20
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 24
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 25
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 27
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 31
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 33
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 34
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 35
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 36
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 37
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 39
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 41
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 42
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 45
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 48
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 50
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 54
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 55
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 57
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 59
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 61
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 63
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 64
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 67
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 70
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 72
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 74
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 75
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 78
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 81
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 83
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 85
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 86
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 89
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 92
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 94
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 96
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 97
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 100
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 103
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 105
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 107
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 108
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 111
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 114
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 116
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 118
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 119
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 122
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 125
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 127
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 129
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 130
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 133
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 136
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 138
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 140
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 141
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 144
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 147
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 149
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 151
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 152
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 155
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 158
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 160
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 162
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 163
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 167
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 169
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 171
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 173
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 174
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 177
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 180
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 182
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 184
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 185
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 188
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 191
+          },
+          {
+            "proxyID": "66D68DA4-A6BE-4848-9DF0-A2D80CC44C57",
+            "requestID": 193
+          }
+        ],
+        "sameProxyOutstandingHighRequests": []
+      }
+    ],
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "interpretation": "After means admission strictly after recorded termination in device uptime; already outstanding requests and other proxy lifetimes are separate. No requests proves only absence in this capture, not a private penalty timer or future behavior.",
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "97C35E8A-7027-4130-9690-73BFAD50F379",
+        "requestID": 57,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      }
+    ],
+    "secondPhaseHighFailures": [],
+    "postLastInstallErrorCounts": [
+      0
+    ],
+    "postLastInstallWidths": [
+      0,
+      320,
+      640
+    ],
+    "passed": false
+  },
+  "normal": {
+    "highResets": null,
+    "diagnosticUnavailableReason": "proxy successful transaction metrics incomplete",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "86E01D0B-C8E6-4568-9DBB-607E13F8EE04",
+        "requestID": 57,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      },
+      {
+        "proxyID": "930FA9F0-89B5-4102-9CE6-3832D911D915",
+        "requestID": 102,
+        "outcome": 2,
+        "cancelSource": 0,
+        "errorDomain": 0,
+        "errorCode": 0
+      }
+    ],
+    "secondPhaseHighFailures": [
+      {
+        "proxyID": "930FA9F0-89B5-4102-9CE6-3832D911D915",
+        "requestID": 102,
+        "outcome": 2,
+        "cancelSource": 0,
+        "errorDomain": 0,
+        "errorCode": 0
+      }
+    ],
+    "postLastInstallErrorCounts": [
+      0
+    ],
+    "postLastInstallWidths": [
+      0,
+      320,
+      640
+    ],
+    "passed": false
+  },
+  "budget-late-throttle": {
+    "highResets": null,
+    "diagnosticUnavailableReason": "retry evidence requires complete request correlation",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "13AF96C3-9272-4779-83ED-8014A9CF2E66",
+        "requestID": 56,
+        "outcome": 2,
+        "cancelSource": 0,
+        "errorDomain": 0,
+        "errorCode": 0
+      }
+    ],
+    "secondPhaseHighFailures": [],
+    "postLastInstallErrorCounts": [
+      0,
+      2,
+      4,
+      6,
+      7,
+      8,
+      10,
+      12,
+      13
+    ],
+    "postLastInstallWidths": [
+      0
+    ],
+    "passed": false
+  },
+  "budget-late-mild": {
+    "highResets": [
+      {
+        "proxyID": "82142FB3-7E8D-4EA4-9E89-527D768582F2",
+        "requestID": 57,
+        "source": 1,
+        "sameProxyLaterHighRequests": [],
+        "sameProxySameAssetRetries": [],
+        "otherProxyLaterHighRequests": [
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 13
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 14
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 17
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 21
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 23
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 27
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 28
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 31
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 33
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 34
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 35
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 36
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 37
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 39
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 41
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 43
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 44
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 47
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 50
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 52
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 54
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 55
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 58
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 61
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 63
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 65
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 66
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 69
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 72
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 74
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 76
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 77
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 80
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 83
+          },
+          {
+            "proxyID": "261AAD0C-E6FA-4C65-A052-FDCF09C5C50E",
+            "requestID": 85
+          }
+        ],
+        "sameProxyOutstandingHighRequests": []
+      }
+    ],
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "interpretation": "After means admission strictly after recorded termination in device uptime; already outstanding requests and other proxy lifetimes are separate. No requests proves only absence in this capture, not a private penalty timer or future behavior.",
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "82142FB3-7E8D-4EA4-9E89-527D768582F2",
+        "requestID": 57,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      }
+    ],
+    "secondPhaseHighFailures": [],
+    "postLastInstallErrorCounts": [
+      0
+    ],
+    "postLastInstallWidths": [
+      320,
+      640
+    ],
+    "passed": false
+  }
+}

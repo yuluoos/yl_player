@@ -1016,7 +1016,7 @@ final class YlHlsProxyRequestTrace {
   }
   // First transport termination wins: 0 non-cancel, 1 proxy invalidated,
   // 2 incomplete-request EOF, 3 downstream error, 4 other local close.
-  // v7 sources: 0 not an error, 1 state.failed, 2 request receive,
+  // v7 sources: 0 no recorded cancellation error, 1 state.failed, 2 request receive,
   // 3 admitted-request monitor receive. This is the first recorded terminal
   // callback, not proof of the underlying peer's intent or physical ordering.
   func finish(outcome: Int, cancelCause: Int = 4, cancelSource: Int = 0, error: NWError? = nil) {

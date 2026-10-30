@@ -1,0 +1,13 @@
+{
+  "reason": "original 50k run had no high output before second impairment; retained as failed budget exercise",
+  "bothSecondPhasesShiftedFrom": [
+    60000,
+    65000
+  ],
+  "bothSecondPhasesShiftedTo": [
+    70000,
+    75000
+  ],
+  "onlyDifferenceBetweenNewPair": "step3.bytesPerSecond 50000 vs 75000 plus descriptive profile id",
+  "noThresholdOrBudgetChange": true
+}

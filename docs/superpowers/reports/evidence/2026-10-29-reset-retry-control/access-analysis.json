@@ -1,0 +1,2695 @@
+{
+  "budget-throttle": {
+    "transitions": [
+      {
+        "elapsed": 0.3636067083280068,
+        "position": 0,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": []
+      },
+      {
+        "elapsed": 0.7174337083415594,
+        "position": 0,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 32227,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 678908,
+            "requests": 3,
+            "segmentsDuration": 2.984,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.560125917
+          }
+        ]
+      },
+      {
+        "elapsed": 2.504361583341961,
+        "position": 1.596817329,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 43071,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 890499,
+            "requests": 3,
+            "segmentsDuration": 3.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.390711708
+          }
+        ]
+      },
+      {
+        "elapsed": 9.19645987500553,
+        "position": 8.288869381,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1125484,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.414948166
+          }
+        ]
+      },
+      {
+        "elapsed": 12.034335833333898,
+        "position": 11.126714691,
+        "width": 640,
+        "errorLogEventCount": 1,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          }
+        ]
+      },
+      {
+        "elapsed": 13.06913066667039,
+        "position": 12.161491144,
+        "width": 640,
+        "errorLogEventCount": 3,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          }
+        ]
+      },
+      {
+        "elapsed": 14.108749041668489,
+        "position": 13.201104045,
+        "width": 640,
+        "errorLogEventCount": 5,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          }
+        ]
+      },
+      {
+        "elapsed": 14.377058791666059,
+        "position": 13.469415381,
+        "width": 640,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          }
+        ]
+      },
+      {
+        "elapsed": 15.154298749999725,
+        "position": 14.24663197,
+        "width": 640,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          },
+          {
+            "bytes": 14840,
+            "downloadOverdue": 3,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1351383,
+            "requests": 2,
+            "segmentsDuration": 1.010667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.46200925
+          }
+        ]
+      },
+      {
+        "elapsed": 16.963746916662785,
+        "position": 16.056055723,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          },
+          {
+            "bytes": 306425,
+            "downloadOverdue": 4,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1465225,
+            "requests": 19,
+            "segmentsDuration": 16.997335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.517514538999999
+          }
+        ]
+      },
+      {
+        "elapsed": 41.617956916670664,
+        "position": 40.608470072,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          },
+          {
+            "bytes": 1166898,
+            "downloadOverdue": 10,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1528500,
+            "requests": 74,
+            "segmentsDuration": 65.997341,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 11.453227749000002
+          }
+        ]
+      },
+      {
+        "elapsed": 60.37060558333178,
+        "position": 57.403377949,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 894281,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3147585429999995
+          },
+          {
+            "bytes": 629214,
+            "downloadOverdue": 3,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1313365,
+            "requests": 24,
+            "segmentsDuration": 22.008003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.556213499
+          },
+          {
+            "bytes": 1719772,
+            "downloadOverdue": 14,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1592665,
+            "requests": 110,
+            "segmentsDuration": 97.99734500000005,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 14.890127000999998
+          }
+        ]
+      },
+      {
+        "elapsed": 61.67435245832894,
+        "position": 58.613807,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": []
+      },
+      {
+        "elapsed": 61.938095083329245,
+        "position": 58,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 10806,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 178164,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 62.71114349999698,
+        "position": 58.613807,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 43344,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 267372,
+            "requests": 3,
+            "segmentsDuration": 2.016001,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.969554751
+          }
+        ]
+      },
+      {
+        "elapsed": 67.34153933334164,
+        "position": 60.632981112,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 386264,
+            "downloadOverdue": 5,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 469042,
+            "requests": 25,
+            "segmentsDuration": 22.00267,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 9.816885706999999
+          },
+          {
+            "bytes": 140846,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 802496,
+            "requests": 3,
+            "segmentsDuration": 3,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.376748541
+          }
+        ]
+      },
+      {
+        "elapsed": 73.82524420833215,
+        "position": 67.116628048,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 386264,
+            "downloadOverdue": 5,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 469042,
+            "requests": 25,
+            "segmentsDuration": 22.00267,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 9.816885706999999
+          },
+          {
+            "bytes": 550064,
+            "downloadOverdue": 3,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 973786,
+            "requests": 18,
+            "segmentsDuration": 15.994668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.7328895410000005
+          }
+        ]
+      }
+    ],
+    "lateSampleCount": 143,
+    "lateLogs": [
+      {
+        "bytes": 386264,
+        "downloadOverdue": 5,
+        "indicatedBitrate": 414000,
+        "observedBitrate": 469042,
+        "requests": 25,
+        "segmentsDuration": 22.00267,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 9.816885706999999
+      },
+      {
+        "bytes": 3107619,
+        "downloadOverdue": 14,
+        "indicatedBitrate": 764000,
+        "observedBitrate": 2223235,
+        "requests": 115,
+        "segmentsDuration": 102.01334600000006,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 14.819601161000001
+      }
+    ],
+    "lateErrorCounts": [
+      0
+    ],
+    "lateWidths": [
+      640
+    ],
+    "interpretation": "Native access-log bitrate values and transfer totals are observations, not an exposed AVPlayer ABR decision rule; no per-transfer rate inferred by subtracting logs across item replacement."
+  },
+  "budget-mild": {
+    "transitions": [
+      {
+        "elapsed": 0.41414029167208355,
+        "position": 0,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": []
+      },
+      {
+        "elapsed": 0.7595888750074664,
+        "position": 0,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 23806,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 534812,
+            "requests": 2,
+            "segmentsDuration": 1.981333,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.43435512499999995
+          }
+        ]
+      },
+      {
+        "elapsed": 2.0271344166685594,
+        "position": 1.034980457,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 8385,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 736848,
+            "requests": 1,
+            "segmentsDuration": 1.002667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.123180208
+          }
+        ]
+      },
+      {
+        "elapsed": 5.101494291666313,
+        "position": 4.109313305,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 534827,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1172856,
+            "requests": 19,
+            "segmentsDuration": 16.997335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.8367015830000004
+          }
+        ]
+      },
+      {
+        "elapsed": 12.063287791665061,
+        "position": 11.071034094,
+        "width": 640,
+        "errorLogEventCount": 4,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 839735,
+            "downloadOverdue": 5,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1413114,
+            "requests": 30,
+            "segmentsDuration": 27.000002999999996,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.588647375999999
+          }
+        ]
+      },
+      {
+        "elapsed": 14.142800041663577,
+        "position": 13.150501374,
+        "width": 640,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 839735,
+            "downloadOverdue": 5,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1413114,
+            "requests": 30,
+            "segmentsDuration": 27.000002999999996,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.588647375999999
+          }
+        ]
+      },
+      {
+        "elapsed": 15.182665458341944,
+        "position": 14.190354077,
+        "width": 640,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 839735,
+            "downloadOverdue": 5,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1413114,
+            "requests": 30,
+            "segmentsDuration": 27.000002999999996,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.588647375999999
+          },
+          {
+            "bytes": 14451,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1526894,
+            "requests": 1,
+            "segmentsDuration": 1,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.064058125
+          }
+        ]
+      },
+      {
+        "elapsed": 17.287371583341155,
+        "position": 16.295044458,
+        "width": 320,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 839735,
+            "downloadOverdue": 5,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1413114,
+            "requests": 30,
+            "segmentsDuration": 27.000002999999996,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.588647375999999
+          },
+          {
+            "bytes": 276112,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1689508,
+            "requests": 11,
+            "segmentsDuration": 11,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.629275832
+          }
+        ]
+      },
+      {
+        "elapsed": 34.95044633332873,
+        "position": 33.793092177,
+        "width": 320,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 839735,
+            "downloadOverdue": 5,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1413114,
+            "requests": 30,
+            "segmentsDuration": 27.000002999999996,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.588647375999999
+          },
+          {
+            "bytes": 940991,
+            "downloadOverdue": 9,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1719110,
+            "requests": 59,
+            "segmentsDuration": 53.00267300000001,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 12.888230044000002
+          }
+        ]
+      },
+      {
+        "elapsed": 53.460034041665494,
+        "position": 50.52135531,
+        "width": 320,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750373,
+            "requests": 13,
+            "segmentsDuration": 11.986668,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.6285189999999994
+          },
+          {
+            "bytes": 839735,
+            "downloadOverdue": 5,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1413114,
+            "requests": 30,
+            "segmentsDuration": 27.000002999999996,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.588647375999999
+          },
+          {
+            "bytes": 1518063,
+            "downloadOverdue": 14,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1800380,
+            "requests": 98,
+            "segmentsDuration": 86.99467700000004,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 15.932631291000003
+          }
+        ]
+      },
+      {
+        "elapsed": 54.505503666674485,
+        "position": 51.385921,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": []
+      },
+      {
+        "elapsed": 54.75758658333507,
+        "position": 51.385921,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 67920,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2131738,
+            "requests": 4,
+            "segmentsDuration": 2.9946669999999997,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.530909876
+          }
+        ]
+      },
+      {
+        "elapsed": 55.01162395832944,
+        "position": 51.580758805,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 67920,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2131738,
+            "requests": 4,
+            "segmentsDuration": 2.9946669999999997,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.530909876
+          },
+          {
+            "bytes": 97286,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1781535,
+            "requests": 6,
+            "segmentsDuration": 5.018667999999999,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.39363812400000003
+          }
+        ]
+      },
+      {
+        "elapsed": 55.52493183333718,
+        "position": 52.09407519,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 67920,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2131738,
+            "requests": 4,
+            "segmentsDuration": 2.9946669999999997,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.530909876
+          },
+          {
+            "bytes": 287582,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1710922,
+            "requests": 14,
+            "segmentsDuration": 12.018669000000001,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 1.448310457
+          }
+        ]
+      }
+    ],
+    "lateSampleCount": 130,
+    "lateLogs": [
+      {
+        "bytes": 67920,
+        "downloadOverdue": 1,
+        "indicatedBitrate": 414000,
+        "observedBitrate": 2131738,
+        "requests": 4,
+        "segmentsDuration": 2.9946669999999997,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 0.530909876
+      },
+      {
+        "bytes": 3998281,
+        "downloadOverdue": 19,
+        "indicatedBitrate": 764000,
+        "observedBitrate": 2359537,
+        "requests": 152,
+        "segmentsDuration": 135.01868400000015,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 20.538198668000014
+      }
+    ],
+    "lateErrorCounts": [
+      0
+    ],
+    "lateWidths": [
+      640
+    ],
+    "interpretation": "Native access-log bitrate values and transfer totals are observations, not an exposed AVPlayer ABR decision rule; no per-transfer rate inferred by subtracting logs across item replacement."
+  },
+  "normal": {
+    "transitions": [
+      {
+        "elapsed": 0.40204666666977573,
+        "position": 0,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": []
+      },
+      {
+        "elapsed": 0.8364860416768352,
+        "position": 0,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 56162,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 555459,
+            "requests": 4,
+            "segmentsDuration": 3.984,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.648161124
+          }
+        ]
+      },
+      {
+        "elapsed": 2.119654708338203,
+        "position": 1.201990986,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 8391,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 837007,
+            "requests": 1,
+            "segmentsDuration": 1.002667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.089577125
+          }
+        ]
+      },
+      {
+        "elapsed": 7.271843250011443,
+        "position": 6.354124724,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 619238,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1359999,
+            "requests": 20,
+            "segmentsDuration": 17.997335000000003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.3826803740000004
+          }
+        ]
+      },
+      {
+        "elapsed": 11.921750416673603,
+        "position": 11.003963677,
+        "width": 640,
+        "errorLogEventCount": 2,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 742306,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1597740,
+            "requests": 24,
+            "segmentsDuration": 22.002669,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.184035958000001
+          }
+        ]
+      },
+      {
+        "elapsed": 14.003152666671667,
+        "position": 13.085327794,
+        "width": 640,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 742306,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1597740,
+            "requests": 24,
+            "segmentsDuration": 22.002669,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.184035958000001
+          }
+        ]
+      },
+      {
+        "elapsed": 15.301193208331824,
+        "position": 14.38337301,
+        "width": 640,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 742306,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1597740,
+            "requests": 24,
+            "segmentsDuration": 22.002669,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.184035958000001
+          },
+          {
+            "bytes": 38386,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1696431,
+            "requests": 2,
+            "segmentsDuration": 2,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.328200791
+          }
+        ]
+      },
+      {
+        "elapsed": 17.12013933333219,
+        "position": 16.202273509,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 742306,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1597740,
+            "requests": 24,
+            "segmentsDuration": 22.002669,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.184035958000001
+          },
+          {
+            "bytes": 276112,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1872027,
+            "requests": 11,
+            "segmentsDuration": 11,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.817162791
+          }
+        ]
+      },
+      {
+        "elapsed": 34.541622041666415,
+        "position": 33.623538276,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 294213,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 895070,
+            "requests": 19,
+            "segmentsDuration": 16.984002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.777341751
+          },
+          {
+            "bytes": 742306,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1597740,
+            "requests": 24,
+            "segmentsDuration": 22.002669,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.184035958000001
+          },
+          {
+            "bytes": 940991,
+            "downloadOverdue": 9,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1864021,
+            "requests": 59,
+            "segmentsDuration": 53.00267300000001,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 13.278715708999993
+          }
+        ]
+      },
+      {
+        "elapsed": 35.57919416666846,
+        "position": 34.411678,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 41143,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1138282,
+            "requests": 2,
+            "segmentsDuration": 2.0026669999999998,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.294868751
+          }
+        ]
+      },
+      {
+        "elapsed": 35.83835054167139,
+        "position": 34.411678,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 14953,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1261018,
+            "requests": 1,
+            "segmentsDuration": 0.010667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.044215333
+          }
+        ]
+      },
+      {
+        "elapsed": 37.65905595834192,
+        "position": 36.229999152,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 630556,
+            "downloadOverdue": 3,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 2995989,
+            "requests": 25,
+            "segmentsDuration": 21.997335999999997,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 1.7539227060000002
+          }
+        ]
+      },
+      {
+        "elapsed": 62.24879283334303,
+        "position": 60.819377219,
+        "width": 640,
+        "errorLogEventCount": 2,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 1912604,
+            "downloadOverdue": 10,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 2668967,
+            "requests": 74,
+            "segmentsDuration": 65.010675,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 10.420073456000003
+          }
+        ]
+      },
+      {
+        "elapsed": 62.515625041676685,
+        "position": 61.086232312,
+        "width": 640,
+        "errorLogEventCount": 4,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 1912604,
+            "downloadOverdue": 11,
+            "indicatedBitrate": -1,
+            "observedBitrate": 2707845,
+            "requests": 74,
+            "segmentsDuration": 65.010675,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 10.420073456000003
+          }
+        ]
+      },
+      {
+        "elapsed": 64.5798545833386,
+        "position": 63.150426097,
+        "width": 640,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 1912604,
+            "downloadOverdue": 11,
+            "indicatedBitrate": -1,
+            "observedBitrate": 2707845,
+            "requests": 74,
+            "segmentsDuration": 65.010675,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 10.420073456000003
+          }
+        ]
+      },
+      {
+        "elapsed": 65.87713012500899,
+        "position": 64.447652393,
+        "width": 640,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 1912604,
+            "downloadOverdue": 11,
+            "indicatedBitrate": -1,
+            "observedBitrate": 2707845,
+            "requests": 74,
+            "segmentsDuration": 65.010675,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 10.420073456000003
+          },
+          {
+            "bytes": 69548,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2958931,
+            "requests": 3,
+            "segmentsDuration": 3,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.40790221
+          }
+        ]
+      },
+      {
+        "elapsed": 69.50890054166666,
+        "position": 68.079398262,
+        "width": 320,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 1912604,
+            "downloadOverdue": 11,
+            "indicatedBitrate": -1,
+            "observedBitrate": 2707845,
+            "requests": 74,
+            "segmentsDuration": 65.010675,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 10.420073456000003
+          },
+          {
+            "bytes": 279869,
+            "downloadOverdue": 3,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2833344,
+            "requests": 15,
+            "segmentsDuration": 14.000001000000001,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.04657346
+          }
+        ]
+      },
+      {
+        "elapsed": 94.74343349999981,
+        "position": 93.31356928,
+        "width": 320,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 97726,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1140416,
+            "requests": 4,
+            "segmentsDuration": 4.0053339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.573432294
+          },
+          {
+            "bytes": 1912604,
+            "downloadOverdue": 11,
+            "indicatedBitrate": -1,
+            "observedBitrate": 2707845,
+            "requests": 74,
+            "segmentsDuration": 65.010675,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 10.420073456000003
+          },
+          {
+            "bytes": 1243578,
+            "downloadOverdue": 10,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2513538,
+            "requests": 80,
+            "segmentsDuration": 71.98934200000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 9.436200126
+          }
+        ]
+      },
+      {
+        "elapsed": 96.04550766666944,
+        "position": 94.399222,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": []
+      },
+      {
+        "elapsed": 96.30149487500603,
+        "position": 94.400508727,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 107435,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1151311,
+            "requests": 6,
+            "segmentsDuration": 4.9973339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.543238876
+          }
+        ]
+      },
+      {
+        "elapsed": 96.55369108333252,
+        "position": 94.652713642,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 107435,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1151311,
+            "requests": 6,
+            "segmentsDuration": 4.9973339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.543238876
+          },
+          {
+            "bytes": 97324,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1819661,
+            "requests": 6,
+            "segmentsDuration": 5.018667999999999,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.48936170900000003
+          }
+        ]
+      },
+      {
+        "elapsed": 98.10268570833432,
+        "position": 96.201715347,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 107435,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1151311,
+            "requests": 6,
+            "segmentsDuration": 4.9973339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.543238876
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 2780685,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.3006917500000004
+          }
+        ]
+      }
+    ],
+    "lateSampleCount": 102,
+    "lateLogs": [
+      {
+        "bytes": 107435,
+        "downloadOverdue": 1,
+        "indicatedBitrate": 414000,
+        "observedBitrate": 1151311,
+        "requests": 6,
+        "segmentsDuration": 4.9973339999999995,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 0.543238876
+      },
+      {
+        "bytes": 1405112,
+        "downloadOverdue": 6,
+        "indicatedBitrate": 764000,
+        "observedBitrate": 2517313,
+        "requests": 53,
+        "segmentsDuration": 47.01867300000001,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 6.552286917
+      }
+    ],
+    "lateErrorCounts": [
+      0
+    ],
+    "lateWidths": [
+      0,
+      320,
+      640
+    ],
+    "interpretation": "Native access-log bitrate values and transfer totals are observations, not an exposed AVPlayer ABR decision rule; no per-transfer rate inferred by subtracting logs across item replacement."
+  },
+  "budget-late-throttle": {
+    "transitions": [
+      {
+        "elapsed": 0.35859941666421946,
+        "position": 0,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": []
+      },
+      {
+        "elapsed": 0.6460905416606693,
+        "position": 0,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 18373,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 378984,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 1.0543934583256487,
+        "position": 0.055909209,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 64553,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 750673,
+            "requests": 5,
+            "segmentsDuration": 4.986667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.9966904990000001
+          }
+        ]
+      },
+      {
+        "elapsed": 2.34315945833805,
+        "position": 1.344680229,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 43071,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1044559,
+            "requests": 3,
+            "segmentsDuration": 3.005334,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.464524166
+          }
+        ]
+      },
+      {
+        "elapsed": 9.293485250003869,
+        "position": 8.294951804,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 560026,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1311693,
+            "requests": 22,
+            "segmentsDuration": 20.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.294739916000001
+          }
+        ]
+      },
+      {
+        "elapsed": 12.13453416666016,
+        "position": 11.135990614,
+        "width": 640,
+        "errorLogEventCount": 3,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1509135,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.590605333000001
+          }
+        ]
+      },
+      {
+        "elapsed": 14.201689624998835,
+        "position": 13.203113997,
+        "width": 640,
+        "errorLogEventCount": 7,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1509135,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.590605333000001
+          }
+        ]
+      },
+      {
+        "elapsed": 15.242961750001996,
+        "position": 14.244374596,
+        "width": 640,
+        "errorLogEventCount": 7,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1509135,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.590605333000001
+          },
+          {
+            "bytes": 14451,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1594789,
+            "requests": 1,
+            "segmentsDuration": 1,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.178911625
+          }
+        ]
+      },
+      {
+        "elapsed": 17.0583394166606,
+        "position": 16.059735165,
+        "width": 320,
+        "errorLogEventCount": 7,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1509135,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.590605333000001
+          },
+          {
+            "bytes": 244950,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1769985,
+            "requests": 10,
+            "segmentsDuration": 10,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.721290915
+          }
+        ]
+      },
+      {
+        "elapsed": 34.76690370833967,
+        "position": 33.527313872,
+        "width": 320,
+        "errorLogEventCount": 7,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1509135,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.590605333000001
+          },
+          {
+            "bytes": 940991,
+            "downloadOverdue": 9,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1892657,
+            "requests": 59,
+            "segmentsDuration": 53.00267300000001,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 12.404780124
+          }
+        ]
+      },
+      {
+        "elapsed": 53.2268765833287,
+        "position": 50.237676654,
+        "width": 320,
+        "errorLogEventCount": 7,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 300243,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1031097,
+            "requests": 19,
+            "segmentsDuration": 16.981335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 2.973114207
+          },
+          {
+            "bytes": 620816,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1509135,
+            "requests": 23,
+            "segmentsDuration": 21.005336,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.590605333000001
+          },
+          {
+            "bytes": 1493865,
+            "downloadOverdue": 13,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1959067,
+            "requests": 95,
+            "segmentsDuration": 85.00267700000003,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 14.915099124999996
+          }
+        ]
+      },
+      {
+        "elapsed": 54.26965637499234,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": []
+      },
+      {
+        "elapsed": 56.338195208329125,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 2,
+        "automaticAttempts": 2,
+        "logs": []
+      },
+      {
+        "elapsed": 68.19870512500347,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 4,
+        "automaticAttempts": 2,
+        "logs": []
+      },
+      {
+        "elapsed": 68.45934508333448,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 0,
+            "downloadOverdue": 2,
+            "indicatedBitrate": -1,
+            "observedBitrate": 0,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 70.29845941666281,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 7,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 0,
+            "downloadOverdue": 2,
+            "indicatedBitrate": -1,
+            "observedBitrate": 0,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 82.30582337500528,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 8,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 0,
+            "downloadOverdue": 2,
+            "indicatedBitrate": -1,
+            "observedBitrate": 0,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 85.48349683333072,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 10,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 0,
+            "downloadOverdue": 2,
+            "indicatedBitrate": -1,
+            "observedBitrate": 0,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 92.34154087500065,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 12,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 0,
+            "downloadOverdue": 2,
+            "indicatedBitrate": -1,
+            "observedBitrate": 0,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      },
+      {
+        "elapsed": 99.43722329166485,
+        "position": 51.099435,
+        "width": 0,
+        "errorLogEventCount": 13,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 0,
+            "downloadOverdue": 2,
+            "indicatedBitrate": -1,
+            "observedBitrate": 0,
+            "requests": 0,
+            "segmentsDuration": 0,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0
+          }
+        ]
+      }
+    ],
+    "lateSampleCount": 36,
+    "lateLogs": [
+      {
+        "bytes": 0,
+        "downloadOverdue": 2,
+        "indicatedBitrate": -1,
+        "observedBitrate": 0,
+        "requests": 0,
+        "segmentsDuration": 0,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 0
+      }
+    ],
+    "lateErrorCounts": [
+      10,
+      12,
+      13
+    ],
+    "lateWidths": [
+      0
+    ],
+    "interpretation": "Native access-log bitrate values and transfer totals are observations, not an exposed AVPlayer ABR decision rule; no per-transfer rate inferred by subtracting logs across item replacement."
+  },
+  "budget-late-mild": {
+    "transitions": [
+      {
+        "elapsed": 0.5113645833334886,
+        "position": 0,
+        "width": 0,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": []
+      },
+      {
+        "elapsed": 0.9125019166676793,
+        "position": 0,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 32227,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 730536,
+            "requests": 3,
+            "segmentsDuration": 2.984,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.455353124
+          }
+        ]
+      },
+      {
+        "elapsed": 2.699439958334551,
+        "position": 1.704984191,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 8385,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 706348,
+            "requests": 1,
+            "segmentsDuration": 1.002667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.106506458
+          }
+        ]
+      },
+      {
+        "elapsed": 5.246371375003946,
+        "position": 4.251874972,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 497748,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1038873,
+            "requests": 19,
+            "segmentsDuration": 17.000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.8068312920000005
+          }
+        ]
+      },
+      {
+        "elapsed": 12.21172624999599,
+        "position": 11.217144709,
+        "width": 640,
+        "errorLogEventCount": 1,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          }
+        ]
+      },
+      {
+        "elapsed": 12.993548500002362,
+        "position": 11.998943997,
+        "width": 640,
+        "errorLogEventCount": 3,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          }
+        ]
+      },
+      {
+        "elapsed": 14.01815400000487,
+        "position": 13.023546464,
+        "width": 640,
+        "errorLogEventCount": 5,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          }
+        ]
+      },
+      {
+        "elapsed": 14.27849112500553,
+        "position": 13.283889971,
+        "width": 640,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          }
+        ]
+      },
+      {
+        "elapsed": 15.312629583335365,
+        "position": 14.318008,
+        "width": 640,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          },
+          {
+            "bytes": 56551,
+            "downloadOverdue": 3,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1343103,
+            "requests": 5,
+            "segmentsDuration": 3.9946669999999997,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 4.449744668
+          }
+        ]
+      },
+      {
+        "elapsed": 17.12091670834343,
+        "position": 16.126266659,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 0,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          },
+          {
+            "bytes": 306425,
+            "downloadOverdue": 4,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1425735,
+            "requests": 19,
+            "segmentsDuration": 16.997335,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 5.545096043000001
+          }
+        ]
+      },
+      {
+        "elapsed": 33.74409849999938,
+        "position": 32.521256154,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 1,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          },
+          {
+            "bytes": 890461,
+            "downloadOverdue": 8,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1505327,
+            "requests": 56,
+            "segmentsDuration": 49.997339000000004,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 8.792555413
+          }
+        ]
+      },
+      {
+        "elapsed": 92.76663420833938,
+        "position": 89.737093608,
+        "width": 320,
+        "errorLogEventCount": 6,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 202785,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 739746,
+            "requests": 13,
+            "segmentsDuration": 11.986668000000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 3.345497624
+          },
+          {
+            "bytes": 848133,
+            "downloadOverdue": 4,
+            "indicatedBitrate": -1,
+            "observedBitrate": 1287816,
+            "requests": 31,
+            "segmentsDuration": 28.002669999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 6.440151460000002
+          },
+          {
+            "bytes": 2867652,
+            "downloadOverdue": 22,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1119090,
+            "requests": 184,
+            "segmentsDuration": 164.0000200000002,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 27.468713368999985
+          }
+        ]
+      },
+      {
+        "elapsed": 94.05900941666914,
+        "position": 90.800587,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 49930,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 2633547,
+            "requests": 4,
+            "segmentsDuration": 3.0160009999999997,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.15850199999999998
+          }
+        ]
+      },
+      {
+        "elapsed": 94.31104016666359,
+        "position": 90.800587,
+        "width": 320,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 107473,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1833235,
+            "requests": 6,
+            "segmentsDuration": 4.9973339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.40584883299999996
+          },
+          {
+            "bytes": 15390,
+            "downloadOverdue": 0,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 1786559,
+            "requests": 1,
+            "segmentsDuration": 1.002667,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.040259167
+          }
+        ]
+      },
+      {
+        "elapsed": 95.59715112500999,
+        "position": 92.08096358,
+        "width": 640,
+        "errorLogEventCount": 0,
+        "automaticAttempts": 2,
+        "logs": [
+          {
+            "bytes": 107473,
+            "downloadOverdue": 1,
+            "indicatedBitrate": 414000,
+            "observedBitrate": 1833235,
+            "requests": 6,
+            "segmentsDuration": 4.9973339999999995,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 0.40584883299999996
+          },
+          {
+            "bytes": 551632,
+            "downloadOverdue": 2,
+            "indicatedBitrate": 764000,
+            "observedBitrate": 4173471,
+            "requests": 21,
+            "segmentsDuration": 19.002669,
+            "stalls": 0,
+            "switchBitrate": -1,
+            "transferDuration": 1.2393885370000002
+          }
+        ]
+      }
+    ],
+    "lateSampleCount": 115,
+    "lateLogs": [
+      {
+        "bytes": 107473,
+        "downloadOverdue": 1,
+        "indicatedBitrate": 414000,
+        "observedBitrate": 1833235,
+        "requests": 6,
+        "segmentsDuration": 4.9973339999999995,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 0.40584883299999996
+      },
+      {
+        "bytes": 1640836,
+        "downloadOverdue": 7,
+        "indicatedBitrate": 764000,
+        "observedBitrate": 3185364,
+        "requests": 62,
+        "segmentsDuration": 55.01867400000001,
+        "stalls": 0,
+        "switchBitrate": -1,
+        "transferDuration": 5.518685744999999
+      }
+    ],
+    "lateErrorCounts": [
+      0
+    ],
+    "lateWidths": [
+      320,
+      640
+    ],
+    "interpretation": "Native access-log bitrate values and transfer totals are observations, not an exposed AVPlayer ABR decision rule; no per-transfer rate inferred by subtracting logs across item replacement."
+  }
+}
