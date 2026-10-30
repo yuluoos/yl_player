@@ -1,0 +1,28 @@
+{
+  "base": "16869125d2eb42969b63e494f42432e1be8b51b9",
+  "mergedCommit": "a6544e720b899a38fcefacc1c5f64ce5e802e20d",
+  "merge": "local fast-forward",
+  "deletedBranch": "codex/audio-consumed-packet-admission",
+  "retainedCheckout": "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player",
+  "checkoutState": "clean detached at mergedCommit",
+  "productionSourceHash": "d5013c8138a598c460af49e1da4c6690594813ec6646a674e4b287eb164deee5",
+  "freshChecks": {
+    "consumerTests": 46,
+    "readinessTests": 15,
+    "failed": 0,
+    "skipped": 0,
+    "testSourceParity": "passed",
+    "evidenceChecksums": "passed",
+    "sixTestedSourceHashes": "matched",
+    "sourceSnapshot": "matched",
+    "readinessExit": 0,
+    "requireReadyExit": 1
+  },
+  "reusedEvidence": {
+    "macosNativePassed": 142,
+    "ios": "arm64 Simulator build-only, not runtime"
+  },
+  "releaseReady": false,
+  "remoteOperations": false,
+  "otherChatIOSRecoveryModified": false
+}

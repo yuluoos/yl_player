@@ -1,6 +1,6 @@
 # 音频已消费输入的容量失败修复（2026-10-29）
 
-基线 `16869125d2eb42969b63e494f42432e1be8b51b9`，分支 `codex/audio-consumed-packet-admission`。本轮优先修复 P03/P08 的实际播放器准入缺口；不改 DASH/ABR、另一聊天工作树或 iOS 恢复逻辑，不推送、不发布。当前未提交/合并。
+基线 `16869125d2eb42969b63e494f42432e1be8b51b9`，分支 `codex/audio-consumed-packet-admission`。本轮优先修复 P03/P08 的实际播放器准入缺口；不改 DASH/ABR、另一聊天工作树或 iOS 恢复逻辑，不推送、不发布。实施验收时尚未提交；现已本地合并并清理分支，见[合并记录](2026-10-29-audio-admission-merge.md)。
 
 ## 问题与修复
 
@@ -44,7 +44,7 @@
 
 台账结构验证退出0，`--require-ready`按现有缺口退出1；`releaseReady=false`。102行状态与HEAD逐行比较不变：67 implemented、34 partial、1 unreviewed；69 not_run、30 external_missing、3 failed、0 passed。本轮仅为CAP-FORMAT iOS/macOS和PERF-BASELINE追加记录引用，不提升资格。
 
-证据目录：[本轮证据](evidence/2026-10-29-audio-consumed-packet-admission/)。包括各轮原始失败/通过摘要、执行身份、压缩日志、候选源码哈希、最终构建二进制哈希和SHA256SUMS；完整xcresult/派生构建留在 `/private/tmp/yl-audio-admission/`。早期结果只声明对应源码快照与测试身份，不追认当时未采集的二进制哈希。所有修改保留在本轮分支，尚未提交/合并。
+证据目录：[本轮证据](evidence/2026-10-29-audio-consumed-packet-admission/)。包括各轮原始失败/通过摘要、执行身份、压缩日志、候选源码哈希、最终构建二进制哈希和SHA256SUMS；完整xcresult/派生构建留在 `/private/tmp/yl-audio-admission/`。早期结果只声明对应源码快照与测试身份，不追认当时未采集的二进制哈希。上述实施验收快照已提交并本地合并，本轮分支已清理；未完成项及原始验收证据继续保留。
 
 ## 未完成项
 
