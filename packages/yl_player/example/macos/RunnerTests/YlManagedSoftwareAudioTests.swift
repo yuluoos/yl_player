@@ -46,6 +46,136 @@ private final class SoftwareAudioHTTP {
 }
 
 final class YlManagedSoftwareAudioTests: XCTestCase {
+  func testCoreAudioMP3LowRateUses576SamplePackets() throws {
+    // Eight real MPEG-2 Layer III frames, sine 440Hz / 16kHz / 32kbps,
+    // generated with libmp3lame, without ID3/Xing. No device/output mock decoder.
+    let packets = [
+      "//NIxAAceI5sFVgwACVa9U6p1TqnVOqdd7E2vrCImFyE6GjgE5tic4m0poEYAFmC8CgjEHIhyWEyYDAYDCyaYOAgCAIOicH+UdOdPnOX85y/u6fdlATB8+sPggGJQBg++TBA5l393Lg+D4Ph8EAQBAEAGD4Pg+HwQBAEHJE4PiAJIIEAaBBgWB2+f5gyFQEB",
+      "//NIxBEgofZsLZ2gAJ0MgD6DpiMT5rslRg0VRsQephGLxwyMIGLggaAeBhhYGKYgoLJwDJYgGgxdDZgtGC0IUj/iURBUcoXMLm/8mRzRzSaIsRb/8mSKkBMiLEWMf/8ul0yLxeRLpdS///LxeRLpdBoKgqz/5YKhot////VaqqAAAJIIoQ/n//QM6UygtvDA",
+      "//NIxBEZmHYmN95AADwFDAlBkMIEBYwggzTFuO9OXQwY/ZT/DK7LiMdYWsxNCRzADD9MHICMwDgAU7lYoegELKGttzM5u/Yv9b/+8ndXr/3l7+TW7s+5u39lxD7qj+7u/T1V///UqUFMJBjIBszRHM3bjQqswGUEcMC8CLTB0xlQynT+uNZLISjBhAeEwNUB",
+      "//NIxC0j47oEAN/EcMDCjA0cwQ8E3MDvASDAUABUwB8AADAA1M5vJJKabf611aGaFw+PQXv/XPQJvU1Hq1R6tfTfT49Xq1cmTFJ0bf1aFybY3rq1fg9dqkoNB6PZ4LJunvRtq/67Y/rr8NOoxW929YAAEfv/5K1hC6Y8ACigAuYAYAiGAdgP5gOQG4YGuDYm",
+      "//NIxCAhA74N6P9EqA7QmUZLXeNGnxDNhhPoRqasrCcHYUZpn0ZSheYXAMEA2gMV2xB/I3hf/3rrq1MmSor/+Wh9sbfbHrrrt/V6vXXNrjen+uTPvn2q1dXrk+famumCz59vvRqt/6ev11+DlrU6dhWgAAwGZ/Lv9oWMFgAwuAACB4aFUMJ8yGAgz5CE40E4",
+      "//NIxB8fg74V9O/KiMuzBfDYyAKowosDxMC5BQTARg74wAkFMFAEsdAFCAABY09cMAgaO71113z647010xlG3z/bev++/rq9frkz/f/zNHZM21WjdH9/p6PXTdrZM/9GjdP9fjvX/EJW/enqR///1XaQkmDAGPKGSUmfiGAbAPpgN4IEYI0GImM2vu5m3ggG",
+      "//NIxCQYaHYYCNf4ZmCCgYxkIsnL/8Z0WRmgPmGQAGAFXTq0desGtt7N1R396bk3IU9PR7ifVq09VqdGhdmd3JvbtVf+3/d+f3dK///lI19LhA4QgcCQzMGhgMQytMhFUNL/ZMYOmLTM0RScwawGsA347gPP/EDUiVAz8EADiGBYEBv4pQZsi5cT+vU9Wrfb",
+      "//NIxEUaGN4UAO/qgD/9oln0XVPZtT7id9Ov/OFbN6F2bN9b2rcG13eq3/f+5H09FcAEC/n/2gbGnYnqHAUaGZjQAGYQya4IB61fmR4DiZpeoJOYPoBpGTB7GMdsmCx7ggMB0CVUGxwBK6e8b2q13JWz9iv1PZs/q16f9itPX7ehdq7EX+qlf9/579PUoAAA"
+    ]
+    let converter = YlAppleCompressedAudioConverter()
+    try converter.configure(stream: .init(codec: .mp3, sampleRate: 16_000,
+      channelCount: 1, magicCookie: Data(), generation: 1))
+    var outputs = 0
+    for (index, encoded) in packets.enumerated() {
+      let packet = YlCompressedAudioPacket(data: try XCTUnwrap(Data(base64Encoded: encoded)),
+        ptsUs: Int64(index) * 36_000, durationUs: Int64.max, generation: 1)
+      let estimate = converter.estimateOutput(for: packet)
+      XCTAssertEqual(estimate.durationUs, 36_000, "576 samples must fit a 40ms window")
+      if let output = try converter.convert(packet: packet) {
+        let pcm = try XCTUnwrap(output.payload as? AVAudioPCMBuffer)
+        // CoreAudio can trim decoder priming from the first PCM block (47
+        // samples on this host). Later complete packets must remain 576 frames.
+        XCTAssertGreaterThan(pcm.frameLength, 0)
+        XCTAssertLessThanOrEqual(pcm.frameLength, 576)
+        if outputs > 0 { XCTAssertEqual(pcm.frameLength, 576) }
+        XCTAssertEqual(output.durationUs, Int64(pcm.frameLength) * 1_000_000 / 16_000)
+        XCTAssertLessThanOrEqual(Int(pcm.frameCapacity) * 4, estimate.byteCount)
+        outputs += 1
+      }
+    }
+    XCTAssertGreaterThan(outputs, 0)
+    let output = AdmissionOutput()
+    let renderer = YlAudioRenderer(maxScheduledDurationUs: 40_000, output: output)
+    defer { renderer.dispose() }
+    try renderer.configure(stream: .init(codec: .mp3, sampleRate: 16_000,
+      channelCount: 1, magicCookie: Data(), generation: 1))
+    var completed = 0
+    for (index, encoded) in packets.enumerated() {
+      let result = try renderer.enqueue(packet: .init(data: try XCTUnwrap(Data(base64Encoded: encoded)),
+        ptsUs: Int64(index) * 36_000, durationUs: Int64.max, generation: 1))
+      XCTAssertTrue(result == .scheduled || result == .buffered)
+      while completed < output.completions.count { output.completions[completed](); completed += 1 }
+    }
+    XCTAssertGreaterThan(completed, 0, "A 40ms window must make actual progress for a 36ms MP3 frame")
+  }
+
+  func testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations() throws {
+    for (codec, channels, cookie) in [(YlAudioCodec.aac, 2, Data([0x11, 0x90])),
+                                     (.aac, 6, Data([0x11, 0xb0])), (.mp3, 2, Data())] {
+      let converter = YlAppleCompressedAudioConverter()
+      try converter.configure(stream: .init(codec: codec, sampleRate: 48_000,
+        channelCount: channels, magicCookie: cookie, generation: 1))
+      let packet = YlCompressedAudioPacket(data: Data([1]), ptsUs: 0, durationUs: 1_000_000_000, generation: 1)
+      let oversized = converter.estimateOutput(for: packet)
+      XCTAssertLessThanOrEqual(oversized.durationUs, 24_000)
+      XCTAssertLessThanOrEqual(oversized.byteCount, 1152 * 2 * channels * 4)
+      // Keep RED safe: do not exercise integer extrema or allocate PCM until
+      // the bounded estimate invariant holds. The unfixed six-channel path can overflow.
+      guard oversized.durationUs <= 24_000, oversized.byteCount <= 1152 * 2 * channels * 4 else { continue }
+      for duration in [Int64.min, -1, 0, 1, 21_000, Int64.max] {
+        let estimate = converter.estimateOutput(for: .init(data: packet.data, ptsUs: 0,
+          durationUs: duration, generation: 1))
+        XCTAssertEqual(estimate.durationUs, oversized.durationUs)
+        XCTAssertEqual(estimate.byteCount, oversized.byteCount)
+      }
+    }
+  }
+
+  func testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration() throws {
+    for (name, ext, hint, codec) in [("h264_aac", "mkv", YlSourceFormat.matroska, YlAudioCodec.aac),
+                                    ("h264_mp3", "flv", .flv, .mp3)] {
+      let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: name, withExtension: ext))
+      let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file, formatHint: hint), requireHardwareProbe: false)
+      defer { prepared.discard() }
+      let stream = try XCTUnwrap(prepared.audioStreams.first)
+      let media = try prepared.takeMedia(); defer { media.close() }
+      let context = try XCTUnwrap(media.context)
+      var packets = [(Data, Int64, Int64)]()
+      for _ in 0..<100 {
+        var packet: YLFPacketRef?
+        if ylf_read_packet(context, &packet) != 0 { break }
+        defer { ylf_packet_release(&packet) }
+        guard let p = packet, ylf_packet_stream_index(p) == stream.index else { continue }
+        packets.append((Data(bytes: try XCTUnwrap(ylf_packet_data(p)), count: ylf_packet_size(p)), ylf_packet_pts_us(p), ylf_packet_duration_us(p)))
+        if packets.count == 8 { break }
+      }
+      XCTAssertEqual(packets.count, 8)
+      let converter = YlAppleCompressedAudioConverter()
+      let cookie = prepared.audioCookies[stream.index] ?? Data()
+      try converter.configure(stream: .init(codec: codec, sampleRate: Double(stream.sample_rate),
+        channelCount: Int(stream.channel_count), magicCookie: cookie, generation: 1))
+      let probe = converter.estimateOutput(for: .init(data: packets[0].0, ptsUs: 0, durationUs: 1_000_000_000, generation: 1))
+      XCTAssertLessThanOrEqual(probe.byteCount, 65_536)
+      guard probe.byteCount <= 65_536 else { continue } // No huge allocations in RED.
+      var baseline = [(Int64, Int64, Int, UInt32, Float)]()
+      for declared in [Int64(0), 1, 1_000_000_000, Int64.max] {
+        // Start each metadata variant with a fresh codec instance so residual
+        // decoder/dither history is not a second variable in the PCM comparison.
+        try converter.configure(stream: .init(codec: codec, sampleRate: Double(stream.sample_rate),
+          channelCount: Int(stream.channel_count), magicCookie: cookie, generation: 1))
+        var observed = [(Int64, Int64, Int, UInt32, Float)]()
+        for (data, pts, originalDuration) in packets {
+          let packet = YlCompressedAudioPacket(data: data, ptsUs: pts,
+            durationUs: declared == 0 ? originalDuration : declared, generation: 1)
+          let estimate = converter.estimateOutput(for: packet)
+          guard let decoded = try converter.convert(packet: packet) else { continue }
+          let pcm = try XCTUnwrap(decoded.payload as? AVAudioPCMBuffer)
+          let samples = try XCTUnwrap(pcm.floatChannelData)
+          let frameBytes = Int(pcm.format.channelCount) * MemoryLayout<Float>.size
+          XCTAssertLessThanOrEqual(Int(pcm.frameCapacity) * frameBytes, estimate.byteCount)
+          XCTAssertGreaterThanOrEqual(estimate.durationUs, decoded.durationUs)
+          observed.append((decoded.ptsUs, decoded.durationUs, decoded.byteCount, pcm.frameLength, samples[0][0]))
+        }
+        XCTAssertFalse(observed.isEmpty)
+        if declared == 0 { baseline = observed }
+        else {
+          XCTAssertEqual(observed.count, baseline.count)
+          for (a, b) in zip(observed, baseline) {
+            XCTAssertEqual(a.0, b.0); XCTAssertEqual(a.1, b.1); XCTAssertEqual(a.2, b.2)
+            XCTAssertEqual(a.3, b.3); XCTAssertEqual(a.4, b.4)
+          }
+        }
+      }
+    }
+  }
+
   func testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding() throws {
     let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p03-mkv-avc-dts", withExtension: "mkv"))
     let source = YlAppleSourceDescriptor(uri: fixture.absoluteString, kind: .file, formatHint: .matroska)
@@ -176,7 +306,8 @@ final class YlManagedSoftwareAudioTests: XCTestCase {
     defer { renderer.dispose() }
     try renderer.configure(stream: admissionStream())
     // Valid AAC-LC stereo silence. The short container duration is deliberately
-    // smaller than decoded PCM; the real stateful system converter consumes it.
+    // smaller than decoded PCM. Even short metadata must not turn an impossible
+    // output window into retryable backpressure.
     var failed = false
     for index in 0..<4 {
       do {

@@ -1,0 +1,304 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.0024s",
+                  "durationInSeconds" : 0.0024149417877197266,
+                  "name" : "testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.033s",
+                  "durationInSeconds" : 0.033338069915771484,
+                  "name" : "testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00087s",
+                  "durationInSeconds" : 0.0008699893951416016,
+                  "name" : "testConsumedPCMOverflowIsNotRetryableBackpressure()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testConsumedPCMOverflowIsNotRetryableBackpressure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testConsumedPCMOverflowIsNotRetryableBackpressure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.022s",
+                  "durationInSeconds" : 0.022410035133361816,
+                  "name" : "testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.019s",
+                  "durationInSeconds" : 0.019181013107299805,
+                  "name" : "testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00067s",
+                  "durationInSeconds" : 0.0006740093231201172,
+                  "name" : "testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.135888934135437,
+                  "name" : "testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0017s",
+                  "durationInSeconds" : 0.0017060041427612305,
+                  "name" : "testPreconversionBackpressureStillRetriesOnceCapacityIsReleased()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testPreconversionBackpressureStillRetriesOnceCapacityIsReleased()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testPreconversionBackpressureStillRetriesOnceCapacityIsReleased",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1.6127985e-06\") is not equal to (\"1.5045694e-06\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.00028537455\") is not equal to (\"-0.00029974096\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.12345224\") is not equal to (\"-0.123464435\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0.10341633\") is not equal to (\"0.103422135\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.034839086\") is not equal to (\"-0.0348357\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.047305066\") is not equal to (\"-0.047306467\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0.111558825\") is not equal to (\"0.11156031\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1.5256029e-06\") is not equal to (\"1.5045694e-06\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.00029321417\") is not equal to (\"-0.00029974096\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.123456016\") is not equal to (\"-0.123464435\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0.10344144\") is not equal to (\"0.103422135\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.034840327\") is not equal to (\"-0.0348357\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.047301553\") is not equal to (\"-0.047306467\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0.11156168\") is not equal to (\"0.11156031\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1.5208406e-06\") is not equal to (\"1.5045694e-06\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.00031002497\") is not equal to (\"-0.00029974096\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.123458795\") is not equal to (\"-0.123464435\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0.10343924\") is not equal to (\"0.103422135\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.034843516\") is not equal to (\"-0.0348357\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"-0.047306437\") is not equal to (\"-0.047306467\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"0.11156572\") is not equal to (\"0.11156031\")",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/.codex/worktrees/remaining-local-acceptance/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedSoftwareAudioTests.swift",
+                        "lineNumber" : 119
+                      }
+                    }
+                  ],
+                  "duration" : "0.25s",
+                  "durationInSeconds" : 0.24794304370880127,
+                  "name" : "testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                },
+                {
+                  "duration" : "0.0011s",
+                  "durationInSeconds" : 0.001134037971496582,
+                  "name" : "testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlManagedSoftwareAudioTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

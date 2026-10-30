@@ -1,0 +1,7 @@
+{
+  "inventoryInitialValidation": {
+    "exit": 2,
+    "cause": "New evidence entry omitted required kind field",
+    "resolution": "Added kind=report; reran unchanged strict validator"
+  }
+}

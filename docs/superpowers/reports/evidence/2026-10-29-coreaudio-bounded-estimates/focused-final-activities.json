@@ -1,0 +1,46 @@
+{
+  "testIdentifier" : "YlManagedSoftwareAudioTests/testCoreAudioMP3LowRateUses576SamplePackets()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCoreAudioMP3LowRateUses576SamplePackets",
+  "testName" : "testCoreAudioMP3LowRateUses576SamplePackets()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793323324.751,
+          "title" : "XCTAssertEqual failed: (\"47\") is not equal to (\"576\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793323324.957,
+          "title" : "XCTAssertEqual failed: (\"2937\") is not equal to (\"36000\")"
+        }
+      ],
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

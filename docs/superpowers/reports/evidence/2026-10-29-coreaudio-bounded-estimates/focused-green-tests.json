@@ -1,0 +1,143 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "duration" : "0.002s",
+                  "durationInSeconds" : 0.001950979232788086,
+                  "name" : "testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.026s",
+                  "durationInSeconds" : 0.026331067085266113,
+                  "name" : "testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00071s",
+                  "durationInSeconds" : 0.0007100105285644531,
+                  "name" : "testConsumedPCMOverflowIsNotRetryableBackpressure()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testConsumedPCMOverflowIsNotRetryableBackpressure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testConsumedPCMOverflowIsNotRetryableBackpressure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.013s",
+                  "durationInSeconds" : 0.01340794563293457,
+                  "name" : "testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.002s",
+                  "durationInSeconds" : 0.0020149946212768555,
+                  "name" : "testCoreAudioMP3LowRateUses576SamplePackets()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testCoreAudioMP3LowRateUses576SamplePackets()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCoreAudioMP3LowRateUses576SamplePackets",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.017s",
+                  "durationInSeconds" : 0.016536951065063477,
+                  "name" : "testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.00062s",
+                  "durationInSeconds" : 0.0006240606307983398,
+                  "name" : "testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.1684460639953613,
+                  "name" : "testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0016s",
+                  "durationInSeconds" : 0.00164794921875,
+                  "name" : "testPreconversionBackpressureStillRetriesOnceCapacityIsReleased()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testPreconversionBackpressureStillRetriesOnceCapacityIsReleased()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testPreconversionBackpressureStillRetriesOnceCapacityIsReleased",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.015s",
+                  "durationInSeconds" : 0.014523029327392578,
+                  "name" : "testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                },
+                {
+                  "duration" : "0.0027s",
+                  "durationInSeconds" : 0.0026630163192749023,
+                  "name" : "testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure()",
+                  "nodeIdentifier" : "YlManagedSoftwareAudioTests/testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure",
+                  "nodeType" : "Test Case",
+                  "result" : "Passed"
+                }
+              ],
+              "name" : "YlManagedSoftwareAudioTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests",
+              "nodeType" : "Test Suite",
+              "result" : "Passed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Passed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Passed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "reviewer": "/root/coreaudio_bounds_review",
+  "scope": "Independent read-only source/evidence review; no reviewer-run build or devices",
+  "productionFindings": [],
+  "minorFinding": {
+    "priority": "P3",
+    "issue": "Report could imply whole-PCM equality, test compares each block first sample",
+    "resolution": "Report narrowed to time/frame/byte counts and first-sample checks; no code or assertion relaxation",
+    "status": "closed"
+  },
+  "verifiedFocusedCases": 11,
+  "candidateHashes": 5,
+  "finalRuntimeAndIOSReceipt": "Verified 203 passing unique cases, 0 failed/skipped, source hashes, and iOS arm64 Simulator compile-only exits0",
+  "acceptedBoundaries": [
+    "Initial MP3 priming is not a complete frame; observed first PCM47 on this host",
+    "AAC960 and HE-AAC support not expanded",
+    "System internal A5 bound, minimum OS and physical playback qualifications remain open"
+  ],
+  "verifiedConsolidatedCases": 203,
+  "consolidatedFailures": 0,
+  "consolidatedSkips": 0,
+  "runtimeWarnings": 28,
+  "iosDiagnostic": "SwiftCompile failed with exit code 0 appears in log; retained, not described as zero error text",
+  "remainingActionableFindings": []
+}

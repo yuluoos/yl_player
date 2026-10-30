@@ -1,0 +1,26 @@
+{
+  "command": [
+    "ffmpeg",
+    "-v",
+    "error",
+    "-f",
+    "lavfi",
+    "-i",
+    "sine=frequency=440:sample_rate=16000:duration=0.35",
+    "-c:a",
+    "libmp3lame",
+    "-b:a",
+    "32k",
+    "-write_xing",
+    "0",
+    "-id3v2_version",
+    "0",
+    "-f",
+    "mp3",
+    "mp3-16k.mp3"
+  ],
+  "firstEightFrames": 8,
+  "bytes": 1152,
+  "embeddedAsBase64": "testCoreAudioMP3LowRateUses576SamplePackets",
+  "fullGeneratedFileSHA256": "42a2849e50ca5ea1af25f4a7cb2ba856e4c58f848511f921dce8cd3e3e5087bb"
+}

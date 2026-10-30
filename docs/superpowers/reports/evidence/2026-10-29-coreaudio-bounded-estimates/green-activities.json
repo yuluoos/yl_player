@@ -1,0 +1,255 @@
+{
+  "testIdentifier" : "YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+  "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration",
+  "testName" : "testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+  "testRuns" : [
+    {
+      "activities" : [
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322853.831,
+          "title" : "XCTAssertEqual failed: (\"1.6127985e-06\") is not equal to (\"1.5045694e-06\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.059,
+          "title" : "XCTAssertEqual failed: (\"-0.00028537455\") is not equal to (\"-0.00029974096\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.06,
+          "title" : "XCTAssertEqual failed: (\"-0.12345224\") is not equal to (\"-0.123464435\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.06,
+          "title" : "XCTAssertEqual failed: (\"0.10341633\") is not equal to (\"0.103422135\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.061,
+          "title" : "XCTAssertEqual failed: (\"-0.034839086\") is not equal to (\"-0.0348357\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.061,
+          "title" : "XCTAssertEqual failed: (\"-0.047305066\") is not equal to (\"-0.047306467\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.062,
+          "title" : "XCTAssertEqual failed: (\"0.111558825\") is not equal to (\"0.11156031\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.063,
+          "title" : "XCTAssertEqual failed: (\"1.5256029e-06\") is not equal to (\"1.5045694e-06\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.063,
+          "title" : "XCTAssertEqual failed: (\"-0.00029321417\") is not equal to (\"-0.00029974096\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.064,
+          "title" : "XCTAssertEqual failed: (\"-0.123456016\") is not equal to (\"-0.123464435\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.064,
+          "title" : "XCTAssertEqual failed: (\"0.10344144\") is not equal to (\"0.103422135\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.065,
+          "title" : "XCTAssertEqual failed: (\"-0.034840327\") is not equal to (\"-0.0348357\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.066,
+          "title" : "XCTAssertEqual failed: (\"-0.047301553\") is not equal to (\"-0.047306467\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.066,
+          "title" : "XCTAssertEqual failed: (\"0.11156168\") is not equal to (\"0.11156031\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.067,
+          "title" : "XCTAssertEqual failed: (\"1.5208406e-06\") is not equal to (\"1.5045694e-06\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.068,
+          "title" : "XCTAssertEqual failed: (\"-0.00031002497\") is not equal to (\"-0.00029974096\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.068,
+          "title" : "XCTAssertEqual failed: (\"-0.123458795\") is not equal to (\"-0.123464435\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.069,
+          "title" : "XCTAssertEqual failed: (\"0.10343924\") is not equal to (\"0.103422135\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.069,
+          "title" : "XCTAssertEqual failed: (\"-0.034843516\") is not equal to (\"-0.0348357\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.07,
+          "title" : "XCTAssertEqual failed: (\"-0.047306437\") is not equal to (\"-0.047306467\")"
+        },
+        {
+          "childActivities" : [
+            {
+              "isAssociatedWithFailure" : false,
+              "title" : ""
+            }
+          ],
+          "isAssociatedWithFailure" : true,
+          "startTime" : 1793322854.071,
+          "title" : "XCTAssertEqual failed: (\"0.11156572\") is not equal to (\"0.11156031\")"
+        }
+      ],
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ]
+}

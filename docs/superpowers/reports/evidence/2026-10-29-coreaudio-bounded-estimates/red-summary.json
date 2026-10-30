@@ -1,0 +1,74 @@
+{
+  "devicesAndConfigurations" : [
+    {
+      "device" : {
+        "architecture" : "arm64",
+        "deviceId" : "00008103-000571C03CD9001E",
+        "deviceName" : "My Mac",
+        "modelName" : "MacBook Pro",
+        "osBuildNumber" : "26A434",
+        "osVersion" : "27.0.1",
+        "platform" : "macOS"
+      },
+      "expectedFailures" : 0,
+      "failedTests" : 2,
+      "passedTests" : 0,
+      "skippedTests" : 0,
+      "testPlanConfiguration" : {
+        "configurationId" : "1",
+        "configurationName" : "Test Scheme Action"
+      }
+    }
+  ],
+  "environmentDescription" : "Runner · Built with macOS 27.0.1",
+  "expectedFailures" : 0,
+  "failedTests" : 2,
+  "finishTime" : 1793322767.364,
+  "passedTests" : 0,
+  "result" : "Failed",
+  "runtimeWarnings" : [
+
+  ],
+  "skippedTests" : 0,
+  "startTime" : 1793322749.686,
+  "statistics" : [
+
+  ],
+  "testFailures" : [
+    {
+      "failureText" : "XCTAssertLessThanOrEqual failed: (\"1000000000\") is greater than (\"24000\")",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 1,
+      "testIdentifierString" : "YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations",
+      "testName" : "testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()"
+    },
+    {
+      "failureText" : "XCTAssertLessThanOrEqual failed: (\"192000000\") is greater than (\"65536\")",
+      "targetName" : "RunnerTests",
+      "testIdentifier" : 2,
+      "testIdentifierString" : "YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+      "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration",
+      "testName" : "testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()"
+    }
+  ],
+  "title" : "Test - Runner",
+  "topInsights" : [
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "3 runs of 1 test failed with XCTAssertLessThanOrEqual failed: (\"1000000000\") is greater than (\"24000\")"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertLessThanOrEqual failed: (\"384000000\") is greater than (\"18432\")"
+    },
+    {
+      "category" : "Common Failures",
+      "impact" : "50% of failures",
+      "text" : "2 runs of 1 test failed with XCTAssertLessThanOrEqual failed: (\"192000000\") is greater than (\"65536\")"
+    }
+  ],
+  "totalTestCount" : 2
+}

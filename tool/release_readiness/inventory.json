@@ -229,7 +229,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioCompletionPolicy.swift": "201f374d0cf2563d52cb59bd040bc6400e15a9e6f319669b5a2eeabb4858b321",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioOwnershipCoordinator.swift": "43ea3c7612111d4038c07827bcea0ee4fd8ac4b6bbcc429d85ec1977de6d0a6c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioPipeline.swift": "6a861ef4478c13fcb1501a4ffdd0e645488a1bec1a5fda10b87175a530e4e0db",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "4739f1082c941da96e91594b42551ef8926b11059d55f8844a52a65375e9c3e9",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "33ff2235d864fb5620b210b8aebafcb39601043b0958d6c2b18a17cba2e6b379",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioSessionDriving.swift": "627cc82c1d28587b41605d2b6b5dd1fd1aaea3a8c35804035534ee1786188deb",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioTerminalState.swift": "db205b02848ed0f86b15ade78b6cafb70918d85c7690cdea73b18dfb5f97d5a0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlDtsAudioConverter.swift": "640150fb2617e8aa717240c19ae5c138fa521c6b39307c145613d84cad4ccff9",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "d5013c8138a598c460af49e1da4c6690594813ec6646a674e4b287eb164deee5"
+    "sha256": "12e4534abbc667e5090346d55899c6f072b9af3b9b79c2db4359f0b00eb2fbbf"
   },
   "evidence": {
     "p01": {
@@ -878,6 +878,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-29-audio-consumed-packet-admission.md",
       "sha256": "ef4d144878a4584b234de6e67fa1ff1c2fa69b005f3c244409227bb22dfcbe40"
+    },
+    "coreaudio-bounds-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-coreaudio-bounded-estimates.md",
+      "sha256": "b165c2b786f4222aa2b5f764fb54cacfbfe7706a57cae97fa26d5fa5e2d7c701",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1255,7 +1260,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "audio-consumed-packet-20261029"
+        "audio-consumed-packet-20261029",
+        "coreaudio-bounds-20261029"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -1270,7 +1276,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "audio-consumed-packet-20261029"
+        "audio-consumed-packet-20261029",
+        "coreaudio-bounds-20261029"
       ],
       "acceptance": null,
       "nextAction": "close-required-format-cells-on-one-build"
@@ -2440,7 +2447,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "audio-consumed-packet-20261029"
+        "audio-consumed-packet-20261029",
+        "coreaudio-bounds-20261029"
       ],
       "acceptance": null,
       "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"

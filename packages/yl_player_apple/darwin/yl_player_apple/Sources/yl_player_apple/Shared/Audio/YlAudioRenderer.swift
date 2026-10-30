@@ -1223,7 +1223,10 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     }
     let formatFlags: AudioFormatFlags = flac?.formatFlags ?? (stream.codec == .aac && !YlAppleCompatibility.current.batchesAudioInput
       ? AudioFormatFlags(MPEG4ObjectID.AAC_LC.rawValue) : 0)
-    let inputFramesPerPacket: UInt32 = flac?.maxBlockSize ?? (stream.codec == .aac ? 1024 : 1152)
+    // MPEG-2/2.5 Layer III uses 576 samples at these inspected sample rates;
+    // MPEG-1 uses 1152. Keep one compressed frame mapped to one PCM interval.
+    let mp3Frames: UInt32 = [8000.0, 11025, 12000, 16000, 22050, 24000].contains(stream.sampleRate) ? 576 : 1152
+    let inputFramesPerPacket: UInt32 = flac?.maxBlockSize ?? (stream.codec == .aac ? 1024 : mp3Frames)
     let magicCookie = flac?.coreAudioCookie ?? (stream.codec == .aac && YlAppleCompatibility.current.batchesAudioInput
       ? Self.aacMagicCookie(audioSpecificConfig: stream.magicCookie)
       : stream.magicCookie)
@@ -1304,14 +1307,12 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
       return YlAudioBufferEstimate(durationUs: 0, byteCount: 0)
     }
     let flacFrames = flacConfiguration?.frameCount(packet: packet.data)
-    let durationUs = flacConfiguration != nil
-      ? Int64((Double(flacFrames ?? 0) * 1_000_000 / outputFormat.sampleRate).rounded(.up))
-      : packet.durationUs > 0
-      ? packet.durationUs
-      : Int64(
-        (Double(framesPerPacket) * 1_000_000 / outputFormat.sampleRate).rounded(.up)
-      )
-    let frameCount = max(1, Int((Double(durationUs) * outputFormat.sampleRate / 1_000_000).rounded(.up)))
+    // Container duration is timeline metadata, not a PCM allocation bound.
+    // Fixed-packet codecs retain their configured output-frame contract; FLAC
+    // supplies an exact, validated frame count from its own header.
+    let outputFrames = flacConfiguration != nil ? (flacFrames ?? 0) : framesPerPacket
+    let durationUs = Int64((Double(outputFrames) * 1_000_000 / outputFormat.sampleRate).rounded(.up))
+    let frameCount = flacConfiguration != nil ? max(1, Int(flacFrames ?? 0)) : Int(fixedOutputFrameCapacity)
     return YlAudioBufferEstimate(
       durationUs: durationUs,
       byteCount: YlAudioFormatPolicy.byteCount(
@@ -1320,6 +1321,12 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
         channelCount: Int(outputFormat.channelCount)
       )
     )
+  }
+
+  // Preserve the existing non-batched CoreAudio headroom without allowing a
+  // container duration to enlarge it. Admission and allocation share this cap.
+  private var fixedOutputFrameCapacity: AVAudioFrameCount {
+    framesPerPacket * (batchesInput ? 1 : 2)
   }
 
   func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
@@ -1362,14 +1369,7 @@ final class YlAppleCompressedAudioConverter: YlAudioPacketConverting {
     }
 
     let bytesPerFrame = max(1, Int(outputFormat.streamDescription.pointee.mBytesPerFrame))
-    let estimate = estimateOutput(for: packet)
-    let bytesPerSampleFrame = YlAudioFormatPolicy.byteCount(
-      frameCount: 1, bytesPerFrame: bytesPerFrame,
-      channelCount: Int(outputFormat.channelCount)
-    )
-    let frameCapacity = flacFrames ?? (batchesInput
-      ? AVAudioFrameCount(framesPerPacket)
-      : AVAudioFrameCount(max(Int(framesPerPacket), estimate.byteCount / bytesPerSampleFrame + Int(framesPerPacket))))
+    let frameCapacity = flacFrames ?? fixedOutputFrameCapacity
     let allocatedBytes = YlAudioFormatPolicy.byteCount(frameCount: Int(frameCapacity), bytesPerFrame: bytesPerFrame,
       channelCount: Int(outputFormat.channelCount))
     let pcmReservation = try bufferScope?.require(category: .scheduledAudio, bytes: allocatedBytes)
