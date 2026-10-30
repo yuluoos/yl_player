@@ -1,6 +1,6 @@
 # CoreAudio 有界估算与低采样率 MP3 帧数（2026-10-29）
 
-基线 `d514997992fda10b4062f568ab511ea084fe2aae`，工作分支 `codex/coreaudio-bounded-estimates`。延续P03/P08可控资源实现，不改另一聊天iOS恢复，不推送、不发布，当前未提交。
+基线 `d514997992fda10b4062f568ab511ea084fe2aae`，工作分支 `codex/coreaudio-bounded-estimates`。延续P03/P08可控资源实现，不改另一聊天iOS恢复，不推送、不发布，已提交并合并至本地main；见[合并与清理记录](2026-10-29-coreaudio-merge.md)。
 
 ## 实质实现
 

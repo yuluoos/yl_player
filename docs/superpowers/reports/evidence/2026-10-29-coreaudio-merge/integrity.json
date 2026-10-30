@@ -1,0 +1,10 @@
+{
+  "commit": "cd441abdf68e0419dff407a220b629befe2df207",
+  "sourceSha256": "12e4534abbc667e5090346d55899c6f072b9af3b9b79c2db4359f0b00eb2fbbf",
+  "candidateFilesMatched": 5,
+  "evidenceChecksumsMatched": true,
+  "reusedNativeTests": 203,
+  "nativeFailures": 0,
+  "nativeSkipped": 0,
+  "premergeVerificationNote": "Initial ad-hoc byte reader did not handle framework symlinks; canonical source_snapshot used successfully without changing sources."
+}
