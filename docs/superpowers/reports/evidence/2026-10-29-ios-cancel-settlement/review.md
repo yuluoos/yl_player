@@ -1,0 +1,3 @@
+独立综合复审cancel_settlement_review：确认DEBUG独立任务所有权、锁外observer、observer返回后pending释放、保留连接防止ID复用、late send冻结。发现v4冻结时间线P2，原校验只约束terminal可能接收downstreamTerminal后的发送。两红例复现后约束所有transport times<=downstreamTerminal、success taskComplete<=downstreamTerminal；取消仍可任务稍后完成。定向复审P2已关闭，188工具通过，无新增P1/P2。首次原生4绿确认；最终矩阵及媒体由完整独立证据另行记录，未将早期检查冒充全量。
+
+最终证据独立重算：1162 trace全有taskComplete与非空metrics，34取消（taskCancelled30/成功4），27取消核心区间不完整，成功无不完整。normal411/14取消/1未关联、repeat407/14取消/1未关联，二者严格失败；original344/6取消/0未关联严格通过。未关联3.183/4.411ms，fetch start存在但request start缺失，不能豁免。二次安装高尾34.575/34.640秒；original39.980秒自然恢复且尝试0。三轮同制品，无双事务不证明历史根因解决；不授予物理连续性。原生iOS249/mac最终224、mac首轮222/224及2/2定向复核保留。未发现新增P1/P2。

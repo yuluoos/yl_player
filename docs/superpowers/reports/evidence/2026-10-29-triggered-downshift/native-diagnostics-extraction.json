@@ -1,0 +1,44 @@
+[
+  {
+    "name": "budget-zero",
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-triggered-downshift/media/budget-zero.xcresult",
+      "--output-path",
+      "/private/tmp/yl-triggered-downshift/budget-zero-diagnostics"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "normal-zero",
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-triggered-downshift/media/normal-zero.xcresult",
+      "--output-path",
+      "/private/tmp/yl-triggered-downshift/normal-zero-diagnostics"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "budget-zero-repeat",
+    "command": [
+      "xcrun",
+      "xcresulttool",
+      "export",
+      "diagnostics",
+      "--path",
+      "/private/tmp/yl-triggered-downshift/media/budget-zero-repeat.xcresult",
+      "--output-path",
+      "/private/tmp/yl-triggered-downshift/budget-zero-repeat-diagnostics"
+    ],
+    "exitCode": 0
+  }
+]

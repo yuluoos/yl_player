@@ -1,0 +1,38 @@
+[
+  {
+    "name": "normal",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-cancel-settlement/media/normal",
+      "--profiles",
+      "/private/tmp/yl-cancel-settlement/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "normal-repeat",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-cancel-settlement/media/normal-repeat",
+      "--profiles",
+      "/private/tmp/yl-cancel-settlement/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-cancel-settlement/media/original",
+      "--profiles",
+      "/private/tmp/yl-cancel-settlement/profiles.json"
+    ],
+    "exitCode": 0
+  }
+]

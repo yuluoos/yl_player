@@ -46,6 +46,23 @@ class ShapingTests(unittest.TestCase):
         return net.Shaper(net.Profile(profile(*steps)), self.clock.now,
                           self.clock.sleep)
 
+    def test_waiting_for_budget_lock_observes_deadline_and_stop(self):
+        for stop in [False,True]:
+            with self.subTest(stop=stop):
+                shaper=net.Shaper(net.Profile(profile(step())))
+                shaper.lock.acquire();done=threading.Event();failures=[];timing=net.RequestTiming(shaper.now)
+                def consume():
+                    try:shaper.consume(1,deadline=shaper.elapsed()+(.06 if not stop else 10),timing=timing)
+                    except Exception as error:failures.append(type(error))
+                    finally:done.set()
+                worker=threading.Thread(target=consume,daemon=True);worker.start()
+                if stop:shaper.stopped.set()
+                try:self.assertTrue(done.wait(.5),'A queued request must not wait for the lock owner after cancellation/deadline')
+                finally:shaper.lock.release();worker.join(timeout=1)
+                self.assertEqual(failures,[net.Disconnected if stop else TimeoutError])
+                self.assertEqual(timing.values['queueFailures'],1)
+                self.assertEqual(timing.values['holdCalls'],0)
+
     def test_transfer_crosses_rate_boundary_without_resetting_timeline(self):
         s = self.shaper(step(), step(1000, 100))
         s.consume(1100, deadline=10)
@@ -146,6 +163,152 @@ class ServerTests(unittest.TestCase):
         # A response EOF can precede its handler's final log append.
         self.server.wait_handlers()
         return [json.loads(line) for line in self.log.getvalue().splitlines()]
+
+    def lifecycle(self):
+        self.assertTrue(callable(getattr(self.server, 'connection_lifecycle', None)),
+                        'Pre-request connection closures need preserved evidence')
+        return self.server.connection_lifecycle()
+
+    def test_lifecycle_keeps_headerless_close_and_correlates_normal_request(self):
+        self.start()
+        conn=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+        with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.requests==1,timeout=2))
+        conn.close();self.assertTrue(self.server.wait_handlers())
+        self.assertEqual(self.request(headers={'Authorization':'secret-value'})[2],self.payload)
+        rows=self.records();trace=self.lifecycle()
+        self.assertEqual(trace['acceptedCount'],2);self.assertEqual(trace['rejectedCount'],0)
+        self.assertEqual(trace['connections'][0]['requestIds'],[])
+        self.assertEqual(trace['connections'][1]['requestIds'],[rows[0]['requestId']])
+        self.assertEqual(trace['connections'][0]['closeReason'],'handlerEnded')
+        self.assertNotIn('secret',json.dumps(trace));self.assertNotIn('127.0.0.1',json.dumps(trace))
+        from connection_lifecycle import summarize_lifecycle
+        summary=summarize_lifecycle(trace,rows)
+        self.assertEqual(summary['withoutParsedRequest'],[1]);self.assertTrue(summary['complete'])
+
+    def test_lifecycle_records_admission_rejection_before_any_request(self):
+        self.start();peers=[]
+        try:
+            for n in range(8):
+                peers.append(socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2))
+                with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.active==n+1,timeout=2))
+            extra=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+            try:self.assertEqual(extra.recv(1),b'')
+            finally:extra.close()
+        finally:
+            for peer in peers:peer.close()
+        self.assertTrue(self.server.wait_handlers());trace=self.lifecycle()
+        self.assertEqual(trace['acceptedCount'],8);self.assertEqual(trace['rejectedCount'],1)
+        self.assertEqual(trace['rejections'][0]['reason'],'activeLimit')
+        self.assertEqual(trace['rejections'][0]['active'],8)
+        self.assertEqual(self.records(),[])
+
+    def test_lifecycle_keeps_full_rejection_count_when_samples_are_bounded(self):
+        self.start();peers=[]
+        try:
+            for n in range(8):
+                peers.append(socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2))
+                with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.active==n+1,timeout=2))
+            for _ in range(33):
+                conn=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+                try:self.assertEqual(conn.recv(1),b'')
+                finally:conn.close()
+        finally:
+            for peer in peers:peer.close()
+        self.assertTrue(self.server.wait_handlers());trace=self.lifecycle()
+        self.assertEqual(trace['rejectedCount'],33);self.assertEqual(len(trace['rejections']),32)
+        self.assertEqual(trace['droppedRejections'],1)
+        from connection_lifecycle import summarize_lifecycle
+        self.assertFalse(summarize_lifecycle(trace,[])['complete'])
+
+    def test_lifecycle_records_shutdown_before_header_read_returns(self):
+        self.start();conn=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+        try:
+            with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.active==1,timeout=2))
+            self.server.shutdown();self.server.server_close()
+            self.assertEqual(conn.recv(1),b'')
+        finally:conn.close()
+        self.assertEqual(self.lifecycle()['connections'][0]['closeReason'],'serverShutdown')
+
+    def test_lifecycle_distinguishes_deadline_from_unobserved_peer_close(self):
+        self.start();self.server.connection_timeout=.05
+        conn=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+        try:self.assertEqual(conn.recv(1),b'')
+        finally:conn.close()
+        self.assertTrue(self.server.wait_handlers());trace=self.lifecycle()
+        self.assertEqual(trace['connections'][0]['closeReason'],'absoluteDeadline')
+        self.assertEqual(trace['connections'][0]['requestIds'],[])
+        self.assertGreaterEqual(trace['connections'][0]['closedSeconds'],trace['connections'][0]['acceptedSeconds'])
+
+    def test_actual_server_records_oversleep_without_increasing_rate_credit(self):
+        class Oversleep(Clock):
+            def sleep(self,seconds):super().sleep(seconds);self.value+=.01
+        self.start(steps=[step(rate=1000,latency=40)],clock=Oversleep())
+        self.assertEqual(self.request()[2],self.payload)
+        rows=self.records();timing=rows[0]['serverTiming']
+        self.assertAlmostEqual(timing['latencySeconds'],.05)
+        self.assertAlmostEqual(timing['sleepRequestedSeconds'],.3)
+        self.assertAlmostEqual(timing['sleepSeconds'],.36)
+        self.assertAlmostEqual(timing['holdSeconds'],.36)
+        self.assertEqual(timing['headerWriteCalls'],1)
+        self.assertEqual(timing['bodyWriteCalls'],1)
+        self.assertEqual(timing['queueCalls'],1)
+        from server_timing import summarize_server_timing
+        self.assertTrue(summarize_server_timing(rows)['complete'])
+
+    def test_http11_persistence_reuses_socket_and_preserves_range_head(self):
+        self.start(connection_mode='http11-keepalive')
+        conn = http.client.HTTPConnection('127.0.0.1', self.server.server_port, timeout=2)
+        try:
+            sockets=[]
+            for method,headers,want in [('GET',{},self.payload),('HEAD',{},b''),
+                    ('GET',{'Range':'bytes=10-19'},b'0123456789')]:
+                conn.request(method,'/segment.m4s',headers=headers)
+                response=conn.getresponse();self.assertEqual(response.version,11)
+                self.assertEqual(response.read(),want);sockets.append(conn.sock)
+            self.assertTrue(all(s is sockets[0] and s is not None for s in sockets))
+        finally:conn.close()
+        rows=self.records()
+        self.assertEqual([r['connectionRequestIndex'] for r in rows],[1,2,3])
+        self.assertEqual(len({r['connectionId'] for r in rows}),1)
+        self.assertTrue(all(r['connectionMode']=='http11-keepalive' for r in rows))
+        self.assertEqual([r['bodyBytesWritten'] for r in rows],[300,0,10])
+
+    def test_http11_close_is_same_protocol_without_persistence(self):
+        self.start(connection_mode='http11-close')
+        conn=http.client.HTTPConnection('127.0.0.1',self.server.server_port,timeout=2)
+        try:
+            for _ in range(2):
+                conn.request('GET','/segment.m4s');response=conn.getresponse()
+                self.assertEqual(response.version,11);self.assertEqual(response.read(),self.payload)
+                self.assertIsNone(conn.sock)
+        finally:conn.close()
+        rows=self.records();self.assertEqual(len({r['connectionId'] for r in rows}),2)
+        self.assertEqual([r['connectionRequestIndex'] for r in rows],[1,1])
+
+    def test_persistent_peer_close_and_request_budget_are_bounded(self):
+        self.start(connection_mode='http11-keepalive')
+        self.server.next_record_id=9999
+        conn=http.client.HTTPConnection('127.0.0.1',self.server.server_port,timeout=2)
+        try:
+            conn.request('GET','/segment.m4s');self.assertEqual(conn.getresponse().read(),self.payload)
+            conn.request('GET','/segment.m4s')
+            with self.assertRaises(http.client.RemoteDisconnected):conn.getresponse()
+        finally:conn.close()
+        rows=self.records();self.assertEqual(len(rows),1);self.assertEqual(rows[0]['requestId'],10000)
+        trace=self.lifecycle();self.assertEqual(trace['connections'][0].get('unrecordedRequests'),1)
+        self.assertEqual(trace['connections'][0]['closeReason'],'requestRecordLimit')
+
+    def test_persistent_client_can_request_close(self):
+        self.start(connection_mode='http11-keepalive')
+        self.assertEqual(self.request(headers={'Connection':'close'})[2],self.payload)
+        self.assertTrue(self.server.wait_handlers())
+        self.assertEqual(self.records()[0]['connectionMode'],'http11-keepalive')
+
+    def test_connection_mode_rejects_unknown_and_default_stays_legacy(self):
+        with self.assertRaises(ValueError):self.start(connection_mode='unexpected')
+        self.start();status,headers,body=self.request()
+        self.assertEqual(headers['Connection'],'close');self.assertEqual(body,self.payload)
+        self.assertEqual(self.records()[0]['connectionMode'],'close')
 
     def test_active_clock_header_is_bracketable_and_head_does_not_arm(self):
         clock = Clock()
@@ -329,6 +492,17 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(rows[1]['startMs'], 0)
         self.assertEqual(rows[2]['startMs'], 2000)
         self.assertTrue(all(r['runId'] == 'capture-1' for r in rows))
+
+class ConnectionEvidenceTests(unittest.TestCase):
+    def test_summary_requires_explicit_consistent_mode_and_sequence(self):
+        self.assertTrue(hasattr(net,'summarize_connections'))
+        rows=[dict(connectionMode='http11-keepalive',connectionId=1,connectionRequestIndex=n) for n in [1,2]]
+        summary=net.summarize_connections(rows,'http11-keepalive')
+        self.assertEqual(summary['reusedRequests'],1)
+        for invalid in [[],[rows[0],rows[0]],list(reversed(rows)),[rows[1]],[dict(rows[0],connectionId=True)],
+                        [dict(rows[0],connectionMode='close')],[{}]]:
+            with self.subTest(rows=invalid),self.assertRaises(ValueError):net.summarize_connections(invalid,'http11-keepalive')
+        with self.assertRaises(ValueError):net.summarize_connections([dict(r,connectionMode='http11-close') for r in rows],'http11-close')
 
 
 if __name__ == '__main__':

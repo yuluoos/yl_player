@@ -267,8 +267,10 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
     sessionConfiguration.timeoutIntervalForRequest = TimeInterval(
       max(1, configuration.readTimeoutMs)
     ) / 1_000
-    sessionConfiguration.timeoutIntervalForResource = TimeInterval(
-      max(1, configuration.connectTimeoutMs + configuration.readTimeoutMs)
+    // Native options may exceed the map's limits. Convert before summing so
+    // valid Int64 inputs cannot trap before Foundation receives the interval.
+    sessionConfiguration.timeoutIntervalForResource = max(1,
+      TimeInterval(configuration.connectTimeoutMs) + TimeInterval(configuration.readTimeoutMs)
     ) / 1_000
     let delegateQueue = OperationQueue()
     delegateQueue.name = "dev.ylplayer.hls.url-session"
@@ -411,8 +413,9 @@ final class YlHlsResourceLoader: NSObject, AVAssetResourceLoaderDelegate {
   func preflight(cancellationToken: YlOpenCancellationToken, snapshot: YlDashManifestSnapshot? = nil) throws {
     try cancellationToken.throwIfCancelled()
     cancellationToken.onCancel { [weak self] in self?.cancelAll() }
-    let maximumWaitMs = max(1_000, configuration.connectTimeoutMs + configuration.readTimeoutMs + 1_000)
-    let deadline = DispatchTime.now() + .milliseconds(Int(maximumWaitMs))
+    let maximumWaitSeconds = max(1,
+      (TimeInterval(configuration.connectTimeoutMs) + TimeInterval(configuration.readTimeoutMs)) / 1_000 + 1)
+    let deadline = DispatchTime.now() + maximumWaitSeconds
     func wait(_ request: PreflightRequest) throws {
       if request.semaphore.wait(timeout: deadline) == .timedOut {
         cancelAll()

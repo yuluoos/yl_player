@@ -1,0 +1,194 @@
+{
+  "same-url-targeted": {
+    "device": "My Mac",
+    "deviceID": "00008103-000571C03CD9001E",
+    "attachment": "6F4DE39B-232D-47A6-8172-3E807C7341C8.json",
+    "cancelledLifetimeMs": 0.09641666656534653,
+    "explicitSameURLAdmissionAfterCancellationMs": 7.115166667063022,
+    "sameResourceToken": true,
+    "distinctRequestCorrelationIDs": true,
+    "cancelledRequestStillUncorrelated": true,
+    "followupTaskOutcome": 0,
+    "strictParserCheck": {
+      "errors": [
+        "proxy request correlation incomplete"
+      ],
+      "proxyRequestObservation": {
+        "version": 6,
+        "requestCount": 1,
+        "outcomeCounts": {
+          "cancelled": 1
+        },
+        "requests": [
+          {
+            "proxyID": "88792566-6CEE-464B-AAF8-031A4389E332",
+            "requestID": 2,
+            "serverRequestID": null,
+            "outcome": "cancelled",
+            "transactionMetrics": {
+              "redirectCount": 0,
+              "taskSeconds": 0.0022429227828979492,
+              "transactionCount": 0,
+              "transactions": [],
+              "truncated": 0,
+              "version": 2,
+              "available": true,
+              "complete": false
+            },
+            "bodyBytes": 0,
+            "sentBodyBytes": 0,
+            "upstreamSeconds": null,
+            "serverSeconds": null,
+            "upstreamMinusServerSeconds": null,
+            "responseWaitSeconds": null,
+            "bodyCallbackSpanSeconds": null,
+            "sendWaitSumSeconds": 0,
+            "sendWaitMaxSeconds": 0,
+            "terminalSeconds": 0.0026434166666149395,
+            "downstreamSeconds": 9.641666656534653e-05,
+            "taskCompletionSeconds": 0.002641875000335858,
+            "taskOutcome": 1,
+            "cancelCause": 2,
+            "resourceToken": "4658398ce9eb8abe7f5e75a1118ccb6ed50a71d749874eea2bfb529424c7eed1"
+          }
+        ],
+        "unmatchedServerRequestIDs": [],
+        "uncorrelatedProxyRequests": 1,
+        "fullyCorrelated": false,
+        "interpretation": "Same-device callback times; correlated server durations use their own clock. Upstream minus server includes transport, scheduling and backpressure, not isolated RTT. Send wait sums may overlap; contentProcessed is not client receipt or display.",
+        "physicalOutputVerified": false,
+        "capabilityAccepted": false
+      }
+    },
+    "capabilityAccepted": false,
+    "interpretation": "Owned loopback single-slot characterization; explicit caller request, not inferred AVPlayer retry. Observed parse ordinals are normalization only."
+  },
+  "macos-final": {
+    "device": "My Mac",
+    "deviceID": "00008103-000571C03CD9001E",
+    "attachment": "EA59B73C-92EF-488F-8248-4A09BA352D93.json",
+    "cancelledLifetimeMs": 0.06812500032538082,
+    "explicitSameURLAdmissionAfterCancellationMs": 2.1171249991311925,
+    "sameResourceToken": true,
+    "distinctRequestCorrelationIDs": true,
+    "cancelledRequestStillUncorrelated": true,
+    "followupTaskOutcome": 0,
+    "strictParserCheck": {
+      "errors": [
+        "proxy request correlation incomplete"
+      ],
+      "proxyRequestObservation": {
+        "version": 6,
+        "requestCount": 1,
+        "outcomeCounts": {
+          "cancelled": 1
+        },
+        "requests": [
+          {
+            "proxyID": "9DF5AC7F-C2EF-42D0-9991-4A479057468E",
+            "requestID": 2,
+            "serverRequestID": null,
+            "outcome": "cancelled",
+            "transactionMetrics": {
+              "redirectCount": 0,
+              "taskSeconds": 0.00010001659393310547,
+              "transactionCount": 0,
+              "transactions": [],
+              "truncated": 0,
+              "version": 2,
+              "available": true,
+              "complete": false
+            },
+            "bodyBytes": 0,
+            "sentBodyBytes": 0,
+            "upstreamSeconds": null,
+            "serverSeconds": null,
+            "upstreamMinusServerSeconds": null,
+            "responseWaitSeconds": null,
+            "bodyCallbackSpanSeconds": null,
+            "sendWaitSumSeconds": 0,
+            "sendWaitMaxSeconds": 0,
+            "terminalSeconds": 0.0001909166676341556,
+            "downstreamSeconds": 6.812500032538082e-05,
+            "taskCompletionSeconds": 0.00018941666712635197,
+            "taskOutcome": 1,
+            "cancelCause": 2,
+            "resourceToken": "c2196ef28a6630a8cb54a0a312851b7ca96d7ceb9cd96811139bb9cdbb2b9b59"
+          }
+        ],
+        "unmatchedServerRequestIDs": [],
+        "uncorrelatedProxyRequests": 1,
+        "fullyCorrelated": false,
+        "interpretation": "Same-device callback times; correlated server durations use their own clock. Upstream minus server includes transport, scheduling and backpressure, not isolated RTT. Send wait sums may overlap; contentProcessed is not client receipt or display.",
+        "physicalOutputVerified": false,
+        "capabilityAccepted": false
+      }
+    },
+    "capabilityAccepted": false,
+    "interpretation": "Owned loopback single-slot characterization; explicit caller request, not inferred AVPlayer retry. Observed parse ordinals are normalization only."
+  },
+  "ios-final": {
+    "device": "iPhone",
+    "deviceID": "00008140-000C49CC3493001C",
+    "attachment": "7C0DB42E-3FB6-4394-B2FF-F2AF3F70624D.json",
+    "cancelledLifetimeMs": 0.07300000288523734,
+    "explicitSameURLAdmissionAfterCancellationMs": 1.5989583334885538,
+    "sameResourceToken": true,
+    "distinctRequestCorrelationIDs": true,
+    "cancelledRequestStillUncorrelated": true,
+    "followupTaskOutcome": 0,
+    "strictParserCheck": {
+      "errors": [
+        "proxy request correlation incomplete"
+      ],
+      "proxyRequestObservation": {
+        "version": 6,
+        "requestCount": 1,
+        "outcomeCounts": {
+          "cancelled": 1
+        },
+        "requests": [
+          {
+            "proxyID": "CDE82E04-6ADB-46C9-8A65-BF5F4D72D18D",
+            "requestID": 2,
+            "serverRequestID": null,
+            "outcome": "cancelled",
+            "transactionMetrics": {
+              "redirectCount": 0,
+              "taskSeconds": 9.191036224365234e-05,
+              "transactionCount": 0,
+              "transactions": [],
+              "truncated": 0,
+              "version": 2,
+              "available": true,
+              "complete": false
+            },
+            "bodyBytes": 0,
+            "sentBodyBytes": 0,
+            "upstreamSeconds": null,
+            "serverSeconds": null,
+            "upstreamMinusServerSeconds": null,
+            "responseWaitSeconds": null,
+            "bodyCallbackSpanSeconds": null,
+            "sendWaitSumSeconds": 0,
+            "sendWaitMaxSeconds": 0,
+            "terminalSeconds": 0.00017495833890279755,
+            "downstreamSeconds": 7.300000288523734e-05,
+            "taskCompletionSeconds": 0.00017425000260118395,
+            "taskOutcome": 1,
+            "cancelCause": 2,
+            "resourceToken": "7b2172f05e1c9d82f0f9ebeca9c851407475c43982602af4988af1dd2a1044b2"
+          }
+        ],
+        "unmatchedServerRequestIDs": [],
+        "uncorrelatedProxyRequests": 1,
+        "fullyCorrelated": false,
+        "interpretation": "Same-device callback times; correlated server durations use their own clock. Upstream minus server includes transport, scheduling and backpressure, not isolated RTT. Send wait sums may overlap; contentProcessed is not client receipt or display.",
+        "physicalOutputVerified": false,
+        "capabilityAccepted": false
+      }
+    },
+    "capabilityAccepted": false,
+    "interpretation": "Owned loopback single-slot characterization; explicit caller request, not inferred AVPlayer retry. Observed parse ordinals are normalization only."
+  }
+}

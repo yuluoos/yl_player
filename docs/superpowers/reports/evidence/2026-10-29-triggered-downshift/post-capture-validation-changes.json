@@ -1,0 +1,12 @@
+{
+  "changed": [
+    "tool/playback_network/README.md",
+    "tool/playback_network/abr_accesslog.py",
+    "tool/playback_network/triggered_fault.py",
+    "tool/playback_network/test_triggered_fault.py"
+  ],
+  "nativeInputsUnchanged": true,
+  "productionInputsUnchanged": true,
+  "captureReceiptsPreserved": true,
+  "reason": "independent review: bound unstarted cleanup and require actual second low output; documentation"
+}

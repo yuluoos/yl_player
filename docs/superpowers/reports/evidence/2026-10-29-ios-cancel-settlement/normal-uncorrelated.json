@@ -1,0 +1,54 @@
+[
+  {
+    "admission": 49200.27912858334,
+    "bodyBytes": 0,
+    "bodyCallbacks": 0,
+    "correlationID": "7C272574-5DBA-4AE5-B91E-98426405A6F7",
+    "downstreamTerminal": 49200.28231191667,
+    "metrics": {
+      "redirectCount": 0,
+      "taskSeconds": 0.0031980276107788086,
+      "transactionCount": 1,
+      "transactions": [
+        {
+          "connectSeconds": null,
+          "dnsSeconds": null,
+          "durationStates": {
+            "connectSeconds": 3,
+            "dnsSeconds": 3,
+            "fetchSeconds": 2,
+            "fetchToRequestSeconds": 2,
+            "requestSeconds": 3,
+            "responseSeconds": 3,
+            "responseWaitSeconds": 3,
+            "tlsSeconds": 3
+          },
+          "fetchSeconds": null,
+          "fetchToRequestSeconds": null,
+          "fetchType": 1,
+          "protocolCode": 0,
+          "requestSeconds": null,
+          "responseSeconds": null,
+          "responseWaitSeconds": null,
+          "reused": 0,
+          "tlsSeconds": null
+        }
+      ],
+      "truncated": 0,
+      "version": 2
+    },
+    "outcome": 1,
+    "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+    "requestID": 63,
+    "sendCompletions": 0,
+    "sendCount": 0,
+    "sendFailures": 0,
+    "sendWaitMax": 0,
+    "sendWaitSum": 0,
+    "sentBodyBytes": 0,
+    "taskComplete": 49200.28252316667,
+    "taskOutcome": 1,
+    "terminal": 49200.282524625,
+    "version": 4
+  }
+]

@@ -1,0 +1,63 @@
+{
+  "media-raw-identity.json": {
+    "count": 44,
+    "mismatches": []
+  },
+  "binary-identity.json": {
+    "count": 307,
+    "mismatches": []
+  },
+  "iosCaseBinding": {
+    "keys": [
+      "expected",
+      "observed",
+      "skipped",
+      "summary",
+      "result_bundle",
+      "platform",
+      "coverage",
+      "skip_evidence"
+    ],
+    "characters": 47412
+  },
+  "macosCaseBinding": {
+    "keys": [
+      "expected",
+      "observed",
+      "skipped",
+      "summary",
+      "result_bundle",
+      "platform",
+      "coverage",
+      "skip_evidence"
+    ],
+    "characters": 42742
+  },
+  "normal-zero": {
+    "passed": false,
+    "exitCode": 0,
+    "errors": [
+      "proxy request correlation incomplete"
+    ],
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  },
+  "budget-zero": {
+    "passed": false,
+    "exitCode": 65,
+    "errors": [
+      "ValueError"
+    ],
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  },
+  "budget-zero-repeat": {
+    "passed": false,
+    "exitCode": 0,
+    "errors": [
+      "ValueError"
+    ],
+    "binaryIdentityUnchanged": true,
+    "ownedProcessExited": true
+  }
+}

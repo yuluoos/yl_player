@@ -1,0 +1,65 @@
+{
+  "strictPassed": false,
+  "failedGate": "summarize_production_recovery requires final width == 640",
+  "actualFinalWidth": 320,
+  "complete": true,
+  "position": 120.025593411,
+  "budgetExhaustionObservation": {
+    "secondInstallElapsed": 56.82876620833122,
+    "secondDownshiftElapsed": 67.14599249999446,
+    "exhaustedSamples": 66,
+    "qualifiedCounterfactualWindows": [
+      {
+        "start": 68.50964849999582,
+        "end": 76.50968716666102,
+        "requests": 20,
+        "bitrate": 2920562.1176946824
+      },
+      {
+        "start": 76.50968716666102,
+        "end": 84.75971162499627,
+        "requests": 18,
+        "bitrate": 3096812.687121913
+      }
+    ],
+    "maximumAttempts": 2,
+    "thirdReservationObserved": false,
+    "capabilityAccepted": false,
+    "continuityAccepted": false,
+    "physicalOutputVerified": false
+  },
+  "policyReasons": {
+    "playbackIneligible": 11,
+    "insufficientBuffer": 51,
+    "highOutput": 95,
+    "windowStarted": 2,
+    "windowPending": 126,
+    "firstQualifiedWindow": 2,
+    "reserved": 2,
+    "backoff": 3,
+    "ticketReady": 1,
+    "budgetExhausted": 139,
+    "nearEnd": 60
+  },
+  "lowTail": {
+    "firstElapsed": 67.14599249999446,
+    "lastElapsed": 123.09959520833218,
+    "firstPosition": 64.018355739,
+    "lastPosition": 119.970852084,
+    "publishedFrames": 1344,
+    "generations": [
+      1
+    ],
+    "widths": [
+      320
+    ]
+  },
+  "hostFailureCount": 0,
+  "coreMediaErrorCodes": {
+    "-12889": 8
+  },
+  "interpretation": "Two eligible windows establish adequate observed bandwidth under the unchanged gate. Attempt two is spent and there is no third reservation. Continued low frames confirm failure of natural high recovery in this run; they do not establish an undocumented AVPlayer penalty timer or justify refunding attempts.",
+  "capabilityAccepted": false,
+  "continuityAccepted": false,
+  "rootCauseEstablished": false
+}

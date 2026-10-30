@@ -78,3 +78,44 @@ class BandwidthDiagnosticsTests(unittest.TestCase):
         summarize_requests(rows,self.profile)
         self.assertEqual(rows,before)
         with self.assertRaises(ValueError): summarize_requests([],self.profile)
+
+
+class VersionFourCLITests(unittest.TestCase):
+    def test_cli_keeps_current_proxy_metrics_and_rejects_incomplete_transactions(self):
+        import json,subprocess,sys,tempfile
+        from pathlib import Path
+        from test_proxy_boundaries import ProxyBoundaryTests
+        from test_transaction_metrics import DurationStateTests
+        fixture=BandwidthDiagnosticsTests();fixture.setUp()
+        boundary=ProxyBoundaryTests();boundary.setUp()
+        server=fixture.row(7,0,100,size=4096,asset='network-period-0/chunk-0-00001.m4s')
+        proxy=dict(boundary.trace,version=6,resourceToken="a"*64,cancelCause=0,metrics=DurationStateTests().source(),taskComplete=10.32,downstreamTerminal=10.33,taskOutcome=0)
+        proxy.update(version=7,cancelSource=0,cancelErrorDomain=0,cancelErrorCode=0)
+        policy=dict(elapsed=1,generation=0,allowed=True,width=640,position=1,remaining=119,bufferAhead=10,bytes=0,
+            transfer=0,requests=0,overdue=0,reason='highOutput',attempts=0,qualifiedWindows=0,sawHigh=True,
+            windowBitrate=None,windowRequests=None,pendingDue=None)
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);profiles=root/'profiles.json'
+            profiles.write_text(json.dumps(dict(schemaVersion=1,profiles=[dict(id=fixture.profile.id,steps=fixture.profile.steps)])))
+            for name,rows in [('requests',[server]),('policy-decisions',[policy]),('rows',[dict(proxyRequestSamplingVersion=7)])]:
+                (root/(name+'.jsonl')).write_text(''.join(json.dumps(v)+'\n' for v in rows))
+            path=root/'proxy-requests.jsonl';path.write_text(json.dumps(proxy)+'\n')
+            cmd=[sys.executable,str(Path(__file__).with_name('bandwidth_diagnostics.py')),str(root),'--profiles',str(profiles)]
+            result=subprocess.run(cmd,capture_output=True,text=True);self.assertEqual(result.returncode,0,result.stderr)
+            self.assertEqual(json.loads(result.stdout)['proxy']['version'],7)
+            first=proxy['metrics']['transactions'][0]
+            for k,state in [('fetchSeconds',2),('responseWaitSeconds',2),('responseSeconds',3)]:first[k]=None;first['durationStates'][k]=state
+            path.write_text(json.dumps(proxy)+'\n');result=subprocess.run(cmd,capture_output=True,text=True)
+            self.assertNotEqual(result.returncode,0)
+            self.assertTrue(result.stdout, 'failed diagnostics lost valid observations')
+            failed=json.loads(result.stdout)
+            self.assertEqual(failed['totalRequests'],1)
+            self.assertFalse(failed['proxy']['requests'][0]['transactionMetrics']['complete'])
+            self.assertTrue(failed['errors'])
+            self.assertFalse(failed['capabilityAccepted'])
+            # Missing request correlation is also a nonzero diagnostic outcome.
+            proxy.update(outcome=1,taskOutcome=1,cancelCause=2,metrics=None)
+            proxy.pop('serverRequestID');proxy.pop('response');proxy.pop('httpStatus')
+            path.write_text(json.dumps(proxy)+'\n');result=subprocess.run(cmd,capture_output=True,text=True)
+            self.assertNotEqual(result.returncode,0)
+            self.assertFalse(json.loads(result.stdout)['proxy']['fullyCorrelated'])

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-same-resource-retry/media/original",
+      "--profiles",
+      "/private/tmp/yl-same-resource-retry/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "normal",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-same-resource-retry/media/normal",
+      "--profiles",
+      "/private/tmp/yl-same-resource-retry/profiles.json"
+    ],
+    "exitCode": 1
+  },
+  {
+    "name": "normal-repeat",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-same-resource-retry/media/normal-repeat",
+      "--profiles",
+      "/private/tmp/yl-same-resource-retry/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "normal-third",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-same-resource-retry/media/normal-third",
+      "--profiles",
+      "/private/tmp/yl-same-resource-retry/profiles.json"
+    ],
+    "exitCode": 0
+  }
+]

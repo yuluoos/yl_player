@@ -1,0 +1,26 @@
+[
+  {
+    "name": "normal",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-transaction-bytes/media/normal",
+      "--profiles",
+      "/private/tmp/yl-transaction-bytes/profiles.json"
+    ],
+    "exitCode": 1
+  },
+  {
+    "name": "original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-transaction-bytes/media/original",
+      "--profiles",
+      "/private/tmp/yl-transaction-bytes/profiles.json"
+    ],
+    "exitCode": 0
+  }
+]

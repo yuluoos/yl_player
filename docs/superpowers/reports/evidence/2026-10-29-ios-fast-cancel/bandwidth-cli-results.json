@@ -1,0 +1,50 @@
+[
+  {
+    "name": "original",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-fast-cancel/media/original",
+      "--profiles",
+      "/private/tmp/yl-fast-cancel/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "normal",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-fast-cancel/media/normal",
+      "--profiles",
+      "/private/tmp/yl-fast-cancel/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "original-repeat",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-fast-cancel/media/original-repeat",
+      "--profiles",
+      "/private/tmp/yl-fast-cancel/profiles.json"
+    ],
+    "exitCode": 0
+  },
+  {
+    "name": "normal-repeat",
+    "command": [
+      "python3",
+      "-B",
+      "tool/playback_network/bandwidth_diagnostics.py",
+      "/private/tmp/yl-fast-cancel/media/normal-repeat",
+      "--profiles",
+      "/private/tmp/yl-fast-cancel/profiles.json"
+    ],
+    "exitCode": 0
+  }
+]

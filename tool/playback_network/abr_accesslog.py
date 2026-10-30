@@ -121,6 +121,12 @@ def production_recovery(args):
     command = getattr(args, 'production_command', 'none')
     if command not in ('none', 'pause-resume', 'pause-prepared', 'seek-prepared', 'load-prepared') or (not enabled and command != 'none'):
         raise ValueError('invalid production command scenario')
+    required = getattr(args, 'require_production_install', False)
+    if type(required) is not bool or (required and (not enabled or command == 'load-prepared')):
+        raise ValueError('production installation requirement needs same-session production capture')
+    exhausted = getattr(args, 'require_budget_exhaustion', False)
+    if type(exhausted) is not bool or (exhausted and (not enabled or not required or command not in ('pause-resume','pause-prepared'))):
+        raise ValueError('budget exhaustion requires same-source production cancellation and installation')
     if not enabled: return False
     if (not getattr(args, 'physical_device', None) or getattr(args, 'duration_seconds', None) != 120 or
         getattr(args, 'recovery_action', None) != 'auto-reload' or getattr(args, 'auto_scenario', None) != 'normal' or
@@ -130,9 +136,10 @@ def production_recovery(args):
     return True
 
 
-def summarize_production_recovery(rows, frames):
+def summarize_production_recovery(rows, frames, *, require_install=False):
     def require(value):
         if not value: raise ValueError('invalid production recovery evidence')
+    require(type(require_install) is bool)
     require(bool(rows) and bool(frames))
     sessions = production_sessions(rows)
     session = rows[0].get('sessionId')
@@ -156,6 +163,7 @@ def summarize_production_recovery(rows, frames):
             published_low = True
     require(published_recovered)
     installed = [e for e in rows[-1]['automaticEvents'] if e['outcome'] == 'installed']
+    require(not require_install or bool(installed))
     for event in installed:
         require(event.get('itemChanged') is True and event.get('credentialCommitAccepted') is True)
         require(any(f.get('frames', 0) > 0 and f.get('width') == 640 and f['elapsed'] > event['elapsedAfter'] for f in frames))
@@ -810,10 +818,20 @@ def validate_candidate_preparation(rows, expected):
                     raise ValueError('preroll installation lacks fresh item preparation evidence')
 
 
+def close_fixture(server, thread):
+    # BaseServer.shutdown waits for serve_forever; it cannot close a listener
+    # whose thread never started (for example after rejected configuration).
+    if server:
+        if thread is not None and thread.is_alive():server.shutdown()
+        server.server_close()
+    if thread is not None and thread.ident is not None:thread.join(timeout=5)
+
+
 def run(args):
     out=args.directory.resolve();out.mkdir(parents=True,exist_ok=False)
     receipt=dict(diagnosticOnly=True,capabilityAccepted=False,errors=[],exitCode=None)
     server=None;thread=None;process=None;log=None;output=None;owned=None
+    fault_control=None;health=[]
     token=uuid.uuid4().hex
     before=None;products=None
     physical_device = getattr(args, 'physical_device', None)
@@ -825,6 +843,17 @@ def run(args):
     try:
         production = production_recovery(args)
         receipt['productionRecovery'] = production
+        fault_rate=getattr(args,'triggered_fault_rate',None)
+        if fault_rate is not None:
+            if (type(fault_rate) is not int or not 0<=fault_rate<=1000000 or not production or
+                not getattr(args,'require_production_install',False) or
+                getattr(args,'production_command','none') not in ('none','pause-resume')):
+                raise ValueError('triggered fault requires bounded production install capture')
+            receipt['triggeredFaultConfiguration']=dict(version=1,rate=fault_rate,duration=5,
+                minimumHighSeconds=2,minimumHighFrames=48,maximumPosition=70)
+
+        receipt['productionInstallRequired'] = getattr(args, 'require_production_install', False)
+        receipt['budgetExhaustionRequired'] = getattr(args, 'require_budget_exhaustion', False)
         cycle = public_policy_cycle(args)
         race = public_policy_race(args)
         receipt['publicPolicyRace'] = race
@@ -844,6 +873,9 @@ def run(args):
         auto_scenario = getattr(args, 'auto_scenario', 'normal')
         if auto_scenario not in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
             raise ValueError('invalid automatic recovery scenario')
+        receipt['connectionMode'] = getattr(args, 'connection_mode', 'close')
+        if receipt['connectionMode'] not in ('close','http11-close','http11-keepalive'):
+            raise ValueError('invalid connection mode')
         receipt['autoScenario'] = auto_scenario
         preparation_mode = candidate_preparation(args)
         receipt['candidatePreparation'] = preparation_mode
@@ -883,11 +915,26 @@ def run(args):
             destination='platform=iOS Simulator,id='+args.device
         if physical_device: destination='platform=iOS,id='+physical_device
         log=(out/'requests.jsonl').open('w');output=(out/'xcode.log').open('w')
+        if fault_rate is not None and profile.steps[-1]['atMs']>15000:
+            raise ValueError('triggered fault requires an initial-only static profile')
         server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog',
-                           owned_host=host if physical_device else None)
+                           owned_host=host if physical_device else None, connection_mode=receipt['connectionMode'])
+        fault_url=''
+        if fault_rate is not None:
+            from triggered_fault import TriggeredShaper,ControlServer
+            server.shaper=TriggeredShaper(profile,rate=fault_rate,duration=5)
+            fault_control=ControlServer(server.shaper,host,token)
+            fault_url=f'http://{host}:{fault_control.port}/fault/{token}'
+        def heartbeat():
+            if len(health)<1000:
+                with server.handlers:
+                    health.append(dict(listenerSeconds=server.shaper.now()-server.lifecycle_origin,
+                        profileSeconds=server.shaper.elapsed() if server.started else None,
+                        accepted=server.requests,active=server.active,rejected=server.rejected_requests))
+        server.service_actions=heartbeat
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
         target.setdefault('EnvironmentVariables',{}).update(
-            YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://{host}:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
+            YL_ABR_PROBE_FAULT_URL=fault_url,YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://{host}:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
             YL_ABR_PROBE_DEVICE='1' if physical_device else '0', YL_ABR_PROBE_OWNED_HOST=host if physical_device else '',
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
@@ -921,9 +968,13 @@ def run(args):
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
         from proxy_boundaries import proxy_trace_version, record_proxy_observation
-        if proxy_trace_version(rows) in (1, 2) and not direct:
+        if proxy_trace_version(rows) in (1, 2, 3, 4, 5, 6, 7) and not direct:
             record_proxy_observation(receipt,
                 read_rows(out/'proxy-requests.jsonl'), read_rows(out/'requests.jsonl'), proxy_trace_version(rows))
+        if fault_control:
+            from triggered_fault import summarize_trigger
+            receipt['triggeredFaultObservation']=summarize_trigger(server.shaper.snapshot(),
+                json.loads((out/'fault-trigger.json').read_text()),rows,read_rows(out/'frame-samples.jsonl'))
         policy_version = policy_trace_version(rows)
         if recovery_action == 'auto-reload' and policy_version in (1,2):
             decisions=read_rows(out/'policy-decisions.jsonl')
@@ -955,8 +1006,14 @@ def run(args):
                 read_rows(out/'frame-samples.jsonl'), json.loads((out/'public-policy-events.json').read_text()))
         elif any(row.get('publicPolicyCycle') is True for row in rows):
             raise ValueError('unexpected public host policy capture')
+        if receipt['budgetExhaustionRequired']:
+            from budget_exhaustion import summarize_budget_exhaustion
+            if read_rows(out/'signals.jsonl'): raise ValueError('budget capture interrupted')
+            receipt['budgetExhaustionObservation'] = summarize_budget_exhaustion(rows, read_rows(out/'frame-samples.jsonl'),
+                read_rows(out/'policy-decisions.jsonl'))
         if production:
-            receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'))
+            receipt['productionRecoveryObservation'] = summarize_production_recovery(rows, read_rows(out/'frame-samples.jsonl'),
+                require_install=receipt['productionInstallRequired'])
             command = getattr(args, 'production_command', 'none')
             if not all(r.get('productionCommand', 'none') == command for r in rows):
                 raise ValueError('production command echo mismatch')
@@ -991,9 +1048,30 @@ def run(args):
             receipt['ownedProcessExited']=False
         if process is not None and not receipt['ownedProcessExited']:
             receipt['errors'].append('owned process cleanup unverified')
-        if server:server.shutdown();server.server_close()
-        if thread:thread.join(timeout=5)
+        if fault_control:
+            fault_control.close()
+            (out/'fault-server.json').write_text(json.dumps(dict(server.shaper.snapshot(),controlRequests=fault_control.records),indent=2)+'\n')
+        close_fixture(server,thread)
+        (out/'server-health.json').write_text(json.dumps(dict(version=1,samples=health,capabilityAccepted=False),indent=2)+'\n')
         if log:log.close()
+        if server:
+            try:
+                from connection_lifecycle import summarize_lifecycle
+                lifecycle = server.connection_lifecycle()
+                (out/'connection-lifecycle.json').write_text(json.dumps(lifecycle,indent=2)+'\n')
+                receipt['connectionLifecycleObservation'] = summarize_lifecycle(lifecycle,read_rows(out/'requests.jsonl'))
+                if not receipt['connectionLifecycleObservation']['complete']:
+                    receipt['errors'].append('connection lifecycle evidence incomplete')
+            except (OSError,ValueError,KeyError,TypeError):
+                receipt['errors'].append('connection lifecycle evidence invalid')
+            try:
+                from network_profile import summarize_connections
+                receipt['connectionObservation'] = summarize_connections(
+                    read_rows(out/'requests.jsonl'), receipt['connectionMode'])
+                from server_timing import summarize_server_timing
+                receipt['serverTimingObservation'] = summarize_server_timing(read_rows(out/'requests.jsonl'))
+            except (OSError,ValueError,KeyError,TypeError):
+                receipt['errors'].append('connection or server timing evidence incomplete')
         if output:output.close()
         receipt['binaryIdentityUnchanged']=False
         if before is not None:
@@ -1014,6 +1092,8 @@ def main():
     p.add_argument('--device',help='Explicit iOS Simulator UUID; omit for native arm64 macOS')
     p.add_argument('--physical-device', help='Explicit paired iPhone UDID; requires --owned-host')
     p.add_argument('--owned-host', help='Explicit owned RFC1918 IPv4 interface for physical-device capture')
+    p.add_argument('--triggered-fault-rate',type=int,help='owned 5s rate overlay after a bound published high baseline; no change to production budget')
+    p.add_argument('--connection-mode',choices=('close','http11-close','http11-keepalive'),default='close')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)
     p.add_argument('--startup-delay-ms',type=int,default=0,
@@ -1024,6 +1104,8 @@ def main():
     p.add_argument('--candidate-preparation', choices=('manifest-only', 'asset-metadata', 'asset-preroll'), default='manifest-only',
                    help='owned diagnostic only; requires native mode echo and unchanged ticket revalidation')
     p.add_argument('--production-command', choices=('none', 'pause-resume', 'pause-prepared', 'seek-prepared', 'load-prepared'), default='none')
+    p.add_argument('--require-budget-exhaustion', action='store_true', help='require a second downshift after attempt two, eligible windows and no third reservation')
+    p.add_argument('--require-production-install', action='store_true', help='fail unless same-session production recovery actually installs; incompatible with new Load')
     p.add_argument('--production-recovery', action='store_true', help='observe automatic production public-host recovery; no diagnostic installation')
     p.add_argument('--public-policy-race', action='store_true',
                    help='typed public caps/fixed command after candidate readiness; requires cancellation')

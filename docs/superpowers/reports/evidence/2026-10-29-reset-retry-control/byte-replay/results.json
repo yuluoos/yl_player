@@ -1,0 +1,123 @@
+{
+  "yl-same-resource-retry/normal": {
+    "oldPassed": false,
+    "proxyErrors": [
+      "proxy successful transaction metrics incomplete",
+      "proxy request correlation incomplete"
+    ],
+    "originalRawHashes": {
+      "rows.jsonl": "874e21053137d443752714b0b84ec60950ce29f2e3c76c52493d900edb3f38cb",
+      "frame-samples.jsonl": "181cc33bebe05ced2c2b87907ab69b423f7132d659c14c3c39b4346dc84c7858",
+      "requests.jsonl": "823813a55277611f3de0daee9e911a25abff3e481fbc928d8061929463beb637",
+      "proxy-requests.jsonl": "3f7f06022c944f6507e4b78687681ef3bb648ad89a3fde558c72cb6041a65dd9",
+      "device-process-check.json": "5aa906fd16063910a3f56a5001feebdc0ab5325fd23895e9c4971fed4145ddf5",
+      "policy-decisions.jsonl": "6da430d469d546241cbf4f6b18818911d136cd7ec332f0558adbb3459e16366f",
+      "process.json": "5c1d16139d5bbb57fe29a8e5eaee18ceff6d8bc5544c1db7185fdafa0dc04187",
+      "device-export-command.json": "f4ff6b08ff404387c55907ee05bfa958eff3e8da012364f3fd0d77ab7efc51ee",
+      "signals.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt.json": "67df6659c1dfb5facd7e41df30d6b7c950b17518c21b033aa0d80470ffec848d",
+      "connection-lifecycle.json": "b646c609c9b93610f81a456864707bb6a1b1c5b4b1043d6f7aeb45e842ed421f"
+    },
+    "archiveRoot": "docs/superpowers/reports/evidence/2026-10-29-ios-same-resource-retry/media/normal",
+    "capabilityAccepted": false
+  },
+  "yl-same-resource-retry/normal-repeat": {
+    "oldPassed": true,
+    "proxyErrors": [],
+    "originalRawHashes": {
+      "rows.jsonl": "9e346479104a6463ec4aa715eb591af911af0834fab85e2279f8b0c6cda6bfee",
+      "frame-samples.jsonl": "ae752c188a38ca133633b474aa540356c27b88336c731e899752390c9dfeae64",
+      "requests.jsonl": "dc9a48866f7219facfa9a95ec524e3b6fde22724b2d30140da140cb69407b3a8",
+      "proxy-requests.jsonl": "90cdd0783e64efdfd31a191466c76bdb5b26567644d49dd5ee0bf06775553449",
+      "device-process-check.json": "c721a1c8ae7139fde32b607487901dd687c4922950293cf20d4394b669565b06",
+      "policy-decisions.jsonl": "4ea0dcc7133086bceec15d62be18458d302aeef2fc33c1bef479ef0812cab17a",
+      "process.json": "304c7a037b7db27050ef2208b87b41e7eae2314c14022a7d20a564a841e6952f",
+      "device-export-command.json": "d7a22989ebb0928c55fef762a25fa299ba84c1a04e86ed76f70d503475fc2e05",
+      "signals.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt.json": "7ca4b98de515aba167800a0604d6be0c26a4a40cf486bde4a704b69fc16cdd08",
+      "connection-lifecycle.json": "243ce67a8912b02484908108d55e29406cb11aba2712b5f0a98f6d50bc4cbf41"
+    },
+    "archiveRoot": "docs/superpowers/reports/evidence/2026-10-29-ios-same-resource-retry/media/normal-repeat",
+    "capabilityAccepted": false
+  },
+  "yl-same-resource-retry/normal-third": {
+    "oldPassed": false,
+    "proxyErrors": [
+      "proxy request correlation incomplete"
+    ],
+    "originalRawHashes": {
+      "rows.jsonl": "c098666cd51629e0160c27ad98f3a18a0cb8dcab24cc07ac9d4b078ea60bba2e",
+      "frame-samples.jsonl": "21f3907c0025f373e3503cdc823a0eea3a49e23a1364e7751992a74c23655433",
+      "requests.jsonl": "969689c60410b6a3fd2fc36611581604b97f8f2f265b6c006d3ff0e35bcb1335",
+      "proxy-requests.jsonl": "1c8fcc85f50c3428f7f9cfb0c1d9cdca979174a743fe9210622331562693b1a4",
+      "device-process-check.json": "a6139ff42a2d2da647bc038a4b8cc9bf27223fa5d5c277d828c2d563853c68f5",
+      "policy-decisions.jsonl": "1514360ad1dd0e11ebb800ae2f14157005f56d2da418f750f46ad4db9bcb2e6f",
+      "process.json": "3982fbc7a53553cc7ab23eaa387b7cc86845ce67cbdf0eb393ac65818ab72694",
+      "device-export-command.json": "efd414baebedb89c276f27112d0ae19463afa01143c816cd50e34d7ff7b3fa19",
+      "signals.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt.json": "ea3f1c8ede20d87ef2875afaf93c870ecc28da6754daf520338fc64f26e43ba4",
+      "connection-lifecycle.json": "55087ff480ff58cb44a172871ef6908c40c8dbdef1e4edd99b1e096f16283725"
+    },
+    "archiveRoot": "docs/superpowers/reports/evidence/2026-10-29-ios-same-resource-retry/media/normal-third",
+    "capabilityAccepted": false
+  },
+  "yl-same-resource-retry/original": {
+    "oldPassed": true,
+    "proxyErrors": [],
+    "originalRawHashes": {
+      "rows.jsonl": "b9333adcadcf8189d473c2283e2c0e5c4a16f8e168ca6941f31b35ac5b9c6f19",
+      "frame-samples.jsonl": "84325f934774a0acf30602c6989122ebf0e6429fbef843824b1a220b77d7f4ba",
+      "requests.jsonl": "899bedb1eb313763766ddefb991e34380adb7535f55c6ebf4c3058be67ddf149",
+      "proxy-requests.jsonl": "aef11010b1521a8ff36ee0d7e0e90f4c92742d0af8727b790cd835f28362f0ad",
+      "device-process-check.json": "1d94cee3dd1fa2e3c3dfffe14ec6849e11d44f24bf855a832585b9f1efc85373",
+      "policy-decisions.jsonl": "d30fef72677370f73746e6e384502bb00401ff59d51b29aab22659bf043c9536",
+      "process.json": "5be9aad4d7b91a8824bca00d87076b1e039bac4f0b3b3f7e618be1a929fe75c3",
+      "device-export-command.json": "586ffd00a7a771a15d903a865f1ab617be77801185461691bbb185d8cdbb66c2",
+      "signals.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt.json": "1ec3892f8896b1981c2ac80ac6e223d589e0e1c3a3e26be0923da52f29868666",
+      "connection-lifecycle.json": "2dbf1593d0f1e90667393d070a8025fc94e4000be52f1cdc7e1fe2fc8b225fc5"
+    },
+    "archiveRoot": "docs/superpowers/reports/evidence/2026-10-29-ios-same-resource-retry/media/original",
+    "capabilityAccepted": false
+  },
+  "yl-transaction-bytes/normal": {
+    "oldPassed": false,
+    "proxyErrors": [
+      "proxy request correlation incomplete"
+    ],
+    "originalRawHashes": {
+      "rows.jsonl": "748f4138f20587cd8bb93f92d08bf5590760f5892c9c3d7a9571ae720bf38044",
+      "frame-samples.jsonl": "6e1345909f98d26faa1392dea9325a7883efc63e5187a003299d04c9feebdbac",
+      "requests.jsonl": "d425e0f906073fc70af2ac5f51acdf9469232a1221aa07244583450c61df37fb",
+      "proxy-requests.jsonl": "4baa0f36127e30d60ac7bc220d055e29e9cec8016e2cc2f771e2de5a144cb96c",
+      "device-process-check.json": "f89853e2cca0e48de33c226ac10dba65b9caf71c5de58a00f98e0bc12fb2af2b",
+      "policy-decisions.jsonl": "73fcb632e083ca42f164317bfa0696d8e94858cca766e3c4965be95e0c020d3a",
+      "process.json": "487a5f7688576ac21a8e0efbd7a99ce47973ccd296358e6c0daf8ea1e48b73c3",
+      "device-export-command.json": "966f41061c24f761a144b13e501201ea88683aef911e6d804ad001631de8952a",
+      "signals.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt.json": "ef3e26bfb46f920a1829c5810ab7fb90fe7a04025acd771a5dca400193cc35fc",
+      "connection-lifecycle.json": "08707a276a6af31c29db5857dfc5e92dfdbd204288633cca60a2c9aaee804521"
+    },
+    "archiveRoot": "docs/superpowers/reports/evidence/2026-10-29-ios-transaction-bytes/media/normal",
+    "capabilityAccepted": false
+  },
+  "yl-transaction-bytes/original": {
+    "oldPassed": true,
+    "proxyErrors": [],
+    "originalRawHashes": {
+      "rows.jsonl": "9c64bd93fe6628dec1e89823773c13e8f35496eeeef8003f4f5d323c598588f8",
+      "frame-samples.jsonl": "62a78c3ef7e9130aa91c8a7311237625a0185ea6cb12f6f3fe47945d51c2da23",
+      "requests.jsonl": "aafdd916b64db370c005464a708755b8a05fc3a1d31d8c6e0178dfb700e78388",
+      "proxy-requests.jsonl": "2ec4607b140e8fc592f9fda5a9854b515838f8323d3721bd975bcb66e388c340",
+      "device-process-check.json": "da5538aafeab5606e6085f656b4a7d0fc66bd4ebc4317609af6580b97e4bbf4f",
+      "policy-decisions.jsonl": "56e58bc43a036a10179b4082a0cab78f927f386e92c2ae0f80e6a7fa6b7ce699",
+      "process.json": "947672abf90ba2b8b1513cb11c7565983ef796fa1cf3966b13b9a3d93b46d9f7",
+      "device-export-command.json": "96d48632b6c2c0cd0d221b922a756e8657c2ccca0b9753ca2d436666292cb734",
+      "signals.jsonl": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "receipt.json": "f9cc0dd5ea43c608a0cbc6ce4b39fc6ef54841571129a9ca3ba05185dec3f195",
+      "connection-lifecycle.json": "8cdd5e2115d0ee9e73ef73c29978259ee7424241392540b85259f29095c1ccf5"
+    },
+    "archiveRoot": "docs/superpowers/reports/evidence/2026-10-29-ios-transaction-bytes/media/original",
+    "capabilityAccepted": false
+  }
+}

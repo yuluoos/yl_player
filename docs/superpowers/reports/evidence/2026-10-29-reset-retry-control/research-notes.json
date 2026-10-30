@@ -1,0 +1,11 @@
+{
+  "date": "2026-10-29",
+  "purpose": "Check whether primary public documentation establishes POSIX54/-12889 retry timing for this iOS build",
+  "sources": [
+    {"url": "https://developer.apple.com/documentation/http-live-streaming", "use": "General HLS adaptive behavior only; no per-item private retry/penalty timing established"},
+    {"url": "https://developer.apple.com/videos/play/wwdc2018/502/", "use": "Redirected to collection, no session transcript obtained; no inference from this URL"},
+    {"url": "https://developer.apple.com/forums/topics/media-technologies/streaming?open-dropdown=true&sortBy=boosts&sortOrder=desc", "use": "Search surfaced a community question; not adopted as Apple documentation or evidence for this app"}
+  ],
+  "privateRetryRuleEstablished": false,
+  "noChangeToRecoveryBudgetOrThresholds": true
+}

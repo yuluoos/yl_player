@@ -4,11 +4,20 @@ import re
 from transaction_metrics import summarize_transactions
 
 
+class IncompleteSuccessfulTransactions(ValueError):
+    """Structurally valid diagnostics that still fail the success metrics gate."""
+
+    def __init__(self, observation, failures):
+        super().__init__('proxy successful transaction metrics incomplete')
+        self.observation = observation
+        self.failures = failures
+
+
 def proxy_trace_version(rows):
     if not any(isinstance(row, dict) and 'proxyRequestSamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('proxyRequestSamplingVersion')) is int and
-               row['proxyRequestSamplingVersion'] in (1, 2) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
+               row['proxyRequestSamplingVersion'] in (1, 2, 3, 4, 5, 6, 7) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
         raise ValueError('unsupported or inconsistent proxy request sampling version')
     return rows[0]['proxyRequestSamplingVersion']
 
@@ -29,7 +38,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         'sendFailures', 'sendWaitSum', 'sendWaitMax'}
     times = {'response', 'firstBody', 'lastBody', 'firstSend', 'lastSend',
         'lastSendComplete', 'upstreamComplete'}
-    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics'}
+    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics', 'downstreamTerminal', 'taskComplete', 'taskOutcome', 'cancelCause', 'resourceToken', 'cancelSource', 'cancelErrorDomain', 'cancelErrorCode'}
     uuid_pattern = r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}'
     def uuid(value):
         return isinstance(value, str) and re.fullmatch(uuid_pattern, value)
@@ -48,14 +57,39 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
     versions = {row.get('version') for row in rows if isinstance(row, dict)}
     require(len(versions) == 1 and (expected_version is None or versions == {expected_version}))
     version = next(iter(versions))
-    identities = set(); matched = set(); results = []; counts = {}
+    identities = set(); matched = set(); results = []; counts = {}; failures = []
     outcomes = ['complete', 'cancelled', 'sendFailed', 'upstreamFailed']
     for row in rows:
         require(isinstance(row, dict) and required <= row.keys() and not row.keys()-required-optional)
-        require(type(row['version']) is int and row['version'] in (1, 2))
-        require(('metrics' in row) == (row['version'] == 2))
+        require(type(row['version']) is int and row['version'] in (1, 2, 3, 4, 5, 6, 7))
+        require(('metrics' in row) == (row['version'] >= 2))
+        settlement = {'downstreamTerminal','taskComplete','taskOutcome'}
+        require((settlement <= row.keys()) if row['version']>=4 else not settlement.intersection(row))
+        if row['version']>=4:
+            require(type(row['taskOutcome']) is int and row['taskOutcome'] in (0,1,2))
+            require(all(finite(row[k]) and row['admission']<=row[k]<=row['terminal'] for k in ('downstreamTerminal','taskComplete')))
+            if row['outcome']==0:require(row['taskOutcome']==0)
+        require(('cancelCause' in row) == (row['version'] >= 5))
+        if row['version'] >= 5:
+            require(type(row['cancelCause']) is int and row['cancelCause'] in range(5))
+            require((row['cancelCause'] != 0) == (row['outcome'] == 1))
+        error_fields = {'cancelSource', 'cancelErrorDomain', 'cancelErrorCode'}
+        require((error_fields <= row.keys()) if row['version'] >= 7 else not error_fields.intersection(row))
+        if row['version'] >= 7:
+            source, domain, code = (row[k] for k in ('cancelSource', 'cancelErrorDomain', 'cancelErrorCode'))
+            require(type(source) is int and source in range(4))
+            require(type(domain) is int and domain in range(5))
+            require(type(code) is int and -(2**31) <= code < 2**31)
+            if row['cancelCause'] == 3:
+                require(source in (1, 2, 3) and domain in (1, 2, 3, 4))
+                if domain == 4: require(code == 0)
+            else:
+                require(source == domain == code == 0)
+        require(('resourceToken' in row) == (row['version'] >= 6))
+        if row['version'] >= 6:
+            require(isinstance(row['resourceToken'], str) and re.fullmatch(r'[0-9a-f]{64}', row['resourceToken']))
         require(isinstance(row['proxyID'], str) and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', row['proxyID']))
-        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics')))
+        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics', 'resourceToken', 'cancelErrorCode')))
         counters = required - {'version', 'proxyID', 'admission', 'terminal', 'sendWaitSum', 'sendWaitMax'}
         require(all(integer(row[key]) for key in counters) and row['requestID'] > 0)
         require(row['outcome'] in range(4))
@@ -64,6 +98,9 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         require(row['terminal'] >= row['admission'])
         for key in times & row.keys():
             require(row['admission'] <= row[key] <= row['terminal'])
+            if row['version']>=4:require(row[key]<=row['downstreamTerminal'])
+        if row['version']>=4 and row['outcome']==0:
+            require(row['taskComplete']<=row['downstreamTerminal'])
         for before,after in [('response','firstBody'),('firstBody','lastBody'),
             ('lastBody','upstreamComplete'),('firstSend','lastSend')]:
             if before in row and after in row: require(row[before] <= row[after])
@@ -96,8 +133,13 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             require(row['bodyBytes'] == row['sentBodyBytes'] == server['bodyBytesWritten'])
             require(server.get('outcome') == 'complete' and 200 <= row['httpStatus'] < 300)
         transaction_metrics = summarize_transactions(row.get('metrics'))
-        if row['version'] == 2 and row['outcome'] == 0:
-            require(transaction_metrics['complete'])
+        if transaction_metrics.get('version') == 3:
+            require(row['version'] >= 6)
+        if row['version']>=3 and row.get('metrics') is not None:
+            require(transaction_metrics.get('version') in ((2, 3) if row['version'] >= 6 else (2,)))
+        if row['version'] >= 2 and row['outcome'] == 0 and not transaction_metrics['complete']:
+            failures.append(dict(code='incomplete-successful-transactions',
+                                 proxyID=row['proxyID'], requestID=row['requestID']))
         outcome = outcomes[int(row['outcome'])]; counts[outcome] = counts.get(outcome,0)+1
         upstream = row['upstreamComplete']-row['admission'] if 'upstreamComplete' in row else None
         duration = (server['endMs']-server['startMs'])/1000 if server is not None else None
@@ -108,19 +150,40 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             responseWaitSeconds=row['response']-row['admission'] if 'response' in row else None,
             bodyCallbackSpanSeconds=row['lastBody']-row['firstBody'] if 'lastBody' in row else None,
             sendWaitSumSeconds=row['sendWaitSum'], sendWaitMaxSeconds=row['sendWaitMax'],
-            terminalSeconds=row['terminal']-row['admission']))
+            terminalSeconds=row['terminal']-row['admission'],
+            downstreamSeconds=row['downstreamTerminal']-row['admission'] if row['version']>=4 else None,
+            taskCompletionSeconds=row['taskComplete']-row['admission'] if row['version']>=4 else None,
+            taskOutcome=row.get('taskOutcome'), cancelCause=row.get('cancelCause'), resourceToken=row.get('resourceToken'),
+            cancelSource=row.get('cancelSource'), cancelErrorDomain=row.get('cancelErrorDomain'),
+            cancelErrorCode=row.get('cancelErrorCode')))
     media = {ident for ident, row in servers.items() if row.get('method') == 'GET' and
              isinstance(row.get('asset'),str) and row['asset'].endswith('.m4s')}
     missing = sorted(media-matched)
-    return dict(version=version, requestCount=len(rows), outcomeCounts=counts, requests=results,
+    observation = dict(version=version, requestCount=len(rows), outcomeCounts=counts, requests=results,
         unmatchedServerRequestIDs=missing, uncorrelatedProxyRequests=sum(x['serverRequestID'] is None for x in results),
         fullyCorrelated=not missing and all(x['serverRequestID'] is not None for x in results),
         interpretation='Same-device callback times; correlated server durations use their own clock. Upstream minus server includes transport, scheduling and backpressure, not isolated RTT. Send wait sums may overlap; contentProcessed is not client receipt or display.',
         physicalOutputVerified=False, capabilityAccepted=False)
+    # Preserve the strict API: only attach a snapshot after every structural,
+    # identity and byte check succeeded. A later corrupt row cannot be trusted.
+    if failures:
+        raise IncompleteSuccessfulTransactions(observation, failures)
+    return observation
 
 
 def record_proxy_observation(receipt, rows, server_rows, expected_version=None):
-    observation = summarize_proxy_boundaries(rows, server_rows, expected_version)
+    try:
+        observation = summarize_proxy_boundaries(rows, server_rows, expected_version)
+    except IncompleteSuccessfulTransactions as error:
+        observation = error.observation
+        receipt['proxyRequestValidationErrors'] = error.failures
+        receipt['errors'].append('proxy successful transaction metrics incomplete')
+    except (ValueError, KeyError, TypeError):
+        # Do not echo unvalidated rows or exception payloads into the receipt.
+        receipt.pop('proxyRequestObservation', None)
+        receipt['proxyRequestValidationErrors'] = [dict(code='invalid-boundary-evidence')]
+        receipt['errors'].append('invalid proxy request boundary evidence')
+        return
     receipt['proxyRequestObservation'] = observation
     if not observation['fullyCorrelated']:
         receipt['errors'].append('proxy request correlation incomplete')

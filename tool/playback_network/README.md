@@ -567,6 +567,14 @@ policy/authority validation. Actual buffers must show high output after a real
 downshift and after any successful installation; EOF and final high output are
 required. System interruption signals invalidate this controlled capture.
 
+For runs intended to exercise an actual same-session automatic installation, add
+`--require-production-install`. This only tightens the receipt: natural recovery
+or cancelled-only events fail, without changing the native player, network profile,
+or policy thresholds. It requires `--production-recovery` and is incompatible
+with `load-prepared`, whose existing cancellation/new-session budget checks apply.
+The receipt records `productionInstallRequired`; the default remains observation
+without a required installation so historical natural-ABR controls stay distinct.
+
 `--production-command pause-resume` sends a public Pause after reservation one,
 waits two seconds, then sends public Play. It requires multiple native paused
 samples with no position drift beyond 50 ms, no early install, no budget refund,
@@ -632,3 +640,95 @@ delivered until its writer returns. Active trace ownership outlives transport ta
 removal, including chunk tails. A drain failure fails the native probe, and missing
 request correlation adds an error to the collector receipt while retaining the
 partial diagnostic. Neither condition can silently produce a successful capture.
+
+
+### Date-state diagnostics and repeated-downshift budget proof
+
+New DEBUG probes use proxy request sampling version 3, with nested metrics version
+2 and `durationStates` for each duration: 0 observed, 1 missing start, 2 missing
+end, 3 both missing, 4 invalid ordered/finite pair. No absolute dates, URL or
+headers are recorded. Shared endpoint presence must agree. Historical v1/v2
+reading remains; v3 cannot silently downgrade to old metrics. Missing durations
+remain null and a successful request with any incomplete transaction still fails.
+A response-less first connection close can produce two Foundation transactions;
+this controlled reproduction does not identify the cause of every historical
+multi-transaction failure.
+
+`--require-budget-exhaustion` requires `--production-recovery`,
+`--require-production-install` and `pause-resume` or `pause-prepared`. It requires
+actual attempt-two installation, published high frames followed by new low frames
+on that same item, and two consecutive eight-second counterfactual bandwidth
+windows at the unchanged 955000bps/three-request/progress gates while native
+policy reports `budgetExhausted`. No third reservation, source/intent/credential
+reset or budget refund may satisfy it. These are independent proof windows, not
+native window decisions (the budget guard executes before window qualification).
+All original EOF/final-high, authority, transaction and continuity checks remain.
+The budget observation may survive a later final-high failure; that receipt still
+fails. This does not certify physical screen/audio continuity.
+
+The collector also preserves `connection-lifecycle.json`: server-local elapsed
+admission/handler-completion times, accepted connection IDs and their parsed
+GET/HEAD request IDs, explicit admission rejections, and locally observed
+shutdown/deadline/error reasons. It retains at most 10,000 accepted connections
+and the first 32 rejection samples plus the full rejection count. No addresses,
+URLs or headers are included. `handlerEnded` does not identify peer FIN/reset or
+a URLSession retry. Connections without a parsed media request are retained.
+The clock starts at listener construction, independently of the first-GET
+profile origin. Do not subtract these timestamps from AVPlayer/Foundation times.
+Parsed requests discarded by the existing 10,000-record limit have an explicit
+`unrecordedRequests` count and are not classified as unparsed connections.
+Missing request links, discarded requests, unfinished handlers or truncated rejection samples prevent
+complete lifecycle evidence; none of this relaxes transaction completeness,
+recovery budget, final high output or physical continuity gates.
+
+Proxy boundary v4 separates `downstreamTerminal` (transport fields frozen) from
+`taskComplete` and `taskOutcome` (0 success, 1 cancellation, 2 other error).
+`terminal` is the final record seal after both sides have finished. DEBUG task
+trace ownership survives playback cancellation until Foundation's metrics and
+completion callbacks; playback cancellation itself does not wait. Late body/send
+callbacks cannot change the frozen transport outcome. The capture still waits
+for observer delivery, and missing completion cannot be treated as a complete
+capture. v1–v3 retain their original interpretation. v4 success requires task
+success and all transaction core intervals; cancellation metrics can still be
+unavailable and are never fabricated. Missing server correlation still fails.
+
+## Published-frame-triggered second fault
+
+For owned physical production recovery diagnostics, `abr_accesslog.py
+--triggered-fault-rate 0 --require-production-install` adds a single five-second
+rate overlay. Use an initial-only static profile whose final step is at or before
+15 seconds; combine with `--production-command pause-resume
+--require-budget-exhaustion` to consume the first reservation without refund.
+The production policy, attempt limit, and all existing acceptance readers are
+unchanged. This is a separate triggered experiment, not the original fixed-time
+profile run.
+
+The test collector requests the fault only after an actual installation and at
+least 48 published high frames spanning two seconds in one generation, with no
+pause, pending seek, non-advancing position, or publication gap above 0.5 seconds.
+The trigger position must be at most 70 seconds to leave observation time. A
+separate owned control listener checks the per-run token and admits only one
+bounded trigger. Requests have bounded body size and connection lifetime; failure
+or a lost acknowledgement never retries the fault. The media listener keeps its
+existing connection and shaping budgets.
+
+`fault-trigger.json` retains device evidence and the server acknowledgement;
+`fault-server.json` retains the server-side overlay interval and control outcomes.
+`triggeredFaultObservation` binds both back to the unmodified frame and installation
+records. Missing trigger, receipt mismatch, or absent second downshift remains a
+failure. A bound trigger alone does not establish recovery, budget exhaustion,
+continuity, or capability acceptance.
+
+The static profile hash and `phaseBoundariesMs`/`phaseBytesWritten` still describe
+the **base** timeline. During the separately recorded overlay interval, the overlay
+rate replaces the base rate, including for in-flight bodies. Do not derive actual
+rates from the base phase labels alone. Both the actual server overlay interval
+and client observation interval are retained in their own monotonic clocks;
+subtracting timestamps across those clocks is invalid.
+
+`server-health.json` records up to 1,000 bounded service-loop samples with local
+listener time, first-GET profile time, and accepted/active/rejected counts. It
+helps distinguish an alive listener loop from a gap in parsed requests; it does
+not prove that packets reached the host, diagnose the network path, or repair
+missing historical logs. Frame publication remains a diagnostic, not calibrated
+physical screen/audio continuity evidence.

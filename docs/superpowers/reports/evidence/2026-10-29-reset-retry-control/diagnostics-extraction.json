@@ -1,0 +1,14 @@
+{
+  "consoleLog": {
+    "exitCode": 1,
+    "available": false,
+    "message": "No console log available",
+    "output": "late-throttle-console.json"
+  },
+  "diagnosticsExport": {
+    "exitCode": 0,
+    "directory": "late-throttle-diagnostics",
+    "log": "diagnostics-export.log"
+  },
+  "interpretation": "The failed console extraction is retained. Exported native stdout contains upstream connect 1:60 and URLSession -1001 failures; underlying network path root cause unresolved."
+}

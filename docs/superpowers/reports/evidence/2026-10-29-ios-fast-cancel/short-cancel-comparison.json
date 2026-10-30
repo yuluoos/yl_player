@@ -1,0 +1,107 @@
+{
+  "cancellation": {
+    "proxyID": "68811196-EEC1-4BAC-88EC-A4A193E1BFE0",
+    "requestID": 63,
+    "correlationID": "CDBF65DA-B7B7-4CB1-8826-FE53B86B0195",
+    "serverRequestID": 65,
+    "cancelCause": 2,
+    "taskOutcome": 1,
+    "downstreamLifetimeMs": 11.526125003001653,
+    "nearbyPlaybackSamples": {
+      "beforeElapsed": 12.53193316666875,
+      "afterElapsed": 12.787488416666747
+    },
+    "firstInstallElapsed": 37.26125258333195,
+    "recordedBeforeFirstInstall": true,
+    "bodyBytes": 0,
+    "sendCount": 0,
+    "transactions": [
+      {
+        "connectSeconds": 0.006999969482421875,
+        "dnsSeconds": 0,
+        "durationStates": {
+          "connectSeconds": 0,
+          "dnsSeconds": 0,
+          "fetchSeconds": 2,
+          "fetchToRequestSeconds": 0,
+          "requestSeconds": 0,
+          "responseSeconds": 3,
+          "responseWaitSeconds": 2,
+          "tlsSeconds": 3
+        },
+        "fetchSeconds": null,
+        "fetchToRequestSeconds": 0.010855913162231445,
+        "fetchType": 1,
+        "protocolCode": 1,
+        "requestSeconds": 0.00010800361633300781,
+        "responseSeconds": null,
+        "responseWaitSeconds": null,
+        "reused": 0,
+        "tlsSeconds": null
+      }
+    ]
+  },
+  "server": {
+    "asset": "network-period-5/chunk-1-00001.m4s",
+    "assetSha256": "af2f256d51ffe9467a1cb5e0e3bf3bdfae5a254545160a23eb94379cd8e4a2ab",
+    "bodyBytesWritten": 0,
+    "connectionId": 65,
+    "connectionMode": "close",
+    "connectionRequestIndex": 1,
+    "endMs": 15005.670875,
+    "method": "GET",
+    "outcome": "client_io_error",
+    "phaseBoundariesMs": [
+      0,
+      10000,
+      15000,
+      60000,
+      65000
+    ],
+    "phaseBytesWritten": [
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "profile": "repeat-stall-budget-diagnostic-v1",
+    "profileSha256": "61fb1c9b9a5b602c2d5828fb520242c0a703cd08ac95b1f9897877b59d3a585f",
+    "proxyTraceID": "CDBF65DA-B7B7-4CB1-8826-FE53B86B0195",
+    "rangeEndExclusive": 25431,
+    "rangeStart": 0,
+    "requestId": 65,
+    "runId": "abr-accesslog",
+    "schemaVersion": 1,
+    "serverTiming": {
+      "bodyWriteCalls": 1,
+      "bodyWriteFailures": 1,
+      "bodyWriteSeconds": 8.520899973518681e-05,
+      "headerWriteCalls": 1,
+      "headerWriteFailures": 0,
+      "headerWriteSeconds": 0.0001189579998026602,
+      "holdCalls": 1,
+      "holdFailures": 0,
+      "holdSeconds": 0.00061699999969278,
+      "latencyCalls": 1,
+      "latencyFailures": 0,
+      "latencySeconds": 0.045070083000609884,
+      "queueCalls": 1,
+      "queueFailures": 0,
+      "queueSeconds": 2.2278719169989927,
+      "sleepCalls": 1,
+      "sleepFailures": 0,
+      "sleepRequestedSeconds": 0.000512,
+      "sleepSeconds": 0.0006106669989094371,
+      "totalSeconds": 2.273947957999553,
+      "valid": true,
+      "version": 1
+    },
+    "startMs": 12731.730375,
+    "status": 200,
+    "timelineMode": "first-get",
+    "timelineState": "active"
+  },
+  "interpretation": "Observed later cancellation with a parsed server request in the same first-stall phase, not proof of historical unlinked tasks causal order.",
+  "historicalEvidence": "../yl-cancel-settlement/uncorrelated-cancellations.json"
+}

@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/bandwidth_diagnostics.py", line 120, in <module>
+    main()
+    ~~~~^^
+  File "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/bandwidth_diagnostics.py", line 115, in main
+    result['proxy'] = summarize_proxy_boundaries(read_rows(args.capture/'proxy-requests.jsonl'), requests, version)
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/proxy_boundaries.py", line 118, in summarize_proxy_boundaries
+    require(transaction_metrics['complete'])
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/.codex/worktrees/remaining-acceptance/yl_player/tool/playback_network/proxy_boundaries.py", line 19, in require
+    raise ValueError('invalid proxy request boundary evidence')
+ValueError: invalid proxy request boundary evidence

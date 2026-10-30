@@ -1,0 +1,373 @@
+{
+  "budget-throttle": {
+    "total": 375,
+    "sources": {
+      "0": 375
+    },
+    "errorTuples": {},
+    "errors": [],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  },
+  "budget-mild": {
+    "total": 377,
+    "sources": {
+      "0": 376,
+      "1": 1
+    },
+    "errorTuples": {
+      "1/1/54": 1
+    },
+    "errors": [
+      {
+        "proxyID": "97C35E8A-7027-4130-9690-73BFAD50F379",
+        "requestID": 57,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 59,
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 5120,
+        "proxyLifetimeMs": 5043.241458333796,
+        "serverStartMs": 10218.204292,
+        "serverDurationMs": 4802.109833,
+        "laterHighRequestCount": 85,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 5.0473480224609375,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.24500000476837158,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.24715399742126465,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.0001538991928100586,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.06106102466583252,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 309,
+                "responseBody": 1024,
+                "responseHeaders": 580
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      }
+    ],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  },
+  "normal": {
+    "total": 421,
+    "sources": {
+      "0": 419,
+      "1": 2
+    },
+    "errorTuples": {
+      "1/1/54": 2
+    },
+    "errors": [
+      {
+        "proxyID": "86E01D0B-C8E6-4568-9DBB-607E13F8EE04",
+        "requestID": 57,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 59,
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "bodyBytes": 8192,
+        "sentBodyBytes": 8192,
+        "serverWritten": 30720,
+        "proxyLifetimeMs": 5202.34341667674,
+        "serverStartMs": 9953.654042,
+        "serverDurationMs": 5107.664916,
+        "laterHighRequestCount": 73,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 5.2027260065078735,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.0989999771118164,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.09984004497528076,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.298324584960938e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.049514055252075195,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 309,
+                "responseBody": 10240,
+                "responseHeaders": 580
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      },
+      {
+        "proxyID": "86E01D0B-C8E6-4568-9DBB-607E13F8EE04",
+        "requestID": 59,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": false,
+        "serverRequestID": 61,
+        "asset": "network-period-4/chunk-0-00001.m4s",
+        "bodyBytes": 5120,
+        "sentBodyBytes": 5120,
+        "serverWritten": 13625,
+        "proxyLifetimeMs": 3188.034458333277,
+        "serverStartMs": 11887.309167,
+        "serverDurationMs": 3161.0120000000006,
+        "laterHighRequestCount": 73,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 3.188289999961853,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.014999985694885254,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.017896056175231934,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.189678192138672e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.04914510250091553,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 309,
+                "responseBody": 9216,
+                "responseHeaders": 581
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      }
+    ],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  },
+  "budget-late-throttle": {
+    "total": 226,
+    "sources": {
+      "0": 225,
+      "1": 1
+    },
+    "errorTuples": {
+      "1/1/54": 1
+    },
+    "errors": [
+      {
+        "proxyID": "13AF96C3-9272-4779-83ED-8014A9CF2E66",
+        "requestID": 55,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": false,
+        "serverRequestID": 57,
+        "asset": "network-period-4/chunk-2-00004.m4s",
+        "bodyBytes": 5120,
+        "sentBodyBytes": 5120,
+        "serverWritten": 8398,
+        "proxyLifetimeMs": 5099.830750012188,
+        "serverStartMs": 9945.244625,
+        "serverDurationMs": 5069.002666,
+        "laterHighRequestCount": 1,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 5.105250954627991,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.016000032424926758,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.018085002899169922,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.00543212890625e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05400192737579346,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 309,
+                "responseBody": 5120,
+                "responseHeaders": 587
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      }
+    ],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  },
+  "budget-late-mild": {
+    "total": 376,
+    "sources": {
+      "0": 375,
+      "1": 1
+    },
+    "errorTuples": {
+      "1/1/54": 1
+    },
+    "errors": [
+      {
+        "proxyID": "82142FB3-7E8D-4EA4-9E89-527D768582F2",
+        "requestID": 57,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 59,
+        "asset": "network-period-4/chunk-1-00004.m4s",
+        "bodyBytes": 10240,
+        "sentBodyBytes": 10240,
+        "serverWritten": 53248,
+        "proxyLifetimeMs": 5119.823791654198,
+        "serverStartMs": 9920.580042,
+        "serverDurationMs": 5137.201625,
+        "laterHighRequestCount": 35,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 5.122561931610107,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.01100003719329834,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.012600898742675781,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 0.00017011165618896484,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05487096309661865,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 309,
+                "responseBody": 16384,
+                "responseHeaders": 584
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      }
+    ],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  }
+}

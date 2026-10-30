@@ -1,0 +1,74 @@
+{
+  "budget-zero": {
+    "faultStartMs": 57403.43354100014,
+    "faultEndMs": 62403.43354100014,
+    "overlappingHighFailures": [
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 43,
+        "serverRequestID": 230,
+        "asset": "network-period-16/chunk-1-00001.m4s",
+        "serverStartMs": 57388.380041,
+        "serverEndMs": 62424.318083,
+        "serverOutcome": "complete",
+        "outcome": 1,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "domain": 1,
+        "code": 54,
+        "bodyBytes": 19456,
+        "sentBodyBytes": 19456
+      }
+    ],
+    "causalityProven": false,
+    "capabilityAccepted": false
+  },
+  "normal-zero": {
+    "faultStartMs": 36716.87279200023,
+    "faultEndMs": 41716.87279200023,
+    "overlappingHighFailures": [
+      {
+        "proxyID": "2C379C43-8C97-4B57-92ED-E7681C86F508",
+        "requestID": 42,
+        "serverRequestID": 172,
+        "asset": "network-period-11/chunk-1-00003.m4s",
+        "serverStartMs": 37182.921167,
+        "serverEndMs": 41789.038667,
+        "serverOutcome": "complete",
+        "outcome": 2,
+        "cancelCause": 0,
+        "cancelSource": 0,
+        "domain": 0,
+        "code": 0,
+        "bodyBytes": 16208,
+        "sentBodyBytes": 7168
+      }
+    ],
+    "causalityProven": false,
+    "capabilityAccepted": false
+  },
+  "budget-zero-repeat": {
+    "faultStartMs": 65241.982041000025,
+    "faultEndMs": 70241.98204100002,
+    "overlappingHighFailures": [
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 44,
+        "serverRequestID": 249,
+        "asset": "network-period-18/chunk-1-00001.m4s",
+        "serverStartMs": 65228.371833,
+        "serverEndMs": 70275.378666,
+        "serverOutcome": "complete",
+        "outcome": 1,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "domain": 1,
+        "code": 54,
+        "bodyBytes": 16384,
+        "sentBodyBytes": 16384
+      }
+    ],
+    "causalityProven": false,
+    "capabilityAccepted": false
+  }
+}

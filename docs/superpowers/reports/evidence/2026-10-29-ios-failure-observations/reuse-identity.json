@@ -1,0 +1,15 @@
+{
+  "baseline": "66d12aa3",
+  "changedInputs": [
+    "tool/playback_network/bandwidth_diagnostics.py",
+    "tool/playback_network/proxy_boundaries.py",
+    "tool/playback_network/test_abr_accesslog.py",
+    "tool/playback_network/test_bandwidth_diagnostics.py",
+    "tool/playback_network/test_proxy_boundaries.py"
+  ],
+  "unchangedNativeInputs": true,
+  "binaryFiles": 307,
+  "unchangedBinary": true,
+  "nativeMatricesReusedFrom": "2026-10-29-ios-same-resource-retry",
+  "notRerun": true
+}

@@ -283,8 +283,8 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "4bd0063821679b54ca147888427cf212e60eb17331e1d64eacb60a59f8c893cd",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "03b56863ffce84d0ca84fc71cffd057dd4517b1ce3a6f2aacc079aeeb43768ea",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "e5a6c1c352b1f1ca15c0f06d7493eca559c631f8310118cdcffaf90fcbda57bb",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "18542c89b6e5d488333c48ec9c889547a32f0f1d75d9a2231cc895bd3e80d2ad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlFallbackTrackCatalog.swift": "17feb3b121f13c5247115faeaae36e082e6174e44ddcc851696e66b49476b8c1",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "12e4534abbc667e5090346d55899c6f072b9af3b9b79c2db4359f0b00eb2fbbf"
+    "sha256": "1eb4e3cb0a3ae0aa75551fd18e8b6d4a7ec66090353c733b76f3cb41757f4039"
   },
   "evidence": {
     "p01": {
@@ -883,6 +883,111 @@
       "path": "docs/superpowers/reports/2026-10-29-coreaudio-bounded-estimates.md",
       "sha256": "a4edf8707106c1f25a55745cad5331c3bcc96d77a75d529e7e67fe3c4e3cfc79",
       "kind": "report"
+    },
+    "ios-connection-persistence-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-connection-persistence.md",
+      "sha256": "8f56033da6473c9d67b71b671f803d2eb3d222cd7670e82a0d35d0731a59a125",
+      "kind": "report"
+    },
+    "ios-server-timing-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-server-timing.md",
+      "sha256": "b1da94e07e686d17233c20b3b589184028bf5a0107982c024b9408404a013727",
+      "kind": "report"
+    },
+    "ios-production-exercise-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-production-exercise.md",
+      "sha256": "a69a6ae861ffadb112c849af80847e987adbfa1fcb26fc2b7b8b2ff16a7f5977",
+      "kind": "report"
+    },
+    "ios-budget-metrics-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-budget-metrics.md",
+      "sha256": "1387d414232f469a038b48cdfdfc934288307e3d24c7863540c9c1dd2bfeefd3",
+      "kind": "report"
+    },
+    "ios-recovery-cause-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-recovery-cause.md",
+      "sha256": "343223a672690c18711082225b80e4841c9a668396997d9a45ac98916c0853e7",
+      "kind": "report"
+    },
+    "ios-cancel-settlement-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-cancel-settlement.md",
+      "sha256": "47a9016a9142d0bdeb2aa4eecfc004291ab37ee48d7baf93282390cc843960c3",
+      "kind": "report"
+    },
+    "ios-fast-cancel-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-fast-cancel.md",
+      "sha256": "ac9df5a49869f210df38d78ceb0daf377d29777bab3dc7a373af5c47023ba10a",
+      "kind": "report"
+    },
+    "ios-queued-cancel-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-queued-cancel.md",
+      "sha256": "c44c8d00dc2ca054dfc926847efb200162f4470843d32108f818ab927f2a3592",
+      "kind": "report"
+    },
+    "ios-resource-correlation-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-resource-correlation.md",
+      "sha256": "d53b9b8e646364ffd9d694de53a27a8d8e744c580064bab314b658ba80cfd4d3",
+      "kind": "report"
+    },
+    "ios-same-resource-retry-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-same-resource-retry.md",
+      "sha256": "96af7ed431036702ae5cbf61b7eeb1697339d7e15b0a056c6b52e360fbd02f69",
+      "kind": "report"
+    },
+    "ios-failure-observations-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-failure-observations.md",
+      "sha256": "c1c0cce1a3b661e6c7fa41e329f1d2933a80270a1ecc6c849d9636baec941ad4",
+      "kind": "report"
+    },
+    "ios-transaction-bytes-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-transaction-bytes.md",
+      "sha256": "136eeaefe7570bc7304b9c77d6cd752ff6ace8629f66282b16e34ea1ec680248",
+      "kind": "report"
+    },
+    "ios-cancel-byte-boundaries-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-cancel-byte-boundaries.md",
+      "sha256": "0721209bbf2999849fef5f6ac762b9254933620846e1545e4eac961d5d98b5f4",
+      "kind": "report"
+    },
+    "ios-half-close-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-half-close.md",
+      "sha256": "a6e53583ab2d096d946d0d4f681fb54d02dae3fcf122b3fb33ab1e6ab6efff60",
+      "kind": "report"
+    },
+    "ios-half-close-fix-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-half-close-fix.md",
+      "sha256": "2750ead5d1c2b23ff1750feb8f8df686295ffaad89f66756a75066e5416aca56",
+      "kind": "report"
+    },
+    "native-timeout-overflow-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-native-timeout-overflow.md",
+      "sha256": "fd15e02b360d89da3faf3494abd4bb708485e1d5aca980b87c221c7fe073fb96",
+      "kind": "report"
+    },
+    "final-media-budget-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-final-media-budget.md",
+      "sha256": "e5d3d958d31362487bceb8873b9bdda800a533cf7eb42870ea221b5131cfa655",
+      "kind": "report"
+    },
+    "budget-low-cause-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-budget-low-cause.md",
+      "sha256": "269fa62297ce2e1fa4b9988f5ca965ba2bdd1780c53a52c6b49a7c6ca82cecee",
+      "kind": "report"
+    },
+    "loopback-error-source-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-loopback-error-source.md",
+      "sha256": "c824077dddfcce9d8be8b6654e92563ac17526118b82a8290c6c17ea43828a7e",
+      "kind": "report"
+    },
+    "reset-retry-control-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-reset-retry-control.md",
+      "sha256": "d2a5f5db25b48fc57242ed443c9f44109d2f295b6b3f303e21c129c584a3724e",
+      "kind": "report"
+    },
+    "triggered-downshift-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-triggered-downshift.md",
+      "sha256": "47b35874b659007078b278f247550f94446a97c81faa3035f2d2898108aa5dbc",
+      "kind": "report"
     }
   },
   "rows": [
@@ -926,11 +1031,11 @@
         "ios-public-policy-20261028",
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
-        "ios-transaction-metrics-20261029",
-        "abr-main-merge-20261029"
+        "abr-main-merge-20261029",
+        "triggered-downshift-20261029"
       ],
       "acceptance": null,
-      "nextAction": "qualify-connection-persistence-original-high-recovery-pre-response-cancel-evidence-stability-physical-av"
+      "nextAction": "verify-exhausted-budget-upshift-and-retired-proxy-request-attribution"
     },
     {
       "requirement": "CAP-ABR",

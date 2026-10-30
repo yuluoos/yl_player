@@ -1,0 +1,15 @@
+{
+  "base": "7bfb3f55",
+  "rebuiltThisTurn": true,
+  "sourceIdentity": "source-identity.json",
+  "binaryIdentity": "binary-identity.json",
+  "contracts": {
+    "ios": 249,
+    "macos": 224
+  },
+  "scope": "selected relevant canonical contracts; not all 876/920 source cases",
+  "sourceChanges": [
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift"
+  ],
+  "postBuildChanges": "Python validation and tests only"
+}

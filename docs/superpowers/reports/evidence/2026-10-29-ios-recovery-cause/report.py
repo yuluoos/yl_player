@@ -1,0 +1,65 @@
+from pathlib import Path
+import json,hashlib
+r=Path('/private/tmp/yl-recovery-cause');a=json.loads((r/'analysis.json').read_text());q=a['results'];assert len(q)==2
+p=Path('docs/superpowers/reports/2026-10-29-ios-recovery-cause.md')
+s='''# iOS 再次降档恢复与连接关闭边界对照
+
+基线9efd8319；承接[预算与双事务原始记录](2026-10-29-ios-budget-metrics.md)及[历史双事务失败](2026-10-29-ios-production-exercise.md)。本轮继续系统排障、红绿及集中验收。原失败及设备/授权缺口保留，门槛不放宽，不发布。
+
+## 本轮确认的因果边界
+
+上轮低档时并非所有带宽证据都不足：原生访问日志及两个8秒增量窗口已超过955000bps；代码YlDashAutoRecoveryPolicy.observe在attempts达到2后明确返回budgetExhausted。此前公开暂停取消第一次预约但不返还预算，第二次安装后再次降档时没有第三次替换。这解释应用层为什么不再发起恢复；不证明AVPlayer内部为何不自然升档。
+
+本轮保持同一个repeat-stall-budget-diagnostic-v1网络曲线、同一120秒素材和同一307文件Swift制品，仅在两种公开命令场景间对照：normal不消耗取消预算，pause-resume先取消第一次预约。网络条件仍为0秒500000B/s+40ms，10秒停流，15秒2000000B/s+0ms，60–65秒第二次停流，然后恢复2000000B/s+0ms。它不是原配置，不能据此宣布原配置问题解决。不同轮次调度和暂停会影响实际时序，本次没有声称物理层完全相同。
+
+normal实际两次安装：首次33.833秒安装后输出高档；69.055秒再次低档，第二次86.831秒安装、86.972秒输出高档新帧，高档持续34.377秒至EOF。说明第二次预算可用且两个原门槛窗口通过时，现有生产链路能完成再次恢复，不是替换后永远失去自动恢复能力。仅一轮正常对照，不能作为重复稳定性结论。
+
+pause-resume的第一次预约作废仍占预算；第二次53.080秒安装并输出高档后，67.200秒再次低档。68.509–76.509–84.509秒两个窗口分别21/18请求、2.014/2.802Mbps，仍满足允许播放、缓冲5秒、剩余20秒、overdue和同会话/权限条件；预算持续2，无第三预约。最终320，严格回执保持失败。不能为通过这轮而返还取消预算、放宽触发或增加第三次预算。
+
+两轮原生探针均退出0、到EOF、无后台/音频切换信号和host failure；严格回执及独立重算均1/2通过。失败不是被预算专项通过覆盖。
+
+| 场景 | 实际安装数 | EOF位置秒/宽度 | item边界新帧间隔ms | 全程最大新帧间隔ms | 严格回执 |
+| --- | --- | --- | --- | --- | --- |
+'''
+for n,v in q.items():
+ gaps='/'.join(f'{x["publicationGapMs"]:.3f}' for x in v['continuity']['replacementBoundaries']);f=v['final'];installs=sum(e['outcome']=='installed' for e in f['automaticEvents'])
+ s+=f'| {n} | {installs} | {f["position"]:.6f}/{f["width"]} | {gaps} | {v["continuity"]["maximumPublishedFrameGapMs"]:.3f} | '+('通过' if v['receiptPassed'] else '失败')+' |\n'
+s+='''
+上述间隔来自发布帧记录；pause-resume全程最大间隔包含主动暂停，两轮均无纹理清空或无帧generation。没有本轮替换算法改动，不能用少量样本宣布延迟改进。缺少校准物理屏幕/音频测量，continuityAccepted、physicalOutputVerified、audioSynchronizationVerified、capabilityAccepted均false。
+
+## 修复诊断缺口，不推断历史根因
+
+旧服务器只保存进入GET/HEAD处理的记录，没有接入拒绝或解析前结束的证据。新增connection-lifecycle.json保存服务器本地接入/处理结束时刻、connectionId及对应requestIds；最多10000条接入、前32条拒绝样本和完整拒绝计数。仅记录有限字段，无地址、URL、头或凭据。普通处理返回为handlerEnded，只说明处理结束，不能当作对端FIN/reset。由本机主动触发的绝对deadline、关闭、handler错误、接入上限和请求记录上限单独记录。
+
+连接时钟从监听器构造开始，独立于first-GET网络profile时钟，不能与Foundation/AVPlayer时钟相减。校验器要求全局请求编号连续、连接请求顺序/关联一一匹配、时序合法；接入10000上限拒绝必须有相应接入证据。未闭合处理、拒绝样本截断或未记录的已解析请求都会使complete=false。collector无论原先成功或失败都保存这段原始证据，新错误继续导致回执失败；没有削弱事务完整性、双窗口、预算、最终高档和物理连续性门槛。
+
+真实socket红例证明解析前关闭/拒绝/deadline原来无证据，补齐后通过。综合复审另发现请求记录满10000时直接关闭被误记为无请求且完整：已添加unrecordedRequests/requestRecordLimit，保留真实红测；独立复审再真实发送10000 HEAD及两个超限请求，确认unrecordedRequests=2、withoutParsedRequest=[]、complete=false。缺请求ID及不可能拒绝记录反例也已红绿修复。达到上限的行为未放宽。
+
+本轮normal/pause-resume分别415/382个接入、415/382个解析请求，拒绝、未解析、未记录和未闭合数量均0。代理413/380条均完整关联（HEAD/manifest不属代理媒体记录），无新的双事务或不完整成功事务。另有10/9条取消请求没有metrics，不能描述为所有请求事务均完整；取消请求仍保留原始空指标。v3带宽CLI两轮均通过。没有复现历史双事务不能等同其已修复。
+
+历史请求26/server28有两个Foundation事务，只有第二事务对应一个服务器GET；既有accepted connectionId没有缺口，也不能排除未计入接入ID的拒绝或网络/对端在HTTP前失败。缺少当时的生命周期日志，无法反向确定具体诱因。上轮“响应前关闭可以产生同类双事务”的真实原生测试仍只是可复现诱因，不是历史归因。historical-double-transaction.json保留原始记录及这个边界，原passed=false不变。辅助读取初次遇到取消请求metrics=null的异常也保留，仅修正临时分析器筛选，不改原数据。
+
+## 统一验收与台账
+
+工具最终186/186通过；消费者46项中45通过、1项既有历史focused证据缺失跳过。中间工具测试因原设备失败夹具未包含新增生命周期字段而失败，已保留并补齐夹具：坏请求行仍失败，额外保存原始生命周期。最终独立复审未发现新增P1/P2。
+
+本轮没有Swift/Dart/Android生产改动或重新构建。400份原生输入及307份制品指纹与上一轮一致，复用上轮iPhone249/macOS224规范用例矩阵，不把复用说成本轮执行；两轮媒体探针是本轮真机新执行，各1/1。438份本轮源码/工具输入采集前后完全一致。规范源码用例总数仍iOS876/macOS920，并非本轮实际执行数。
+
+[完整证据](evidence/2026-10-29-ios-recovery-cause/README.md)含两轮完整xcresult、原始失败回执、帧/策略/请求/事务/连接生命周期、红绿、复审、命令与指纹及无损校验。历史34组7894条哈希逐项核对，所有旧证据及失败保留。原生复用依据和旧结果文件来源显式记录。
+
+发布台账绑定生产源码62f46a45…未变；102行implementation/verification/acceptance不提升。新增本报告引用、保留全部旧evidence及20直接引用限制。台账结构、15项回归、性能注册表及diff检查通过；sourceMatches=true，releaseReady=false，发布/性能--require-ready均预期退出1。本地保存，不发布、不推送、不合并。
+
+仍未完成：原配置/真实生产网络和重复运行的高档稳定性；AVPlayer在预算耗尽后不自然恢复的内部机制；历史双事务确切诱因及在新边界下的复现；更多提交后故障/生命周期竞争、历史快速取消关联；校准物理音画、更多设备/最低系统、授权媒体等既有资源缺口。已移除的旧终末停顿不恢复为待办。本轮补齐诊断盲区并证实剩余预算下可再次恢复，不提升整体ABR验收。
+'''
+# Counts are checked against raw summaries before writing prose.
+assert q['normal']['lifecycle']['acceptedCount']==415 and q['pause-resume']['lifecycle']['acceptedCount']==382
+assert q['normal']['proxyCount']==413 and q['pause-resume']['proxyCount']==380
+p.write_text(s)
+ledger=Path('tool/release_readiness/inventory.json');d=json.loads(ledger.read_text());key='ios-recovery-cause-20261029';d['evidence'][key]=dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),kind='report')
+for row in d['rows']:
+ if row['requirement']=='CAP-ABR' and row['platform']=='ios':
+  row['evidence']=[x for x in row['evidence'] if x!='ios-budget-metrics-20261029']
+  if key not in row['evidence']:row['evidence'].append(key)
+  row['nextAction']='qualify-repeat-second-recovery-original-stability-historical-transactions-lifecycle-races-and-physical-av'
+ledger.write_text(json.dumps(d,indent=2)+'\n')
+plan=Path('docs/superpowers/plans/2026-10-29-recovery-cause.md');plan.write_text(plan.read_text().replace('- [ ]','- [x]')+'\n本批实施与统一验收完成：工具186、消费者45通过1历史跳过；两轮新真机严格1/2，通过轮完成第二次安装，高档34.377秒至EOF；耗尽轮仍低档且失败。上一轮249/224原生矩阵仅复用。详见本轮报告，保留全部未完成项，不发布。\n')

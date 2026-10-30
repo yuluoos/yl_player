@@ -95,6 +95,8 @@ class DeviceCaptureTests(unittest.TestCase):
                 physical_device='00008140-000C49CC3493001C', owned_host='192.168.50.196',
                 profiles=Path('unused'), profile='owned')
             server = Mock(server_port=1234)
+            lifecycle=dict(version=1,acceptedCount=0,rejectedCount=0,droppedRejections=0,connections=[],rejections=[])
+            server.connection_lifecycle.return_value=lifecycle
             process = Mock()
             process.poll.return_value = 0
             with patch('abr_accesslog.create', return_value={}), \
@@ -107,7 +109,8 @@ class DeviceCaptureTests(unittest.TestCase):
                     patch('abr_accesslog.read_rows', return_value=[None, None]):
                 receipt = abr_accesslog.run(args)
             self.assertFalse(receipt['passed'])
-            self.assertEqual(receipt['errors'], ['ValueError'])
+            self.assertEqual(receipt['errors'], ['ValueError', 'connection lifecycle evidence invalid', 'connection or server timing evidence incomplete'])
+            self.assertEqual(json.loads((args.directory/'connection-lifecycle.json').read_text()),lifecycle)
             self.assertEqual(receipt['exitCode'], 0)
             self.assertEqual(json.loads((args.directory/'receipt.json').read_text()), receipt)
 

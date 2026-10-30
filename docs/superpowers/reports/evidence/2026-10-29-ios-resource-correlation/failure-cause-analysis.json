@@ -1,0 +1,190 @@
+{
+  "yl-cancel-settlement/normal": [
+    {
+      "trace": {
+        "admission": 49200.27912858334,
+        "bodyBytes": 0,
+        "bodyCallbacks": 0,
+        "correlationID": "7C272574-5DBA-4AE5-B91E-98426405A6F7",
+        "downstreamTerminal": 49200.28231191667,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0031980276107788086,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ],
+          "truncated": 0,
+          "version": 2
+        },
+        "outcome": 1,
+        "proxyID": "FBE15A39-7241-4667-ACDE-586223B6010D",
+        "requestID": 63,
+        "sendCompletions": 0,
+        "sendCount": 0,
+        "sendFailures": 0,
+        "sendWaitMax": 0,
+        "sendWaitSum": 0,
+        "sentBodyBytes": 0,
+        "taskComplete": 49200.28252316667,
+        "taskOutcome": 1,
+        "terminal": 49200.282524625,
+        "version": 4
+      },
+      "activeAtAdmission": [
+        {
+          "requestID": 63,
+          "admission": 49200.27912858334,
+          "taskComplete": 49200.28252316667
+        }
+      ],
+      "nearbyTerminalObservations": [
+        {
+          "requestID": 60,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": -12.06612500391202
+        },
+        {
+          "requestID": 62,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": -10.141375001694541
+        },
+        {
+          "requestID": 61,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": -8.797875001619104
+        },
+        {
+          "requestID": 63,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": 0.0
+        }
+      ],
+      "sampleBefore": 12.579194708334398,
+      "sampleAfter": 12.844846333333408,
+      "interpretation": "Tracked task lifetimes, not Foundation connection occupancy. They cannot establish its internal scheduling or AVPlayer decision."
+    }
+  ],
+  "yl-cancel-settlement/normal-repeat": [
+    {
+      "trace": {
+        "admission": 49330.155904125,
+        "bodyBytes": 0,
+        "bodyCallbacks": 0,
+        "correlationID": "4DC58F73-F8CA-4628-98BB-C2F9BE3B598D",
+        "downstreamTerminal": 49330.16031520833,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.004417061805725098,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null
+            }
+          ],
+          "truncated": 0,
+          "version": 2
+        },
+        "outcome": 1,
+        "proxyID": "FDB98A18-F98E-4EC3-92D8-CB8D8FF72C56",
+        "requestID": 58,
+        "sendCompletions": 0,
+        "sendCount": 0,
+        "sendFailures": 0,
+        "sendWaitMax": 0,
+        "sendWaitSum": 0,
+        "sentBodyBytes": 0,
+        "taskComplete": 49330.16058475,
+        "taskOutcome": 1,
+        "terminal": 49330.16058625,
+        "version": 4
+      },
+      "activeAtAdmission": [
+        {
+          "requestID": 58,
+          "admission": 49330.155904125,
+          "taskComplete": 49330.16058475
+        }
+      ],
+      "nearbyTerminalObservations": [
+        {
+          "requestID": 55,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": -15.953999994962942
+        },
+        {
+          "requestID": 56,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": -12.395041667332407
+        },
+        {
+          "requestID": 57,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": -10.267624995321967
+        },
+        {
+          "requestID": 58,
+          "cancelCause": null,
+          "outcome": 1,
+          "offsetMs": 0.0
+        }
+      ],
+      "sampleBefore": 12.543782749999082,
+      "sampleAfter": 12.796739458332013,
+      "interpretation": "Tracked task lifetimes, not Foundation connection occupancy. They cannot establish its internal scheduling or AVPlayer decision."
+    }
+  ],
+  "yl-resource-correlation/normal": [],
+  "yl-resource-correlation/normal-repeat": [],
+  "yl-resource-correlation/original": [],
+  "yl-resource-correlation/original-repeat": []
+}

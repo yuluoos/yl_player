@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "capture": "yl-same-resource-retry/normal",
+      "proxyID": "C459CA68-0CFA-4FC2-BA04-9A3359F8E0F2",
+      "requestID": 4,
+      "taskOutcome": 0,
+      "serverRequestIDs": [
+        148
+      ],
+      "transactionCount": 2,
+      "metricsVersion": 2,
+      "redirectCount": 0,
+      "transactions": [
+        {
+          "connectSeconds": 0.06599998474121094,
+          "dnsSeconds": 0,
+          "durationStates": {
+            "connectSeconds": 0,
+            "dnsSeconds": 0,
+            "fetchSeconds": 2,
+            "fetchToRequestSeconds": 0,
+            "requestSeconds": 0,
+            "responseSeconds": 3,
+            "responseWaitSeconds": 2,
+            "tlsSeconds": 3
+          },
+          "fetchSeconds": null,
+          "fetchToRequestSeconds": 0.06707310676574707,
+          "fetchType": 1,
+          "protocolCode": 1,
+          "requestSeconds": 1.2993812561035156e-05,
+          "responseSeconds": null,
+          "responseWaitSeconds": null,
+          "reused": 0,
+          "tlsSeconds": null
+        },
+        {
+          "connectSeconds": 0.008000016212463379,
+          "dnsSeconds": 0,
+          "durationStates": {
+            "connectSeconds": 0,
+            "dnsSeconds": 0,
+            "fetchSeconds": 0,
+            "fetchToRequestSeconds": 0,
+            "requestSeconds": 0,
+            "responseSeconds": 0,
+            "responseWaitSeconds": 0,
+            "tlsSeconds": 3
+          },
+          "fetchSeconds": 0.02706599235534668,
+          "fetchToRequestSeconds": 0.010267972946166992,
+          "fetchType": 1,
+          "protocolCode": 1,
+          "requestSeconds": 0.0012999773025512695,
+          "responseSeconds": 0.008018016815185547,
+          "responseWaitSeconds": 0.007480025291442871,
+          "reused": 0,
+          "tlsSeconds": null
+        }
+      ],
+      "byteEvidence": {
+        "availability": "legacy",
+        "transactions": [],
+        "serverReceiptProven": false,
+        "physicalTransmissionProven": false,
+        "interpretation": "Foundation-reported counts only. Zero is not proof of no packets; unknown and absent transactions are not zero. Positive counts do not establish server parsing or repair missing dates."
+      },
+      "inference": "The first transaction has request timing but lacks response timing. The legacy metrics contain no byte counts. One server parse cannot identify the first transaction transport outcome; no internal retry cause is established."
+    }
+  ],
+  "rootCauseEstablished": false,
+  "capabilityAccepted": false
+}

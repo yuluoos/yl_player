@@ -1,0 +1,1 @@
+独立代码复审 same_resource_review：无P1/P2。三处测试镜像一致；同URL/同token/不同correlationID及后续ID对应服务端第二请求断言完整，旧取消ID仍禁止出现。capture等待覆盖observer和trace清理，defer释放保留；followupTrace原始附件和false验收标记保留。diff通过，定向1passed/0failed。未运行Xcode。最终媒体/报告另审。

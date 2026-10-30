@@ -1,0 +1,351 @@
+{
+  "budget-zero": {
+    "proxyCount": 359,
+    "cancelled": 6,
+    "multiTransactions": [],
+    "unmatched": [],
+    "missingMetrics": 0,
+    "incompleteSuccessful": 0,
+    "source54": [
+      {
+        "proxyID": "4B095A21-7923-4F2C-937C-2EA6FD7E8206",
+        "requestID": 58,
+        "serverRequestID": 60,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "8b334a463b93793706a508170ca472db594646405557a454a35223f1082dc0c5",
+        "admission": 99454.23306641667,
+        "downstreamTerminal": 99459.56956766667
+      },
+      {
+        "proxyID": "4B095A21-7923-4F2C-937C-2EA6FD7E8206",
+        "requestID": 59,
+        "serverRequestID": 61,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "0d93edb75562fa9896a152f86f54ac9aab88d3dbdb5cf1e909ae876b231ec0ef",
+        "admission": 99454.24300370834,
+        "downstreamTerminal": 99459.59217258333
+      },
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 43,
+        "serverRequestID": 230,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "7005863ee5d1ff1d0cc49af197799d9bb5520c361bd64b075049d18c724a3880",
+        "admission": 99501.77549537501,
+        "downstreamTerminal": 99506.8241105
+      },
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 49,
+        "serverRequestID": 236,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "17b12c22a504e6af5bc7b077eda52e5ac732abfdd0f31db15d60ad6e5ea00422",
+        "admission": 99504.81605929167,
+        "downstreamTerminal": 99506.82706325
+      },
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 47,
+        "serverRequestID": 233,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "a00b4f8a7940e1defb620063dd386b7efbbd162d664ca372c8b64c79938435b9",
+        "admission": 99503.79481429167,
+        "downstreamTerminal": 99506.827648125
+      },
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 44,
+        "serverRequestID": 231,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "17b12c22a504e6af5bc7b077eda52e5ac732abfdd0f31db15d60ad6e5ea00422",
+        "admission": 99501.80012,
+        "downstreamTerminal": 99506.828573
+      }
+    ],
+    "health": {
+      "samples": 589,
+      "last": {
+        "listenerSeconds": 153.4551295000001,
+        "profileSeconds": 141.99916441599999,
+        "accepted": 361,
+        "active": 0,
+        "rejected": 0
+      },
+      "maximumGap": 0.5406321249997745
+    },
+    "capabilityAccepted": false
+  },
+  "normal-zero": {
+    "proxyCount": 416,
+    "cancelled": 4,
+    "multiTransactions": [],
+    "unmatched": [
+      {
+        "admission": 99744.58444766667,
+        "bodyBytes": 0,
+        "bodyCallbacks": 0,
+        "cancelCause": 1,
+        "cancelErrorCode": 0,
+        "cancelErrorDomain": 0,
+        "cancelSource": 0,
+        "correlationID": "8A5FDE12-D52A-4D02-AE82-D767B5E8ED77",
+        "downstreamTerminal": 99744.59719120833,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.012807965278625488,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 0,
+                "responseBody": 0,
+                "responseHeaders": 0
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        },
+        "outcome": 1,
+        "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+        "requestID": 129,
+        "resourceToken": "3994163cee59d111a38d1910890ef454fca421b8c374a03ab8d7cf1629942a44",
+        "sendCompletions": 0,
+        "sendCount": 0,
+        "sendFailures": 0,
+        "sendWaitMax": 0,
+        "sendWaitSum": 0,
+        "sentBodyBytes": 0,
+        "taskComplete": 99744.59749141667,
+        "taskOutcome": 1,
+        "terminal": 99744.59749304167,
+        "version": 7
+      },
+      {
+        "admission": 99744.59650316667,
+        "bodyBytes": 0,
+        "bodyCallbacks": 0,
+        "cancelCause": 1,
+        "cancelErrorCode": 0,
+        "cancelErrorDomain": 0,
+        "cancelSource": 0,
+        "correlationID": "B6409359-68E5-4459-98D3-C33AF3D146C0",
+        "downstreamTerminal": 99744.59719441667,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 0.0007920265197753906,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": null,
+              "dnsSeconds": null,
+              "durationStates": {
+                "connectSeconds": 3,
+                "dnsSeconds": 3,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 2,
+                "requestSeconds": 3,
+                "responseSeconds": 3,
+                "responseWaitSeconds": 3,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": null,
+              "fetchType": 1,
+              "protocolCode": 0,
+              "requestSeconds": null,
+              "responseSeconds": null,
+              "responseWaitSeconds": null,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 0,
+                "responseBody": 0,
+                "responseHeaders": 0
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        },
+        "outcome": 1,
+        "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+        "requestID": 130,
+        "resourceToken": "4b8e948269cdc231573fb2f6eb740b4e0716af482671b6d4d0e6c742f21f9437",
+        "sendCompletions": 0,
+        "sendCount": 0,
+        "sendFailures": 0,
+        "sendWaitMax": 0,
+        "sendWaitSum": 0,
+        "sentBodyBytes": 0,
+        "taskComplete": 99744.59781987501,
+        "taskOutcome": 1,
+        "terminal": 99744.59784804167,
+        "version": 7
+      }
+    ],
+    "missingMetrics": 0,
+    "incompleteSuccessful": 0,
+    "source54": [
+      {
+        "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+        "requestID": 56,
+        "serverRequestID": 58,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "e1711c978248bf50a340450cdef8db05cba452dbee70f9de40adf59c608906bb",
+        "admission": 99720.59838020834,
+        "downstreamTerminal": 99725.81953425001
+      },
+      {
+        "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+        "requestID": 59,
+        "serverRequestID": 61,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "7e6c62907be2fac70e2a02ba526278dee805902345ea8e2bb12e0b4dfea74781",
+        "admission": 99722.60902629167,
+        "downstreamTerminal": 99725.835896125
+      }
+    ],
+    "health": {
+      "samples": 583,
+      "last": {
+        "listenerSeconds": 128.49328945900015,
+        "profileSeconds": 123.10259408299999,
+        "accepted": 416,
+        "active": 0,
+        "rejected": 0
+      },
+      "maximumGap": 0.5029192080000939
+    },
+    "capabilityAccepted": false
+  },
+  "budget-zero-repeat": {
+    "proxyCount": 386,
+    "cancelled": 5,
+    "multiTransactions": [],
+    "unmatched": [],
+    "missingMetrics": 0,
+    "incompleteSuccessful": 0,
+    "source54": [
+      {
+        "proxyID": "7E6E06A3-2082-4D8E-BB5A-83B3B5E04ACC",
+        "requestID": 59,
+        "serverRequestID": 61,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "e4b4360fe14a12a94ff6504feb0d16bb9c29637da730c09bbae392fa1b6c4fac",
+        "admission": 99849.147853,
+        "downstreamTerminal": 99854.40315308335
+      },
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 44,
+        "serverRequestID": 249,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "93a17cb7f42c21d793bbb18d07e0547c77e9b9b1b4b21e2d3035c202abea599a",
+        "admission": 99904.58275533334,
+        "downstreamTerminal": 99909.65007029167
+      },
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 50,
+        "serverRequestID": 255,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "0f14a4de4265f4f60b2d27e32a6e7c08d87d601cd83d7e860f17d9c082f7b268",
+        "admission": 99907.65148279167,
+        "downstreamTerminal": 99909.655169
+      },
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 48,
+        "serverRequestID": 254,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "e98bf433a9f2a74a7a214b2e453090f10bb0e638d0f5d78ace1523e0250b293b",
+        "admission": 99906.61865083333,
+        "downstreamTerminal": 99909.65530279167
+      },
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 46,
+        "serverRequestID": 252,
+        "cancelCause": 3,
+        "cancelSource": 1,
+        "cancelErrorDomain": 1,
+        "cancelErrorCode": 54,
+        "resourceToken": "0f14a4de4265f4f60b2d27e32a6e7c08d87d601cd83d7e860f17d9c082f7b268",
+        "admission": 99904.64061845835,
+        "downstreamTerminal": 99909.65609245835
+      }
+    ],
+    "health": {
+      "samples": 565,
+      "last": {
+        "listenerSeconds": 128.88369570899977,
+        "profileSeconds": 124.73402387499982,
+        "accepted": 388,
+        "active": 0,
+        "rejected": 0
+      },
+      "maximumGap": 0.5030934169999455
+    },
+    "capabilityAccepted": false
+  }
+}

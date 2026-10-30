@@ -1,0 +1,26 @@
+{
+  "normal": {
+    "proxyCount": 411,
+    "cancelled": 10,
+    "missingMetrics": 0,
+    "zeroTransactionMetrics": 0,
+    "multiTransactions": 0,
+    "unknownByteFields": 0,
+    "uncorrelated": 0,
+    "details": [],
+    "interpretation": "Foundation-reported transaction counts, not packet capture. Empty transactions and unknown counts are not zero. Counts neither establish server parsing nor repair missing response dates.",
+    "capabilityAccepted": false
+  },
+  "original": {
+    "proxyCount": 340,
+    "cancelled": 5,
+    "missingMetrics": 0,
+    "zeroTransactionMetrics": 0,
+    "multiTransactions": 0,
+    "unknownByteFields": 0,
+    "uncorrelated": 0,
+    "details": [],
+    "interpretation": "Foundation-reported transaction counts, not packet capture. Empty transactions and unknown counts are not zero. Counts neither establish server parsing nor repair missing response dates.",
+    "capabilityAccepted": false
+  }
+}

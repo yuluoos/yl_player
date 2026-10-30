@@ -1,0 +1,159 @@
+[
+  {
+    "line": 100,
+    "error": "invalid proxy request boundary evidence",
+    "row": {
+      "admission": 43407.92624325,
+      "bodyBytes": 13625,
+      "bodyCallbacks": 7,
+      "correlationID": "2F234E88-4BDE-4F53-9B12-C66726B50CB3",
+      "firstBody": 43408.071153625,
+      "firstSend": 43408.071082125,
+      "httpStatus": 200,
+      "lastBody": 43408.09756058334,
+      "lastSend": 43408.09756475,
+      "lastSendComplete": 43408.09782154167,
+      "metrics": {
+        "redirectCount": 0,
+        "taskSeconds": 0.1714780330657959,
+        "transactionCount": 2,
+        "transactions": [
+          {
+            "connectSeconds": 0.042999982833862305,
+            "dnsSeconds": 0,
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": 0.045805931091308594,
+            "fetchType": 1,
+            "protocolCode": 1,
+            "requestSeconds": 6.508827209472656e-05,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "reused": 0,
+            "tlsSeconds": null
+          },
+          {
+            "connectSeconds": 0.006999969482421875,
+            "dnsSeconds": 0,
+            "fetchSeconds": 0.09786605834960938,
+            "fetchToRequestSeconds": 0.008823990821838379,
+            "fetchType": 1,
+            "protocolCode": 1,
+            "requestSeconds": 0.00010704994201660156,
+            "responseSeconds": 0.028219103813171387,
+            "responseWaitSeconds": 0.06071591377258301,
+            "reused": 0,
+            "tlsSeconds": null
+          }
+        ],
+        "truncated": 0
+      },
+      "outcome": 0,
+      "proxyID": "0740EE71-C06E-423A-9C73-7077401AD4BA",
+      "requestID": 26,
+      "response": 43408.07105916667,
+      "sendCompletions": 8,
+      "sendCount": 8,
+      "sendFailures": 0,
+      "sendWaitMax": 0.000256791667197831,
+      "sendWaitSum": 0.0012668333292822354,
+      "sentBodyBytes": 13625,
+      "serverRequestID": 28,
+      "terminal": 43408.097958708335,
+      "upstreamComplete": 43408.09795333334,
+      "version": 2
+    },
+    "server": {
+      "asset": "network-period-2/chunk-0-00001.m4s",
+      "assetSha256": "6af3f999a14954623ed3f4affc581cba50deba2aa071d7c36e4d1a82e7d5fd0b",
+      "bodyBytesWritten": 13625,
+      "connectionId": 28,
+      "connectionMode": "close",
+      "connectionRequestIndex": 1,
+      "endMs": 2494.703167,
+      "method": "GET",
+      "outcome": "complete",
+      "phaseBoundariesMs": [
+        0,
+        10000,
+        15000
+      ],
+      "phaseBytesWritten": [
+        13625,
+        0,
+        0
+      ],
+      "profile": "stall-headroom-zero-latency-diagnostic-v1",
+      "profileSha256": "9f63acdf1ab0ce92c5565bc3a750478f0c6c5ba76cef88c7e1092cfcd89b01f1",
+      "proxyTraceID": "2F234E88-4BDE-4F53-9B12-C66726B50CB3",
+      "rangeEndExclusive": 13625,
+      "rangeStart": 0,
+      "requestId": 28,
+      "runId": "abr-accesslog",
+      "schemaVersion": 1,
+      "serverTiming": {
+        "bodyWriteCalls": 14,
+        "bodyWriteFailures": 0,
+        "bodyWriteSeconds": 0.0006189149999045185,
+        "headerWriteCalls": 1,
+        "headerWriteFailures": 0,
+        "headerWriteSeconds": 0.00015995800004020566,
+        "holdCalls": 14,
+        "holdFailures": 0,
+        "holdSeconds": 0.034728708999864466,
+        "latencyCalls": 1,
+        "latencyFailures": 0,
+        "latencySeconds": 0.04507062500010761,
+        "queueCalls": 14,
+        "queueFailures": 0,
+        "queueSeconds": 7.77500006279297e-05,
+        "sleepCalls": 14,
+        "sleepFailures": 0,
+        "sleepRequestedSeconds": 0.027250000000000007,
+        "sleepSeconds": 0.03442279099908774,
+        "totalSeconds": 0.0812447499999962,
+        "valid": true,
+        "version": 1
+      },
+      "startMs": 2413.480292,
+      "status": 200,
+      "timelineMode": "first-get",
+      "timelineState": "active"
+    },
+    "transaction_metrics": {
+      "redirectCount": 0,
+      "taskSeconds": 0.1714780330657959,
+      "transactionCount": 2,
+      "transactions": [
+        {
+          "connectSeconds": 0.042999982833862305,
+          "dnsSeconds": 0,
+          "fetchSeconds": null,
+          "fetchToRequestSeconds": 0.045805931091308594,
+          "fetchType": 1,
+          "protocolCode": 1,
+          "requestSeconds": 6.508827209472656e-05,
+          "responseSeconds": null,
+          "responseWaitSeconds": null,
+          "reused": 0,
+          "tlsSeconds": null
+        },
+        {
+          "connectSeconds": 0.006999969482421875,
+          "dnsSeconds": 0,
+          "fetchSeconds": 0.09786605834960938,
+          "fetchToRequestSeconds": 0.008823990821838379,
+          "fetchType": 1,
+          "protocolCode": 1,
+          "requestSeconds": 0.00010704994201660156,
+          "responseSeconds": 0.028219103813171387,
+          "responseWaitSeconds": 0.06071591377258301,
+          "reused": 0,
+          "tlsSeconds": null
+        }
+      ],
+      "truncated": 0,
+      "available": true,
+      "complete": false
+    }
+  }
+]

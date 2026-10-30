@@ -1,0 +1,31 @@
+{
+  "firstSignalElapsed": 102.38286716667062,
+  "lastIncludedRow": 102.36364454166323,
+  "diagnosticPrefixOnly": true,
+  "fullCapturePassed": false,
+  "capabilityAccepted": false,
+  "budgetObservation": {
+    "secondInstallElapsed": 54.33152654166042,
+    "secondDownshiftElapsed": 67.44394958333578,
+    "exhaustedSamples": 66,
+    "qualifiedCounterfactualWindows": [
+      {
+        "start": 67.51141087499855,
+        "end": 75.76070229166362,
+        "requests": 20,
+        "bitrate": 1661487.5907438535
+      },
+      {
+        "start": 75.76070229166362,
+        "end": 83.76141079167428,
+        "requests": 18,
+        "bitrate": 1758730.1298783696
+      }
+    ],
+    "maximumAttempts": 2,
+    "thirdReservationObserved": false,
+    "capabilityAccepted": false,
+    "continuityAccepted": false,
+    "physicalOutputVerified": false
+  }
+}

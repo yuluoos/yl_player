@@ -116,6 +116,17 @@ class AccessLogTests(unittest.TestCase):
             startup_delay_ms=0)
         self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values)))
         self.assertFalse(abr_accesslog.production_recovery(SimpleNamespace()))
+        for changes in [dict(require_budget_exhaustion=1),dict(require_budget_exhaustion=True),
+                        dict(require_budget_exhaustion=True,require_production_install=True,production_command='none')]:
+            with self.subTest(budget=changes),self.assertRaises(ValueError):
+                abr_accesslog.production_recovery(SimpleNamespace(**dict(values,**changes)))
+        self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**dict(values,require_budget_exhaustion=True,
+            require_production_install=True,production_command='pause-resume'))))
+        self.assertTrue(abr_accesslog.production_recovery(SimpleNamespace(**values,require_production_install=True)))
+        for changes in [dict(require_production_install=1),dict(require_production_install=True,production_recovery=False),
+                        dict(require_production_install=True,production_command='load-prepared')]:
+            with self.subTest(changes=changes),self.assertRaises(ValueError):
+                abr_accesslog.production_recovery(SimpleNamespace(**dict(values,**changes)))
         for key, value in [('physical_device', None), ('duration_seconds', 40), ('recovery_action', 'none'),
                            ('auto_scenario', 'pause-first'), ('candidate_preparation', 'asset-preroll'),
                            ('public_policy_cycle', True), ('public_policy_race', True), ('direct_hls_control', True),
@@ -152,6 +163,25 @@ class AccessLogTests(unittest.TestCase):
             else:ff[0]['width']=320
             with self.subTest(mutation=mutation), self.assertRaises(ValueError):
                 abr_accesslog.summarize_production_recovery(rr, ff)
+
+    def test_required_production_install_rejects_natural_or_cancelled_only_recovery(self):
+        event = dict(outcome='installed', elapsedAfter=20, itemChanged=True, credentialCommitAccepted=True)
+        rows = [dict(elapsed=0, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=640, automaticEvents=[]),
+                dict(elapsed=10, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=320, automaticEvents=[]),
+                dict(elapsed=120, productionRecovery=True, captureDeviceKind='physical', sessionId='same',
+                     publicPolicyRace=False, publicPolicyCycle=False, hostFailureCount=0, width=640, automaticEvents=[event])]
+        frames = [dict(elapsed=1, width=640, frames=1), dict(elapsed=11, width=320, frames=1), dict(elapsed=21, width=640, frames=1)]
+        self.assertEqual(abr_accesslog.summarize_production_recovery(rows, frames, require_install=True)['installed'],1)
+        for events in [[], [dict(outcome='cancelled', elapsedAfter=20, itemChanged=False)]]:
+            rr=copy.deepcopy(rows);rr[-1]['automaticEvents']=events
+            self.assertFalse(abr_accesslog.summarize_production_recovery(rr,frames)['triggerExercised'])
+            with self.subTest(events=events),self.assertRaises(ValueError):
+                abr_accesslog.summarize_production_recovery(rr,frames,require_install=True)
+        for invalid in [1, 'yes', None]:
+            with self.subTest(invalid=invalid),self.assertRaises(ValueError):
+                abr_accesslog.summarize_production_recovery(rows,frames,require_install=invalid)
 
     def test_candidate_preparation_is_explicit_and_limited_to_owned_auto_probe(self):
         def args(**kwargs):
@@ -583,7 +613,7 @@ class CleanupTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
-    def _failed_playback_receipt(self, raw_rows):
+    def _failed_playback_receipt(self, raw_rows, proxy=None, server=None):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); products = root / 'products'; app = products / 'Fixture.app'
             app.mkdir(parents=True)
@@ -596,6 +626,9 @@ class FailureReceiptTests(unittest.TestCase):
             def failed_native(*_args):
                 # Deliberately incomplete main rows cannot satisfy playback acceptance.
                 (args.directory/'rows.jsonl').write_text(raw_rows)
+                if proxy is not None:
+                    (args.directory/'proxy-requests.jsonl').write_text(json.dumps(proxy)+'\n')
+                    (args.directory/'requests.jsonl').write_text(json.dumps(server)+'\n')
                 frames = [dict(elapsed=0, generation=0, frames=1, width=320, position=1),
                           dict(elapsed=.05, generation=0, frames=1, width=320, position=1.05),
                           dict(elapsed=30, generation=0, frames=0, width=0, position=1.05)]
@@ -607,6 +640,16 @@ class FailureReceiptTests(unittest.TestCase):
                  patch('abr_accesslog.cleanup_owned', return_value=True):
                 receipt = abr_accesslog.run(args)
             return receipt
+
+    def test_proxy_metrics_failure_keeps_independent_frame_observation(self):
+        from test_proxy_boundaries import ProxyBoundaryTests
+        base=ProxyBoundaryTests();base.setUp()
+        proxy=dict(base.trace,version=2,metrics=None)
+        receipt=self._failed_playback_receipt('{"framesPublished":2,"proxyRequestSamplingVersion":2}\n',proxy,base.server)
+        self.assertFalse(receipt['passed'])
+        self.assertIn('proxy successful transaction metrics incomplete',receipt['errors'])
+        self.assertIn('continuityObservation',receipt)
+        self.assertFalse(receipt['continuityObservation']['continuityAccepted'])
 
     def test_empty_main_rows_fail_closed_without_escaping(self):
         receipt = self._failed_playback_receipt('')

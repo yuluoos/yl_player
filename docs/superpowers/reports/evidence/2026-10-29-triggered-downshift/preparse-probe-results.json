@@ -1,0 +1,187 @@
+[
+  {
+    "mode": "normal",
+    "platform": "macOS",
+    "accepted": [
+      1
+    ],
+    "parsed": [
+      1
+    ],
+    "exitCode": 0,
+    "command": [
+      "swift",
+      "/private/tmp/yl-triggered-downshift/session-metrics.swift",
+      "http://127.0.0.1:50337/owned"
+    ],
+    "historicalCauseProven": false,
+    "capabilityAccepted": false,
+    "metrics": {
+      "bodyBytes": 4,
+      "errorCode": 0,
+      "sessionInvalidated": true,
+      "status": 200,
+      "transactions": [
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 238,
+          "requestStartPresent": true,
+          "responseBody": 4,
+          "responseEndPresent": true,
+          "responseHeaders": 57,
+          "responseStartPresent": true,
+          "reused": false
+        }
+      ]
+    }
+  },
+  {
+    "mode": "before-parse",
+    "platform": "macOS",
+    "accepted": [
+      1,
+      2
+    ],
+    "parsed": [
+      2
+    ],
+    "exitCode": 0,
+    "command": [
+      "swift",
+      "/private/tmp/yl-triggered-downshift/session-metrics.swift",
+      "http://127.0.0.1:50339/owned"
+    ],
+    "historicalCauseProven": false,
+    "capabilityAccepted": false,
+    "metrics": {
+      "bodyBytes": 4,
+      "errorCode": 0,
+      "sessionInvalidated": true,
+      "status": 200,
+      "transactions": [
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 0,
+          "requestStartPresent": true,
+          "responseBody": 0,
+          "responseEndPresent": false,
+          "responseHeaders": 0,
+          "responseStartPresent": false,
+          "reused": false
+        },
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 238,
+          "requestStartPresent": true,
+          "responseBody": 4,
+          "responseEndPresent": true,
+          "responseHeaders": 57,
+          "responseStartPresent": true,
+          "reused": false
+        }
+      ]
+    }
+  },
+  {
+    "mode": "delayed-before-parse",
+    "platform": "macOS",
+    "accepted": [
+      1,
+      2
+    ],
+    "parsed": [
+      2
+    ],
+    "exitCode": 0,
+    "command": [
+      "swift",
+      "/private/tmp/yl-triggered-downshift/session-metrics.swift",
+      "http://127.0.0.1:50342/owned"
+    ],
+    "historicalCauseProven": false,
+    "capabilityAccepted": false,
+    "metrics": {
+      "bodyBytes": 4,
+      "errorCode": 0,
+      "sessionInvalidated": true,
+      "status": 200,
+      "transactions": [
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 238,
+          "requestStartPresent": true,
+          "responseBody": 0,
+          "responseEndPresent": false,
+          "responseHeaders": 0,
+          "responseStartPresent": false,
+          "reused": false
+        },
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 238,
+          "requestStartPresent": true,
+          "responseBody": 4,
+          "responseEndPresent": true,
+          "responseHeaders": 57,
+          "responseStartPresent": true,
+          "reused": false
+        }
+      ]
+    }
+  },
+  {
+    "mode": "after-parse",
+    "platform": "macOS",
+    "accepted": [
+      1,
+      2
+    ],
+    "parsed": [
+      1,
+      2
+    ],
+    "exitCode": 0,
+    "command": [
+      "swift",
+      "/private/tmp/yl-triggered-downshift/session-metrics.swift",
+      "http://127.0.0.1:50349/owned"
+    ],
+    "historicalCauseProven": false,
+    "capabilityAccepted": false,
+    "metrics": {
+      "bodyBytes": 4,
+      "errorCode": 0,
+      "sessionInvalidated": true,
+      "status": 200,
+      "transactions": [
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 238,
+          "requestStartPresent": true,
+          "responseBody": 0,
+          "responseEndPresent": false,
+          "responseHeaders": 0,
+          "responseStartPresent": false,
+          "reused": false
+        },
+        {
+          "requestBody": 0,
+          "requestEndPresent": true,
+          "requestHeaders": 238,
+          "requestStartPresent": true,
+          "responseBody": 4,
+          "responseEndPresent": true,
+          "responseHeaders": 57,
+          "responseStartPresent": true,
+          "reused": false
+        }
+      ]
+    }
+  }
+]
