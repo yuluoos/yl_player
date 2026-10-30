@@ -1,0 +1,114 @@
+{
+  "analyze.py": {
+    "bytes": 2482,
+    "sha256": "f97ff8c90e0be998251347cdb916c161d6f03dac66d159be6fbc5a1a02be8744"
+  },
+  "command.json": {
+    "bytes": 809,
+    "sha256": "d223ab494313200b7321505b520bf7913d64dfc9104ec079481361b8cd63e7a2"
+  },
+  "diagnosis.json.gz": {
+    "bytes": 9322,
+    "sha256": "92177bdfffcb0bb5546282f2bdcab0d66bb9b1d3f0bcb72ddd831068c8917a45"
+  },
+  "endpoint-green.log": {
+    "bytes": 1590,
+    "sha256": "c0afda09f07bb6b9d0dc0a9b882106b1e3cb22845991e53a1ec467bc0b864620"
+  },
+  "endpoint-red.log": {
+    "bytes": 1100,
+    "sha256": "03200429db73626d8c6b912afc154e77d6e2db13863345d6daf7c51f3ab045f2"
+  },
+  "inputs.json": {
+    "bytes": 342,
+    "sha256": "59750bf21eeaa6a23b8d2c97e11513d17b11f7ca65683856d83d14e203c336b6"
+  },
+  "media/connection-lifecycle.json.gz": {
+    "bytes": 28128,
+    "sha256": "1b3eb5d2a81f75c1a119af62cc8d1f808edd43e54a78bf1d298d432c5a8c3b0d"
+  },
+  "media/fault-server.json": {
+    "bytes": 714,
+    "sha256": "13f0fc3698504ee4678186b39c1bb68764f271bdcae17f99c3337919ee511c8d"
+  },
+  "media/fault-trigger.json": {
+    "bytes": 590,
+    "sha256": "7e8196d5f056c03ac8cd2cc40909df6722016c6340af6be2dd4d8a46862b5e0d"
+  },
+  "media/frame-samples.jsonl.gz": {
+    "bytes": 129960,
+    "sha256": "c5cdd351274c580b91c161b318d29a8909d908d36d3245d8b845264e3a5e3686"
+  },
+  "media/packet-summary.json.gz": {
+    "bytes": 194704,
+    "sha256": "e5c23c43d7f01e8feea9c8e65cfb80dbf91d8ff9cb7323ffedea0f5e0ad69d9e"
+  },
+  "media/packets/capture-root.py": {
+    "bytes": 2232,
+    "sha256": "00943b68bd2e96d318334d0c5a231d8c132dc253677627d490c25b0b8436ca62"
+  },
+  "media/packets/capture.pcap.gz": {
+    "bytes": 7250592,
+    "sha256": "d6393d6d4d8130f9789d727e267dcc2d8a10793523c2c816ef7d1bb37c0feae1"
+  },
+  "media/packets/command.json": {
+    "bytes": 195,
+    "sha256": "45c2172554887d82c960b0473a991a5372e44638baf30a45d38ad9207a56201b"
+  },
+  "media/packets/done.json": {
+    "bytes": 78,
+    "sha256": "d595d9240f3d3960922db74405fbef6c4999fbcf379fe8181ade3d5bdd659bae"
+  },
+  "media/packets/tcpdump.log": {
+    "bytes": 169,
+    "sha256": "98d735ef6b416c05e179c3f041cefa669ea35d85ce53f624a7294a974863cbd7"
+  },
+  "media/policy-decisions.jsonl.gz": {
+    "bytes": 26975,
+    "sha256": "f3d9b34ae9cefcd3122c403068e911b14e088885bf4cd1e6f30d77025f4b5903"
+  },
+  "media/proxy-requests.jsonl.gz": {
+    "bytes": 112744,
+    "sha256": "3eb6faa8eaf00a27dfa55b73b5c241a1989c90de3ffff21d119f0001e06b7bad"
+  },
+  "media/receipt.json.gz": {
+    "bytes": 177471,
+    "sha256": "c795f5e23eea166d3e7dfe927f988d4352498bf95570a4d1fa2d8fb24c1d7d9a"
+  },
+  "media/requests.jsonl.gz": {
+    "bytes": 64209,
+    "sha256": "0cecb96fe68f5bad7818d45c6e9327513451a6528997cf06e835f66ff721b373"
+  },
+  "media/rows.jsonl.gz": {
+    "bytes": 37036,
+    "sha256": "e7166435e620d82d6357ff1588329ba70c94a1a4a638d22c2275018327199a40"
+  },
+  "media/server-health.json.gz": {
+    "bytes": 13090,
+    "sha256": "5d083e741e82d82da981969aeed1756111b7c00619bcff12302686285860162b"
+  },
+  "media/signals.jsonl": {
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "media/transaction-connection-summary.json.gz": {
+    "bytes": 20005,
+    "sha256": "175bdba190b7ff3ec8c152237455e81953e16760dd7713287020f7ff419f789f"
+  },
+  "media/transaction-connections.jsonl.gz": {
+    "bytes": 29115,
+    "sha256": "78b88913ca799f87e0a242a87808088468845d2360692e11c14fcbdcb07daf43"
+  },
+  "profiles.json": {
+    "bytes": 449,
+    "sha256": "4f54097696127a6eb43acd45e97453aab62d68d9b4f8d8068540100792884c3f"
+  },
+  "readiness.json": {
+    "bytes": 49198,
+    "sha256": "ef2c17e65276a6961c1406289bf04c9ea56923385d44790368b7cd45c0b5994a"
+  },
+  "result.json": {
+    "bytes": 47,
+    "sha256": "2ca372da5aa2f16dcd17c563a5ec6aa7826c12451b0ba7dbaa19deba69430657"
+  }
+}

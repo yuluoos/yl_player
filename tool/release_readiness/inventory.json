@@ -1018,6 +1018,11 @@
       "path": "docs/superpowers/reports/2026-10-30-packet-evidence.md",
       "sha256": "53e03cf9cbba91fdba29fd66fc9cedddc2a84998a8a1912067391a1d05d2340b",
       "kind": "report"
+    },
+    "packet-followup-20261030": {
+      "path": "docs/superpowers/reports/2026-10-30-packet-followup.md",
+      "sha256": "0ef9d98e011a2a709d4f1f11cf2db97dae30b23d978ddad5968b83042909b6cc",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1062,7 +1067,7 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "packet-evidence-20261030"
+        "packet-followup-20261030"
       ],
       "acceptance": null,
       "nextAction": "reproduce-endpoint-absent-or-response-missing-transactions-with-complete-packets-retain-physical-output-gaps"

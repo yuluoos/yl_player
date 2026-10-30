@@ -1,0 +1,13 @@
+test_absent_endpoint_and_nonmatching_correlation_remain_unknown (test_packet_evidence.PacketAttributionTests.test_absent_endpoint_and_nonmatching_correlation_remain_unknown) ... ok
+test_absent_endpoint_exact_case_insensitive_correlation_is_task_evidence_only (test_packet_evidence.PacketAttributionTests.test_absent_endpoint_exact_case_insensitive_correlation_is_task_evidence_only) ... ok
+test_duplicate_token_flows_and_proxy_transactions_do_not_bind (test_packet_evidence.PacketAttributionTests.test_duplicate_token_flows_and_proxy_transactions_do_not_bind) ... ok
+test_known_endpoint_references_unique_flow_without_copying_packet_arrays (test_packet_evidence.PacketAttributionTests.test_known_endpoint_references_unique_flow_without_copying_packet_arrays) ... ok
+test_lifecycle_tuple_ambiguity_survives_single_opening_syn_capture (test_packet_evidence.PacketAttributionTests.test_lifecycle_tuple_ambiguity_survives_single_opening_syn_capture) ... ok
+test_repeated_tuple_missing_syn_and_unmatched_endpoint_do_not_bind (test_packet_evidence.PacketAttributionTests.test_repeated_tuple_missing_syn_and_unmatched_endpoint_do_not_bind) ... ok
+test_same_correlation_across_flows_preserves_all_references (test_packet_evidence.PacketAttributionTests.test_same_correlation_across_flows_preserves_all_references) ... ok
+test_unsupported_endpoint_keeps_its_transaction_classification (test_packet_evidence.PacketAttributionTests.test_unsupported_endpoint_keeps_its_transaction_classification) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.000s
+
+OK

@@ -1,0 +1,18 @@
+test_unsupported_endpoint_keeps_its_transaction_classification (test_packet_evidence.PacketAttributionTests.test_unsupported_endpoint_keeps_its_transaction_classification) ... FAIL
+
+======================================================================
+FAIL: test_unsupported_endpoint_keeps_its_transaction_classification (test_packet_evidence.PacketAttributionTests.test_unsupported_endpoint_keeps_its_transaction_classification)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_packet_evidence.py", line 205, in test_unsupported_endpoint_keeps_its_transaction_classification
+    self.assertEqual(row['transactions'][0]['binding'], 'unsupported-endpoint')
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'endpoint-unavailable' != 'unsupported-endpoint'
+- endpoint-unavailable
++ unsupported-endpoint
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (failures=1)

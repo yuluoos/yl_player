@@ -855,7 +855,10 @@ IDs. It handles split/out-of-order/retransmitted headers, and leaves gaps or
 ambiguous tuples unknown. The receipt's `packetAttributionObservation` binds a
 transaction by its unique connection token, or records task-level header evidence
 by exact correlation ID. A task-level match never assigns an endpoint-absent
-transaction by order. No matching packet/header is an unknown result, not proof
+transaction by order. Packet attribution preserves the transaction layer's
+`endpoint-unavailable` versus `unsupported-endpoint` distinction; an exact task
+header match does not supply the missing transaction endpoint. No matching
+packet/header is an unknown result, not proof
 that a request was never transmitted. Existing strict failures remain failures.
 
 The privileged worker unblocks inherited `SIGINT` before starting `tcpdump`, so

@@ -227,7 +227,7 @@ def attribute_packets(packet_summary, boundaries, connection_observation):
             elif transaction['binding'] == 'ambiguous':
                 binding = 'ambiguous'
             elif token is None:
-                binding = 'endpoint-unavailable'
+                binding = transaction['binding']
             elif not indices:
                 binding = 'not-observed-in-capture'
             elif len(indices) != 1 or flows[indices[0]]['connectionInstanceStatus'] == 'multiple-opening-syn':

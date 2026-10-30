@@ -187,7 +187,8 @@ class PacketAttributionTests(unittest.TestCase):
         self.assertFalse(result['rootCauseEstablished'])
 
     def test_absent_endpoint_exact_case_insensitive_correlation_is_task_evidence_only(self):
-        self.observation['requests'][0]['transactions'][0]['connectionToken'] = None
+        self.observation['requests'][0]['transactions'][0].update(
+            connectionToken=None, binding='endpoint-unavailable')
         row = self.attribute()['requests'][0]
         self.assertTrue(row['packetObserved'])
         self.assertTrue(row['correlationPacketObserved'])
@@ -197,8 +198,18 @@ class PacketAttributionTests(unittest.TestCase):
         self.assertEqual(row['transactions'][0]['binding'], 'endpoint-unavailable')
         self.assertEqual(row['transactions'][0]['flowIndices'], [])
 
+    def test_unsupported_endpoint_keeps_its_transaction_classification(self):
+        transaction = self.observation['requests'][0]['transactions'][0]
+        transaction.update(connectionToken=None, binding='unsupported-endpoint', endpointFields=15)
+        row = self.attribute()['requests'][0]
+        self.assertTrue(row['correlationPacketObserved'])
+        self.assertEqual(row['transactions'][0]['binding'], 'unsupported-endpoint')
+        self.assertIsNone(row['transactions'][0]['packetObserved'])
+        self.assertEqual(row['transactions'][0]['flowIndices'], [])
+
     def test_absent_endpoint_and_nonmatching_correlation_remain_unknown(self):
-        self.observation['requests'][0]['transactions'][0]['connectionToken'] = None
+        self.observation['requests'][0]['transactions'][0].update(
+            connectionToken=None, binding='endpoint-unavailable')
         for correlation in (None, 'prefix-' + CID, CID[:-1] + 'd'):
             with self.subTest(correlation=correlation):
                 self.summary['flows'][0]['http']['requests'][0]['correlationID'] = correlation
