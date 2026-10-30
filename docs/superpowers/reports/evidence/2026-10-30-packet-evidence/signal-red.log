@@ -1,0 +1,17 @@
+F
+======================================================================
+FAIL: test_authorization_inherited_blocked_interrupt_is_unblocked (test_packet_capture.BoundedCaptureTests.test_authorization_inherited_blocked_interrupt_is_unblocked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_packet_capture.py", line 50, in test_authorization_inherited_blocked_interrupt_is_unblocked
+    self.assertEqual(self.run_worker(True,blocked_interrupt=True)['reason'],'stop-requested')
+                     ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/playback_network/test_packet_capture.py", line 37, in run_worker
+    self.assertEqual(result['exitCode'],0)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: -9 != 0
+
+----------------------------------------------------------------------
+Ran 1 test in 5.496s
+
+FAILED (failures=1)

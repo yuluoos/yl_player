@@ -1,0 +1,12 @@
+[
+  "/usr/sbin/tcpdump",
+  "-i",
+  "en0",
+  "-nn",
+  "-s",
+  "0",
+  "-U",
+  "-w",
+  "/private/tmp/yl-packet-evidence/media-signal-fixed-authorized/packets/capture.pcap",
+  "tcp and host 192.168.50.196 and port 60007"
+]

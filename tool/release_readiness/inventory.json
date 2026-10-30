@@ -1013,6 +1013,11 @@
       "path": "docs/superpowers/reports/2026-10-30-transaction-connection-evidence.md",
       "sha256": "37ff1b9f0d1fcafc323deeb7fe467aa0a17c6ed08b9cb5220ffa27c09c0be702",
       "kind": "report"
+    },
+    "packet-evidence-20261030": {
+      "path": "docs/superpowers/reports/2026-10-30-packet-evidence.md",
+      "sha256": "53e03cf9cbba91fdba29fd66fc9cedddc2a84998a8a1912067391a1d05d2340b",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1057,10 +1062,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "transaction-connection-evidence-20261030"
+        "packet-evidence-20261030"
       ],
       "acceptance": null,
-      "nextAction": "obtain-packet-evidence-for-unreported-endpoints-and-client-connections-unseen-at-server-accept"
+      "nextAction": "reproduce-endpoint-absent-or-response-missing-transactions-with-complete-packets-retain-physical-output-gaps"
     },
     {
       "requirement": "CAP-ABR",

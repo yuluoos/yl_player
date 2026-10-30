@@ -844,7 +844,7 @@ def run(args):
     server=None;thread=None;process=None;log=None;output=None;owned=None
     fault_control=None;health=[]
     connection_key=secrets.token_hex(32).encode('ascii') if getattr(args,'transaction_connections',False) else None
-    secret_manifest=None;lifecycle=None;lifecycle_observation=None;proxy_rows=[]
+    secret_manifest=None;lifecycle=None;lifecycle_observation=None;proxy_rows=[];packet_capture=None
     token=uuid.uuid4().hex
     before=None;products=None
     physical_device = getattr(args, 'physical_device', None)
@@ -854,6 +854,9 @@ def run(args):
         paths=[p for p in products.rglob('*') if p.is_file() and ('.app/' in str(p) or p.suffix=='.xctestrun')]
         return {str(p.relative_to(products)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
     try:
+        packet_interface=getattr(args,'packet_interface',None)
+        if packet_interface is not None and (not physical_device or connection_key is None or args.connection_mode!='close'):
+            raise ValueError('packet capture requires physical owned IPv4, transaction connections and close mode')
         production = production_recovery(args)
         receipt['productionRecovery'] = production
         fault_rate=getattr(args,'triggered_fault_rate',None)
@@ -948,6 +951,10 @@ def run(args):
                         accepted=server.requests,active=server.active,rejected=server.rejected_requests))
         server.service_actions=heartbeat
         thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
+        if packet_interface is not None:
+            from packet_capture import PacketCapture
+            packet_capture=PacketCapture(out/'packets',packet_interface,host,server.server_port)
+            packet_capture.start()
         target.setdefault('EnvironmentVariables',{}).update(
             YL_ABR_PROBE_FAULT_URL=fault_url,YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://{host}:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
             YL_ABR_PROBE_DEVICE='1' if physical_device else '0', YL_ABR_PROBE_OWNED_HOST=host if physical_device else '',
@@ -1127,6 +1134,26 @@ def run(args):
                 receipt['errors'].append('invalid transaction connection sidecar')
                 result=record_connections(receipt,[],proxy_rows,None,lifecycle,lifecycle_observation)
             (out/'transaction-connection-summary.json').write_text(json.dumps(result,indent=2)+'\n')
+        if packet_capture is not None:
+            receipt['packetCaptureObservation']=packet_capture.stop()
+            try:
+                from packet_evidence import summarize_pcap,attribute_packets
+                packets=summarize_pcap(out/'packets/capture.pcap',key=connection_key,
+                                       server_host=host,server_port=server.server_port)
+                (out/'packet-summary.json').write_text(json.dumps(packets,indent=2)+'\n')
+                capture=receipt['packetCaptureObservation']
+                capture['captureSHA256']=packets['captureSHA256']
+                capture['complete']=(capture['complete'] and packets['packetCount']>0 and
+                    capture['packetsCaptured']==packets['packetCount']+packets['ignoredPacketCount'])
+                if (receipt.get('proxyRequestObservation') is not None and
+                    receipt.get('transactionConnectionObservation',{}).get('availability')=='reported'):
+                    receipt['packetAttributionObservation']=attribute_packets(packets,proxy_rows,
+                        receipt['transactionConnectionObservation'])
+            except (OSError,ValueError):
+                receipt['packetCaptureObservation']['complete']=False
+                receipt['errors'].append('packet evidence unavailable or invalid')
+            if not receipt['packetCaptureObservation']['complete']:
+                receipt['errors'].append('packet capture incomplete')
         if secret_manifest is not None:secret_manifest.cleanup()
         if output:output.close()
         receipt['binaryIdentityUnchanged']=False
@@ -1150,6 +1177,7 @@ def main():
     p.add_argument('--owned-host', help='Explicit owned RFC1918 IPv4 interface for physical-device capture')
     p.add_argument('--triggered-fault-rate',type=int,help='owned 5s rate overlay after a bound published high baseline; no change to production budget')
     p.add_argument('--transaction-connections',action='store_true',help='capture opaque per-transaction connection evidence')
+    p.add_argument('--packet-interface',help='explicit owned IPv4 capture interface; macOS administrator authentication, bounded to this TCP service')
     p.add_argument('--connection-mode',choices=('close','http11-close','http11-keepalive'),default='close')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)

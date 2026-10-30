@@ -838,3 +838,30 @@ mask reports `endpoint-unavailable`, while 15 reports `unsupported-endpoint`
 (outside the supported IPv4/nonzero-port encoding). Neither proves physical
 non-delivery. Sidecar v1 is still readable with its original, less specific
 unknown result; no mask is invented for earlier records.
+
+For packet evidence on the owned physical-device HTTP service, add
+`--packet-interface en0` together with `--transaction-connections` and
+`--connection-mode close`. macOS prompts for administrator authentication;
+the tool never requests or reads a password. A fixed-argument `tcpdump` worker
+captures only TCP traffic for this run's owned host and ephemeral service port.
+Playback starts after the listener is ready. The worker stops on collection
+completion or after 180 seconds; the kernel enforces a 64 MiB file limit. Hitting
+a limit, truncation, or a nonzero kernel-drop count keeps capture incomplete.
+
+`packets/capture.pcap` preserves raw test traffic, including its endpoints and
+HTTP headers. `packet-summary.json` exports opaque connection tokens, TCP flags,
+sequence/acknowledgment numbers, payload lengths and exact request correlation
+IDs. It handles split/out-of-order/retransmitted headers, and leaves gaps or
+ambiguous tuples unknown. The receipt's `packetAttributionObservation` binds a
+transaction by its unique connection token, or records task-level header evidence
+by exact correlation ID. A task-level match never assigns an endpoint-absent
+transaction by order. No matching packet/header is an unknown result, not proof
+that a request was never transmitted. Existing strict failures remain failures.
+
+The privileged worker unblocks inherited `SIGINT` before starting `tcpdump`, so
+normal stop can flush the capture and print packet/drop statistics. A forced stop
+or missing statistics stays incomplete even when the pcap can be parsed.
+The [2026-10-30 physical run](../../docs/superpowers/reports/2026-10-30-packet-evidence.md)
+completed with 14,296 packets, zero kernel drops and 414 correlated requests.
+That run did not reproduce endpoint-absent or missing-response transactions;
+the earlier failures and unknown causes remain open.
