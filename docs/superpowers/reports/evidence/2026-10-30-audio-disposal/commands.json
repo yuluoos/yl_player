@@ -1,0 +1,59 @@
+{
+  "baseline": "0a4f4ac5",
+  "cwd": "/Users/yy2021_8689/Desktop/Flutter/yl_player",
+  "red": {
+    "command": [
+      "xcodebuild",
+      "test",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "-quiet",
+      "-sdk",
+      "macosx",
+      "-workspace",
+      "packages/yl_player/example/macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-parallel-testing-enabled",
+      "NO",
+      "-derivedDataPath",
+      "/private/tmp/yl-audio-disposal/build",
+      "-destination",
+      "platform=macOS",
+      "-only-testing:RunnerTests/YlManagedSoftwareAudioTests/testDisposeReleasesConverterPendingPacketsWhileRendererIsRetained",
+      "-resultBundlePath",
+      "/private/tmp/yl-audio-disposal/red.xcresult"
+    ],
+    "exitCode": 65
+  },
+  "green": {
+    "command": [
+      "xcodebuild",
+      "test",
+      "CODE_SIGNING_ALLOWED=NO",
+      "ENABLE_TESTABILITY=YES",
+      "-quiet",
+      "-sdk",
+      "macosx",
+      "-workspace",
+      "packages/yl_player/example/macos/Runner.xcworkspace",
+      "-scheme",
+      "Runner",
+      "-parallel-testing-enabled",
+      "NO",
+      "-derivedDataPath",
+      "/private/tmp/yl-audio-disposal/build",
+      "-destination",
+      "platform=macOS",
+      "-only-testing:RunnerTests/YlManagedSoftwareAudioTests",
+      "-only-testing:RunnerTests/YlMacosAudioTests/testRendererResetAcceptsSynchronousOldOutputCallbacks",
+      "-only-testing:RunnerTests/YlMacosAudioTests/testTerminalTimerDoesNotRetainRendererAndDisposalReleasesHeldPCM",
+      "-only-testing:RunnerTests/YlMacosAudioTests/testTerminalInvalidationStopsBeforeReleaseAndCannotSilentlyPlayAgain",
+      "-only-testing:RunnerTests/YlMacosAudioTests/testTerminalRendererStopRetainsPCMUntilOutputStopsAndIsolatesOldCallbacks",
+      "-only-testing:RunnerTests/YlMacosAudioTests/testSplitCompletionKeepsOldGenerationIsolatedAndDisposesOwnPayload",
+      "-resultBundlePath",
+      "/private/tmp/yl-audio-disposal/green.xcresult"
+    ],
+    "exitCode": 0
+  }
+}

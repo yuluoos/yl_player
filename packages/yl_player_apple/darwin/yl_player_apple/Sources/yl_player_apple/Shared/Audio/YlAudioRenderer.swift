@@ -952,6 +952,8 @@ final class YlAudioRenderer: YlAudioRendering {
     waitingForAudio = false
     lock.unlock()
     output.dispose()
+    // Retire buffered compressed input even while the disposed renderer is held.
+    converter.reset()
     oldTerminal?.retireAfterStop()
     terminal = nil
   }

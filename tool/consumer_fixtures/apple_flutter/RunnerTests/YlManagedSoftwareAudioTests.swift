@@ -45,6 +45,48 @@ private final class SoftwareAudioHTTP {
 }
 
 final class YlManagedSoftwareAudioTests: XCTestCase {
+  func testDisposeReleasesConverterPendingPacketsWhileRendererIsRetained() throws {
+    for failsConversion in [false, true] {
+      let ledger = YlManagedBufferLedger()
+      let scope = try ledger.makeScope(maxBytes: nil)
+      let converter = PendingPacketConverter(failsConversion: failsConversion)
+      let renderer = YlAudioRenderer(bufferScope: scope, converter: converter, output: AdmissionOutput())
+      try renderer.configure(stream: .init(codec: .aac, sampleRate: 48_000,
+        channelCount: 2, magicCookie: Data(), generation: 1))
+      func enqueue() throws -> YlAudioEnqueueResult {
+        let token = try scope.require(category: .compressedPackets, bytes: 64)
+        return try renderer.enqueue(packet: .init(reservation: token, data: Data(repeating: 1, count: 64),
+          ptsUs: 0, durationUs: 20_000, generation: 1))
+      }
+      if failsConversion { XCTAssertThrowsError(try enqueue()) }
+      else { XCTAssertEqual(try enqueue(), .buffered) }
+      XCTAssertEqual(ledger.snapshot.currentBytes, 64)
+      renderer.dispose()
+      withExtendedLifetime((renderer, converter)) {
+        XCTAssertEqual(ledger.snapshot.currentBytes, 0,
+          "Disposal must release queued compressed input without waiting for renderer deinit")
+      }
+      renderer.dispose()
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    }
+  }
+
+  private final class PendingPacketConverter: YlAudioPacketConverting {
+    let failsConversion: Bool
+    private var pending: YlCompressedAudioPacket?
+    init(failsConversion: Bool) { self.failsConversion = failsConversion }
+    func configure(stream: YlAudioStreamConfiguration) throws {}
+    func estimateOutput(for packet: YlCompressedAudioPacket) -> YlAudioBufferEstimate {
+      .init(durationUs: 20_000, byteCount: 128)
+    }
+    func convert(packet: YlCompressedAudioPacket) throws -> YlScheduledAudioBuffer? {
+      pending = packet
+      if failsConversion { throw YlManagedBufferLedger.unsupported() }
+      return nil
+    }
+    func reset() { pending = nil }
+  }
+
   func testCoreAudioMP3LowRateUses576SamplePackets() throws {
     // Eight real MPEG-2 Layer III frames, sine 440Hz / 16kHz / 32kbps,
     // generated with libmp3lame, without ID3/Xing. No device/output mock decoder.
