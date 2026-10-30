@@ -1,0 +1,1 @@
+当前合并源码的 iPhone 16 / iOS 27.2 定向33项测试，33通过、0失败、0跳过。完整xcresult留在 `/private/tmp/yl-ios-remaining-20261029/remaining.xcresult`。运行器退出0；实际用例身份经过项目既有verify_runtime核验。源码/测试及构建产物指纹在测试前采集。23条运行警告和devicectl诊断采集错误保留，不宣称零警告。此目录不包含系统诊断压缩包或完整设备日志。

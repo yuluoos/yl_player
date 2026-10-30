@@ -732,3 +732,31 @@ helps distinguish an alive listener loop from a gap in parsed requests; it does
 not prove that packets reached the host, diagnose the network path, or repair
 missing historical logs. Frame publication remains a diagnostic, not calibrated
 physical screen/audio continuity evidence.
+
+### Offline retry attribution by proxy
+
+`rendition_retry.py` reads explicit owned high-rendition asset paths (a JSON
+array) and plain or gzip JSONL captures:
+
+```sh
+python3 -B tool/playback_network/rendition_retry.py \
+  --boundaries capture/proxy-requests.jsonl.gz \
+  --server-requests capture/requests.jsonl.gz \
+  --high-assets high-assets.json --scoped
+```
+
+Without `--scoped`, the existing strict whole-capture correlation requirement
+applies. Scoped output retains each unknown request and reports `highResets: null`
+for unavailable scopes. An old proxy's uncorrelated cancellation does not prevent
+observing another proxy's fully joined requests. Unmatched server media cannot be
+assigned to a proxy, so it blocks all scoped retry observations. Ordering always
+uses device uptime; replacement proxy traffic is never counted as the original
+proxy retrying. The asset list must identify the actual owned rendition, including
+its Period path, rather than unresolved MPD templates.
+
+Exit zero means the diagnostic was produced, not that playback passed. Global
+`fullyCorrelated` and every unknown request remain visible; `capabilityAccepted`
+and `physicalOutputVerified` stay false. Zero Foundation byte counts do not prove
+that a cancelled request was never sent. These observations do not replace or
+rewrite the original receipt, explain AVPlayer's private penalty policy, or
+change the two-reservation recovery budget.

@@ -1,4 +1,11 @@
+import gzip
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
 import unittest
+import rendition_retry
 import test_proxy_boundaries as boundaries
 import test_transaction_metrics as metrics
 try:
@@ -58,3 +65,77 @@ class RenditionRetryTests(unittest.TestCase):
         b['serverRequestID']=7;b['version']=6
         for k in ['cancelSource','cancelErrorDomain','cancelErrorCode']:b.pop(k)
         with self.assertRaises(ValueError):summarize_rendition_retries([b],[s],{'high1.m4s'})
+
+
+class ScopedRenditionRetryTests(unittest.TestCase):
+    def fixture(self):
+        helper = RenditionRetryTests()
+        failed, server = helper.fixture()
+        server['asset'] = 'high1.m4s'
+        retired = dict(failed, proxyID='87654321-1234-1234-1234-123456789abc',
+            cancelCause=1, cancelSource=0, cancelErrorDomain=0, cancelErrorCode=0)
+        retired.pop('serverRequestID')
+        return helper, failed, server, retired
+
+    def summarize(self, rows, servers):
+        return rendition_retry.summarize_scoped_rendition_retries(rows, servers, {'high1.m4s', 'high2.m4s'})
+
+    def test_retired_unjoined_request_does_not_hide_another_proxy_retry(self):
+        helper, failed, server, retired = self.fixture()
+        later, later_server = helper.request(2, 10.5, asset='high1.m4s')
+        result = self.summarize([retired, failed, later], [server, later_server])
+        self.assertFalse(result['fullyCorrelated'])
+        self.assertFalse(result['capabilityAccepted'])
+        old, current = result['proxyScopes']
+        self.assertIsNone(old['highResets'])
+        self.assertEqual(old['uncorrelatedRequests'][0]['requestID'], 1)
+        self.assertEqual(old['uncorrelatedRequests'][0]['cancelCause'], 1)
+        self.assertEqual(current['highResets'][0]['sameProxySameAssetRetries'], [2])
+        self.assertNotIn('otherProxyLaterHighRequests', current['highResets'][0])
+        with self.assertRaises(ValueError):
+            summarize_rendition_retries([retired, failed, later], [server, later_server], {'high1.m4s'})
+
+    def test_same_proxy_unknown_or_unmatched_server_prevents_absence_claim(self):
+        _, failed, server, retired = self.fixture()
+        retired.update(proxyID=failed['proxyID'], requestID=2)
+        for rows, servers in [([failed, retired], [server]),
+                              ([failed], [server, dict(server, requestId=8)])]:
+            with self.subTest(rows=len(rows)):
+                result = self.summarize(rows, servers)
+                self.assertFalse(result['proxyScopes'][0]['retryObservationComplete'])
+                self.assertIsNone(result['proxyScopes'][0]['highResets'])
+
+    def test_complete_scope_preserves_same_device_order_and_excludes_replacements(self):
+        helper, failed, server, retired = self.fixture()
+        later, later_server = helper.request(2, 10.5, retired['proxyID'])
+        result = self.summarize([failed, later], [server, later_server])
+        self.assertTrue(result['fullyCorrelated'])
+        self.assertEqual(result['proxyScopes'][0]['highResets'][0]['sameProxyLaterHighRequests'], [])
+        shifted = [dict(s, startMs=s['startMs']+1e8, endMs=s['endMs']+1e8) for s in [server,later_server]]
+        self.assertEqual(result, self.summarize([failed,later], shifted))
+
+    def test_corrupt_unjoined_row_and_legacy_version_are_still_rejected(self):
+        _, failed, server, retired = self.fixture()
+        for bad in [dict(retired, terminal=0), dict(retired, version=6)]:
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                self.summarize([failed,bad], [server])
+
+    def test_cli_reads_plain_or_compressed_capture_and_keeps_global_failure(self):
+        _, failed, server, retired = self.fixture()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            assets = root/'high-assets.json'
+            assets.write_text(json.dumps(['high1.m4s']))
+            for suffix, opener in [('.jsonl', open), ('.jsonl.gz', gzip.open)]:
+                with self.subTest(suffix=suffix):
+                    paths = [root/('proxy'+suffix), root/('server'+suffix)]
+                    for path, rows in zip(paths, [[failed,retired],[server]]):
+                        with opener(path, 'wt') as stream:
+                            stream.write(''.join(json.dumps(row)+'\n' for row in rows))
+                    result = subprocess.run([sys.executable, '-B', rendition_retry.__file__,
+                        '--boundaries', str(paths[0]), '--server-requests', str(paths[1]),
+                        '--high-assets', str(assets), '--scoped'], capture_output=True, text=True)
+                    self.assertEqual(result.returncode, 0, result.stderr)
+                    observation = json.loads(result.stdout)
+                    self.assertFalse(observation['fullyCorrelated'])
+                    self.assertFalse(observation['capabilityAccepted'])

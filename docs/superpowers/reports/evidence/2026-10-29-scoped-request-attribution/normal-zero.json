@@ -1,0 +1,51 @@
+{
+  "fullyCorrelated": false,
+  "unmatchedServerRequestIDs": [],
+  "proxyScopes": [
+    {
+      "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+      "requestCount": 130,
+      "correlatedRequestCount": 128,
+      "uncorrelatedRequests": [
+        {
+          "requestID": 129,
+          "cancelCause": 1,
+          "cancelSource": 0,
+          "cancelErrorDomain": 0,
+          "cancelErrorCode": 0,
+          "taskOutcome": 1
+        },
+        {
+          "requestID": 130,
+          "cancelCause": 1,
+          "cancelSource": 0,
+          "cancelErrorDomain": 0,
+          "cancelErrorCode": 0,
+          "taskOutcome": 1
+        }
+      ],
+      "retryObservationComplete": false,
+      "highResets": null
+    },
+    {
+      "proxyID": "2C379C43-8C97-4B57-92ED-E7681C86F508",
+      "requestCount": 123,
+      "correlatedRequestCount": 123,
+      "uncorrelatedRequests": [],
+      "retryObservationComplete": true,
+      "highResets": []
+    },
+    {
+      "proxyID": "0F9DB8F7-51DB-4D5B-8FEF-B23856B842CB",
+      "requestCount": 163,
+      "correlatedRequestCount": 163,
+      "uncorrelatedRequests": [],
+      "retryObservationComplete": true,
+      "highResets": []
+    }
+  ],
+  "rootCauseEstablished": false,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "interpretation": "Scopes describe recorded admissions within one proxy only, using device uptime. Null highResets means unavailable, not no retry. Unknown cancelled requests remain uncorrelated; zero bytes do not prove no transmission. Unmatched server media blocks all scopes. Complete local scopes do not pass the strict whole-capture gate or prove future behavior."
+}

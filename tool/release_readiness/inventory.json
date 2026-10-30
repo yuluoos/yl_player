@@ -988,6 +988,16 @@
       "path": "docs/superpowers/reports/2026-10-29-triggered-downshift.md",
       "sha256": "47b35874b659007078b278f247550f94446a97c81faa3035f2d2898108aa5dbc",
       "kind": "report"
+    },
+    "scoped-request-attribution-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-scoped-request-attribution.md",
+      "sha256": "7a99c6919fdcf88b93e7a9e07e30b4e8ea8b25747b98bdcd6a95d6b585a0f98b",
+      "kind": "report"
+    },
+    "ios-format-physical-followup-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-ios-format-physical-followup.md",
+      "sha256": "22c8d7ebc99650918d963663dc44521ab02651372b806daf2187e63f5c001f91",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1032,7 +1042,7 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "triggered-downshift-20261029"
+        "scoped-request-attribution-20261029"
       ],
       "acceptance": null,
       "nextAction": "verify-exhausted-budget-upshift-and-retired-proxy-request-attribution"
@@ -1366,10 +1376,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "audio-consumed-packet-20261029",
-        "coreaudio-bounds-20261029"
+        "coreaudio-bounds-20261029",
+        "ios-format-physical-followup-20261029"
       ],
       "acceptance": null,
-      "nextAction": "close-required-format-cells-on-one-build"
+      "nextAction": "complete-full-same-build-format-qualification-after-33-physical-regressions"
     },
     {
       "requirement": "CAP-FORMAT",
@@ -1499,7 +1510,8 @@
         "p02",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "ios-format-physical-followup-20261029"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -2377,7 +2389,8 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "ios-format-physical-followup-20261029"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -2426,7 +2439,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "ios-public-policy-20261028"
+        "ios-public-policy-20261028",
+        "ios-format-physical-followup-20261029"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
