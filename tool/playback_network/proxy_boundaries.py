@@ -17,7 +17,7 @@ def proxy_trace_version(rows):
     if not any(isinstance(row, dict) and 'proxyRequestSamplingVersion' in row for row in rows):
         return None
     if not all(isinstance(row, dict) and type(row.get('proxyRequestSamplingVersion')) is int and
-               row['proxyRequestSamplingVersion'] in (1, 2, 3, 4, 5, 6) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
+               row['proxyRequestSamplingVersion'] in (1, 2, 3, 4, 5, 6, 7) for row in rows) or len({row['proxyRequestSamplingVersion'] for row in rows}) != 1:
         raise ValueError('unsupported or inconsistent proxy request sampling version')
     return rows[0]['proxyRequestSamplingVersion']
 
@@ -38,7 +38,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         'sendFailures', 'sendWaitSum', 'sendWaitMax'}
     times = {'response', 'firstBody', 'lastBody', 'firstSend', 'lastSend',
         'lastSendComplete', 'upstreamComplete'}
-    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics', 'downstreamTerminal', 'taskComplete', 'taskOutcome', 'cancelCause', 'resourceToken'}
+    optional = times | {'httpStatus', 'serverRequestID', 'correlationID', 'metrics', 'downstreamTerminal', 'taskComplete', 'taskOutcome', 'cancelCause', 'resourceToken', 'cancelSource', 'cancelErrorDomain', 'cancelErrorCode'}
     uuid_pattern = r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}'
     def uuid(value):
         return isinstance(value, str) and re.fullmatch(uuid_pattern, value)
@@ -61,7 +61,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
     outcomes = ['complete', 'cancelled', 'sendFailed', 'upstreamFailed']
     for row in rows:
         require(isinstance(row, dict) and required <= row.keys() and not row.keys()-required-optional)
-        require(type(row['version']) is int and row['version'] in (1, 2, 3, 4, 5, 6))
+        require(type(row['version']) is int and row['version'] in (1, 2, 3, 4, 5, 6, 7))
         require(('metrics' in row) == (row['version'] >= 2))
         settlement = {'downstreamTerminal','taskComplete','taskOutcome'}
         require((settlement <= row.keys()) if row['version']>=4 else not settlement.intersection(row))
@@ -73,11 +73,23 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
         if row['version'] >= 5:
             require(type(row['cancelCause']) is int and row['cancelCause'] in range(5))
             require((row['cancelCause'] != 0) == (row['outcome'] == 1))
+        error_fields = {'cancelSource', 'cancelErrorDomain', 'cancelErrorCode'}
+        require((error_fields <= row.keys()) if row['version'] >= 7 else not error_fields.intersection(row))
+        if row['version'] >= 7:
+            source, domain, code = (row[k] for k in ('cancelSource', 'cancelErrorDomain', 'cancelErrorCode'))
+            require(type(source) is int and source in range(4))
+            require(type(domain) is int and domain in range(5))
+            require(type(code) is int and -(2**31) <= code < 2**31)
+            if row['cancelCause'] == 3:
+                require(source in (1, 2, 3) and domain in (1, 2, 3, 4))
+                if domain == 4: require(code == 0)
+            else:
+                require(source == domain == code == 0)
         require(('resourceToken' in row) == (row['version'] >= 6))
         if row['version'] >= 6:
             require(isinstance(row['resourceToken'], str) and re.fullmatch(r'[0-9a-f]{64}', row['resourceToken']))
         require(isinstance(row['proxyID'], str) and re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}', row['proxyID']))
-        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics', 'resourceToken')))
+        require(all(finite(value) for key,value in row.items() if key not in ('proxyID', 'correlationID', 'metrics', 'resourceToken', 'cancelErrorCode')))
         counters = required - {'version', 'proxyID', 'admission', 'terminal', 'sendWaitSum', 'sendWaitMax'}
         require(all(integer(row[key]) for key in counters) and row['requestID'] > 0)
         require(row['outcome'] in range(4))
@@ -122,7 +134,7 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             require(server.get('outcome') == 'complete' and 200 <= row['httpStatus'] < 300)
         transaction_metrics = summarize_transactions(row.get('metrics'))
         if transaction_metrics.get('version') == 3:
-            require(row['version'] == 6)
+            require(row['version'] >= 6)
         if row['version']>=3 and row.get('metrics') is not None:
             require(transaction_metrics.get('version') in ((2, 3) if row['version'] >= 6 else (2,)))
         if row['version'] >= 2 and row['outcome'] == 0 and not transaction_metrics['complete']:
@@ -141,7 +153,9 @@ def summarize_proxy_boundaries(rows, server_rows, expected_version=None):
             terminalSeconds=row['terminal']-row['admission'],
             downstreamSeconds=row['downstreamTerminal']-row['admission'] if row['version']>=4 else None,
             taskCompletionSeconds=row['taskComplete']-row['admission'] if row['version']>=4 else None,
-            taskOutcome=row.get('taskOutcome'), cancelCause=row.get('cancelCause'), resourceToken=row.get('resourceToken')))
+            taskOutcome=row.get('taskOutcome'), cancelCause=row.get('cancelCause'), resourceToken=row.get('resourceToken'),
+            cancelSource=row.get('cancelSource'), cancelErrorDomain=row.get('cancelErrorDomain'),
+            cancelErrorCode=row.get('cancelErrorCode')))
     media = {ident for ident, row in servers.items() if row.get('method') == 'GET' and
              isinstance(row.get('asset'),str) and row['asset'].endswith('.m4s')}
     missing = sorted(media-matched)

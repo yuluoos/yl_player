@@ -100,7 +100,7 @@ class ProxyVersionTests(unittest.TestCase):
         self.assertIsNone(proxy_trace_version([{}]))
         self.assertEqual(proxy_trace_version([{'proxyRequestSamplingVersion':1}]),1)
         for rows in [[{'proxyRequestSamplingVersion':True}],
-                     [{'proxyRequestSamplingVersion':7}],
+                     [{'proxyRequestSamplingVersion':8}],
                      [{'proxyRequestSamplingVersion':1},{}]]:
             with self.subTest(rows=rows), self.assertRaises(ValueError): proxy_trace_version(rows)
 
@@ -280,3 +280,42 @@ class TransactionByteVersionTests(unittest.TestCase):
         self.assertTrue(receipt['errors'])
         self.assertFalse(receipt['proxyRequestObservation']['requests'][0]['transactionMetrics']['complete'])
         self.assertEqual(receipt['proxyRequestObservation']['requests'][0]['transactionMetrics']['transactions'][0]['transportBytes']['responseBody'],4096)
+
+
+class ProxyLoopbackErrorSourceTests(unittest.TestCase):
+    def source(self):
+        base=ProxyBoundaryTests();base.setUp()
+        return dict(base.trace,version=7,resourceToken='a'*64,metrics=None,outcome=1,
+            taskOutcome=1,downstreamTerminal=10.33,taskComplete=10.33,cancelCause=3,
+            cancelSource=1,cancelErrorDomain=1,cancelErrorCode=54),base.server
+
+    def test_v7_preserves_callback_source_and_signed_code_without_inventing_legacy_cause(self):
+        from proxy_boundaries import proxy_trace_version
+        self.assertEqual(proxy_trace_version([dict(proxyRequestSamplingVersion=7)]),7)
+        row,server=self.source()
+        for source in (1,2,3):
+            for domain,code in ((1,54),(2,-65538),(3,-9806),(4,0)):
+                changed=dict(row,cancelSource=source,cancelErrorDomain=domain,cancelErrorCode=code)
+                result=summarize_proxy_boundaries([changed],[server],7)['requests'][0]
+                self.assertEqual((result['cancelSource'],result['cancelErrorDomain'],result['cancelErrorCode']),(source,domain,code))
+        legacy={k:v for k,v in row.items() if k not in ('cancelSource','cancelErrorDomain','cancelErrorCode')}
+        legacy['version']=6
+        result=summarize_proxy_boundaries([legacy],[server],6)['requests'][0]
+        self.assertIsNone(result['cancelSource']);self.assertIsNone(result['cancelErrorCode'])
+
+    def test_v7_rejects_missing_forged_or_inconsistent_error_fields(self):
+        row,server=self.source()
+        invalid=[dict(row,cancelSource=x) for x in (True,-1,0,4,1.0)]
+        invalid += [dict(row,cancelErrorDomain=x) for x in (True,-1,0,5)]
+        invalid += [dict(row,cancelErrorCode=x) for x in (True,1.5,2**31,-2**31-1,'private')]
+        invalid += [dict(row,cancelCause=4),dict(row,cancelErrorDomain=4,cancelErrorCode=54),dict(row,version=6)]
+        invalid += [{k:v for k,v in row.items() if k!=missing} for missing in ('cancelSource','cancelErrorDomain','cancelErrorCode')]
+        for broken in invalid:
+            with self.subTest(broken=broken),self.assertRaises(ValueError):summarize_proxy_boundaries([broken],[server])
+
+    def test_v7_non_error_close_does_not_acquire_error_source(self):
+        row,server=self.source()
+        row.update(cancelCause=4,cancelSource=0,cancelErrorDomain=0,cancelErrorCode=0)
+        self.assertEqual(summarize_proxy_boundaries([row],[server],7)['requests'][0]['cancelSource'],0)
+        row['cancelErrorCode']=54
+        with self.assertRaises(ValueError):summarize_proxy_boundaries([row],[server],7)

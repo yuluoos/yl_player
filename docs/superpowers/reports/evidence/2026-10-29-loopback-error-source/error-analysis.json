@@ -1,0 +1,427 @@
+{
+  "budget-throttle": {
+    "total": 376,
+    "sources": {
+      "0": 374,
+      "1": 2
+    },
+    "errorTuples": {
+      "1/1/54": 2
+    },
+    "errors": [
+      {
+        "proxyID": "F7143C0A-ACA1-4ACF-B241-7966B0B75724",
+        "requestID": 57,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": false,
+        "serverRequestID": 59,
+        "asset": "network-period-4/chunk-0-00001.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 13312,
+        "proxyLifetimeMs": 3244.3847083341097,
+        "serverStartMs": 11782.376208,
+        "serverDurationMs": 3239.172375,
+        "laterHighRequestCount": 23,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 3.2477920055389404,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.01100003719329834,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.013337969779968262,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.103515625e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.050613999366760254,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 307,
+                "responseBody": 3072,
+                "responseHeaders": 584
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      },
+      {
+        "proxyID": "F4B772A8-7737-4170-A42F-B3A6C36FCB40",
+        "requestID": 50,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 229,
+        "asset": "network-period-16/chunk-1-00004.m4s",
+        "bodyBytes": 65536,
+        "sentBodyBytes": 65536,
+        "serverWritten": 66560,
+        "proxyLifetimeMs": 2013.9307083445601,
+        "serverStartMs": 60134.483083,
+        "serverDurationMs": 2110.547584,
+        "laterHighRequestCount": 0,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 2.0139780044555664,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.008011937141418457,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.496906280517578e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.009719014167785645,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 308,
+                "responseBody": 65536,
+                "responseHeaders": 585
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      }
+    ],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  },
+  "normal": {
+    "total": 407,
+    "sources": {
+      "0": 402,
+      "1": 5
+    },
+    "errorTuples": {
+      "1/1/54": 5
+    },
+    "errors": [
+      {
+        "proxyID": "E71C3BC0-C918-4EF3-AD97-F2593E629350",
+        "requestID": 60,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": false,
+        "serverRequestID": 62,
+        "asset": "network-period-5/chunk-0-00001.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 8192,
+        "proxyLifetimeMs": 2241.960791667225,
+        "serverStartMs": 12784.784375,
+        "serverDurationMs": 2239.5278750000016,
+        "laterHighRequestCount": 85,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 2.2448019981384277,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.009137988090515137,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 4.398822784423828e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05096900463104248,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 307,
+                "responseBody": 1024,
+                "responseHeaders": 581
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      },
+      {
+        "proxyID": "E71C3BC0-C918-4EF3-AD97-F2593E629350",
+        "requestID": 57,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 59,
+        "asset": "network-period-5/chunk-1-00001.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 9216,
+        "proxyLifetimeMs": 4271.081166662043,
+        "serverStartMs": 10758.599417,
+        "serverDurationMs": 4268.371333000001,
+        "laterHighRequestCount": 86,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 4.271044969558716,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.007988929748535156,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.606910705566406e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05195796489715576,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 307,
+                "responseBody": 1024,
+                "responseHeaders": 581
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      },
+      {
+        "proxyID": "E71C3BC0-C918-4EF3-AD97-F2593E629350",
+        "requestID": 58,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 60,
+        "asset": "network-period-5/chunk-1-00001.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 9216,
+        "proxyLifetimeMs": 2264.89508333907,
+        "serverStartMs": 12767.55675,
+        "serverDurationMs": 2260.024209000001,
+        "laterHighRequestCount": 85,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 2.2648420333862305,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.006999969482421875,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010342001914978027,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 8.797645568847656e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.05280900001525879,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 307,
+                "responseBody": 1024,
+                "responseHeaders": 581
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      },
+      {
+        "proxyID": "901B9A0C-BAB7-41CC-8EDD-D1DE2EAD9CAD",
+        "requestID": 91,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": true,
+        "serverRequestID": 231,
+        "asset": "network-period-17/chunk-1-00002.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 7168,
+        "proxyLifetimeMs": 4993.964708337444,
+        "serverStartMs": 60031.261,
+        "serverDurationMs": 4992.808250000002,
+        "laterHighRequestCount": 43,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 4.993898034095764,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.008999943733215332,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.010421991348266602,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 9.202957153320312e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.007896065711975098,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 308,
+                "responseBody": 1024,
+                "responseHeaders": 582
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      },
+      {
+        "proxyID": "901B9A0C-BAB7-41CC-8EDD-D1DE2EAD9CAD",
+        "requestID": 94,
+        "source": 1,
+        "domain": 1,
+        "code": 54,
+        "high": false,
+        "serverRequestID": 234,
+        "asset": "network-period-17/chunk-0-00001.m4s",
+        "bodyBytes": 1024,
+        "sentBodyBytes": 1024,
+        "serverWritten": 11264,
+        "proxyLifetimeMs": 2992.10000000312,
+        "serverStartMs": 62040.992625,
+        "serverDurationMs": 2986.836667000003,
+        "laterHighRequestCount": 43,
+        "metrics": {
+          "redirectCount": 0,
+          "taskSeconds": 2.992048978805542,
+          "transactionCount": 1,
+          "transactions": [
+            {
+              "connectSeconds": 0.006000041961669922,
+              "dnsSeconds": 0,
+              "durationStates": {
+                "connectSeconds": 0,
+                "dnsSeconds": 0,
+                "fetchSeconds": 2,
+                "fetchToRequestSeconds": 0,
+                "requestSeconds": 0,
+                "responseSeconds": 2,
+                "responseWaitSeconds": 0,
+                "tlsSeconds": 3
+              },
+              "fetchSeconds": null,
+              "fetchToRequestSeconds": 0.00795602798461914,
+              "fetchType": 1,
+              "protocolCode": 1,
+              "requestSeconds": 6.99758529663086e-05,
+              "responseSeconds": null,
+              "responseWaitSeconds": 0.008813977241516113,
+              "reused": 0,
+              "tlsSeconds": null,
+              "transportBytes": {
+                "requestBody": 0,
+                "requestHeaders": 308,
+                "responseBody": 1024,
+                "responseHeaders": 582
+              }
+            }
+          ],
+          "truncated": 0,
+          "version": 3
+        }
+      }
+    ],
+    "sourceNames": {
+      "0": "no recorded cancellation error",
+      "1": "NWConnection.state.failed",
+      "2": "request header receive error",
+      "3": "admitted request monitor receive error"
+    },
+    "caveats": "First trace termination only. It does not record all later callbacks or establish private AVPlayer retry/penalty decisions. Request header errors before admission have no request trace. Source 0 also includes send failures whose cause is separately recorded by outcome; it is not proof of an error-free exchange.",
+    "rootCauseEstablished": false
+  }
+}

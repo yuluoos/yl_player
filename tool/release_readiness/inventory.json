@@ -283,7 +283,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "ed5e6f8ba13a70c0b398676ecfaa4f5d4369971fca4d5095df20eec15d99e517",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "849eb75be0164cb835ebfe529d5599856e90008c8d349b1805de6fbab59cf34c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "18542c89b6e5d488333c48ec9c889547a32f0f1d75d9a2231cc895bd3e80d2ad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "bc13b80799b42cb676bd3e31f29498933047a281650205a83ccbd6d2aa9e42f5"
+    "sha256": "5970eefecbb530451b70ff3d3fd56d030aa0a2af62a2034927caa3980201ad4d"
   },
   "evidence": {
     "p01": {
@@ -958,6 +958,11 @@
       "path": "docs/superpowers/reports/2026-10-29-budget-low-cause.md",
       "sha256": "269fa62297ce2e1fa4b9988f5ca965ba2bdd1780c53a52c6b49a7c6ca82cecee",
       "kind": "report"
+    },
+    "loopback-error-source-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-loopback-error-source.md",
+      "sha256": "c824077dddfcce9d8be8b6654e92563ac17526118b82a8290c6c17ea43828a7e",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1002,10 +1007,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "budget-low-cause-20261029"
+        "loopback-error-source-20261029"
       ],
       "acceptance": null,
-      "nextAction": "isolate-high-rendition-request-failure-without-increasing-recovery-budget"
+      "nextAction": "isolate-player-side-high-request-reset-and-natural-retry-without-increasing-budget"
     },
     {
       "requirement": "CAP-ABR",

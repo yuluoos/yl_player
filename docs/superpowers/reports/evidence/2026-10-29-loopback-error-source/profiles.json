@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "repeat-stall-budget-diagnostic-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 0,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 15000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 0
+        },
+        {
+          "atMs": 60000,
+          "bytesPerSecond": 0,
+          "latencyMs": 0
+        },
+        {
+          "atMs": 65000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 0
+        }
+      ]
+    },
+    {
+      "id": "repeat-throttle-budget-diagnostic-v1",
+      "steps": [
+        {
+          "atMs": 0,
+          "bytesPerSecond": 500000,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 10000,
+          "bytesPerSecond": 0,
+          "latencyMs": 40
+        },
+        {
+          "atMs": 15000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 0
+        },
+        {
+          "atMs": 60000,
+          "bytesPerSecond": 50000,
+          "latencyMs": 0
+        },
+        {
+          "atMs": 65000,
+          "bytesPerSecond": 2000000,
+          "latencyMs": 0
+        }
+      ]
+    }
+  ]
+}

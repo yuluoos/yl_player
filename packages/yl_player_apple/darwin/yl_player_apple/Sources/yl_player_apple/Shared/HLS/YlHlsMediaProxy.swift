@@ -302,7 +302,9 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }
     connection.stateUpdateHandler = { [weak self, weak connection] state in
       guard let self, let connection else { return }
-      if case .failed = state { self.close(connection, diagnosticCancelCause: 3) }
+      if case .failed(let error) = state {
+        self.close(connection, diagnosticCancelCause: 3, diagnosticCancelSource: 1, diagnosticError: error)
+      }
       if case .cancelled = state { self.close(connection) }
     }
     connection.start(queue: queue)
@@ -314,7 +316,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       [weak self, weak connection] data, _, isComplete, error in
       guard let self, let connection else { return }
       if error != nil {
-        self.close(connection, diagnosticCancelCause: 3)
+        self.close(connection, diagnosticCancelCause: 3, diagnosticCancelSource: 2, diagnosticError: error)
         return
       }
       var requestData = accumulated
@@ -416,7 +418,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       [weak self, weak connection] _, _, isComplete, error in
       guard let self, let connection else { return }
       if error != nil {
-        self.close(connection, diagnosticCancelCause: 3)
+        self.close(connection, diagnosticCancelCause: 3, diagnosticCancelSource: 3, diagnosticError: error)
       } else if !isComplete {
         self.monitorDisconnect(connection)
       }
@@ -464,7 +466,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
     }))
   }
 
-  private func close(_ connection: NWConnection, diagnosticCancelCause: Int = 4) {
+  private func close(_ connection: NWConnection, diagnosticCancelCause: Int = 4,
+    diagnosticCancelSource: Int = 0, diagnosticError: NWError? = nil) {
     #if DEBUG
     var trace: YlHlsProxyRequestTrace?
     #endif
@@ -485,7 +488,8 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
       return task
     }
     #if DEBUG
-    trace?.finish(outcome: 1, cancelCause: diagnosticCancelCause)
+    trace?.finish(outcome: 1, cancelCause: diagnosticCancelCause,
+      cancelSource: diagnosticCancelSource, error: diagnosticError)
     #endif
     task?.cancel()
     connection.cancel()
@@ -889,7 +893,7 @@ final class YlHlsProxyRequestTrace {
       "bodyBytes": 0.0, "sentBodyBytes": 0.0, "bodyCallbacks": 0.0,
       "sendCount": 0.0, "sendCompletions": 0.0, "sendFailures": 0.0,
       "sendWaitSum": 0.0, "sendWaitMax": 0.0]
-    if let resourceToken { values["version"] = 6; values["resourceToken"] = resourceToken }
+    if let resourceToken { values["version"] = 7; values["resourceToken"] = resourceToken }
   }
   private func update(allowAfterDownstream: Bool = false, _ action: (inout [String: Any], Double) -> Void) {
     lock.withLock {
@@ -1011,14 +1015,32 @@ final class YlHlsProxyRequestTrace {
     if let row { observer(row) }
   }
   // First transport termination wins: 0 non-cancel, 1 proxy invalidated,
-  // 2 downstream EOF, 3 downstream error, 4 other local close.
-  func finish(outcome: Int, cancelCause: Int = 4) {
+  // 2 incomplete-request EOF, 3 downstream error, 4 other local close.
+  // v7 sources: 0 not an error, 1 state.failed, 2 request receive,
+  // 3 admitted-request monitor receive. This is the first recorded terminal
+  // callback, not proof of the underlying peer's intent or physical ordering.
+  func finish(outcome: Int, cancelCause: Int = 4, cancelSource: Int = 0, error: NWError? = nil) {
     let row = lock.withLock { () -> [String: Any]? in
       guard !sealed && !downstreamFinished else { return nil }
       downstreamFinished = true
       values["downstreamTerminal"] = ProcessInfo.processInfo.systemUptime
       values["outcome"] = Double(outcome)
       values["cancelCause"] = outcome == 1 ? cancelCause : 0
+      if values["version"] as? Int == 7 {
+        let recordsError = outcome == 1 && cancelCause == 3
+        var domain = 0, code = 0
+        if recordsError {
+          switch error {
+          case .posix(let value): domain = 1; code = Int(value.rawValue)
+          case .dns(let value): domain = 2; code = Int(value)
+          case .tls(let value): domain = 3; code = Int(value)
+          default: domain = 4
+          }
+        }
+        values["cancelSource"] = recordsError ? cancelSource : 0
+        values["cancelErrorDomain"] = domain
+        values["cancelErrorCode"] = code
+      }
       return completedRow()
     }
     if let row { observer(row) }
