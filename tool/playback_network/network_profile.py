@@ -210,10 +210,11 @@ class FixtureServer(ThreadingHTTPServer):
     daemon_threads = False
     request_queue_size = 8
 
-    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None, connection_mode="close"):
+    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None, connection_mode="close", connection_key=None):
         if connection_mode not in ("close", "http11-close", "http11-keepalive"):
             raise ValueError("invalid connection mode")
         self.connection_mode = connection_mode
+        self.connection_key = connection_key
         self.connection_ids = {}
         self.lifecycle_origin = now()
         self.lifecycle_connections = {}
@@ -253,6 +254,10 @@ class FixtureServer(ThreadingHTTPServer):
             self.lifecycle_connections[self.requests] = dict(connectionId=self.requests,
                 acceptedSeconds=self.shaper.now()-self.lifecycle_origin, closedSeconds=None,
                 activeAtAdmission=self.active, requestIds=[], unrecordedRequests=0, closeReason=None)
+            if self.connection_key is not None:
+                from transaction_connections import connection_token
+                self.lifecycle_connections[self.requests]['connectionToken'] = connection_token(
+                    self.connection_key,request.getpeername(),request.getsockname())
             self.active_sockets.add(request)
             self.handlers.notify_all()
         super().process_request(request, client_address)
@@ -284,7 +289,7 @@ class FixtureServer(ThreadingHTTPServer):
         # Snapshot after server_close for complete evidence; no addresses/headers.
         import copy
         with self.handlers:
-            return copy.deepcopy(dict(version=1, acceptedCount=self.requests,
+            return copy.deepcopy(dict(version=2 if self.connection_key is not None else 1, acceptedCount=self.requests,
                 rejectedCount=self.rejected_requests,
                 droppedRejections=self.rejected_requests-len(self.lifecycle_rejections),
                 connections=list(self.lifecycle_connections.values()), rejections=self.lifecycle_rejections))
@@ -460,8 +465,8 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def make_server(root, profile, log, port=0, now=time.monotonic, sleep=time.sleep,
-                start_on_first_get=False, run_id=None, owned_host=None, connection_mode="close"):
-    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host, connection_mode)
+                start_on_first_get=False, run_id=None, owned_host=None, connection_mode="close", connection_key=None):
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host, connection_mode, connection_key)
 
 
 def summarize_connections(rows, expected_mode):

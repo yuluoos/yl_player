@@ -1,0 +1,7 @@
+[
+  "testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose",
+  "testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse",
+  "testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt",
+  "testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity",
+  "testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns"
+]

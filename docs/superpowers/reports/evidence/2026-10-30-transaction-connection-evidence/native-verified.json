@@ -1,0 +1,23 @@
+{
+  "expected": [
+    "YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+    "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+    "YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+    "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+    "YlDashResourceLoaderTests/testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt()"
+  ],
+  "observed": [
+    "YlDashResourceLoaderTests/testProxyRequestTimingCorrelatesOwnedServerWithoutResourceIdentity()",
+    "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+    "YlDashResourceLoaderTests/testProxyRequestTimingRetainsTerminalOwnershipUntilObserverReturns()",
+    "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+    "YlDashResourceLoaderTests/testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt()"
+  ],
+  "skipped": [],
+  "summary": {
+    "totalTestCount": 5,
+    "passedTests": 5,
+    "skippedTests": 0,
+    "failedTests": 0
+  }
+}

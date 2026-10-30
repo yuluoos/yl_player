@@ -8,8 +8,10 @@ from pathlib import Path
 import plistlib
 import re
 import signal
+import secrets
 import subprocess
 import threading
+import tempfile
 import time
 import uuid
 from xml.parsers.expat import ExpatError
@@ -841,6 +843,8 @@ def run(args):
     receipt=dict(diagnosticOnly=True,capabilityAccepted=False,errors=[],exitCode=None)
     server=None;thread=None;process=None;log=None;output=None;owned=None
     fault_control=None;health=[]
+    connection_key=secrets.token_hex(32).encode('ascii') if getattr(args,'transaction_connections',False) else None
+    secret_manifest=None;lifecycle=None;lifecycle_observation=None;proxy_rows=[]
     token=uuid.uuid4().hex
     before=None;products=None
     physical_device = getattr(args, 'physical_device', None)
@@ -928,7 +932,8 @@ def run(args):
         if fault_rate is not None and profile.steps[-1]['atMs']>15000:
             raise ValueError('triggered fault requires an initial-only static profile')
         server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog',
-                           owned_host=host if physical_device else None, connection_mode=receipt['connectionMode'])
+                           owned_host=host if physical_device else None, connection_mode=receipt['connectionMode'],
+                           **({'connection_key':connection_key} if connection_key is not None else {}))
         fault_url=''
         if fault_rate is not None:
             from triggered_fault import TriggeredShaper,ControlServer
@@ -956,6 +961,15 @@ def run(args):
             YL_ABR_PROBE_CANDIDATE_PREPARATION=preparation_mode,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
+        if connection_key is not None:
+            # XCTest requires its test environment in the manifest. Keep the
+            # secret-bearing launch manifest outside saved capture artifacts.
+            secret_manifest=tempfile.TemporaryDirectory(prefix='yl-connection-')
+            manifest=Path(secret_manifest.name)/'probe.xctestrun'
+            target['EnvironmentVariables']['YL_ABR_PROBE_CONNECTION_KEY']=connection_key.decode('ascii')
+            manifest.write_bytes(plistlib.dumps(config))
+            manifest.chmod(0o600)
+            del target['EnvironmentVariables']['YL_ABR_PROBE_CONNECTION_KEY']
         command=['xcodebuild','test-without-building','-quiet','-xctestrun',str(manifest),
             '-destination',destination,'-only-testing:RunnerTests/YlDashResourceLoaderTests/testActualOwnedDashAdaptiveObservation',
             '-parallel-testing-enabled','NO','-resultBundlePath',str(out)+'.xcresult']
@@ -979,8 +993,8 @@ def run(args):
             raise ValueError('physical capture requires native device identity')
         from proxy_boundaries import proxy_trace_version, record_proxy_observation
         if proxy_trace_version(rows) in (1, 2, 3, 4, 5, 6, 7) and not direct:
-            record_proxy_observation(receipt,
-                read_rows(out/'proxy-requests.jsonl'), read_rows(out/'requests.jsonl'), proxy_trace_version(rows))
+            proxy_rows=read_rows(out/'proxy-requests.jsonl')
+            record_proxy_observation(receipt,proxy_rows,read_rows(out/'requests.jsonl'),proxy_trace_version(rows))
         if fault_control:
             from triggered_fault import summarize_trigger
             receipt['triggeredFaultObservation']=summarize_trigger(server.shaper.snapshot(),
@@ -1088,7 +1102,8 @@ def run(args):
                 from connection_lifecycle import summarize_lifecycle
                 lifecycle = server.connection_lifecycle()
                 (out/'connection-lifecycle.json').write_text(json.dumps(lifecycle,indent=2)+'\n')
-                receipt['connectionLifecycleObservation'] = summarize_lifecycle(lifecycle,read_rows(out/'requests.jsonl'))
+                lifecycle_observation=summarize_lifecycle(lifecycle,read_rows(out/'requests.jsonl'))
+                receipt['connectionLifecycleObservation'] = lifecycle_observation
                 if not receipt['connectionLifecycleObservation']['complete']:
                     receipt['errors'].append('connection lifecycle evidence incomplete')
             except (OSError,ValueError,KeyError,TypeError):
@@ -1101,6 +1116,18 @@ def run(args):
                 receipt['serverTimingObservation'] = summarize_server_timing(read_rows(out/'requests.jsonl'))
             except (OSError,ValueError,KeyError,TypeError):
                 receipt['errors'].append('connection or server timing evidence incomplete')
+        if connection_key is not None:
+            from transaction_connections import record_connections
+            try:
+                sidecar_path=out/'transaction-connections.jsonl'
+                sidecar=read_rows(sidecar_path) if sidecar_path.exists() else []
+                result=record_connections(receipt,sidecar,proxy_rows,receipt.get('proxyRequestObservation'),
+                                          lifecycle,lifecycle_observation)
+            except (OSError,ValueError):
+                receipt['errors'].append('invalid transaction connection sidecar')
+                result=record_connections(receipt,[],proxy_rows,None,lifecycle,lifecycle_observation)
+            (out/'transaction-connection-summary.json').write_text(json.dumps(result,indent=2)+'\n')
+        if secret_manifest is not None:secret_manifest.cleanup()
         if output:output.close()
         receipt['binaryIdentityUnchanged']=False
         if before is not None:
@@ -1122,6 +1149,7 @@ def main():
     p.add_argument('--physical-device', help='Explicit paired iPhone UDID; requires --owned-host')
     p.add_argument('--owned-host', help='Explicit owned RFC1918 IPv4 interface for physical-device capture')
     p.add_argument('--triggered-fault-rate',type=int,help='owned 5s rate overlay after a bound published high baseline; no change to production budget')
+    p.add_argument('--transaction-connections',action='store_true',help='capture opaque per-transaction connection evidence')
     p.add_argument('--connection-mode',choices=('close','http11-close','http11-keepalive'),default='close')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)

@@ -76,7 +76,14 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   }
   static var diagnosticRequestObserver: (([String: Any]) -> Void)? {
     get { diagnosticObserverLock.withLock { diagnosticCapture?.observer } }
-    set { diagnosticObserverLock.withLock { diagnosticCapture = newValue.map(YlHlsProxyRequestCapture.init) } }
+    set { diagnosticObserverLock.withLock { diagnosticCapture = newValue.map { YlHlsProxyRequestCapture(observer: $0) } } }
+  }
+  static func beginDiagnosticConnectionCapture(key: Data,
+    connections: @escaping ([String: Any]) -> Void, requests: @escaping ([String: Any]) -> Void) {
+    diagnosticObserverLock.withLock {
+      diagnosticCapture = YlHlsProxyRequestCapture(observer: requests,
+        connections: YlHlsProxyConnectionCapture(key: key, observer: connections))
+    }
   }
   private let diagnosticProxyID = UUID().uuidString
   // Per-proxy secret is never emitted; no URL map or cross-proxy identity.
@@ -875,6 +882,28 @@ private extension NSLock {
 }
 
 #if DEBUG
+/// Owned IPv4 diagnostic only. A per-capture HMAC binds the observed TCP tuple
+/// without exporting addresses, ports, credentials, or the capture key.
+struct YlHlsProxyConnectionCapture {
+  let key: Data
+  let observer: ([String: Any]) -> Void
+  static func token(key: Data, localAddress: String?, localPort: Int?,
+    remoteAddress: String?, remotePort: Int?) -> String? {
+    guard let localAddress, let local = IPv4Address(localAddress),
+      let remoteAddress, let remote = IPv4Address(remoteAddress),
+      let localPort, let remotePort,
+      let clientPort = UInt16(exactly: localPort), clientPort > 0,
+      let serverPort = UInt16(exactly: remotePort), serverPort > 0 else { return nil }
+    var bytes = Data("yl-connection-v1\n".utf8)
+    bytes.append(local.rawValue)
+    bytes.append(contentsOf: [UInt8(clientPort >> 8), UInt8(clientPort & 255)])
+    bytes.append(remote.rawValue)
+    bytes.append(contentsOf: [UInt8(serverPort >> 8), UInt8(serverPort & 255)])
+    return HMAC<SHA256>.authenticationCode(for: bytes, using: SymmetricKey(data: key))
+      .map { String(format: "%02x", $0) }.joined()
+  }
+}
+
 /// One bounded record per admitted request, enabled only by an explicit observer.
 /// Transport completion freezes send/body fields. Delivery additionally waits
 /// for the attached Foundation task; late transport callbacks stay ignored.
@@ -885,9 +914,14 @@ final class YlHlsProxyRequestTrace {
   private var taskPending = false
   private var values: [String: Any]
   private let observer: ([String: Any]) -> Void
+  private let connections: YlHlsProxyConnectionCapture?
+  private let proxyID: String
+  private let requestID: Int
   let correlationID: String
-  init(proxyID: String, requestID: Int, resourceToken: String? = nil, observer: @escaping ([String: Any]) -> Void) {
+  init(proxyID: String, requestID: Int, resourceToken: String? = nil,
+    connections: YlHlsProxyConnectionCapture? = nil, observer: @escaping ([String: Any]) -> Void) {
     self.observer = observer
+    self.connections = connections; self.proxyID = proxyID; self.requestID = requestID
     let correlationID = UUID().uuidString
     self.correlationID = correlationID
     values = ["version": 5, "metrics": NSNull(), "correlationID": correlationID, "proxyID": proxyID, "requestID": Double(requestID),
@@ -921,6 +955,21 @@ final class YlHlsProxyRequestTrace {
     value >= 0 ? value as Any : NSNull()
   }
   func metrics(_ metrics: URLSessionTaskMetrics) {
+    if let connections {
+      let transactions: [[String: Any]] = metrics.transactionMetrics.prefix(32).enumerated().map { index, t in
+        let fields = (t.localAddress == nil ? 0 : 1) | (t.localPort == nil ? 0 : 2)
+          | (t.remoteAddress == nil ? 0 : 4) | (t.remotePort == nil ? 0 : 8)
+        let token = YlHlsProxyConnectionCapture.token(key: connections.key,
+          localAddress: t.localAddress, localPort: t.localPort,
+          remoteAddress: t.remoteAddress, remotePort: t.remotePort)
+        return ["index": index, "connectionToken": token.map { $0 as Any } ?? NSNull(),
+          "endpointFields": fields, "proxyConnection": t.isProxyConnection, "responsePresent": t.response != nil]
+      }
+      // Delegate metrics arrive before task completion; capture drain therefore
+      // covers this sidecar delivery as well as the main request observer.
+      connections.observer(["version": 2, "proxyID": proxyID, "requestID": requestID,
+        "correlationID": correlationID, "transactions": transactions])
+    }
     func duration(_ start: Date?, _ end: Date?) -> Any {
       Self.interval(from: start, to: end).map { $0 as Any } ?? NSNull()
     }
@@ -1067,12 +1116,15 @@ final class YlHlsProxyRequestCapture {
   private let pending = DispatchGroup()
   private var active = true
   let observer: ([String: Any]) -> Void
-  init(observer: @escaping ([String: Any]) -> Void) { self.observer = observer }
+  private let connections: YlHlsProxyConnectionCapture?
+  init(observer: @escaping ([String: Any]) -> Void, connections: YlHlsProxyConnectionCapture? = nil) {
+    self.observer = observer; self.connections = connections
+  }
   func makeTrace(proxyID: String, requestID: Int, resourceToken: String? = nil, didDeliver: @escaping () -> Void = {}) -> YlHlsProxyRequestTrace? {
     lock.withLock {
       guard active else { return nil }
       pending.enter()
-      return YlHlsProxyRequestTrace(proxyID: proxyID, requestID: requestID, resourceToken: resourceToken) { [self] row in
+      return YlHlsProxyRequestTrace(proxyID: proxyID, requestID: requestID, resourceToken: resourceToken, connections: connections) { [self] row in
         defer { didDeliver(); pending.leave() }
         observer(row)
       }

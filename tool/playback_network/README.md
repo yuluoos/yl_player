@@ -812,3 +812,29 @@ dates remain null; `before-recorded-request` means the request stage was not
 recorded, not proof that no data was sent. Complete handler logs cover admitted
 application connections, not the TCP backlog or packets. No resource, ordinal,
 byte-count or cross-clock heuristic assigns an unknown transaction or request.
+
+For new owned IPv4 captures, add `--transaction-connections` to
+`abr_accesslog.py`. The native probe writes `transaction-connections.jsonl`,
+and server lifecycle v2 records the same capture-scoped HMAC of each actual
+client/server address and port tuple. Raw endpoints and the random key are not
+exported. The launch manifest containing the key is temporary; the saved
+`probe.xctestrun` omits it. This option requires a probe built with connection
+capture support; missing sidecars remain unknown and fail the optional check.
+
+`python3 tool/playback_network/transaction_connections.py CAPTURE_DIRECTORY`
+recomputes the connection observation from saved raw files. Only a token unique
+among accepted server connections establishes a connection binding; it does not
+by itself prove HTTP parsing. Use the bound connection's lifecycle `requestIds`
+and the request's correlation ID to establish parsing. Repeated tuples, proxy
+connections, missing endpoints and absent callbacks remain unbound. Empty
+transactions are explicit and never prove no packets. Strict transaction-time
+and task-correlation failures are retained even when connection binding succeeds.
+Historical captures without these fields cannot be retroactively bound.
+
+Sidecar v2 also records `endpointFields`, a presence mask: local address=1,
+local port=2, remote address=4, remote port=8. Zero means Foundation supplied none
+of these fields; 15 means all four were supplied. With a null token, an incomplete
+mask reports `endpoint-unavailable`, while 15 reports `unsupported-endpoint`
+(outside the supported IPv4/nonzero-port encoding). Neither proves physical
+non-delivery. Sidecar v1 is still readable with its original, less specific
+unknown result; no mask is invented for earlier records.

@@ -1,0 +1,102 @@
+[
+  {
+    "file": "28DAFF6B-44A7-4D57-9EF6-5DEAC00C2814.json",
+    "forcedFirstConnectionClose": false,
+    "downstreamCancelled": true,
+    "cancelCause": 4,
+    "responsePresent": [
+      false
+    ],
+    "connectionTokens": [
+      "aa353d489796d8fbb447c86c4aa9fcd39435497f238f9032e27f4391fb528656"
+    ],
+    "parsedServerConnectionTokens": [
+      "aa353d489796d8fbb447c86c4aa9fcd39435497f238f9032e27f4391fb528656"
+    ],
+    "responseSeconds": [
+      null
+    ]
+  },
+  {
+    "file": "F147956D-72D6-4483-8EBD-B806608CE456.json",
+    "queued": true,
+    "connectionLimit": 1,
+    "transactionConnections": [
+      {
+        "correlationID": "ADA89953-A4D8-44DE-94FF-C802D6CFBFFD",
+        "proxyID": "BC99CCBE-A79F-4BC8-A6E9-FBA4C5E53E00",
+        "requestID": 1,
+        "transactions": [
+          {
+            "connectionToken": "63e52380223135850d92290bea7dd556ff97c55cbced47c083ebc10cf4f41915",
+            "index": 0,
+            "proxyConnection": false,
+            "responsePresent": false
+          }
+        ],
+        "version": 1
+      },
+      {
+        "correlationID": "E331F7CF-ECA3-4279-83C6-F18FDC9CDD26",
+        "proxyID": "BC99CCBE-A79F-4BC8-A6E9-FBA4C5E53E00",
+        "requestID": 2,
+        "transactions": [
+          {
+            "connectionToken": null,
+            "index": 0,
+            "proxyConnection": false,
+            "responsePresent": false
+          }
+        ],
+        "version": 1
+      }
+    ],
+    "parsedServerConnectionTokens": [
+      "63e52380223135850d92290bea7dd556ff97c55cbced47c083ebc10cf4f41915"
+    ],
+    "parsedServerTraceIDs": [
+      "ADA89953-A4D8-44DE-94FF-C802D6CFBFFD"
+    ],
+    "physicalReceipt": "unknown"
+  },
+  {
+    "file": "6BDBC38A-BB12-4790-8FDC-B8F7E11F7B97.json",
+    "forcedFirstConnectionClose": true,
+    "downstreamCancelled": null,
+    "cancelCause": 0,
+    "responsePresent": [
+      false,
+      true
+    ],
+    "connectionTokens": [
+      "2e15352430f375192a951d143d69ec21ba185b2dcae8a015b2695e00f10ed392",
+      "f4add7e0eae947c713e066185fbf7223574943bc0d8770f1cfa22e1bf62b7d29"
+    ],
+    "parsedServerConnectionTokens": [
+      "2e15352430f375192a951d143d69ec21ba185b2dcae8a015b2695e00f10ed392",
+      "f4add7e0eae947c713e066185fbf7223574943bc0d8770f1cfa22e1bf62b7d29"
+    ],
+    "responseSeconds": [
+      null,
+      5.3048133850097656e-05
+    ]
+  },
+  {
+    "file": "DCFC691A-5F89-4019-A7A9-BB147927322A.json",
+    "forcedFirstConnectionClose": false,
+    "downstreamCancelled": false,
+    "cancelCause": 1,
+    "responsePresent": [
+      false
+    ],
+    "connectionTokens": [
+      "e915e4efada88524ea0324fcae6b1edfb477146117806b07687d7674cf96cd4b"
+    ],
+    "parsedServerConnectionTokens": [
+      "e915e4efada88524ea0324fcae6b1edfb477146117806b07687d7674cf96cd4b"
+    ],
+    "responseSeconds": [
+      null
+    ]
+  }
+]

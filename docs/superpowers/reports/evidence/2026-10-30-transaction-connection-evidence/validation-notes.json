@@ -1,0 +1,66 @@
+{
+  "baseCommit": "4a63ce4f",
+  "captureScope": "owned IPv4, DEBUG opt-in; no production networking change",
+  "packetCapture": {
+    "performed": false,
+    "reason": "BPF devices are root-only; process has no packet capture access"
+  },
+  "native": {
+    "initialBuild": {
+      "exitCode": 65,
+      "testsExecuted": 0,
+      "reason": "Foundation ports import to Swift Int?, not NSNumber?; corrected"
+    },
+    "v1": {
+      "selected": 5,
+      "passed": 5,
+      "skipped": 0
+    },
+    "v2Presence": {
+      "selected": 3,
+      "passed": 3,
+      "skipped": 0,
+      "scope": "only three changed evidence scenarios rerun"
+    }
+  },
+  "python": {
+    "focusedUniquePassed": 18,
+    "logsAvailable": false,
+    "source": "delegated tool outputs; no fabricated filesystem logs",
+    "initialFailures": [
+      "saved capture missing sidecar incorrectly raised FileNotFoundError; fixed as unknown",
+      "empty sidecar identity incorrectly matched absent main correlation; fixed with UUID contract"
+    ],
+    "v2PresenceTests": {
+      "tests": 3,
+      "passed": 3,
+      "log": "endpoint-fields-tests.log"
+    }
+  },
+  "fixtureParity": {
+    "passed": true,
+    "log": "final-fixture-parity.log.gz",
+    "timing": "after final v2 shared fixture and mirrors"
+  },
+  "review": {
+    "readOnly": true,
+    "findings": [],
+    "testsRun": false,
+    "scope": "one pass before endpointFields addition; small addition covered by new targeted tests"
+  },
+  "capabilityAccepted": false,
+  "mediaCaptures": {
+    "count": 3,
+    "originalStrictPassed": [
+      false,
+      false,
+      false
+    ],
+    "v2BinarySetsEqual": true,
+    "savedManifestContainsKey": [
+      false,
+      false,
+      false
+    ]
+  }
+}

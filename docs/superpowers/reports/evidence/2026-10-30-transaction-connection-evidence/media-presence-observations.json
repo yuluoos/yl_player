@@ -1,0 +1,206 @@
+{
+  "strictPassed": false,
+  "errors": [
+    "proxy successful transaction metrics incomplete",
+    "ValueError",
+    "transaction connection evidence incomplete"
+  ],
+  "binaryIdentityUnchanged": true,
+  "proxyCounts": {
+    "requestCount": 420,
+    "outcomeCounts": {
+      "complete": 413,
+      "sendFailed": 7
+    },
+    "uncorrelatedProxyRequests": 0,
+    "unmatchedServerRequestIDs": []
+  },
+  "lifecycle": {
+    "version": 2,
+    "acceptedCount": 422,
+    "rejectedCount": 0,
+    "droppedRejections": 0,
+    "unrecordedRequests": 0,
+    "parsedRequests": 422,
+    "withoutParsedRequest": [],
+    "unclosedConnections": [],
+    "closedReasonCounts": {
+      "handlerEnded": 422
+    },
+    "complete": true,
+    "retryCauseProven": false,
+    "capabilityAccepted": false,
+    "interpretation": "Server-local elapsed time from listener construction, not profile time. handlerEnded means only that the handler returned; it does not prove peer FIN/reset or identify a URLSession transaction."
+  },
+  "unbound": [
+    {
+      "proxyID": "D8FDF2DC-8D01-4105-A4E3-532F90CA60BA",
+      "requestID": 9,
+      "availability": "reported",
+      "transactions": [
+        {
+          "connectionToken": "59c1fee213cb78657704e46ad24c20dc277dc787b1d6c89a4e475d7ad9904749",
+          "endpointFields": 15,
+          "index": 0,
+          "proxyConnection": false,
+          "responsePresent": false,
+          "connectionId": null,
+          "binding": "unmatched"
+        },
+        {
+          "connectionToken": "00f3a9bd729deea7af6c1fffd4e0f02b662c8e649cdbbf969b543fd5f58889cb",
+          "endpointFields": 15,
+          "index": 1,
+          "proxyConnection": false,
+          "responsePresent": true,
+          "connectionId": 334,
+          "binding": "bound"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "admission": 110322.99161329167,
+      "bodyBytes": 8591,
+      "bodyCallbacks": 3,
+      "cancelCause": 0,
+      "cancelErrorCode": 0,
+      "cancelErrorDomain": 0,
+      "cancelSource": 0,
+      "correlationID": "B77C1872-C2FF-4E46-A6C2-11C767DAAC93",
+      "downstreamTerminal": 110323.15883941668,
+      "firstBody": 110323.14966737501,
+      "firstSend": 110323.14961666668,
+      "httpStatus": 200,
+      "lastBody": 110323.15831816668,
+      "lastSend": 110323.158320625,
+      "lastSendComplete": 110323.15846975001,
+      "metrics": {
+        "redirectCount": 0,
+        "taskSeconds": 0.16682004928588867,
+        "transactionCount": 2,
+        "transactions": [
+          {
+            "connectSeconds": 0.08899998664855957,
+            "dnsSeconds": 0,
+            "durationStates": {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "fetchSeconds": 2,
+              "fetchToRequestSeconds": 0,
+              "requestSeconds": 0,
+              "responseSeconds": 3,
+              "responseWaitSeconds": 2,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": 0.09045493602752686,
+            "fetchType": 1,
+            "protocolCode": 1,
+            "requestSeconds": 1.2040138244628906e-05,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "reused": 0,
+            "tlsSeconds": null,
+            "transportBytes": {
+              "requestBody": 0,
+              "requestHeaders": 310,
+              "responseBody": 0,
+              "responseHeaders": 0
+            }
+          },
+          {
+            "connectSeconds": 0.013000011444091797,
+            "dnsSeconds": 0,
+            "durationStates": {
+              "connectSeconds": 0,
+              "dnsSeconds": 0,
+              "fetchSeconds": 0,
+              "fetchToRequestSeconds": 0,
+              "requestSeconds": 0,
+              "responseSeconds": 0,
+              "responseWaitSeconds": 0,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": 0.038497090339660645,
+            "fetchToRequestSeconds": 0.014579057693481445,
+            "fetchType": 1,
+            "protocolCode": 1,
+            "requestSeconds": 3.3974647521972656e-05,
+            "responseSeconds": 0.009026050567626953,
+            "responseWaitSeconds": 0.014858007431030273,
+            "reused": 0,
+            "tlsSeconds": null,
+            "transportBytes": {
+              "requestBody": 0,
+              "requestHeaders": 310,
+              "responseBody": 8591,
+              "responseHeaders": 584
+            }
+          }
+        ],
+        "truncated": 0,
+        "version": 3
+      },
+      "outcome": 0,
+      "proxyID": "D8FDF2DC-8D01-4105-A4E3-532F90CA60BA",
+      "requestID": 9,
+      "resourceToken": "6bb758c7582a9e9f842dc6df57743593ca2f2062bb3bc248a000787323dd7009",
+      "response": 110323.14959100001,
+      "sendCompletions": 4,
+      "sendCount": 4,
+      "sendFailures": 0,
+      "sendWaitMax": 0.000149125000461936,
+      "sendWaitSum": 0.00032845833629835397,
+      "sentBodyBytes": 8591,
+      "serverRequestID": 334,
+      "taskComplete": 110323.15882995834,
+      "taskOutcome": 0,
+      "terminal": 110323.158842,
+      "upstreamComplete": 110323.158835875,
+      "version": 7
+    }
+  ],
+  "final": {
+    "completed": true,
+    "width": 640,
+    "position": 120.053766643,
+    "automaticAttempts": 2,
+    "automaticEvents": [
+      {
+        "attempt": 1,
+        "credentialCommitAccepted": true,
+        "due": 58.008887958334526,
+        "elapsed": 58.26120808333508,
+        "elapsedAfter": 58.330546541677904,
+        "generation": 2,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 57.365010142,
+        "preparationDeadline": 60.26120808333508,
+        "ticketCredentialRevision": 0,
+        "ticketIntentRevision": 1
+      },
+      {
+        "attempt": 2,
+        "credentialCommitAccepted": true,
+        "due": 88.75837529166893,
+        "elapsed": 88.76094150000426,
+        "elapsedAfter": 88.83037408333621,
+        "generation": 4,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 87.506037422,
+        "preparationDeadline": 90.76094150000426,
+        "ticketCredentialRevision": 0,
+        "ticketIntentRevision": 1
+      }
+    ],
+    "hostFailureCount": 0
+  },
+  "connectionBindings": {
+    "bound": 420,
+    "unmatched": 1
+  }
+}

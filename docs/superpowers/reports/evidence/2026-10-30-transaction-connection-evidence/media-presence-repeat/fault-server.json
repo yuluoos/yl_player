@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "baseProfileSha256": "c5e3aaa69be92e5182e2af3cc032eecc3eb31d58030a8907dd72ba6032013478",
+  "rate": 0,
+  "duration": 5,
+  "trigger": {
+    "version": 1,
+    "startSeconds": 37.52158374999999,
+    "endSeconds": 42.52158374999999,
+    "rate": 0,
+    "evidence": {
+      "attempts": 1,
+      "elapsed": 37.506047458344256,
+      "firstHighElapsed": 35.50148620833352,
+      "generation": 1,
+      "highFrames": 49,
+      "installedElapsed": 33.83364029167569,
+      "lastHighElapsed": 37.506047458344256,
+      "position": 35.925193994,
+      "version": 1
+    }
+  },
+  "capabilityAccepted": false,
+  "controlRequests": [
+    {
+      "serverSeconds": 37.5216626249985,
+      "status": 200
+    }
+  ]
+}

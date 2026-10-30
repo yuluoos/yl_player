@@ -283,7 +283,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "f602666c3742c0e9ae506ba3dc1324a7e39cfb07eef46b293bd925b595bd1a8d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "986b4858bd86c8069746c4b59d2963e6cb6c816e7d3b25645f11e744b36e7dcc",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "18542c89b6e5d488333c48ec9c889547a32f0f1d75d9a2231cc895bd3e80d2ad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "881df84669d4ec1d6e6d24def37190b84f11b62e50117d35d2895d1c01b566b8"
+    "sha256": "e512c50c8e26be359fcac1956184fe524c3b2df677097701a379c1ca66f4f2a4"
   },
   "evidence": {
     "p01": {
@@ -1008,6 +1008,11 @@
       "path": "docs/superpowers/reports/2026-10-29-request-receipt-attribution.md",
       "sha256": "b367e7096dafdb12eb6415cf38b93275b73d39ff4f31f420397d30d18f9701ab",
       "kind": "report"
+    },
+    "transaction-connection-evidence-20261030": {
+      "path": "docs/superpowers/reports/2026-10-30-transaction-connection-evidence.md",
+      "sha256": "37ff1b9f0d1fcafc323deeb7fe467aa0a17c6ed08b9cb5220ffa27c09c0be702",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1052,10 +1057,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "request-receipt-attribution-20261029"
+        "transaction-connection-evidence-20261030"
       ],
       "acceptance": null,
-      "nextAction": "capture-transaction-connection-or-packet-evidence-for-new-failures-preserve-historical-unknowns"
+      "nextAction": "obtain-packet-evidence-for-unreported-endpoints-and-client-connections-unseen-at-server-accept"
     },
     {
       "requirement": "CAP-ABR",

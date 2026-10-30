@@ -1,0 +1,31 @@
+{
+  "preparation": {
+    "passed": true,
+    "result": null
+  },
+  "playback": {
+    "passed": true,
+    "result": {
+      "schemaVersion": 1,
+      "geometryWidths": [
+        320,
+        640,
+        320,
+        640,
+        320,
+        640
+      ],
+      "downshiftObserved": true,
+      "recoveryInterventionApplied": true,
+      "highOutputAfterInterventionObserved": true,
+      "upshiftAfterDownshiftObserved": true,
+      "lastObservedBitrate": 2899460,
+      "lastIndicatedBitrate": 764000,
+      "framesPublished": 2883,
+      "diagnosticOnly": true,
+      "internalABRDecisionVerified": false,
+      "capabilityAccepted": false,
+      "physicalOutputVerified": false
+    }
+  }
+}

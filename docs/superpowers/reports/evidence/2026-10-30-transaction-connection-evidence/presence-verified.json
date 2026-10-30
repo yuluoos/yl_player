@@ -1,0 +1,19 @@
+{
+  "expected": [
+    "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+    "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+    "YlDashResourceLoaderTests/testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt()"
+  ],
+  "observed": [
+    "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+    "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+    "YlDashResourceLoaderTests/testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt()"
+  ],
+  "skipped": [],
+  "summary": {
+    "totalTestCount": 3,
+    "passedTests": 3,
+    "skippedTests": 0,
+    "failedTests": 0
+  }
+}

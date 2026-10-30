@@ -613,7 +613,7 @@ class CleanupTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
-    def _failed_playback_receipt(self, raw_rows, proxy=None, server=None):
+    def _failed_playback_receipt(self, raw_rows, proxy=None, server=None, transaction_connections=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); products = root / 'products'; app = products / 'Fixture.app'
             app.mkdir(parents=True)
@@ -622,8 +622,15 @@ class FailureReceiptTests(unittest.TestCase):
             (products / 'probe.xctestrun').write_bytes(plistlib.dumps({
                 'RunnerTests': {'TestHostPath': '__TESTROOT__/Fixture.app/Fixture'}}))
             args = SimpleNamespace(products=products, directory=root/'out', device=None,
-                profiles=Path(__file__).with_name('profiles.json'), profile='down-and-recover-v1')
+                profiles=Path(__file__).with_name('profiles.json'), profile='down-and-recover-v1',
+                transaction_connections=transaction_connections)
+            ephemeral=[]
             def failed_native(*_args):
+                if transaction_connections:
+                    command=_args[1];path=Path(command[command.index('-xctestrun')+1]);ephemeral.append(path)
+                    key=plistlib.loads(path.read_bytes())['RunnerTests']['EnvironmentVariables']['YL_ABR_PROBE_CONNECTION_KEY']
+                    self.assertRegex(key,r'^[0-9a-f]{64}$')
+                    self.assertNotIn(key,(args.directory/'probe.xctestrun').read_text())
                 # Deliberately incomplete main rows cannot satisfy playback acceptance.
                 (args.directory/'rows.jsonl').write_text(raw_rows)
                 if proxy is not None:
@@ -639,7 +646,16 @@ class FailureReceiptTests(unittest.TestCase):
                  patch('abr_accesslog.wait_for_native', side_effect=failed_native), \
                  patch('abr_accesslog.cleanup_owned', return_value=True):
                 receipt = abr_accesslog.run(args)
+            self.assertEqual(len(ephemeral),int(transaction_connections))
+            for path in ephemeral:self.assertFalse(path.exists())
             return receipt
+
+    def test_opt_in_missing_callback_stays_unknown_in_failed_receipt(self):
+        receipt=self._failed_playback_receipt('',transaction_connections=True)
+        self.assertFalse(receipt['passed'])
+        self.assertEqual(receipt['transactionConnectionObservation']['availability'],'unknown')
+        self.assertIn('transaction connection evidence incomplete',receipt['errors'])
+        self.assertNotIn('invalid transaction connection sidecar',receipt['errors'])
 
     def test_proxy_metrics_failure_keeps_independent_frame_observation(self):
         from test_proxy_boundaries import ProxyBoundaryTests

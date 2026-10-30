@@ -1,0 +1,318 @@
+{
+  "strictPassed": false,
+  "errors": [
+    "proxy request correlation incomplete",
+    "transaction connection evidence incomplete"
+  ],
+  "binaryIdentityUnchanged": true,
+  "proxyCounts": {
+    "requestCount": 415,
+    "outcomeCounts": {
+      "complete": 404,
+      "cancelled": 6,
+      "sendFailed": 5
+    },
+    "uncorrelatedProxyRequests": 3,
+    "unmatchedServerRequestIDs": []
+  },
+  "lifecycle": {
+    "version": 2,
+    "acceptedCount": 414,
+    "rejectedCount": 0,
+    "droppedRejections": 0,
+    "unrecordedRequests": 0,
+    "parsedRequests": 414,
+    "withoutParsedRequest": [],
+    "unclosedConnections": [],
+    "closedReasonCounts": {
+      "handlerEnded": 414
+    },
+    "complete": true,
+    "retryCauseProven": false,
+    "capabilityAccepted": false,
+    "interpretation": "Server-local elapsed time from listener construction, not profile time. handlerEnded means only that the handler returned; it does not prove peer FIN/reset or identify a URLSession transaction."
+  },
+  "unbound": [
+    {
+      "proxyID": "AC2B9B4F-441B-44B2-BAE8-DB0B4B7BAEEF",
+      "requestID": 132,
+      "availability": "reported",
+      "transactions": [
+        {
+          "connectionToken": null,
+          "endpointFields": 0,
+          "index": 0,
+          "proxyConnection": false,
+          "responsePresent": false,
+          "connectionId": null,
+          "binding": "endpoint-unavailable"
+        }
+      ]
+    },
+    {
+      "proxyID": "AC2B9B4F-441B-44B2-BAE8-DB0B4B7BAEEF",
+      "requestID": 133,
+      "availability": "reported",
+      "transactions": [
+        {
+          "connectionToken": null,
+          "endpointFields": 0,
+          "index": 0,
+          "proxyConnection": false,
+          "responsePresent": false,
+          "connectionId": null,
+          "binding": "endpoint-unavailable"
+        }
+      ]
+    },
+    {
+      "proxyID": "469F60F5-BF0E-42D2-9F1C-5D03604B3DD9",
+      "requestID": 140,
+      "availability": "reported",
+      "transactions": [
+        {
+          "connectionToken": null,
+          "endpointFields": 0,
+          "index": 0,
+          "proxyConnection": false,
+          "responsePresent": false,
+          "connectionId": null,
+          "binding": "endpoint-unavailable"
+        }
+      ]
+    }
+  ],
+  "boundaries": [
+    {
+      "admission": 110510.22617729167,
+      "bodyBytes": 0,
+      "bodyCallbacks": 0,
+      "cancelCause": 1,
+      "cancelErrorCode": 0,
+      "cancelErrorDomain": 0,
+      "cancelSource": 0,
+      "correlationID": "99DA0F8E-411E-4ED3-8E03-9FF76108798B",
+      "downstreamTerminal": 110510.28747358335,
+      "metrics": {
+        "redirectCount": 0,
+        "taskSeconds": 0.06136906147003174,
+        "transactionCount": 1,
+        "transactions": [
+          {
+            "connectSeconds": null,
+            "dnsSeconds": null,
+            "durationStates": {
+              "connectSeconds": 3,
+              "dnsSeconds": 3,
+              "fetchSeconds": 2,
+              "fetchToRequestSeconds": 2,
+              "requestSeconds": 3,
+              "responseSeconds": 3,
+              "responseWaitSeconds": 3,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": null,
+            "fetchType": 1,
+            "protocolCode": 0,
+            "requestSeconds": null,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "reused": 0,
+            "tlsSeconds": null,
+            "transportBytes": {
+              "requestBody": 0,
+              "requestHeaders": 0,
+              "responseBody": 0,
+              "responseHeaders": 0
+            }
+          }
+        ],
+        "truncated": 0,
+        "version": 3
+      },
+      "outcome": 1,
+      "proxyID": "AC2B9B4F-441B-44B2-BAE8-DB0B4B7BAEEF",
+      "requestID": 132,
+      "resourceToken": "845181f940c692f12f74508e92bf1805e99dc924429a5e7dc16db23e18b738db",
+      "sendCompletions": 0,
+      "sendCount": 0,
+      "sendFailures": 0,
+      "sendWaitMax": 0,
+      "sendWaitSum": 0,
+      "sentBodyBytes": 0,
+      "taskComplete": 110510.28829083334,
+      "taskOutcome": 1,
+      "terminal": 110510.28829220834,
+      "version": 7
+    },
+    {
+      "admission": 110510.23719175001,
+      "bodyBytes": 0,
+      "bodyCallbacks": 0,
+      "cancelCause": 1,
+      "cancelErrorCode": 0,
+      "cancelErrorDomain": 0,
+      "cancelSource": 0,
+      "correlationID": "58A4B5FE-48B7-471D-918D-032848A43CAA",
+      "downstreamTerminal": 110510.287469375,
+      "metrics": {
+        "redirectCount": 0,
+        "taskSeconds": 0.050408005714416504,
+        "transactionCount": 1,
+        "transactions": [
+          {
+            "connectSeconds": null,
+            "dnsSeconds": null,
+            "durationStates": {
+              "connectSeconds": 3,
+              "dnsSeconds": 3,
+              "fetchSeconds": 2,
+              "fetchToRequestSeconds": 2,
+              "requestSeconds": 3,
+              "responseSeconds": 3,
+              "responseWaitSeconds": 3,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": null,
+            "fetchType": 1,
+            "protocolCode": 0,
+            "requestSeconds": null,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "reused": 0,
+            "tlsSeconds": null,
+            "transportBytes": {
+              "requestBody": 0,
+              "requestHeaders": 0,
+              "responseBody": 0,
+              "responseHeaders": 0
+            }
+          }
+        ],
+        "truncated": 0,
+        "version": 3
+      },
+      "outcome": 1,
+      "proxyID": "AC2B9B4F-441B-44B2-BAE8-DB0B4B7BAEEF",
+      "requestID": 133,
+      "resourceToken": "aeabf3c706c3773e09619408bbb5a9860ccb04de6d8e04bc0384506daf163c0d",
+      "sendCompletions": 0,
+      "sendCount": 0,
+      "sendFailures": 0,
+      "sendWaitMax": 0,
+      "sendWaitSum": 0,
+      "sentBodyBytes": 0,
+      "taskComplete": 110510.288560625,
+      "taskOutcome": 1,
+      "terminal": 110510.28856245834,
+      "version": 7
+    },
+    {
+      "admission": 110548.03082670835,
+      "bodyBytes": 0,
+      "bodyCallbacks": 0,
+      "cancelCause": 1,
+      "cancelErrorCode": 0,
+      "cancelErrorDomain": 0,
+      "cancelSource": 0,
+      "correlationID": "5F5FCB8E-695D-4266-A85C-D0E43B68A805",
+      "downstreamTerminal": 110548.03545170835,
+      "metrics": {
+        "redirectCount": 0,
+        "taskSeconds": 0.004665970802307129,
+        "transactionCount": 1,
+        "transactions": [
+          {
+            "connectSeconds": null,
+            "dnsSeconds": null,
+            "durationStates": {
+              "connectSeconds": 3,
+              "dnsSeconds": 3,
+              "fetchSeconds": 2,
+              "fetchToRequestSeconds": 2,
+              "requestSeconds": 3,
+              "responseSeconds": 3,
+              "responseWaitSeconds": 3,
+              "tlsSeconds": 3
+            },
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": null,
+            "fetchType": 1,
+            "protocolCode": 0,
+            "requestSeconds": null,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "reused": 0,
+            "tlsSeconds": null,
+            "transportBytes": {
+              "requestBody": 0,
+              "requestHeaders": 0,
+              "responseBody": 0,
+              "responseHeaders": 0
+            }
+          }
+        ],
+        "truncated": 0,
+        "version": 3
+      },
+      "outcome": 1,
+      "proxyID": "469F60F5-BF0E-42D2-9F1C-5D03604B3DD9",
+      "requestID": 140,
+      "resourceToken": "89280d217a66984ac618855771d2cfd135f65bdaae50407c5dd8e9acaafe9890",
+      "sendCompletions": 0,
+      "sendCount": 0,
+      "sendFailures": 0,
+      "sendWaitMax": 0,
+      "sendWaitSum": 0,
+      "sentBodyBytes": 0,
+      "taskComplete": 110548.03606929167,
+      "taskOutcome": 1,
+      "terminal": 110548.03607204168,
+      "version": 7
+    }
+  ],
+  "final": {
+    "completed": true,
+    "width": 640,
+    "position": 120.031835103,
+    "automaticAttempts": 2,
+    "automaticEvents": [
+      {
+        "attempt": 1,
+        "credentialCommitAccepted": true,
+        "due": 33.76241791667417,
+        "elapsed": 33.764370916673215,
+        "elapsedAfter": 33.83364029167569,
+        "generation": 2,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 32.98482818,
+        "preparationDeadline": 35.764370916673215,
+        "ticketCredentialRevision": 0,
+        "ticketIntentRevision": 1
+      },
+      {
+        "attempt": 2,
+        "credentialCommitAccepted": true,
+        "due": 71.5123447500082,
+        "elapsed": 71.51425520834164,
+        "elapsedAfter": 71.58080729166977,
+        "generation": 4,
+        "itemChanged": true,
+        "outcome": "installed",
+        "positionBefore": 69.930881494,
+        "preparationDeadline": 73.51425520834164,
+        "ticketCredentialRevision": 0,
+        "ticketIntentRevision": 1
+      }
+    ],
+    "hostFailureCount": 0
+  },
+  "connectionBindings": {
+    "bound": 412,
+    "endpoint-unavailable": 3
+  },
+  "signals": []
+}

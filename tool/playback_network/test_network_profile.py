@@ -169,6 +169,20 @@ class ServerTests(unittest.TestCase):
                         'Pre-request connection closures need preserved evidence')
         return self.server.connection_lifecycle()
 
+    def test_opt_in_lifecycle_token_matches_actual_socket_endpoints(self):
+        from transaction_connections import connection_token
+        from connection_lifecycle import summarize_lifecycle
+        key=b'0123456789abcdef'*4
+        self.start(connection_key=key)
+        conn=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+        expected=connection_token(key,conn.getsockname(),conn.getpeername())
+        with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.requests==1,timeout=2))
+        conn.close();self.assertTrue(self.server.wait_handlers())
+        trace=self.lifecycle();self.assertEqual(trace['version'],2)
+        self.assertEqual(trace['connections'][0]['connectionToken'],expected)
+        self.assertNotIn(key.decode(),json.dumps(trace));self.assertNotIn('127.0.0.1',json.dumps(trace))
+        self.assertEqual(summarize_lifecycle(trace,[])['withoutParsedRequest'],[1])
+
     def test_lifecycle_keeps_headerless_close_and_correlates_normal_request(self):
         self.start()
         conn=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)

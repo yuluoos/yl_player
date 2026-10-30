@@ -1,0 +1,56 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "exportedFileName" : "28DAFF6B-44A7-4D57-9EF6-5DEAC00C2814.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "cancel-before-response-connection-true_0_653C91E6-C29F-41E5-8220-B45DE1494D52.json",
+        "timestamp" : 1793343192.726
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "exportedFileName" : "DCFC691A-5F89-4019-A7A9-BB147927322A.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "cancel-before-response-connection-false_0_39CC968F-ACC1-4F7C-A0B8-5689CAF143E6.json",
+        "timestamp" : 1793343192.182
+      }
+    ],
+    "testIdentifier" : "YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse()",
+    "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyRequestTimingRecordsRealCancellationBeforeUpstreamResponse"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "exportedFileName" : "6BDBC38A-BB12-4790-8FDC-B8F7E11F7B97.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "forced-close-transaction-bytes_0_AE743B82-5550-46F5-8377-6296540F840B.json",
+        "timestamp" : 1793343192.836
+      }
+    ],
+    "testIdentifier" : "YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose()",
+    "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008140-000C49CC3493001C",
+        "deviceName" : "iPhone",
+        "exportedFileName" : "F147956D-72D6-4483-8EBD-B806608CE456.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "queued-cancel-connection-evidence_0_0DBF77C9-3905-499B-A252-957603B341BB.json",
+        "timestamp" : 1793343193.881
+      }
+    ],
+    "testIdentifier" : "YlDashResourceLoaderTests/testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt()",
+    "testIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testQueuedCancellationPreservesUnknownConnectionWithoutInventingServerReceipt"
+  }
+]
