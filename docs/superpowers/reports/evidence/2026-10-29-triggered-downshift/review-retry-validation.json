@@ -1,0 +1,47 @@
+{
+  "budget-zero": {
+    "strictRetryMatches": true,
+    "independentlyClassifiedOverlaps": [
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 43,
+        "startsBeforeFaultMs": 15.053500000140048,
+        "endsAfterFaultMs": 20.88454199986154,
+        "serverWrittenBytes": 25431,
+        "assetBytes": 25431,
+        "proxyReceivedBytes": 19456,
+        "proxySentBytes": 19456
+      }
+    ]
+  },
+  "normal-zero": {
+    "strictRetryUnavailableMatches": "retry evidence requires complete request correlation",
+    "independentlyClassifiedOverlaps": [
+      {
+        "proxyID": "2C379C43-8C97-4B57-92ED-E7681C86F508",
+        "requestID": 42,
+        "startsBeforeFaultMs": -466.04837499977293,
+        "endsAfterFaultMs": 72.16587499977322,
+        "serverWrittenBytes": 60790,
+        "assetBytes": 60790,
+        "proxyReceivedBytes": 16208,
+        "proxySentBytes": 7168
+      }
+    ]
+  },
+  "budget-zero-repeat": {
+    "strictRetryMatches": true,
+    "independentlyClassifiedOverlaps": [
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 44,
+        "startsBeforeFaultMs": 13.610208000027342,
+        "endsAfterFaultMs": 33.396624999979394,
+        "serverWrittenBytes": 25431,
+        "assetBytes": 25431,
+        "proxyReceivedBytes": 16384,
+        "proxySentBytes": 16384
+      }
+    ]
+  }
+}

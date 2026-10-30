@@ -365,6 +365,37 @@ private enum AbrDiagnosticCaptureURL {
   }
 }
 
+private struct AbrDiagnosticFaultGate {
+  private var first: Double?, last: Double?, lastPosition: Double?
+  private var identity: Int?, count = 0, fired = false
+  mutating func observe(elapsed: Double, generation: Int, frames: Int, width: Int,
+    position: Double, rate: Float, itemStatus: Int, seekPending: Bool,
+    installedElapsed: Double?, attempts: Int) -> [String: Any]? {
+    guard !fired else { return nil }
+    guard let installedElapsed, installedElapsed.isFinite, elapsed.isFinite, position.isFinite,
+      elapsed > installedElapsed, generation > 0, (1...2).contains(attempts),
+      position >= 0, position <= 70, rate > 0, itemStatus == 1, !seekPending else {
+      first = nil; last = nil; lastPosition = nil; count = 0; return nil
+    }
+    if frames <= 0 {
+      if let last, elapsed - last > 0.5 { first = nil; count = 0 }
+      return nil
+    }
+    guard width == 640 else { first = nil; last = nil; lastPosition = nil; count = 0; return nil }
+    if identity != generation || last.map({ elapsed <= $0 || elapsed - $0 > 0.5 }) == true ||
+        lastPosition.map({ position <= $0 }) == true {
+      first = nil; count = 0
+    }
+    if first == nil { first = elapsed }
+    identity = generation; last = elapsed; lastPosition = position; count += frames
+    guard let first, elapsed - first >= 2, count >= 48 else { return nil }
+    fired = true
+    return ["version": 1, "elapsed": elapsed, "generation": generation, "position": position,
+      "installedElapsed": installedElapsed, "attempts": attempts, "firstHighElapsed": first,
+      "lastHighElapsed": elapsed, "highFrames": count]
+  }
+}
+
 final class YlDashResourceLoaderTests: XCTestCase {
   @MainActor func testDelayedItemReadinessPreservesAcknowledgedPause() async throws {
     let frameworks = try XCTUnwrap(Bundle.main.privateFrameworksURL)
@@ -882,6 +913,28 @@ final class YlDashResourceLoaderTests: XCTestCase {
     withExtendedLifetime(held) {}
   }
 
+  func testTriggeredFaultRequiresPublishedHighBaselineAfterInstall() {
+    var gate = AbrDiagnosticFaultGate()
+    func sample(_ time: Double, _ width: Int = 640, _ generation: Int = 1,
+      _ installed: Double? = 9) -> [String: Any]? {
+      gate.observe(elapsed: time, generation: generation, frames: 1, width: width,
+        position: time, rate: 1, itemStatus: 1, seekPending: false,
+        installedElapsed: installed, attempts: 2)
+    }
+    XCTAssertNil(sample(8, 640, 1, nil))
+    for i in 0..<48 { XCTAssertNil(sample(10 + Double(i)/24)) }
+    let trigger = sample(12)
+    XCTAssertEqual(trigger?["highFrames"] as? Int, 49)
+    XCTAssertEqual(trigger?["installedElapsed"] as? Double, 9)
+    XCTAssertNil(sample(13), "Only one fault may be requested")
+    gate = AbrDiagnosticFaultGate()
+    for i in 0..<48 { _ = sample(10 + Double(i)/24) }
+    XCTAssertNil(sample(12, 320))
+    XCTAssertNil(sample(13))
+    XCTAssertNil(sample(14, 640, 2))
+    XCTAssertNil(sample(71), "Leave time for the unchanged recovery windows")
+  }
+
   func testDeviceCaptureRequiresExplicitOwnedPrivateURL() {
     func permits(_ text: String, _ host: String? = nil) -> Bool {
       AbrDiagnosticCaptureURL.permits(URL(string: text)!, ownedHost: host)
@@ -1267,6 +1320,26 @@ final class YlDashResourceLoaderTests: XCTestCase {
     guard ["none", "pause-resume", "pause-prepared", "seek-prepared", "load-prepared"].contains(productionCommand), productionCommand == "none" || productionRecovery else {
       XCTFail("Invalid production command scenario"); return
     }
+    var faultURL: URL?
+    if let rawFaultURL = env["YL_ABR_PROBE_FAULT_URL"], !rawFaultURL.isEmpty {
+      let control = try XCTUnwrap(URL(string: rawFaultURL))
+      var validation = try XCTUnwrap(URLComponents(url: control, resolvingAgainstBaseURL: false))
+      validation.path = "/manifest.mpd"
+      guard productionRecovery, control.host == url.host, control.path == "/fault/" + token,
+        let validationURL = validation.url,
+        AbrDiagnosticCaptureURL.permits(validationURL, ownedHost: env["YL_ABR_PROBE_OWNED_HOST"]) else {
+        XCTFail("Fault control must use the owned capture host and token"); return
+      }
+      faultURL = control
+    }
+    var faultGate = AbrDiagnosticFaultGate()
+    var faultReceipt: [String: Any]?
+    var faultTask: Task<Void, Never>?
+    let faultConfiguration = URLSessionConfiguration.ephemeral
+    faultConfiguration.timeoutIntervalForRequest = 3
+    faultConfiguration.timeoutIntervalForResource = 3
+    let faultSession = URLSession(configuration: faultConfiguration)
+    defer { faultTask?.cancel(); faultSession.invalidateAndCancel() }
     var productionCommandEvents: [String: Any] = [:]
     var productionObservedEvents: [[String: Any]] = []
     let productionBarrier = DispatchSemaphore(value: 0)
@@ -1555,6 +1628,31 @@ final class YlDashResourceLoaderTests: XCTestCase {
           "resumeSeekPending": backend?.diagnosticResumeSeekPending ?? publicHost?.diagnosticResumeSeekPending ?? false]
         do { try frameFile.write(contentsOf: JSONSerialization.data(withJSONObject: sample, options: [.sortedKeys]) + Data([10])) }
         catch { frameWriteFailed = true; return }
+        if let faultURL, let event = productionObservedEvents.last(where: { $0["outcome"] as? String == "installed" }),
+          let evidence = faultGate.observe(elapsed: sample["elapsed"] as! Double, generation: frameGeneration,
+            frames: count, width: width, position: position, rate: player.rate,
+            itemStatus: player.currentItem?.status.rawValue ?? -1,
+            seekPending: publicHost?.diagnosticResumeSeekPending ?? false,
+            installedElapsed: event["elapsedAfter"] as? Double, attempts: publicHost?.dashRecoveryAttempts ?? 0) {
+          faultTask = Task { @MainActor in
+            faultReceipt = ["evidence": evidence, "status": 0]
+            func persist() {
+              do { try JSONSerialization.data(withJSONObject: faultReceipt!, options: [.sortedKeys])
+                .write(to: directory.appendingPathComponent("fault-trigger.json"), options: .atomic) }
+              catch { frameWriteFailed = true }
+            }
+            persist()
+            do {
+              var request = URLRequest(url: faultURL); request.httpMethod = "POST"
+              request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+              request.httpBody = try JSONSerialization.data(withJSONObject: evidence, options: [.sortedKeys])
+              let (data, response) = try await faultSession.data(for: request)
+              faultReceipt?["status"] = (response as? HTTPURLResponse)?.statusCode ?? 0
+              faultReceipt?["response"] = try JSONSerialization.jsonObject(with: data)
+            } catch { faultReceipt?["errorCode"] = (error as NSError).code }
+            persist()
+          }
+        }
         try? await Task.sleep(nanoseconds: 16_000_000)
       }
     }

@@ -968,6 +968,11 @@
       "path": "docs/superpowers/reports/2026-10-29-reset-retry-control.md",
       "sha256": "d2a5f5db25b48fc57242ed443c9f44109d2f295b6b3f303e21c129c584a3724e",
       "kind": "report"
+    },
+    "triggered-downshift-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-triggered-downshift.md",
+      "sha256": "47b35874b659007078b278f247550f94446a97c81faa3035f2d2898108aa5dbc",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1012,10 +1017,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "reset-retry-control-20261029"
+        "triggered-downshift-20261029"
       ],
       "acceptance": null,
-      "nextAction": "establish-high-baseline-and-isolate-upstream-timeout-with-unchanged-budget"
+      "nextAction": "verify-exhausted-budget-upshift-and-retired-proxy-request-attribution"
     },
     {
       "requirement": "CAP-ABR",

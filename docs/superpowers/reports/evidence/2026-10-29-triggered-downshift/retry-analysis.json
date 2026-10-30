@@ -1,0 +1,299 @@
+{
+  "budget-zero": {
+    "highResets": [
+      {
+        "proxyID": "4B095A21-7923-4F2C-937C-2EA6FD7E8206",
+        "requestID": 59,
+        "source": 1,
+        "sameProxyLaterHighRequests": [],
+        "sameProxySameAssetRetries": [],
+        "otherProxyLaterHighRequests": [
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 12
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 13
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 15
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 17
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 22
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 25
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 26
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 28
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 32
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 34
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 35
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 36
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 37
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 38
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 40
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 42
+          },
+          {
+            "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+            "requestID": 43
+          }
+        ],
+        "sameProxyOutstandingHighRequests": []
+      },
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 43,
+        "source": 1,
+        "sameProxyLaterHighRequests": [],
+        "sameProxySameAssetRetries": [],
+        "otherProxyLaterHighRequests": [],
+        "sameProxyOutstandingHighRequests": []
+      }
+    ],
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "interpretation": "After means admission strictly after recorded termination in device uptime; already outstanding requests and other proxy lifetimes are separate. No requests proves only absence in this capture, not a private penalty timer or future behavior.",
+    "secondPhaseHighFailuresScope": "Only server admissions at or after fault start; empty does not exclude already-in-flight failures. See fault-overlap.json.",
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "4B095A21-7923-4F2C-937C-2EA6FD7E8206",
+        "requestID": 59,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      },
+      {
+        "proxyID": "CF3DBDC0-AC08-4BDA-9335-1D894F6E6F7F",
+        "requestID": 43,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      }
+    ],
+    "secondPhaseHighFailures": [],
+    "postLastInstallErrorCounts": [
+      0,
+      3,
+      5,
+      7
+    ],
+    "postLastInstallWidths": [
+      0,
+      320,
+      640
+    ],
+    "passed": false
+  },
+  "normal-zero": {
+    "highResets": null,
+    "diagnosticUnavailableReason": "retry evidence requires complete request correlation",
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "secondPhaseHighFailuresScope": "Only server admissions at or after fault start; empty does not exclude already-in-flight failures. See fault-overlap.json.",
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+        "requestID": 56,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      },
+      {
+        "proxyID": "2C379C43-8C97-4B57-92ED-E7681C86F508",
+        "requestID": 42,
+        "outcome": 2,
+        "cancelSource": 0,
+        "errorDomain": 0,
+        "errorCode": 0
+      }
+    ],
+    "secondPhaseHighFailures": [
+      {
+        "proxyID": "2C379C43-8C97-4B57-92ED-E7681C86F508",
+        "requestID": 42,
+        "outcome": 2,
+        "cancelSource": 0,
+        "errorDomain": 0,
+        "errorCode": 0
+      }
+    ],
+    "postLastInstallErrorCounts": [
+      0
+    ],
+    "postLastInstallWidths": [
+      320,
+      640
+    ],
+    "passed": false
+  },
+  "budget-zero-repeat": {
+    "highResets": [
+      {
+        "proxyID": "7E6E06A3-2082-4D8E-BB5A-83B3B5E04ACC",
+        "requestID": 59,
+        "source": 1,
+        "sameProxyLaterHighRequests": [],
+        "sameProxySameAssetRetries": [],
+        "otherProxyLaterHighRequests": [
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 13
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 14
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 17
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 21
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 24
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 26
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 27
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 31
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 32
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 34
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 35
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 36
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 37
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 39
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 41
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 43
+          },
+          {
+            "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+            "requestID": 44
+          }
+        ],
+        "sameProxyOutstandingHighRequests": []
+      },
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 44,
+        "source": 1,
+        "sameProxyLaterHighRequests": [],
+        "sameProxySameAssetRetries": [],
+        "otherProxyLaterHighRequests": [],
+        "sameProxyOutstandingHighRequests": []
+      }
+    ],
+    "rootCauseEstablished": false,
+    "capabilityAccepted": false,
+    "interpretation": "After means admission strictly after recorded termination in device uptime; already outstanding requests and other proxy lifetimes are separate. No requests proves only absence in this capture, not a private penalty timer or future behavior.",
+    "secondPhaseHighFailuresScope": "Only server admissions at or after fault start; empty does not exclude already-in-flight failures. See fault-overlap.json.",
+    "assetSetProvenance": "actual frozen MPD representation width640 and correlated fixture paths",
+    "highRequestFailures": [
+      {
+        "proxyID": "7E6E06A3-2082-4D8E-BB5A-83B3B5E04ACC",
+        "requestID": 59,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      },
+      {
+        "proxyID": "CF1BEE88-1379-4C19-BE21-02DFF6BA812D",
+        "requestID": 44,
+        "outcome": 1,
+        "cancelSource": 1,
+        "errorDomain": 1,
+        "errorCode": 54
+      }
+    ],
+    "secondPhaseHighFailures": [],
+    "postLastInstallErrorCounts": [
+      0,
+      3,
+      5,
+      7
+    ],
+    "postLastInstallWidths": [
+      320,
+      640
+    ],
+    "passed": false
+  }
+}

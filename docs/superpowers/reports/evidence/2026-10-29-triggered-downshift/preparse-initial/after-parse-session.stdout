@@ -1,0 +1,29 @@
+{
+  "bodyBytes" : 4,
+  "errorCode" : 0,
+  "status" : 200,
+  "transactions" : [
+    {
+      "requestBody" : 0,
+      "requestEndPresent" : true,
+      "requestHeaders" : 238,
+      "requestStartPresent" : true,
+      "responseBody" : 0,
+      "responseEndPresent" : false,
+      "responseHeaders" : 0,
+      "responseStartPresent" : false,
+      "reused" : false
+    },
+    {
+      "requestBody" : 0,
+      "requestEndPresent" : true,
+      "requestHeaders" : 238,
+      "requestStartPresent" : true,
+      "responseBody" : 4,
+      "responseEndPresent" : true,
+      "responseHeaders" : 57,
+      "responseStartPresent" : true,
+      "reused" : false
+    }
+  ]
+}

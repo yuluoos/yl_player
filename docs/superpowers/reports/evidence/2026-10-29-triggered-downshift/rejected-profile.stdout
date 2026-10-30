@@ -1,0 +1,41 @@
+{
+  "diagnosticOnly": true,
+  "capabilityAccepted": false,
+  "errors": [
+    "ValueError"
+  ],
+  "exitCode": null,
+  "deviceKind": "physical",
+  "productionRecovery": true,
+  "triggeredFaultConfiguration": {
+    "version": 1,
+    "rate": 0,
+    "duration": 5,
+    "minimumHighSeconds": 2,
+    "minimumHighFrames": 48,
+    "maximumPosition": 70
+  },
+  "productionInstallRequired": true,
+  "budgetExhaustionRequired": false,
+  "publicPolicyRace": false,
+  "publicPolicyCycle": false,
+  "connectionMode": "close",
+  "autoScenario": "normal",
+  "candidatePreparation": "manifest-only",
+  "recoveryAction": "auto-reload",
+  "transport": "managed-dash",
+  "startupDelayMs": 0,
+  "fixture": {
+    "fixedMissingAtMs": null,
+    "durationSeconds": 120,
+    "periodCount": 30,
+    "assetCount": 481,
+    "sourceManifestSha256": "1c9d2979524b0d1939fc6f2eefd83694cc6b832172dd22c725d44e2b8b47edbe",
+    "manifestSha256": "1be00f4b713ecdcaf00a5744ba344b6973d67db764e3f4aa65bdf613da46ceb6",
+    "inventorySha256": "34c75b407f19c01ea4db1706ed47c0c85431e4b07e149e062fc136e815a523a0"
+  },
+  "profileSha256": "95123adf2e1fde532941f725026e3f45e3bcaa9f1e0a8f939fbedc3684207d29",
+  "ownedProcessExited": false,
+  "binaryIdentityUnchanged": true,
+  "passed": false
+}

@@ -1,0 +1,21 @@
+{
+  "devices": {
+    "/dev/bpf0": {
+      "readable": false,
+      "writable": false
+    },
+    "/dev/bpf1": {
+      "readable": false,
+      "writable": false
+    },
+    "/dev/bpf2": {
+      "readable": false,
+      "writable": false
+    },
+    "/dev/bpf3": {
+      "readable": false,
+      "writable": false
+    }
+  },
+  "packetCaptureAvailable": false
+}

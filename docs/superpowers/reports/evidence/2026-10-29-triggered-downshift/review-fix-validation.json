@@ -1,0 +1,22 @@
+{
+  "nonSocketTests": 3,
+  "success": true,
+  "unstartedBaseServerCleanupReturned": true,
+  "captures": {
+    "budget-zero": {
+      "bound": true,
+      "secondDownshiftElapsed": 67.44394958333578,
+      "capabilityAccepted": false
+    },
+    "normal-zero": {
+      "bound": true,
+      "secondDownshiftElapsed": 45.19892350000737,
+      "capabilityAccepted": false
+    },
+    "budget-zero-repeat": {
+      "bound": true,
+      "secondDownshiftElapsed": 75.2991458333272,
+      "capabilityAccepted": false
+    }
+  }
+}

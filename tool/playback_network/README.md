@@ -691,3 +691,44 @@ for observer delivery, and missing completion cannot be treated as a complete
 capture. v1–v3 retain their original interpretation. v4 success requires task
 success and all transaction core intervals; cancellation metrics can still be
 unavailable and are never fabricated. Missing server correlation still fails.
+
+## Published-frame-triggered second fault
+
+For owned physical production recovery diagnostics, `abr_accesslog.py
+--triggered-fault-rate 0 --require-production-install` adds a single five-second
+rate overlay. Use an initial-only static profile whose final step is at or before
+15 seconds; combine with `--production-command pause-resume
+--require-budget-exhaustion` to consume the first reservation without refund.
+The production policy, attempt limit, and all existing acceptance readers are
+unchanged. This is a separate triggered experiment, not the original fixed-time
+profile run.
+
+The test collector requests the fault only after an actual installation and at
+least 48 published high frames spanning two seconds in one generation, with no
+pause, pending seek, non-advancing position, or publication gap above 0.5 seconds.
+The trigger position must be at most 70 seconds to leave observation time. A
+separate owned control listener checks the per-run token and admits only one
+bounded trigger. Requests have bounded body size and connection lifetime; failure
+or a lost acknowledgement never retries the fault. The media listener keeps its
+existing connection and shaping budgets.
+
+`fault-trigger.json` retains device evidence and the server acknowledgement;
+`fault-server.json` retains the server-side overlay interval and control outcomes.
+`triggeredFaultObservation` binds both back to the unmodified frame and installation
+records. Missing trigger, receipt mismatch, or absent second downshift remains a
+failure. A bound trigger alone does not establish recovery, budget exhaustion,
+continuity, or capability acceptance.
+
+The static profile hash and `phaseBoundariesMs`/`phaseBytesWritten` still describe
+the **base** timeline. During the separately recorded overlay interval, the overlay
+rate replaces the base rate, including for in-flight bodies. Do not derive actual
+rates from the base phase labels alone. Both the actual server overlay interval
+and client observation interval are retained in their own monotonic clocks;
+subtracting timestamps across those clocks is invalid.
+
+`server-health.json` records up to 1,000 bounded service-loop samples with local
+listener time, first-GET profile time, and accepted/active/rejected counts. It
+helps distinguish an alive listener loop from a gap in parsed requests; it does
+not prove that packets reached the host, diagnose the network path, or repair
+missing historical logs. Frame publication remains a diagnostic, not calibrated
+physical screen/audio continuity evidence.
