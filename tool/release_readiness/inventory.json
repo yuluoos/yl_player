@@ -1003,6 +1003,11 @@
       "path": "docs/superpowers/reports/2026-10-29-recovery-renewal.md",
       "sha256": "f256872c4aa81ebf61117ecb71afbc0f9d132f1a0d43c0c0b863d33febab10df",
       "kind": "report"
+    },
+    "request-receipt-attribution-20261029": {
+      "path": "docs/superpowers/reports/2026-10-29-request-receipt-attribution.md",
+      "sha256": "b367e7096dafdb12eb6415cf38b93275b73d39ff4f31f420397d30d18f9701ab",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1047,10 +1052,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "recovery-renewal-20261029"
+        "request-receipt-attribution-20261029"
       ],
       "acceptance": null,
-      "nextAction": "resolve-partial-transaction-dates-and-historical-unknown-receipts-then-qualify-physical-output"
+      "nextAction": "capture-transaction-connection-or-packet-evidence-for-new-failures-preserve-historical-unknowns"
     },
     {
       "requirement": "CAP-ABR",

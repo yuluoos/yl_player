@@ -791,3 +791,24 @@ transaction and continuity readers still run. This flag is mutually exclusive
 with `--require-budget-exhaustion`; that historical v2 requirement still demands
 no third reservation and explicitly rejects v3 captures. Existing historical
 receipts are unchanged. Neither path certifies physical screen/audio continuity.
+# Transaction and server-receipt attribution
+
+`request_attribution.py` reads proxy boundaries, server requests and the server
+connection lifecycle together. All three inputs accept plain JSON/JSONL or gzip:
+
+```sh
+python3 tool/playback_network/request_attribution.py \
+  --boundaries path/to/proxy-requests.jsonl.gz \
+  --server-requests path/to/requests.jsonl.gz \
+  --lifecycle path/to/connection-lifecycle.json
+```
+
+This is an offline diagnostic. Exit zero means the inputs produced a valid
+diagnostic, not that playback passed. `strictProxyEvidencePassed` preserves the
+existing proxy gate result; it is not whole-capture or release acceptance.
+The tool separates final-transaction timing from all-transaction timing and
+task-level parsed server receipts from individual transactions. Missing response
+dates remain null; `before-recorded-request` means the request stage was not
+recorded, not proof that no data was sent. Complete handler logs cover admitted
+application connections, not the TCP backlog or packets. No resource, ordinal,
+byte-count or cross-clock heuristic assigns an unknown transaction or request.

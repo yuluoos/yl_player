@@ -1,0 +1,133 @@
+{
+  "version": 1,
+  "diagnosticOnly": true,
+  "serverCoverage": {
+    "version": 1,
+    "acceptedCount": 416,
+    "rejectedCount": 0,
+    "droppedRejections": 0,
+    "unrecordedRequests": 0,
+    "parsedRequests": 416,
+    "withoutParsedRequest": [],
+    "unclosedConnections": [],
+    "closedReasonCounts": {
+      "handlerEnded": 416
+    },
+    "complete": true,
+    "retryCauseProven": false,
+    "capabilityAccepted": false,
+    "interpretation": "Server-local elapsed time from listener construction, not profile time. handlerEnded means only that the handler returned; it does not prove peer FIN/reset or identify a URLSession transaction.",
+    "allAcceptedConnectionsHaveParsedRequests": true
+  },
+  "requests": [
+    {
+      "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+      "requestID": 129,
+      "correlationID": "8A5FDE12-D52A-4D02-AE82-D767B5E8ED77",
+      "outcome": "cancelled",
+      "cancelCause": 1,
+      "taskOutcome": 1,
+      "serverRequestID": null,
+      "serverReceipt": "not-observed-in-recorded-requests",
+      "physicalReceipt": "unknown",
+      "metricAvailability": "reported",
+      "taskSeconds": 0.012807965278625488,
+      "allTransactionTimingsComplete": false,
+      "finalTransactionTimingComplete": false,
+      "transactions": [
+        {
+          "index": 0,
+          "timingState": "before-recorded-request",
+          "timingComplete": false,
+          "durations": {
+            "connectSeconds": null,
+            "dnsSeconds": null,
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": null,
+            "requestSeconds": null,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "tlsSeconds": null
+          },
+          "durationStates": {
+            "connectSeconds": 3,
+            "dnsSeconds": 3,
+            "fetchSeconds": 2,
+            "fetchToRequestSeconds": 2,
+            "requestSeconds": 3,
+            "responseSeconds": 3,
+            "responseWaitSeconds": 3,
+            "tlsSeconds": 3
+          },
+          "transportBytes": {
+            "requestBody": 0,
+            "requestHeaders": 0,
+            "responseBody": 0,
+            "responseHeaders": 0
+          },
+          "serverRequestID": null
+        }
+      ]
+    },
+    {
+      "proxyID": "06B27FF8-1A3B-4698-B4E2-B5CE7A1690F3",
+      "requestID": 130,
+      "correlationID": "B6409359-68E5-4459-98D3-C33AF3D146C0",
+      "outcome": "cancelled",
+      "cancelCause": 1,
+      "taskOutcome": 1,
+      "serverRequestID": null,
+      "serverReceipt": "not-observed-in-recorded-requests",
+      "physicalReceipt": "unknown",
+      "metricAvailability": "reported",
+      "taskSeconds": 0.0007920265197753906,
+      "allTransactionTimingsComplete": false,
+      "finalTransactionTimingComplete": false,
+      "transactions": [
+        {
+          "index": 0,
+          "timingState": "before-recorded-request",
+          "timingComplete": false,
+          "durations": {
+            "connectSeconds": null,
+            "dnsSeconds": null,
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": null,
+            "requestSeconds": null,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "tlsSeconds": null
+          },
+          "durationStates": {
+            "connectSeconds": 3,
+            "dnsSeconds": 3,
+            "fetchSeconds": 2,
+            "fetchToRequestSeconds": 2,
+            "requestSeconds": 3,
+            "responseSeconds": 3,
+            "responseWaitSeconds": 3,
+            "tlsSeconds": 3
+          },
+          "transportBytes": {
+            "requestBody": 0,
+            "requestHeaders": 0,
+            "responseBody": 0,
+            "responseHeaders": 0
+          },
+          "serverRequestID": null
+        }
+      ]
+    }
+  ],
+  "strictProxyEvidencePassed": false,
+  "strictFailures": [
+    {
+      "code": "incomplete-request-correlation"
+    }
+  ],
+  "unmatchedServerRequestIDs": [],
+  "rootCauseEstablished": false,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "interpretation": "Timing states describe Foundation observations, not why a phase is absent. A parsed server receipt binds a proxy task, not its individual transactions. Complete handler logs cover admitted application connections, not TCP backlog, packets, partial requests or physical delivery. Unobserved trace IDs and zero counts do not prove no transmission. No missing timestamp or receipt is synthesized; strict failures remain."
+}

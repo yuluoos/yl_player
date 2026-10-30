@@ -1,0 +1,31 @@
+{
+  "baseCommit": "7a3f5a12",
+  "red": {
+    "tests": 6,
+    "failures": 6,
+    "reason": "function absent"
+  },
+  "initialValidation": {
+    "tests": 6,
+    "passed": 5,
+    "errors": 1,
+    "reason": "test used unsupported nested metrics v1 under outer v7"
+  },
+  "correctedFixture": {
+    "tests": 1,
+    "passed": 1,
+    "change": "nested metrics v2; implementation unchanged"
+  },
+  "review": {
+    "mode": "one-pass-read-only",
+    "findings": [],
+    "testsRun": false
+  },
+  "nativeTestsRun": false,
+  "originalReceiptsOverwritten": false,
+  "strictOutcomes": {
+    "historical": false,
+    "renewal": false
+  },
+  "capabilityAccepted": false
+}

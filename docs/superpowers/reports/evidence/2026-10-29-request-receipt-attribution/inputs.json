@@ -1,0 +1,38 @@
+{
+  "historical": [
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-triggered-downshift/media/normal-zero/proxy-requests.jsonl.gz",
+      "sha256": "36443c4eba49a6fac561892e1730f8543faeec9639c988cfea4690fd6b5d9317"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-triggered-downshift/media/normal-zero/requests.jsonl.gz",
+      "sha256": "ce99c73cd28dadab7a5317c9a35aea2639aa0ba0cbc00e76d194ba8c777c874a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-triggered-downshift/media/normal-zero/connection-lifecycle.json",
+      "sha256": "63ff1a6c4cd25ba1b99fc00c07c23236565e975ad137672c5fc99c3f55bbeddd"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-triggered-downshift/media/normal-zero/receipt.json.gz",
+      "sha256": "33e08d959ccb0eb9fa0d3ea22b7feab41dcd33741a4e5dbd3802f402d0cce1a2"
+    }
+  ],
+  "renewal": [
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-recovery-renewal/media/proxy-requests.jsonl.gz",
+      "sha256": "8422aac89cd626e03fb2b6713bb7081820729c6096605a4437eb705751c71e1a"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-recovery-renewal/media/requests.jsonl.gz",
+      "sha256": "ba406caae2cfeb6c9c67376923d895adc44f80f86317dc21e69b5640e28562d4"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-recovery-renewal/media/connection-lifecycle.json.gz",
+      "sha256": "785b7c4a23d1c587e277c54ece4afee2584eb617e0bd857063a5365a49325ecf"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-10-29-recovery-renewal/media/receipt.json.gz",
+      "sha256": "785058ace387a0510ae3e49f17dc68521c33b1057bb008d4a858d2cb1d004835"
+    }
+  ]
+}

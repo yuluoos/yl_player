@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "diagnosticOnly": true,
+  "serverCoverage": {
+    "version": 1,
+    "acceptedCount": 422,
+    "rejectedCount": 0,
+    "droppedRejections": 0,
+    "unrecordedRequests": 0,
+    "parsedRequests": 422,
+    "withoutParsedRequest": [],
+    "unclosedConnections": [],
+    "closedReasonCounts": {
+      "handlerEnded": 422
+    },
+    "complete": true,
+    "retryCauseProven": false,
+    "capabilityAccepted": false,
+    "interpretation": "Server-local elapsed time from listener construction, not profile time. handlerEnded means only that the handler returned; it does not prove peer FIN/reset or identify a URLSession transaction.",
+    "allAcceptedConnectionsHaveParsedRequests": true
+  },
+  "requests": [
+    {
+      "proxyID": "89485701-B33F-47A0-A478-547C4BF0BFB7",
+      "requestID": 4,
+      "correlationID": "EDC49E21-1A90-4E27-B099-FC26D193D702",
+      "outcome": "complete",
+      "cancelCause": 0,
+      "taskOutcome": 0,
+      "serverRequestID": 341,
+      "serverReceipt": "parsed-request-observed",
+      "physicalReceipt": "unknown",
+      "metricAvailability": "reported",
+      "taskSeconds": 0.1366560459136963,
+      "allTransactionTimingsComplete": false,
+      "finalTransactionTimingComplete": true,
+      "transactions": [
+        {
+          "index": 0,
+          "timingState": "request-recorded-response-unobserved",
+          "timingComplete": false,
+          "durations": {
+            "connectSeconds": 0.06400001049041748,
+            "dnsSeconds": 0,
+            "fetchSeconds": null,
+            "fetchToRequestSeconds": 0.06490492820739746,
+            "requestSeconds": 1.0013580322265625e-05,
+            "responseSeconds": null,
+            "responseWaitSeconds": null,
+            "tlsSeconds": null
+          },
+          "durationStates": {
+            "connectSeconds": 0,
+            "dnsSeconds": 0,
+            "fetchSeconds": 2,
+            "fetchToRequestSeconds": 0,
+            "requestSeconds": 0,
+            "responseSeconds": 3,
+            "responseWaitSeconds": 2,
+            "tlsSeconds": 3
+          },
+          "transportBytes": {
+            "requestBody": 0,
+            "requestHeaders": 310,
+            "responseBody": 0,
+            "responseHeaders": 0
+          },
+          "serverRequestID": null
+        },
+        {
+          "index": 1,
+          "timingState": "complete-network-timing",
+          "timingComplete": true,
+          "durations": {
+            "connectSeconds": 0.0140000581741333,
+            "dnsSeconds": 0,
+            "fetchSeconds": 0.03137803077697754,
+            "fetchToRequestSeconds": 0.014577984809875488,
+            "requestSeconds": 0.00029098987579345703,
+            "responseSeconds": 0.00934302806854248,
+            "responseWaitSeconds": 0.007166028022766113,
+            "tlsSeconds": null
+          },
+          "durationStates": {
+            "connectSeconds": 0,
+            "dnsSeconds": 0,
+            "fetchSeconds": 0,
+            "fetchToRequestSeconds": 0,
+            "requestSeconds": 0,
+            "responseSeconds": 0,
+            "responseWaitSeconds": 0,
+            "tlsSeconds": 3
+          },
+          "transportBytes": {
+            "requestBody": 0,
+            "requestHeaders": 310,
+            "responseBody": 8398,
+            "responseHeaders": 584
+          },
+          "serverRequestID": null
+        }
+      ]
+    }
+  ],
+  "strictProxyEvidencePassed": false,
+  "strictFailures": [
+    {
+      "code": "incomplete-successful-transactions",
+      "proxyID": "89485701-B33F-47A0-A478-547C4BF0BFB7",
+      "requestID": 4
+    }
+  ],
+  "unmatchedServerRequestIDs": [],
+  "rootCauseEstablished": false,
+  "capabilityAccepted": false,
+  "physicalOutputVerified": false,
+  "interpretation": "Timing states describe Foundation observations, not why a phase is absent. A parsed server receipt binds a proxy task, not its individual transactions. Complete handler logs cover admitted application connections, not TCP backlog, packets, partial requests or physical delivery. Unobserved trace IDs and zero counts do not prove no transmission. No missing timestamp or receipt is synthesized; strict failures remain."
+}
