@@ -852,7 +852,12 @@ a limit, truncation, or a nonzero kernel-drop count keeps capture incomplete.
 HTTP headers. `packet-summary.json` exports opaque connection tokens, TCP flags,
 sequence/acknowledgment numbers, payload lengths and exact request correlation
 IDs. It handles split/out-of-order/retransmitted headers, and leaves gaps or
-ambiguous tuples unknown. The receipt's `packetAttributionObservation` binds a
+ambiguous tuples unknown. If SYN-ACKs acknowledging the same opening SYN use
+different server sequence numbers, the flow reports `multiple-syn-ack-sequences`.
+Its transaction binding is `ambiguous`. Task-level header evidence can still
+be recovered from contiguous request bytes acknowledging one of those replies.
+Repeated SYN-ACKs using the same sequence number count as retransmissions.
+The receipt's `packetAttributionObservation` binds a
 transaction by its unique connection token, or records task-level header evidence
 by exact correlation ID. A task-level match never assigns an endpoint-absent
 transaction by order. Packet attribution preserves the transaction layer's

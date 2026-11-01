@@ -130,6 +130,29 @@ class PacketEvidenceTests(unittest.TestCase):
         self.assertEqual(flow['http']['reason'], 'conflicting-retransmission')
         self.assertEqual(flow['http']['requests'], [])
 
+    def test_syn_ack_retransmission_and_competing_replies(self):
+        for reply, tail_ack, binding, has_header in (
+                (900, 901, 'observed', True),
+                (1000, 901, 'ambiguous', True),
+                (1000, 1001, 'ambiguous', False)):
+            with self.subTest(reply=reply, tail_ack=tail_ack):
+                summary = self.summarize([
+                    packet(), packet(900, 18, server=True, ack=101),
+                    packet(101, 24, REQUEST[:20], ack=901),
+                    packet(), packet(reply, 18, server=True, ack=101),
+                    packet(121, 24, REQUEST[20:], ack=tail_ack)])
+                flow = summary['flows'][0]
+                boundaries = [dict(proxyID='abc', requestID=4, correlationID=CID)]
+                transaction = dict(index=0, connectionToken=flow['connectionToken'],
+                                   proxyConnection=False, binding='unmatched')
+                connections = dict(requests=[dict(proxyID='abc', requestID=4,
+                                                   transactions=[transaction])])
+                row = packet_evidence.attribute_packets(summary, boundaries, connections)['requests'][0]
+                self.assertEqual(row['transactions'][0]['binding'], binding)
+                self.assertEqual(row['transactions'][0]['packetObserved'], True if binding == 'observed' else None)
+                self.assertEqual(row['transactions'][0]['flowIndices'], [0])
+                self.assertEqual(row['correlationPacketObserved'], True if has_header else None)
+
     def test_sequence_wrap_and_syn_payload(self):
         flow = self.summarize([packet(0xfffffffe, 2, REQUEST[:2]), packet(1, 24, REQUEST[2:])])['flows'][0]
         self.assertEqual(flow['http']['requests'][0]['correlationID'], CID)

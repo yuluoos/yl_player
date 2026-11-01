@@ -14,6 +14,7 @@ from transaction_connections import connection_token
 
 MAX_CAPTURE_BYTES = 64 * 1024 * 1024
 MAX_PACKETS = 100000
+MAX_HTTP_REQUESTS = 10000
 FLAGS = ((1, 'FIN'), (2, 'SYN'), (4, 'RST'), (8, 'PSH'), (16, 'ACK'),
          (32, 'URG'), (64, 'ECE'), (128, 'CWR'), (256, 'NS'))
 UUID = re.compile(rb'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}')
@@ -124,11 +125,34 @@ def _http(opening_sequences, segments):
             return result
         result['requests'].append(dict(method=request[1].decode('ascii'),
                                        correlationID=correlations[0].decode('ascii').lower() if correlations else None))
-        if len(result['requests']) > 10000:
+        if len(result['requests']) > MAX_HTTP_REQUESTS:
             raise ValueError('HTTP request summary limit exceeded')
         position = end + 4
     result.update(status='unknown' if gap else 'parsed', reason='stream-gap' if gap else None)
     return result
+
+
+def _flow_evidence(openings, segments_by_ack, packets):
+    if len(openings) == 1:
+        opening_ack = (next(iter(openings)) + 1) & 0xffffffff
+        replies = {p['sequenceNumber'] for p in packets
+                   if p['direction'] == 'server' and 'SYN' in p['flags'] and 'ACK' in p['flags']
+                   and p['acknowledgmentNumber'] == opening_ack}
+        if len(replies) > 1:
+            # Each reply gives the client a different initial ACK. Keep headers
+            # observed under one reply, without splicing competing handshakes.
+            requests = []
+            for sequence in sorted(replies):
+                segments = segments_by_ack.get((sequence + 1) & 0xffffffff, [])
+                requests.extend(_http(openings, segments)['requests'])
+                if len(requests) > MAX_HTTP_REQUESTS:
+                    raise ValueError('HTTP request summary limit exceeded')
+            reason = 'multiple-syn-ack-sequences'
+            return reason, dict(status='unknown', reason=reason, requests=requests)
+    state = ('multiple-opening-syn' if len(openings) > 1 else
+             'single-opening-syn' if openings else 'missing-opening-syn')
+    segments = [segment for group in segments_by_ack.values() for segment in group]
+    return state, _http(openings, segments)
 
 
 def summarize_pcap(path, *, key: bytes, server_host: str, server_port: int):
@@ -163,7 +187,7 @@ def summarize_pcap(path, *, key: bytes, server_host: str, server_port: int):
             flows[token] = dict(connectionToken=token, packets=[],
                                client=dict(packetCount=0, payloadBytes=0, flagCounts={}),
                                server=dict(packetCount=0, payloadBytes=0, flagCounts={}))
-            streams[token] = (set(), [])
+            streams[token] = (set(), {})
         flow = flows[token]
         side = flow[direction]
         side['packetCount'] += 1
@@ -175,16 +199,14 @@ def summarize_pcap(path, *, key: bytes, server_host: str, server_port: int):
                                    direction=direction, flags=names, sequenceNumber=sequence,
                                    acknowledgmentNumber=acknowledgment, payloadBytes=len(payload)))
         if direction == 'client':
-            openings, segments = streams[token]
+            openings, segments_by_ack = streams[token]
             if flags & 2 and not flags & 16:
                 openings.add(sequence)
             if payload:
-                segments.append(((sequence + bool(flags & 2)) & 0xffffffff, payload))
+                segment = ((sequence + bool(flags & 2)) & 0xffffffff, payload)
+                segments_by_ack.setdefault(acknowledgment if flags & 16 else None, []).append(segment)
     for token, flow in flows.items():
-        openings, segments = streams[token]
-        flow['connectionInstanceStatus'] = ('multiple-opening-syn' if len(openings) > 1 else
-                                            'single-opening-syn' if openings else 'missing-opening-syn')
-        flow['http'] = _http(openings, segments)
+        flow['connectionInstanceStatus'], flow['http'] = _flow_evidence(*streams[token], flow['packets'])
     return dict(version=1, availability='reported', captureSHA256=hashlib.sha256(data).hexdigest(),
                 packetCount=packet_count, ignoredPacketCount=ignored, flows=list(flows.values()),
                 unsentProven=False, physicalDeliveryProven=False,
@@ -230,7 +252,8 @@ def attribute_packets(packet_summary, boundaries, connection_observation):
                 binding = transaction['binding']
             elif not indices:
                 binding = 'not-observed-in-capture'
-            elif len(indices) != 1 or flows[indices[0]]['connectionInstanceStatus'] == 'multiple-opening-syn':
+            elif len(indices) != 1 or flows[indices[0]]['connectionInstanceStatus'] in (
+                    'multiple-opening-syn', 'multiple-syn-ack-sequences'):
                 binding = 'ambiguous'
             elif flows[indices[0]]['connectionInstanceStatus'] == 'missing-opening-syn':
                 binding = 'missing-opening-syn'
@@ -247,7 +270,7 @@ def attribute_packets(packet_summary, boundaries, connection_observation):
                              correlationFlowIndices=correlation_indices, transactions=transactions))
     return dict(version=1, requests=requests, unsentProven=False, rootCauseEstablished=False,
                 interpretation='Exact captured correlation headers establish task-level packet observation only. '
-                'Transactions require a unique endpoint-token flow with a single distinct opening SYN; '
+                'Transactions require a unique endpoint-token flow with one opening SYN sequence and no competing SYN-ACK sequences; '
                 'established lifecycle tuple ambiguity remains unbound even in a partial capture. '
                 'flow indices on unbound transactions identify candidates only. '
                 'Unknown or not-observed-in-capture never means unsent. No retry or cancellation cause is established.')
