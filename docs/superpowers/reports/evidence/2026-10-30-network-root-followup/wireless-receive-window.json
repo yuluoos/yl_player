@@ -1,0 +1,69 @@
+{
+  "source": "Mac unified log, selected HighBand unicast counters and broken-backhaul events",
+  "windowLocal": [
+    "2026-10-30 02:54:25-0700",
+    "2026-10-30 02:55:05-0700"
+  ],
+  "entries": [
+    {
+      "timestamp": "2026-10-30 02:54:27.218749-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=40 rxBeaconObss=273 rxDataUcastMbss=147 rxMgmtUcastMbss=0 rxCNTRLUcast=476 txACKFrm=0 txBACK=121 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=136 rxMgmtMcast=384 rxDrop20s=12"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:32.231353-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=38 rxBeaconObss=226 rxDataUcastMbss=332 rxMgmtUcastMbss=0 rxCNTRLUcast=1338 txACKFrm=0 txBACK=323 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=45 rxMgmtMcast=327 rxDrop20s=9"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:37.236533-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=43 rxBeaconObss=260 rxDataUcastMbss=25 rxMgmtUcastMbss=0 rxCNTRLUcast=235 txACKFrm=0 txBACK=23 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=38 rxMgmtMcast=383 rxDrop20s=9"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:39.119810-0700",
+      "eventMessage": "posting recommendation code: 3, probe timeout: 20"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:39.125895-0700",
+      "eventMessage": "[corewifi] [bbh] Fetched SYMPTOMS_INFO_BROKEN_BACKHAUL_STATE event (seqno=1023, type=broken-backhaul, timestamp=815046879.123313, cause=broken-backhaul, code=3, info={\n    \"aon-rnf\" = 0;\n    \"probe-timeout\" = 20;\n})"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:41.139118-0700",
+      "eventMessage": "posting recommendation code: 4, probe timeout: 20"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:41.142929-0700",
+      "eventMessage": "[corewifi] [bbh] Fetched SYMPTOMS_INFO_BROKEN_BACKHAUL_STATE event (seqno=1024, type=broken-backhaul, timestamp=815046881.139209, cause=broken-backhaul, code=4, info={\n    \"aon-rnf\" = 0;\n    \"probe-timeout\" = 20;\n})"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:42.241826-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=41 rxBeaconObss=329 rxDataUcastMbss=0 rxMgmtUcastMbss=0 rxCNTRLUcast=287 txACKFrm=0 txBACK=0 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=74 rxMgmtMcast=442 rxDrop20s=15"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:47.247948-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=37 rxBeaconObss=293 rxDataUcastMbss=0 rxMgmtUcastMbss=0 rxCNTRLUcast=875 txACKFrm=0 txBACK=0 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=49 rxMgmtMcast=412 rxDrop20s=32"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:51.241964-0700",
+      "eventMessage": "Waiting for 1 ICMP probes to finish"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:51.242125-0700",
+      "eventMessage": "posting recommendation code: 0, probe timeout: 20"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:51.253675-0700",
+      "eventMessage": "[corewifi] [bbh] Fetched SYMPTOMS_INFO_BROKEN_BACKHAUL_STATE event (seqno=1025, type=broken-backhaul, timestamp=815046891.252635, cause=broken-backhaul, code=0, info={\n    \"aon-rnf\" = 0;\n    \"probe-timeout\" = 20;\n})"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:52.252567-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=40 rxBeaconObss=301 rxDataUcastMbss=0 rxMgmtUcastMbss=0 rxCNTRLUcast=1186 txACKFrm=0 txBACK=0 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=42 rxMgmtMcast=408 rxDrop20s=38"
+    },
+    {
+      "timestamp": "2026-10-30 02:54:57.257896-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=39 rxBeaconObss=258 rxDataUcastMbss=0 rxMgmtUcastMbss=0 rxCNTRLUcast=1080 txACKFrm=0 txBACK=0 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=133 rxMgmtMcast=360 rxDrop20s=40"
+    },
+    {
+      "timestamp": "2026-10-30 02:55:02.263293-0700",
+      "eventMessage": "[corewifi] LQM-WiFi: (HighBand) rxBeaconMbss=38 rxBeaconObss=194 rxDataUcastMbss=1192 rxMgmtUcastMbss=0 rxCNTRLUcast=1439 txACKFrm=1 txBACK=258 ctxFifoFull=0 ctxFifo2Full=0 rxDataMcast=198 rxMgmtMcast=301 rxDrop20s=87"
+    }
+  ]
+}

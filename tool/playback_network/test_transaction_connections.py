@@ -36,6 +36,19 @@ class TransactionConnectionTests(unittest.TestCase):
         self.assertEqual(connections.connection_token(b'0123456789abcdef'*4,('127.0.0.1',54321),('127.0.0.1',8080)),
             'b93437e984e46bdf0227cb06708354812141a850a8190a619cc23d4cfe6dbb8e')
 
+    def test_v3_preserves_exact_foundation_task_identity_without_inventing_legacy_identity(self):
+        self.sidecar[0].update(version=3,foundationTaskID='<87654321-1234-1234-1234-123456789abc>.<1>')
+        self.sidecar[0]['transactions'][0]['endpointFields']=15
+        result=self.summarize()
+        self.assertEqual(result['requests'][0]['foundationTaskID'],self.sidecar[0]['foundationTaskID'])
+        self.sidecar[0]['foundationTaskID']=None
+        self.assertIsNone(self.summarize()['requests'][0]['foundationTaskID'])
+        for value in ('', 'http://private?token=secret', '<87654321-1234-1234-1234-123456789abc>.<1> secret', 1):
+            self.sidecar[0]['foundationTaskID']=value
+            with self.subTest(value=value),self.assertRaises(ValueError):self.summarize()
+        self.sidecar[0].pop('foundationTaskID');self.sidecar[0]['version']=2
+        self.assertNotIn('foundationTaskID',self.summarize()['requests'][0])
+
     def test_binds_only_unique_token_and_keeps_ambiguous_proxy_and_unknown_unbound(self):
         result=self.summarize(); transaction=result['requests'][0]['transactions'][0]
         self.assertEqual(transaction['connectionId'],2);self.assertEqual(transaction['binding'],'bound');self.assertTrue(result['complete'])

@@ -1,0 +1,52 @@
+{
+  "provenance": "Transcription of the command results observed on 2026-10-30. This is a session summary, not an original receipt or pcap.",
+  "fixture": {
+    "path": "tool/playback_network/network_profile.py",
+    "beforeSHA256": "3f0fcaebc798dc002874d7b04b3b1b0fe6f5dbb3c993c7868226ccb02cb7be9a",
+    "afterSHA256": "51deae5f215885a7bc839131829cf8c7e2e9b5e9d9d20e9627ace7861ffb8b62",
+    "handlerLimit": 8
+  },
+  "fixtureRuns": [
+    {
+      "backlog": 8,
+      "accepted": 8,
+      "synCookieSendCounterDelta": 2,
+      "packetsCaptured": 64,
+      "kernelDrops": 0,
+      "exitCode": 1
+    },
+    {
+      "backlog": 32,
+      "accepted": 8,
+      "synCookieSendCounterDelta": 0,
+      "packetsCaptured": 64,
+      "kernelDrops": 0,
+      "exitCode": 0
+    }
+  ],
+  "serverUnitTests": {
+    "passed": 37,
+    "exitCode": 0
+  },
+  "listener32": {
+    "captureStarted": false,
+    "playbackStarted": false,
+    "passed": false
+  },
+  "listener32Client": {
+    "sameBinaryHashesAsNextinOnAuthorized": true,
+    "passed": true,
+    "exitCode": 0,
+    "packetCapturePerformed": false,
+    "taskCount": 418,
+    "taskIdentities": 418,
+    "exactClientLogMatches": 418,
+    "clientLogRows": 49386,
+    "targetCount": 0,
+    "positionSeconds": 120.025036224,
+    "completed": true,
+    "automaticAttempts": 2
+  },
+  "originalListenerRunFilesAvailable": false,
+  "deviceReexportError": "CoreDeviceError 4000: device connection could not be established"
+}

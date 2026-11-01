@@ -1,0 +1,14 @@
+{
+  "baseline": "6698ff7e",
+  "tools": {
+    "tool/playback_network/abr_accesslog.py": "00fe577859607a8fcf1bb334e67c4f0465ed756a62d337716588cfa00d4069e2",
+    "tool/playback_network/abr_device.py": "41b7228d7d62da4238890e0a5896db4bfa2e5fa7cfca7bba3da97771126f3522",
+    "tool/playback_network/packet_capture.py": "0daf226d79b38964f9ece01ddc57ed3f798f4fef22e1d38fd20bcb7ee1e4ab46",
+    "tool/playback_network/packet_evidence.py": "35a6c03633e131fa98f4e5c89eb0c8ef4b2939476bd878aecb0cf5e428c75af2",
+    "tool/playback_network/transaction_connections.py": "8edd07166a5192b7b9a47cc8b3a1c0ec504b287a8fd01d805e76549a63be41b3"
+  },
+  "diagnosticManifestChange": {
+    "CFNETWORK_DIAGNOSTICS": "3"
+  },
+  "binaryReuse": "previous iPhone candidate, before audio-disposal change; no current-main binary acceptance"
+}

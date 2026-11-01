@@ -208,7 +208,9 @@ def owned_bind_host(value):
 
 class FixtureServer(ThreadingHTTPServer):
     daemon_threads = False
-    request_queue_size = 8
+    # Keep the listener queue separate from the eight-handler admission limit.
+    # A queue of eight triggered macOS SYN cookies in an eight-connection burst.
+    request_queue_size = 32
 
     def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None, connection_mode="close", connection_key=None):
         if connection_mode not in ("close", "http11-close", "http11-keepalive"):

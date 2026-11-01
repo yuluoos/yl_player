@@ -658,7 +658,7 @@ final class YlHlsMediaProxy: NSObject, URLSessionDataDelegate {
   #if DEBUG
   func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
     let trace = lock.withLock { diagnosticTaskTraces[task.taskIdentifier] }
-    trace?.metrics(metrics)
+    trace?.metrics(metrics, task: task)
   }
   #endif
 
@@ -887,6 +887,14 @@ private extension NSLock {
 struct YlHlsProxyConnectionCapture {
   let key: Data
   let observer: ([String: Any]) -> Void
+  // Foundation's diagnostic description is not a public identity contract.
+  // Export only the observed UUID/task-number form, never arbitrary description
+  // text (which could contain a URL). Other formats remain explicitly unknown.
+  static func taskIdentity(_ description: String) -> String? {
+    let pattern = "^LocalDataTask <[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12}>\\.<[1-9][0-9]*>\\z"
+    guard description.range(of: pattern, options: .regularExpression) != nil else { return nil }
+    return String(description.dropFirst("LocalDataTask ".count)).lowercased()
+  }
   static func token(key: Data, localAddress: String?, localPort: Int?,
     remoteAddress: String?, remotePort: Int?) -> String? {
     guard let localAddress, let local = IPv4Address(localAddress),
@@ -954,7 +962,7 @@ final class YlHlsProxyRequestTrace {
   static func reportedByteCount(_ value: Int64) -> Any {
     value >= 0 ? value as Any : NSNull()
   }
-  func metrics(_ metrics: URLSessionTaskMetrics) {
+  func metrics(_ metrics: URLSessionTaskMetrics, task: URLSessionTask) {
     if let connections {
       let transactions: [[String: Any]] = metrics.transactionMetrics.prefix(32).enumerated().map { index, t in
         let fields = (t.localAddress == nil ? 0 : 1) | (t.localPort == nil ? 0 : 2)
@@ -967,7 +975,8 @@ final class YlHlsProxyRequestTrace {
       }
       // Delegate metrics arrive before task completion; capture drain therefore
       // covers this sidecar delivery as well as the main request observer.
-      connections.observer(["version": 2, "proxyID": proxyID, "requestID": requestID,
+      connections.observer(["version": 3, "proxyID": proxyID, "requestID": requestID,
+        "foundationTaskID": YlHlsProxyConnectionCapture.taskIdentity(task.description).map { $0 as Any } ?? NSNull(),
         "correlationID": correlationID, "transactions": transactions])
     }
     func duration(_ start: Date?, _ end: Date?) -> Any {

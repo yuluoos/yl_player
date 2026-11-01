@@ -27,9 +27,14 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
     require(isinstance(sidecar,list) and len(sidecar)<=len(main))
     attached={}
     for row in sidecar:
-        require(isinstance(row,dict) and set(row)=={'version','proxyID','requestID','correlationID','transactions'})
-        require(type(row['version']) is int and row['version'] in (1,2) and isinstance(row['proxyID'],str) and
+        require(isinstance(row,dict) and set(row)=={'version','proxyID','requestID','correlationID','transactions'} |
+                ({'foundationTaskID'} if row.get('version')==3 else set()))
+        require(type(row['version']) is int and row['version'] in (1,2,3) and isinstance(row['proxyID'],str) and
                 type(row['requestID']) is int and isinstance(row['correlationID'],str))
+        if row['version']==3:
+            task=row['foundationTaskID']
+            require(task is None or isinstance(task,str) and
+                    re.fullmatch(r'<[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}>\.<[1-9][0-9]*>',task))
         require(re.fullmatch(r'[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}',row['correlationID']))
         ident=identity(row);require(ident in main and ident not in attached)
         require(row['correlationID'].lower()==main[ident].get('correlationID','').lower())
@@ -38,12 +43,12 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
         transactions=row['transactions'];require(isinstance(transactions,list) and len(transactions)==len(metrics['transactions']))
         for index,item in enumerate(transactions):
             require(isinstance(item,dict) and set(item)=={'index','connectionToken','proxyConnection','responsePresent'} |
-                    ({'endpointFields'} if row['version']==2 else set()))
+                    ({'endpointFields'} if row['version']>=2 else set()))
             require(type(item['index']) is int and item['index']==index)
             require(type(item['proxyConnection']) is bool and type(item['responsePresent']) is bool)
             require(item['connectionToken'] is None or isinstance(item['connectionToken'],str) and
                     re.fullmatch('[0-9a-f]{64}',item['connectionToken']))
-            if row['version']==2:
+            if row['version']>=2:
                 mask=item['endpointFields']
                 require(type(mask) is int and 0<=mask<=15)
                 require(item['connectionToken'] is None or mask==15)
@@ -58,7 +63,7 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
         else:
             for item in extra['transactions']:
                 token=item['connectionToken'];matches=tokens.get(token,[])
-                missing_endpoint=('unsupported-endpoint' if extra['version']==2 and item['endpointFields']==15
+                missing_endpoint=('unsupported-endpoint' if extra['version']>=2 and item['endpointFields']==15
                                   else 'endpoint-unavailable')
                 binding=('proxy' if item['proxyConnection'] else missing_endpoint if token is None else
                          'ambiguous' if len(matches)>1 else 'unmatched' if not matches else 'bound')
@@ -66,6 +71,8 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
                 complete=complete and binding=='bound'
             complete=complete and not validated[ident]['transactionMetrics']['truncated']
         results.append(dict(proxyID=row['proxyID'],requestID=row['requestID'],availability=availability,transactions=transactions))
+        if extra is not None and extra['version']==3:
+            results[-1]['foundationTaskID']=extra['foundationTaskID']
     return dict(version=1,availability='reported',complete=bool(complete),requests=results,
         retryCauseProven=False,unsentProven=False,capabilityAccepted=False,
         interpretation='Only a unique capture-scoped endpoint token binds a transaction to an accepted connection. Missing metrics, unavailable or unsupported endpoints, proxies, unmatched and repeated tuples remain unbound; zero transactions never proves no packets.')

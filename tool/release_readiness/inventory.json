@@ -283,7 +283,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlPreparedFallback.swift": "2090ca0bbb76e602009be6f315487a89155717351d877870f8aa08a1a05b1be7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsHeaderPolicy.swift": "414861f9e35f5135a2cfec62dc90ca8aa5c6deef9ac5c6caa6ba4f3255d55707",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsManifestRewriter.swift": "5c806a358f4673813909288cdaf015dad84d3a83538099888071c24eef8cc925",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "986b4858bd86c8069746c4b59d2963e6cb6c816e7d3b25645f11e744b36e7dcc",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsMediaProxy.swift": "853a63ce7c3c03beee433f032b4a2d531bcffd8a6dc421810adc4d0ceca91a45",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsResourceLoader.swift": "18542c89b6e5d488333c48ec9c889547a32f0f1d75d9a2231cc895bd3e80d2ad",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/HLS/YlHlsURLCodec.swift": "b7b8d0e4e2dbe1d4f8ffb4a997caccd9b071bbda61943aa67ef25a289b0ab2c1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Metrics/YlBackendStateEncoder.swift": "85fa97a6426c7079829dbbb3a543fa3d4229b20a9afcf36a02751586a909ae6d",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "38f0ed573ad716dbce35befebd58f2effad155b0722cc88feaf6d6feee596ee6"
+    "sha256": "a7c6b364f251cf469d07d5cef398198e71769e837be9e21268f7ec43b573fff7"
   },
   "evidence": {
     "p01": {
@@ -1028,6 +1028,11 @@
       "path": "docs/superpowers/reports/2026-10-30-audio-disposal.md",
       "sha256": "8eeacbedef9608b501e77bb17be9a5e754adee1b679f28f0856ad9b4591ca8cf",
       "kind": "report"
+    },
+    "network-root-followup-20261030": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-30-network-root-followup.md",
+      "sha256": "b14f46b91210859393162d91aae1bc008a946e4dae1b91e4cdf38f2107e63df2"
     }
   },
   "rows": [
@@ -1072,10 +1077,10 @@
         "ios-public-race-20261028",
         "ios-public-transport-20261028",
         "abr-main-merge-20261029",
-        "packet-followup-20261030"
+        "network-root-followup-20261030"
       ],
       "acceptance": null,
-      "nextAction": "reproduce-endpoint-absent-or-response-missing-transactions-with-complete-packets-retain-physical-output-gaps"
+      "nextAction": "localize-wireless-unicast-stall-with-ap-or-second-path-evidence-retain-historical-cancellation-and-physical-output-gaps"
     },
     {
       "requirement": "CAP-ABR",

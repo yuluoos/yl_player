@@ -2,6 +2,7 @@
 import AVFoundation
 import CoreImage
 import Network
+import OSLog
 import XCTest
 #if os(iOS)
 import UIKit
@@ -1338,6 +1339,14 @@ final class YlDashResourceLoaderTests: XCTestCase {
     let captureDeviceKind = "local"
     let directory = URL(fileURLWithPath: rawDirectory)
     #endif
+    let clientLogStart = Date()
+    defer {
+      if env["YL_ABR_PROBE_CLIENT_LOG"] == "1" {
+        do { try AbrClientNetworkLog.write(since: clientLogStart,
+          to: directory.appendingPathComponent("client-network.jsonl")) }
+        catch { XCTFail("Current-process network log export failed: \(error)") }
+      }
+    }
     let proxyBoundaryFile = try AbrProxyBoundaryFile(directory.appendingPathComponent("proxy-requests.jsonl"))
     let connectionFile = try env["YL_ABR_PROBE_CONNECTION_KEY"].map { _ in
       try AbrProxyBoundaryFile(directory.appendingPathComponent("transaction-connections.jsonl"))
@@ -4665,6 +4674,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertEqual(captured.count, 2); XCTAssertEqual(connectionRows.count, 2)
     let queued = try XCTUnwrap(captured.first { $0["requestID"] as? Double == 2 })
     let queuedLink = try XCTUnwrap(connectionRows.first { $0["requestID"] as? Int == 2 })
+    let taskIDs = try connectionRows.map { try XCTUnwrap($0["foundationTaskID"] as? String) }
+    XCTAssertEqual(Set(taskIDs).count, 2)
+    XCTAssertTrue(try XCTUnwrap(queuedLink["foundationTaskID"] as? String).hasSuffix(".<2>"))
     let transactions = try XCTUnwrap(queuedLink["transactions"] as? [[String: Any]])
     XCTAssertTrue(transactions.allSatisfy { $0["connectionToken"] is NSNull })
     XCTAssertTrue(transactions.allSatisfy { ($0["endpointFields"] as? Int) != 15 })
@@ -4682,6 +4694,13 @@ final class YlDashResourceLoaderTests: XCTestCase {
   }
 
   func testProxyTransactionsPreserveMissingResponseDatesAfterOwnedConnectionClose() throws {
+    let clientLogStart = Date()
+    let knownID = "<87654321-ABCD-1234-1234-123456789ABC>.<17>"
+    XCTAssertEqual(YlHlsProxyConnectionCapture.taskIdentity("LocalDataTask " + knownID), knownID.lowercased())
+    for description in ["http://private?token=secret", "LocalDataTask " + knownID + " secret",
+      "LocalDataTask " + knownID + "\n", "LocalDataTask <invalid>.<17>"] {
+      XCTAssertNil(YlHlsProxyConnectionCapture.taskIdentity(description))
+    }
     let key = Data(UUID().uuidString.utf8)
     let server = try DashHTTPServer(connectionKey: key); defer { server.close() }
     server.handler = { _ in
@@ -4754,6 +4773,23 @@ final class YlDashResourceLoaderTests: XCTestCase {
     XCTAssertGreaterThan(try XCTUnwrap(lastBytes["responseHeaders"] as? Int64), 0)
     XCTAssertEqual(lastBytes["responseBody"] as? Int64, 4)
     let connectionRow = try XCTUnwrap(capturedLock.withLock { connectionRows.first })
+    XCTAssertEqual(connectionRow["version"] as? Int, 3)
+    let foundationTaskID = try XCTUnwrap(connectionRow["foundationTaskID"] as? String)
+    XCTAssertNotNil(foundationTaskID.range(of: "^<[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}>\\.<1>$", options: .regularExpression))
+    if ProcessInfo.processInfo.environment["YL_ABR_PROBE_CLIENT_LOG"] == "1" {
+      let logURL = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jsonl")
+      defer { try? FileManager.default.removeItem(at: logURL) }
+      try AbrClientNetworkLog.write(since: clientLogStart, to: logURL)
+      let data = try Data(contentsOf: logURL)
+      let lines = String(decoding: data, as: UTF8.self).split(separator: "\n")
+      let logs = try lines.map { try XCTUnwrap(JSONSerialization.jsonObject(with: Data($0.utf8)) as? [String: Any]) }
+      XCTAssertFalse(logs.isEmpty)
+      XCTAssertTrue(logs.allSatisfy { $0["pid"] as? Int32 == ProcessInfo.processInfo.processIdentifier })
+      XCTAssertTrue(logs.contains { ($0["message"] as? String)?.lowercased().contains(foundationTaskID) == true })
+      let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+      attachment.name = "current-process-network-log"; attachment.lifetime = .keepAlways
+      XCTContext.runActivity(named: "Only this process exposes the exact Foundation task") { $0.add(attachment) }
+    }
     let links = try XCTUnwrap(connectionRow["transactions"] as? [[String: Any]])
     XCTAssertEqual(links.count, 2)
     let tokens = try links.map { try XCTUnwrap($0["connectionToken"] as? String) }
@@ -6849,6 +6885,26 @@ private final class DashHeldBodyServer {
     listener.cancel(); pending.forEach { $0.cancel() }
   }
   deinit { close() }
+}
+
+private enum AbrClientNetworkLog {
+  static func write(since start: Date, to url: URL) throws {
+    let store = try OSLogStore(scope: .currentProcessIdentifier)
+    let entries = try store.getEntries(at: store.position(date: start),
+      matching: NSPredicate(format: "subsystem IN %@", ["com.apple.CFNetwork", "com.apple.network"]))
+    var data = Data()
+    var count = 0
+    for case let entry as OSLogEntryLog in entries {
+      let row: [String: Any] = ["timestamp": entry.date.timeIntervalSince1970,
+        "pid": entry.processIdentifier, "subsystem": entry.subsystem, "message": entry.composedMessage]
+      let encoded = try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]) + Data([10])
+      guard count < 100000, data.count + encoded.count <= 16 * 1024 * 1024 else {
+        throw CocoaError(.fileWriteOutOfSpace)
+      }
+      data.append(encoded); count += 1
+    }
+    try data.write(to: url, options: .atomic)
+  }
 }
 
 private final class AbrProxyBoundaryFile: @unchecked Sendable {
