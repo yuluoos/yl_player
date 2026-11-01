@@ -31,8 +31,7 @@ final class YlDashAudioTimeline: YlAudioPacketConverting {
   func decode(_ packet: YlCompressedAudioPacket, pts: Time) throws {
     guard !hasPendingOutput, packet.generation == generation else { throw invalid() }
     try decoder.register(pts, forMicroseconds: packet.ptsUs)
-    _ = try decoder.convert(packet: packet)
-    guard var decoded = decoder.lastOutput else { return }
+    guard var decoded = try decoder.convertTimed(packet: packet) else { return }
     if decoded.start < nextTime {
       guard let clipped = try YlDashPCMClipper.timed(decoded.buffer, pts: decoded.start,
         window: .init(start: nextTime, end: window.end)) else { return }

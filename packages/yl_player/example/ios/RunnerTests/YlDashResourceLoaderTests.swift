@@ -6603,8 +6603,14 @@ extension YlDashSampleSourceNativeTests {
           let input = try YlCompressedAudioPacket(data: packet.audioBytes(), ptsUs: pts.converted(to: 1_000_000, rounding: .floor),
             durationUs: packet.duration.converted(to: 1_000_000, rounding: .ceil), generation: 1)
           try timeline.decode(input, pts: pts)
+          let framesBeforeSubmission = frames
           while let submission = try timeline.nextSubmission() {
             let output = try XCTUnwrap(timeline.convert(packet: submission))
+            if framesBeforeSubmission == 0 && !timeline.hasPendingOutput {
+              let reservation = try XCTUnwrap(output.reservation)
+              XCTAssertGreaterThan(reservation.bytes, 0)
+              XCTAssertEqual(scope.ledger.snapshot.categories[.scheduledAudio], reservation.bytes)
+            }
             let pcm = try XCTUnwrap(output.payload as? AVAudioPCMBuffer), samples = try XCTUnwrap(pcm.floatChannelData?[0])
             let start = Int((Double(output.ptsUs) * 48000 / 1_000_000).rounded())
             XCTAssertEqual(start, frames, "No unrepresented gap or overlap")
@@ -6618,6 +6624,10 @@ extension YlDashSampleSourceNativeTests {
               }
             }
             frames += Int(pcm.frameLength)
+          }
+          if framesBeforeSubmission == 0 && frames > 0 {
+            XCTAssertEqual(scope.ledger.snapshot.categories[.scheduledAudio, default: 0], 0,
+              "After the caller releases the submitted PCM, the live timeline must return its byte budget")
           }
         }
       }

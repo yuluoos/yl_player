@@ -244,8 +244,8 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoPump.swift": "24448aa16dfd7313103a26efcd6be55c590385d1f3df88d034f28da7db02aaaf",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoReadinessTrace.swift": "8fd44afe6418b88716bcf69ee204dc2e87d2600ba7905eced7feb322cf827c2b",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoWindow.swift": "2ef00dbd238e274d13584162c158ef875da7c94842c4ef9fc5a8e8bdca019eec",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioConverter.swift": "c28ca8e7846ba13e4c39de779eb87830cf55a0241aea834b3a3e23b5357ff46d",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioTimeline.swift": "ecbeeb95c425121137e6d279ed8a815cfad35f18a99981e31f38112bf7a0dc10",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioConverter.swift": "87fd0c211b46fb20b46ab286c84530182662758115c1b717e582a02abf0a8a7a",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioTimeline.swift": "448fb0bdd35016276ff36def7e76e9c00ba5ada07d2ed2efece6ec3ccd23a04d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashDocument.swift": "7696c3b715aa1987087880b8c9b553fb60f3d34c298a3347895d3b603d3410bd",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashHlsCompiler.swift": "028eff77e07896b0b1d69d78cfdfe8956a4812c4a69d6c83942b291e5e8a165c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashManagedResourceHop.swift": "bba91a3fd55cf600961e869213efe1649e59322a001523b5802972fdcf44f390",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "7b024a449b41a43767d3e851be758fcb56780223c39dea4823fa49ee2938f12b"
+    "sha256": "c470686323315a26f83c8b14c7699da29a337e0c380df3e3a944d86fa0a110ca"
   },
   "evidence": {
     "p01": {
@@ -1038,6 +1038,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-31-audio-byte-admission.md",
       "sha256": "d33dd340abb11666d5624ab024b60ec9c70acf901652b9dae3cd6f68ccb66e52"
+    },
+    "dash-pcm-ownership-20261031": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-31-dash-pcm-ownership.md",
+      "sha256": "8ffbfe2575b4a8391c43fef50f1632f780d6e524361a61ad63904fbade085070"
     }
   },
   "rows": [
@@ -2293,7 +2298,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "audio-disposal-20261030",
-        "audio-byte-admission-20261031"
+        "audio-byte-admission-20261031",
+        "dash-pcm-ownership-20261031"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -2311,7 +2317,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "audio-disposal-20261030",
-        "audio-byte-admission-20261031"
+        "audio-byte-admission-20261031",
+        "dash-pcm-ownership-20261031"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"

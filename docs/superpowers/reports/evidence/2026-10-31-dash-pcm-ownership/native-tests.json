@@ -1,0 +1,45 @@
+{
+  "baseline": "83e2f0e419d292c2fa465a0eae76ac1be97a8eb0",
+  "sources": {
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioConverter.swift": {
+      "before": "c28ca8e7846ba13e4c39de779eb87830cf55a0241aea834b3a3e23b5357ff46d",
+      "after": "87fd0c211b46fb20b46ab286c84530182662758115c1b717e582a02abf0a8a7a"
+    },
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioTimeline.swift": {
+      "before": "ecbeeb95c425121137e6d279ed8a815cfad35f18a99981e31f38112bf7a0dc10",
+      "after": "448fb0bdd35016276ff36def7e76e9c00ba5ada07d2ed2efece6ec3ccd23a04d"
+    }
+  },
+  "red": {
+    "exitCode": 65,
+    "test": "YlDashSampleSourceNativeTests/testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM()",
+    "assertions": [
+      "XCTAssertEqual failed: (\"4096\") is not equal to (\"0\") - After the caller releases the submitted PCM, the live timeline must return its byte budget",
+      "XCTAssertEqual failed: (\"4096\") is not equal to (\"0\") - After the caller releases the submitted PCM, the live timeline must return its byte budget"
+    ]
+  },
+  "green": {
+    "macos": {
+      "exitCode": 0,
+      "cases": [
+        "YlContainerOutputTests/testDASHWindowOwnsNegativePCMClipping()",
+        "YlDashSampleSourceNativeTests/testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers()",
+        "YlDashSampleSourceNativeTests/testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM()"
+      ],
+      "passedTests": 3,
+      "failedTests": 0,
+      "skippedTests": 0
+    },
+    "ios": {
+      "exitCode": 0,
+      "cases": [
+        "YlContainerOutputTests/testDASHWindowOwnsNegativePCMClipping()",
+        "YlDashSampleSourceNativeTests/testActualDecodedPCMClipsExactlyThreePointFiveSecondsAndKeepsBothToneMarkers()",
+        "YlDashSampleSourceNativeTests/testAudioTimelineSchedulesExactBoundedSilenceAndOriginalPCM()"
+      ],
+      "passedTests": 3,
+      "failedTests": 0,
+      "skippedTests": 0
+    }
+  }
+}
