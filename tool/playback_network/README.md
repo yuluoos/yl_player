@@ -839,6 +839,25 @@ mask reports `endpoint-unavailable`, while 15 reports `unsupported-endpoint`
 non-delivery. Sidecar v1 is still readable with its original, less specific
 unknown result; no mask is invented for earlier records.
 
+For CFNetwork task evidence, add `--client-network-log` to a managed Apple
+ABR capture. The runner enables level 1 CFNetwork diagnostics in the launch
+manifest and requests the test host's own network logs and transaction
+identities. This also works without packet capture. The native test products
+must include the v3 task identity and current-process log exporter.
+
+`client-task-summary.json` and the receipt's `clientTaskObservation` link each
+proxy request to zero-based row indices in `client-network.jsonl`. For example,
+if CFNetwork logs that a task set up Connection 430 and then timed out, 430
+appears in `setupConnectionIDs`. Only an explicit “now using Connection 430”
+event puts it in `usedConnectionIDs`. `connectionLogIndices` indexes the
+related connection events in the same log. Raw log messages can contain the
+owned test URL and remain in the JSONL file.
+
+The runner records this observation even when playback fails. A complete
+observation means every reported proxy task matched its own CFNetwork log
+identity. A missing identity or a missing export leaves the requested evidence
+incomplete and adds an error to the receipt.
+
 For packet evidence on the owned physical-device HTTP service, add
 `--packet-interface en0` together with `--transaction-connections` and
 `--connection-mode close`. macOS prompts for administrator authentication;

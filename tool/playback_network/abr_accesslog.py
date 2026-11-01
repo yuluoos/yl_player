@@ -723,6 +723,23 @@ def read_rows(path):
     return [json.loads(line) for line in path.read_text().splitlines()]
 
 
+def record_client_tasks(out, receipt, token):
+    from client_task_logs import summarize_client_tasks
+    try:
+        proof = json.loads((out/'process.json').read_text())
+        if proof['token'] != token:
+            raise ValueError('unexpected test run')
+        observation = summarize_client_tasks(read_rows(out/'client-network.jsonl'),
+            receipt['transactionConnectionObservation']['requests'], proof['pid'])
+        if not observation['complete']:
+            receipt['errors'].append('client task evidence incomplete')
+    except (OSError, ValueError, KeyError, TypeError):
+        observation = dict(version=1, availability='unavailable', complete=False, requests=[])
+        receipt['errors'].append('client task evidence unavailable or invalid')
+    receipt['clientTaskObservation'] = observation
+    (out/'client-task-summary.json').write_text(json.dumps(observation, indent=2)+'\n')
+
+
 def process_identity(pid):
     result = subprocess.run(['ps', '-p', str(pid), '-o', 'lstart=', '-o', 'comm='],
                             capture_output=True, text=True, timeout=5)
@@ -843,7 +860,8 @@ def run(args):
     receipt=dict(diagnosticOnly=True,capabilityAccepted=False,errors=[],exitCode=None)
     server=None;thread=None;process=None;log=None;output=None;owned=None
     fault_control=None;health=[]
-    connection_key=secrets.token_hex(32).encode('ascii') if getattr(args,'transaction_connections',False) else None
+    client_network_log = getattr(args, 'client_network_log', False)
+    connection_key=secrets.token_hex(32).encode('ascii') if client_network_log or getattr(args,'transaction_connections',False) else None
     secret_manifest=None;lifecycle=None;lifecycle_observation=None;proxy_rows=[];packet_capture=None
     token=uuid.uuid4().hex
     before=None;products=None
@@ -885,6 +903,8 @@ def run(args):
         else: host = '127.0.0.1'
         duration_seconds = getattr(args, 'duration_seconds', 40)
         direct = getattr(args, 'direct_hls_control', False)
+        if direct and client_network_log:
+            raise ValueError('client task evidence requires managed proxy requests')
         startup_delay_ms = getattr(args, 'startup_delay_ms', 0)
         recovery_action = getattr(args, 'recovery_action', 'none')
         auto_scenario = getattr(args, 'auto_scenario', 'normal')
@@ -967,6 +987,8 @@ def run(args):
             YL_ABR_PROBE_AUTO_SCENARIO=auto_scenario,
             YL_ABR_PROBE_CANDIDATE_PREPARATION=preparation_mode,
             YL_ABR_PROBE_STARTUP_DELAY_MS=str(startup_delay_ms), YL_ABR_PROBE_PROFILE_SHA256=profile.sha256)
+        if client_network_log:
+            target['EnvironmentVariables'].update(CFNETWORK_DIAGNOSTICS='1', YL_ABR_PROBE_CLIENT_LOG='1')
         manifest=out/'probe.xctestrun';manifest.write_bytes(plistlib.dumps(config))
         if connection_key is not None:
             # XCTest requires its test environment in the manifest. Keep the
@@ -1134,6 +1156,8 @@ def run(args):
                 receipt['errors'].append('invalid transaction connection sidecar')
                 result=record_connections(receipt,[],proxy_rows,None,lifecycle,lifecycle_observation)
             (out/'transaction-connection-summary.json').write_text(json.dumps(result,indent=2)+'\n')
+        if client_network_log:
+            record_client_tasks(out, receipt, token)
         if packet_capture is not None:
             receipt['packetCaptureObservation']=packet_capture.stop()
             try:
@@ -1177,6 +1201,8 @@ def main():
     p.add_argument('--owned-host', help='Explicit owned RFC1918 IPv4 interface for physical-device capture')
     p.add_argument('--triggered-fault-rate',type=int,help='owned 5s rate overlay after a bound published high baseline; no change to production budget')
     p.add_argument('--transaction-connections',action='store_true',help='capture opaque per-transaction connection evidence')
+    p.add_argument('--client-network-log', action='store_true',
+                   help='export the owned test process network log and link Foundation tasks (implies --transaction-connections)')
     p.add_argument('--packet-interface',help='explicit owned IPv4 capture interface; macOS administrator authentication, bounded to this TCP service')
     p.add_argument('--connection-mode',choices=('close','http11-close','http11-keepalive'),default='close')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))

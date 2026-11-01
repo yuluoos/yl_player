@@ -613,7 +613,8 @@ class CleanupTests(unittest.TestCase):
 
 
 class FailureReceiptTests(unittest.TestCase):
-    def _failed_playback_receipt(self, raw_rows, proxy=None, server=None, transaction_connections=False):
+    def _failed_playback_receipt(self, raw_rows, proxy=None, server=None, transaction_connections=False,
+                                client_network_log=False):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); products = root / 'products'; app = products / 'Fixture.app'
             app.mkdir(parents=True)
@@ -623,14 +624,20 @@ class FailureReceiptTests(unittest.TestCase):
                 'RunnerTests': {'TestHostPath': '__TESTROOT__/Fixture.app/Fixture'}}))
             args = SimpleNamespace(products=products, directory=root/'out', device=None,
                 profiles=Path(__file__).with_name('profiles.json'), profile='down-and-recover-v1',
-                transaction_connections=transaction_connections)
+                transaction_connections=transaction_connections, client_network_log=client_network_log)
             ephemeral=[]
             def failed_native(*_args):
-                if transaction_connections:
+                if transaction_connections or client_network_log:
                     command=_args[1];path=Path(command[command.index('-xctestrun')+1]);ephemeral.append(path)
-                    key=plistlib.loads(path.read_bytes())['RunnerTests']['EnvironmentVariables']['YL_ABR_PROBE_CONNECTION_KEY']
+                    env=plistlib.loads(path.read_bytes())['RunnerTests']['EnvironmentVariables']
+                    key=env['YL_ABR_PROBE_CONNECTION_KEY']
                     self.assertRegex(key,r'^[0-9a-f]{64}$')
                     self.assertNotIn(key,(args.directory/'probe.xctestrun').read_text())
+                    if client_network_log:
+                        self.assertEqual(env['CFNETWORK_DIAGNOSTICS'], '1')
+                        self.assertEqual(env['YL_ABR_PROBE_CLIENT_LOG'], '1')
+                    else:
+                        self.assertNotIn('YL_ABR_PROBE_CLIENT_LOG', env)
                 # Deliberately incomplete main rows cannot satisfy playback acceptance.
                 (args.directory/'rows.jsonl').write_text(raw_rows)
                 if proxy is not None:
@@ -646,7 +653,7 @@ class FailureReceiptTests(unittest.TestCase):
                  patch('abr_accesslog.wait_for_native', side_effect=failed_native), \
                  patch('abr_accesslog.cleanup_owned', return_value=True):
                 receipt = abr_accesslog.run(args)
-            self.assertEqual(len(ephemeral),int(transaction_connections))
+            self.assertEqual(len(ephemeral),int(transaction_connections or client_network_log))
             for path in ephemeral:self.assertFalse(path.exists())
             return receipt
 
@@ -656,6 +663,15 @@ class FailureReceiptTests(unittest.TestCase):
         self.assertEqual(receipt['transactionConnectionObservation']['availability'],'unknown')
         self.assertIn('transaction connection evidence incomplete',receipt['errors'])
         self.assertNotIn('invalid transaction connection sidecar',receipt['errors'])
+        self.assertNotIn('clientTaskObservation', receipt)
+
+    def test_client_log_opt_in_requests_task_ids_and_reports_missing_export_on_failure(self):
+        receipt = self._failed_playback_receipt('', client_network_log=True)
+        self.assertEqual(receipt['exitCode'], 65)
+        self.assertIn('transactionConnectionObservation', receipt)
+        self.assertEqual(receipt['clientTaskObservation']['availability'], 'unavailable')
+        self.assertIn('client task evidence unavailable or invalid', receipt['errors'])
+        self.assertFalse(receipt['passed'])
 
     def test_proxy_metrics_failure_keeps_independent_frame_observation(self):
         from test_proxy_boundaries import ProxyBoundaryTests
