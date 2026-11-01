@@ -638,8 +638,8 @@ final class YlAudioRenderer: YlAudioRendering {
     lock.unlock()
     // Queue drainage cannot make an individual packet fit a smaller total
     // window. Fail before conversion instead of retrying forever on an empty queue.
-    if exceedsTotalDuration { throw YlManagedBufferLedger.unsupported() }
-    if let boundedPlan, estimate.byteCount > boundedPlan.maxBytes {
+    let byteLimit = min(maxScheduledBytes, boundedPlan?.maxBytes ?? maxScheduledBytes)
+    if exceedsTotalDuration || estimate.byteCount > byteLimit {
       throw YlManagedBufferLedger.unsupported()
     }
     guard estimatedCapacity == .scheduled else {

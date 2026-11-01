@@ -229,7 +229,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioCompletionPolicy.swift": "201f374d0cf2563d52cb59bd040bc6400e15a9e6f319669b5a2eeabb4858b321",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioOwnershipCoordinator.swift": "43ea3c7612111d4038c07827bcea0ee4fd8ac4b6bbcc429d85ec1977de6d0a6c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioPipeline.swift": "6a861ef4478c13fcb1501a4ffdd0e645488a1bec1a5fda10b87175a530e4e0db",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "8c1858d0165cff47adf3089183967fc15211ed357fbd77f5fb51a72a11f0bdb6",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "2dab3915c41dd28b0d71a75c2ccd532645ce0076076657b688cdb7d4ad3672f2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioSessionDriving.swift": "627cc82c1d28587b41605d2b6b5dd1fd1aaea3a8c35804035534ee1786188deb",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioTerminalState.swift": "db205b02848ed0f86b15ade78b6cafb70918d85c7690cdea73b18dfb5f97d5a0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlDtsAudioConverter.swift": "640150fb2617e8aa717240c19ae5c138fa521c6b39307c145613d84cad4ccff9",
@@ -606,7 +606,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "3b8d507ad9cf97b7961b68a149bd86f78cb8f4266aceb704a52167d2e01be33b"
     },
-    "sha256": "a7c6b364f251cf469d07d5cef398198e71769e837be9e21268f7ec43b573fff7"
+    "sha256": "7b024a449b41a43767d3e851be758fcb56780223c39dea4823fa49ee2938f12b"
   },
   "evidence": {
     "p01": {
@@ -1033,6 +1033,11 @@
       "kind": "report",
       "path": "docs/superpowers/reports/2026-10-30-network-root-followup.md",
       "sha256": "b14f46b91210859393162d91aae1bc008a946e4dae1b91e4cdf38f2107e63df2"
+    },
+    "audio-byte-admission-20261031": {
+      "kind": "report",
+      "path": "docs/superpowers/reports/2026-10-31-audio-byte-admission.md",
+      "sha256": "d33dd340abb11666d5624ab024b60ec9c70acf901652b9dae3cd6f68ccb66e52"
     }
   },
   "rows": [
@@ -2287,7 +2292,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "audio-disposal-20261030"
+        "audio-disposal-20261030",
+        "audio-byte-admission-20261031"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -2304,7 +2310,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "audio-disposal-20261030"
+        "audio-disposal-20261030",
+        "audio-byte-admission-20261031"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"

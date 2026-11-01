@@ -1,0 +1,56 @@
+{
+  "baseline": "50be2d55ae42824c2e3ba9a23bacd0751a747243",
+  "renderer": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift",
+  "beforeSHA256": "8c1858d0165cff47adf3089183967fc15211ed357fbd77f5fb51a72a11f0bdb6",
+  "afterSHA256": "2dab3915c41dd28b0d71a75c2ccd532645ce0076076657b688cdb7d4ad3672f2",
+  "runs": {
+    "red": {
+      "result": "Failed",
+      "passedTests": 0,
+      "failedTests": 1,
+      "skippedTests": 0,
+      "xcodebuildExitCode": 65,
+      "assertions": [
+        "XCTAssertEqual failed: (\"[]\") is not equal to (\"[\"policy.unsupported\"]\")",
+        "XCTAssertFalse failed",
+        "XCTAssertEqual failed: (\"1\") is not equal to (\"0\")",
+        "XCTAssertEqual failed: (\"1\") is not equal to (\"0\")"
+      ]
+    },
+    "green-macos": {
+      "result": "Passed",
+      "passedTests": 14,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "xcodebuildExitCode": 0,
+      "cases": [
+        "YlMacosAudioTests/testTerminalRendererCapacityFallbackAndEOFAlreadyPlayed()",
+        "YlManagedSoftwareAudioTests/testAudioPipelineDoesNotRetainOrReplayConsumedPacketAfterOverflow()",
+        "YlManagedSoftwareAudioTests/testCancellationDuringManagedRetryReturnsAllOwnedBytes()",
+        "YlManagedSoftwareAudioTests/testConsumedPCMOverflowIsNotRetryableBackpressure()",
+        "YlManagedSoftwareAudioTests/testCoreAudioEstimatesStayBoundedAcrossUntrustedDurations()",
+        "YlManagedSoftwareAudioTests/testCoreAudioMP3LowRateUses576SamplePackets()",
+        "YlManagedSoftwareAudioTests/testDisposeReleasesConverterPendingPacketsWhileRendererIsRetained()",
+        "YlManagedSoftwareAudioTests/testDTSAdmissionEstimateCoversActualPCMDespiteContainerRounding()",
+        "YlManagedSoftwareAudioTests/testImpossibleDurationFailsBeforeConversionRatherThanRetryingForever()",
+        "YlManagedSoftwareAudioTests/testManagedRangeRetryAndActualOpusVorbisPCMOwnership()",
+        "YlManagedSoftwareAudioTests/testPacketLargerThanAudioByteBudgetFailsWithoutSchedulingARetry()",
+        "YlManagedSoftwareAudioTests/testPreconversionBackpressureStillRetriesOnceCapacityIsReleased()",
+        "YlManagedSoftwareAudioTests/testRealAACAndMP3PCMAllocationDoesNotFollowContainerDuration()",
+        "YlManagedSoftwareAudioTests/testRealAACUnderreportedDurationDoesNotBecomeRetryableBackpressure()"
+      ]
+    },
+    "green-ios": {
+      "result": "Passed",
+      "passedTests": 3,
+      "failedTests": 0,
+      "skippedTests": 0,
+      "xcodebuildExitCode": 0,
+      "cases": [
+        "YlAudioRendererTests/testByteLimitWinsBeforeConversion()",
+        "YlAudioRendererTests/testScheduledPCMByteLimitComesFromFallbackBudget()",
+        "YlManagedSoftwareAudioTests/testPacketLargerThanAudioByteBudgetFailsWithoutSchedulingARetry()"
+      ]
+    }
+  }
+}

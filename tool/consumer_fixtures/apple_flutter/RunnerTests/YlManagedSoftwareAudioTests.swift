@@ -393,6 +393,31 @@ final class YlManagedSoftwareAudioTests: XCTestCase {
     XCTAssertEqual(output.pumps, 0)
   }
 
+  func testPacketLargerThanAudioByteBudgetFailsWithoutSchedulingARetry() throws {
+    let budget = try YlFallbackBufferBudget.make(configuration: PlayerConfiguration(map: [
+      "bufferMode": "lowLatency",
+    ]))
+    let converter = AdmissionConverter()
+    converter.estimate = .init(durationUs: 1, byteCount: budget.scheduledAudioBytes + 1)
+    let renderer = YlAudioRenderer(bufferBudget: budget, converter: converter, output: AdmissionOutput())
+    try renderer.configure(stream: admissionStream())
+    let pipeline = YlAudioPipeline(bufferBudget: budget, lock: NSLock(), generation: 1,
+      factory: AdmissionFactory(renderer: renderer))
+    let output = AdmissionPipelineOutput()
+    pipeline.output = output
+    pipeline.initializeRenderer()
+    defer { pipeline.discardRenderer() }
+
+    var backpressure = 0
+    pipeline.enqueue(admissionPacket(), codecName: "AAC") { _ in backpressure += 1 }
+    pipeline.retryPending(codecName: "AAC")
+    XCTAssertEqual(output.failures.map(\.code), ["policy.unsupported"])
+    XCTAssertFalse(pipeline.hasPendingPacket)
+    XCTAssertEqual(backpressure, 0)
+    XCTAssertEqual(output.pumps, 0)
+    XCTAssertEqual(converter.convertCount, 0)
+  }
+
   func testPreconversionBackpressureStillRetriesOnceCapacityIsReleased() throws {
     let converter = AdmissionConverter()
     converter.estimate = .init(durationUs: 8, byteCount: 8)

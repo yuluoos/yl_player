@@ -536,7 +536,9 @@ final class YlAudioRendererTests: XCTestCase {
       output: FakeOutput()
     )
     try renderer.configure(stream: stream())
-    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedBytes)
+    XCTAssertThrowsError(try renderer.enqueue(packet: packet())) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "policy.unsupported")
+    }
     XCTAssertEqual(renderer.scheduledBytes, 0)
     XCTAssertEqual(converter.convertCount, 0)
   }
@@ -555,9 +557,16 @@ final class YlAudioRendererTests: XCTestCase {
     )
     try renderer.configure(stream: stream())
 
-    XCTAssertEqual(try renderer.enqueue(packet: packet()), .wouldExceedBytes)
+    defer { renderer.dispose() }
+    XCTAssertThrowsError(try renderer.enqueue(packet: packet())) {
+      XCTAssertEqual(($0 as? NativePlayerError)?.code, "policy.unsupported")
+    }
     XCTAssertEqual(converter.convertCount, 0)
     XCTAssertTrue(output.completions.isEmpty)
+
+    converter.outputBytes = budget.scheduledAudioBytes
+    XCTAssertEqual(try renderer.enqueue(packet: packet()), .scheduled)
+    XCTAssertEqual(renderer.scheduledBytes, budget.scheduledAudioBytes)
   }
 
   func testUnderrunClampAndStaleCompletionSuppression() throws {
