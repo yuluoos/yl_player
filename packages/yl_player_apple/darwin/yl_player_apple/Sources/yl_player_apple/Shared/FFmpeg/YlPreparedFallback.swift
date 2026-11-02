@@ -72,7 +72,7 @@ final class YlPreparedFallback {
   ) throws {
     self.softwareServices = softwareServices
     self.decoderPolicy = source.loadOptions?.decoderPolicy ?? .systemDefault
-    self.decoderFactoryPolicy = .hardwareRequired
+    self.decoderFactoryPolicy = YlVTSessionPropertyReader.isSupported ? .hardwareRequired : self.decoderPolicy
     var plan = source.boundedPlan
     if plan == nil, let options = source.loadOptions, options.bufferStrategy == .bounded,
        let low = options.minDurationMs, let high = options.maxDurationMs, let bytes = options.maxManagedBytes {
@@ -391,7 +391,7 @@ final class YlPreparedFallback {
       } else {
         var probeBudget = budget; probeBudget.bufferScope = bufferScope
         let probe = YlVideoPipeline(format: videoFormat, bufferBudget: probeBudget,
-          factory: YlHardwareVTSessionFactory(policy: .hardwareRequired), policy: decoderPolicy,
+          factory: YlHardwareVTSessionFactory(policy: decoderFactoryPolicy), policy: decoderPolicy,
           softwareConfiguration: softwareConfiguration, softwareServices: softwareServices)
         try probe.initializeDecoder()
         try cancellationToken?.throwIfCancelled()

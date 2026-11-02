@@ -19,7 +19,10 @@ enum YlVideoDecoderSelection {
       software: () throws -> any YlVideoDecoderResource) throws -> any YlVideoDecoderResource {
     do {
       let candidate = try hardware()
-      guard candidate.hardwareEvidence.mode == .hardware else {
+      // iOS 15/16 can decode with system defaults, but cannot publicly prove hardware use.
+      let acceptsUnknown = !YlVTSessionPropertyReader.isSupported && policy != .hardwareRequired
+      guard candidate.hardwareEvidence.mode == .hardware ||
+          (acceptsUnknown && candidate.hardwareEvidence.mode == .unknown) else {
         candidate.dispose(); throw YlHardwareDecoderEvidence.unavailable()
       }
       return candidate

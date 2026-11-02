@@ -68,7 +68,8 @@ final class YlDashPeriodPlayback {
     video = try YlVideoDecoderSelection.choose(policy: policy, hardware: {
       try YlVideoToolboxDecoder(formatDescription: format,
         maxInFlightBytes: 4 * 1024 * 1024, bufferScope: scope,
-        factory: videoFactory ?? YlHardwareVTSessionFactory(policy: .hardwareRequired), sharedLease: sharedLease,
+        factory: videoFactory ?? YlHardwareVTSessionFactory(
+          policy: YlVTSessionPropertyReader.isSupported ? .hardwareRequired : policy), sharedLease: sharedLease,
         onFrame: { [weak self] in self?.receive($0) }, onError: onError)
     }, software: {
       let budget = YlFallbackBufferBudget(bufferScope: scope, networkBytes: 4 * 1024 * 1024,

@@ -1273,12 +1273,16 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
   func testInjectedPropertyReaderPreservesCompatibleKeyAndCFType() {
     for value: CFTypeRef in [kCFBooleanTrue!, kCFBooleanFalse!, NSNumber(value: 1)] {
       let reader = YlVTSessionPropertyReader(copy: { _, key, output in
-        XCTAssertEqual(key as String, "UsingHardwareAcceleratedVideoDecoder")
+        if #available(macOS 10.9, iOS 17.0, *) {
+          XCTAssertEqual(key, kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder)
+        } else {
+          XCTFail("iOS 15/16 must not query hardware evidence")
+        }
         output = value; return noErr
       })
       // The reader is injected; the opaque handle is never passed to native VT.
       let evidence = reader.evidence(for: kCFBooleanTrue)
-      XCTAssertEqual(evidence.mode, CFGetTypeID(value) != CFBooleanGetTypeID() ? .unknown : (CFEqual(value, kCFBooleanTrue) ? .hardware : .software))
+      XCTAssertEqual(evidence.mode, !YlVTSessionPropertyReader.isSupported || CFGetTypeID(value) != CFBooleanGetTypeID() ? .unknown : (CFEqual(value, kCFBooleanTrue) ? .hardware : .software))
     }
   }
 

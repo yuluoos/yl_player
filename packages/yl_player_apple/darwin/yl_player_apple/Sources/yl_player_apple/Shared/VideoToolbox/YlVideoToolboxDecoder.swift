@@ -663,7 +663,7 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
     }
     guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC
             || codec == kCMVideoCodecType_DolbyVisionHEVC || codec == kCMVideoCodecType_VP9 || codec == kCMVideoCodecType_AV1,
-          !requiresHardware || VTIsHardwareDecodeSupported(codec) else {
+          !requiresHardware || (YlVTSessionPropertyReader.isSupported && VTIsHardwareDecodeSupported(codec)) else {
       throw Self.hardwareUnavailable(status: nil)
     }
 
@@ -672,12 +672,13 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
       decompressionOutputCallback: ylVTOutputCallback,
       decompressionOutputRefCon: Unmanaged.passUnretained(outputContext).toOpaque()
     )
-    // Preserve the legacy string keys across SDK availability differences.
     var specification: [CFString: Any] = [:]
-    if requiresHardware {
-      specification["RequireHardwareAcceleratedVideoDecoder" as CFString] = kCFBooleanTrue
-    } else if policy == .hardwarePreferred {
-      specification["EnableHardwareAcceleratedVideoDecoder" as CFString] = kCFBooleanTrue
+    if #available(macOS 10.9, iOS 17.0, *) {
+      if requiresHardware {
+        specification[kVTVideoDecoderSpecification_RequireHardwareAcceleratedVideoDecoder] = kCFBooleanTrue
+      } else if policy == .hardwarePreferred {
+        specification[kVTVideoDecoderSpecification_EnableHardwareAcceleratedVideoDecoder] = kCFBooleanTrue
+      }
     }
     let decoderSpecification = specification as CFDictionary
     var imageAttributes: [String: Any] = [

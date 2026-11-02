@@ -22,14 +22,18 @@ struct YlHardwareDecoderEvidence: Equatable {
 }
 
 struct YlVTSessionPropertyReader {
+  static var isSupported: Bool {
+    if #available(macOS 10.9, iOS 17.0, *) { return true }
+    return false
+  }
   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
   var copy: Copy = { session, key, value in
     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
   }
   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+    guard #available(macOS 10.9, iOS 17.0, *) else { return .unknown }
     var value: CFTypeRef?
-    // Named SDK constant is iOS 17+. This verified key also supports iOS 15/16.
-    let status = copy(session, "UsingHardwareAcceleratedVideoDecoder" as CFString, &value)
+    let status = copy(session, kVTDecompressionPropertyKey_UsingHardwareAcceleratedVideoDecoder, &value)
     return YlHardwareDecoderEvidence(status: status, value: value)
   }
 }
