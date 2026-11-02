@@ -65,9 +65,14 @@ final class YlDtsAudioConverter: YlAudioPacketConverting {
       header = normalized
     }
     func bits(_ offset: Int, _ count: Int) -> Int {
-      (offset..<(offset + count)).reduce(0) { value, bit in
-        (value << 1) | Int((header[bit / 8] >> (7 - bit % 8)) & 1)
+      var value = 0
+      for bit in offset..<(offset + count) {
+        let byte = Int(header[bit / 8])
+        let shift = 7 - bit % 8
+        let nextBit = (byte >> shift) & 1
+        value = (value << 1) | nextBit
       }
+      return value
     }
     let blocks = bits(39, 7) + 1
     let frameBytes = bits(46, 14) + 1
