@@ -1,3 +1,7 @@
+## 0.3.0-dev.7
+
+- Simplify DTS header bit parsing for the Swift type checker without changing how bits are read.
+
 ## 0.3.0-dev.6
 
 - Add bounded iOS DASH recovery and request diagnostics, limit buffered PCM, and use public VideoToolbox APIs.

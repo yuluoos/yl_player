@@ -1,3 +1,7 @@
+## 0.3.0-dev.7
+
+- Update the Apple backend to include the Swift type-checking fix for DTS header parsing.
+
 ## 0.3.0-dev.6
 
 - Reuse the native view subtree for progress-only updates while still updating it for changes to video geometry, subtitles and surfaces.

@@ -1,3 +1,7 @@
+## 0.3.0-dev.7
+
+- Synchronize the package with the `0.3.0-dev.7` release.
+
 ## 0.3.0-dev.6
 
 - Report an actionable error when an MP4 file cannot be opened.

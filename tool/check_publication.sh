@@ -14,9 +14,9 @@ case "$mode" in
     ;;
 esac
 
-core_release_version=0.3.0-dev.6
-apple_release_version=0.3.0-dev.6
-source_resolver_release_version=0.3.0-dev.6
+core_release_version=0.3.0-dev.7
+apple_release_version=0.3.0-dev.7
+source_resolver_release_version=0.3.0-dev.7
 package_names='yl_player_platform_interface yl_player_media_core yl_player_media_delivery yl_player_android yl_player_apple yl_player_source_resolver yl_player yl_player_cast yl_player_cast_player_adapter'
 log_root=${YL_PUBLICATION_LOG_DIR:-}
 cleanup_logs=0
