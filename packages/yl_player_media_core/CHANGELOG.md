@@ -1,3 +1,7 @@
+## 0.3.0-dev.6
+
+- Match Apple transport security exceptions for equivalent IP address literals, including IPv4-mapped IPv6 addresses.
+
 ## 0.3.0-dev.5
 
 - Add the minimum iOS version to the device and simulator FFmpeg framework bundle metadata.

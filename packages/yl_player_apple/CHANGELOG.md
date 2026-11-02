@@ -1,3 +1,7 @@
+## 0.3.0-dev.6
+
+- Add bounded iOS DASH recovery and request diagnostics, limit buffered PCM, and use public VideoToolbox APIs.
+
 ## 0.3.0-dev.5
 
 - Adopt the media core release with corrected minimum iOS version metadata in the bundled FFmpeg framework.

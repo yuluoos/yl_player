@@ -62,7 +62,7 @@ internal class YlPlayerRegistry(
             )
             val reply = AndroidCreateReply(
                 schemaMajor = 8, spiMajor = 2, channelSuffix = suffix, textureId = texture.id(),
-                implementationName = "yl_player_android", implementationVersion = "0.3.0-dev.5",
+                implementationName = "yl_player_android", implementationVersion = "0.3.0-dev.6",
                 capabilities = session.capabilities, initialState = session.initialState, drmSupport = drmSupport,
                 nativeVideoSurfaceViewType = if (nativeViews?.get(texture.id()) != null) YlNativeViewFactory.TYPE else null,
             )

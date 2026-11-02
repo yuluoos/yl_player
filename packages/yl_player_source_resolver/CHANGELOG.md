@@ -1,3 +1,7 @@
+## 0.3.0-dev.6
+
+- Align internal package dependencies with the `0.3.0-dev.6` release.
+
 ## 0.3.0-dev.5
 
 - Synchronize package and internal dependency versions at `0.3.0-dev.5`.

@@ -1,3 +1,7 @@
+## 0.3.0-dev.6
+
+- Report an actionable error when an MP4 file cannot be opened.
+
 ## 0.3.0-dev.5
 
 - Synchronize package and internal dependency versions at `0.3.0-dev.5`.

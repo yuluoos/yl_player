@@ -1,3 +1,7 @@
+## 0.3.0-dev.6
+
+- Improve playback on low-memory Android TV devices, support tunneled TV playback and E-AC-3, and honor source audio downmix coefficients.
+
 ## 0.3.0-dev.5
 
 - Synchronize package and internal dependency versions at `0.3.0-dev.5`.

@@ -1,3 +1,7 @@
+## 0.3.0-dev.6
+
+- Reuse the native view subtree for progress-only updates while still updating it for changes to video geometry, subtitles and surfaces.
+
 ## 0.3.0-dev.5
 
 - Adopt the media core release with corrected minimum iOS version metadata in the bundled FFmpeg framework.
