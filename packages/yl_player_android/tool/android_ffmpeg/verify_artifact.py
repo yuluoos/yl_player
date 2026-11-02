@@ -14,6 +14,7 @@ import subprocess
 
 PACKAGE = Path(__file__).resolve().parents[2]
 INPUTS = ["android/src/main/cpp/yl_player_ffmpeg.cpp", "android/src/main/cpp/YlSoftwareVideoBudget.inc",
+          "android/src/main/cpp/YlAudioDownmix.h",
           "tool/android_ffmpeg/build_shared_libraries.sh", "tool/android_ffmpeg/ffmpeg-9.0.1.lock"]
 MACHINES = {"arm64-v8a": "AArch64", "armeabi-v7a": "ARM", "x86_64": "Advanced Micro Devices X86-64"}
 PATTERN = r"Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_\w+"

@@ -1,15 +1,16 @@
 {
   "schemaVersion": 1,
   "inputs": {
-    "android/src/main/cpp/yl_player_ffmpeg.cpp": "534694dfd5f43f031ba188958e495b2c45e31b6e4568750b86a0b0049edc794c",
+    "android/src/main/cpp/yl_player_ffmpeg.cpp": "45998f2c1464644c22466eb8ea737b0ce5cd150629d59785dcf7b9c3e7148651",
     "android/src/main/cpp/YlSoftwareVideoBudget.inc": "61d0e05273a202123062b378d5e5eac2c53c81fb199010ff6015722230e9ce41",
+    "android/src/main/cpp/YlAudioDownmix.h": "4ea9f4e4d4b38460ecf86101ae0153d928edb00909d769e23def6d82c1afbedc",
     "tool/android_ffmpeg/build_shared_libraries.sh": "49788a07bb50d5a88d37ca349c437dfcdf97d3d666d3e580b764e210824c5a0b",
     "tool/android_ffmpeg/ffmpeg-9.0.1.lock": "79783ae110c2c1bf95f457efe1f3099597dddc1c127eb38a7c1ca8c636b468a1"
   },
   "configureContractSha256": "07bfe96894802b010190443570aec8dfa95df1a65e79766dab643301c9d527a0",
   "libraries": {
     "arm64-v8a": {
-      "sha256": "b1035d561cfeb24813372141773bc1c9bd6d66280af87689a16e32806880acde",
+      "sha256": "a693de5e873c66f1ffcd0720696e9734f99b1a276a61f70c7191e265309753ba",
       "minApi": 24,
       "jniExports": [
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose",
@@ -40,7 +41,7 @@
       ]
     },
     "armeabi-v7a": {
-      "sha256": "63d2e7a018cc08a6ea9caea926453d87bbad318c7fd92816f204e3b077c86621",
+      "sha256": "48688ca898966f7d7d44099f9cedd37d08272827bce250fb97e4cc9834fad16a",
       "minApi": 24,
       "jniExports": [
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose",
@@ -71,7 +72,7 @@
       ]
     },
     "x86_64": {
-      "sha256": "3eaa02009e2402abfdc7c32cb0e6340b0a31516af262143cd86a05cc82188d57",
+      "sha256": "ebad4a103f45510f67e88d5f8c4966ffa320b7e78d14bad8af6140b731e13c83",
       "minApi": 24,
       "jniExports": [
         "Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeClose",

@@ -26,6 +26,8 @@ extern "C" {
 #include <libswresample/swresample.h>
 }
 
+#include "YlAudioDownmix.h"
+
 namespace {
 
 enum NativeKind { kUnknownKind = 0, kVideo = 1, kAudio = 2 };
@@ -84,6 +86,7 @@ struct Session {
   bool waiting_seek_keyframe = false;
   AVCodecContext* audio_decoder = nullptr;
   SwrContext* resampler = nullptr;
+  YlAudioDownmix downmix;
   int software_audio_stream = -1;
   std::vector<uint8_t> packet_data;
   std::vector<uint8_t> pcm_data;
@@ -627,6 +630,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeConfigureSoftwareAudi
   swr_free(&session->resampler);
   session->audio_decoder = decoder;
   session->resampler = resampler;
+  session->downmix = {};
   session->software_audio_stream = index;
   return JNI_TRUE;
 }
@@ -772,6 +776,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeSoftwareAudio(
   int64_t first_pts = pts;
   const int channels = std::min(std::max(session->audio_decoder->ch_layout.nb_channels, 1), 2);
   while (frame && avcodec_receive_frame(session->audio_decoder, frame) >= 0) {
+    if (session->downmix.apply(session->resampler, frame) < 0) { session->pcm_data.clear(); break; }
     const int output_samples = swr_get_out_samples(session->resampler, frame->nb_samples);
     const size_t old_size = session->pcm_data.size();
     session->pcm_data.resize(old_size + static_cast<size_t>(output_samples) * channels * sizeof(int16_t));
@@ -918,6 +923,7 @@ namespace {
 struct Eac3Decoder {
   AVCodecContext* codec = nullptr;
   SwrContext* resampler = nullptr;
+  YlAudioDownmix downmix;
   AVChannelLayout input_layout{};
   int input_format = AV_SAMPLE_FMT_NONE;
   int rate = 0;
@@ -959,6 +965,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeEac3(
   if (reset) {
     avcodec_flush_buffers(state->codec);
     swr_free(&state->resampler);
+    state->downmix = {};
     av_channel_layout_uninit(&state->input_layout);
     state->input_format = AV_SAMPLE_FMT_NONE;
   }
@@ -988,6 +995,7 @@ Java_dev_ylplayer_yl_1player_1android_YlFfmpegBridge_nativeDecodeEac3(
     }
     if (av_channel_layout_compare(&state->input_layout, &frame->ch_layout) != 0 ||
         state->input_format != frame->format) { ok = false; break; }
+    if (state->downmix.apply(state->resampler, frame) < 0) { ok = false; break; }
     const int samples = swr_get_out_samples(state->resampler, frame->nb_samples);
     const size_t old = pcm.size();
     if (samples < 0 || samples > 65536 || old + static_cast<size_t>(samples) * 4 > 256 * 1024) { ok = false; break; }
