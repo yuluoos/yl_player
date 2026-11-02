@@ -15,7 +15,9 @@ import subprocess
 import time
 import uuid
 from pathlib import Path
-from bound_artifacts import canonical, freeze, verify
+from bound_artifacts import canonical, freeze, verify, sha_file
+from acoustic_capture import microphone
+from acoustic_evidence import PROTOCOL
 from bound_device import DeviceTransport
 from bound_av import validate, validate_render_pull
 from bound_matrix import planned_case
@@ -60,7 +62,10 @@ def main():
     parser.add_argument('--matrix-id',default=None)
     parser.add_argument('--negative-identity',action='store_true')
     parser.add_argument('--negative-framework',action='store_true')
+    parser.add_argument('--macos-acoustic-app', type=Path, help='Authorized built-in microphone helper for the local MP4 cell')
     args=parser.parse_args()
+    if args.macos_acoustic_app and (args.platform, args.case_id, args.transport) != ('macos','mp4-avc-aac','file'):
+        parser.error('microphone capture requires the local macOS MP4 cell')
     if not args.case_id and (args.transport!='file' or args.matrix_id):parser.error('--case required for transport/matrix selection')
     app=args.app.resolve();out=args.out.resolve();out.mkdir(parents=True,exist_ok=False)
     if args.platform=='ios' and not (args.simulator or args.device):parser.error('--simulator or --device required for iOS')
@@ -72,6 +77,8 @@ def main():
         planned=[planned_case(catalog,args.case_id,args.platform,args.transport)] if args.case_id else planned_controls(catalog),phases=PHASES,negativeFramework=args.negative_framework)
     plan['executionTarget']=dict(kind='physical' if args.device else 'simulator' if args.simulator else 'host',id=args.device or args.simulator or 'macos')
     if args.matrix_id:plan['matrixId']=args.matrix_id
+    if args.macos_acoustic_app:
+        plan['acoustic'] = dict(protocol=PROTOCOL, helperSha256=sha_file(args.macos_acoustic_app/'Contents/MacOS/Marker'))
     if args.negative_identity:plan['buildSha256']='0'*64
     write(out/'plan.json',plan);write(out/'product-files.json',product)
     encoded=base64.b64encode(canonical(plan)).decode()
@@ -92,7 +99,7 @@ def main():
         environment['SIMCTL_CHILD_NSUnbufferedIO']='YES'
     write(out/'launch.json',dict(command=command,preverified=verify(app,product)))
     status={};rows=[];remote=None;collection_completed=False
-    with (out/'flutter.log').open('wb') as log:
+    with microphone(args.macos_acoustic_app, plan, out) as acoustic, (out/'flutter.log').open('wb') as log:
         process=subprocess.Popen(command,env=environment,stdout=log,stderr=subprocess.STDOUT,
             stdin=subprocess.PIPE if device else None,
             cwd=Path(__file__).resolve().parents[2]/'packages/yl_player/example' if device else None)
@@ -149,6 +156,8 @@ def main():
     if remote and (remote/'rows.json').is_file():rows=json.loads((remote/'rows.json').read_bytes())
     if remote and (remote/'unfinished.json').is_file():
         (out/'unfinished.json').write_bytes((remote/'unfinished.json').read_bytes())
+    if acoustic and len(rows) == 1:
+        rows[0]['acoustic'] = dict(acoustic, sessionId=rows[0]['publicSessionId'])
     write(out/'status.json',status)
     with gzip.open(out/'rows.json.gz','wb') as stream:stream.write(canonical(rows))
     result=acceptance(plan,rows,status,verify(app,product) and cleanup and collection_completed and collector_error is None)

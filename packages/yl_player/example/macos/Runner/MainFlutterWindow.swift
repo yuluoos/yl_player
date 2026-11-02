@@ -2,6 +2,15 @@ import Cocoa
 import FlutterMacOS
 
 class MainFlutterWindow: NSWindow {
+#if YL_VIDEO_PERFORMANCE_PROBE
+  private let isQualificationWindow = ProcessInfo.processInfo.environment["YL_AV1_VISIBLE_QUALIFICATION"] == "1"
+  override var canBecomeKey: Bool { !isQualificationWindow && super.canBecomeKey }
+  override var canBecomeMain: Bool { !isQualificationWindow && super.canBecomeMain }
+  private(set) var qualificationOcclusions = 0
+  @objc private func qualificationVisibilityChanged() {
+    if !occlusionState.contains(.visible) { qualificationOcclusions += 1 }
+  }
+#endif
   override func awakeFromNib() {
     let flutterViewController = FlutterViewController()
     let windowFrame = self.frame
@@ -17,6 +26,34 @@ class MainFlutterWindow: NSWindow {
 #endif
 
     super.awakeFromNib()
+#if YL_VIDEO_PERFORMANCE_PROBE
+    if isQualificationWindow {
+      ignoresMouseEvents = true
+      var behavior = collectionBehavior.subtracting([
+        .moveToActiveSpace, .fullScreenPrimary, .fullScreenNone,
+        .managed, .transient, .participatesInCycle,
+      ])
+      behavior.formUnion([.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle])
+      if #available(macOS 13.0, *) {
+        behavior.subtract([.primary, .auxiliary])
+        behavior.insert(.canJoinAllApplications)
+      }
+      collectionBehavior = behavior
+      setFrameAutosaveName("")
+      minSize = .zero
+      setContentSize(NSSize(width: 336, height: 196))
+      if let area = (screen ?? NSScreen.main)?.visibleFrame {
+        setFrameOrigin(NSPoint(x: max(area.minX, area.maxX - frame.width - 24),
+          y: max(area.minY, area.maxY - frame.height - 24)))
+      }
+      // Keep the qualification surface above the observed Dock and floating
+      // overlay windows so compositor occlusion cannot invalidate the run.
+      level = NSWindow.Level(rawValue: NSWindow.Level.statusBar.rawValue + 3)
+      NotificationCenter.default.addObserver(self, selector: #selector(qualificationVisibilityChanged),
+        name: NSWindow.didChangeOcclusionStateNotification, object: self)
+      orderFrontRegardless()
+    }
+#endif
   }
 }
 
@@ -77,6 +114,14 @@ private enum YlDisplayReadbackProbe {
           DispatchQueue.main.async {
             guard pending else { return }; pending = false; deadline.cancel()
             var snapshot = empty
+#if YL_VIDEO_PERFORMANCE_PROBE
+            snapshot["windowOcclusions"] = (window as? MainFlutterWindow)?.qualificationOcclusions
+#endif
+            snapshot["surfaceHasBounds"] = !display.bounds.isEmpty
+            snapshot["windowOcclusionVisible"] = window.map {
+              $0.isOnActiveSpace && $0.isVisible && !$0.isMiniaturized &&
+                $0.occlusionState.contains(.visible) && !NSApp.isHidden
+            } ?? false
             if let metrics {
               snapshot["status"] = "observed"
               snapshot["totalFrames"] = metrics.totalNumberOfFrames

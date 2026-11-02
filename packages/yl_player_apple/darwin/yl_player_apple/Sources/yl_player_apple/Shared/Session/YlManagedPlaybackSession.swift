@@ -182,28 +182,11 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       DispatchQueue.main.async { [weak self] in self?.requestPump() }
     }
     presentation.configureBounded(prepared.boundedPlan)
-    presentation.configureTimedCandidate(enabled: timedVideoCandidateEnabled && services.platform == .macos
-      && services.nativeViewType != nil && localSource && !prepared.policy.isLive
-      && demux.isSeekable && demux.mediaInfo.duration_us > 0 && prepared.boundedPlan == nil,
-      requiresAudioAnchor: demux.selectedAudioStream != nil, diagnosticsEnabled: timedVideoDiagnosticsEnabled)
     self.presentation.configureClock(providedMediaClock, audioTime: { [weak self] in
       guard let self else { return nil }
       let renderer = self.audio.currentResource
       return renderer?.renderedAudioTime
     })
-    if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration, read: { [weak self] generation in
-      guard let self, let resource = self.audio.currentResource else { return .waiting }
-      // A finite audio gap must not freeze the independent video worker when
-      // AppKit stops delivering display ticks. Advance only through decoded
-      // video, on the same sampler that reads the audio clock; never via UI.
-      resource.advanceSilence(through: self.presentation.pendingFrames.last,
-        atHostTimeUs: Self.hostTimeUs(), expectedGeneration: generation)
-      return resource.clockObservation(expectedGeneration: generation)
-    }) {
-      audio.beforeClockControl = { [weak presentation] in presentation?.invalidateAudioClock() }
-      audio.onClockGenerationChanged = { [weak presentation] generation in presentation?.setAudioClockGeneration(generation) }
-    }
-    audio.initializeRenderer()
     demux.output = self
     recovery.session = self
     presentation.output = self
@@ -216,6 +199,24 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     video.connect(self)
     do {
       if !video.hasDecoder { try video.initializeDecoder() }
+      let useTimedVideo = timedVideoCandidateEnabled || video.hardwareEvidence == .init(software: .dav1d)
+      presentation.configureTimedCandidate(enabled: useTimedVideo && services.platform == .macos
+        && services.nativeViewType != nil && localSource && !prepared.policy.isLive
+        && demux.isSeekable && demux.mediaInfo.duration_us > 0 && prepared.boundedPlan == nil,
+        requiresAudioAnchor: demux.selectedAudioStream != nil, diagnosticsEnabled: timedVideoDiagnosticsEnabled)
+      if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration, read: { [weak self] generation in
+        guard let self, let resource = self.audio.currentResource else { return .waiting }
+        // A finite audio gap must not freeze the independent video worker when
+        // AppKit stops delivering display ticks. Advance only through decoded
+        // video, on the same sampler that reads the audio clock; never via UI.
+        resource.advanceSilence(through: self.presentation.pendingFrames.last,
+          atHostTimeUs: Self.hostTimeUs(), expectedGeneration: generation)
+        return resource.clockObservation(expectedGeneration: generation)
+      }) {
+        audio.beforeClockControl = { [weak presentation] in presentation?.invalidateAudioClock() }
+        audio.onClockGenerationChanged = { [weak presentation] generation in presentation?.setAudioClockGeneration(generation) }
+      }
+      audio.initializeRenderer()
       if let audioStream = demux.selectedAudioStream {
         try audio.configureInitial(stream: audioStream, cookies: demux.audioCookies)
       }

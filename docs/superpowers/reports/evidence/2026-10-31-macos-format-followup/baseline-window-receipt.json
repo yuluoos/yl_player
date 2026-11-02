@@ -1,0 +1,34 @@
+{
+  "protocolSha256": "6ff20394759afaa86809e727136b56e4cf36c664e781609404c658b99ce9d23d",
+  "run": "baseline",
+  "pid": 41899,
+  "passed": false,
+  "errors": [
+    "QUAL_DROP catchUp count=1 pts=10417000 selected=10458000 position=10472166 previous=10402500 tickGapMs=66.4471666677855 queue=8",
+    "application did not complete successfully",
+    "continuous playback incomplete",
+    "decoded frame count mismatch",
+    "resource sampling incomplete"
+  ],
+  "exit": -15,
+  "elapsed": 10.963438042002963,
+  "samples": 6,
+  "ticks": 5,
+  "decoded": [],
+  "decoderIdentities": [
+    [
+      "MacBookPro17,1",
+      "26A434",
+      "80b3d9a06bd8f6a5bcd05c13f12c7ebe805b96e7c7f84b334ba76e14496c8d8c:0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764",
+      "false"
+    ]
+  ],
+  "peaks": {
+    "maxOwnedBytes": 2191788,
+    "maxFrames": 19,
+    "maxPacketBytes": 168,
+    "maxCpuNs": 163587000,
+    "maxDecodeWallNs": 9967167
+  },
+  "productFilesDigest": "661eaab43a9dd321feb6d72a6fa13e11123d83a6895bb09446b22f70c7fddf83"
+}

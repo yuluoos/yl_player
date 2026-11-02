@@ -1,0 +1,85 @@
+{
+  "exception": {
+    "codes": "0x0000000000000001, 0x1a1a2848391e67b1",
+    "rawCodes": [
+      1,
+      1880860085041653681
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x1a1a2848391e67b1 -> 0x00002848391e67b1 (possible pointer authentication failure)"
+  },
+  "frames": [
+    {
+      "imageOffset": 873372,
+      "symbol": "AVAudioIONodeImpl::AUI() const",
+      "symbolLocation": 20,
+      "imageIndex": 40
+    },
+    {
+      "imageOffset": 18036,
+      "symbol": "AVAudioNodeImplBase::RemoveRenderObserver(AURenderCallbackStruct const&)",
+      "symbolLocation": 48,
+      "imageIndex": 40
+    },
+    {
+      "imageOffset": 367768,
+      "symbol": "-[AVAudioClock dealloc]",
+      "symbolLocation": 88,
+      "imageIndex": 40
+    },
+    {
+      "imageOffset": 870340,
+      "symbol": "AVAudioIONodeImpl::~AVAudioIONodeImpl()",
+      "symbolLocation": 56,
+      "imageIndex": 40
+    },
+    {
+      "imageOffset": 870400,
+      "symbol": "AVAudioIONodeImpl::~AVAudioIONodeImpl()",
+      "symbolLocation": 16,
+      "imageIndex": 40
+    },
+    {
+      "imageOffset": 813116,
+      "symbol": "-[AVAudioNode dealloc]",
+      "symbolLocation": 60,
+      "imageIndex": 40
+    },
+    {
+      "imageOffset": 1514100,
+      "sourceLine": 1748,
+      "sourceFile": "YlAudioRenderer.swift",
+      "symbol": "YlSystemAudioOutput.deinit",
+      "imageIndex": 4,
+      "symbolLocation": 332
+    },
+    {
+      "imageOffset": 1514188,
+      "sourceFile": "YlAudioRenderer.swift",
+      "symbol": "YlSystemAudioOutput.__deallocating_deinit",
+      "symbolLocation": 28,
+      "imageIndex": 4
+    },
+    {
+      "imageOffset": 45732,
+      "symbol": "_swift_release_dealloc",
+      "symbolLocation": 64,
+      "imageIndex": 41
+    },
+    {
+      "imageOffset": 466028,
+      "symbol": "bool swift::RefCounts<swift::SideTableRefCountBits>::doDecrementSlow<(swift::PerformDeinit)1>(swift::SideTableRefCountBits, unsigned int)",
+      "symbolLocation": 176,
+      "imageIndex": 41
+    },
+    {
+      "imageOffset": 9300248,
+      "sourceLine": 1797,
+      "sourceFile": "YlMacosAudioTests.swift",
+      "symbol": "YlMacosAudioTests.testActualTimestampedAudioClockAcrossRatesAndControls()",
+      "imageIndex": 33,
+      "symbolLocation": 3764
+    }
+  ]
+}

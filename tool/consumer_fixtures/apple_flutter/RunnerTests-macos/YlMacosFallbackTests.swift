@@ -1,12 +1,57 @@
 @testable import yl_player_apple
 import AppKit
 import AVFAudio
+import CryptoKit
 import Foundation
 import VideoToolbox
 import XCTest
 import YlFFmpegBridge
 
 final class YlMacosFallbackTests: XCTestCase {
+  func testPackagedAV1ProfileOnlyMatchesItsQualifiedImage() throws {
+    let key = YlSoftwareDecodeKey(model: "M1-test", osBuild: "build", decoderBuild: "swift:bridge",
+      codec: Int32(YLFCodecAV1), profile: 0, bitDepth: 8, chroma: 420, width: 320, height: 180,
+      fpsNumerator: 24, fpsDenominator: 1, threads: 2, outputPixelFormat: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+    let limits = YlSoftwareDecodeLimits(maxOwnedBytes: 1024, maxFrames: 4, maxPacketBytes: 128,
+      windowNs: 1000, maxCpuNs: 500, maxDecodeWallNs: 200)
+    let encoder = JSONEncoder()
+    var record: [String: Any] = ["schemaVersion": 1, "baselineSHA256": String(repeating: "a", count: 64),
+      "verificationSHA256": String(repeating: "b", count: 64),
+      "key": try JSONSerialization.jsonObject(with: encoder.encode(key)),
+      "limits": try JSONSerialization.jsonObject(with: encoder.encode(limits))]
+    func read() throws -> YlSoftwareDecodeAdmission {
+      .init(qualifiedProfile: try JSONSerialization.data(withJSONObject: record))
+    }
+    XCTAssertEqual(try read().limits(for: key), limits)
+    var different = try XCTUnwrap(record["key"] as? [String: Any])
+    different["decoderBuild"] = "other:bridge"
+    record["key"] = different
+    XCTAssertNil(try read().limits(for: key))
+    record["verificationSHA256"] = record["baselineSHA256"]
+    XCTAssertTrue(try read().entries.isEmpty)
+  }
+
+  func testSoftwareDecodeIdentityIncludesImageContainingDecoder() throws {
+    let address = unsafeBitCast(YlSoftwareVideoDecoder.self, to: UnsafeRawPointer.self)
+    var image = Dl_info()
+    XCTAssertNotEqual(dladdr(address, &image), 0)
+    let path = String(cString: try XCTUnwrap(image.dli_fname))
+    let bytes = try Data(contentsOf: URL(fileURLWithPath: path))
+    let expected = SHA256.hash(data: bytes).map { String(format: "%02x", $0) }.joined()
+    let identity = try XCTUnwrap(YlSoftwareDecodeIdentity.current)
+    XCTAssertEqual(identity.decoderBuild.components(separatedBy: ":").first, expected)
+  }
+
+  func testMp4OpenFailurePreservesPublicContainerCode() {
+    XCTAssertThrowsError(try YlOpenedMedia(
+      recipe: .local(path: "/dev/null", container: .mp4)
+    )) { error in
+      let failure = YlAppleSafeDiagnostics.failure(error, scope: .command)
+      XCTAssertEqual(failure.code, "container.mp4_open_failed")
+      XCTAssertTrue(failure.message.contains("complete MP4 file"))
+    }
+  }
+
   func testResetRejectsPendingReservationsFromTheOldDecoderGeneration() throws {
     let budget = YlVideoDecodeBudget(maxBytes: 12, maxFrames: 1)
     let old = try XCTUnwrap(budget.reservePending(byteCount: 12, timeout: 0))

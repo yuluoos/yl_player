@@ -1,4 +1,8 @@
 import Foundation
+#if os(macOS)
+import Security
+import YlFFmpegBridge
+#endif
 
 /// Exact measurement identity; frame rate is a positive rational, dimensions are pixels.
 /// Build/OS/model changes require new evidence, never nearest-profile matching.
@@ -19,6 +23,41 @@ struct YlSoftwareDecodeLimits: Codable, Equatable {
 struct YlSoftwareDecodeAdmission {
   let entries: [YlSoftwareDecodeKey: YlSoftwareDecodeLimits]
   init(entries: [YlSoftwareDecodeKey: YlSoftwareDecodeLimits] = [:]) { self.entries = entries }
+
+  // A profile is an application publisher's release resource. Never consult
+  // preferences, environment variables or a path supplied by a media source.
+  static let production: Self = {
+    #if os(macOS)
+    let app = Bundle.main
+    guard let url = app.url(forResource: "yl-player-qualified-av1", withExtension: "json") else { return .init() }
+    var code: SecStaticCode?
+    guard SecStaticCodeCreateWithPath(app.bundleURL as CFURL, [], &code) == errSecSuccess,
+          let code, SecStaticCodeCheckValidity(code, SecCSFlags(rawValue: kSecCSStrictValidate), nil) == errSecSuccess,
+          let data = try? Data(contentsOf: url) else { return .init() }
+    return Self(qualifiedProfile: data)
+    #else
+    return .init()
+    #endif
+  }()
+
+  #if os(macOS)
+  private struct Profile: Decodable {
+    let schemaVersion: Int
+    let key: YlSoftwareDecodeKey
+    let limits: YlSoftwareDecodeLimits
+    let baselineSHA256: String
+    let verificationSHA256: String
+  }
+
+  init(qualifiedProfile data: Data) {
+    guard let profile = try? JSONDecoder().decode(Profile.self, from: data), profile.schemaVersion == 1,
+          Int(profile.key.codec) == YLFCodecAV1, profile.baselineSHA256 != profile.verificationSHA256,
+          [profile.baselineSHA256, profile.verificationSHA256].allSatisfy({
+            $0.utf8.count == 64 && $0.utf8.allSatisfy { (48...57).contains($0) || (97...102).contains($0) }
+          }) else { self.init(); return }
+    self.init(entries: [profile.key: profile.limits])
+  }
+  #endif
   func limits(for key: YlSoftwareDecodeKey) -> YlSoftwareDecodeLimits? {
     guard key.isValid, let limits = entries[key], limits.isValid else { return nil }
     return limits

@@ -95,3 +95,41 @@ The 32 MiB/64-frame ownership limits are fixed test limits, not measured product
 profiles. The tool always leaves production admission disabled. Matching sustained
 qualification and actual product-build verification remain separate requirements;
 this tool does not start long-play or weak-network workloads.
+
+## macOS example profile
+
+For the macOS example, the publisher may package a single
+`Contents/Resources/yl-player-qualified-av1.json` inside the signed app.
+The SDK reads this resource once, verifies the app seal, then applies the existing
+exact model, OS build, Swift image, codec image, format, thread and output key.
+Media, environment variables and preferences cannot supply a production entry.
+A missing record, a broken seal or another decoder image leaves admission closed.
+
+`macos_profile.py APP BASELINE VERIFICATION PROTOCOL NEW_OUTPUT` verifies
+the two sustained run receipts and raw logs before writing the profile. Its input
+is the optimized macOS example, two fresh process directories with `plan.json`,
+`raw.log` and `receipt.json`, and the protocol frozen before measurement. The
+baseline also produces `limits.json`; the verification launch plan must attest
+to its SHA-256. The format is AV1 Main 8-bit 4:2:0, 320×180 at 24 fps with two
+threads. Both runs must measure the identical target, every decoded frame and
+the actual output. When the first frame predates the timed layer, include its
+dequeue PTS and legacy layer metrics from that same run.
+
+Package only an issued record. Sign the final application and recheck the two
+loaded decoder image hashes. If signing changes either image, the record no
+longer matches. This is especially relevant to a statically linked main
+executable whose signature also seals bundle resources. A separately signed
+decoder image can retain its identity when the outer example is signed.
+
+The exporter consumes a release qualification capture; it does not launch a
+candidate or grant provisional budgets. The pre-run protocol includes the full
+`videoConfiguration`, the packaged long fixture's relative `fixturePath` and
+`fixtureSha256`, expected frame count, CPU window and trial ceilings. Each plan
+binds the protocol and a file-to-SHA-256 map of the app. The verification plan
+additionally binds the baseline limits file. Peak names and units follow
+`YlSoftwareDecodeLimits`. The issuer checks both processes' raw `QUAL_ID`,
+`QUAL_SAMPLE`, `QUAL_DART`, `QUAL_SYSTEM`, `QUAL_DECODED`, `QUAL_END` and
+`QUAL_FINISH` observations and rejects any failure or drop. The signed record
+carries both raw log digests so the approving publisher can trace it to the
+retained measurements. An example build with a changed decoder hash requires
+its own profile.

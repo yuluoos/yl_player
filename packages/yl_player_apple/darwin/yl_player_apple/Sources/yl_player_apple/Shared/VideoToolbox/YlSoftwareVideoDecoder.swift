@@ -47,6 +47,7 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
   private var pendingKeyframes = [Int64: Bool]()
   private var pendingTiming = [Int64: YlManagedBufferLedger.Token]()
   private let pixelFormat: OSType
+  private let usesSDMatrixForUntaggedOutput: Bool
   let hardwareEvidence: YlHardwareDecoderEvidence
   var usesHardwareDecoder: Bool { false }
 
@@ -71,6 +72,9 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
     compressed = YlVideoDecodeBudget(maxBytes: maxInFlightBytes)
     self.observe = observe; self.onFrame = onFrame; self.onError = onError
     pixelFormat = key.outputPixelFormat
+    usesSDMatrixForUntaggedOutput = Int(key.codec) == YLFCodecAV1 &&
+      key.outputPixelFormat == kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange &&
+      key.width <= 720 && key.height <= 576
     hardwareEvidence = .init(software: Int(key.codec) == YLFCodecAV1 ? .dav1d : .ffmpegVP9)
     try budget.observe(using: { observe(0) })
     var native = YLFSoftwareVideoLimits()
@@ -94,8 +98,9 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
     }
     let start = DispatchTime.now().uptimeNanoseconds
     let result = ylf_software_video_create_from_configuration(configuration.handle, native, &handle)
+    let createWallNs = DispatchTime.now().uptimeNanoseconds - start
     do {
-      try budget.observe(using: { observe(DispatchTime.now().uptimeNanoseconds - start) })
+      try budget.observe(using: { observe(createWallNs) })
       guard result == YLFResultOK, handle != nil else { throw Self.error(result) }
     } catch {
       if let handle { ylf_software_video_free(handle); self.handle = nil }
@@ -142,7 +147,10 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
     try accounting.budget.observe(using: { observe(0) })
     let start = DispatchTime.now().uptimeNanoseconds
     let result = work()
-    try accounting.budget.observe(using: { observe(DispatchTime.now().uptimeNanoseconds - start) })
+    // CPU/thermal observations are serialized across leases. Waiting for that
+    // lock after the native call returns is outside the call's wall-time budget.
+    let decodeWallNs = DispatchTime.now().uptimeNanoseconds - start
+    try accounting.budget.observe(using: { observe(decodeWallNs) })
     return result
   }
   private func receive(_ decoder: YLFSoftwareVideoDecoderRef, frames: inout [YlVideoFrame]) throws {
@@ -161,6 +169,12 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
       if result == YLFResultWouldBlock || result == YLFResultEOF { return }
       guard result == YLFResultOK, let pixel, let generation,
         CVPixelBufferGetPixelFormatType(pixel) == pixelFormat else { throw Self.error(result) }
+      // Match normal SD playback for completely untagged, limited-range SDR.
+      // Leave declared color and HDR attachments, including partial tags, alone.
+      if usesSDMatrixForUntaggedOutput,
+         ((CVBufferCopyAttachments(pixel, .shouldPropagate) as NSDictionary?)?.count ?? 0) == 0 {
+        CVBufferSetAttachment(pixel, kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_601_4, .shouldPropagate)
+      }
       let ptsUs = CMTimeConvertScale(pts, timescale: 1_000_000, method: .default).value
       let durationUs = CMTimeConvertScale(duration, timescale: 1_000_000, method: .default).value
       let timing = accounting.scope?.reserve(category: .queuedVideoFrames, bytes: 0)

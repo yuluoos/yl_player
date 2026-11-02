@@ -142,8 +142,10 @@ final class YlApplePlayerHost: ApplePlayerHostApi {
   var managesAudio: Bool { options.audioPolicy == .pluginManagedMediaPlayback }
   var isActive: Bool { coordinator.isActive }
   var playbackIntent: Bool { coordinator.currentPlaybackIntent }
+  #if DEBUG
   var diagnosticProxySnapshot: [String: Double] { coordinator.diagnosticProxySnapshot }
   var diagnosticResumeSeekPending: Bool { coordinator.diagnosticResumeSeekPending }
+  #endif
   var onDashRecoveryEvent: (([String: Any]) -> Void)? {
     get { coordinator.onDashRecoveryEvent }
     set { coordinator.onDashRecoveryEvent = newValue }

@@ -188,6 +188,10 @@ final class YlSoftwareVideoLifecycleTests: XCTestCase {
       let decoder = try controlled(config, pool: pool, onFrame: {
         count += 1; pts.append($0.ptsUs)
         XCTAssertEqual(CVPixelBufferGetPixelFormatType($0.pixelBuffer), pixel)
+        if count == 1 {
+          let matrix = CVBufferCopyAttachment($0.pixelBuffer, kCVImageBufferYCbCrMatrixKey, nil) as? String
+          XCTAssertEqual(matrix, name == "p03-av1-main8" ? kCVImageBufferYCbCrMatrix_ITU_R_601_4 as String : nil)
+        }
       }, onError: { errors.append($0) })
       XCTAssertEqual(decoder.hardwareEvidence.decoderName, "dav1d")
       for packet in packets { decoder.decode(sample: packet, generation: 1, reservation: nil) }

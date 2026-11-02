@@ -1,0 +1,22 @@
+[
+  {
+    "buildSha256": "a15d420e4bf82ad90dd74cf4809a9ad70b6210e79d865f2c5c5b95e5721a93a4",
+    "runId": "3f6025bc-b44d-4ef6-b2c4-52a615421ea8",
+    "transport": "file",
+    "publicTestPassed": true,
+    "scopeAcceptance": false,
+    "errors": [
+      "pixel_audio_pair_missing"
+    ]
+  },
+  {
+    "buildSha256": "a15d420e4bf82ad90dd74cf4809a9ad70b6210e79d865f2c5c5b95e5721a93a4",
+    "runId": "41728fe5-1d56-4598-9d18-99e1448846b9",
+    "transport": "http",
+    "publicTestPassed": true,
+    "scopeAcceptance": false,
+    "errors": [
+      "pixel_audio_pair_missing"
+    ]
+  }
+]

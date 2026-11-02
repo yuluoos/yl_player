@@ -283,11 +283,16 @@ void main() {
               await bridge.invokeMethod('awaitPhase', {'sessionId': sessionId});
             }
             await session.play().timeout(const Duration(seconds: 12));
+            // The microphone needs the *next* audible tone transition to map
+            // captured device samples back to this seek without using item time.
+            final captureEndMs = continuousSourcePull && plan['acoustic'] != null
+                ? (target ~/ 1000 + 1) * 1000 + 650
+                : target + 650;
             await captureUntil(
               () =>
                   player!.state.timeline.position.inMilliseconds >=
-                  target + 650,
-              minimumNativeClockUs: (target + 650) * 1000,
+                  captureEndMs,
+              minimumNativeClockUs: captureEndMs * 1000,
             );
             // End the continuous source-pull phase before retaining its PCM.
             if (continuousSourcePull) {

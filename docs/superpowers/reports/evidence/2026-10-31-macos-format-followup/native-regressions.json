@@ -1,0 +1,21 @@
+{
+  "id-old": {
+    "result": "Failed",
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "failure": "XCTAssertEqual failed: (\"Optional(\"f60805dcaeeb9c3f24a11b96aa4273fd5d773de1df50f54722b5807be4545423\")\") is not equal to (\"Optional(\"9ba5ec0f3252a5cf3e79bd0230fa0a50b4bb9516a9416ec0586f51e2abe059ed\")\")"
+  },
+  "id-new": {
+    "result": "Passed",
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "color-native": {
+    "result": "Passed",
+    "passedTests": 1,
+    "failedTests": 0,
+    "skippedTests": 0
+  }
+}

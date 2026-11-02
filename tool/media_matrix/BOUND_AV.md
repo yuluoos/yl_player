@@ -230,3 +230,32 @@ API semantics: [Apple audio processing tap](https://developer.apple.com/document
 [audio tap processor](https://developer.apple.com/documentation/avfoundation/avmutableaudiomixinputparameters/audiotapprocessor).
 The local SDK `MTAudioProcessingTap.h` additionally specifies source-range,
 real-time callback, and finalization contracts.
+
+### Built-in microphone observation on macOS
+
+The optional acoustic collector applies to the local `mp4-avc-aac` cell. It keeps
+AVPlayer's existing source-pull, pixel, seek, lifecycle and tap-release checks.
+A separate application observes the built-in microphone during the short test.
+It writes timestamps, sample indices and normalized energy in the eight fixture
+tone bands. It does not write microphone PCM. The player itself needs no
+microphone permission.
+
+Build the helper into a new location and authorize that app in macOS. Supply
+the helper only when the operator has agreed to microphone use. Use the built-in
+speakers at an audible level in a quiet room.
+
+```sh
+sh tool/media_matrix/acoustic/build.sh /tmp/yl-acoustic/Marker.app
+open -n -W /tmp/yl-acoustic/Marker.app --args authorize setup /tmp/yl-acoustic/permission.jsonl
+python3 -B tool/media_matrix/run_bound_flutter_apple.py --platform macos \
+  --app /path/to/yl_player_example.app --case mp4-avc-aac --transport file \
+  --macos-acoustic-app /tmp/yl-acoustic/Marker.app --out /tmp/yl-acoustic/result
+```
+
+The same flag on the matrix runner starts the helper only for that cell.
+Each playback/seek phase continues through a known one-second tone change.
+Replay identifies that change on the microphone sample timeline, then pairs
+actual microphone windows with displayed marker pixels using host timestamps.
+Each required marker needs two matches at least 100 ms apart. Capture gaps,
+an audible marker before launch, unrelated run IDs, and absent transitions
+reject the row. The result measures the owned fixture at marker resolution.

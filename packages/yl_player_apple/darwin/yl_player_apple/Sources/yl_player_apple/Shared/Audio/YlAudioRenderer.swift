@@ -1549,6 +1549,8 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
     invalidationLock.withLock { invalidationHandler = handler }
   }
   private let engine: AVAudioEngine
+  // The engine owns this singleton and must also own its teardown order.
+  private unowned let outputNode: AVAudioOutputNode
   private let player = AVAudioPlayerNode()
   private let timePitch = AVAudioUnitTimePitch()
   private var configured = false
@@ -1557,6 +1559,8 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
 
   init(engine: AVAudioEngine = AVAudioEngine()) {
     self.engine = engine
+    // Resolve the graph singleton on the control path, outside clock sampling.
+    self.outputNode = engine.outputNode
     configurationObserver = NotificationCenter.default.addObserver(
       forName: .AVAudioEngineConfigurationChange, object: engine, queue: nil
     ) { [weak self] _ in
@@ -1603,7 +1607,7 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   /// Convert the actual output-node host timestamp into the player timeline;
   /// passing only host time avoids mixing the output's sample-rate/domain.
   var presentationAudioTime: YlRenderedAudioTime? {
-    guard configured, !disposed, let outputTime = engine.outputNode.lastRenderTime,
+    guard configured, !disposed, let outputTime = outputNode.lastRenderTime,
           outputTime.isHostTimeValid,
           let playerTime = player.playerTime(forNodeTime: AVAudioTime(hostTime: outputTime.hostTime)),
           playerTime.isHostTimeValid, playerTime.isSampleTimeValid,
@@ -1652,7 +1656,7 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
       // Fractional SRC blocks between the mixer and output can otherwise make
       // node host timestamps diverge over long playback (48 kHz -> 44.1 kHz).
       // The output unit still converts to the unchanged hardware rate/layout.
-      let hardware = engine.outputNode.outputFormat(forBus: 0)
+      let hardware = outputNode.outputFormat(forBus: 0)
       let graphFormat: AVAudioFormat?
       if aligningClockDomains {
         if let layout = hardware.channelLayout {
@@ -1667,7 +1671,7 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
       }
       guard let graphFormat else { throw YlAudioImplementationError.invalidConfiguration }
       engine.disconnectNodeOutput(engine.mainMixerNode)
-      engine.connect(engine.mainMixerNode, to: engine.outputNode, format: graphFormat)
+      engine.connect(engine.mainMixerNode, to: outputNode, format: graphFormat)
       outputClockAligned = aligningClockDomains
     }
     engine.prepare()

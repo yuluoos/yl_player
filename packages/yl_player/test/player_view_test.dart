@@ -35,6 +35,43 @@ void main() {
         .setMockMethodCallHandler(SystemChannels.platform_views, null);
   });
 
+  testWidgets('macOS progress updates retain the native surface widget', (
+    tester,
+  ) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.macOS;
+    final backend = _NativePlatformPlayer(platform: TargetPlatform.macOS);
+    final controller = await _presentedController(
+      backend,
+      geometry: _wideGeometry,
+    );
+    await _pumpView(tester, YlPlayerView(controller: controller));
+    final surface = tester.widget<AppKitView>(find.byType(AppKitView));
+    backend.emitState(
+      backend.state.copyWith(
+        revision: backend.state.revision + 1,
+        timeline: backend.state.timeline.copyWith(
+          position: const Duration(seconds: 1),
+        ),
+      ),
+    );
+    await tester.pump();
+    expect(tester.widget<AppKitView>(find.byType(AppKitView)), same(surface));
+
+    _publishGeometry(
+      backend,
+      const YlVideoGeometry(
+        encodedSize: YlPixelSize(1080, 1920),
+        displaySize: YlPixelSize(1080, 1920),
+      ),
+    );
+    await tester.pump();
+    expect(
+      tester.widget<AppKitView>(find.byType(AppKitView)),
+      isNot(same(surface)),
+    );
+    await _dispose(tester, controller);
+  });
+
   testWidgets(
     'Android native output mounts before geometry and keeps its holder when frames arrive',
     (tester) async {

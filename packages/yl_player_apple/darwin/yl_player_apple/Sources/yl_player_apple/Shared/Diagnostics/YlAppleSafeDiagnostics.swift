@@ -62,6 +62,7 @@ enum YlAppleSafeDiagnostics {
     "container.hls_url_invalid",
     "container.mkv_malformed",
     "container.mkv_open_failed",
+    "container.mp4_open_failed",
     "container.avi_timing_unsupported",
     "container.avi_open_failed",
     "container.avi_seek_failed",
@@ -177,6 +178,7 @@ enum YlAppleSafeDiagnostics {
     "policy.opus_unsupported": "Opus requires Matroska VOD; managed networking requires random access.",
     "policy.opus_track_switch_unsupported": "Activate or resume playback before switching an Opus track.",
 
+    "container.mp4_open_failed": "The MP4 media could not be opened. Try a complete MP4 file with supported codecs.",
     "container.avi_timing_unsupported": "The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.",
     "container.avi_open_failed": "The AVI media could not be opened. Check that the source is complete and uses supported codecs.",
     "container.avi_seek_failed": "The AVI seek failed. Try another position or a complete media file with a usable index.",

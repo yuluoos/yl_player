@@ -577,8 +577,9 @@ final class YlMacosPresentationTests: XCTestCase {
     var supportsTimedVideo = true
     let textureId: Int64 = 91
     var endpoints: [RecordingTimedEndpoint] = []
+    var onCreate: (() -> Void)?
     func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? {
-      let endpoint = RecordingTimedEndpoint(); endpoints.append(endpoint); return endpoint
+      let endpoint = RecordingTimedEndpoint(); endpoints.append(endpoint); onCreate?(); return endpoint
     }
     func publish(_ pixelBuffer: CVPixelBuffer?) {}
     func resize(width: Int, height: Int) {}
@@ -594,6 +595,31 @@ final class YlMacosPresentationTests: XCTestCase {
     func didPublishFirstPresentationFrame() {}
     func presentationDidTick(atHostTimeUs: Int64) {}
     func emitPresentationDelta() {}
+  }
+
+  @MainActor
+  func testAudioBackedTimedOutputArmsWithoutDisplayTicks() async {
+    for anchorBeforePlay in [true, false] {
+      let texture = RecordingTimedOutput(), sink = CandidatePresentationSink()
+      let services = YlPlatformServices(platform: .macos, textureOutput: texture,
+        makeDisplayDriver: { _ in AppleTestDisplay() })
+      let coordinator = YlPresentationCoordinator(services: services, lock: NSLock(), openedAt: 0,
+        positionEventIntervalMs: 100)
+      coordinator.output = sink
+      coordinator.configureClock(nil, audioTime: { nil })
+      coordinator.configureTimedCandidate(enabled: true, requiresAudioAnchor: true)
+      coordinator.configureIsolatedAudioClock(generation: 1, read: { _ in .waiting })
+      coordinator.flushFrames(generation: 1)
+      let armed = expectation(description: "Timed worker arms before the first display tick")
+      texture.onCreate = { armed.fulfill() }
+      if anchorBeforePlay { coordinator.anchorSubmittedAudio(ptsUs: 0, sampleTime: 0) }
+      coordinator.play(atHostTimeUs: YlPresentationCoordinator.hostTimeUs())
+      if !anchorBeforePlay { coordinator.anchorSubmittedAudio(ptsUs: 0, sampleTime: 0) }
+      await fulfillment(of: [armed], timeout: 1)
+      XCTAssertEqual(coordinator.timedVideoStatistics?.submitted, 0)
+      coordinator.disposeFrames()
+      texture.endpoints.forEach { $0.retirement?() }
+    }
   }
 
   @MainActor

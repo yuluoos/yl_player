@@ -1,0 +1,40 @@
+{
+  "protocolSha256": "6ff20394759afaa86809e727136b56e4cf36c664e781609404c658b99ce9d23d",
+  "run": "verification",
+  "baselineFinalTimedLayerFrames": 28903,
+  "scope": "independent budget and reported-drop verification; first preview belongs to the legacy renderer",
+  "pid": 47101,
+  "finalTimedLayerFrames": 5519,
+  "allFramesCountedOnFinalLayer": false,
+  "passed": false,
+  "errors": [
+    "QUAL_ERROR Bad state: failure=YlFailure(category: resource, code: resource.exhausted, retryable: false, scope: session, diagnosticId: apple-76736261-dff2-442b-aa62-55c1a49922b9), drops=0",
+    "application did not complete successfully",
+    "continuous playback incomplete",
+    "decoded frame count mismatch",
+    "resource sampling incomplete"
+  ],
+  "exit": 1,
+  "elapsed": 233.37447387499924,
+  "samples": 116,
+  "ticks": 116,
+  "decoded": [
+    5591
+  ],
+  "decoderIdentities": [
+    [
+      "MacBookPro17,1",
+      "26A434",
+      "912f749509fab1b424dae42e27d39812425f4c27e173c589d9fcfffeaabe7b64:0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764",
+      "true"
+    ]
+  ],
+  "peaks": {
+    "maxOwnedBytes": 2364588,
+    "maxFrames": 21,
+    "maxPacketBytes": 168,
+    "maxCpuNs": 189110000,
+    "maxDecodeWallNs": 68239500
+  },
+  "productFilesDigest": "819554ccc6bb67cc5ee1b9f23b10f16a8b7502fde011f431a38237c6ef753047"
+}

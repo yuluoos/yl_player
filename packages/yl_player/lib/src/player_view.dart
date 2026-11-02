@@ -8,6 +8,7 @@ import 'package:yl_player_platform_interface/yl_player_platform_interface.dart';
 
 import 'player_controller.dart';
 import 'subtitles/text_subtitle_overlay.dart';
+import 'subtitles/text_subtitle_runtime.dart' show TextSubtitleCue;
 
 /// Displays current-session video using the negotiated presentation surface.
 ///
@@ -64,9 +65,16 @@ final class YlPlayerView extends StatelessWidget {
   );
 
   @override
-  Widget build(BuildContext context) => AnimatedBuilder(
-    animation: controller,
-    builder: (context, child) => ValueListenableBuilder<int?>(
+  Widget build(BuildContext context) => _PlayerViewProjection(
+    controller: controller,
+    configuration: (
+      placeholder,
+      fit,
+      alignment,
+      backgroundColor,
+      filterQuality,
+    ),
+    builder: () => ValueListenableBuilder<int?>(
       valueListenable: controller.textureId,
       builder: (context, textureId, child) {
         final protected = controller.protectedVideoSurface;
@@ -228,6 +236,86 @@ final class YlPlayerView extends StatelessWidget {
       },
     ),
   );
+}
+
+/// Keep native surface composition independent of timeline-only notifications.
+class _PlayerViewProjection extends StatefulWidget {
+  const _PlayerViewProjection({
+    required this.controller,
+    required this.configuration,
+    required this.builder,
+  });
+
+  final YlPlayerController controller;
+  final Object configuration;
+  final Widget Function() builder;
+
+  @override
+  State<_PlayerViewProjection> createState() => _PlayerViewProjectionState();
+}
+
+class _PlayerViewProjectionState extends State<_PlayerViewProjection> {
+  late Object _projection;
+  late List<TextSubtitleCue> _cues;
+  late Widget _content;
+
+  Object _select() {
+    final controller = widget.controller;
+    final native = controller.nativeVideoSurface;
+    return (
+      controller,
+      widget.configuration,
+      defaultTargetPlatform,
+      controller.state.sessionId,
+      controller.state.videoGeometry,
+      controller.protectedVideoSurface,
+      native?.platform,
+      native?.viewType,
+      controller.isCurrentFramePresented,
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _projection = _select();
+    _cues = widget.controller.textSubtitleCues;
+    _content = widget.builder();
+    widget.controller.addListener(_onChanged);
+  }
+
+  bool _refresh() {
+    final projection = _select();
+    final cues = widget.controller.textSubtitleCues;
+    if (projection == _projection && listEquals(cues, _cues)) return false;
+    _projection = projection;
+    _cues = cues;
+    _content = widget.builder();
+    return true;
+  }
+
+  void _onChanged() {
+    if (_refresh()) setState(() {});
+  }
+
+  @override
+  void didUpdateWidget(_PlayerViewProjection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      oldWidget.controller.removeListener(_onChanged);
+      widget.controller.addListener(_onChanged);
+    }
+    _refresh();
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_onChanged);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => _content;
 }
 
 /// Native secure SurfaceView owns geometry and its pre-frame black cover. Never

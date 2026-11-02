@@ -1,0 +1,74 @@
+{
+  "productionEligible": false,
+  "baseline": {
+    "pid": 43274,
+    "runElapsedSeconds": 1205.630944708002,
+    "exit": 0,
+    "reportedPeaks": {
+      "maxOwnedBytes": 2364588,
+      "maxFrames": 21,
+      "maxPacketBytes": 168,
+      "maxCpuNs": 191027000,
+      "maxDecodeWallNs": 46338583
+    },
+    "decoded": [
+      28904
+    ],
+    "lastSystemOutput": {
+      "totalFrameDelaySeconds": 5.0000000000000004e-08,
+      "totalFrames": 28903,
+      "corruptedFrames": 0,
+      "status": "observed",
+      "layerCount": 1,
+      "droppedFrames": 0
+    },
+    "decoderIdentity": [
+      "MacBookPro17,1",
+      "26A434",
+      "912f749509fab1b424dae42e27d39812425f4c27e173c589d9fcfffeaabe7b64:0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764"
+    ]
+  },
+  "frozenLimits": {
+    "maxOwnedBytes": 3014656,
+    "maxFrames": 27,
+    "maxPacketBytes": 4096,
+    "maxCpuNs": 239000000,
+    "maxDecodeWallNs": 58000000,
+    "windowNs": 1000000000
+  },
+  "verification": {
+    "pid": 47101,
+    "runElapsedSeconds": 233.37447387499924,
+    "exit": 1,
+    "reportedPeaks": {
+      "maxOwnedBytes": 2364588,
+      "maxFrames": 21,
+      "maxPacketBytes": 168,
+      "maxCpuNs": 189110000,
+      "maxDecodeWallNs": 68239500
+    },
+    "decoded": [
+      5591
+    ],
+    "lastSystemOutput": {
+      "layerCount": 1,
+      "droppedFrames": 0,
+      "totalFrames": 5519,
+      "totalFrameDelaySeconds": 0.0,
+      "corruptedFrames": 0,
+      "status": "observed"
+    },
+    "decoderIdentity": [
+      "MacBookPro17,1",
+      "26A434",
+      "912f749509fab1b424dae42e27d39812425f4c27e173c589d9fcfffeaabe7b64:0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764"
+    ]
+  },
+  "verificationFailure": "resource.exhausted: native call wall budget exceeded",
+  "extraDiagnosticSlowestObserved": "WALL_TRACE send native=24804208 charged=24813291 processCpu=2127000 threadCpu=189750",
+  "diagnosticEnd": [
+    "QUAL_DROP enqueueTimeout count=1 pts=132375000 selected=-1 position=-1 previous=0 tickGapMs=132232.39137499695 queue=8",
+    "QUAL_DROP enqueueTimeout count=1 pts=132417000 selected=-1 position=-1 previous=0 tickGapMs=132493.1788333306 queue=8"
+  ],
+  "diagnosticConstraints": "Additional diagnostic overlapped host test/build activity, ended on scheduler timeout, and did not reproduce the original 68.2395 ms call."
+}

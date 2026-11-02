@@ -54,6 +54,12 @@ void main() {
       }
     },
   );
+  test('MP4 open failure identifies the container and recovery', () {
+    expect(
+      YlSafeDiagnostics.messageForCode('container.mp4_open_failed'),
+      contains('complete MP4 file'),
+    );
+  });
   test('AVI failures provide fixed recovery guidance', () {
     const guidance = {
       'container.avi_timing_unsupported': 'without frame reordering',

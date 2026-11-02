@@ -70,7 +70,17 @@ def pcm_window(window, row, case, phase, marker):
 
 
 def validate(plan, rows):
-    """Strict played-sample evidence; render-pull observations never qualify."""
+    """Strict output evidence. Source pulls alone never qualify."""
+    if isinstance(plan, dict) and 'acoustic' in plan:
+        from acoustic_evidence import inspect
+        result = _validate(plan, rows, render_pull=True)
+        if result['scopeAcceptance']:
+            try:
+                require(len(rows) == 1, 'wrong_acoustic_scope')
+                result['acousticMeasurements'] = inspect(plan, rows[0])
+            except (ValueError, KeyError, TypeError, IndexError, OverflowError) as error:
+                result.update(scopeAcceptance=False, supportedRows=0, errors=[str(error)])
+        return result
     return _validate(plan, rows, render_pull=False)
 
 

@@ -1647,6 +1647,26 @@ final class YlMacosAudioTests: XCTestCase {
     }
   }
 
+  private final class CountingOutputEngine: AVAudioEngine, @unchecked Sendable {
+    var outputNodeReads = 0
+    override var outputNode: AVAudioOutputNode {
+      outputNodeReads += 1
+      return super.outputNode
+    }
+  }
+
+  func testPresentationClockDoesNotReenterEngineOutputNodeGetter() throws {
+    let engine = CountingOutputEngine()
+    let output = YlSystemAudioOutput(engine: engine)
+    defer { output.dispose() }
+    let format = try XCTUnwrap(AVAudioFormat(standardFormatWithSampleRate: 48_000, channels: 2))
+    try output.configure(format: format, aligningClockDomains: true)
+    let configuredReads = engine.outputNodeReads
+    for _ in 0..<5 { _ = output.presentationAudioTime }
+    XCTAssertEqual(engine.outputNodeReads, configuredReads,
+      "Clock sampling must use the configured singleton instead of reentering the engine graph getter")
+  }
+
   func testActualAudioGraphClockDomains() throws {
     var allRows: [[String: Double]] = []
     for normalized in [false, true] {

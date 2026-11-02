@@ -1,0 +1,27 @@
+{
+  "artifactsUnchanged": true,
+  "collectionCompleted": true,
+  "collectorError": null,
+  "deviceCleanupCompleted": null,
+  "errors": [
+    "played_sample_clock_unverified"
+  ],
+  "executionTarget": {
+    "id": "macos",
+    "kind": "host"
+  },
+  "fullAcceptance": false,
+  "measurements": [],
+  "negativeFramework": false,
+  "negativeIdentity": false,
+  "processExit": -15,
+  "publicTestPassed": true,
+  "renderPullAcceptance": true,
+  "renderPullErrors": [],
+  "renderPullRows": 1,
+  "requiredRows": 1,
+  "runtimeIdentityVerified": true,
+  "scopeAcceptance": false,
+  "statusRunMatches": true,
+  "supportedRows": 0
+}

@@ -1,0 +1,17 @@
+{
+  "fixture": "320x180 24fps limited-range AV1 Main 8-bit repeated original compressed picture packets with continuous stereo Opus test tones",
+  "platform": "MacBookPro17,1 / 26A434 / arm64 Release",
+  "independentProcesses": 2,
+  "minimumPlaybackSeconds": 1200,
+  "requiredTerminalState": "completed",
+  "requiredDroppedFrames": 0,
+  "requiredDecoderMode": "software",
+  "expectedVideoPackets": 28904,
+  "thermal": "Every real software-budget observation must be nominal, low power disabled",
+  "resourceObservationNs": 250000000,
+  "maximumSummaryGapSeconds": 5,
+  "cpuWindowNs": 1000000000,
+  "freezeRule": "For each observed maximum add 25% headroom, round up to 64KiB owned bytes, 1 frame, 4KiB for the largest non-frame allocation, and 1ms for rolling CPU and decode wall. Clamp to trial ceilings. Freeze before starting verification.",
+  "trialCeilings": {"maxOwnedBytes":33554432,"maxFrames":64,"maxPacketBytes":1048576,"maxCpuNs":1000000000,"maxDecodeWallNs":100000000},
+  "eligibility": "A failed first process cannot define budgets. The second process must use the identical frozen executable, codec library, exact device, asset and the first process limits. Neither a prior debug observation nor a stand-alone bridge probe qualifies production."
+}

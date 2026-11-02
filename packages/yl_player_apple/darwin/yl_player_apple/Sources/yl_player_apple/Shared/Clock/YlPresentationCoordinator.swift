@@ -112,6 +112,13 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   }
   private func markTimedAudioReady() {
     timedLock.withLock { timedAudioReady = true }
+    requestTimedStart()
+  }
+  private func requestTimedStart() {
+    guard timedLock.withLock({ timedCandidateEnabled && timedAudioReady && timedPump == nil }) else { return }
+    // Endpoint creation is main-thread work. A submitted-audio callback can
+    // hold the session lock, which ensureTimedPresentation consults again.
+    DispatchQueue.main.async { [weak self] in self?.ensureTimedPresentation() }
   }
   private func synchronizeTimedPresentation() {
     timedLock.withLock { timedPump }?.synchronize()
@@ -130,7 +137,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     guard state.0, state.1, let output, output.acceptsPresentationFrame(generation: state.2) else { return }
     if let pump = state.3, !pump.isStopped { return }
     if state.3 != nil { stopTimedPresentation(clearOutput: false) }
-    guard mediaClock.presentationSnapshot(atHostTimeUs: Self.hostTimeUs()).playing else { return }
+    let snapshot = mediaClock.presentationSnapshot(atHostTimeUs: Self.hostTimeUs())
+    // Arm the worker while the first audio sample is pending. It can only
+    // submit once the clock supplies a playing snapshot and a submission horizon.
+    guard snapshot.playing || snapshot.waitingForClock else { return }
     guard let endpoint = (services.textureOutput as? YlTimedVideoOutput)?.makeTimedVideoEndpoint(),
           !endpoint.isRetired else { return }
     let epoch = timedLock.withLock { () -> UInt64 in timedEpoch &+= 1; return timedEpoch }
@@ -194,7 +204,11 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     markTimedAudioReady()
   }
   func position(atHostTimeUs time: Int64) -> Int64 { mediaClock.position(atHostTimeUs: time) }
-  func play(atHostTimeUs time: Int64) { mediaClock.play(atHostTimeUs: time); synchronizeTimedPresentation() }
+  func play(atHostTimeUs time: Int64) {
+    mediaClock.play(atHostTimeUs: time)
+    requestTimedStart()
+    synchronizeTimedPresentation()
+  }
   func pause(atHostTimeUs time: Int64) { mediaClock.pause(atHostTimeUs: time); synchronizeTimedPresentation() }
   func seek(to time: Int64) { mediaClock.seek(to: time) }
   func setRate(_ rate: Double, atHostTimeUs time: Int64) {

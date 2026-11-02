@@ -114,6 +114,8 @@ abstract final class YlSafeDiagnostics {
     'policy.opus_unsupported' =>
       'Opus currently supports ordinary Matroska VOD without managed networking, bounded buffering or hardware-required decoding.',
 
+    'container.mp4_open_failed' =>
+      'The MP4 media could not be opened. Try a complete MP4 file with supported codecs.',
     'container.avi_timing_unsupported' =>
       'The AVI video lacks supported presentation timing. Use a file with explicit timestamps or Baseline AVC without frame reordering.',
     'container.avi_open_failed' =>

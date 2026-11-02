@@ -60,8 +60,10 @@ final class YlAppleSessionCoordinator: NSObject {
   private var dashRecoveryTimer: Timer?
   private var dashRecoveryObserver: NSObjectProtocol?
   private var dashRecoveryRevision: UInt64 = 0
+  #if DEBUG
   var diagnosticProxySnapshot: [String: Double] { avBackend.diagnosticProxySnapshot }
   var diagnosticResumeSeekPending: Bool { avBackend.diagnosticResumeSeekPending }
+  #endif
   var onDashRecoveryEvent: (([String: Any]) -> Void)? {
     get { dashRecovery.onEvent }
     set { dashRecovery.onEvent = newValue }

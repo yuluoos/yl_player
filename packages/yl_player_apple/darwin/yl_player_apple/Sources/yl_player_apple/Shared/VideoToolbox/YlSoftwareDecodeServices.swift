@@ -6,7 +6,7 @@ import Darwin
 import Foundation
 import YlFFmpegBridge
 
-/// Measurement identity uses the actual host executable and loaded codec bridge.
+/// Measurement identity uses the loaded Swift decoder image and codec bridge.
 /// Any unavailable field denies admission; no device-family or OS-version fallback.
 struct YlSoftwareDecodeIdentity {
   let model: String
@@ -29,20 +29,24 @@ struct YlSoftwareDecodeIdentity {
       } catch { return nil }
       return digest.finalize().map { String(format: "%02x", $0) }.joined()
     }
-    var image = Dl_info()
+    func imageHash(_ address: UnsafeRawPointer) -> String? {
+      var image = Dl_info()
+      guard dladdr(address, &image) != 0, let path = image.dli_fname else { return nil }
+      return hash(URL(fileURLWithPath: String(cString: path)))
+    }
+    // In a split Xcode build the decoder lives in the debug dylib, not the launcher.
+    let decoder = unsafeBitCast(YlSoftwareVideoDecoder.self, to: UnsafeRawPointer.self)
     let symbol = unsafeBitCast(ylf_ffmpeg_version as @convention(c) () -> UnsafePointer<CChar>?, to: UnsafeRawPointer.self)
     guard let model = sysctl("hw.model") ?? sysctl("hw.machine"), let os = sysctl("kern.osversion"),
-      let executable = Bundle(for: YlSoftwareVideoDecoder.self).executableURL,
-      let swiftHash = hash(executable), dladdr(symbol, &image) != 0, let path = image.dli_fname,
-      let codecHash = hash(URL(fileURLWithPath: String(cString: path))) else { return nil }
+      let swiftHash = imageHash(decoder), let codecHash = imageHash(symbol) else { return nil }
     return .init(model: model, osBuild: os, decoderBuild: swiftHash + ":" + codecHash)
   }()
 }
 
-/// Production admission is deliberately empty until independent sustained evidence
-/// qualifies the exact identity. Controlled tests inject entries and observations.
+/// A signed host profile can admit its exact measured identity. Controlled tests
+/// inject entries and observations separately.
 struct YlSoftwareDecodeServices {
-  var admission = YlSoftwareDecodeAdmission()
+  var admission = YlSoftwareDecodeAdmission.production
   var pool = YlSoftwareDecodePool.shared
   var identity: () -> YlSoftwareDecodeIdentity? = { .current }
   var threads = 2

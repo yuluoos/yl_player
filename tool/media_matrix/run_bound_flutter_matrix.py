@@ -28,7 +28,10 @@ def main():
     target.add_argument('--device')
     parser.add_argument('--flutter',default='flutter')
     parser.add_argument('--out',type=Path,required=True)
+    parser.add_argument('--macos-acoustic-app',type=Path,help='Explicit microphone opt-in for the local MP4 cell')
     args=parser.parse_args()
+    if args.macos_acoustic_app and args.platform != 'macos':
+        parser.error('microphone capture is only supported on macOS')
     android=args.platform=='android'
     if android and (not args.apk or not args.serial):parser.error('--apk and --serial required')
     if not android and not args.app:parser.error('--app required')
@@ -45,6 +48,8 @@ def main():
         command=[sys.executable,'-B',str(Path(__file__).with_name('run_bound_flutter_android.py' if android else 'run_bound_flutter_apple.py')),
             '--out',str(folder),'--case',cell['caseId'],'--transport',cell['transport'],'--matrix-id',matrix['matrixId']]
         command+=['--apk',str(args.apk.resolve()),'--serial',args.serial] if android else ['--app',str(args.app.resolve()),'--platform',args.platform]
+        if args.macos_acoustic_app and cell['caseId']=='mp4-avc-aac' and cell['transport']=='file':
+            command+=['--macos-acoustic-app',str(args.macos_acoustic_app.resolve())]
         if args.simulator:command+=['--simulator',args.simulator]
         if args.device:command+=['--device',args.device,'--flutter',args.flutter]
         record=dict(cell=cell,plan={},rows=[],status={},artifactsUnchanged=False)
