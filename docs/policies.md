@@ -14,6 +14,13 @@ package-owned behavior described below. Android Media3 and Apple managed
 fallback have separate implementations and supported routes; Apple container
 rejections must not be applied to Android.
 
+On iOS, when a local AVPlayer output stalls during DASH on-demand playback
+after the first frame, a ready item can keep buffering in the same session.
+The playback watchdog allows one read interval plus one interval per configured
+retry (60 seconds with the default settings). The individual resource requests
+retain their own deadlines. Playback continues at its existing position when
+media arrives within that window.
+
 `YlHttpRequest.headers` contains ordinary metadata that may follow a
 cross-origin resource. `credentials` contains Authorization, cookies, proxy
 authorization, API keys, tokens, secrets, and every custom credential-bearing

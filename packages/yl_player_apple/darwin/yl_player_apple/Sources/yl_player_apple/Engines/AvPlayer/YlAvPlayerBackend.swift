@@ -1297,6 +1297,15 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private func refreshStallWatchdog() {
     let generation = itemGeneration
+    let network = configuration.network
+    // A ready DASH item can continue fetching segments after one read expires.
+    // Leave AVPlayer waiting on the same timeline for the configured retry windows.
+    let canResumeDash = services.platform == .ios && dashVideoCatalog != nil
+      && firstFrameSent && !sourceIsLive && !airPlayActive
+      && player.currentItem?.status == .readyToPlay
+    let timeoutMs = canResumeDash
+      ? network.readTimeoutMs * Int64(network.maxRetries + 1)
+      : network.readTimeoutMs
     stallWatchdog.update(
       active: active && pendingRuntimeResume == nil,
       wantsToPlay: playRequested,
@@ -1304,7 +1313,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
       timeControlStatus: player.timeControlStatus,
       playbackStatus: status,
       firstFrameSent: firstFrameSent || airPlayActive,
-      timeoutMs: configuration.network.readTimeoutMs,
+      timeoutMs: timeoutMs,
       waitingReason: player.reasonForWaitingToPlay?.rawValue
     ) { [weak self] error in
       self?.handleStallTimeout(error, generation: generation)

@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "exitCode": 0,
+  "errors": [],
+  "publicPolicyObservation": {
+    "phasesVerified": [
+      "initial-auto",
+      "caps",
+      "clear-caps",
+      "fixed",
+      "restore-auto"
+    ],
+    "phases": [
+      {
+        "phase": "initial-auto",
+        "rows": 31,
+        "publishedFrames": 178,
+        "widths": [
+          320,
+          640
+        ]
+      },
+      {
+        "phase": "caps",
+        "rows": 62,
+        "publishedFrames": 367,
+        "widths": [
+          320
+        ]
+      },
+      {
+        "phase": "clear-caps",
+        "rows": 100,
+        "publishedFrames": 596,
+        "widths": [
+          320,
+          640
+        ]
+      },
+      {
+        "phase": "fixed",
+        "rows": 77,
+        "publishedFrames": 461,
+        "widths": [
+          320
+        ]
+      },
+      {
+        "phase": "restore-auto",
+        "rows": 210,
+        "publishedFrames": 1273,
+        "widths": [
+          320,
+          640
+        ]
+      }
+    ],
+    "sameSession": true,
+    "capabilityAccepted": false,
+    "physicalOutputVerified": false,
+    "continuityAccepted": false
+  },
+  "ownedProcessExited": true,
+  "binaryIdentityUnchanged": true,
+  "profileSha256": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+  "endPositionSeconds": 120.055107462,
+  "guardTests": {
+    "device": {
+      "architecture": "arm64e",
+      "deviceId": "00008140-000C49CC3493001C",
+      "deviceName": "iPhone",
+      "modelName": "iPhone 16",
+      "osBuildNumber": "24B119",
+      "osVersion": "27.2",
+      "platform": "iOS"
+    },
+    "expectedFailures": 0,
+    "failedTests": 0,
+    "passedTests": 4,
+    "skippedTests": 0,
+    "testPlanConfiguration": {
+      "configurationId": "1",
+      "configurationName": "Test Scheme Action"
+    }
+  },
+  "appleFrameworkSHA256": "53379f660c025af33bc082e8331b937318686c94e15f57a225c038f49965e96e"
+}
