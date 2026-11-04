@@ -1,0 +1,29 @@
+2026-11-03 08:14:01.281 yl_player_example[20808:178130] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 8d1b72258134561f3403bea2fce09da0df2d8f917ddd95dfeb46a4c7511e480b:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP file load
+[libdav1d @ 0x74b13c8700] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x74b13fc280] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x74b13c8700] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP file play
+QUAL_SAMPLE D5B84F6C-1B17-4386-9D08-04FFDF32E3B4 12798963292583 2364588 21 168 164247000 541834
+PUBLIC_STEP file pause-seek-2000
+PUBLIC_SEEK_RETURN file target=2000 position=3411 revision=36
+QUAL_SAMPLE D5B84F6C-1B17-4386-9D08-04FFDF32E3B4 12800963075416 2364588 21 168 181894000 669167
+PUBLIC_SEEK_WAIT file target=2000 position=2269 revision=43
+PUBLIC_STEP file pause-seek-1250
+PUBLIC_SEEK_RETURN file target=1250 position=2451 revision=47
+PUBLIC_SEEK_WAIT file target=1250 position=1714 revision=54
+PUBLIC_STEP file pause-seek-0
+PUBLIC_SEEK_RETURN file target=0 position=1715 revision=56
+PUBLIC_SEEK_WAIT file target=0 position=470 revision=65
+PUBLIC_STEP file await-completed
+QUAL_SAMPLE D5B84F6C-1B17-4386-9D08-04FFDF32E3B4 12802963530833 2364588 21 168 216038000 922167
+QUAL_SAMPLE D5B84F6C-1B17-4386-9D08-04FFDF32E3B4 12804963525041 2364588 21 168 216038000 922167
+PUBLIC_PLAYBACK {"transport":"file","decoder":"software","completed":true,"markers":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":453000},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1435000},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2421000},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3437000},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2271000},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1715000},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":471000}],"requests":[],"pixelVerificationMethod":"native-renderer-displayed-buffer","readbackWhilePaused":true,"acousticOutputVerified":false}
+PUBLIC_DISPOSE {"transport":"file","elapsedUs":21765}
+QUAL_ID MacBookPro17,1 26A434 8d1b72258134561f3403bea2fce09da0df2d8f917ddd95dfeb46a4c7511e480b:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP http load
+[libdav1d @ 0x74b13cb100] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x74b112b480] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x74b13cb100] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP http play

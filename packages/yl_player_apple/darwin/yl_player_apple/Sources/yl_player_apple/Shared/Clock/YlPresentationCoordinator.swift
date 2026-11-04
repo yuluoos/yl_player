@@ -10,6 +10,7 @@ protocol YlPresentationScheduling: AnyObject {
   var bufferedDurationUs: Int64 { get }
   func configureBounded(_ plan: YlBoundedBufferPlan?)
   func setRate(_ rate: Double)
+  func setPaused(_ paused: Bool)
   func enqueue(_ frame: YlFrameEnvelope) -> Bool
   func nextFrame(upTo positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
   func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
@@ -187,7 +188,8 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     mediaClock = provided ?? YlMediaClock(audioTime: audioTime)
   }
   @discardableResult
-  func configureIsolatedAudioClock(generation: UInt64, read: @escaping (UInt64) -> YlAudioClockObservation) -> Bool {
+  func configureIsolatedAudioClock(generation: UInt64,
+                                  read: @escaping (UInt64) -> YlAudioClockObservation) -> Bool {
     guard timedLock.withLock({ timedCandidateEnabled && timedRequiresAudioAnchor }) else { return false }
     mediaClock.enableIsolatedAudioClock(read: read, generation: generation)
     return true
@@ -204,8 +206,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     markTimedAudioReady()
   }
   func position(atHostTimeUs time: Int64) -> Int64 { mediaClock.position(atHostTimeUs: time) }
+  func pauseFrameEnqueues() { frameScheduler.setPaused(true) }
   func play(atHostTimeUs time: Int64) {
     mediaClock.play(atHostTimeUs: time)
+    frameScheduler.setPaused(false)
     requestTimedStart()
     synchronizeTimedPresentation()
   }
@@ -292,9 +296,13 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   }
 
   private func present(_ pixelBuffer: CVPixelBuffer, reservation: YlManagedBufferLedger.Token?) {
-    let old = stateLock.withLock { () -> YlManagedBufferLedger.Token? in
-      let old = currentFrameReservation; currentPixelBuffer = pixelBuffer; currentFrameReservation = reservation; return old
-    }
+    stateLock.lock()
+    // The initial-frame notice and the first display tick may select the same
+    // retained immutable image. Publish it once, whichever route arrives first.
+    guard currentPixelBuffer !== pixelBuffer else { stateLock.unlock(); return }
+    let old = currentFrameReservation
+    currentPixelBuffer = pixelBuffer; currentFrameReservation = reservation
+    stateLock.unlock()
     if textureId >= 0 {
       ylPublishVideoFrame(pixelBuffer, retaining: reservation, to: services.textureOutput)
     }

@@ -165,9 +165,10 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       softwareServices: prepared.softwareServices)
     let localSource: Bool
     if case .local = prepared.sourceRecipe { localSource = true } else { localSource = false }
+    let finiteSeekable = !prepared.policy.isLive && demux.isSeekable && demux.mediaInfo.duration_us > 0
     self.audio = YlAudioPipeline(bufferBudget: bufferBudget, lock: stateLock, generation: generation, factory: audioRendererFactory,
       completionContext: .init(enabled: audioTerminalCandidateEnabled, platform: services.platform,
-        localFiniteSeekable: localSource && !prepared.policy.isLive && demux.isSeekable && demux.mediaInfo.duration_us > 0,
+        eligibleFiniteSource: localSource && finiteSeekable,
         hasBoundedPlan: prepared.boundedPlan != nil, codec: .unsupported, sampleRate: 0, channels: 0, rate: 1))
     self.audio.beforeOutput = services.beforeAudioOutput
     self.presentation = YlPresentationCoordinator(services: services, lock: stateLock,
@@ -199,12 +200,25 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     video.connect(self)
     do {
       if !video.hasDecoder { try video.initializeDecoder() }
-      let useTimedVideo = timedVideoCandidateEnabled || video.hardwareEvidence == .init(software: .dav1d)
+      let softwareAV1 = video.hardwareEvidence == .init(software: .dav1d)
+      let admittedHTTPAV1: Bool
+      if case .network = prepared.sourceRecipe { admittedHTTPAV1 = softwareAV1 && finiteSeekable }
+      else { admittedHTTPAV1 = false }
+      // Decoder creation has already enforced the exact-image admission profile.
+      // Per-buffer playedBack queries hold the audio graph during HAL latency
+      // reads; keep that real completion fence only on the final PCM boundary.
+      if softwareAV1 {
+        audio.enableTerminalCompletion(eligibleFiniteSource: (localSource || admittedHTTPAV1) && finiteSeekable)
+      }
+      let useTimedVideo = timedVideoCandidateEnabled || softwareAV1
       presentation.configureTimedCandidate(enabled: useTimedVideo && services.platform == .macos
-        && services.nativeViewType != nil && localSource && !prepared.policy.isLive
+        && services.nativeViewType != nil && (localSource || admittedHTTPAV1) && !prepared.policy.isLive
         && demux.isSeekable && demux.mediaInfo.duration_us > 0 && prepared.boundedPlan == nil,
         requiresAudioAnchor: demux.selectedAudioStream != nil, diagnosticsEnabled: timedVideoDiagnosticsEnabled)
-      if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration, read: { [weak self] generation in
+      // Admitted finite HTTP AV1 uses the same native timed queue as files;
+      // neither source depends on main-thread display ticks for frame submission.
+      if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration,
+        read: { [weak self] generation in
         guard let self, let resource = self.audio.currentResource else { return .waiting }
         // A finite audio gap must not freeze the independent video worker when
         // AppKit stops delivering display ticks. Advance only through decoded
@@ -316,6 +330,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     if stopping { recovery.cancelBudget() }
     reconnectToCancel?.cancel()
     presentation.retireDisplay()
+    // Release a producer waiting for presentation capacity before joining it.
+    presentation.flushFrames(generation: currentGeneration)
     currentAudioRenderer?.pause()
     presentation.pause(atHostTimeUs: Self.hostTimeUs())
     YlFallbackTeardownTransaction(
@@ -333,7 +349,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         mediaToClose?.close()
       }
     ).run()
-    presentation.flushFrames(generation: currentGeneration)
     boundedStarted = false; boundedProducerLimited = false
     bufferBudget.bufferScope?.beginMediaGeneration()
     stateLock.withLock {
@@ -511,6 +526,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
 
   func pause() throws {
       if stateLock.withLock({ completionSent }) { emitState(); return }
+      presentation.pauseFrameEnqueues()
       stateLock.withLock {
         if playing { livePausedAt = CACurrentMediaTime() }
         playing = false
@@ -660,6 +676,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     reconnectToCancel?.cancel()
     presentation.stopAudioClock()
     presentation.retireDisplay()
+    presentation.disposeFrames()
     YlFallbackTeardownTransaction(
       cancelInput: { [self] in
         tokenToCancel?.cancel()
@@ -671,7 +688,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           cancelVideoSubmissions()
           video.discardDecoder()
           audio.discardRenderer()
-          presentation.disposeFrames()
         }
         mediaToClose?.close()
       }
@@ -1162,6 +1178,9 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       },
       stopDemux: { [self] in
         demux.interrupt(media)
+        // A paused full presentation queue can hold the decoder being joined.
+        // Advance its generation and wake that producer before waiting for it.
+        presentation.flushFrames(generation: operationGeneration)
         demux.joinForControl { cancelVideoSubmissions() }
         demux.resume(media)
         try cancellationToken?.throwIfCancelled()
@@ -1178,7 +1197,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
             audio.resetAnchor()
             presentation.clearFrameAndTexture()
           }
-          presentation.flushFrames(generation: nextGeneration)
           boundedStarted = false; boundedProducerLimited = false
     bufferBudget.bufferScope?.beginMediaGeneration()
         }
@@ -1424,7 +1442,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let reselectedAudio = preferredAudioIndex.flatMap { preferredIndex in
       supportedAudio.first { $0.index == preferredIndex }
     } ?? supportedAudio.first
-    audio.updateSourceEligibility(localFiniteSeekable: false) // Live/network reconnects cannot enter the local candidate.
+    audio.updateSourceEligibility(eligibleFiniteSource: false) // Reconnects cannot enter the finite-source candidate.
     let newAudioRenderer = try audio.prepareReconnect(stream: reselectedAudio,
       generation: reconnectGeneration, cookies: copiedAudioCookies,
       onCreated: { resource in candidateAudio = resource })
@@ -1479,7 +1497,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
           rewind: { try demux.seek(reopenedMedia, toMediaTimeUs: 0) })
     let localSource: Bool
     if case .local = demux.sourceRecipe { localSource = true } else { localSource = false }
-    audio.updateSourceEligibility(localFiniteSeekable: localSource && !demux.mediaPolicy.isLive
+    audio.updateSourceEligibility(eligibleFiniteSource: localSource && !demux.mediaPolicy.isLive
       && demux.isSeekable && reopenedMedia.supportsRandomAccess && reopenedMedia.info.duration_us > 0)
     let renderer = try audio.prepareRebuild(stream: demux.selectedAudioStream, cookies: demux.audioCookies,
       onCreated: { resource in candidateAudio = resource })

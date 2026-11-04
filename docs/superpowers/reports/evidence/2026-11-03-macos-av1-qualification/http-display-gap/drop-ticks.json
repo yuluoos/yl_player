@@ -1,0 +1,2162 @@
+[
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 421, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1308062, hostTimeUs: 17983061632, lowerBoundUs: 1250000, upperBoundUs: 1714000, rate: 1.0))), lastReadHostTimeUs: Optional(17983047401))",
+    "drops": 0,
+    "endNs": 17983052703416,
+    "hostNs": 17983052631500,
+    "paused": false,
+    "pendingPTS": [
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000
+    ],
+    "positionUs": 1299061
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 423, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1331270, hostTimeUs: 17983084853, lowerBoundUs: 1250000, upperBoundUs: 1754000, rate: 1.0))), lastReadHostTimeUs: Optional(17983067427))",
+    "drops": 0,
+    "endNs": 17983069336458,
+    "hostNs": 17983069291208,
+    "paused": false,
+    "pendingPTS": [
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000
+    ],
+    "positionUs": 1315708
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 424, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1342895, hostTimeUs: 17983096463, lowerBoundUs: 1250000, upperBoundUs: 1754000, rate: 1.0))), lastReadHostTimeUs: Optional(17983077168))",
+    "drops": 0,
+    "endNs": 17983086016458,
+    "hostNs": 17983085981041,
+    "paused": false,
+    "pendingPTS": [
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000
+    ],
+    "positionUs": 1332413
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 426, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1366104, hostTimeUs: 17983119683, lowerBoundUs: 1250000, upperBoundUs: 1774000, rate: 1.0))), lastReadHostTimeUs: Optional(17983097390))",
+    "drops": 0,
+    "endNs": 17983102717083,
+    "hostNs": 17983102630958,
+    "paused": false,
+    "pendingPTS": [
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000
+    ],
+    "positionUs": 1349051
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 428, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1389333, hostTimeUs: 17983142904, lowerBoundUs: 1250000, upperBoundUs: 1814000, rate: 1.0))), lastReadHostTimeUs: Optional(17983117381))",
+    "drops": 0,
+    "endNs": 17983119320333,
+    "hostNs": 17983119300458,
+    "paused": false,
+    "pendingPTS": [
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000
+    ],
+    "positionUs": 1365729
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 429, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1389333, hostTimeUs: 17983142904, lowerBoundUs: 1250000, upperBoundUs: 1814000, rate: 1.0))), lastReadHostTimeUs: Optional(17983127138))",
+    "drops": 0,
+    "endNs": 17983136018791,
+    "hostNs": 17983135975541,
+    "paused": false,
+    "pendingPTS": [
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000
+    ],
+    "positionUs": 1382404
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 431, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1412541, hostTimeUs: 17983166124, lowerBoundUs: 1250000, upperBoundUs: 1834000, rate: 1.0))), lastReadHostTimeUs: Optional(17983147854))",
+    "drops": 0,
+    "endNs": 17983152667541,
+    "hostNs": 17983152653583,
+    "paused": false,
+    "pendingPTS": [
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000
+    ],
+    "positionUs": 1399070
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 433, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1435770, hostTimeUs: 17983189344, lowerBoundUs: 1250000, upperBoundUs: 1854000, rate: 1.0))), lastReadHostTimeUs: Optional(17983167423))",
+    "drops": 0,
+    "endNs": 17983169318750,
+    "hostNs": 17983169294625,
+    "paused": false,
+    "pendingPTS": [
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000
+    ],
+    "positionUs": 1415720
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 434, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1447375, hostTimeUs: 17983200955, lowerBoundUs: 1250000, upperBoundUs: 1854000, rate: 1.0))), lastReadHostTimeUs: Optional(17983177099))",
+    "drops": 0,
+    "endNs": 17983186076291,
+    "hostNs": 17983185983625,
+    "paused": false,
+    "pendingPTS": [
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000
+    ],
+    "positionUs": 1432403
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 436, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1458979, hostTimeUs: 17983212565, lowerBoundUs: 1250000, upperBoundUs: 1874000, rate: 1.0))), lastReadHostTimeUs: Optional(17983197348))",
+    "drops": 0,
+    "endNs": 17983202696500,
+    "hostNs": 17983202659791,
+    "paused": false,
+    "pendingPTS": [
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000
+    ],
+    "positionUs": 1449073
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 438, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1482208, hostTimeUs: 17983235785, lowerBoundUs: 1250000, upperBoundUs: 1894000, rate: 1.0))), lastReadHostTimeUs: Optional(17983217396))",
+    "drops": 0,
+    "endNs": 17983219484500,
+    "hostNs": 17983219318333,
+    "paused": false,
+    "pendingPTS": [
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000
+    ],
+    "positionUs": 1465741
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 439, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1493812, hostTimeUs: 17983247395, lowerBoundUs: 1250000, upperBoundUs: 1914000, rate: 1.0))), lastReadHostTimeUs: Optional(17983227228))",
+    "drops": 0,
+    "endNs": 17983235999166,
+    "hostNs": 17983235973125,
+    "paused": false,
+    "pendingPTS": [
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000
+    ],
+    "positionUs": 1482390
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 441, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1517041, hostTimeUs: 17983270616, lowerBoundUs: 1250000, upperBoundUs: 1934000, rate: 1.0))), lastReadHostTimeUs: Optional(17983247403))",
+    "drops": 0,
+    "endNs": 17983252681708,
+    "hostNs": 17983252648208,
+    "paused": false,
+    "pendingPTS": [
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000
+    ],
+    "positionUs": 1499073
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 443, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1528645, hostTimeUs: 17983282226, lowerBoundUs: 1250000, upperBoundUs: 1954000, rate: 1.0))), lastReadHostTimeUs: Optional(17983268087))",
+    "drops": 0,
+    "endNs": 17983269400416,
+    "hostNs": 17983269311375,
+    "paused": false,
+    "pendingPTS": [
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000
+    ],
+    "positionUs": 1515730
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 444, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1540250, hostTimeUs: 17983293836, lowerBoundUs: 1250000, upperBoundUs: 1954000, rate: 1.0))), lastReadHostTimeUs: Optional(17983277176))",
+    "drops": 0,
+    "endNs": 17983286014791,
+    "hostNs": 17983285984916,
+    "paused": false,
+    "pendingPTS": [
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000
+    ],
+    "positionUs": 1532398
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 446, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1563479, hostTimeUs: 17983317056, lowerBoundUs: 1250000, upperBoundUs: 1974000, rate: 1.0))), lastReadHostTimeUs: Optional(17983298107))",
+    "drops": 0,
+    "endNs": 17983302726666,
+    "hostNs": 17983302643583,
+    "paused": false,
+    "pendingPTS": [
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000
+    ],
+    "positionUs": 1549066
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 448, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1586687, hostTimeUs: 17983340277, lowerBoundUs: 1250000, upperBoundUs: 1994000, rate: 1.0))), lastReadHostTimeUs: Optional(17983318080))",
+    "drops": 0,
+    "endNs": 17983319364583,
+    "hostNs": 17983319336541,
+    "paused": false,
+    "pendingPTS": [
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000
+    ],
+    "positionUs": 1565746
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 449, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1598312, hostTimeUs: 17983351887, lowerBoundUs: 1250000, upperBoundUs: 1994000, rate: 1.0))), lastReadHostTimeUs: Optional(17983327156))",
+    "drops": 0,
+    "endNs": 17983336004750,
+    "hostNs": 17983335970125,
+    "paused": false,
+    "pendingPTS": [
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000
+    ],
+    "positionUs": 1582395
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 451, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1609916, hostTimeUs: 17983363497, lowerBoundUs: 1250000, upperBoundUs: 2034000, rate: 1.0))), lastReadHostTimeUs: Optional(17983347379))",
+    "drops": 0,
+    "endNs": 17983352730708,
+    "hostNs": 17983352651791,
+    "paused": false,
+    "pendingPTS": [
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000
+    ],
+    "positionUs": 1599070
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 453, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1633145, hostTimeUs: 17983386718, lowerBoundUs: 1250000, upperBoundUs: 2034000, rate: 1.0))), lastReadHostTimeUs: Optional(17983368090))",
+    "drops": 0,
+    "endNs": 17983369337833,
+    "hostNs": 17983369314125,
+    "paused": false,
+    "pendingPTS": [
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000
+    ],
+    "positionUs": 1615741
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 454, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1644750, hostTimeUs: 17983398328, lowerBoundUs: 1250000, upperBoundUs: 2054000, rate: 1.0))), lastReadHostTimeUs: Optional(17983377210))",
+    "drops": 0,
+    "endNs": 17983386155500,
+    "hostNs": 17983385993000,
+    "paused": false,
+    "pendingPTS": [
+      1625000,
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000
+    ],
+    "positionUs": 1632415
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 456, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1667958, hostTimeUs: 17983421548, lowerBoundUs: 1250000, upperBoundUs: 2074000, rate: 1.0))), lastReadHostTimeUs: Optional(17983397403))",
+    "drops": 0,
+    "endNs": 17983402670958,
+    "hostNs": 17983402656708,
+    "paused": false,
+    "pendingPTS": [
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000
+    ],
+    "positionUs": 1649066
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 458, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1679583, hostTimeUs: 17983433158, lowerBoundUs: 1250000, upperBoundUs: 2114000, rate: 1.0))), lastReadHostTimeUs: Optional(17983417388))",
+    "drops": 0,
+    "endNs": 17983419311416,
+    "hostNs": 17983419292958,
+    "paused": false,
+    "pendingPTS": [
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000
+    ],
+    "positionUs": 1665717
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 459, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1691187, hostTimeUs: 17983444768, lowerBoundUs: 1250000, upperBoundUs: 2114000, rate: 1.0))), lastReadHostTimeUs: Optional(17983427117))",
+    "drops": 0,
+    "endNs": 17983436038833,
+    "hostNs": 17983435977041,
+    "paused": false,
+    "pendingPTS": [
+      1667000,
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000
+    ],
+    "positionUs": 1682396
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 461, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1714416, hostTimeUs: 17983467989, lowerBoundUs: 1250000, upperBoundUs: 2134000, rate: 1.0))), lastReadHostTimeUs: Optional(17983447275))",
+    "drops": 0,
+    "endNs": 17983452707458,
+    "hostNs": 17983452675083,
+    "paused": false,
+    "pendingPTS": [
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000,
+      2000000
+    ],
+    "positionUs": 1699102
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 463, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1737625, hostTimeUs: 17983491209, lowerBoundUs: 1250000, upperBoundUs: 2154000, rate: 1.0))), lastReadHostTimeUs: Optional(17983467364))",
+    "drops": 0,
+    "endNs": 17983469361291,
+    "hostNs": 17983469298000,
+    "paused": false,
+    "pendingPTS": [
+      1708000,
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000,
+      2000000
+    ],
+    "positionUs": 1715714
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 464, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1749229, hostTimeUs: 17983502819, lowerBoundUs: 1250000, upperBoundUs: 2154000, rate: 1.0))), lastReadHostTimeUs: Optional(17983477209))",
+    "drops": 0,
+    "endNs": 17983486127875,
+    "hostNs": 17983485999958,
+    "paused": false,
+    "pendingPTS": [
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000,
+      2000000,
+      2042000
+    ],
+    "positionUs": 1732409
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 465, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 4, positionUs: 1726041, hostTimeUs: 17983526040, lowerBoundUs: 1250000, upperBoundUs: 2174000, rate: 1.0))), lastReadHostTimeUs: Optional(17983500676))",
+    "drops": 0,
+    "endNs": 17983502819125,
+    "hostNs": 17983502803583,
+    "paused": false,
+    "pendingPTS": [
+      1750000,
+      1792000,
+      1833000,
+      1875000,
+      1917000,
+      1958000,
+      2000000,
+      2042000
+    ],
+    "positionUs": 1702137
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 466, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 0, hostTimeUs: 17983537650, lowerBoundUs: 0, upperBoundUs: 454000, rate: 1.0))), lastReadHostTimeUs: Optional(17983518063))",
+    "drops": 0,
+    "endNs": 17983519360208,
+    "hostNs": 17983519329750,
+    "paused": false,
+    "pendingPTS": [
+      0,
+      42000,
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000
+    ],
+    "positionUs": 0
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 467, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 11625, hostTimeUs: 17983549260, lowerBoundUs: 0, upperBoundUs: 454000, rate: 1.0))), lastReadHostTimeUs: Optional(17983527173))",
+    "drops": 0,
+    "endNs": 17983536017125,
+    "hostNs": 17983536003458,
+    "paused": false,
+    "pendingPTS": [
+      42000,
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000
+    ],
+    "positionUs": 0
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 469, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 34833, hostTimeUs: 17983572480, lowerBoundUs: 0, upperBoundUs: 454000, rate: 1.0))), lastReadHostTimeUs: Optional(17983547371))",
+    "drops": 0,
+    "endNs": 17983552679958,
+    "hostNs": 17983552665208,
+    "paused": false,
+    "pendingPTS": [
+      42000,
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000
+    ],
+    "positionUs": 15018
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 471, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 46437, hostTimeUs: 17983584091, lowerBoundUs: 0, upperBoundUs: 474000, rate: 1.0))), lastReadHostTimeUs: Optional(17983567362))",
+    "drops": 0,
+    "endNs": 17983569327708,
+    "hostNs": 17983569303708,
+    "paused": false,
+    "pendingPTS": [
+      42000,
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000
+    ],
+    "positionUs": 31649
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 472, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 58062, hostTimeUs: 17983595701, lowerBoundUs: 0, upperBoundUs: 474000, rate: 1.0))), lastReadHostTimeUs: Optional(17983577201))",
+    "drops": 0,
+    "endNs": 17983586057458,
+    "hostNs": 17983585985583,
+    "paused": false,
+    "pendingPTS": [
+      42000,
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000
+    ],
+    "positionUs": 48346
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 474, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 81270, hostTimeUs: 17983618921, lowerBoundUs: 0, upperBoundUs: 494000, rate: 1.0))), lastReadHostTimeUs: Optional(17983597405))",
+    "drops": 0,
+    "endNs": 17983602683375,
+    "hostNs": 17983602663541,
+    "paused": false,
+    "pendingPTS": [
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000
+    ],
+    "positionUs": 65012
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 476, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 104500, hostTimeUs: 17983642142, lowerBoundUs: 0, upperBoundUs: 514000, rate: 1.0))), lastReadHostTimeUs: Optional(17983618083))",
+    "drops": 0,
+    "endNs": 17983619329458,
+    "hostNs": 17983619304458,
+    "paused": false,
+    "pendingPTS": [
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000
+    ],
+    "positionUs": 81662
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 477, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 104500, hostTimeUs: 17983642142, lowerBoundUs: 0, upperBoundUs: 534000, rate: 1.0))), lastReadHostTimeUs: Optional(17983627206))",
+    "drops": 0,
+    "endNs": 17983636051875,
+    "hostNs": 17983635975583,
+    "paused": false,
+    "pendingPTS": [
+      83000,
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000
+    ],
+    "positionUs": 98333
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 479, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 127708, hostTimeUs: 17983665362, lowerBoundUs: 0, upperBoundUs: 554000, rate: 1.0))), lastReadHostTimeUs: Optional(17983647412))",
+    "drops": 0,
+    "endNs": 17983652664791,
+    "hostNs": 17983652640000,
+    "paused": false,
+    "pendingPTS": [
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000
+    ],
+    "positionUs": 114986
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 481, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 150937, hostTimeUs: 17983688582, lowerBoundUs: 0, upperBoundUs: 574000, rate: 1.0))), lastReadHostTimeUs: Optional(17983667355))",
+    "drops": 0,
+    "endNs": 17983669352791,
+    "hostNs": 17983669316958,
+    "paused": false,
+    "pendingPTS": [
+      125000,
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000
+    ],
+    "positionUs": 131671
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 482, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 162541, hostTimeUs: 17983700192, lowerBoundUs: 0, upperBoundUs: 574000, rate: 1.0))), lastReadHostTimeUs: Optional(17983677197))",
+    "drops": 0,
+    "endNs": 17983686009583,
+    "hostNs": 17983685989583,
+    "paused": false,
+    "pendingPTS": [
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000
+    ],
+    "positionUs": 148338
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 484, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 174145, hostTimeUs: 17983711803, lowerBoundUs: 0, upperBoundUs: 594000, rate: 1.0))), lastReadHostTimeUs: Optional(17983697389))",
+    "drops": 0,
+    "endNs": 17983702676250,
+    "hostNs": 17983702660708,
+    "paused": false,
+    "pendingPTS": [
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000
+    ],
+    "positionUs": 165002
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 486, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 197375, hostTimeUs: 17983735023, lowerBoundUs: 0, upperBoundUs: 634000, rate: 1.0))), lastReadHostTimeUs: Optional(17983717398))",
+    "drops": 0,
+    "endNs": 17983719367583,
+    "hostNs": 17983719321250,
+    "paused": false,
+    "pendingPTS": [
+      167000,
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000
+    ],
+    "positionUs": 181673
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 487, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 208979, hostTimeUs: 17983746633, lowerBoundUs: 0, upperBoundUs: 634000, rate: 1.0))), lastReadHostTimeUs: Optional(17983727186))",
+    "drops": 0,
+    "endNs": 17983736003041,
+    "hostNs": 17983735989916,
+    "paused": false,
+    "pendingPTS": [
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000
+    ],
+    "positionUs": 198335
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 489, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 232208, hostTimeUs: 17983769854, lowerBoundUs: 0, upperBoundUs: 634000, rate: 1.0))), lastReadHostTimeUs: Optional(17983747383))",
+    "drops": 0,
+    "endNs": 17983752764500,
+    "hostNs": 17983752663625,
+    "paused": false,
+    "pendingPTS": [
+      208000,
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000
+    ],
+    "positionUs": 215017
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 491, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 243812, hostTimeUs: 17983781464, lowerBoundUs: 0, upperBoundUs: 654000, rate: 1.0))), lastReadHostTimeUs: Optional(17983767400))",
+    "drops": 0,
+    "endNs": 17983769337791,
+    "hostNs": 17983769315708,
+    "paused": false,
+    "pendingPTS": [
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000
+    ],
+    "positionUs": 231663
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 492, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 255416, hostTimeUs: 17983793074, lowerBoundUs: 0, upperBoundUs: 674000, rate: 1.0))), lastReadHostTimeUs: Optional(17983777126))",
+    "drops": 0,
+    "endNs": 17983786020833,
+    "hostNs": 17983785993583,
+    "paused": false,
+    "pendingPTS": [
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000
+    ],
+    "positionUs": 248335
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 494, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 278645, hostTimeUs: 17983816294, lowerBoundUs: 0, upperBoundUs: 714000, rate: 1.0))), lastReadHostTimeUs: Optional(17983797461))",
+    "drops": 0,
+    "endNs": 17983802726541,
+    "hostNs": 17983802653916,
+    "paused": false,
+    "pendingPTS": [
+      250000,
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000
+    ],
+    "positionUs": 265004
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 496, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 301875, hostTimeUs: 17983839515, lowerBoundUs: 0, upperBoundUs: 734000, rate: 1.0))), lastReadHostTimeUs: Optional(17983817374))",
+    "drops": 0,
+    "endNs": 17983819329875,
+    "hostNs": 17983819310916,
+    "paused": false,
+    "pendingPTS": [
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000
+    ],
+    "positionUs": 281670
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 497, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 313479, hostTimeUs: 17983851125, lowerBoundUs: 0, upperBoundUs: 734000, rate: 1.0))), lastReadHostTimeUs: Optional(17983827161))",
+    "drops": 0,
+    "endNs": 17983836076208,
+    "hostNs": 17983836002166,
+    "paused": false,
+    "pendingPTS": [
+      292000,
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000
+    ],
+    "positionUs": 298356
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 499, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 325083, hostTimeUs: 17983862735, lowerBoundUs: 0, upperBoundUs: 734000, rate: 1.0))), lastReadHostTimeUs: Optional(17983847921))",
+    "drops": 0,
+    "endNs": 17983852679916,
+    "hostNs": 17983852654125,
+    "paused": false,
+    "pendingPTS": [
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000
+    ],
+    "positionUs": 315002
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 501, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 348312, hostTimeUs: 17983885956, lowerBoundUs: 0, upperBoundUs: 774000, rate: 1.0))), lastReadHostTimeUs: Optional(17983867403))",
+    "drops": 0,
+    "endNs": 17983869349583,
+    "hostNs": 17983869327333,
+    "paused": false,
+    "pendingPTS": [
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000
+    ],
+    "positionUs": 331683
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 502, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 359916, hostTimeUs: 17983897566, lowerBoundUs: 0, upperBoundUs: 774000, rate: 1.0))), lastReadHostTimeUs: Optional(17983877132))",
+    "drops": 0,
+    "endNs": 17983886073583,
+    "hostNs": 17983885982250,
+    "paused": false,
+    "pendingPTS": [
+      333000,
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000
+    ],
+    "positionUs": 348332
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 504, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 383145, hostTimeUs: 17983920786, lowerBoundUs: 0, upperBoundUs: 794000, rate: 1.0))), lastReadHostTimeUs: Optional(17983897335))",
+    "drops": 0,
+    "endNs": 17983902677541,
+    "hostNs": 17983902650875,
+    "paused": false,
+    "pendingPTS": [
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000
+    ],
+    "positionUs": 365009
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 506, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 394750, hostTimeUs: 17983932396, lowerBoundUs: 0, upperBoundUs: 814000, rate: 1.0))), lastReadHostTimeUs: Optional(17983917424))",
+    "drops": 0,
+    "endNs": 17983919531458,
+    "hostNs": 17983919453291,
+    "paused": false,
+    "pendingPTS": [
+      375000,
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000
+    ],
+    "positionUs": 381807
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 507, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 406354, hostTimeUs: 17983944006, lowerBoundUs: 0, upperBoundUs: 834000, rate: 1.0))), lastReadHostTimeUs: Optional(17983927226))",
+    "drops": 0,
+    "endNs": 17983936018291,
+    "hostNs": 17983936000250,
+    "paused": false,
+    "pendingPTS": [
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000
+    ],
+    "positionUs": 398348
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 509, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 429583, hostTimeUs: 17983967227, lowerBoundUs: 0, upperBoundUs: 854000, rate: 1.0))), lastReadHostTimeUs: Optional(17983947368))",
+    "drops": 0,
+    "endNs": 17983952686666,
+    "hostNs": 17983952670625,
+    "paused": false,
+    "pendingPTS": [
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000
+    ],
+    "positionUs": 415026
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 511, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 452791, hostTimeUs: 17983990447, lowerBoundUs: 0, upperBoundUs: 874000, rate: 1.0))), lastReadHostTimeUs: Optional(17983968038))",
+    "drops": 0,
+    "endNs": 17983969379958,
+    "hostNs": 17983969331208,
+    "paused": false,
+    "pendingPTS": [
+      417000,
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000
+    ],
+    "positionUs": 431675
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 512, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 464395, hostTimeUs: 17984002057, lowerBoundUs: 0, upperBoundUs: 874000, rate: 1.0))), lastReadHostTimeUs: Optional(17983977186))",
+    "drops": 0,
+    "endNs": 17983986016208,
+    "hostNs": 17983986002125,
+    "paused": false,
+    "pendingPTS": [
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000
+    ],
+    "positionUs": 448340
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 514, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025504, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 476020, hostTimeUs: 17984013668, lowerBoundUs: 0, upperBoundUs: 894000, rate: 1.0))), lastReadHostTimeUs: Optional(17983997410))",
+    "drops": 0,
+    "endNs": 17984002797291,
+    "hostNs": 17984002658666,
+    "paused": false,
+    "pendingPTS": [
+      458000,
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000
+    ],
+    "positionUs": 465010
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 516, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 464416, hostTimeUs: 17984036888, lowerBoundUs: 0, upperBoundUs: 914000, rate: 1.0))), lastReadHostTimeUs: Optional(17984017389))",
+    "drops": 0,
+    "endNs": 17984019342208,
+    "hostNs": 17984019321875,
+    "paused": false,
+    "pendingPTS": [
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000
+    ],
+    "positionUs": 446849
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 517, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 476041, hostTimeUs: 17984048498, lowerBoundUs: 0, upperBoundUs: 914000, rate: 1.0))), lastReadHostTimeUs: Optional(17984027141))",
+    "drops": 0,
+    "endNs": 17984036069291,
+    "hostNs": 17984036032875,
+    "paused": false,
+    "pendingPTS": [
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000
+    ],
+    "positionUs": 463575
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 519, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 499250, hostTimeUs: 17984071718, lowerBoundUs: 0, upperBoundUs: 914000, rate: 1.0))), lastReadHostTimeUs: Optional(17984047396))",
+    "drops": 0,
+    "endNs": 17984052693833,
+    "hostNs": 17984052658791,
+    "paused": false,
+    "pendingPTS": [
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000
+    ],
+    "positionUs": 480190
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 521, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 510854, hostTimeUs: 17984083329, lowerBoundUs: 0, upperBoundUs: 934000, rate: 1.0))), lastReadHostTimeUs: Optional(17984067423))",
+    "drops": 0,
+    "endNs": 17984069381875,
+    "hostNs": 17984069356375,
+    "paused": false,
+    "pendingPTS": [
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000
+    ],
+    "positionUs": 496881
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 522, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 522479, hostTimeUs: 17984094939, lowerBoundUs: 0, upperBoundUs: 954000, rate: 1.0))), lastReadHostTimeUs: Optional(17984077207))",
+    "drops": 0,
+    "endNs": 17984086078416,
+    "hostNs": 17984085999208,
+    "paused": false,
+    "pendingPTS": [
+      500000,
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000
+    ],
+    "positionUs": 513539
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 524, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 545687, hostTimeUs: 17984118159, lowerBoundUs: 0, upperBoundUs: 954000, rate: 1.0))), lastReadHostTimeUs: Optional(17984098091))",
+    "drops": 0,
+    "endNs": 17984102690750,
+    "hostNs": 17984102663875,
+    "paused": false,
+    "pendingPTS": [
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000
+    ],
+    "positionUs": 530191
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 526, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 568916, hostTimeUs: 17984141380, lowerBoundUs: 0, upperBoundUs: 974000, rate: 1.0))), lastReadHostTimeUs: Optional(17984117427))",
+    "drops": 0,
+    "endNs": 17984119452625,
+    "hostNs": 17984119364250,
+    "paused": false,
+    "pendingPTS": [
+      542000,
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000
+    ],
+    "positionUs": 546900
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 527, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 568916, hostTimeUs: 17984141380, lowerBoundUs: 0, upperBoundUs: 994000, rate: 1.0))), lastReadHostTimeUs: Optional(17984127129))",
+    "drops": 0,
+    "endNs": 17984136018208,
+    "hostNs": 17984136000791,
+    "paused": false,
+    "pendingPTS": [
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000
+    ],
+    "positionUs": 563536
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 529, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 592125, hostTimeUs: 17984164600, lowerBoundUs: 0, upperBoundUs: 1014000, rate: 1.0))), lastReadHostTimeUs: Optional(17984147396))",
+    "drops": 0,
+    "endNs": 17984152688416,
+    "hostNs": 17984152671166,
+    "paused": false,
+    "pendingPTS": [
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000
+    ],
+    "positionUs": 580196
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 531, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 615354, hostTimeUs: 17984187820, lowerBoundUs: 0, upperBoundUs: 1034000, rate: 1.0))), lastReadHostTimeUs: Optional(17984167405))",
+    "drops": 0,
+    "endNs": 17984169389208,
+    "hostNs": 17984169329708,
+    "paused": false,
+    "pendingPTS": [
+      583000,
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000
+    ],
+    "positionUs": 596863
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 532, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 626958, hostTimeUs: 17984199431, lowerBoundUs: 0, upperBoundUs: 1034000, rate: 1.0))), lastReadHostTimeUs: Optional(17984177187))",
+    "drops": 0,
+    "endNs": 17984185985958,
+    "hostNs": 17984185975791,
+    "paused": false,
+    "pendingPTS": [
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000
+    ],
+    "positionUs": 613502
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 534, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 650187, hostTimeUs: 17984222651, lowerBoundUs: 0, upperBoundUs: 1054000, rate: 1.0))), lastReadHostTimeUs: Optional(17984197372))",
+    "drops": 0,
+    "endNs": 17984202686250,
+    "hostNs": 17984202646000,
+    "paused": false,
+    "pendingPTS": [
+      625000,
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000
+    ],
+    "positionUs": 630182
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 536, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.00027291666992823593, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 661791, hostTimeUs: 17984234261, lowerBoundUs: 0, upperBoundUs: 1074000, rate: 1.0))), lastReadHostTimeUs: Optional(17984217360))",
+    "drops": 0,
+    "endNs": 17984219329916,
+    "hostNs": 17984219314166,
+    "paused": false,
+    "pendingPTS": [
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000
+    ],
+    "positionUs": 646844
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 537, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 685020, hostTimeUs: 17984257481, lowerBoundUs: 0, upperBoundUs: 1094000, rate: 1.0))), lastReadHostTimeUs: Optional(17984234328))",
+    "drops": 0,
+    "endNs": 17984235998750,
+    "hostNs": 17984235981333,
+    "paused": false,
+    "pendingPTS": [
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000
+    ],
+    "positionUs": 663520
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 539, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 696625, hostTimeUs: 17984269092, lowerBoundUs: 0, upperBoundUs: 1094000, rate: 1.0))), lastReadHostTimeUs: Optional(17984247361))",
+    "drops": 0,
+    "endNs": 17984252672875,
+    "hostNs": 17984252643750,
+    "paused": false,
+    "pendingPTS": [
+      667000,
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000
+    ],
+    "positionUs": 680176
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 541, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 719854, hostTimeUs: 17984292312, lowerBoundUs: 0, upperBoundUs: 1134000, rate: 1.0))), lastReadHostTimeUs: Optional(17984267345))",
+    "drops": 0,
+    "endNs": 17984269399208,
+    "hostNs": 17984269342375,
+    "paused": false,
+    "pendingPTS": [
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000
+    ],
+    "positionUs": 696884
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 542, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 719854, hostTimeUs: 17984292312, lowerBoundUs: 0, upperBoundUs: 1154000, rate: 1.0))), lastReadHostTimeUs: Optional(17984277190))",
+    "drops": 0,
+    "endNs": 17984286029875,
+    "hostNs": 17984285986625,
+    "paused": false,
+    "pendingPTS": [
+      708000,
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000
+    ],
+    "positionUs": 713528
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 544, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 743062, hostTimeUs: 17984315532, lowerBoundUs: 0, upperBoundUs: 1174000, rate: 1.0))), lastReadHostTimeUs: Optional(17984297373))",
+    "drops": 0,
+    "endNs": 17984302679166,
+    "hostNs": 17984302666625,
+    "paused": false,
+    "pendingPTS": [
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000
+    ],
+    "positionUs": 730196
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 546, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 766291, hostTimeUs: 17984338753, lowerBoundUs: 0, upperBoundUs: 1194000, rate: 1.0))), lastReadHostTimeUs: Optional(17984318049))",
+    "drops": 0,
+    "endNs": 17984319322333,
+    "hostNs": 17984319318333,
+    "paused": false,
+    "pendingPTS": [
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000
+    ],
+    "positionUs": 746856
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 547, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 777895, hostTimeUs: 17984350363, lowerBoundUs: 0, upperBoundUs: 1194000, rate: 1.0))), lastReadHostTimeUs: Optional(17984327190))",
+    "drops": 0,
+    "endNs": 17984336027375,
+    "hostNs": 17984335999250,
+    "paused": false,
+    "pendingPTS": [
+      750000,
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000
+    ],
+    "positionUs": 763531
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 549, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 789500, hostTimeUs: 17984361973, lowerBoundUs: 0, upperBoundUs: 1214000, rate: 1.0))), lastReadHostTimeUs: Optional(17984347339))",
+    "drops": 0,
+    "endNs": 17984352661375,
+    "hostNs": 17984352654791,
+    "paused": false,
+    "pendingPTS": [
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000
+    ],
+    "positionUs": 780181
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 551, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 812729, hostTimeUs: 17984385194, lowerBoundUs: 0, upperBoundUs: 1234000, rate: 1.0))), lastReadHostTimeUs: Optional(17984367363))",
+    "drops": 0,
+    "endNs": 17984369326500,
+    "hostNs": 17984369308208,
+    "paused": false,
+    "pendingPTS": [
+      792000,
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000
+    ],
+    "positionUs": 796843
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 552, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 824333, hostTimeUs: 17984396804, lowerBoundUs: 0, upperBoundUs: 1234000, rate: 1.0))), lastReadHostTimeUs: Optional(17984377180))",
+    "drops": 0,
+    "endNs": 17984386008291,
+    "hostNs": 17984385996916,
+    "paused": false,
+    "pendingPTS": [
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000
+    ],
+    "positionUs": 813525
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 554, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 847562, hostTimeUs: 17984420024, lowerBoundUs: 0, upperBoundUs: 1254000, rate: 1.0))), lastReadHostTimeUs: Optional(17984397381))",
+    "drops": 0,
+    "endNs": 17984402664166,
+    "hostNs": 17984402655083,
+    "paused": false,
+    "pendingPTS": [
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000
+    ],
+    "positionUs": 830193
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 556, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 859166, hostTimeUs: 17984431634, lowerBoundUs: 0, upperBoundUs: 1274000, rate: 1.0))), lastReadHostTimeUs: Optional(17984417359))",
+    "drops": 0,
+    "endNs": 17984419354208,
+    "hostNs": 17984419331583,
+    "paused": false,
+    "pendingPTS": [
+      833000,
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000
+    ],
+    "positionUs": 846863
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 557, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 870770, hostTimeUs: 17984443244, lowerBoundUs: 0, upperBoundUs: 1294000, rate: 1.0))), lastReadHostTimeUs: Optional(17984427196))",
+    "drops": 0,
+    "endNs": 17984436017125,
+    "hostNs": 17984436007916,
+    "paused": false,
+    "pendingPTS": [
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000
+    ],
+    "positionUs": 863533
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 559, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 894000, hostTimeUs: 17984466465, lowerBoundUs: 0, upperBoundUs: 1314000, rate: 1.0))), lastReadHostTimeUs: Optional(17984447364))",
+    "drops": 0,
+    "endNs": 17984452688958,
+    "hostNs": 17984452660708,
+    "paused": false,
+    "pendingPTS": [
+      875000,
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000
+    ],
+    "positionUs": 880195
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 561, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 917208, hostTimeUs: 17984489685, lowerBoundUs: 0, upperBoundUs: 1354000, rate: 1.0))), lastReadHostTimeUs: Optional(17984467387))",
+    "drops": 0,
+    "endNs": 17984469341041,
+    "hostNs": 17984469333666,
+    "paused": false,
+    "pendingPTS": [
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000
+    ],
+    "positionUs": 896856
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 562, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 928833, hostTimeUs: 17984501295, lowerBoundUs: 0, upperBoundUs: 1354000, rate: 1.0))), lastReadHostTimeUs: Optional(17984477191))",
+    "drops": 0,
+    "endNs": 17984486013791,
+    "hostNs": 17984486005000,
+    "paused": false,
+    "pendingPTS": [
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000
+    ],
+    "positionUs": 913543
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 564, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 940437, hostTimeUs: 17984512906, lowerBoundUs: 0, upperBoundUs: 1354000, rate: 1.0))), lastReadHostTimeUs: Optional(17984497380))",
+    "drops": 0,
+    "endNs": 17984502698166,
+    "hostNs": 17984502668583,
+    "paused": false,
+    "pendingPTS": [
+      917000,
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000
+    ],
+    "positionUs": 930199
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 566, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 963645, hostTimeUs: 17984536126, lowerBoundUs: 0, upperBoundUs: 1374000, rate: 1.0))), lastReadHostTimeUs: Optional(17984517414))",
+    "drops": 0,
+    "endNs": 17984519450916,
+    "hostNs": 17984519339833,
+    "paused": false,
+    "pendingPTS": [
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000
+    ],
+    "positionUs": 946858
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 567, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 975270, hostTimeUs: 17984547736, lowerBoundUs: 0, upperBoundUs: 1374000, rate: 1.0))), lastReadHostTimeUs: Optional(17984527236))",
+    "drops": 0,
+    "endNs": 17984536068083,
+    "hostNs": 17984535998791,
+    "paused": false,
+    "pendingPTS": [
+      958000,
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000
+    ],
+    "positionUs": 963532
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 569, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 998479, hostTimeUs: 17984570956, lowerBoundUs: 0, upperBoundUs: 1394000, rate: 1.0))), lastReadHostTimeUs: Optional(17984548058))",
+    "drops": 0,
+    "endNs": 17984552696625,
+    "hostNs": 17984552672333,
+    "paused": false,
+    "pendingPTS": [
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000
+    ],
+    "positionUs": 980195
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 571, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1010104, hostTimeUs: 17984582567, lowerBoundUs: 0, upperBoundUs: 1434000, rate: 1.0))), lastReadHostTimeUs: Optional(17984567412))",
+    "drops": 0,
+    "endNs": 17984569385166,
+    "hostNs": 17984569360208,
+    "paused": false,
+    "pendingPTS": [
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000
+    ],
+    "positionUs": 996897
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 572, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1021708, hostTimeUs: 17984594177, lowerBoundUs: 0, upperBoundUs: 1454000, rate: 1.0))), lastReadHostTimeUs: Optional(17984577229))",
+    "drops": 0,
+    "endNs": 17984586120416,
+    "hostNs": 17984586024583,
+    "paused": false,
+    "pendingPTS": [
+      1000000,
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000
+    ],
+    "positionUs": 1013555
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 574, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1044916, hostTimeUs: 17984617397, lowerBoundUs: 0, upperBoundUs: 1474000, rate: 1.0))), lastReadHostTimeUs: Optional(17984597928))",
+    "drops": 0,
+    "endNs": 17984602701833,
+    "hostNs": 17984602668583,
+    "paused": false,
+    "pendingPTS": [
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000
+    ],
+    "positionUs": 1030187
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 576, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1068145, hostTimeUs: 17984640618, lowerBoundUs: 0, upperBoundUs: 1494000, rate: 1.0))), lastReadHostTimeUs: Optional(17984618068))",
+    "drops": 0,
+    "endNs": 17984619420833,
+    "hostNs": 17984619357541,
+    "paused": false,
+    "pendingPTS": [
+      1042000,
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000
+    ],
+    "positionUs": 1046884
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 577, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1079750, hostTimeUs: 17984652228, lowerBoundUs: 0, upperBoundUs: 1494000, rate: 1.0))), lastReadHostTimeUs: Optional(17984627194))",
+    "drops": 0,
+    "endNs": 17984636027833,
+    "hostNs": 17984635998666,
+    "paused": false,
+    "pendingPTS": [
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000
+    ],
+    "positionUs": 1063520
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 579, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1091354, hostTimeUs: 17984663838, lowerBoundUs: 0, upperBoundUs: 1514000, rate: 1.0))), lastReadHostTimeUs: Optional(17984647403))",
+    "drops": 0,
+    "endNs": 17984652697208,
+    "hostNs": 17984652679416,
+    "paused": false,
+    "pendingPTS": [
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000
+    ],
+    "positionUs": 1080195
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 581, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1114583, hostTimeUs: 17984687058, lowerBoundUs: 0, upperBoundUs: 1534000, rate: 1.0))), lastReadHostTimeUs: Optional(17984667400))",
+    "drops": 0,
+    "endNs": 17984669394958,
+    "hostNs": 17984669346583,
+    "paused": false,
+    "pendingPTS": [
+      1083000,
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000
+    ],
+    "positionUs": 1096871
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 582, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1126187, hostTimeUs: 17984698668, lowerBoundUs: 0, upperBoundUs: 1534000, rate: 1.0))), lastReadHostTimeUs: Optional(17984677220))",
+    "drops": 0,
+    "endNs": 17984686064666,
+    "hostNs": 17984686045791,
+    "paused": false,
+    "pendingPTS": [
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000
+    ],
+    "positionUs": 1113564
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 584, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1149416, hostTimeUs: 17984721889, lowerBoundUs: 0, upperBoundUs: 1554000, rate: 1.0))), lastReadHostTimeUs: Optional(17984697393))",
+    "drops": 0,
+    "endNs": 17984702708541,
+    "hostNs": 17984702674000,
+    "paused": false,
+    "pendingPTS": [
+      1125000,
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000
+    ],
+    "positionUs": 1130201
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 586, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1161020, hostTimeUs: 17984733499, lowerBoundUs: 0, upperBoundUs: 1574000, rate: 1.0))), lastReadHostTimeUs: Optional(17984717379))",
+    "drops": 0,
+    "endNs": 17984719355666,
+    "hostNs": 17984719345208,
+    "paused": false,
+    "pendingPTS": [
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000
+    ],
+    "positionUs": 1146866
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 587, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1172625, hostTimeUs: 17984745109, lowerBoundUs: 0, upperBoundUs: 1594000, rate: 1.0))), lastReadHostTimeUs: Optional(17984727251))",
+    "drops": 0,
+    "endNs": 17984736044708,
+    "hostNs": 17984736014541,
+    "paused": false,
+    "pendingPTS": [
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000
+    ],
+    "positionUs": 1163530
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 589, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1195854, hostTimeUs: 17984768330, lowerBoundUs: 0, upperBoundUs: 1614000, rate: 1.0))), lastReadHostTimeUs: Optional(17984748084))",
+    "drops": 0,
+    "endNs": 17984752737625,
+    "hostNs": 17984752671416,
+    "paused": false,
+    "pendingPTS": [
+      1167000,
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000
+    ],
+    "positionUs": 1180195
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 591, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1219083, hostTimeUs: 17984791550, lowerBoundUs: 0, upperBoundUs: 1634000, rate: 1.0))), lastReadHostTimeUs: Optional(17984767359))",
+    "drops": 0,
+    "endNs": 17984769450041,
+    "hostNs": 17984769343166,
+    "paused": false,
+    "pendingPTS": [
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000
+    ],
+    "positionUs": 1196876
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 592, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1219083, hostTimeUs: 17984791550, lowerBoundUs: 0, upperBoundUs: 1634000, rate: 1.0))), lastReadHostTimeUs: Optional(17984777281))",
+    "drops": 0,
+    "endNs": 17984786100625,
+    "hostNs": 17984786024875,
+    "paused": false,
+    "pendingPTS": [
+      1208000,
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000
+    ],
+    "positionUs": 1213557
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 594, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1242291, hostTimeUs: 17984814770, lowerBoundUs: 0, upperBoundUs: 1654000, rate: 1.0))), lastReadHostTimeUs: Optional(17984797409))",
+    "drops": 0,
+    "endNs": 17984802695666,
+    "hostNs": 17984802664083,
+    "paused": false,
+    "pendingPTS": [
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000
+    ],
+    "positionUs": 1230185
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 596, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1265520, hostTimeUs: 17984837991, lowerBoundUs: 0, upperBoundUs: 1674000, rate: 1.0))), lastReadHostTimeUs: Optional(17984817397))",
+    "drops": 0,
+    "endNs": 17984819355958,
+    "hostNs": 17984819334416,
+    "paused": false,
+    "pendingPTS": [
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000
+    ],
+    "positionUs": 1246863
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 597, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1277125, hostTimeUs: 17984849601, lowerBoundUs: 0, upperBoundUs: 1674000, rate: 1.0))), lastReadHostTimeUs: Optional(17984827165))",
+    "drops": 0,
+    "endNs": 17984836173833,
+    "hostNs": 17984836099250,
+    "paused": false,
+    "pendingPTS": [
+      1250000,
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000
+    ],
+    "positionUs": 1263623
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 599, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1300354, hostTimeUs: 17984872821, lowerBoundUs: 0, upperBoundUs: 1714000, rate: 1.0))), lastReadHostTimeUs: Optional(17984847841))",
+    "drops": 0,
+    "endNs": 17984852690208,
+    "hostNs": 17984852669708,
+    "paused": false,
+    "pendingPTS": [
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000
+    ],
+    "positionUs": 1280202
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 601, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1311958, hostTimeUs: 17984884432, lowerBoundUs: 0, upperBoundUs: 1734000, rate: 1.0))), lastReadHostTimeUs: Optional(17984867379))",
+    "drops": 0,
+    "endNs": 17984869404666,
+    "hostNs": 17984869340708,
+    "paused": false,
+    "pendingPTS": [
+      1292000,
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000
+    ],
+    "positionUs": 1296866
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 602, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1323562, hostTimeUs: 17984896042, lowerBoundUs: 0, upperBoundUs: 1754000, rate: 1.0))), lastReadHostTimeUs: Optional(17984877199))",
+    "drops": 0,
+    "endNs": 17984886029291,
+    "hostNs": 17984886002458,
+    "paused": false,
+    "pendingPTS": [
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000
+    ],
+    "positionUs": 1313522
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 604, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1346791, hostTimeUs: 17984919262, lowerBoundUs: 0, upperBoundUs: 1774000, rate: 1.0))), lastReadHostTimeUs: Optional(17984898056))",
+    "drops": 0,
+    "endNs": 17984902700083,
+    "hostNs": 17984902672041,
+    "paused": false,
+    "pendingPTS": [
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000
+    ],
+    "positionUs": 1330201
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 606, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1370000, hostTimeUs: 17984942482, lowerBoundUs: 0, upperBoundUs: 1794000, rate: 1.0))), lastReadHostTimeUs: Optional(17984917111))",
+    "drops": 0,
+    "endNs": 17984919426833,
+    "hostNs": 17984919346375,
+    "paused": false,
+    "pendingPTS": [
+      1333000,
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000
+    ],
+    "positionUs": 1346864
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 607, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1370000, hostTimeUs: 17984942482, lowerBoundUs: 0, upperBoundUs: 1794000, rate: 1.0))), lastReadHostTimeUs: Optional(17984927248))",
+    "drops": 0,
+    "endNs": 17984936049916,
+    "hostNs": 17984936022583,
+    "paused": false,
+    "pendingPTS": [
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000
+    ],
+    "positionUs": 1363540
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 609, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1393229, hostTimeUs: 17984965703, lowerBoundUs: 0, upperBoundUs: 1814000, rate: 1.0))), lastReadHostTimeUs: Optional(17984947419))",
+    "drops": 0,
+    "endNs": 17984952720333,
+    "hostNs": 17984952675583,
+    "paused": false,
+    "pendingPTS": [
+      1375000,
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000
+    ],
+    "positionUs": 1380201
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 611, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1416437, hostTimeUs: 17984988923, lowerBoundUs: 0, upperBoundUs: 1834000, rate: 1.0))), lastReadHostTimeUs: Optional(17984967375))",
+    "drops": 0,
+    "endNs": 17984969363500,
+    "hostNs": 17984969342875,
+    "paused": false,
+    "pendingPTS": [
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000
+    ],
+    "positionUs": 1396856
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 612, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1428062, hostTimeUs: 17985000533, lowerBoundUs: 0, upperBoundUs: 1834000, rate: 1.0))), lastReadHostTimeUs: Optional(17984977230))",
+    "drops": 0,
+    "endNs": 17984986032708,
+    "hostNs": 17984986001375,
+    "paused": false,
+    "pendingPTS": [
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000
+    ],
+    "positionUs": 1413530
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 614, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1439666, hostTimeUs: 17985012144, lowerBoundUs: 0, upperBoundUs: 1854000, rate: 1.0))), lastReadHostTimeUs: Optional(17984997391))",
+    "drops": 0,
+    "endNs": 17985002740458,
+    "hostNs": 17985002671166,
+    "paused": false,
+    "pendingPTS": [
+      1417000,
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000
+    ],
+    "positionUs": 1430193
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 616, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1462875, hostTimeUs: 17985035364, lowerBoundUs: 0, upperBoundUs: 1874000, rate: 1.0))), lastReadHostTimeUs: Optional(17985017390))",
+    "drops": 0,
+    "endNs": 17985019463916,
+    "hostNs": 17985019338500,
+    "paused": false,
+    "pendingPTS": [
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000
+    ],
+    "positionUs": 1446849
+  },
+  {
+    "clock": "YlIsolatedAudioClockStatistics(samples: 622, staleEvents: 0, rejectedObservations: 0, maximumReadSeconds: 0.007001624999247724, maximumAgeSeconds: 0.025525, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 5, positionUs: 1520937, hostTimeUs: 17985093415, lowerBoundUs: 0, upperBoundUs: 1934000, rate: 1.0))), lastReadHostTimeUs: Optional(17985077235))",
+    "drops": 1,
+    "endNs": 17985077342375,
+    "hostNs": 17985077283166,
+    "paused": false,
+    "pendingPTS": [
+      1458000,
+      1500000,
+      1542000,
+      1583000,
+      1625000,
+      1667000,
+      1708000,
+      1750000
+    ],
+    "positionUs": 1504805
+  }
+]

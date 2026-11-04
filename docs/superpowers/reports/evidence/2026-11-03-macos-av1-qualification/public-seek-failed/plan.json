@@ -1,0 +1,18 @@
+{
+  "app": "/Users/yy2021_8689/Desktop/Flutter/yl_player/build/macos-av1-20261103-resumed/qualified-public.app",
+  "sdkImages": {
+    "Contents/Frameworks/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d",
+    "Contents/Frameworks/yl-player-apple.framework/Versions/A/yl-player-apple": "be49c02af31ddee2ebb7566f09b70db5b2f947a90c187baffe6befb54057e5ea"
+  },
+  "profileSHA256": "9675e0ef44836430bb095e91f6930a5dc10ccfa0e8a2cd7f535766368b81f860",
+  "entry": "public YlPlayerApplePlugin.register; no configureServices; phase=production",
+  "signature": "codesign --verify --deep --strict passed",
+  "scenarios": [
+    "file",
+    "HTTP Range",
+    "native displayed color markers",
+    "pause/seek/play",
+    "completed",
+    "dispose <=3s"
+  ]
+}

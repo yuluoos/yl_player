@@ -1,0 +1,927 @@
+2026-11-03 02:42:26.144 yl_player_example[38859:842475] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 e4e2beadb93afbd23de7d6eb0de7b1b0a62be1336eae0cad6726b30ee0f0d005:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+[libdav1d @ 0x7ae3c99c00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7ae33f8500] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7ae3c99c00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_PREFLIGHT {"waitUs":40091,"layer":{"totalFrameDelaySeconds":0.0,"surfaceHasBounds":true,"totalFrames":1,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e56440)","corruptedFrames":0},"positionUs":0,"decoder":"software","firstFrameCompleted":true}
+QUAL_CLOCK {"hostNs":23832935150125,"maximumAgeSeconds":0.025037,"maximumReadSeconds":0.011546874997293344,"maximumWorkerGapSeconds":0.010887874999752967,"samples":171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23832935457458 2364588 21 168 171295000 638167
+QUAL_DART {"us":2041462,"position":1925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23834934898958,"maximumAgeSeconds":0.025037,"maximumReadSeconds":0.011546874997293344,"maximumWorkerGapSeconds":0.010913750000327127,"samples":371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23834935065125 2364588 21 168 187490000 876958
+QUAL_DART {"us":4041736,"position":3770000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":120,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23836935018583,"maximumAgeSeconds":0.025037,"maximumReadSeconds":0.011546874997293344,"maximumWorkerGapSeconds":0.011008666668203659,"samples":571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23836935379916 2364588 21 168 187490000 876958
+QUAL_DART {"us":6041322,"position":5858000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23838935025250,"maximumAgeSeconds":0.025037,"maximumReadSeconds":0.011546874997293344,"maximumWorkerGapSeconds":0.011008666668203659,"samples":771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23838935218041 2364588 21 168 187490000 917000
+QUAL_DART {"us":8041602,"position":7941000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23840935021458,"maximumAgeSeconds":0.025037,"maximumReadSeconds":0.011546874997293344,"maximumWorkerGapSeconds":0.011047291667637182,"samples":971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23840935325625 2364588 21 168 187490000 1217875
+QUAL_DART {"us":10042011,"position":9770000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":240,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23842935103583,"maximumAgeSeconds":0.025037,"maximumReadSeconds":0.011546874997293344,"maximumWorkerGapSeconds":0.011047291667637182,"samples":1171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23842935349791 2364588 21 168 187490000 1217875
+QUAL_DART {"us":12040939,"position":11841000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23844935136666,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011047291667637182,"samples":1371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23844935434833 2364588 21 168 187490000 2257333
+QUAL_DART {"us":14041428,"position":13891000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":360,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23846935205375,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":1570,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23846935494000 2364588 21 168 187490000 2257333
+QUAL_DART {"us":16041216,"position":15769000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23848935191500,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":1771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23848935431291 2364588 21 168 187490000 2257333
+QUAL_DART {"us":18041573,"position":17770000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23850935169708,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":1971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23850935380416 2364588 21 168 187490000 2257333
+QUAL_DART {"us":20042030,"position":19808000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":481,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23852935230583,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":2171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23852935486958 2364588 21 168 187490000 2257333
+QUAL_DART {"us":22041385,"position":21874000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23854935151416,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":2370,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23854935404500 2364588 21 168 187490000 2257333
+QUAL_DART {"us":24041899,"position":23769000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":601,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23856935321375,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":2571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23856935619833 2364588 21 168 187490000 2257333
+QUAL_DART {"us":26041570,"position":25774000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23858934388416,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011057083334890194,"samples":2771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23858934639583 2364588 21 168 187490000 2257333
+QUAL_DART {"us":28041959,"position":27824000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23860935263375,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":2971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23860935512291 2364588 21 168 187490000 2257333
+QUAL_DART {"us":30041341,"position":29941000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":721,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23862935236041,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":3170,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23862935517125 2364588 21 168 187490000 2257333
+QUAL_DART {"us":32041227,"position":31770000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23864935119125,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":3371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23864935294833 2364588 21 168 187490000 2257333
+QUAL_DART {"us":34040592,"position":33824000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":841,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23866935180500,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":3571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23866935415000 2364588 21 168 187490000 2257333
+QUAL_DART {"us":36042083,"position":35891000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23868935267041,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":3771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23868935529666 2364588 21 168 187490000 2257333
+QUAL_DART {"us":38041410,"position":37770000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23870935202875,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":3970,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23870935436750 2364588 21 168 187490000 2257333
+QUAL_DART {"us":40041859,"position":39824000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":961,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23872935216333,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":4171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23872935449416 2364588 21 168 187490000 2257333
+QUAL_DART {"us":42041251,"position":41908000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23874935167791,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011096541667939164,"samples":4371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23874935403416 2364588 21 168 187490000 2257333
+QUAL_DART {"us":44041549,"position":43770000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1081,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23876934346250,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":4571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23876934746125 2364588 21 168 187490000 2257333
+QUAL_DART {"us":46040739,"position":45791000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23878935183416,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":4770,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23878935390041 2364588 21 168 187490000 2257333
+QUAL_DART {"us":48040280,"position":47874000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23880935588166,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":4971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23880935985125 2364588 21 168 187490000 2257333
+QUAL_DART {"us":50041722,"position":49770000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1201,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23882934723208,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":5171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23882934937833 2364588 21 168 187490000 2257333
+QUAL_DART {"us":52041620,"position":51791000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23884935072166,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":5371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23884935357333 2364588 21 168 187490000 2257333
+QUAL_DART {"us":54042013,"position":53858000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1321,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23886935222000,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":5571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23886935443875 2364588 21 168 187490000 2257333
+QUAL_DART {"us":56042139,"position":55908000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23888934895541,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":5771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23888935206916 2364588 21 168 187490000 2257333
+QUAL_DART {"us":58041570,"position":57769000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23890935072416,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":5971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23890935292166 2364588 21 168 187490000 2257333
+QUAL_DART {"us":60042145,"position":59774000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1441,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23892934360291,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":6170,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23892934612375 2364588 21 168 187490000 2257333
+QUAL_DART {"us":62041559,"position":61841000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23894935183250,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":6371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23894935457958 2364588 21 168 187490000 2257333
+QUAL_DART {"us":64041954,"position":63908000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1561,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23896934676041,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011137708333990304,"samples":6571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23896935011291 2364588 21 168 187490000 2257333
+QUAL_DART {"us":66041402,"position":65769000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23898935190166,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011142041665152647,"samples":6771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23898935422875 2364588 21 168 187490000 2257333
+QUAL_DART {"us":68041753,"position":67775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23900935310333,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011142041665152647,"samples":6970,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23900935625208 2364588 21 168 187490000 2257333
+QUAL_DART {"us":70041238,"position":69841000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1681,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23902935191333,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011142041665152647,"samples":7171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23902935443458 2364588 21 168 187490000 2257333
+QUAL_DART {"us":72041764,"position":71941000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23904935253375,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":7371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23904935542125 2364588 21 168 187490000 2257333
+QUAL_DART {"us":74041235,"position":73775000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1801,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23906935195208,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":7571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23906935408625 2364588 21 168 187490000 2257333
+QUAL_DART {"us":76041574,"position":75825000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23908935185333,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":7771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23908935423250 2364588 21 168 187490000 2257333
+QUAL_DART {"us":78041955,"position":77891000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23910935205083,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":7971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23910935459625 2364588 21 168 187490000 2257333
+QUAL_DART {"us":80041744,"position":79941000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":1921,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23912935444625,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":8171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23912935736291 2364588 21 168 187490000 2257333
+QUAL_DART {"us":82041637,"position":81775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23914934970958,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":8371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23914935148166 2364588 21 168 187490000 2257333
+QUAL_DART {"us":84041861,"position":83858000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":2041,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23916935307875,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":8571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23916935577083 2364588 21 168 187490000 2257333
+QUAL_DART {"us":86041564,"position":85891000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23918934768125,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":8771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23918934900750 2364588 21 168 187490000 2257333
+QUAL_DART {"us":88041827,"position":87768000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23920935282041,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":8971,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23920935639291 2364588 21 168 187490000 2257333
+QUAL_DART {"us":90041268,"position":89769000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":2161,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23922934421875,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":9170,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23922934585583 2364588 21 168 187490000 2257333
+QUAL_DART {"us":92041706,"position":91825000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23924935233458,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":9370,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23924935436458 2364588 21 168 187490000 2257333
+QUAL_DART {"us":94042060,"position":93891000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":2281,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23926934994500,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":9571,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23926935283125 2364588 21 168 187490000 2257333
+QUAL_DART {"us":96041437,"position":95925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23928935257666,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":9771,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23928935488000 2364588 21 168 187490000 4843250
+QUAL_DART {"us":98041721,"position":97769000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23930935180875,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":9970,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23930935366250 2364588 21 168 187490000 4843250
+QUAL_DART {"us":100042194,"position":99769000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"surfaceHasBounds":true,"totalFrames":2401,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23932935071625,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":10171,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23932935294791 2364588 21 168 187490000 4843250
+QUAL_DART {"us":102041303,"position":101825000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23934935232291,"maximumAgeSeconds":0.025087999999999999,"maximumReadSeconds":0.013030375001108041,"maximumWorkerGapSeconds":0.011367375002009794,"samples":10371,"staleEvents":0}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23934935488333 2364588 21 168 187490000 4843250
+QUAL_DART {"us":104041693,"position":103891000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":2521,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23936935129000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":10560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23936935326958 2364588 21 168 187490000 6658917
+QUAL_DART {"us":106042164,"position":105768000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23938935419333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":10759,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23938935727416 2364588 21 168 187490000 6658917
+QUAL_DART {"us":108041653,"position":107769000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23940935252625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":10960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23940935623875 2364588 21 168 187490000 6658917
+QUAL_DART {"us":110042039,"position":109808000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":2641,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23942935294666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":11160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23942935724708 2364588 21 168 187490000 6658917
+QUAL_DART {"us":112041135,"position":111925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23944935335833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":11360,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23944935600791 2364588 21 168 187490000 6658917
+QUAL_DART {"us":114041473,"position":113769000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":2761,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23946935260750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":11560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23946935573041 2364588 21 168 187490000 6658917
+QUAL_DART {"us":116041283,"position":115769000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23948935068291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":11760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23948935434583 2364588 21 168 187490000 6658917
+QUAL_DART {"us":118041702,"position":117791000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23950935011083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":11960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23950935333458 2364588 21 168 187490000 6658917
+QUAL_DART {"us":120041362,"position":119875000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":2881,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23952934721916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":12160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23952935175500 2364588 21 168 187490000 6658917
+QUAL_DART {"us":122041656,"position":121925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23954935327708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":12360,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23954935578666 2364588 21 168 187490000 6658917
+QUAL_DART {"us":124041971,"position":123769000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3001,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23956935343000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":12560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23956935671666 2364588 21 168 187490000 6658917
+QUAL_DART {"us":126041678,"position":125808000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23958935370666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":12760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23958935660500 2364588 21 168 187490000 6658917
+QUAL_DART {"us":128042167,"position":127891000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23960935271625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":12959,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23960935510875 2364588 21 168 187490000 6658917
+QUAL_DART {"us":130041516,"position":129769000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3121,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23962935282958,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.011367375002009794,"samples":13160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23962935588208 2364588 21 168 187490000 6658917
+QUAL_DART {"us":132041852,"position":131791000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23964935503375,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":13360,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23964935941875 2364588 21 168 187490000 6658917
+QUAL_DART {"us":134041372,"position":133808000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3241,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23966935338750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":13560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23966935760625 2364588 21 168 187490000 6658917
+QUAL_DART {"us":136040686,"position":135925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23968935219750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":13760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23968935551875 2364588 21 168 187490000 6658917
+QUAL_DART {"us":138041164,"position":137768000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23970935359708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":13960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23970935784625 2364588 21 168 187490000 6658917
+QUAL_DART {"us":140041750,"position":139768000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3361,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23972935116916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":14160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23972935374291 2364588 21 168 187490000 6658917
+QUAL_DART {"us":142042217,"position":141808000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23974935385416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":14360,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23974935786833 2364588 21 168 187490000 6658917
+QUAL_DART {"us":144041452,"position":143892000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3481,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23976935337791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":14559,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23976935705333 2364588 21 168 187490000 6658917
+QUAL_DART {"us":146041233,"position":145768000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23978935308250,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":14760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23978935651958 2364588 21 168 187490000 6658917
+QUAL_DART {"us":148040941,"position":147775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23980935427333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":14960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23980935808125 2364588 21 168 187490000 6658917
+QUAL_DART {"us":150041542,"position":149875000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3601,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23982934780666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":15160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23982935143958 2364588 21 168 187490000 6658917
+QUAL_DART {"us":152041961,"position":151767000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23984935354583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":15359,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23984935731416 2364588 21 168 187490000 6658917
+QUAL_DART {"us":154041310,"position":153768000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3721,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23986934486291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":15560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23986934826583 2364588 21 168 187490000 6658917
+QUAL_DART {"us":156042207,"position":155792000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23988935298791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":15760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23988935644208 2364588 21 168 187490000 6658917
+QUAL_DART {"us":158041874,"position":157825000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23990935470041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":15960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23990935900375 2364588 21 168 187490000 6658917
+QUAL_DART {"us":160041342,"position":159875000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3841,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23992935329791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":16160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23992935657083 2364588 21 168 187490000 6658917
+QUAL_DART {"us":162041828,"position":161908000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23994935328291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":16360,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23994935663291 2364588 21 168 187490000 6658917
+QUAL_DART {"us":164041805,"position":163767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":3961,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":23996935304000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":16560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23996935729666 2364588 21 168 187490000 6658917
+QUAL_DART {"us":166041516,"position":165768000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23998935321291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":16760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 23998935749458 2364588 21 168 187490000 6658917
+QUAL_DART {"us":168041874,"position":167792000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24000935279416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":16960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24000935691583 2364588 21 168 187490000 6658917
+QUAL_DART {"us":170041271,"position":169875000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":4081,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24002935166708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":17160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24002935533000 2364588 21 168 187490000 6658917
+QUAL_DART {"us":172041660,"position":171942000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24004935384166,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":17360,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24004935802750 2364588 21 168 187490000 6658917
+QUAL_DART {"us":174041980,"position":173767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":4201,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24006935324583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":17560,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24006935695875 2364588 21 168 187490000 6658917
+QUAL_DART {"us":176041588,"position":175808000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24008935383625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":17760,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24008935783833 2364588 21 168 187490000 6658917
+QUAL_DART {"us":178041906,"position":177858000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24010935503333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":17960,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24010936010583 2364588 21 168 187490000 6658917
+QUAL_DART {"us":180041318,"position":179925000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":5.0000000000000004e-8,"surfaceHasBounds":true,"totalFrames":4321,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24012934995333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":18160,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24012935259625 2364588 21 168 187490000 6658917
+QUAL_DART {"us":182041655,"position":181767000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24014935007500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":18358,"staleEvents":1}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24014935127666 2364588 21 168 187490000 6658917
+QUAL_DART {"us":184041973,"position":183767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":4441,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24016934722583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":18550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24016935117625 2364588 21 168 187490000 10500417
+QUAL_DART {"us":186041453,"position":185775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24018935345125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":18750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24018935718833 2364588 21 168 187490000 10500417
+QUAL_DART {"us":188041783,"position":187858000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24020935317125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":18950,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24020935696875 2364588 21 168 187490000 10500417
+QUAL_DART {"us":190042103,"position":189942000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":4561,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24022935202250,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":19149,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24022935424833 2364588 21 168 187490000 10500417
+QUAL_DART {"us":192041452,"position":191768000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24024935469625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":19350,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24024935958333 2364588 21 168 187490000 10500417
+QUAL_DART {"us":194041515,"position":193775000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":4681,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24026935165541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":19550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24026935391750 2364588 21 168 187490000 10500417
+QUAL_DART {"us":196041198,"position":195858000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24028935198458,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":19750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24028935418375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":198041535,"position":197925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24030935205208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":19950,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24030935452791 2364588 21 168 187490000 10500417
+QUAL_DART {"us":200041428,"position":199768000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":4802,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24032935233500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":20150,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24032935487375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":202041787,"position":201767000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24034935045833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":20350,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24034935279958 2364588 21 168 187490000 10500417
+QUAL_DART {"us":204041168,"position":203808000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":4922,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24036935209500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":20549,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24036935469041 2364588 21 168 187490000 10500417
+QUAL_DART {"us":206041783,"position":205842000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24038935200375,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":20750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24038935404708 2364588 21 168 187490000 10500417
+QUAL_DART {"us":208041212,"position":207908000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24040935284208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":20950,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24040935681875 2364588 21 168 187490000 10500417
+QUAL_DART {"us":210041640,"position":209767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5042,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24042935204791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":21150,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24042935410750 2364588 21 168 187490000 10500417
+QUAL_DART {"us":212041997,"position":211808000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24044935139625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":21349,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24044935323500 2364588 21 168 187490000 10500417
+QUAL_DART {"us":214041320,"position":213858000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5162,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24046934964916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":21550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24046935221666 2364588 21 168 187490000 10500417
+QUAL_DART {"us":216041881,"position":215925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24048934727750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":21750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24048934944791 2364588 21 168 187490000 10500417
+QUAL_DART {"us":218041790,"position":217766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24050934364750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":21950,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24050934605125 2364588 21 168 187490000 10500417
+QUAL_DART {"us":220041314,"position":219842000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5282,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24052935086625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":22149,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24052935321250 2364588 21 168 187490000 10500417
+QUAL_DART {"us":222041668,"position":221925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24054935222333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":22350,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24054935500375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":224041951,"position":223767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5402,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24056935183333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":22550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24056935427083 2364588 21 168 187490000 10500417
+QUAL_DART {"us":226041544,"position":225775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24058935222750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":22750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24058935496458 2364588 21 168 187490000 10500417
+QUAL_DART {"us":228041943,"position":227859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24060935271958,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":22949,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24060935489083 2364588 21 168 187490000 10500417
+QUAL_DART {"us":230040700,"position":229925000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5522,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24062935255583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":23150,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24062935501791 2364588 21 168 187490000 10500417
+QUAL_DART {"us":232042082,"position":231766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24064935187875,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":23350,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24064935400791 2364588 21 168 187490000 10500417
+QUAL_DART {"us":234041428,"position":233775000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5642,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24066935259250,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":23550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24066935491375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":236041950,"position":235842000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24068935106083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":23750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24068935275333 2364588 21 168 187490000 10500417
+QUAL_DART {"us":238041240,"position":237875000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24070935311916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":23950,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24070935590000 2364588 21 168 187490000 10500417
+QUAL_DART {"us":240041619,"position":239925000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5762,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24072935184458,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":24150,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24072935411250 2364588 21 168 187490000 10500417
+QUAL_DART {"us":242041787,"position":241767000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24074935256208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":24350,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24074935464041 2364588 21 168 187490000 10500417
+QUAL_DART {"us":244041092,"position":243809000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":5882,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24076934527666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":24550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24076934706125 2364588 21 168 187490000 10500417
+QUAL_DART {"us":246041613,"position":245859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24078935375416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":24750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24078935623541 2364588 21 168 187490000 10500417
+QUAL_DART {"us":248041934,"position":247909000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24080935038583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":24950,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24080935148916 2364588 21 168 187490000 10500417
+QUAL_DART {"us":250041222,"position":249942000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":6002,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24082935194583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":25149,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24082935424458 2364588 21 168 187490000 10500417
+QUAL_DART {"us":252041542,"position":251775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24084935211333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":25350,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24084935477166 2364588 21 168 187490000 10500417
+QUAL_DART {"us":254041947,"position":253809000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":6122,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24086934983375,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":25550,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24086935512291 2364588 21 168 187490000 10500417
+QUAL_DART {"us":256041538,"position":255859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24088935087125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":25750,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24088935329083 2364588 21 168 187490000 10500417
+QUAL_DART {"us":258041861,"position":257925000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24090935013000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":25949,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24090935136125 2364588 21 168 187490000 10500417
+QUAL_DART {"us":260041309,"position":259767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":6242,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24092935338958,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":26149,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24092935732583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":262041572,"position":261775000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24094934607416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":26349,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24094934792416 2364588 21 168 187490000 10500417
+QUAL_DART {"us":264042019,"position":263825000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":6362,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24096935058291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":26549,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24096935208583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":266041263,"position":265909000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24098935334291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":26748,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24098935703416 2364588 21 168 187490000 10500417
+QUAL_DART {"us":268041434,"position":267766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24100934948833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":26948,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24100935016250 2364588 21 168 187490000 10500417
+QUAL_DART {"us":270041675,"position":269792000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":6.666666666666667e-8,"surfaceHasBounds":true,"totalFrames":6482,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24102935120375,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":27148,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24102935293666 2364588 21 168 187490000 10500417
+QUAL_DART {"us":272041908,"position":271842000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24104934571125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":27348,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24104934939750 2364588 21 168 187490000 10500417
+QUAL_DART {"us":274041357,"position":273909000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":6602,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24106935260791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":27548,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24106935661958 2364588 21 168 187490000 10500417
+QUAL_DART {"us":276041976,"position":275942000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24108935361833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":27748,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24108935738625 2364588 21 168 187490000 10500417
+QUAL_DART {"us":278041371,"position":277766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24110934609583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":27948,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24110934728833 2364588 21 168 187490000 10500417
+QUAL_DART {"us":280041937,"position":279826000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":6722,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24112935328000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":28148,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24112935646583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":282041254,"position":281876000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24114934524833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":28348,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24114934923250 2364588 21 168 187490000 10500417
+QUAL_DART {"us":284041679,"position":283909000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":6842,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24116935301833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":28548,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24116935704458 2364588 21 168 187490000 10500417
+QUAL_DART {"us":286041886,"position":285766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24118934325750,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":28748,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24118934752041 2364588 21 168 187490000 10500417
+QUAL_DART {"us":288041275,"position":287792000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24120935301791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":28947,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24120935663458 2364588 21 168 187490000 10500417
+QUAL_DART {"us":290040778,"position":289842000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":6962,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24122935337583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":29148,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24122935780708 2364588 21 168 187490000 10500417
+QUAL_DART {"us":292041281,"position":291909000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24124935256125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":29348,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24124935570250 2364588 21 168 187490000 10500417
+QUAL_DART {"us":294040997,"position":293942000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7082,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24126935388708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":29540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24126935841375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":296041456,"position":295792000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24128935282250,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":29739,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24128935677291 2364588 21 168 187490000 10500417
+QUAL_DART {"us":298041742,"position":297842000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24130934997458,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.012881458333140472,"samples":29940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24130935118791 2364588 21 168 187490000 10500417
+QUAL_DART {"us":300041986,"position":299926000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7202,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24132935355583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":30140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24132935759166 2364588 21 168 187490000 10500417
+QUAL_DART {"us":302041231,"position":301766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24134935186958,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":30340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24134935435583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":304041615,"position":303792000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7322,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24136934494583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":30539,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24136934782000 2364588 21 168 187490000 10500417
+QUAL_DART {"us":306042037,"position":305826000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24138935124125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":30740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24138935503208 2364588 21 168 187490000 10500417
+QUAL_DART {"us":308041365,"position":307892000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24140934992541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":30940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24140935326791 2364588 21 168 187490000 10500417
+QUAL_DART {"us":310041674,"position":309766000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7442,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24142936237708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":31140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24142936510375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":312042035,"position":311766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24144936363541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":31340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24144936770041 2364588 21 168 187490000 10500417
+QUAL_DART {"us":314042027,"position":313842000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7562,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24146936395458,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":31540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24146936696833 2364588 21 168 187490000 10500417
+QUAL_DART {"us":316043000,"position":315892000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24148936246791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":31740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24148936575083 2364588 21 168 187490000 10500417
+QUAL_DART {"us":318042308,"position":317766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24150936262333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":31940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24150936618583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":320042720,"position":319767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7682,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24152936267833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":32140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24152936615583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":322042387,"position":321826000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24154934843500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":32340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24154935134458 2364588 21 168 187490000 10500417
+QUAL_DART {"us":324041795,"position":323842000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7802,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24156934342041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":32540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24156934611208 2364588 21 168 187490000 10500417
+QUAL_DART {"us":326042956,"position":325892000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24158936064083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":32739,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24158936391958 2364588 21 168 187490000 10500417
+QUAL_DART {"us":328040543,"position":327767000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24160936011916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":32940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24160936410916 2364588 21 168 187490000 10500417
+QUAL_DART {"us":330042947,"position":329767000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":7922,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24162935231708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":33140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24162935527666 2364588 21 168 187490000 10500417
+QUAL_DART {"us":332042329,"position":331809000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24164935867083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":33340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24164936215875 2364588 21 168 187490000 10500417
+QUAL_DART {"us":334041769,"position":333859000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8042,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24166934835333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":33540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24166935247208 2364588 21 168 187490000 10500417
+QUAL_DART {"us":336042396,"position":335926000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24168934696791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":33740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24168935112333 2364588 21 168 187490000 10500417
+QUAL_DART {"us":338041761,"position":337766000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24170934541833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":33940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24170934853208 2364588 21 168 187490000 10500417
+QUAL_DART {"us":340041175,"position":339809000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8162,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24172934267791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":34140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24172934619916 2364588 21 168 187490000 10500417
+QUAL_DART {"us":342041599,"position":341876000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24174934445500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":34340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24174934790125 2364588 21 168 187490000 10500417
+QUAL_DART {"us":344041853,"position":343926000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8282,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24176935247583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":34540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24176935564375 2364588 21 168 187490000 10500417
+QUAL_DART {"us":346041536,"position":345765000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24178935188208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":34740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24178935445291 2364588 21 168 187490000 10500417
+QUAL_DART {"us":348042224,"position":347776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24180935090875,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":34940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24180935267916 2364588 21 168 187490000 10500417
+QUAL_DART {"us":350041072,"position":349826000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8402,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24182935282583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":35140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24182935677416 2364588 21 168 187490000 10500417
+QUAL_DART {"us":352041060,"position":351943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24184935354333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":35340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24184935776041 2364588 21 168 187490000 10500417
+QUAL_DART {"us":354041374,"position":353764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8522,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24186935515125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":35540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24186935978166 2364588 21 168 187490000 10500417
+QUAL_DART {"us":356040651,"position":355776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24188935223125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":35740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24188935481416 2364588 21 168 187490000 10500417
+QUAL_DART {"us":358042071,"position":357843000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24190935245333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":35940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24190935508833 2364588 21 168 187490000 10500417
+QUAL_DART {"us":360041555,"position":359909000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8642,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24192935295000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":36140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24192935655416 2364588 21 168 187490000 10500417
+QUAL_DART {"us":362042063,"position":361764000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24194935193708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":36340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24194935474041 2364588 21 168 187490000 10500417
+QUAL_DART {"us":364041396,"position":363809000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8762,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24196935134666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":36539,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24196935334583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":366042082,"position":365843000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24198935168083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":36740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24198935456458 2364588 21 168 187490000 10500417
+QUAL_DART {"us":368041324,"position":367893000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24200935214458,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":36940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24200935454625 2364588 21 168 187490000 10500417
+QUAL_DART {"us":370041673,"position":369764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":8882,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24202935191208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":37140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24202935434875 2364588 21 168 187490000 10500417
+QUAL_DART {"us":372042023,"position":371776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24204935166333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":37339,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24204935392166 2364588 21 168 187490000 10500417
+QUAL_DART {"us":374041929,"position":373843000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9003,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24206935234125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":37540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24206935531583 2364588 21 168 187490000 10500417
+QUAL_DART {"us":376041488,"position":375909000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24208935198416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":37740,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24208935445750 2364588 21 168 187490000 10500417
+QUAL_DART {"us":378041788,"position":377943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24210935202500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":37940,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24210935597166 2364588 21 168 187490000 10500417
+QUAL_DART {"us":380041246,"position":379776000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9123,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24212935236416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":38140,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24212935520708 2364588 21 168 187490000 10500417
+QUAL_DART {"us":382041652,"position":381859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24214935267125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":38340,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24214935613083 2364588 21 168 187490000 10500417
+QUAL_DART {"us":384041975,"position":383765000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9243,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24216935223041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":38540,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24216935487291 2364588 21 168 187490000 10500417
+QUAL_DART {"us":386041606,"position":385764000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24218934049791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":38735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24218934165625 2364588 21 168 187490000 50537583
+QUAL_DART {"us":388041914,"position":387826000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24220934271875,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":38935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24220934622791 2364588 21 168 187490000 50537583
+QUAL_DART {"us":390041261,"position":389859000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9363,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24222934414083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":39135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24222934653916 2364588 21 168 187490000 50537583
+QUAL_DART {"us":392041364,"position":391764000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24224934321708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":39335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24224934524583 2364588 21 168 187490000 50537583
+QUAL_DART {"us":394041372,"position":393764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9483,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24226934328041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":39535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24226934519541 2364588 21 168 187490000 50537583
+QUAL_DART {"us":396042020,"position":395826000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24228934490916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":39735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24228934771958 2364588 21 168 187490000 50537583
+QUAL_DART {"us":398041370,"position":397859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24230934501208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":39935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24230934705916 2364588 21 168 187490000 50537583
+QUAL_DART {"us":400041263,"position":399764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9603,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24232934520500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":40135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24232934763750 2364588 21 168 187490000 50537583
+QUAL_DART {"us":402041891,"position":401764000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24234934554125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":40335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24234934873875 2364588 21 168 187490000 50537583
+QUAL_DART {"us":404040244,"position":403809000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9723,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24236934762291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":40535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24236934998000 2364588 21 168 187490000 50537583
+QUAL_DART {"us":406041646,"position":405843000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24238934818333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":40735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24238935196708 2364588 21 168 187490000 50537583
+QUAL_DART {"us":408042166,"position":407909000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24240934668333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":40935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24240934850208 2364588 21 168 187490000 50537583
+QUAL_DART {"us":410041619,"position":409764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9843,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24242934751708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":41135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24242935107208 2364588 21 168 187490000 50537583
+QUAL_DART {"us":412041914,"position":411809000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24244934827000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":41335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24244935097291 2364588 21 168 187490000 50537583
+QUAL_DART {"us":414041198,"position":413876000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":9963,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24246934969500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":41535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24246935272541 2364588 21 168 187490000 50537583
+QUAL_DART {"us":416041854,"position":415943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24248934836833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":41735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24248935053291 2364588 21 168 187490000 50537583
+QUAL_DART {"us":418041203,"position":417764000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24250934909708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":41935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24250935156041 2364588 21 168 187490000 50537583
+QUAL_DART {"us":420041568,"position":419809000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10083,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24252935043666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":42135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24252935318791 2364588 21 168 187490000 50537583
+QUAL_DART {"us":422041873,"position":421859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24254934961250,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":42335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24254935213791 2364588 21 168 187490000 50537583
+QUAL_DART {"us":424041220,"position":423926000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10203,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24256935045791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":42535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24256935286875 2364588 21 168 187490000 50537583
+QUAL_DART {"us":426042048,"position":425763000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24258935134916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":42735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24258935481125 2364588 21 168 187490000 50537583
+QUAL_DART {"us":428041312,"position":427776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24260935207041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":42935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24260935457666 2364588 21 168 187490000 50537583
+QUAL_DART {"us":430041687,"position":429859000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10323,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24262935119541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":43135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24262935325666 2364588 21 168 187490000 50537583
+QUAL_DART {"us":432042059,"position":431909000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24264935012458,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":43335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24264935158250 2364588 21 168 187490000 50537583
+QUAL_DART {"us":434041418,"position":433764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10443,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24266934894083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":43535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24266935271500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":436041980,"position":435809000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24268934982166,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":43735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24268935363041 2364588 21 168 187490000 50537583
+QUAL_DART {"us":438041403,"position":437859000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24270934980166,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":43935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24270935344333 2364588 21 168 187490000 50537583
+QUAL_DART {"us":440041798,"position":439926000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10563,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24272934654625,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":44135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24272934726541 2364588 21 168 187490000 50537583
+QUAL_DART {"us":442041079,"position":441763000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24274934897000,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":44335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24274935243666 2364588 21 168 187490000 50537583
+QUAL_DART {"us":444041476,"position":443810000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10683,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24276934962916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":44535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24276935338375 2364588 21 168 187490000 50537583
+QUAL_DART {"us":446041465,"position":445876000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24278934984583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":44735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24278935305000 2364588 21 168 187490000 50537583
+QUAL_DART {"us":448041833,"position":447926000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24280935166708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":44935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24280935503958 2364588 21 168 187490000 50537583
+QUAL_DART {"us":450041178,"position":449763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10803,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24282935137375,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":45135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24282935506250 2364588 21 168 187490000 50537583
+QUAL_DART {"us":452041455,"position":451776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24284935061666,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":45335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24284935318625 2364588 21 168 187490000 50537583
+QUAL_DART {"us":454041787,"position":453793000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":10923,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24286935289916,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":45535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24286935623458 2364588 21 168 187490000 50537583
+QUAL_DART {"us":456041623,"position":455860000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24288935304333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":45735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24288935640875 2364588 21 168 187490000 50537583
+QUAL_DART {"us":458042085,"position":457926000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24290935310541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":45935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24290935736125 2364588 21 168 187490000 50537583
+QUAL_DART {"us":460041518,"position":459763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11043,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24292935183500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":46135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24292935470375 2364588 21 168 187490000 50537583
+QUAL_DART {"us":462042035,"position":461776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24294935291041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":46335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24294935657791 2364588 21 168 187490000 50537583
+QUAL_DART {"us":464041465,"position":463810000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11163,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24296935270125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":46535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24296935547541 2364588 21 168 187490000 50537583
+QUAL_DART {"us":466041288,"position":465910000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24298935292125,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":46735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24298935649875 2364588 21 168 187490000 50537583
+QUAL_DART {"us":468041683,"position":467763000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24300935203708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":46935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24300935534958 2364588 21 168 187490000 50537583
+QUAL_DART {"us":470040356,"position":469763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11283,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24302934917541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":47135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24302935342000 2364588 21 168 187490000 50537583
+QUAL_DART {"us":472040734,"position":471810000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24304935452875,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":47335,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24304935787500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":474041199,"position":473843000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11403,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24306934437041,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":47535,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24306934890750 2364588 21 168 187490000 50537583
+QUAL_DART {"us":476042112,"position":475876000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24308935203333,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":47735,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24308935477541 2364588 21 168 187490000 50537583
+QUAL_DART {"us":478040861,"position":477943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24310934314500,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":47935,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24310934698791 2364588 21 168 187490000 50537583
+QUAL_DART {"us":480041361,"position":479763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11523,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24312935009166,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":48135,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24312935173708 2364588 21 168 187490000 50537583
+QUAL_DART {"us":482041133,"position":481843000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24314934971416,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":48332,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24314935083833 2364588 21 168 187490000 50537583
+QUAL_DART {"us":484041334,"position":483910000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11643,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24316934833791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":48532,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24316934931208 2364588 21 168 187490000 50537583
+QUAL_DART {"us":486040915,"position":485943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24318934976291,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":48732,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24318935061000 2364588 21 168 187490000 50537583
+QUAL_DART {"us":488040835,"position":487776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24320935007541,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":48932,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24320935116458 2364588 21 168 187490000 50537583
+QUAL_DART {"us":490041788,"position":489810000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11763,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24322934212208,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":49132,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24322934301125 2364588 21 168 187490000 50537583
+QUAL_DART {"us":492041980,"position":491860000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24324934982958,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":49332,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24324935066500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":494041140,"position":493893000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":11883,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24326934982833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":49532,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24326935071375 2364588 21 168 187490000 50537583
+QUAL_DART {"us":496041409,"position":495943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24328935363375,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":49732,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24328935762875 2364588 21 168 187490000 50537583
+QUAL_DART {"us":498041690,"position":497763000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24330935173708,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":49932,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24330935446875 2364588 21 168 187490000 50537583
+QUAL_DART {"us":500041195,"position":499810000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12003,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24332935080833,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":50132,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24332935335833 2364588 21 168 187490000 50537583
+QUAL_DART {"us":502041649,"position":501843000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24334935320791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":50332,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24334935700208 2364588 21 168 187490000 50537583
+QUAL_DART {"us":504041216,"position":503893000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12123,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24336934777250,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":50532,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24336935079750 2364588 21 168 187490000 50537583
+QUAL_DART {"us":506041861,"position":505943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24338935253166,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":50732,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24338935523125 2364588 21 168 187490000 50537583
+QUAL_DART {"us":508041308,"position":507762000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24340934278583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":50932,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24340934534208 2364588 21 168 187490000 50537583
+QUAL_DART {"us":510041828,"position":509810000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12243,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24342935274583,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":51132,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24342935632458 2364588 21 168 187490000 50537583
+QUAL_DART {"us":512041202,"position":511910000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24344935272083,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":51332,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24344935565166 2364588 21 168 187490000 50537583
+QUAL_DART {"us":514041490,"position":513943000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12363,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24346934126791,"maximumAgeSeconds":0.12856600000000001,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":51532,"staleEvents":2}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24346934208583 2364588 21 168 187490000 50537583
+QUAL_DART {"us":516041515,"position":515762000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24348935379708,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":51721,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24348935845166 2364588 21 168 187490000 50537583
+QUAL_DART {"us":518041625,"position":517793000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24350935360041,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.017384750000928761,"samples":51921,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24350935770500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":520042070,"position":519860000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12483,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24352935302833,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":52121,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24352935608083 2364588 21 168 187490000 50537583
+QUAL_DART {"us":522041466,"position":521943000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24354934665791,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":52321,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24354935051250 2364588 21 168 187490000 50537583
+QUAL_DART {"us":524041886,"position":523762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12603,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24356935377500,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":52521,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24356935814041 2364588 21 168 187490000 50537583
+QUAL_DART {"us":526040775,"position":525776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24358935021666,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":52721,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24358935160583 2364588 21 168 187490000 50537583
+QUAL_DART {"us":528041083,"position":527826000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24360935166041,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":52921,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24360935373166 2364588 21 168 187490000 50537583
+QUAL_DART {"us":530041304,"position":529893000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12723,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24362935304291,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":53121,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24362935712500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":532041651,"position":531926000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24364935136791,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":53321,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24364935385500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":534042021,"position":533762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12843,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24366934842500,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":53521,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24366935087291 2364588 21 168 187490000 50537583
+QUAL_DART {"us":536086515,"position":535762000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24368935299875,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":53716,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24368935633833 2364588 21 168 187490000 50537583
+QUAL_DART {"us":538041509,"position":537793000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":24370934515208,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":53916,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24370934932083 2364588 21 168 187490000 50537583
+QUAL_DART {"us":540042030,"position":539860000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":8.333333333333333e-8,"surfaceHasBounds":true,"totalFrames":12963,"droppedFrames":0,"windowOcclusionVisible":true,"status":"observed","windowOcclusions":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007ae3e577a0)","corruptedFrames":0}
+QUAL_CLOCK {"hostNs":24372935361333,"maximumAgeSeconds":0.12868299999999999,"maximumReadSeconds":0.12547629166510887,"maximumWorkerGapSeconds":0.018025958332145819,"samples":54116,"staleEvents":3}
+QUAL_SAMPLE B1518DDF-7A94-4178-86E9-938E14D5AA40 24372935657500 2364588 21 168 187490000 50537583
+QUAL_DART {"us":542041483,"position":541893000,"status":"playing","decoder":"software","drops":0}

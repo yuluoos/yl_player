@@ -1,0 +1,18 @@
+{
+  "diagnosticOnly": true,
+  "phases": [
+    {
+      "seconds": 90,
+      "completion": "dataPlayedBack"
+    },
+    {
+      "seconds": 90,
+      "completion": "dataRendered"
+    }
+  ],
+  "sameEngine": true,
+  "nativeClockReaders": 1,
+  "maxBlocks": 50,
+  "blockFrames": 960,
+  "hypothesis": "Per-buffer playedBack completion invokes GetOutputPresentationLatency and synchronous HAL device property reads while native clock getter waits for graph locks. Changing only callback type should remove that wait. Rendered callbacks are not playback completion evidence."
+}

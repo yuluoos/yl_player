@@ -1,0 +1,15 @@
+{
+  "passed": false,
+  "exit": 1,
+  "elapsedSeconds": 20.62773904200003,
+  "peaks": {
+    "maxOwnedBytes": 2364588,
+    "maxFrames": 21,
+    "maxPacketBytes": 168,
+    "maxCpuNs": 148214000,
+    "maxDecodeWallNs": 2583166
+  },
+  "errors": [
+    "baseline did not pass"
+  ]
+}

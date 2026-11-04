@@ -1,0 +1,407 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-02 20:35:20.482 A  native-display-control[17510:1b159] (libsystem_info.dylib) Retrieve User by ID
+2026-11-02 20:35:20.483 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x1056de440] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.daemon
+2026-11-02 20:35:20.483 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x1056dea80] activating connection: mach=true listener=false peer=false name=com.apple.cfprefsd.agent
+2026-11-02 20:35:20.486 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x1056e0b80] activating connection: mach=true listener=false peer=false name=com.apple.distributed_notifications@Uv3
+2026-11-02 20:35:20.488 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x1056ddbb0] activating connection: mach=true listener=false peer=false name=com.apple.pasteboard.1
+2026-11-02 20:35:20.506 Df native-display-control[17510:1b159] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) No windows open yet
+2026-11-02 20:35:20.508 A  native-display-control[17510:1b159] (TCC) TCCAccessRequest() IPC
+2026-11-02 20:35:20.508 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20000] activating connection: mach=true listener=false peer=false name=com.apple.tccd.system
+2026-11-02 20:35:20.509 I  native-display-control[17510:1b159] [com.apple.TCC:access] SEND: 0/7 synchronous to com.apple.tccd.system: request: msgID=17510.1, function=TCCAccessRequest, service=kTCCServiceListenEvent,
+2026-11-02 20:35:20.579 I  native-display-control[17510:1b159] [com.apple.TCC:access] RECV: synchronous reply <dictionary: 0x780b410000> { count = 6, transaction: 0, voucher = 0x0, contents =
+	"prompt_type" => <uint64: 0x99ab730c6143935f>: 1
+	"do_not_cache" => <bool: 0x1fe6908b0>: true
+	"auth_value" => <uint64: 0x99ab730c61439347>: 2
+	"result" => <bool: 0x1fe6908b0>: true
+	"auth_version" => <uint64: 0x99ab730c6143935f>: 1
+	"auth_reason" => <uint64: 0x99ab730c61439377>: 4
+}
+2026-11-02 20:35:20.579 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20000] invalidated after the last release of the connection object
+2026-11-02 20:35:20.580 Df native-display-control[17510:1b159] [com.apple.SkyLight:default] server port 0x00003813, session port 0x00003813
+2026-11-02 20:35:20.648 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20000] activating connection: mach=true listener=false peer=false name=com.apple.coreservices.launchservicesd
+2026-11-02 20:35:20.649 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] Registering for notification <private> on default queue, to re-boostrap client connection.
+2026-11-02 20:35:20.653 I  native-display-control[17510:1b159] [com.apple.CarbonCore:coreservicesdaemon] SCSession():SCSession( id=100, this=0x0x1056e93b0 option=65538) created, forUID=501 mach_port_t=0x3003.
+2026-11-02 20:35:20.653 I  native-display-control[17510:1b159] [com.apple.CarbonCore:coreservicesdaemon] SCSession():SCSession( id=101, this=0x0x1056ec120 option=65538) created, forUID=501 mach_port_t=0x360b.
+2026-11-02 20:35:20.653 I  native-display-control[17510:1b159] [com.apple.CarbonCore:coreservicesdaemon] connectToCoreServicesD():Instantiating server (coreservicesd based) SCSession, port=0x3003 serverOptions=0x10002.
+2026-11-02 20:35:20.658 Df native-display-control[17510:1b159] [com.apple.SkyLight:default] New connection 0x12749b main
+2026-11-02 20:35:20.658 I  native-display-control[17510:1b15f] [com.apple.SkyLight:processes] 0[outside of RPC]: First connection id 1209499 mapped to ctx = 0x1056e8d50
+2026-11-02 20:35:20.669 I  native-display-control[17510:1b159] [com.apple.hiservices:processmgr] Unable to get main bundle, so trying to use execPath URL <private>
+2026-11-02 20:35:20.671 I  native-display-control[17510:1b159] [com.apple.CarbonCore:FileIDMap] FIDCopyFileIDMapForVolume: FIDCopyFileIDMapForVolume: adding FileIDMap for vRefNum (-100)
+2026-11-02 20:35:20.672 I  native-display-control[17510:1b159] [com.apple.hiservices:processmgr] Checking in with CAS, pid=17510
+2026-11-02 20:35:20.672 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] LSApplicationCheckIn(), app being registered is:"/private/tmp/yl-av1-20261103/native-display-control"
+2026-11-02 20:35:20.675 I  native-display-control[17510:1b159] [com.apple.launchservices:cas]  { "ApplicationType"="BackgroundOnly", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundlePackageType"="????", "CFBundleSignature"="????", "Flavor"=3, "LSArchitecture"="arm64", "LSCheckInTime*"=now-ish 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LSExecutableSDKVersion"="27.2" }
+2026-11-02 20:35:20.675 Df native-display-control[17510:1b159] [com.apple.processmanager:front-35286506] CHECKIN: pid=17510 coalition=1411
+2026-11-02 20:35:20.714 Df native-display-control[17510:1b159] [com.apple.processmanager:front-35286506] CHECKEDIN: pid=17510 asn=0x0-0xe50e5 foreground=0
+2026-11-02 20:35:20.714 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] Not setting processControlState because current application is not a foreground application.
+2026-11-02 20:35:20.738 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20140] activating connection: mach=true listener=false peer=false name=com.apple.lsd.modifydb
+2026-11-02 20:35:20.742 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20280] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-02 20:35:20.742 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20280] Connection returned listener port: 0x5303
+2026-11-02 20:35:20.744 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac20500] activating connection: mach=false listener=false peer=true name=com.apple.xpc.anonymous.0x780ac20280.peer[386].0x780ac20500
+2026-11-02 20:35:20.766 Df native-display-control[17510:1b159] [com.apple.processmanager:front-35286506] FRONTLOGGING: version 1
+2026-11-02 20:35:20.766 Df native-display-control[17510:1b159] [com.apple.processmanager:front-35286506] Registered, pid=17510 ASN=0x0,0xe50e5
+2026-11-02 20:35:20.767 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac203c0] activating connection: mach=true listener=false peer=false name=com.apple.analyticsd
+2026-11-02 20:35:20.767 I  native-display-control[17510:1b159] [com.apple.CoreAnalytics:client] Daemon status changed from 0 to 1
+2026-11-02 20:35:20.772 I  native-display-control[17510:1b159] [com.apple.hiservices:processmgr] _RegisterApplication( pid 17510 => 0x0,0xe50e5) type=background
+2026-11-02 20:35:20.772 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20280] Connection returned listener port: 0x5303
+2026-11-02 20:35:20.776 I  native-display-control[17510:1b162] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 521 was still valid, so using cached info { "ApplicationType"="BackgroundOnly", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=false, "ChangeCount"=521, "Flavor"=3, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=now-ish 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LSExecutableFilenameLowerCaseKey"="native-display-control", "LS<…>
+2026-11-02 20:35:20.779 Df native-display-control[17510:1b159] [com.apple.AppKit:Appearance] Current system appearance, (HLTB: 2), (SLS: 1)
+2026-11-02 20:35:20.782 Df native-display-control[17510:1b162] [com.apple.CoreAnalytics:client] Received configuration update from daemon (initial)
+2026-11-02 20:35:20.796 Df native-display-control[17510:1b159] (libMobileGestalt.dylib) No persisted cache on this platform.
+2026-11-02 20:35:20.809 Df native-display-control[17510:1b159] [com.apple.AppKit:Appearance] Current system appearance, (HLTB: 2), (SLS: 1)
+2026-11-02 20:35:20.815 Df native-display-control[17510:1b159] [com.apple.AppKit:Appearance] Post-registration system appearance: (HLTB: 2)
+2026-11-02 20:35:20.823 Df native-display-control[17510:1b159] [com.apple.runningboard:connection] Initializing connection
+2026-11-02 20:35:20.825 Df native-display-control[17510:1b159] [com.apple.runningboard:process] Removing all cached process handles
+2026-11-02 20:35:20.825 Df native-display-control[17510:1b15f] [com.apple.runningboard:connection] Sending handshake request attempt #1 to server
+2026-11-02 20:35:20.825 Df native-display-control[17510:1b15f] [com.apple.runningboard:connection] Creating connection to com.apple.runningboard
+2026-11-02 20:35:20.825 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac20780] activating connection: mach=true listener=false peer=false name=com.apple.runningboard
+2026-11-02 20:35:20.826 Df native-display-control[17510:1b159] [com.apple.BoardServices:Injection] activating monitor for service com.apple.frontboard.workspace-service
+2026-11-02 20:35:20.827 Df native-display-control[17510:1b159] [com.apple.FrontBoard:Common] FBSWorkspace: default shell endpoint is disabled.
+2026-11-02 20:35:20.831 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20280] Connection returned listener port: 0x5303
+2026-11-02 20:35:20.831 Df native-display-control[17510:1b15f] [com.apple.runningboard:connection] Handshake succeeded
+2026-11-02 20:35:20.831 Df native-display-control[17510:1b15f] [com.apple.runningboard:connection] Identity resolved as anon<native-display-control>(501)
+2026-11-02 20:35:20.832 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] Removing cached information for app [ 0x0-0xe50e5]  "native-display-control", as its seed is different from that in shared memory ( 521 vs 523)
+2026-11-02 20:35:20.852 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20280] Connection returned listener port: 0x5303
+2026-11-02 20:35:20.964 I  native-display-control[17510:1b159] [com.apple.hiservices:processmgr] TransformProcessType(0x0,0x2 => 1 wasFront=0 pickNew=0)
+2026-11-02 20:35:20.967 A  native-display-control[17510:1b15f] (RunningBoardServices) didChangeInheritances
+2026-11-02 20:35:20.968 Df native-display-control[17510:1b180] [com.apple.AppKit:TouchBar] Received DFR status change 0. status = 0x1
+2026-11-02 20:35:20.972 Df native-display-control[17510:1b181] [com.apple.AppKit:TouchBar] Received DFR status change 1. status = 0x1
+2026-11-02 20:35:20.996 A  native-display-control[17510:1b159] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-02 20:35:20.996 A  native-display-control[17510:1b159] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-02 20:35:20.999 A  native-display-control[17510:1b162] (AppIntents) appintents:register process
+2026-11-02 20:35:21.010 Df native-display-control[17510:1b159] [com.apple.AppKit:Appearance] NSApp cache appearance:
+-NSRequiresAquaSystemAppearance: 0
+-appearance: (null)
+-effectiveAppearance: <NSCompositeAppearance: 0x780a829040
+ (
+    "<NSDarkAquaAppearance: 0x780a829ae0>",
+    "<NSSystemAppearance: 0x780a828fa0>"
+)>
+2026-11-02 20:35:21.016 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20a00] activating connection: mach=true listener=false peer=false name=com.apple.fonts
+2026-11-02 20:35:21.026 Df native-display-control[17510:1b162] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.026 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac20640] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-02 20:35:21.027 Df native-display-control[17510:1b162] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-02 20:35:21.029 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac20b40] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-02 20:35:21.041 I  native-display-control[17510:1b162] [com.apple.appintents:Execution] LNAppConnectionListener instantiated
+2026-11-02 20:35:21.041 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac20b40] Connection returned listener port: 0x8303
+2026-11-02 20:35:21.049 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac20640] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-02 20:35:21.049 Df native-display-control[17510:1b15f] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-02 20:35:21.049 E  native-display-control[17510:1b162] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.049 E  native-display-control[17510:1b162] [com.apple.AppKit:Application] Error registering app with intents framework: Error Domain=NSCocoaErrorDomain Code=4097 UserInfo={NSDebugDescription=<private>}
+2026-11-02 20:35:21.049 Df native-display-control[17510:1b181] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.049 A  native-display-control[17510:1b181] (AppIntents) appintents:register process
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b181] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b181] [com.apple.xpc:connection] [0x780ac20dc0] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b181] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b181] [com.apple.xpc:connection] [0x780ac20b40] Connection returned listener port: 0x8303
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac20dc0] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b162] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-02 20:35:21.050 E  native-display-control[17510:1b181] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.050 E  native-display-control[17510:1b181] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b15f] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.050 A  native-display-control[17510:1b15f] (AppIntents) appintents:register process
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b15f] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac21040] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b15f] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-02 20:35:21.050 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac20b40] Connection returned listener port: 0x8303
+2026-11-02 20:35:21.051 Df native-display-control[17510:1b181] [com.apple.xpc:connection] [0x780ac21040] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-02 20:35:21.051 Df native-display-control[17510:1b181] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-02 20:35:21.051 E  native-display-control[17510:1b15f] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.051 E  native-display-control[17510:1b15f] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.051 Df native-display-control[17510:1b162] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.051 A  native-display-control[17510:1b162] (AppIntents) appintents:register process
+2026-11-02 20:35:21.052 Df native-display-control[17510:1b162] [com.apple.appintents:Connection] Created a new Process Instance Registry XPC connection (inactive)
+2026-11-02 20:35:21.052 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac212c0] activating connection: mach=true listener=false peer=false name=com.apple.linkd.autoShortcut
+2026-11-02 20:35:21.052 Df native-display-control[17510:1b162] [com.apple.appintents:Connection] Activated connection to linkd (ApplicationService)
+2026-11-02 20:35:21.052 Df native-display-control[17510:1b162] [com.apple.xpc:connection] [0x780ac20b40] Connection returned listener port: 0x8303
+2026-11-02 20:35:21.054 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac212c0] Re-initialization successful; calling out to event handler with XPC_ERROR_CONNECTION_INTERRUPTED
+2026-11-02 20:35:21.054 Df native-display-control[17510:1b15f] [com.apple.appintents:Connection] Process Instance Registry XPC connection has been interrupted
+2026-11-02 20:35:21.055 E  native-display-control[17510:1b15f] [com.apple.appintents:Connection] Will NOT re-try to establish the connection
+2026-11-02 20:35:21.056 E  native-display-control[17510:1b162] [com.apple.appintents:Connection] Unable to get synchronousRemoteObjectProxy, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.056 E  native-display-control[17510:1b162] [com.apple.appintents:Connection] Unable to re-register with Process Instance Registry, error: Error Domain=NSCocoaErrorDomain Code=4097 "connection to service named com.apple.linkd.autoShortcut" UserInfo={NSDebugDescription=connection to service named com.apple.linkd.autoShortcut}
+2026-11-02 20:35:21.082 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac21400] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-02 20:35:21.100 A  native-display-control[17510:1b159] (libsystem_info.dylib) Membership API: translate identifier
+2026-11-02 20:35:21.107 I  native-display-control[17510:1b159] [com.apple.AppKit:Window] context (0 -> 9b08364f) for window 218
+2026-11-02 20:35:21.145 E  native-display-control[17510:1b159] [com.apple.AppKit:WindowTab] Cannot index window tabs due to missing main bundle identifier
+2026-11-02 20:35:21.146 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac21900] activating connection: mach=true listener=false peer=false name=com.apple.dock.fullscreen
+2026-11-02 20:35:21.165 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> FigVideoReceiverCreateWithVideoLayer: [0x10570d840|L/CK]: Created new VideoReceiver w/ layer <FigVideoLayer: 0x780aa7c5b0>
+2026-11-02 20:35:21.166 Df native-display-control[17510:1b159] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_create: [0x780a9e0a00|(null)]: Created with videoReceiver 0x0
+2026-11-02 20:35:21.166 Df native-display-control[17510:1b159] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_attachToVideoReceiver: [0x780a9e0a00|L/CK]: attached to receiver 0x10570d840, loading state is complete
+2026-11-02 20:35:21.166 Df native-display-control[17510:1b159] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_setVideoReceiverLoadingState: [0x780a9e0a00|L/CK]: loadingState: Complete, error: 0 stateDidChange: YES
+2026-11-02 20:35:21.166 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< FigVideoContainerLayer >>>> -[FigVideoContainerLayerForVideoReceiver rebuildCommittingSynchronously:]: Layer assignment : client video layer 0x780b411a00 -> internal video layer 0x780aa7c5b0, FigVideoReceiver <FigVideoReceiverForCALayer [0x10570d840|L/CK] retainCount: 2>
+2026-11-02 20:35:21.177 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< AVReadWriteDispatchQueue >>>> usesSerialQueue_block_invoke: Using serial queue
+2026-11-02 20:35:21.178 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueCreateLocalWithOptions: 0x105707540 (pid 0)
+2026-11-02 20:35:21.180 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterCreate: 0x780b211c80: [DeviceBudget: 18446744073709551615] [Budget: 18446744073709551615] {
+ Groups: 
+}
+2026-11-02 20:35:21.181 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterRegisterConsumer: 0x780b211c80: Registered new consumer: 1, group (null) consumer name com.apple.coremedia.videoqueue.resourcearbiter.consumername..17510-1 (VR/MOO)
+2026-11-02 20:35:21.181 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueCreateLocalWithOptions: created (0x105707540) VR/MOO (pid 17510)
+2026-11-02 20:35:21.181 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_SetProperty: (0x105707540) controlTimebase 0x780ab11680 (pid 17510)
+2026-11-02 20:35:21.181 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x105707540) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 17510)
+2026-11-02 20:35:21.182 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer init]: <VR/MOO|0x780a8b0f00> [0x105707540]
+2026-11-02 20:35:21.182 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_handleWaitForVideoTargetConditionChange: (0x105707540) number of video targets 0 => 1
+2026-11-02 20:35:21.198 I  native-display-control[17510:1b159] [com.apple.AppKit:Window] order window: 218 op: 1 relative: 0 related: 0
+2026-11-02 20:35:21.198 Df native-display-control[17510:1b159] [com.apple.AppKit:AutomaticTermination] void _NSEnableAutomaticTerminationAndLog(NSString *) No windows open yet
+2026-11-02 20:35:21.198 I  native-display-control[17510:1b159] [com.apple.AppKit:Intelligence] starting collection observation
+2026-11-02 20:35:21.214 Df native-display-control[17510:1b15f] [com.apple.UIIntelligenceSupport:xpc] establishing connection to agent
+2026-11-02 20:35:21.215 Df native-display-control[17510:1b15f] [com.apple.xpc:session] [0x780ac2f110] Session created.
+2026-11-02 20:35:21.215 Df native-display-control[17510:1b15f] [com.apple.xpc:session] [0x780ac2f110] Session created from connection [0x780ac21cc0]
+2026-11-02 20:35:21.215 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac21cc0] activating connection: mach=true listener=false peer=false name=com.apple.uiintelligencesupport.agent
+2026-11-02 20:35:21.217 Df native-display-control[17510:1b15f] [com.apple.xpc:session] [0x780ac2f110] Session activated
+2026-11-02 20:35:21.228 Df native-display-control[17510:1b159] (CoreVideo) Pixel format registry initialized. Constant classes enabled.
+2026-11-02 20:35:21.235 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x105707540) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 17510)
+2026-11-02 20:35:21.235 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_SetProperty: (0x105707540) controlTimebase 0x780ab11680 (pid 17510)
+2026-11-02 20:35:21.235 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x105707540) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 17510)
+2026-11-02 20:35:21.235 Df native-display-control[17510:1b15f] [com.apple.UIIntelligenceSupport:xpc] Connection established with agent PID: 905
+2026-11-02 20:35:21.240 Df native-display-control[17510:1b159] [com.apple.dt.xctest:Default] Registering for test daemon availability notify post.
+2026-11-02 20:35:21.240 Df native-display-control[17510:1b159] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-02 20:35:21.241 Df native-display-control[17510:1b159] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-02 20:35:21.241 Df native-display-control[17510:1b159] [com.apple.dt.xctest:Default] notify_get_state check indicated test daemon not ready.
+2026-11-02 20:35:21.728 Df native-display-control[17510:1b159] (libMobileGestalt.dylib) couldn't load support library
+2026-11-02 20:35:21.728 Df native-display-control[17510:1b159] (libMobileGestalt.dylib) called dummy function!
+2026-11-02 20:35:21.737 I  native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] Current availability state: unavailable, use cases: com.apple.WritingTools, language: <any>, api: <private>
+2026-11-02 20:35:21.739 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] UserDefaults(com.apple.gms.availability, 501
+2026-11-02 20:35:21.745 I  native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] Enhanced Siri read: bootState=fresh
+2026-11-02 20:35:21.749 I  native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] Enhanced Siri returning: unavailable [startupInProgress=false, isAvailableRaw=false, rawReasonCodes=[1]]
+2026-11-02 20:35:21.751 Df native-display-control[17510:1b159] [com.apple.WritingTools:Default] isEnhancedSiriAvailable value changed: false
+2026-11-02 20:35:21.753 Df native-display-control[17510:1b159] [com.apple.WritingTools:Default] isAvailable value changed: isMDMAllowed = true, gmAvailable (current) = false
+2026-11-02 20:35:21.810 I  native-display-control[17510:1b159] [com.apple.SkyLight:processes] 0[outside of RPC]: SLSSetFrontProcessWithInfo(0x0-0x2 window=0 options=0x1
+2026-11-02 20:35:21.816 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac22440] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-02 20:35:21.821 Df native-display-control[17510:1b15f] [com.apple.menubar:menu-xpc-client] Attempting to activate session
+2026-11-02 20:35:21.823 Df native-display-control[17510:1b15f] [com.apple.menubar:menu-xpc-client] Session activated
+2026-11-02 20:35:21.827 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AERegisterCurrentApplicationInfomationWithAppleEventsD((port:45571/0xb203 rcv:1 send:1 limit:5))
+2026-11-02 20:35:21.828 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] About to register with com.apple.coreservices.appleeventsd.
+2026-11-02 20:35:21.832 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] opts=[ NULL ]  name=- uid=501 euid=501
+2026-11-02 20:35:21.832 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] Creating an xpc connection, serviceName=com.apple.coreservices.appleevents
+2026-11-02 20:35:21.832 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] Saving connection as the default connection, connectionID=0x0x780ac22580
+2026-11-02 20:35:21.832 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] Resuming xpc connection.
+2026-11-02 20:35:21.832 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac22580] activating connection: mach=true listener=false peer=false name=com.apple.coreservices.appleevents
+2026-11-02 20:35:21.836 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AppleEventsCheckInAppWithBlock(), callback with errorRef=[ NULL ] )
+2026-11-02 20:35:21.836 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AppleEventsCheckInAppWithBlock(), errorRef=[ NULL ]  (port=(port:45571/0xb203 rcv:1 send:2 limit:5))
+2026-11-02 20:35:21.836 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AppleEventsCheckInAppWithBlock(), result = YES
+2026-11-02 20:35:21.836 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] Registered successfully with appleeventsd server
+2026-11-02 20:35:21.836 I  native-display-control[17510:1b159] [com.apple.appleevents:main]  _AEGetRegisteredMachPort() created default port (port:45571/0xb203 rcv:1 send:1 limit:5) and registered it with server
+2026-11-02 20:35:21.841 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AERegisterCurrentApplicationInfomationWithAppleEventsD((port:45571/0xb203 rcv:1 send:1 limit:5))
+2026-11-02 20:35:21.841 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac20280] Connection returned listener port: 0x5303
+2026-11-02 20:35:21.841 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 529 was still valid, so using cached info { "ApplicationType"="Foreground", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=true, "ChangeCount"=529, "Flavor"=3, "Hidden"=false, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=1 seconds ago, 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LSExecutableFilenameLowerCaseKey"="native-dis<…>
+2026-11-02 20:35:21.841 Df native-display-control[17510:1b159] [com.apple.processmanager:front-35286506] SignalReady: pid=17510 asn=0x0-0xe50e5
+2026-11-02 20:35:21.845 Df native-display-control[17510:1b159] [com.apple.processmanager:front-35286506] SIGNAL: pid=17510 asn=0x0x-0xe50e5
+2026-11-02 20:35:21.846 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AERegisterCurrentApplicationInfomationWithAppleEventsD((port:45571/0xb203 rcv:1 send:1 limit:5))
+2026-11-02 20:35:21.846 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AECopyHintedPortsArray(), forgetThem=YES
+2026-11-02 20:35:21.846 Db native-display-control[17510:1b159] [com.apple.appleevents:connection] _AECopyHintedPortsArray(), result = (null)
+2026-11-02 20:35:21.846 I  native-display-control[17510:1b159] [com.apple.appleevents:main]  aeGenerateFakeFirstOAPPEventIfNecessary()
+2026-11-02 20:35:21.846 I  native-display-control[17510:1b159] [com.apple.appleevents:main]  aeGenerateFakeFirstOAPPEventIfNecessary(), needToCreateFakeOAPPEventIfFirstEvent == true
+2026-11-02 20:35:21.846 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] Removing cached information for app [ 0x0-0xe50e5]  "native-display-control", as its seed is different from that in shared memory ( 529 vs 531)
+2026-11-02 20:35:21.859 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 531 was still valid, so using cached info { "ApplicationType"="Foreground", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=true, "ChangeCount"=531, "Flavor"=3, "Hidden"=false, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationHasSignalledItIsReady"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=1 seconds ago, 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LS<…>
+2026-11-02 20:35:21.860 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('DefaultAsciiKeyboardLayoutPasteboard' (<CFUUID 0x780b20d0c0> E03101E6-4708-4C46-AFEA-28002925CC59) gen: -1 item: 1264739405 flavor: 'DefaultAsciiKeyboardLayoutFlavor')
+2026-11-02 20:35:21.860 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:cache] Rebuilding cache for 'DefaultAsciiKeyboardLayoutPasteboard' (<CFUUID 0x780b20d0c0> E03101E6-4708-4C46-AFEA-28002925CC59)
+2026-11-02 20:35:21.861 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: -8 generation: 0 null data flags: 0
+2026-11-02 20:35:21.861 A  native-display-control[17510:1b159] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-02 20:35:21.861 A  native-display-control[17510:1b159] (CoreFoundation) Loading Preferences From System CFPrefsD
+2026-11-02 20:35:21.867 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5) gen: -1 item: 1 flavor: '-32766 1768845414')
+2026-11-02 20:35:21.867 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:cache] Rebuilding cache for 'AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5)
+2026-11-02 20:35:21.867 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.876 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac21f40] activating connection: mach=true listener=false peer=false name=com.apple.lsd.mapdb
+2026-11-02 20:35:21.882 I  native-display-control[17510:1b159] [com.apple.launchservices:db] LaunchServices database schema version: 33554481
+2026-11-02 20:35:21.884 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 7 data (310 bytes) flags: 0
+2026-11-02 20:35:21.884 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5) gen: -1 item: 1 flavor: '-32765 1802264953')
+2026-11-02 20:35:21.884 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.886 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 7 data (306 bytes) flags: 0
+2026-11-02 20:35:21.886 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5) gen: -1 item: 1 flavor: '-32764 1802264953')
+2026-11-02 20:35:21.886 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.886 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 7 data (281 bytes) flags: 0
+2026-11-02 20:35:21.886 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5) gen: -1 item: 1 flavor: '-32763 1802264953')
+2026-11-02 20:35:21.886 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.887 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 7 data (324 bytes) flags: 0
+2026-11-02 20:35:21.887 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5) gen: -1 item: 1 flavor: '-32765 1768845414')
+2026-11-02 20:35:21.887 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.887 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 7 data (303 bytes) flags: 0
+2026-11-02 20:35:21.887 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleIntlFileCacheModificationDatePasteboard' (<CFUUID 0x780b20ef60> 826003B3-41CC-4EA4-A34E-99CCC3FA23D5) gen: -1 item: 1 flavor: '-32763 1768845414')
+2026-11-02 20:35:21.887 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.888 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 7 data (321 bytes) flags: 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValuesBulk: SetGestaltValuesBulk( count=22 tuples=0x19b1695d0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(alis 1C9) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(os   FE) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(addr 7) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(fs   3D332) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(fold 11) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(lram 7FFFF000) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(mmap 1) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cfrg 1) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(thds 7) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(tmgr E) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(vers 7) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cbon 160) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cltn 1108000) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cpnt 8) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(rsrc 3) => 0
+2026-11-02 20:35:21.917 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(rmbg 11F) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(vm   11) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(srad 4170706C) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(sysa 14) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(copl 9) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(xlat 0) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(stdf 0) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(ram  0x19b0e8a80) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(ramm 0x19b0e8a80) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(cput 0x19b0e8b70) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(cpuf 0x19b0e8ba0) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(bclk 0x19b0e8bd0) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(bclm 0x19b0e8bd0) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(pclk 0x19b0e8c70) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(mclk 0x19b0e8c70) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(a/ux 0x19b0e8d88) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(pgsz 0x19b0e8d90) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(csiz 0x19b0e8dd0) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(sysv 0x19b094370) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(sys1 0x19b094370) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(sys2 0x19b094370) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(sys3 0x19b094370) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(cdfl 0x19b0e8e10) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(cdrm 0x19b0e906c) => 0
+2026-11-02 20:35:21.918 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] _NewGestalt: _NewGestalt(cpus 0x19b0e90b4) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:coreservicesdaemon] findOrCreateCacheable():findOrCreateCacheable(), factoryName=3 cacheableName=<private> fCacheables.size()=0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:coreservicesdaemon] findOrCreateCacheable():findOrCreateCacheable(), result = 0x780ab23200 (should be non-NULL)
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(twai 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(ascr 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(ascv 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(srtb 300) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(srta 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(icav 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cpkr 300) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(wind 1FF) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cmnu F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(apvr 300) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(lang 7) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cmvr 400) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(kbd  0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(menu 7F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(tmTE 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(dlog 5) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(nmgr 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(tmTV 152) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(te   6) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(scr# 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(scri 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(appr 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(lngv 7578000) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(drag 3F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cntl 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(scrx 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(teat 9) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(ditl 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(help 0) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(tsmv 240) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(isrv 3) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(powr 1) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(pwrv 220) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestalt: SetGestalt(mnam 0x19b0ae024) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(evnt 17) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(ttsc 3) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cmta 3) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(cmtc 450) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(icon 1F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(qdtf 7F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(qdrw 2F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(qd   330) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(dply 99) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(uisf 3F) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(qdtx 200) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(dplv 40000) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(uisv 80000) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] DeleteGestaltValue: DeleteGestaltValue(scrx) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] SetGestaltValue: SetGestaltValue(scrx 0) => 0
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] Gestalt(scrx => 0/0 wasLazy=NO)
+2026-11-02 20:35:21.919 I  native-display-control[17510:1b159] [com.apple.CarbonCore:gestalt] Gestalt(scrx => 0/0 wasLazy=YES)
+2026-11-02 20:35:21.920 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleInternationalPasteboard-le' (<CFUUID 0x780b4ae300> 54262FCB-C055-4A96-9A22-5BBCF41CA00D) gen: -1 item: 1231975532 flavor: 'AppleInternationalCacheFlavor')
+2026-11-02 20:35:21.920 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:cache] Rebuilding cache for 'AppleInternationalPasteboard-le' (<CFUUID 0x780b4ae300> 54262FCB-C055-4A96-9A22-5BBCF41CA00D)
+2026-11-02 20:35:21.920 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.921 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 1 data (192 bytes) flags: 0
+2026-11-02 20:35:21.948 I  native-display-control[17510:1b159] [com.apple.CarbonCore:flippers] FLIPPERS: Flip rsrc/itlb/25 data=0x105150543/50 currentlyNative=NO
+2026-11-02 20:35:21.950 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 531 was still valid, so using cached info { "ApplicationType"="Foreground", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=true, "ChangeCount"=531, "Flavor"=3, "Hidden"=false, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationHasSignalledItIsReady"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=1 seconds ago, 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LS<…>
+2026-11-02 20:35:21.951 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac21e00] activating connection: mach=false listener=false peer=false name=com.apple.ViewBridgeAuxiliary
+2026-11-02 20:35:21.982 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac226c0] activating connection: mach=false listener=false peer=false name=(anonymous)
+2026-11-02 20:35:21.983 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac22800] activating connection: mach=false listener=true peer=false name=(anonymous)
+2026-11-02 20:35:21.983 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac22800] Connection returned listener port: 0xef03
+2026-11-02 20:35:21.985 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac21e00] invalidated after the last release of the connection object
+2026-11-02 20:35:21.985 Df native-display-control[17510:1b159] [com.apple.AppKit:TouchBar] Reacting to DFR status change 0. status = 0x1
+2026-11-02 20:35:21.986 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 531 was still valid, so using cached info { "ApplicationType"="Foreground", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=true, "ChangeCount"=531, "Flavor"=3, "Hidden"=false, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationHasSignalledItIsReady"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=1 seconds ago, 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LS<…>
+2026-11-02 20:35:21.986 Df native-display-control[17510:1b159] [com.apple.AppKit:TouchBar] Reacting to DFR status change 1. status = 0x1
+2026-11-02 20:35:21.988 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('AppleKeyboardLayoutOverridePasteboard' (<CFUUID 0x780b20f4e0> CA036701-ABDC-4B16-AD85-E18B6B61A148) gen: -1 item: 1264739405 flavor: 'AppleKeyboardLayoutOverrideFlavor')
+2026-11-02 20:35:21.988 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:cache] Rebuilding cache for 'AppleKeyboardLayoutOverridePasteboard' (<CFUUID 0x780b20f4e0> CA036701-ABDC-4B16-AD85-E18B6B61A148)
+2026-11-02 20:35:21.989 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:general] Will request data from daemon
+2026-11-02 20:35:21.989 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: 0 generation: 273 data (250 bytes) flags: 0
+2026-11-02 20:35:21.989 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:entry] CopyData('DefaultAsciiKeyboardLayoutPasteboard' (<CFUUID 0x780b20d0c0> E03101E6-4708-4C46-AFEA-28002925CC59) gen: -1 item: 1264739405 flavor: 'DefaultAsciiKeyboardLayoutFlavor')
+2026-11-02 20:35:21.989 I  native-display-control[17510:1b159] [com.apple.CFPasteboard:exit] (not-in-cache) - result: -8 generation: 0 null data flags: 0
+2026-11-02 20:35:22.003 I  native-display-control[17510:1b159] [com.apple.HIToolbox:MBDisplays] <private>
+2026-11-02 20:35:22.003 I  native-display-control[17510:1b159] [com.apple.HIToolbox:MBDisplays] <private>
+2026-11-02 20:35:22.007 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.gms.availability.notification
+2026-11-02 20:35:22.007 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.os-eligibility-domain.change.greymatter
+2026-11-02 20:35:22.007 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.language.changed
+2026-11-02 20:35:22.008 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.gms.availability.notification
+2026-11-02 20:35:22.008 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.os-eligibility-domain.change.greymatter
+2026-11-02 20:35:22.008 Df native-display-control[17510:1b159] [com.apple.GenerativeModels:availability] registering darwin observer for name: com.apple.language.changed
+2026-11-02 20:35:22.008 I  native-display-control[17510:1b159] [com.apple.runningboard:assertion] Acquiring assertion: <RBSAssertionDescriptor| "AppNap adapter assertion" ID:(null) target:17510>
+2026-11-02 20:35:22.015 Df native-display-control[17510:1b159] [com.apple.AppKit:AutomaticTermination] void _NSDisableAutomaticTerminationAndLog(NSString *) Restoring windows
+2026-11-02 20:35:22.015 Df native-display-control[17510:1b159] [com.apple.AppKit:StateRestoration] -[NSApplication _reopenWindowsAsNecessaryIncludingRestorableState:withFullFidelity:completionHandler:] shouldRestoreState=1 hasPersistentStateToRestore=0 shouldStillRestoreStateAfterPrompting=0
+2026-11-02 20:35:22.015 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac22a80] activating connection: mach=true listener=false peer=false name=com.apple.window_proxies
+2026-11-02 20:35:22.016 Df native-display-control[17510:1b159] [com.apple.xpc:connection] [0x780ac22a80] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-02 20:35:22.017 I  native-display-control[17510:1b159] [com.apple.SkyLight:processes] 0[outside of RPC]: SLSSetFrontProcessWithInfo(0x0-0x2 window=0 options=0x1
+2026-11-02 20:35:22.017 Df native-display-control[17510:1b159] [com.apple.AppKit:AutomaticTermination] void _NSEnableAutomaticTerminationAndLog(NSString *) Restoring windows
+2026-11-02 20:35:22.019 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 531 was still valid, so using cached info { "ApplicationType"="Foreground", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=true, "ChangeCount"=531, "Flavor"=3, "Hidden"=false, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationHasSignalledItIsReady"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=1 seconds ago, 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LS<…>
+2026-11-02 20:35:22.019 I  native-display-control[17510:1b159] [com.apple.launchservices:cas] information in shared memory for 0x0-0xe50e5 with seed 531 was still valid, so using cached info { "ApplicationType"="Foreground", "CFBundleExecutablePath"="/private/tmp/yl-av1-20261103/native-display-control", "CFBundleExecutablePathDeviceID"=16777229, "CFBundleExecutablePathINode"=428401885, "CFBundlePackageType"="????", "CFBundleSignature"="????", "CanBecomeFrontmost"=true, "ChangeCount"=531, "Flavor"=3, "Hidden"=false, "LSASN"=ASN:0x0-0xe50e5:, "LSApplicationHasRegistered"=true, "LSApplicationHasSignalledItIsReady"=true, "LSApplicationMemberCoalitionIDKey"=1411, "LSApplicationReadyToBeFrontableKey"=true, "LSArchitecture"="arm64", "LSAuditToken"=$F5010000F501000014000000F50100001400000066440000B3860100E0880000, "LSBundlePath"="/private/tmp/yl-av1-20261103/native-display-control", "LSBundlePathDeviceID"=16777229, "LSBundlePathINode"=428401885, "LSBundlePathLastComponentLowerCaseKey"="native-display-control", "LSCheckInTime*"=1 seconds ago, 2026/11/02 20:35:20, "LSDYLDPlatformKey"=1, "LSDisplayName"="native-display-control", "LSExecutableFileName"="native-display-control", "LS<…>
+2026-11-02 20:35:22.150 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer _setStatus:error:]_block_invoke: <VR/MOO|0x780a8b0f00> Change status from Unknown to Rendering with success
+2026-11-02 20:35:22.150 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_createVideoRenderPipeline: 0x105707540 SampleBuffer 0x780a908700 isStereo: NO with Tags: <private>
+2026-11-02 20:35:22.152 Df native-display-control[17510:1b159] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> FigOSTransactionCreateWithProcessName: [Fig Transaction] Added transaction weak reference holder <0x780b3647c0>: <private>
+2026-11-02 20:35:22.153 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< IQ-CA >>>> FigImageQueueCreateForCoreAnimationWithOptions: Created IQ (0x780b10f000[0x780b4bb600]) VR/MOO:IQ/MZL on behalf of client pid 17510 (native-display-control)
+2026-11-02 20:35:22.153 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> FigVideoReceiverForCALayerCommonCreateFigImageQueue: [0x10570d840|<private>] created image queue with capacity: 32, flags: 64, mask: 64, FigImageQueue 0x780b10f000, caImageQueue 0x780b4bb600
+2026-11-02 20:35:22.153 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x780b10f000) Forward; Set IQTiming beginTime:0.000000, (0.000000 - (0.000000 / 1.000000) )
+2026-11-02 20:35:22.153 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x780b10f000) Paused; Set IQTimingOffset: 0.000 at host time 0.000
+2026-11-02 20:35:22.153 Df native-display-control[17510:1b189] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x780b10f000) Paused; Set IQTimingOffset: 0.000 at host time 1806.859
+2026-11-02 20:35:22.163 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< VMC >>>> VMC2CreateWithCallbacks: Created [0x1056fd340:VR/MOO:0x0] on behalf of client pid 17510
+2026-11-02 20:35:22.163 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< VRP >>>> FigVideoRenderPipelineCreateWithFigImageQueueArray: Created video render pipeline (0x780abc83c0) VR/MOO associated with VMC VMC2 0x1056fd340 VR/MOO retainCount: 1 allocator: 0x1fe6b6f70 and image queues [[FigImageQueue 0x780b10f000]]
+2026-11-02 20:35:22.164 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x105707540) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 17510)
+2026-11-02 20:35:22.165 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< LayerSync >>>> FigLayerSynchronizerSetCompensateForDisplayLatency: (0x780b1d0840) called. Will compensate for display latency.
+2026-11-02 20:35:22.167 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x10570d840|L/CK]: adding config [DataChannelConfiguration <0x780ab08640|(null)>] activationID 1, resourceCount: 0, dataChannelCount: 1 immediately: YES, hostTime: nan
+2026-11-02 20:35:22.167 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x10570d840|L/CK]: replacing pending config 0x0 with config [DataChannelConfiguration <0x780ab08640|(null)> activationID 1, channels: {
+	[FIQ caIQID 0, slotID 0, firstFrameEnq: NO desc: [mdia: 'vide', msub: (null), eyes: N, pack: 'none', proj: 'rect', indx: (null)]]
+},
+Resources: {
+}
+2026-11-02 20:35:22.167 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x10570d840|L/CK]: Replacing active config 0x0 w/ pending config 0x780ab08640, newConfigIsReadyForDisplay NO, newConfigIsEmpty NO
+2026-11-02 20:35:22.167 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x10570d840|L/CK]: Applying configuration <0x780ab08640> to videoLayer (0x780aa7c5b0)
+2026-11-02 20:35:22.167 Df native-display-control[17510:1b159] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_attachVideoLayerToImageQueue: [0x10570d840|L/CK]: Slot assignment : Attaching videoLayer ((
+    "<FigVideoLayer: 0x780aa7c5b0>"
+)) to imageQueue (FigImageQueueForCoreAnimation VR/MOO:IQ/MZL)
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b15f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x780aa7c5b0, context 0x780a9116a0, displayID 1: latency 0.000
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b15f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x780aa7c5b0) only set layer timeOffset: 0.000000 at hostTime 1806.873721 and layer speed 0.000000
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b159] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x105707540) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 17510)
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b189] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_DeferredSynchronousFrameEnqueued: [0x10570d840|L/CK]: Handling deferred sync frame enqueued with imageQueue 0x780b10f000
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b1cd] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x780b10f000) Forward; Set IQTiming beginTime:1806.874969, (1806.875112 - (0.000143 / 1.000000) )
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b15f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x780aa7c5b0, context 0x780a9116a0, displayID 1: latency 0.000
+2026-11-02 20:35:22.169 Df native-display-control[17510:1b15f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x780aa7c5b0) only set layer timeOffset: 0.000000 at hostTime 1806.875152 and layer speed 1.000000
+2026-11-02 20:35:22.170 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x1056fd340:VR/MOO]: client pid 17510; timebase time: 0.001 s rate: 1.00. recent stats: cfq empty: 1 times; frames decoded: 0, dropped: 0; decode: mean 0.000 s, max: 0.000 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-02 20:35:22.170 Df native-display-control[17510:1b159] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x1056fd340:VR/MOO]:Snapshots:
+Last Decoded Frames [
+]
+2026-11-02 20:35:22.170 Df native-display-control[17510:1b1ce] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x780b10f000) Forward; Set IQTiming beginTime:1806.874969, (1806.876297 - (0.001327 / 1.000000) )
+2026-11-02 20:35:22.170 Df native-display-control[17510:1b15f] [com.apple.xpc:connection] [0x780ac22bc0] activating connection: mach=true listener=false peer=false name=com.apple.powerlog.plxpclogger.xpc
+2026-11-02 20:35:22.170 Df native-display-control[17510:1b180] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x780aa7c5b0, context 0x780a9116a0, displayID 1: latency 0.000
+2026-11-02 20:35:22.170 Df native-display-control[17510:1b180] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x780aa7c5b0) only set layer timeOffset: 0.000000 at hostTime 1806.876350 and layer speed 1.000000
+2026-11-02 20:35:22.171 A  native-display-control[17510:1b15f] (CoreFoundation) Loading Preferences From User CFPrefsD
+2026-11-02 20:35:22.177 E  native-display-control[17510:1b1cb] [com.apple.libsqlite3:logging-persist] cannot open file at line 53009 of [8fa8248e30]
+2026-11-02 20:35:22.177 E  native-display-control[17510:1b1cb] [com.apple.libsqlite3:logging-persist] os_unix.c:53009: (2) open(/private/var/db/DetachedSignatures) - No such file or directory
+2026-11-02 20:35:22.198 Df native-display-control[17510:1b1cb] (UsageTracking) Certificate trust validation failed requirements with message: <private> (-67050)
+2026-11-02 20:35:22.198 Df native-display-control[17510:1b1cb] [com.apple.xpc:connection] [0x780ac22d00] activating connection: mach=true listener=false peer=false name=com.apple.UsageTrackingAgent
+2026-11-02 20:35:22.199 Df native-display-control[17510:1b1cb] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_enqueueImageWithRotation: (0x780b10f000) VR/MOO:IQ/MZL Did enqueue first frame.
+2026-11-02 20:35:22.199 Df native-display-control[17510:1b1cb] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer setReadyForDisplayWithoutKVO:]: <VR/MOO|0x780a8b0f00> setting readyForDisplay to YES
+2026-11-02 20:35:22.200 Df native-display-control[17510:1b1cb] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> _figVideoQueueFirstVideoFrameEnqueued: <VR/MOO|0x780a8b0f00> [0x105707540] Received first video frame enqueued notification
+2026-11-02 20:35:22.200 Df native-display-control[17510:1b1ce] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_DeferredFirstFrameEnqueued: [0x10570d840|L/CK]: Handling deferred first frame enqueued with imageQueue 0x780b10f000
+2026-11-02 20:35:22.200 Df native-display-control[17510:1b1ce] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_firstFrameWasEnqueuedForImageQueueOrSlot: [0x10570d840|L/CK]: Handling first frame was enqueued for imageQueueOrSlot FigImageQueueForCoreAnimation VR/MOO:IQ/MZL
+2026-11-02 20:35:23.170 Df native-display-control[17510:1b1c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x780aa7c5b0, context 0x780a9116a0, displayID 1: latency 0.000
+2026-11-02 20:35:23.170 Df native-display-control[17510:1b1c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x780aa7c5b0) only set layer timeOffset: 0.000000 at hostTime 1807.875781 and layer speed 1.000000
+2026-11-02 20:35:23.250 Df native-display-control[17510:1b159] [com.apple.CoreAnalytics:client] Entering exit handler.
+2026-11-02 20:35:23.250 Df native-display-control[17510:1b159] [com.apple.CoreAnalytics:client] Queueing exit procedure onto XPC queue. Any further messages sent will be discarded. activeSendTransactions=0
+2026-11-02 20:35:23.250 Df native-display-control[17510:1b181] [com.apple.CoreAnalytics:client] Cancelling XPC connection. Any further reply handler invocations will not retry messages
+2026-11-02 20:35:23.250 Df native-display-control[17510:1b181] [com.apple.xpc:connection] [0x780ac203c0] invalidated because the current process cancelled the connection by calling xpc_connection_cancel()
+2026-11-02 20:35:23.250 Df native-display-control[17510:1b159] [com.apple.CoreAnalytics:client] Exiting exit handler.
+2026-11-02 20:35:23.250 Df native-display-control[17510:1b181] [com.apple.CoreAnalytics:client] XPC connection invalidated (daemon unloaded/disabled)

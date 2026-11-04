@@ -92,6 +92,7 @@ struct YlPlatformServices {
   var beforeAudioOutput: () throws -> Void = {}
   var externalAudioRouteIdentity: () -> String? = { nil }
   var mediaDeliveryService: () throws -> any YlMediaDeliveryService = { throw YlMediaDeliveryRegistry.unavailable() }
+  var softwareDecodeServices = YlSoftwareDecodeServices()
 
   init(platform: YlApplePlatform, textureOutput: any YlTextureOutput,
        makeDisplayDriver: @escaping (@escaping () -> Void) -> any YlDisplayDriving,
@@ -112,6 +113,7 @@ extension YlPlatformServices {
     result.beforeAudioOutput = beforeAudioOutput
     result.externalAudioRouteIdentity = externalAudioRouteIdentity
     result.mediaDeliveryService = mediaDeliveryService
+    result.softwareDecodeServices = softwareDecodeServices
     result.nativeViewType = nativeViewType
     return result
   }

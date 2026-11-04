@@ -20,6 +20,18 @@ if mode == 'link'
   app.source_build_phase.add_file_reference(group.new_file('ConsumerLinkProbe.swift'))
 else
   tests = project.targets.find { |target| target.name == 'RunnerTests' }
+  if manager == 'swiftpm'
+    ['yl-player-apple', 'yl-player-media-core'].each do |name|
+      dependency = tests.package_product_dependencies.find { |item| item.product_name == name }
+      unless dependency
+        dependency = project.new(Xcodeproj::Project::Object::XCSwiftPackageProductDependency)
+        dependency.product_name = name
+        tests.package_product_dependencies << dependency
+        build_file = tests.frameworks_build_phase.files.new
+        build_file.product_ref = dependency
+      end
+    end
+  end
   group = project.main_group.find_subpath('RunnerTests', false)
   group.files.each { |file| file.remove_from_project }
   tests.source_build_phase.files.to_a.each(&:remove_from_project)

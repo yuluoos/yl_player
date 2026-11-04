@@ -1,0 +1,82 @@
+2026-11-03 02:36:57.870 yl_player_example[37229:831900] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 e4e2beadb93afbd23de7d6eb0de7b1b0a62be1336eae0cad6726b30ee0f0d005:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+[libdav1d @ 0x7aa2546680] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7aa33f2800] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7aa2546680] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_PREFLIGHT {"waitUs":34170,"layer":{"droppedFrames":0,"windowOcclusionVisible":true,"totalFrameDelaySeconds":0.0,"corruptedFrames":0,"layerCount":1,"status":"observed","totalFrames":1,"layerIdentity":"ObjectIdentifier(0x0000007aa33d6620)","surfaceHasBounds":true,"windowOcclusions":0},"positionUs":0,"decoder":"software","firstFrameCompleted":true}
+QUAL_CLOCK {"hostNs":23504815357375,"maximumAgeSeconds":0.024073000000000001,"maximumReadSeconds":0.017804791667003883,"maximumWorkerGapSeconds":0.01089545833383454,"samples":168,"staleEvents":0}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23504815683666 2364583 21 168 195557000 1148083
+QUAL_DART {"us":2024135,"position":1776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23506815105041,"maximumAgeSeconds":0.024271999999999998,"maximumReadSeconds":0.017804791667003883,"maximumWorkerGapSeconds":0.011040708333894145,"samples":369,"staleEvents":0}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23506815340708 2364583 21 168 195557000 1148083
+QUAL_DART {"us":4023428,"position":3775000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)","status":"observed","corruptedFrames":0,"totalFrameDelaySeconds":0.0,"layerCount":1,"windowOcclusions":0,"windowOcclusionVisible":true,"droppedFrames":0,"totalFrames":120,"surfaceHasBounds":true}
+QUAL_CLOCK {"hostNs":23508814963541,"maximumAgeSeconds":0.024271999999999998,"maximumReadSeconds":0.017804791667003883,"maximumWorkerGapSeconds":0.011040708333894145,"samples":569,"staleEvents":0}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23508815108291 2364588 21 168 195557000 1148083
+QUAL_DART {"us":6022981,"position":5831000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23510815075166,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":759,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23510815279333 2364588 21 168 195557000 48854417
+QUAL_DART {"us":8024229,"position":7898000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23512815132708,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":958,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23512815390416 2364588 21 168 195557000 48854417
+QUAL_DART {"us":10023620,"position":9776000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)","status":"observed","corruptedFrames":0,"totalFrameDelaySeconds":0.0,"layerCount":1,"windowOcclusions":0,"windowOcclusionVisible":true,"droppedFrames":0,"totalFrames":240,"surfaceHasBounds":true}
+QUAL_CLOCK {"hostNs":23514815128208,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":1159,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23514815417958 2364588 21 168 195557000 48854417
+QUAL_DART {"us":12023972,"position":11831000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23516815062375,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":1359,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23516815350833 2364588 21 168 195557000 48854417
+QUAL_DART {"us":14024207,"position":13915000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)","status":"observed","corruptedFrames":0,"totalFrameDelaySeconds":0.0,"layerCount":1,"windowOcclusions":0,"windowOcclusionVisible":true,"droppedFrames":0,"totalFrames":360,"surfaceHasBounds":true}
+QUAL_CLOCK {"hostNs":23518815115916,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":1559,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23518815363833 2364588 21 168 195557000 48854417
+QUAL_DART {"us":16023631,"position":15776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23520815074333,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":1758,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23520815272541 2364588 21 168 195557000 48854417
+QUAL_DART {"us":18023931,"position":17781000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23522815073416,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":1959,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23522815303041 2364588 21 168 195557000 48854417
+QUAL_DART {"us":20024291,"position":19848000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)","status":"observed","corruptedFrames":0,"totalFrameDelaySeconds":0.0,"layerCount":1,"windowOcclusions":0,"windowOcclusionVisible":true,"droppedFrames":0,"totalFrames":480,"surfaceHasBounds":true}
+QUAL_CLOCK {"hostNs":23524815184291,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":2159,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23524815405291 2364588 21 168 195557000 48854417
+QUAL_DART {"us":22023114,"position":21882000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23526815116541,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":2359,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23526815344291 2364588 21 168 195557000 48854417
+QUAL_DART {"us":24022995,"position":23948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)","status":"observed","corruptedFrames":0,"totalFrameDelaySeconds":0.0,"layerCount":1,"windowOcclusions":0,"windowOcclusionVisible":true,"droppedFrames":0,"totalFrames":601,"surfaceHasBounds":true}
+QUAL_CLOCK {"hostNs":23528815187791,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":2559,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23528815438083 2364588 21 168 195557000 48854417
+QUAL_DART {"us":26024105,"position":25776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23530815098375,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":2759,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23530815353250 2364588 21 168 195557000 48854417
+QUAL_DART {"us":28023385,"position":27848000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23532815153958,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":2959,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23532815376583 2364588 21 168 195557000 48854417
+QUAL_DART {"us":30023736,"position":29948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusionVisible":true,"surfaceHasBounds":true,"status":"observed","corruptedFrames":0,"droppedFrames":0,"windowOcclusions":0,"layerCount":1,"totalFrames":721,"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)"}
+QUAL_CLOCK {"hostNs":23534815037333,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3158,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23534815126666 2364588 21 168 195557000 48854417
+QUAL_DART {"us":32023738,"position":31776000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23536815228083,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3359,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23536815400000 2364588 21 168 195557000 48854417
+QUAL_DART {"us":34023928,"position":33782000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusionVisible":true,"surfaceHasBounds":true,"status":"observed","corruptedFrames":0,"droppedFrames":0,"windowOcclusions":0,"layerCount":1,"totalFrames":841,"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)"}
+QUAL_CLOCK {"hostNs":23538815038166,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3559,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23538815122625 2364588 21 168 195557000 48854417
+QUAL_DART {"us":36023517,"position":35832000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23540815324125,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3759,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23540815571291 2364588 21 168 195557000 48854417
+QUAL_DART {"us":38023833,"position":37915000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK {"hostNs":23542815237791,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3958,"staleEvents":1}
+QUAL_SAMPLE CC17CD3C-C595-4B82-9C67-4A758BFE9C10 23542815454166 2364588 21 168 195557000 48854417
+QUAL_DART {"us":40024274,"position":39776000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusionVisible":true,"surfaceHasBounds":true,"status":"observed","corruptedFrames":0,"droppedFrames":10,"windowOcclusions":1,"layerCount":1,"totalFrames":961,"layerIdentity":"ObjectIdentifier(0x0000007aa33d5e00)"}
+QUAL_ERROR Bad state: system presentation failed {totalFrameDelaySeconds: 1.6666666666666667e-8, windowOcclusionVisible: true, surfaceHasBounds: true, status: observed, corruptedFrames: 0, droppedFrames: 10, windowOcclusions: 1, layerCount: 1, totalFrames: 961, layerIdentity: ObjectIdentifier(0x0000007aa33d5e00)}
+QUAL_CLOCK {"hostNs":23543105313458,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3987,"staleEvents":1}
+QUAL_TIMED_DIAGNOSTICS {"anchors":16,"backpressureEvents":[],"blockedAttempts":0,"blockedPTS":null,"blockedSince":null,"enqueues":961,"events":[{"correctionUs":-6052.3749998168951,"uptime":23503.146933833334},{"correctionUs":-9394.125,"uptime":23509.57715666667},{"correctionUs":17862.333000183105,"uptime":23509.585613875002}],"lateEnqueues":0,"lifetime":{"events":[],"samples":[{"pts":39706000,"reservationAlive":false,"sampleAlive":false},{"pts":39748000,"reservationAlive":false,"sampleAlive":false},{"pts":39790000,"reservationAlive":false,"sampleAlive":false},{"pts":39831000,"reservationAlive":false,"sampleAlive":false},{"pts":39873000,"reservationAlive":false,"sampleAlive":false},{"pts":39915000,"reservationAlive":true,"sampleAlive":false},{"pts":39956000,"reservationAlive":true,"sampleAlive":false},{"pts":39997000,"reservationAlive":true,"sampleAlive":false}]},"maximumBackwardCorrectionUs":9394.125,"maximumForwardCorrectionUs":17862.333000183105,"maximumLeadUs":49892.916999999434,"minimumLeadUs":6873.4170000000004,"readyChecks":null,"updates":4968}
+QUAL_CLOCK {"hostNs":23543106340041,"maximumAgeSeconds":0.10147299999999999,"maximumReadSeconds":0.09386804166570073,"maximumWorkerGapSeconds":0.014515625000058208,"samples":3987,"staleEvents":1}
+QUAL_TIMED_DIAGNOSTICS {"anchors":16,"backpressureEvents":[],"blockedAttempts":0,"blockedPTS":null,"blockedSince":null,"enqueues":961,"events":[{"correctionUs":-6052.3749998168951,"uptime":23503.146933833334},{"correctionUs":-9394.125,"uptime":23509.57715666667},{"correctionUs":17862.333000183105,"uptime":23509.585613875002}],"lateEnqueues":0,"lifetime":{"events":[],"samples":[{"pts":39706000,"reservationAlive":false,"sampleAlive":false},{"pts":39748000,"reservationAlive":false,"sampleAlive":false},{"pts":39790000,"reservationAlive":false,"sampleAlive":false},{"pts":39831000,"reservationAlive":false,"sampleAlive":false},{"pts":39873000,"reservationAlive":false,"sampleAlive":false},{"pts":39915000,"reservationAlive":true,"sampleAlive":false},{"pts":39956000,"reservationAlive":true,"sampleAlive":false},{"pts":39997000,"reservationAlive":true,"sampleAlive":false}]},"maximumBackwardCorrectionUs":9394.125,"maximumForwardCorrectionUs":17862.333000183105,"maximumLeadUs":49892.916999999434,"minimumLeadUs":6873.4170000000004,"readyChecks":null,"updates":4968}
+QUAL_END CC17CD3C-C595-4B82-9C67-4A758BFE9C10 2364588 21 168 195557000 48854417
+QUAL_DECODED 970
+QUAL_FINISH 1

@@ -1,0 +1,46 @@
+2026-11-03 08:46:14.685 yl_player_example[22564:198361] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 8d1b72258134561f3403bea2fce09da0df2d8f917ddd95dfeb46a4c7511e480b:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP file load
+[libdav1d @ 0x7ace6cdc00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7acee80280] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7ace6cdc00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP file play
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14732371074875 2364588 21 168 153699000 613542
+PUBLIC_STEP file pause-seek-2000
+PUBLIC_SEEK_RETURN file target=2000 position=3388 revision=35
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14734371452791 2364588 21 168 159072000 613542
+PUBLIC_SEEK_WAIT file target=2000 position=2325 revision=43
+PUBLIC_STEP file pause-seek-1250
+PUBLIC_SEEK_RETURN file target=1250 position=2433 revision=47
+PUBLIC_SEEK_WAIT file target=1250 position=1724 revision=54
+PUBLIC_STEP file pause-seek-0
+PUBLIC_SEEK_RETURN file target=0 position=1724 revision=56
+PUBLIC_SEEK_WAIT file target=0 position=292 revision=64
+PUBLIC_STEP file await-completed
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14736371493291 2364588 21 168 194909000 935375
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14738371506416 2364588 21 168 194909000 1058000
+PUBLIC_PLAYBACK {"transport":"file","decoder":"software","completed":true,"markers":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":466000},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1437000},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2407000},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3388000},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2326000},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1724000},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":293000}],"requests":[],"pixelVerificationMethod":"native-renderer-displayed-buffer","readbackWhilePaused":true,"acousticOutputVerified":false}
+PUBLIC_DISPOSE {"transport":"file","elapsedUs":28292}
+QUAL_ID MacBookPro17,1 26A434 8d1b72258134561f3403bea2fce09da0df2d8f917ddd95dfeb46a4c7511e480b:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP http load
+[libdav1d @ 0x7ace6cdf80] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7acee81b80] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7ace6cdf80] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP http play
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14741275157500 2364588 21 168 194909000 1058000
+PUBLIC_STEP http pause-seek-2000
+PUBLIC_SEEK_RETURN http target=2000 position=3250 revision=34
+PUBLIC_SEEK_WAIT http target=2000 position=2499 revision=40
+PUBLIC_STEP http pause-seek-1250
+PUBLIC_SEEK_RETURN http target=1250 position=2510 revision=42
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14743275146166 2364588 21 168 221144000 1058000
+PUBLIC_SEEK_WAIT http target=1250 position=1749 revision=50
+PUBLIC_STEP http pause-seek-0
+PUBLIC_SEEK_RETURN http target=0 position=1760 revision=52
+PUBLIC_SEEK_WAIT http target=0 position=441 revision=59
+PUBLIC_STEP http await-completed
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14745275155166 2364588 21 168 227938000 1058000
+QUAL_SAMPLE 2FAD1C26-5237-4919-AD02-6049725F44F2 14747274742125 2364588 21 168 227938000 1058000
+PUBLIC_PLAYBACK {"transport":"http","decoder":"software","completed":true,"markers":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":487000},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1486000},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2484000},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3250000},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2510000},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1760000},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":452000}],"requests":[{"method":"GET","range":null,"status":200},{"method":"GET","range":"bytes=0-","status":206}],"pixelVerificationMethod":"native-renderer-displayed-buffer","readbackWhilePaused":true,"acousticOutputVerified":false}
+PUBLIC_DISPOSE {"transport":"http","elapsedUs":24027}
+PUBLIC_FINISH 0

@@ -1,0 +1,8 @@
+Starting recording with the System Trace template. Attaching to: yl_player_example (94639). Time limit: 22.0 min
+Ctrl-C to stop the recording
+Target app exited, ending recording...
+Run issues were detected (trace is still ready to be viewed):
+* [Warning] Warning while binding 'time-sample' table: requested sampling period (1000000ns) differs from configured (5000000ns)
+
+Recording completed. Saving output file...
+Output file saved as: display.trace

@@ -1,0 +1,425 @@
+Timestamp               Ty Process[PID:TID]
+2026-11-03 00:27:45.687 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVReadWriteDispatchQueue >>>> usesSerialQueue_block_invoke: Using serial queue
+2026-11-03 00:27:45.692 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer init]: <P/NP|0x76bf0eead0> Player initialized
+2026-11-03 00:27:45.699 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer setAutomaticallyWaitsToMinimizeStalling:]_block_invoke: <P/NP|0x76bf0eead0> setting timeControlStatus=0, reasonForWaitingToPlay=(null)
+2026-11-03 00:27:45.716 Df yl_player_example[98225:8b46f] [com.apple.coreaudio:AMCP] System_Input_Processing_Notification_Handler.mm:456   System_Input_Processing_Notification_Handler::is_vi_available(): Voice isolation DSP is available for client with bundle id dev.ylplayer.ylPlayerExample (AVFoundation is available, application is not in client deny list, application is not FaceTime variant)
+2026-11-03 00:27:45.902 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:416   AUHAL: (0x105a03ef0) Selecting device 91 from constructor
+2026-11-03 00:27:45.902 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:625   SelectDevice: -> (0x105a03ef0)
+2026-11-03 00:27:45.902 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:677   SelectDevice: (0x105a03ef0) not already running
+2026-11-03 00:27:45.902 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:753   SelectDevice: (0x105a03ef0) nothing to teardown
+2026-11-03 00:27:45.903 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:758   SelectDevice: (0x105a03ef0) connecting device 91
+2026-11-03 00:27:45.903 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:3406  IsDeviceUsable: (0x105a03ef0) Device ID: 91 (Input:No | Output:Yes): true
+2026-11-03 00:27:45.903 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:770   SelectDevice: (0x105a03ef0) created ioproc 0xa for device 91
+2026-11-03 00:27:45.903 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:859   SelectDevice: (0x105a03ef0) adding 7 device listeners to device 91
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:859   SelectDevice: (0x105a03ef0) adding 0 device delegate listeners to device 91
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1582  UpdateStreamFormats: -> (0x105a03ef0)
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1678  UpdateStreamFormats: 
+  output stream 0 [0x5c]:  2 ch,  44100 Hz, Float32, interleaved
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1690  UpdateStreamFormats: 1 output streams; not all mono
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1702  UpdateStreamFormats: 
+  Output render format:  2 ch,  44100 Hz, Float32, interleaved
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1690  UpdateStreamFormats: 0 input streams; not all mono
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1702  UpdateStreamFormats: 
+  Input render format:  0 ch,      0 Hz, lpcm (0x00000029) 32-bit little-endian float, deinterleaved
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1772  UpdateStreamFormats: AUHAL(0x105a03ef0) Calling PropertyChanged() for kAudioUnitProperty_StreamFormat, Scope:Output, Bus:Output
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1778  UpdateStreamFormats: AUHAL(0x105a03ef0) Calling PropertyChanged() for kAudioUnitProperty_StreamFormat, Scope:Input, Bus:Input
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1788  UpdateStreamFormats: <-
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:896   SelectDevice: (0x105a03ef0) removing 0 device listeners from device 0
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:896   SelectDevice: (0x105a03ef0) removing 0 device delegate listeners from device 0
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:912   SelectDevice: <- (0x105a03ef0)
+2026-11-03 00:27:45.904 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is DISABLED
+2026-11-03 00:27:45.905 Df yl_player_example[98225:8b452] [com.apple.coreaudio:ddagg]        AggregateDevice.mm:887   Creating DefaultDeviceAggregate
+2026-11-03 00:27:45.905 Df yl_player_example[98225:8b452] [com.apple.coreaudio:ddagg]        AggregateDevice.mm:914   fetched default output device, ID = 91
+2026-11-03 00:27:45.905 Df yl_player_example[98225:8b452] [com.apple.coreaudio:ddagg]        AggregateDevice.mm:914   fetched default input device, ID = 98
+2026-11-03 00:27:45.921 Df yl_player_example[98225:8b452] [com.apple.coreaudio:ddagg]        AggregateDevice.mm:688   Built valid aggregate 139
+2026-11-03 00:27:45.921 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.924 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        ACv2Workarounds.mm:51    dev.ylplayer.ylPlayerExample: fix84702776_86723525_86479548_89800354_SinglePacketDesc: false
+2026-11-03 00:27:45.926 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1068  Created a new in process converter -> 0x76bf4791d0, from  2 ch,  44100 Hz, Float32, deinterleaved to  2 ch,  44100 Hz, Float32, interleaved
+2026-11-03 00:27:45.926 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1318  AudioConverter -> 0x76bf4791d0: The in-process GetProperty call returned 1886547824 for property 1936876385 with size 4.
+2026-11-03 00:27:45.926 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1318  AudioConverter -> 0x76bf4791d0: The in-process GetProperty call returned 1886547824 for property 1936876401 with size 4.
+2026-11-03 00:27:45.926 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1318  AudioConverter -> 0x76bf4791d0: The in-process GetProperty call returned 1886547824 for property 1886546285 with size 8.
+2026-11-03 00:27:45.926 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.926 Df yl_player_example[98225:8b46f] [com.apple.coreaudio:AudioConverter] AudioConverter -> 0x76bf4791d0: The in-process SetProperty call returned 1886547824 for property 1886547309 with size 4.
+2026-11-03 00:27:45.930 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.933 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.934 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1068  Created a new in process converter -> 0x76bf479140, from  2 ch,  44100 Hz, Float32, deinterleaved to  2 ch,  44100 Hz, Float32, interleaved
+2026-11-03 00:27:45.934 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1318  AudioConverter -> 0x76bf479140: The in-process GetProperty call returned 1886547824 for property 1936876385 with size 4.
+2026-11-03 00:27:45.934 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1318  AudioConverter -> 0x76bf479140: The in-process GetProperty call returned 1886547824 for property 1936876401 with size 4.
+2026-11-03 00:27:45.934 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1318  AudioConverter -> 0x76bf479140: The in-process GetProperty call returned 1886547824 for property 1886546285 with size 8.
+2026-11-03 00:27:45.934 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.934 Df yl_player_example[98225:8b470] [com.apple.coreaudio:AudioConverter] AudioConverter -> 0x76bf479140: The in-process SetProperty call returned 1886547824 for property 1886547309 with size 4.
+2026-11-03 00:27:45.935 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.935 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.936 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AudioConverter]        AudioConverter.cpp:1068  Created a new in process converter -> 0x76bf479920, from  2 ch,  48000 Hz, Float32, deinterleaved to  2 ch,  44100 Hz, Float32, interleaved
+2026-11-03 00:27:45.936 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:1894  SetStreamUsage: Output stream enables: Stream 0 is ENABLED
+2026-11-03 00:27:45.938 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer replaceCurrentItemWithPlayerItem:]: <P/NP|0x76bf0eead0> currentItem KVO: replacing currentItem with (null)
+2026-11-03 00:27:45.939 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer _setRate:rateChangeReason:figPlayerSetRateHandler:]_block_invoke: <P/NP|0x76bf0eead0> setting timeControlStatus=0, reasonForWaitingToPlay=(null)
+2026-11-03 00:27:46.105 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> FigVideoReceiverCreateWithVideoLayer: [0x76be119200|L/JB]: Created new VideoReceiver w/ layer <FigVideoLayer: 0x76bfa42140>
+2026-11-03 00:27:46.106 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_create: [0x76bfb6cdc0|(null)]: Created with videoReceiver 0x0
+2026-11-03 00:27:46.106 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_attachToVideoReceiver: [0x76bfb6cdc0|L/JB]: attached to receiver 0x76be119200, loading state is complete
+2026-11-03 00:27:46.106 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_setVideoReceiverLoadingState: [0x76bfb6cdc0|L/JB]: loadingState: Complete, error: 0 stateDidChange: YES
+2026-11-03 00:27:46.106 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigVideoContainerLayer >>>> -[FigVideoContainerLayerForVideoReceiver rebuildCommittingSynchronously:]: Layer assignment : client video layer 0x76bfa94300 -> internal video layer 0x76bfa42140, FigVideoReceiver <FigVideoReceiverForCALayer [0x76be119200|L/JB] retainCount: 2>
+2026-11-03 00:27:46.107 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueCreateLocalWithOptions: 0x76be80c400 (pid 0)
+2026-11-03 00:27:46.107 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterCreate: 0x76bec2b900: [DeviceBudget: 18446744073709551615] [Budget: 18446744073709551615] {
+ Groups: 
+}
+2026-11-03 00:27:46.107 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterRegisterConsumer: 0x76bec2b900: Registered new consumer: 1, group (null) consumer name com.apple.coremedia.videoqueue.resourcearbiter.consumername..98225-1 (VR/KYQ)
+2026-11-03 00:27:46.107 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueCreateLocalWithOptions: created (0x76be80c400) VR/KYQ (pid 98225)
+2026-11-03 00:27:46.108 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_SetProperty: (0x76be80c400) controlTimebase 0x76bf0f7780 (pid 98225)
+2026-11-03 00:27:46.108 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80c400) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 98225)
+2026-11-03 00:27:46.108 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer init]: <VR/KYQ|0x76bfb79f80> [0x76be80c400]
+2026-11-03 00:27:46.108 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_handleWaitForVideoTargetConditionChange: (0x76be80c400) number of video targets 0 => 1
+2026-11-03 00:27:46.109 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer _setStatus:error:]_block_invoke: <VR/KYQ|0x76bfb79f80> Change status from Unknown to Rendering with success
+2026-11-03 00:27:46.109 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_createVideoRenderPipeline: 0x76be80c400 SampleBuffer 0x76bf254700 isStereo: NO with Tags: <private>
+2026-11-03 00:27:46.110 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> FigOSTransactionCreateWithProcessName: [Fig Transaction] Added transaction weak reference holder <0x76bf2d95a0>: <private>
+2026-11-03 00:27:46.110 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> FigImageQueueCreateForCoreAnimationWithOptions: Created IQ (0x76bec42800[0x76be3bf000]) VR/KYQ:IQ/GHX on behalf of client pid 98225 (yl_player_example)
+2026-11-03 00:27:46.110 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> FigVideoReceiverForCALayerCommonCreateFigImageQueue: [0x76be119200|<private>] created image queue with capacity: 32, flags: 64, mask: 64, FigImageQueue 0x76bec42800, caImageQueue 0x76be3bf000
+2026-11-03 00:27:46.110 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:0.000000, (0.000000 - (0.000000 / 1.000000) )
+2026-11-03 00:27:46.110 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:0.000000, (15750.812439 - (15750.812439 / 1.000000) )
+2026-11-03 00:27:46.110 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:0.000000, (15750.816282 - (15750.816282 / 1.000000) )
+2026-11-03 00:27:46.111 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> VMC2CreateWithCallbacks: Created [0x76bfa35200:VR/KYQ:0x0] on behalf of client pid 98225
+2026-11-03 00:27:46.111 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VRP >>>> FigVideoRenderPipelineCreateWithFigImageQueueArray: Created video render pipeline (0x76be114c80) VR/KYQ associated with VMC VMC2 0x76bfa35200 VR/KYQ retainCount: 1 allocator: 0x1fe6b6f70 and image queues [[FigImageQueue 0x76bec42800]]
+2026-11-03 00:27:46.111 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80c400) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 98225)
+2026-11-03 00:27:46.111 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< LayerSync >>>> FigLayerSynchronizerSetCompensateForDisplayLatency: (0x76bfaea100) called. Will compensate for display latency.
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x76be119200|L/JB]: adding config [DataChannelConfiguration <0x76be33e030|(null)>] activationID 1, resourceCount: 0, dataChannelCount: 1 immediately: YES, hostTime: nan
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x76be119200|L/JB]: replacing pending config 0x0 with config [DataChannelConfiguration <0x76be33e030|(null)> activationID 1, channels: {
+	[FIQ caIQID 0, slotID 0, firstFrameEnq: NO desc: [mdia: 'vide', msub: (null), eyes: N, pack: 'none', proj: 'rect', indx: (null)]]
+},
+Resources: {
+}
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x76be119200|L/JB]: Replacing active config 0x0 w/ pending config 0x76be33e030, newConfigIsReadyForDisplay NO, newConfigIsEmpty NO
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119200|L/JB]: Applying configuration <0x76be33e030> to videoLayer (0x76bfa42140)
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_attachVideoLayerToImageQueue: [0x76be119200|L/JB]: Slot assignment : Attaching videoLayer ((
+    "<FigVideoLayer: 0x76bfa42140>"
+)) to imageQueue (FigImageQueueForCoreAnimation VR/KYQ:IQ/GHX)
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42140, context 0x0, displayID 0: latency 0.000
+2026-11-03 00:27:46.112 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42140) only set layer timeOffset: 0.000000 at hostTime 15750.818297 and layer speed 1.000000
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b565] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_enqueueImageWithRotation: (0x76bec42800) VR/KYQ:IQ/GHX Did enqueue first frame.
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b565] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer setReadyForDisplayWithoutKVO:]: <VR/KYQ|0x76bfb79f80> setting readyForDisplay to YES
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b565] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> _figVideoQueueFirstVideoFrameEnqueued: <VR/KYQ|0x76bfb79f80> [0x76be80c400] Received first video frame enqueued notification
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b563] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_DeferredFirstFrameEnqueued: [0x76be119200|L/JB]: Handling deferred first frame enqueued with imageQueue 0x76bec42800
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b563] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_firstFrameWasEnqueuedForImageQueueOrSlot: [0x76be119200|L/JB]: Handling first frame was enqueued for imageQueueOrSlot FigImageQueueForCoreAnimation VR/KYQ:IQ/GHX
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b565] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/KYQ]: client pid 98225; timebase time: 15750.829 s rate: 1.00. recent stats: cfq empty: 2 times; frames decoded: 1, dropped: 0; decode: mean 0.005 s, max: 0.005 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:27:46.123 Df yl_player_example[98225:8b565] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/KYQ]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+{PTS: 0.000 s, decode: 4.913 ms},
+]
+2026-11-03 00:27:46.140 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client]   AVAudioSession_MacOS.mm:174   Init SessionCoreLegacy_macOS, sessionType: Primary
+2026-11-03 00:27:46.145 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client]     SessionCore_Create.mm:101   Created session 0x76bf0ee750 with ID: 0x2ba00e
+2026-11-03 00:27:46.145 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:163   --> setPlayState Started  Output {BuiltInSpeakerDevice, 0xa}
+2026-11-03 00:27:46.146 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:156   Sent updated IOState to server: [0, 1]. BT device UIDS: {(
+)}
+2026-11-03 00:27:46.146 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:199   <-- setPlayState Server update was required.
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer setReadyForDisplayWithoutKVO:]: <VR/KYQ|0x76bfb79f80> setting readyForDisplay to NO
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x76be119200|L/JB]: adding config [DataChannelConfiguration <0x76be33e5d0|(null)>] activationID 2, resourceCount: 0, dataChannelCount: 0 immediately: YES, hostTime: nan
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x76be119200|L/JB]: replacing pending config 0x0 with config [DataChannelConfiguration <0x76be33e5d0|(null)> activationID 2, channels: {
+},
+Resources: {
+}
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x76be119200|L/JB]: Replacing active config 0x76be33e030 w/ pending config 0x76be33e5d0, newConfigIsReadyForDisplay YES, newConfigIsEmpty YES
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119200|L/JB]: Applying configuration <0x76be33e5d0> to videoLayer (0x76bfa42140)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119200|L/JB]: Received empty config, clearing video layers
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> FigVideoReceiverCreateWithVideoLayer: [0x76be119380|L/GA]: Created new VideoReceiver w/ layer <FigVideoLayer: 0x76bfa42300>
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_create: [0x76bfb6d400|(null)]: Created with videoReceiver 0x0
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_attachToVideoReceiver: [0x76bfb6d400|L/GA]: attached to receiver 0x76be119380, loading state is complete
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-target] << FigVideoTargetForReceiver >> videoTarget_setVideoReceiverLoadingState: [0x76bfb6d400|L/GA]: loadingState: Complete, error: 0 stateDidChange: YES
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigVideoContainerLayer >>>> -[FigVideoContainerLayerForVideoReceiver rebuildCommittingSynchronously:]: Layer assignment : client video layer 0x76bfa94d00 -> internal video layer 0x76bfa42300, FigVideoReceiver <FigVideoReceiverForCALayer [0x76be119380|L/GA] retainCount: 2>
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueCreateLocalWithOptions: 0x76be80cc00 (pid 0)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterRegisterConsumer: 0x76bec2b900: Registered new consumer: 2, group (null) consumer name com.apple.coremedia.videoqueue.resourcearbiter.consumername..98225-2 (VR/SBB)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueCreateLocalWithOptions: created (0x76be80cc00) VR/SBB (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_SetProperty: (0x76be80cc00) controlTimebase 0x76bfc80180 (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer init]: <VR/SBB|0x76bfb7a100> [0x76be80cc00]
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_handleWaitForVideoTargetConditionChange: (0x76be80cc00) number of video targets 0 => 1
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_SetProperty: (0x76be80cc00) controlTimebase 0x76bfc80180 (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer dealloc]: <VR/KYQ|0x76bfb79f80> [0x76be80c400]
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_Finalize: (0x76be80c400) VR/KYQ (pid 98225)
+2026-11-03 00:27:46.150 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_Invalidate: 0x76be80c400 (pid 98225)
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/KYQ]: client pid 98225; timebase time: 15750.856 s rate: 1.00. recent stats: cfq empty: 8 times; frames decoded: 0, dropped: 0; decode: mean 0.000 s, max: 0.000 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/KYQ]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+]
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x76be119200|L/JB]: adding config [DataChannelConfiguration <0x76be33e030|(null)>] activationID 3, resourceCount: 0, dataChannelCount: 0 immediately: YES, hostTime: nan
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x76be119200|L/JB]: replacing pending config 0x0 with config [DataChannelConfiguration <0x76be33e030|(null)> activationID 3, channels: {
+},
+Resources: {
+}
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x76be119200|L/JB]: Replacing active config 0x76be33e5d0 w/ pending config 0x76be33e030, newConfigIsReadyForDisplay YES, newConfigIsEmpty YES
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119200|L/JB]: Applying configuration <0x76be33e030> to videoLayer (0x76bfa42140)
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119200|L/JB]: Received empty config, clearing video layers
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterUnregisterConsumer: 0x76bec2b900: Unregistered consumer: 1
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> FigOSTransactionCreateWithProcessName: [Fig Transaction] Added transaction weak reference holder <0x76bf2d9760>: <private>
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VRP >>>> figVideoRenderPipelineFinalize: Finalizing [0x76be114c80]
+2026-11-03 00:27:46.151 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> vmc2Finalize: Finalized VMC [0x76bfa35200] VR/KYQ
+2026-11-03 00:27:46.152 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/KYQ:IQ/GHX client pid 98225 (yl_player_example), timebase rate: 1.00, layer time: 15750.858 s, host: 15750.858 s, diff: 0.000 s; iq unconsumed: 0, min: 0.000, max: 0.000; preventsDisplaySleep: NO
+2026-11-03 00:27:46.152 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/KYQ:IQ/GHX recent frames: enqueued: 1, displayed: 0, dropped: 0, droppedAfterBeingSampledFromImageQueue: 0, flushed: 0, evicted: 0, >16ms late: 0, skipped: 0, refresh interval: min: 0.000 ms, max: 0.000 ms
+2026-11-03 00:27:46.152 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/KYQ:IQ/GHX most recently enqueued:
+Enqueued Pixel Buffer:BGRA, 320 x 180 [
+{PTS: 0.000 s, enqueued at: host 15750.823 s (media 15750.823 s)},
+]
+2026-11-03 00:27:46.152 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/KYQ:IQ/GHX most recently displayed:
+(null)
+2026-11-03 00:27:46.152 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_finalize: Finalized IQ (0x76bec42800) VR/KYQ:IQ/GHX on behalf of client pid 98225 (yl_player_example)
+2026-11-03 00:27:46.191 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 98225)
+2026-11-03 00:27:46.191 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer _setStatus:error:]_block_invoke: <VR/SBB|0x76bfb7a100> Change status from Unknown to Rendering with success
+2026-11-03 00:27:46.191 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_createVideoRenderPipeline: 0x76be80cc00 SampleBuffer 0x76bf254a80 isStereo: NO with Tags: <private>
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> figPruneOSTransactionArrayWhilePerformingOperation: [Fig Transaction] Pruned transaction weak reference holder: <0x76bf2d95a0>
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> figPruneOSTransactionArrayWhilePerformingOperation: [Fig Transaction] Pruned transaction weak reference holder: <0x76bf2d9760>
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> FigOSTransactionCreateWithProcessName: [Fig Transaction] Added transaction weak reference holder <0x76bf2da060>: <private>
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< IQ-CA >>>> FigImageQueueCreateForCoreAnimationWithOptions: Created IQ (0x76bec42800[0x76bd4d0600]) VR/SBB:IQ/CGO on behalf of client pid 98225 (yl_player_example)
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> FigVideoReceiverForCALayerCommonCreateFigImageQueue: [0x76be119380|<private>] created image queue with capacity: 32, flags: 64, mask: 64, FigImageQueue 0x76bec42800, caImageQueue 0x76bd4d0600
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:0.000000, (0.000000 - (0.000000 / 1.000000) )
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:15750.897234, (15750.897234 - (0.000000 / 1.000000) )
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:15750.897234, (15750.897588 - (0.000354 / 1.000000) )
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< VMC >>>> VMC2CreateWithCallbacks: Created [0x76bfa35200:VR/SBB:0x0] on behalf of client pid 98225
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< VRP >>>> FigVideoRenderPipelineCreateWithFigImageQueueArray: Created video render pipeline (0x76be114b40) VR/SBB associated with VMC VMC2 0x76bfa35200 VR/SBB retainCount: 1 allocator: 0x1fe6b6f70 and image queues [[FigImageQueue 0x76bec42800]]
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 98225)
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< LayerSync >>>> FigLayerSynchronizerSetCompensateForDisplayLatency: (0x76bfaea0a0) called. Will compensate for display latency.
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x76be119380|L/GA]: adding config [DataChannelConfiguration <0x76be33e670|(null)>] activationID 4, resourceCount: 0, dataChannelCount: 1 immediately: YES, hostTime: nan
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x76be119380|L/GA]: replacing pending config 0x0 with config [DataChannelConfiguration <0x76be33e670|(null)> activationID 4, channels: {
+	[FIQ caIQID 0, slotID 0, firstFrameEnq: NO desc: [mdia: 'vide', msub: (null), eyes: N, pack: 'none', proj: 'rect', indx: (null)]]
+},
+Resources: {
+}
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x76be119380|L/GA]: Replacing active config 0x0 w/ pending config 0x76be33e670, newConfigIsReadyForDisplay NO, newConfigIsEmpty NO
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119380|L/GA]: Applying configuration <0x76be33e670> to videoLayer (0x76bfa42300)
+2026-11-03 00:27:46.192 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_attachVideoLayerToImageQueue: [0x76be119380|L/GA]: Slot assignment : Attaching videoLayer ((
+    "<FigVideoLayer: 0x76bfa42300>"
+)) to imageQueue (FigImageQueueForCoreAnimation VR/SBB:IQ/CGO)
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15750.898002 and layer speed 1.000000
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_enqueueImageWithRotation: (0x76bec42800) VR/SBB:IQ/CGO Did enqueue first frame.
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer setReadyForDisplayWithoutKVO:]: <VR/SBB|0x76bfb7a100> setting readyForDisplay to YES
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> _figVideoQueueFirstVideoFrameEnqueued: <VR/SBB|0x76bfb7a100> [0x76be80cc00] Received first video frame enqueued notification
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b563] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_DeferredFirstFrameEnqueued: [0x76be119380|L/GA]: Handling deferred first frame enqueued with imageQueue 0x76bec42800
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 0.002 s rate: 1.00. recent stats: cfq empty: 2 times; frames decoded: 1, dropped: 0; decode: mean 0.001 s, max: 0.001 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+{PTS: 0.007 s, decode: 0.771 ms},
+]
+2026-11-03 00:27:46.193 Df yl_player_example[98225:8b563] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_firstFrameWasEnqueuedForImageQueueOrSlot: [0x76be119380|L/GA]: Handling first frame was enqueued for imageQueueOrSlot FigImageQueueForCoreAnimation VR/SBB:IQ/CGO
+2026-11-03 00:27:46.201 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:15750.903805, (15750.906651 - (0.002846 / 1.000000) )
+2026-11-03 00:27:46.201 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:46.201 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15750.906697 and layer speed 1.000000
+2026-11-03 00:27:47.195 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:47.195 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15751.900565 and layer speed 1.000000
+2026-11-03 00:27:48.194 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.194 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15752.900140 and layer speed 1.000000
+2026-11-03 00:27:48.651 Df yl_player_example[98225:8b49b] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 98225)
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO client pid 98225 (yl_player_example), timebase rate: 0.00, layer time: 2.448 s, host: 15753.360 s, diff: 15750.912 s; iq unconsumed: 1, min: 2.465, max: 2.465; preventsDisplaySleep: NO
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO recent frames: enqueued: 60, displayed: 58, dropped: 0, droppedAfterBeingSampledFromImageQueue: 0, flushed: 0, evicted: 0, >16ms late: 0, skipped: 0, refresh interval: min: 16.667 ms, max: 16.667 ms
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently enqueued:
+Enqueued Pixel Buffer:BGRA, 320 x 180 [
+{PTS: 2.340 s, enqueued at: host 15753.198 s (media 2.294 s)},
+{PTS: 2.382 s, enqueued at: host 15753.237 s (media 2.333 s)},
+{PTS: 2.424 s, enqueued at: host 15753.288 s (media 2.384 s)},
+{PTS: 2.465 s, enqueued at: host 15753.327 s (media 2.423 s)},
+]
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently displayed:
+DisplaySize: 640.000000 x 360.000000 [
+{PTS: 2.257 s: enqueued at 2.214 s; sampled at host 15753.168 s; displayed at layer time 2.264 s and host time 15753.185 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 2.299 s: enqueued at 2.254 s; sampled at host 15753.218 s; displayed at layer time 2.314 s and host time 15753.235 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+{PTS: 2.340 s: enqueued at 2.294 s; sampled at host 15753.252 s; displayed at layer time 2.348 s and host time 15753.268 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 2.382 s: enqueued at 2.333 s; sampled at host 15753.302 s; displayed at layer time 2.398 s and host time 15753.318 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+]
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 2.448 at host time 15753.360
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 2.448 s rate: 0.00. recent stats: cfq empty: 190 times; frames decoded: 59, dropped: 0; decode: mean 0.000 s, max: 0.001 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+{PTS: 2.340 s, decode: 0.386 ms},
+{PTS: 2.382 s, decode: 0.153 ms},
+{PTS: 2.424 s, decode: 0.174 ms},
+{PTS: 2.465 s, decode: 0.214 ms},
+]
+2026-11-03 00:27:48.654 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 2.448 at host time 15753.360
+2026-11-03 00:27:48.659 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.659 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.364899 and layer speed 0.000000
+2026-11-03 00:27:48.661 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 2.448 at host time 15753.367
+2026-11-03 00:27:48.661 Df yl_player_example[98225:8b5c8] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.661 Df yl_player_example[98225:8b5c8] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.367246 and layer speed 0.000000
+2026-11-03 00:27:48.670 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 2.448 at host time 15753.376
+2026-11-03 00:27:48.670 Df yl_player_example[98225:8b5c8] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.670 Df yl_player_example[98225:8b5c8] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.375802 and layer speed 0.000000
+2026-11-03 00:27:48.671 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 2.448 at host time 15753.377
+2026-11-03 00:27:48.671 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.671 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.376553 and layer speed 0.000000
+2026-11-03 00:27:48.681 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 2.448 at host time 15753.387
+2026-11-03 00:27:48.681 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.681 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.387421 and layer speed 0.000000
+2026-11-03 00:27:48.691 Df yl_player_example[98225:8b46f] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 1.000 (pid 98225)
+2026-11-03 00:27:48.691 Df yl_player_example[98225:8b563] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_DeferredSynchronousFrameEnqueued: [0x76be119380|L/GA]: Handling deferred sync frame enqueued with imageQueue 0x76bec42800
+2026-11-03 00:27:48.691 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:15750.903815, (15753.397388 - (2.493573 / 1.000000) )
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.397451 and layer speed 1.000000
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 2.494 s rate: 1.00. recent stats: cfq empty: 1 times; frames decoded: 0, dropped: 0; decode: mean 0.000 s, max: 0.000 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+]
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Forward; Set IQTiming beginTime:15750.903815, (15753.397602 - (2.493787 / 1.000000) )
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:48.692 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15753.397620 and layer speed 1.000000
+2026-11-03 00:27:49.692 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:49.692 Df yl_player_example[98225:8b4f0] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15754.398410 and layer speed 1.000000
+2026-11-03 00:27:50.696 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:50.696 Df yl_player_example[98225:8b49b] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15755.401622 and layer speed 1.000000
+2026-11-03 00:27:51.696 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:51.696 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15756.401629 and layer speed 1.000000
+2026-11-03 00:27:52.150 Df yl_player_example[98225:8b49b] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueGMStats: (0x76be80cc00) 144 frames enqueued in the last 6 seconds; 0 were suspended. sbuf queue contains 0 frames (0.000 sec), max PTS: nan; LWM: 1.000 HWM: 2.000. Timebase time 5.953, rate 1.00. (pid 98225)
+2026-11-03 00:27:52.696 Df yl_player_example[98225:8b5c8] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:52.696 Df yl_player_example[98225:8b5c8] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15757.401638 and layer speed 1.000000
+2026-11-03 00:27:53.698 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:53.698 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15758.403483 and layer speed 1.000000
+2026-11-03 00:27:54.696 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:54.696 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15759.401546 and layer speed 1.000000
+2026-11-03 00:27:54.702 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 8.504 s rate: 1.00. recent stats: cfq empty: 491 times; frames decoded: 146, dropped: 0; decode: mean 0.000 s, max: 0.001 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:27:54.702 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+{PTS: 8.422 s, decode: 0.419 ms},
+{PTS: 8.463 s, decode: 0.402 ms},
+{PTS: 8.505 s, decode: 0.347 ms},
+{PTS: 8.547 s, decode: 0.361 ms},
+]
+2026-11-03 00:27:54.706 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO client pid 98225 (yl_player_example), timebase rate: 1.00, layer time: 8.508 s, host: 15759.412 s, diff: 15750.904 s; iq unconsumed: 1, min: 8.547, max: 8.547; preventsDisplaySleep: NO
+2026-11-03 00:27:54.706 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO recent frames: enqueued: 146, displayed: 144, dropped: 0, droppedAfterBeingSampledFromImageQueue: 0, flushed: 0, evicted: 0, >16ms late: 0, skipped: 1, refresh interval: min: 16.667 ms, max: 16.667 ms
+2026-11-03 00:27:54.706 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently enqueued:
+Enqueued Pixel Buffer:BGRA, 320 x 180 [
+{PTS: 8.422 s, enqueued at: host 15759.277 s (media 8.373 s)},
+{PTS: 8.463 s, enqueued at: host 15759.318 s (media 8.414 s)},
+{PTS: 8.505 s, enqueued at: host 15759.368 s (media 8.464 s)},
+{PTS: 8.547 s, enqueued at: host 15759.408 s (media 8.504 s)},
+]
+2026-11-03 00:27:54.706 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently displayed:
+DisplaySize: 640.000000 x 360.000000 [
+{PTS: 8.297 s: enqueued at 8.254 s; sampled at host 15759.202 s; displayed at layer time 8.298 s and host time 15759.218 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 8.338 s: enqueued at 8.294 s; sampled at host 15759.252 s; displayed at layer time 8.348 s and host time 15759.268 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+{PTS: 8.380 s: enqueued at 8.334 s; sampled at host 15759.285 s; displayed at layer time 8.381 s and host time 15759.302 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 8.422 s: enqueued at 8.373 s; sampled at host 15759.335 s; displayed at layer time 8.431 s and host time 15759.352 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+]
+2026-11-03 00:27:55.693 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:55.693 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15760.399049 and layer speed 1.000000
+2026-11-03 00:27:56.693 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:56.693 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15761.398882 and layer speed 1.000000
+2026-11-03 00:27:57.692 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:57.692 Df yl_player_example[98225:8b46f] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15762.397684 and layer speed 1.000000
+2026-11-03 00:27:58.150 Df yl_player_example[98225:8b46f] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> FigVideoQueueGMStats: (0x76be80cc00) 144 frames enqueued in the last 6 seconds; 0 were suspended. sbuf queue contains 0 frames (0.000 sec), max PTS: nan; LWM: 1.000 HWM: 2.000. Timebase time 11.952, rate 1.00. (pid 98225)
+2026-11-03 00:27:58.696 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:58.696 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15763.401662 and layer speed 1.000000
+2026-11-03 00:27:59.694 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:27:59.694 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15764.399611 and layer speed 1.000000
+2026-11-03 00:28:00.698 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x76bf0eec40, displayID 1: latency 0.000
+2026-11-03 00:28:00.698 Df yl_player_example[98225:8b470] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15765.403607 and layer speed 1.000000
+2026-11-03 00:28:00.717 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO client pid 98225 (yl_player_example), timebase rate: 1.00, layer time: 14.519 s, host: 15765.422 s, diff: 15750.904 s; iq unconsumed: 1, min: 14.546, max: 14.546; preventsDisplaySleep: NO
+2026-11-03 00:28:00.717 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO recent frames: enqueued: 144, displayed: 144, dropped: 1, droppedAfterBeingSampledFromImageQueue: 0, flushed: 0, evicted: 0, >16ms late: 1, skipped: 0, refresh interval: min: 16.667 ms, max: 16.667 ms
+2026-11-03 00:28:00.717 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently enqueued:
+Enqueued Pixel Buffer:BGRA, 320 x 180 [
+{PTS: 14.421 s, enqueued at: host 15765.277 s (media 14.373 s)},
+{PTS: 14.462 s, enqueued at: host 15765.318 s (media 14.414 s)},
+{PTS: 14.504 s, enqueued at: host 15765.368 s (media 14.464 s)},
+{PTS: 14.546 s, enqueued at: host 15765.408 s (media 14.504 s)},
+]
+2026-11-03 00:28:00.717 Df yl_player_example[98225:8b564] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently displayed:
+DisplaySize: 640.000000 x 360.000000 [
+{PTS: 14.337 s: enqueued at 14.294 s; sampled at host 15765.252 s; displayed at layer time 14.348 s and host time 15765.268 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+{PTS: 14.379 s: enqueued at 14.334 s; sampled at host 15765.285 s; displayed at layer time 14.381 s and host time 15765.302 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 14.421 s: enqueued at 14.373 s; sampled at host 15765.335 s; displayed at layer time 14.431 s and host time 15765.352 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+{PTS: 14.462 s: enqueued at 14.414 s; sampled at host 15765.368 s; displayed at layer time 14.464 s and host time 15765.385 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+]
+2026-11-03 00:28:00.742 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 14.544 s rate: 1.00. recent stats: cfq empty: 489 times; frames decoded: 145, dropped: 0; decode: mean 0.000 s, max: 0.001 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:28:00.742 Df yl_player_example[98225:8b586] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+{PTS: 14.462 s, decode: 0.343 ms},
+{PTS: 14.504 s, decode: 0.422 ms},
+{PTS: 14.546 s, decode: 0.365 ms},
+{PTS: 14.587 s, decode: 0.434 ms},
+]
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_updateForCurrentTimebaseRate: (0x76be80cc00) Effective Timebase Rate of videoqueue changed to: 0.000 (pid 98225)
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO client pid 98225 (yl_player_example), timebase rate: 0.00, layer time: 14.959 s, host: 15765.863 s, diff: 15750.904 s; iq unconsumed: 0, min: 0.000, max: 0.000; preventsDisplaySleep: NO
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO recent frames: enqueued: 10, displayed: 11, dropped: 0, droppedAfterBeingSampledFromImageQueue: 0, flushed: 0, evicted: 0, >16ms late: 0, skipped: 0, refresh interval: min: 16.667 ms, max: 16.667 ms
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently enqueued:
+Enqueued Pixel Buffer:BGRA, 320 x 180 [
+{PTS: 14.837 s, enqueued at: host 15765.698 s (media 14.794 s)},
+{PTS: 14.879 s, enqueued at: host 15765.738 s (media 14.834 s)},
+{PTS: 14.921 s, enqueued at: host 15765.777 s (media 14.873 s)},
+{PTS: 14.962 s, enqueued at: host 15765.818 s (media 14.914 s)},
+]
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_gmstats_dump: FIQCA(0x76bec42800) VR/SBB:IQ/CGO most recently displayed:
+DisplaySize: 640.000000 x 360.000000 [
+{PTS: 14.796 s: enqueued at 14.754 s; sampled at host 15765.702 s; displayed at layer time 14.798 s and host time 15765.718 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 14.837 s: enqueued at 14.794 s; sampled at host 15765.752 s; displayed at layer time 14.848 s and host time 15765.768 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+{PTS: 14.879 s: enqueued at 14.834 s; sampled at host 15765.785 s; displayed at layer time 14.881 s and host time 15765.802 s; on glass for 49.998 ms; display count 3 and display interval 16.666 ms},
+{PTS: 14.921 s: enqueued at 14.873 s; sampled at host 15765.835 s; displayed at layer time 14.931 s and host time 15765.852 s; on glass for 33.332 ms; display count 2 and display interval 16.666 ms},
+]
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b563] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_setImageQueueTiming: (0x76bec42800) Paused; Set IQTimingOffset: 14.959 at host time 15765.863
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_getLayerDisplayLatency: layer 0x76bfa42300, context 0x0, displayID 0: latency 0.000
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b5c7] [com.apple.coremedia:] <<<< LayerSync >>>> figlayersync_setLayerTiming: (layer 0x76bfa42300) only set layer timeOffset: 0.000000 at hostTime 15765.863188 and layer speed 0.000000
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 14.959 s rate: 0.00. recent stats: cfq empty: 34 times; frames decoded: 9, dropped: 0; decode: mean 0.000 s, max: 0.001 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:28:01.157 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+{PTS: 14.837 s, decode: 0.309 ms},
+{PTS: 14.879 s, decode: 0.352 ms},
+{PTS: 14.921 s, decode: 0.447 ms},
+{PTS: 14.962 s, decode: 0.365 ms},
+]
+2026-11-03 00:28:01.158 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer setReadyForDisplayWithoutKVO:]: <VR/SBB|0x76bfb7a100> setting readyForDisplay to NO
+2026-11-03 00:28:01.158 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x76be119380|L/GA]: adding config [DataChannelConfiguration <0x76be33d4a0|(null)>] activationID 5, resourceCount: 0, dataChannelCount: 0 immediately: YES, hostTime: nan
+2026-11-03 00:28:01.158 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x76be119380|L/GA]: replacing pending config 0x0 with config [DataChannelConfiguration <0x76be33d4a0|(null)> activationID 5, channels: {
+},
+Resources: {
+}
+2026-11-03 00:28:01.158 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x76be119380|L/GA]: Replacing active config 0x76be33e670 w/ pending config 0x76be33d4a0, newConfigIsReadyForDisplay YES, newConfigIsEmpty YES
+2026-11-03 00:28:01.158 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119380|L/GA]: Applying configuration <0x76be33d4a0> to videoLayer (0x76bfa42300)
+2026-11-03 00:28:01.158 Df yl_player_example[98225:8b4f2] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119380|L/GA]: Received empty config, clearing video layers
+2026-11-03 00:28:01.184 Df yl_player_example[98225:8b56d] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:163   --> setPlayState Stopped  Output {BuiltInSpeakerDevice, 0xa}
+2026-11-03 00:28:01.184 Df yl_player_example[98225:8b56d] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:156   Sent updated IOState to server: [0, 0]. BT device UIDS: {(
+)}
+2026-11-03 00:28:01.184 Df yl_player_example[98225:8b56d] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:199   <-- setPlayState Server update was required.
+2026-11-03 00:28:01.191 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:469   ~AUHAL: (0x105a03ef0) Selecting device 0 from destructor
+2026-11-03 00:28:01.191 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:625   SelectDevice: -> (0x105a03ef0)
+2026-11-03 00:28:01.191 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:677   SelectDevice: (0x105a03ef0) not already running
+2026-11-03 00:28:01.191 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:683   SelectDevice: (0x105a03ef0) disconnecting device 91
+2026-11-03 00:28:01.191 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:747   SelectDevice: (0x105a03ef0) destroying ioproc 0xa for device 91
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:163   --> setPlayState Stopped  Output {BuiltInSpeakerDevice, 0xa}
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:as_client] SessionCore_macOS_Legacy.mm:194   <-- setPlayState IOState: [0, 0]. BT device UIDS: {(
+)} Server update was not required.
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:849   SelectDevice: (0x105a03ef0) nothing to setup
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:859   SelectDevice: (0x105a03ef0) adding 0 device listeners to device 0
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:859   SelectDevice: (0x105a03ef0) adding 0 device delegate listeners to device 0
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:896   SelectDevice: (0x105a03ef0) removing 7 device listeners from device 91
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:896   SelectDevice: (0x105a03ef0) removing 0 device delegate listeners from device 91
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coreaudio:AUHAL]                 AUHAL.cpp:912   SelectDevice: <- (0x105a03ef0)
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer _setRate:rateChangeReason:figPlayerSetRateHandler:]_block_invoke: <P/NP|0x76bf0eead0> setting timeControlStatus=0, reasonForWaitingToPlay=(null)
+2026-11-03 00:28:01.192 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer replaceCurrentItemWithPlayerItem:]: <P/NP|0x76bf0eead0> currentItem KVO: replacing currentItem with (null)
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigDeferredTransaction >>>> fdt_commitTransactionOnMainQueue: Warning: deferred transaction <private> was delayed by 0.035s before it began running
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVSampleBufferVideoRenderer >>>> -[AVSampleBufferVideoRenderer dealloc]: <VR/SBB|0x76bfb7a100> [0x76be80cc00]
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_Finalize: (0x76be80cc00) VR/SBB (pid 98225)
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback.videoqueue] <<<< FigVideoQueue >>>> vq_Invalidate: 0x76be80cc00 (pid 98225)
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]: client pid 98225; timebase time: 14.959 s rate: 0.00. recent stats: cfq empty: 3 times; frames decoded: 0, dropped: 0; decode: mean 0.000 s, max: 0.000 s; codec service tier: 0; number of black frames for empty media: 0, number of frames replaced by black frames: 0; number of frames output late: 0
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> vmc2GMFigLogDumpStats: VMC [0x76bfa35200:VR/SBB]:Snapshots:
+, DecodedPixelBuffer: BGRA, 320 x 180
+Last Decoded Frames [
+]
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_AddDataChannelConfiguration: [0x76be119380|L/GA]: adding config [DataChannelConfiguration <0x76be33dd10|(null)>] activationID 6, resourceCount: 0, dataChannelCount: 0 immediately: YES, hostTime: nan
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_setPendingConfigurationAndAttemptToMakeActive: [0x76be119380|L/GA]: replacing pending config 0x0 with config [DataChannelConfiguration <0x76be33dd10|(null)> activationID 6, channels: {
+},
+Resources: {
+}
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_activatePendingConfigurationIfReadyAndCopyNewlyActivatedConfig: [0x76be119380|L/GA]: Replacing active config 0x76be33d4a0 w/ pending config 0x76be33dd10, newConfigIsReadyForDisplay YES, newConfigIsEmpty YES
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119380|L/GA]: Applying configuration <0x76be33dd10> to videoLayer (0x76bfa42300)
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:video-receiver] <<<< FigVideoReceiverForCALayer >>>> videoReceiverForCA_applyConfigurationToLayersAtHostTime: [0x76be119380|L/GA]: Received empty config, clearing video layers
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< FigPlayerResourceArbiter >>>> FigPlayerResourceArbiterUnregisterConsumer: 0x76bec2b900: Unregistered consumer: 2
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:playback-memory] <<< FigOSTransactionsUtilities >>> FigOSTransactionCreateWithProcessName: [Fig Transaction] Added transaction weak reference holder <0x76bf2daa00>: <private>
+2026-11-03 00:28:01.193 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VRP >>>> figVideoRenderPipelineFinalize: Finalizing [0x76be114b40]
+2026-11-03 00:28:01.194 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< VMC >>>> vmc2Finalize: Finalized VMC [0x76bfa35200] VR/SBB
+2026-11-03 00:28:01.194 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< IQ-CA >>>> piqca_finalize: Finalized IQ (0x76bec42800) VR/SBB:IQ/CGO on behalf of client pid 98225 (yl_player_example)
+2026-11-03 00:28:01.194 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer dealloc]: <P/NP|0x76bf0eead0> Player deallocated
+2026-11-03 00:28:01.194 Df yl_player_example[98225:8b452] [com.apple.coremedia:] <<<< AVPlayer >>>> -[AVPlayer dealloc]: <P/NP|0x76bf0eead0> AVPlayer releasing figPlayer 0x0

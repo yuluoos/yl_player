@@ -98,7 +98,7 @@ final class YlSoftwareVideoLifecycleTests: XCTestCase {
       outputPixelFormat: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
     let limits = YlSoftwareDecodeLimits(maxOwnedBytes: 32 * 1024 * 1024, maxFrames: 64,
       maxPacketBytes: 1024 * 1024, windowNs: 1_000_000, maxCpuNs: 1_000_000, maxDecodeWallNs: 1_000_000)
-    let pool = YlSoftwareDecodePool(); var ticks: UInt64 = 0
+    let pool = YlSoftwareDecodePool(measuring: true); var ticks: UInt64 = 0
     var retained: CVPixelBuffer?; var count = 0; var failures = [NativePlayerError]()
     let decoder = try YlSoftwareVideoDecoder(configuration: config, key: key,
       admission: .init(entries: [key: limits]), pool: pool, maxInFlightBytes: 1024 * 1024,
@@ -124,6 +124,8 @@ final class YlSoftwareVideoLifecycleTests: XCTestCase {
     }
     decoder.drain(); decoder.dispose(); decoder.dispose()
     XCTAssertTrue(failures.isEmpty, "\(failures)"); XCTAssertEqual(count, 96)
+    XCTAssertEqual(pool.measured?.decodedFrames, 96)
+    XCTAssertGreaterThan(try XCTUnwrap(pool.measured).maxPacketBytes, 0)
     XCTAssertGreaterThan(pool.ownedBytes, 0)
     XCTAssertNotNil(retained); retained = nil
     XCTAssertEqual(pool.ownedBytes, 0)
@@ -180,6 +182,37 @@ final class YlSoftwareVideoLifecycleTests: XCTestCase {
       observe: observe ?? { _ in ticks += 1; return .init(monotonicNs: ticks, cumulativeCpuNs: ticks, decodeWallNs: 1, thermalNominal: true) },
       onFrame: onFrame, onError: onError)
   }
+  func testDefaultServicesDecodeAV1AndVP9WithTheirExactThreadProfiles() throws {
+    #if os(macOS)
+    let av1Threads = 1
+    #else
+    let av1Threads = 2
+    #endif
+    for (name, ext, threadCount) in [("p03-av1-main8", "mkv", av1Threads),
+                                      ("p03-webm-vp9-vorbis", "webm", 2)] {
+      let (config, format, packets) = try samples(name, ext: ext)
+      let prepared = try preparedFixture(name, ext: ext)
+      defer { prepared.discard() }
+      let pool = YlSoftwareDecodePool()
+      var service = services([config], pool: pool)
+      // Exercise the production default rather than this helper's override.
+      service.threads = YlSoftwareDecodeServices().threads
+      let limits = try XCTUnwrap(service.admission.entries.values.first)
+      let key = config.key(model: "test", osBuild: "test", decoderBuild: "test",
+        threads: threadCount, outputPixelFormat: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+      service.admission = .init(entries: [key: limits])
+      var frames = 0; var errors = [NativePlayerError]()
+      let decoder = try service.make(configuration: config, format: format,
+        budget: .make(configuration: .init(map: [:]), prepared: prepared),
+        onFrame: { _ in frames += 1 }, onError: { errors.append($0) })
+      for packet in packets { decoder.decode(sample: packet, generation: 1, reservation: nil) }
+      decoder.drain(); decoder.dispose()
+      XCTAssertEqual(frames, 96, name)
+      XCTAssertTrue(errors.isEmpty, "\(name): \(errors)")
+      XCTAssertEqual(pool.ownedBytes, 0)
+    }
+  }
+
   func testActualAV1EightAndTenBitAfterDemuxClosed() throws {
     for (name, expected, pixel) in [("p03-av1-main8", 96, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange),
                                   ("p03-av1-main10", 24, kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange)] {

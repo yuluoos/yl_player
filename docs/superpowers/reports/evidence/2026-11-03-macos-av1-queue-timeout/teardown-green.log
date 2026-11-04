@@ -1,0 +1,80 @@
+Writing result bundle at path:
+	/private/tmp/yl-av1-20261103/teardown-green.xcresult
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:324:23: warning: capture 'self' was never used [#NoUsage]
+ 322 |     presentation.pause(atHostTimeUs: Self.hostTimeUs())
+ 323 |     YlFallbackTeardownTransaction(
+ 324 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 325 |         tokenToCancel?.cancel()
+ 326 |         mediaToClose?.cancelInput()
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift:666:23: warning: capture 'self' was never used [#NoUsage]
+ 664 |     presentation.disposeFrames()
+ 665 |     YlFallbackTeardownTransaction(
+ 666 |       cancelInput: { [self] in
+     |                       `- warning: capture 'self' was never used [#NoUsage]
+ 667 |         tokenToCancel?.cancel()
+ 668 |         mediaToClose?.cancelInput()
+
+[#NoUsage]: <https://docs.swift.org/compiler/documentation/diagnostics/no-usage>
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift:157:55: warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 155 |     pixelBufferAttributes: [
+ 156 |       kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+ 157 |       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+     |                                                       `- warning: conformance of 'AnyHashable' to 'Sendable' is unavailable; this is an error in the Swift 6 language mode; this is an error in the Swift 6 language mode
+ 158 |     ]
+ 159 |   )
+
+Swift.AnyHashable:2:11: note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+1 | @available(*, unavailable)
+2 | extension AnyHashable : Sendable {
+  |           `- note: conformance of 'AnyHashable' to 'Sendable' has been explicitly marked unavailable here
+3 | }
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DRM/YlFairPlayView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   let registry: YlFairPlayViewRegistry
+13 |   init(registry: YlFairPlayViewRegistry) { self.registry = registry }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   private func record(_ args: Any?) -> YlFairPlayViewRecord? {
+16 |     guard let values = args as? [String: Any],
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift:14:8: warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+12 |   }
+13 |   func unregister(_ identity: Int64) { outputs.removeObject(forKey: NSNumber(value: identity)) }
+14 |   func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol { FlutterStandardMessageCodec.sharedInstance() }
+   |        `- warning: result of 'createArgsCodec()' has different optionality than expected by protocol 'FlutterPlatformViewFactory'
+15 |   func create(withViewIdentifier viewId: Int64, arguments args: Any?) -> NSView {
+16 |     let identity = (args as? [String: Any])?["textureId"] as? NSNumber
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/FlutterMacOS.framework/Headers/FlutterPlatformViews.h:37:1: note: requirement 'createArgsCodec()' declared here
+35 |  */
+36 | @optional
+37 | - (nullable NSObject<FlutterMessageCodec>*)createArgsCodec;
+   | `- note: requirement 'createArgsCodec()' declared here
+38 | @end
+39 | 
+
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlHardwareDecoderEvidence.swift:31:88: warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 29 |   typealias Copy = (VTSession, CFString, inout CFTypeRef?) -> OSStatus
+ 30 |   var copy: Copy = { session, key, value in
+ 31 |     VTSessionCopyProperty(session, key: key, allocator: kCFAllocatorDefault, valueOut: &value)
+    |                                                                                        `- warning: forming 'UnsafeMutableRawPointer' to a variable of type 'Optional<AnyObject>'; this is likely incorrect because 'Optional<AnyObject>' may contain an object reference.
+ 32 |   }
+ 33 |   func evidence(for session: VTSession) -> YlHardwareDecoderEvidence {
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/Runner.xcodeproj: RunnerTests: ld: warning: building for macOS-12.0, but linking with dylib '@rpath/XCTest.framework/Versions/A/XCTest' which was built for newer version 14.0
+/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/Runner.xcodeproj: RunnerTests: ld: warning: building for macOS-12.0, but linking with dylib '@rpath/libXCTestSwiftSupport.dylib' which was built for newer version 14.0
+note: Run script build phase 'Run Script' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Runner' from project 'Runner')
+2026-11-02 20:34:24.591 xcodebuild[16880:107006] [MT] IDETestOperationsObserverDebug: 2.922 elapsed -- Testing started completed.
+2026-11-02 20:34:24.591 xcodebuild[16880:107006] [MT] IDETestOperationsObserverDebug: 0.000 sec, +0.000 sec -- start
+2026-11-02 20:34:24.591 xcodebuild[16880:107006] [MT] IDETestOperationsObserverDebug: 2.922 sec, +2.922 sec -- end
+Testing started

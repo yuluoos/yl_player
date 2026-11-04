@@ -9,7 +9,7 @@ let package = Package(
         .macOS("12.0")
     ],
     products: [
-        .library(name: "yl-player-apple", targets: ["yl_player_apple"])
+        .library(name: "yl-player-apple", type: .dynamic, targets: ["yl_player_apple"])
     ],
     dependencies: [
         .package(name: "FlutterFramework", path: "../FlutterFramework"),

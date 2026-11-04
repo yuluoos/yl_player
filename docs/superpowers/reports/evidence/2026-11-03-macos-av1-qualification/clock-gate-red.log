@@ -1,0 +1,32 @@
+FFF
+======================================================================
+FAIL: test_stale_or_missing_clock_cannot_qualify_zero_drop_playback (test_macos_profile.MacOSProfileTests.test_stale_or_missing_clock_cannot_qualify_zero_drop_playback) (change={'staleEvents': 1})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_macos_profile.py", line 125, in test_stale_or_missing_clock_cannot_qualify_zero_drop_playback
+    with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'clock|worker'):
+                                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_stale_or_missing_clock_cannot_qualify_zero_drop_playback (test_macos_profile.MacOSProfileTests.test_stale_or_missing_clock_cannot_qualify_zero_drop_playback) (change={'maximumWorkerGapSeconds': 0.101})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_macos_profile.py", line 125, in test_stale_or_missing_clock_cannot_qualify_zero_drop_playback
+    with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'clock|worker'):
+                                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_stale_or_missing_clock_cannot_qualify_zero_drop_playback (test_macos_profile.MacOSProfileTests.test_stale_or_missing_clock_cannot_qualify_zero_drop_playback) (change=None)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_macos_profile.py", line 125, in test_stale_or_missing_clock_cannot_qualify_zero_drop_playback
+    with self.subTest(change=change), self.assertRaisesRegex(ValueError, 'clock|worker'):
+                                      ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.043s
+
+FAILED (failures=3)

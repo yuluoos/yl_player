@@ -1,0 +1,17 @@
+{
+  "purpose": "separate-diagnostic-observer-effects",
+  "phaseDurationSeconds": 180,
+  "phases": [
+    "display-and-main",
+    "main-only",
+    "neither"
+  ],
+  "maximumFrames": 12960,
+  "maximumSeconds": 560,
+  "leadSeconds": 0.05,
+  "pollIntervalSeconds": 0.01,
+  "stopAtFirstDrop": false,
+  "productionQualification": false,
+  "sourceSha256": "942a3e234d1536e9d9e1e04a32a49dbf6a89d865b936699a674cf364f4a691ef",
+  "binarySha256": "7b3385d890916dd5860c1cce46fcecb415b2f00dac2b296a208a5f6bd98e7543"
+}

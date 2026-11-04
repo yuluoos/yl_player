@@ -1,0 +1,31 @@
+..E.
+======================================================================
+ERROR: test_counts_first_frame_only_from_distinct_observed_preplay_layer (test_macos_profile.MacOSProfileTests.test_counts_first_frame_only_from_distinct_observed_preplay_layer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4/Frameworks/Python.framework/Versions/3.14/lib/python3.14/unittest/mock.py", line 1439, in patched
+    return func(*newargs, **newkeywargs)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_macos_profile.py", line 84, in test_counts_first_frame_only_from_distinct_observed_preplay_layer
+    self.assertEqual(self.profile()['key']['threads'], 2)
+                     ~~~~~~~~~~~~^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/test_macos_profile.py", line 56, in profile
+    return issue(self.app, self.root/'baseline', self.root/'verification', self.protocol)
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/macos_profile.py", line 68, in issue
+    first = observations(baseline, 'baseline', config['expectedVideoPackets'])
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/macos_profile.py", line 50, in observations
+    require(timed == expected_frames - 1 and
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            [x for x in lines if x.startswith('QUAL_LEGACY_DEQUEUE ')] == ['QUAL_LEGACY_DEQUEUE 0'] and
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            any(x.startswith('QUAL_LEGACY total=') and int(x.split()[1][6:]) > 0 and x.endswith(' drops=0')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                for x in lines), 'unaccounted displayed frames')
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/yy2021_8689/Desktop/Flutter/yl_player/tool/decoder_probe/macos_profile.py", line 15, in require
+    raise ValueError(reason)
+ValueError: unaccounted displayed frames
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.069s
+
+FAILED (errors=1)

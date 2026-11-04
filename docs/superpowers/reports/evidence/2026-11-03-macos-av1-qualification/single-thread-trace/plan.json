@@ -1,0 +1,33 @@
+{
+  "diagnosticOnly": true,
+  "formalAcceptance": false,
+  "maximumSeconds": 180,
+  "triggerNativeWallNs": 22000000,
+  "diagnosticTrialCeilingNs": 100000000,
+  "command": [
+    "xcrun",
+    "xctrace",
+    "record",
+    "--template",
+    "Time Profiler",
+    "--attach",
+    "13330",
+    "--recording-options",
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player/build/macos-av1-20261103-resumed/single-thread-trace/options.json",
+    "--notify-tracing-started",
+    "dev.ylplayer.budget.e938561939e748f38735fcde3657c563",
+    "--time-limit",
+    "220s",
+    "--window",
+    "10s",
+    "--output",
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player/build/macos-av1-20261103-resumed/single-thread-trace/recording.trace"
+  ],
+  "pid": 13330,
+  "sdkImages": {
+    "Contents/Frameworks/yl-player-apple.framework/Versions/A/yl-player-apple": "78376212fb801d64f015a018438a40c82e015a2e9e6c7de1aab6d4b235200b05",
+    "Contents/Frameworks/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d"
+  },
+  "decoderThreads": 1,
+  "hypothesis": "Remove dav1d inter-worker waits for this low-resolution AV1 key; diagnostic only"
+}

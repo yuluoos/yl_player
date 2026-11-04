@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		A71F00000000000000000004 /* yl-player-media-core in Frameworks */ = {isa = PBXBuildFile; productRef = A71F00000000000000000003 /* yl-player-media-core */; };
+		A71F00000000000000000002 /* yl-player-apple in Frameworks */ = {isa = PBXBuildFile; productRef = A71F00000000000000000001 /* yl-player-apple */; };
 		01DF178319EF10D49C1EF278 /* hevc_aac.flv in Resources */ = {isa = PBXBuildFile; fileRef = 6F135885A3F56F40C6C7F785 /* hevc_aac.flv */; };
 		0297CDE8E558DC16D82844EE /* YlApplePublicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75630A8AD23C5386F95DD3C9 /* YlApplePublicationTests.swift */; };
 		0A09E52D8B8A29CCDC17180D /* YlFairPlayOutputTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B04CFDDF3B1614FD42743EF /* YlFairPlayOutputTests.swift */; };
@@ -96,6 +98,7 @@
 		35346C19B30D124CD566DD50 /* p03-vp9-hidden.webm in Resources */ = {isa = PBXBuildFile; fileRef = 6261956E4FF91A829EC83112 /* p03-vp9-hidden.webm */; };
 		274CA7C39C96B10C6D163373 /* p03-av1-main10.mkv in Resources */ = {isa = PBXBuildFile; fileRef = DC19ABA39ABE4456EA703EFD /* p03-av1-main10.mkv */; };
 		A6C1A59B37DF002B69800AFC /* p03-av1-main8.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 8B81432280782AF19CFA85E2 /* p03-av1-main8.mkv */; };
+		2054D5AEEFE896DF99526BCF /* p03-av1-opus.mkv in Resources */ = {isa = PBXBuildFile; fileRef = CCCD010D2E496354C71651B2 /* p03-av1-opus.mkv */; };
 		8AF21BB0A43A336EF9B59DF2 /* p03-ps-avc-mp3.mpg in Resources */ = {isa = PBXBuildFile; fileRef = 9957314FD516A29891C7C3B7 /* p03-ps-avc-mp3.mpg */; };
 		B5C232983E28BCC94B7FAD9B /* dash-sidx-v0.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 163664CDFDA8A7FA6E87C46B /* dash-sidx-v0.mp4 */; };
 		B5C2EC2C16033EAB5CECFA6A /* YlHlsManifestRewriterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63C04CC5CBCBC2772ACBE6DC /* YlHlsManifestRewriterTests.swift */; };
@@ -237,6 +240,7 @@
 		6261956E4FF91A829EC83112 /* p03-vp9-hidden.webm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-vp9-hidden.webm"; sourceTree = "<group>"; };
 		DC19ABA39ABE4456EA703EFD /* p03-av1-main10.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-main10.mkv"; sourceTree = "<group>"; };
 		8B81432280782AF19CFA85E2 /* p03-av1-main8.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-main8.mkv"; sourceTree = "<group>"; };
+		CCCD010D2E496354C71651B2 /* p03-av1-opus.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-opus.mkv"; sourceTree = "<group>"; };
 		9957314FD516A29891C7C3B7 /* p03-ps-avc-mp3.mpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-ps-avc-mp3.mpg"; sourceTree = "<group>"; };
 		D5066B6A5AC2AF4ABCEC96DF /* YlMacosPlatformAdapterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlMacosPlatformAdapterTests.swift; sourceTree = "<group>"; };
 		DC082FBAB1E5C3F7599EC575 /* YlAppleReconciliationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlAppleReconciliationTests.swift; sourceTree = "<group>"; };
@@ -267,6 +271,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A71F00000000000000000002 /* yl-player-apple in Frameworks */,
+				A71F00000000000000000004 /* yl-player-media-core in Frameworks */,
 				A643CC937C14D2A3D8766502 /* Pods_RunnerTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,6 +367,7 @@
 				6261956E4FF91A829EC83112 /* p03-vp9-hidden.webm */,
 				DC19ABA39ABE4456EA703EFD /* p03-av1-main10.mkv */,
 				8B81432280782AF19CFA85E2 /* p03-av1-main8.mkv */,
+				CCCD010D2E496354C71651B2 /* p03-av1-opus.mkv */,
 				9957314FD516A29891C7C3B7 /* p03-ps-avc-mp3.mpg */,
 				C6912F19C303058E527259FE /* hevc_dts.mp4 */,
 				EA232D5E16F22AC9EB08B629 /* hls_encrypted_segment0.ts */,
@@ -473,6 +480,7 @@
 		331C80D4294CF70F00263BE5 /* RunnerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C80DE294CF71000263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
+			packageProductDependencies = (A71F00000000000000000001 /* yl-player-apple */, A71F00000000000000000003 /* yl-player-media-core */,);
 			buildPhases = (
 				D896F5BB1F8FC28EC1910FB7 /* [CP] Check Pods Manifest.lock */,
 				331C80D1294CF70F00263BE5 /* Sources */,
@@ -592,6 +600,7 @@
 				35346C19B30D124CD566DD50 /* p03-vp9-hidden.webm in Resources */,
 				274CA7C39C96B10C6D163373 /* p03-av1-main10.mkv in Resources */,
 				A6C1A59B37DF002B69800AFC /* p03-av1-main8.mkv in Resources */,
+				2054D5AEEFE896DF99526BCF /* p03-av1-opus.mkv in Resources */,
 				8AF21BB0A43A336EF9B59DF2 /* p03-ps-avc-mp3.mpg in Resources */,
 				8E0F089F97147D279FD80AF9 /* hevc_dts.mp4 in Resources */,
 				7C9D11245578AD3EF5C79527 /* hls_encrypted_segment0.ts in Resources */,
@@ -1161,6 +1170,8 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A71F00000000000000000003 /* yl-player-media-core */ = {isa = XCSwiftPackageProductDependency; productName = "yl-player-media-core"; };
+		A71F00000000000000000001 /* yl-player-apple */ = {isa = XCSwiftPackageProductDependency; productName = "yl-player-apple"; };
 		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlutterGeneratedPluginSwiftPackage;

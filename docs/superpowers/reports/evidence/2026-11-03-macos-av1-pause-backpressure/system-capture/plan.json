@@ -1,0 +1,14 @@
+{
+  "purpose": "system-render-deadline-diagnosis",
+  "productionQualification": false,
+  "template": "Animation Hitches",
+  "maximumFrames": 7200,
+  "captureTimeLimitSeconds": 315,
+  "retainedTraceWindowSeconds": 30,
+  "leadSeconds": 0.05,
+  "pollIntervalSeconds": 0.01,
+  "stopOnFirstSteadyDrop": true,
+  "startupBoundaryFrames": 120,
+  "sourceSha256": "8ff30fc55631915f491921fa3ca8702696639a10784992240f95cf813d00c210",
+  "binarySha256": "80f43564adbf42e49cbdfdb6defa0358420a45e9d57f8dba0a09759bac38cff9"
+}

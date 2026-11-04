@@ -1,0 +1,6018 @@
+{
+  "approximateTraceStartHostSeconds": 17814.781720638275,
+  "dropObservedTraceSeconds": 13.719628652725078,
+  "rows": [
+    {
+      "time": 13.271035625,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2302334,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.271070583,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2356708,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.271435833,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2702083,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.271471625,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7427125,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.275290166,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11378833,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.277574333,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17685833,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.27766975,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8974542,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.277689125,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5595542,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.278828333,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1115458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.283480666,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11406625,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.284093875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 486459,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.286858458,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11427583,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.286943125,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4712084,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.286986291,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4773500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.2892225,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2176250,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.289250625,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2204334,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.29363775,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6569500,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.293699625,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6693459,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.293820375,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "SetAlgebra.init<A>(_:)",
+        "default argument 2 of OS_dispatch_queue.asyncAfter(deadline:qos:flags:execute:)",
+        "YlDemuxPipeline.schedulePump(after:operation:)",
+        "YlManagedPlaybackSession.requestPump(after:)",
+        "YlDemuxPipeline.pumpOne(generation:)",
+        "YlManagedPlaybackSession.pumpOne()",
+        "closure #1 in YlManagedPlaybackSession.requestPump(after:)",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_client_callout",
+        "_dispatch_continuation_pop",
+        "_dispatch_source_latch_and_call",
+        "_dispatch_source_invoke",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.293886708,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 127958,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.293900666,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 192333,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.295364333,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17672750,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.295448833,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17753458,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.298525833,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11555542,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.299353833,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3881667,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.300174791,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6238750,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.30865125,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6697459,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.310082125,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11389959,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.310171916,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1457416,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.3102095,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1495959,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.310230708,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 16276833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.310258083,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 9423625,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.313133916,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17673750,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.315250125,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3017542,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.315279166,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3056333,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.315520875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5235500,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.315555416,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5321250,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.317496083,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 49165542,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.317703458,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 22234500,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.319357,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1183667,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.321701208,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11499875,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.329327333,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7101417,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.329361208,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7138875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.330849375,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17680375,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.330918125,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 12750667,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.333317458,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11474042,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.333483958,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17825583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.333488166,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 15757791,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.334119541,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 544500,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.336110125,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2577750,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.336138166,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2609666,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.336377583,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2890167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.33923775,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2680417,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.344914916,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11453166,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.345007333,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2996292,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.345042541,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3036458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.345086416,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8519666,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.348596791,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17672166,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.348696916,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17760458,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.349360625,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 643834,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.349390791,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4295625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.350167583,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5052958,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.350826625,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 32965834,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.351006916,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2292916,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.356538125,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11501125,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.357885541,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6342666,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.357913166,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6371125,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.358112208,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6591667,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.358136916,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6597750,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.362186125,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3513292,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.366376708,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17672083,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.366434,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 14969042,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.366437916,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4220000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.36683825,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8583250,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.368156375,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11475834,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.36834,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6124084,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.369357833,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 964917,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.378417375,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6199375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.378443708,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6227375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.378652333,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10243792,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.378684291,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10325291,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.378819541,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "0x19a07be01",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.378819791,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "__workq_kernreturn",
+        "_pthread_workqueue_addthreads",
+        "_dispatch_root_queue_poke_slow",
+        "_dispatch_root_queue_drain",
+        "_dispatch_worker_thread2",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.378819875,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "_platform_memmove",
+        "_dispatch_event_loop_merge",
+        "_dispatch_kevent_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.378829041,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 78875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.379730875,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11395417,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.384093958,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17656917,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.384130916,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 564458,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.384192041,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17739541,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.384201833,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1973083,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.389231208,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5015125,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.389268541,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7038833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.391360916,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11526375,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.391551833,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 12720833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.391589875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7383834,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.399337958,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7359917,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.399359708,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7390292,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.399621458,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7994333,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.399655458,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8102125,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.400826083,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 49280875,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.401038083,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 16822333,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.401885,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17684209,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.403028666,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11522041,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.408644875,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5398167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.412180291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3468500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.414582333,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11401500,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.4168655,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 13599625,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.419344875,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7112417,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.419413166,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7192583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.419601375,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17668834,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.419744958,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17815292,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.421375958,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3859250,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.421411041,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 18209916,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.426209666,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11524416,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.426290625,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4710459,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.42632475,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4754459,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.4263875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4811250,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.429358208,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2935458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.433487166,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7062291,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.434102125,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 529584,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.434159791,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 32940291,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.434263541,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2018791,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.434284875,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2049084,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.43447075,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 14703167,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.437423875,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17673125,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.437827,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11506750,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.439217208,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1711083,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.439255166,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4205791,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.442000291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 20436166,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.442304958,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7469458,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.449348666,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6774583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.44938875,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6815959,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.449435958,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11460625,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.4496195,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7047709,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.449679625,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7106584,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.454712875,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17219084,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.454862666,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17356208,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.454879333,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2668500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.458647875,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6446667,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.461036666,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11431125,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.46217775,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3454917,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.462235958,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3544583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.463060958,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 12229542,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.463101291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 13398541,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.466825708,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3603625,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.467511916,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4302666,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.472172041,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3551208,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.472206166,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3608000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.472559583,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17680792,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.472648833,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11495708,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.472898875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4544209,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.478196166,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5200708,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.478231708,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5289708,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.478820208,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "cache_t::insert(objc_selector*, void (*)(), objc_object*)",
+        "objc_lookUpImpOrForward",
+        "_objc_msgSend_uncached",
+        "-[NSWindow encodeRestorableStateWithCoder:]",
+        "recursivelyEncodeInvalidPersistentState",
+        "-[NSPersistentUIManager flushAllChanges]",
+        "-[NSPersistentUIFlushScheduler _performFlush]",
+        "__45-[NSPersistentUIFlushScheduler scheduleTimer]_block_invoke",
+        "__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__",
+        "__CFRunLoopDoBlocks",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.479344791,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 764958,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.479425875,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 16221792,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.484117666,
+      "thread": "0x3d93b (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1849583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.484140375,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5488167,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "_CGSHWCaptureWindowListToIOSurface",
+        "__hw_capture_window_list_to_iosurface_internal_direct_block_invoke",
+        "CGSWindowArrayPerformWithList",
+        "hw_capture_window_list_to_iosurface_internal_direct",
+        "hw_capture_window_list_common",
+        "-[NSPersistentUIWindowSnapshotter accessWindowBits:handler:]",
+        "-[NSPersistentUIWindowSnapshotter captureAndWriteSnapshotForWindowNumber:forWindowID:waitUntilDone:]",
+        "-[NSPersistentUIWindowSnapshotter snapshotOnePendingWindowWaitUntilDone:]",
+        "-[NSPersistentUIWindowSnapshotter _continueAsynchronouslySnapshotPendingWindows]",
+        "___NSPersistentUIDispatchQueueAsync_block_invoke",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.484181041,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1918583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.484195708,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5233708,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "SLSWindowServerClientSpaceCopyName",
+        "-[NSWindow encodeRestorableStateWithCoder:]",
+        "recursivelyEncodeInvalidPersistentState",
+        "-[NSPersistentUIManager flushAllChanges]",
+        "-[NSPersistentUIFlushScheduler _performFlush]",
+        "__45-[NSPersistentUIFlushScheduler scheduleTimer]_block_invoke",
+        "__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__",
+        "__CFRunLoopDoBlocks",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.484252666,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11447791,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.484352541,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 41783875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.484470666,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 621910500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.484541583,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10520198792,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.489216916,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1814458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.489247833,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2889875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.490290208,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17684542,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.490865041,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6289250,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "SLSCopyApplicationPersistencePropertyListsForWindowList",
+        "-[NSWindow _packagesPersistencePropertyList]",
+        "-[NSWindow encodeRestorableStateWithCoder:]",
+        "recursivelyEncodeInvalidPersistentState",
+        "-[NSPersistentUIManager flushAllChanges]",
+        "-[NSPersistentUIFlushScheduler _performFlush]",
+        "__45-[NSPersistentUIFlushScheduler scheduleTimer]_block_invoke",
+        "__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__",
+        "__CFRunLoopDoBlocks",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.495849791,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11490083,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.499349791,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7331208,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.505355,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3142792,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.50538075,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3168042,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.507459791,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11525708,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.50758975,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 22690750,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.50800025,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17676334,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.5110555,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2399500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.511703541,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3059500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.518169,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 26540834,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "run_query(unsigned int, _SLSTransactionWriteStream*, unsigned long)",
+        "-[_NSCGSWindowOrdering _windowsWithOptions:onSpaces:xorSpacesMatching:forConnectionID:]",
+        "+[NSCGSWindow(NSCGSWindowOrdering) windowsWithOptions:onSpacesMatching:forConnectionID:]",
+        "+[NSWindow _windowNumbersWithOptions:onSpace:]",
+        "-[NSApplication encodeRestorableStateWithCoder:]",
+        "recursivelyEncodeInvalidPersistentState",
+        "-[NSPersistentUIManager flushAllChanges]",
+        "-[NSPersistentUIFlushScheduler _performFlush]",
+        "__45-[NSPersistentUIFlushScheduler scheduleTimer]_block_invoke",
+        "__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__",
+        "__CFRunLoopDoBlocks",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.5183695,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6140584,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.518403208,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6178375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.518822,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "cache_release",
+        "cache_get_and_retain",
+        "CGCMSConverterCacheConverterGetRetained",
+        "CGColorTransformConvertColorComponents",
+        "CGColorTransformConvertColor",
+        "NSColorConvertToColorSpaceNamed",
+        "_NSColorSpaceColorWithLinearExposureEncodeWithCoder",
+        "-[_NSTaggedPointerColor encodeWithCoder:]",
+        "_encodeObject",
+        "_encodeObject",
+        "+[NSKeyedArchiver archivedDataWithRootObject:requiringSecureCoding:error:]",
+        "-[NSApplication _copyPublicPersistentUIInfo]",
+        "recursivelyEncodeInvalidPersistentState",
+        "-[NSPersistentUIManager flushAllChanges]",
+        "-[NSPersistentUIFlushScheduler _performFlush]",
+        "__45-[NSPersistentUIFlushScheduler scheduleTimer]_block_invoke",
+        "__CFRUNLOOP_IS_CALLING_OUT_TO_A_BLOCK__",
+        "__CFRunLoopDoBlocks",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.518989,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 459084,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.519009416,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 592625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.5190525,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11461334,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.5191805,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11589292,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.519227541,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 84374583,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.519380166,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 64490791,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.525713333,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17677792,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.525737583,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6037667,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.52574575,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3944250,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.526364458,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4563875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.526516958,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6895917,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.526537291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6840291,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.52935575,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2712292,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.529378916,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2737875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.530702958,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11573208,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.530900416,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4252333,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.534127333,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 569583,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.539233,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7001459,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.542328916,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11448958,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.543416833,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17671583,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.543488583,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17742375,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.548003583,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4506167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.548029041,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6043375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.548235625,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 14072417,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.548258208,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 21617417,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.550186958,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1834500,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.552193208,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3837833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.553877833,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11380958,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.553949791,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1729833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.553979916,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1760958,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.553996,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5655917,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.554012333,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3171750,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.561161541,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17672541,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.562184375,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3504834,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.565496083,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11518417,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.565592166,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3380458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.56562125,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3412167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.565656916,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11623791,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.567510166,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 47790041,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.567685125,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 24181125,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.569363083,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1266333,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.569391208,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1295833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.569584458,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1868167,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.569608,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 15613417,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.569869666,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 50548875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.577105083,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11483167,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.57886175,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17670584,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.578910583,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10818417,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.578912166,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6681833,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.5835075,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 13610542,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.584130041,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 557958,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.588713666,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11531750,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.588800375,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6555625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.588819458,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "kevent_id",
+        "_dispatch_kq_poll",
+        "_dispatch_event_loop_poke",
+        "AVAudioPlayerNodeImpl::Command::~Command()",
+        "non-virtual thunk to AVAudioPlayerNodeImpl::BufferCommand::~BufferCommand()",
+        "caulk::concurrent::messenger_impl::wokeUp()",
+        "invocation function for block in caulk::concurrent::(anonymous namespace)::dispatch_impl::dispatch_impl(applesauce::dispatch::v1::queue)",
+        "_dispatch_client_callout",
+        "_dispatch_continuation_pop",
+        "_dispatch_source_latch_and_call",
+        "_dispatch_source_invoke",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.588820916,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "StereoMultiCoefsSRC_Neon",
+        "Resampler2::ConvertSIMD_SmallIntegerRatio(float*, float*, unsigned int, unsigned int)",
+        "Resampler2::PushConvert(float const*, float const*, float*, float*, unsigned int&, unsigned int&, unsigned int, unsigned int, unsigned int)",
+        "acv2::Resampler2Wrapper::ProduceOutput(ACAudioSpan&, ConverterContext)",
+        "acv2::SampleRateConverter::ProduceOutput(ACAudioSpan&, ConverterContext)",
+        "acv2::AudioConverterChain::ProduceOutput(caulk::function_ref<caulk::expected<unsigned int, int> (ACAudioSpan&)>, ACBaseAudioSpan&, ConverterContext)",
+        "acv2::AudioConverterV2::fillComplexBuffer(int (*)(OpaqueAudioConverter*, unsigned int*, AudioBufferList*, AudioStreamPacketDescription**, void*), void*, unsigned int*, AudioBufferList*, AudioStreamPacketDescription*, AudioStreamPacketDependencyDescription*, ConverterContext)",
+        "int caulk::rt_function_ref<int (AudioConverterAPI*)>::functor_invoker<AudioConverterFillComplexBufferRealtimeSafe::$_0>(caulk::details::erased_callable_rt<int (AudioConverterAPI*)> const&, AudioConverterAPI*)",
+        "with_resolved_rt(OpaqueAudioConverter*, caulk::rt_function_ref<int (AudioConverterAPI*)>)",
+        "AudioConverterFillComplexBufferRealtimeSafe",
+        "0x1256561f8",
+        "0x125655dcc",
+        "0x125692b94",
+        "0x125585fd8",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.588834791,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6591958,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.588853458,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 18951583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.588876791,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4701333,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.596583375,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17671875,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.596680375,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17754584,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.596699833,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4691917,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.599369666,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2659000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.599398041,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7393458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.600170291,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 9164708,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.600341791,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11501458,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.600850583,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 32974167,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.601014291,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4317666,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.608654625,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7221834,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.61194225,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11448709,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.612030833,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3330458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.612074333,
+      "thread": "0x3d8c7 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3398708,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.612094458,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10668167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.612126916,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10971541,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.612441166,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 42572125,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.612463041,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 127953250,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.61437825,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17679084,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.614441791,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 13029291,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.614449875,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1892084,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.616960333,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4391917,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.619349291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4886166,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.619374541,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6819666,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.62357575,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11509750,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.62376225,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11208625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.623786958,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6288500,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.629374958,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5572167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.629408125,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5608834,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.632127833,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17679083,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.632211416,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17752916,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.633646833,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 9836708,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.633822375,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "<deduplicated_symbol>",
+        "swift_endAccess",
+        "YlManagedBufferLedger.reserve(category:bytes:generation:scope:)",
+        "YlManagedBufferScope.reserve(category:bytes:)",
+        "YlManagedBufferScope.require(category:bytes:)",
+        "YlOpusAudioConverter.convert(packet:)",
+        "YlAppleCompressedAudioConverter.convert(packet:)",
+        "protocol witness for YlAudioPacketConverting.convert(packet:) in conformance YlAppleCompressedAudioConverter",
+        "YlAudioRenderer.enqueue(packet:)",
+        "YlAudioPipeline.retryPending(codecName:)",
+        "YlManagedPlaybackSession.pumpOne()",
+        "closure #1 in YlManagedPlaybackSession.requestPump(after:)",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_client_callout",
+        "_dispatch_continuation_pop",
+        "_dispatch_source_latch_and_call",
+        "_dispatch_source_invoke",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.633887541,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 170166,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.63391625,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 239625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.633935333,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10174750,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.633947541,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 21480916,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.635131416,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11386750,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.639218416,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5138333,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.646799791,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11588541,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.646907708,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4912500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.646943916,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4956625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.646986875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 12819834,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.649369083,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2369792,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.64939725,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2399625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.649898458,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17680167,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.650299083,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3282792,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.650830708,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 49528667,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.651029625,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 18798250,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.655262541,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3752875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.655293166,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3792625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.655527083,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4378875,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.655551458,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8589583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.655574666,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 21606625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.658390166,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11464250,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.662190208,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3509458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.666942333,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11251125,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.667605208,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17673375,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.667667208,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 16175042,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.667670333,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5441500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.669359625,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1676167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.669391333,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7161500,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.6699855,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11481000,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.670162041,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2639875,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.676994541,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4763375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.677029791,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4801000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.677294375,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7099084,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.677324208,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7190333,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.679336208,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1779583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.681643958,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11561000,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.683601875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6067292,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.684099375,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 410292,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.684150916,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 32835458,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.684226125,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2032459,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.684246875,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2057042,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.684427125,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 16736917,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.685349208,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17679750,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.689195458,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3091583,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.689245666,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3156708,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.693236875,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11440042,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.693445666,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8455250,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.698827875,
+      "thread": "0x3dbc6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.698864583,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5385708,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.699166,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5669667,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.699199333,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5790000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.699335166,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 43755666,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.703106875,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17679084,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.703241666,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17173416,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.704867,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11490000,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.704975666,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1709000,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.705015333,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2826458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.705042291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5706375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.705068875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4239667,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.712185291,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3511625,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.716485416,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11463708,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.716934583,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11821667,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.717541916,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5306708,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.718820666,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5000000,
+      "stack": [
+        "swift_allocBox",
+        "swift::TargetMetadata<swift::InProcess>::allocateBoxForExistentialIn(swift::TargetValueBuffer<swift::InProcess>*) const",
+        "tryCastToConstrainedOpaqueExistential(swift::OpaqueValue*, swift::TargetMetadata<swift::InProcess> const*, swift::OpaqueValue*, swift::TargetMetadata<swift::InProcess> const*, swift::TargetMetadata<swift::InProcess> const*&, swift::TargetMetadata<swift::InProcess> const*&, bool, bool, bool)",
+        "tryCast(swift::OpaqueValue*, swift::TargetMetadata<swift::InProcess> const*, swift::OpaqueValue*, swift::TargetMetadata<swift::InProcess> const*, swift::TargetMetadata<swift::InProcess> const*&, swift::TargetMetadata<swift::InProcess> const*&, bool, bool, bool)",
+        "tryCast(swift::OpaqueValue*, swift::TargetMetadata<swift::InProcess> const*, swift::OpaqueValue*, swift::TargetMetadata<swift::InProcess> const*, swift::TargetMetadata<swift::InProcess> const*&, swift::TargetMetadata<swift::InProcess> const*&, bool, bool, bool)",
+        "swift_dynamicCast",
+        "Mirror.descendant(_:_:)",
+        "specialized static YlAV1Capture.diagnose()",
+        "static YlAV1Capture.diagnose()",
+        "closure #1 in static YlDisplayReadbackProbe.register(_:window:)",
+        "thunk for @escaping @callee_guaranteed (@guaranteed FlutterMethodCall, @guaranteed @escaping @callee_guaranteed (@in_guaranteed Any?) -> ()) -> ()",
+        "__45-[FlutterMethodChannel setMethodCallHandler:]_block_invoke",
+        "-[FlutterEngine engineCallbackOnPlatformMessage:]",
+        "FlutterEngineInitialize::$_3::operator()(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>) const",
+        "decltype(std::declval<FlutterEngineInitialize::$_3&>()(std::declval<std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>>())) std::__fl::__invoke[abi:nn210000]<FlutterEngineInitialize::$_3&, std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>>(FlutterEngineInitialize::$_3&, std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>&&)",
+        "void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<FlutterEngineInitialize::$_3&, std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>>(FlutterEngineInitialize::$_3&, std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>&&)",
+        "void std::__fl::__invoke_r[abi:nn210000]<void, FlutterEngineInitialize::$_3&, std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>>(FlutterEngineInitialize::$_3&, std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>&&)",
+        "std::__fl::__function::__alloc_func<FlutterEngineInitialize::$_3, std::__fl::allocator<FlutterEngineInitialize::$_3>, void (std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)>::operator()[abi:nn210000](std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>&&)",
+        "std::__fl::__function::__func<FlutterEngineInitialize::$_3, std::__fl::allocator<FlutterEngineInitialize::$_3>, void (std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)>::operator()(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>&&)",
+        "std::__fl::__function::__value_func<void (std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)>::operator()[abi:nn210000](std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>&&) const",
+        "std::__fl::function<void (std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)>::operator()(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>) const",
+        "flutter::PlatformViewEmbedder::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)",
+        "flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()::operator()()",
+        "auto fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>::operator()<>() const",
+        "decltype(std::declval<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&>()()) std::__fl::__invoke[abi:nn210000]<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&>(fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&)",
+        "void std::__fl::__invoke_void_return_wrapper<void, true>::__call[abi:nn210000]<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&>(fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&)",
+        "void std::__fl::__invoke_r[abi:nn210000]<void, fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&>(fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>&)",
+        "std::__fl::__function::__alloc_func<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>, std::__fl::allocator<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>>, void ()>::operator()[abi:nn210000]()",
+        "std::__fl::__function::__func<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>, std::__fl::allocator<fml::internal::CopyableLambda<flutter::PlatformViewEmbedder::EmbedderPlatformMessageHandler::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)::'lambda'()>>, void ()>::operator()()",
+        "std::__fl::__function::__value_func<void ()>::operator()[abi:nn210000]() const",
+        "std::__fl::function<void ()>::operator()() const",
+        "flutter::EmbedderTaskRunner::PostTask(unsigned long long)",
+        "flutter::EmbedderEngine::RunTask(FlutterTask const*)",
+        "FlutterEngineRunTask",
+        "__60-[FlutterEngine postMainThreadTask:targetTimeInNanoseconds:]_block_invoke",
+        "thunk for @escaping @callee_unowned @convention(block) () -> ()",
+        "FlutterRunLoop.performExpiredTasks()",
+        "closure #1 in FlutterRunLoop.().init()",
+        "@objc closure #1 in FlutterRunLoop.().init()",
+        "__CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__",
+        "__CFRunLoopDoSource0",
+        "__CFRunLoopDoSources0",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.719339541,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 1435166,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.719442708,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7217375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.719714375,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 14672959,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.720932208,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17677000,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.728094083,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11436917,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.728223708,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6011208,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.728269666,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 6059958,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.728353208,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8046792,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.729344416,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 954125,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.733592,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 5190209,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.734107375,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 424084,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.734171,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 49165167,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.734241041,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2032083,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.734265291,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2061333,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.7344485,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 31181375,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.73866075,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17684500,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.739658166,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11382583,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.741209916,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2498416,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.74123525,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 2526834,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.741528875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7039292,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.741568708,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 21677458,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.749351708,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7626333,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.749385375,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 7663250,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.750277875,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 8552334,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.751294416,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11540583,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.751465208,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 9744167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.756386666,
+      "thread": "0x3d939 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17684500,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnConditionTimed",
+        "FigSemaphoreWaitRelative",
+        "0x1a65dfe38",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.756540208,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 17832000,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.756565458,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4361167,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.762169375,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3477042,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.762204958,
+      "thread": "0x3d8d4 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3541875,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.762229958,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10765958,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.762471541,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 10932750,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.762897875,
+      "thread": "0x3dc02 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11448792,
+      "stack": [
+        "semaphore_wait_signal_trap",
+        "caulk::mach::semaphore::wait_signal_or_error(caulk::mach::semaphore&)",
+        "HALC_ProxyIOContext::IOWorkLoop()",
+        "invocation function for block in HALC_ProxyIOContext::HALC_ProxyIOContext(unsigned int, unsigned int)",
+        "HALC_IOThread::Entry(void*)",
+        "_pthread_start",
+        "thread_start"
+      ]
+    },
+    {
+      "time": 13.766932083,
+      "thread": "0x3d893 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 3882833,
+      "stack": [
+        "mach_msg2_trap",
+        "mach_msg2_internal",
+        "mach_msg_overwrite",
+        "mach_msg",
+        "__CFRunLoopServiceMachPort",
+        "__CFRunLoopRun",
+        "_CFRunLoopRunSpecificWithOptions",
+        "RunCurrentEventLoopInMode",
+        "ReceiveNextEventCommon",
+        "_BlockUntilNextEventMatchingListInMode",
+        "_DPSBlockUntilNextEventMatchingListInMode",
+        "_DPSNextEvent",
+        "-[NSApplication(NSEventRouting) _nextEventMatchingEventMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication(NSEventRouting) nextEventMatchingMask:untilDate:inMode:dequeue:]",
+        "-[NSApplication run]",
+        "NSApplicationMain",
+        "specialized static NSApplicationDelegate.main()",
+        "static AppDelegate.$main()",
+        "main",
+        "start"
+      ]
+    },
+    {
+      "time": 13.767495,
+      "thread": "0x3d8ff (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 32799125,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "-[NSCondition waitUntilDate:]",
+        "YlFrameScheduler.enqueue(_:)",
+        "YlPresentationCoordinator.receive(_:)",
+        "YlManagedPlaybackSession.receive(_:)",
+        "protocol witness for YlVideoPipelineOutput.receive(_:) in conformance YlManagedPlaybackSession",
+        "closure #1 in closure #1 in YlVideoPipeline.makeDecoder(format:configuration:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "specialized YlSoftwareVideoDecoder.run(_:)",
+        "YlSoftwareVideoDecoder.decode(sample:generation:reservation:)",
+        "protocol witness for YlVideoToolboxDecoding.decode(sample:generation:reservation:) in conformance YlSoftwareVideoDecoder",
+        "closure #1 in YlVideoPipeline.scheduleVideoDecode(_:generation:decoder:reservation:)",
+        "thunk for @escaping @callee_guaranteed () -> ()",
+        "YlVideoSubmissionQueue.drain()",
+        "thunk for @escaping @callee_guaranteed @Sendable () -> ()",
+        "_dispatch_call_block_and_release",
+        "_dispatch_client_callout",
+        "_dispatch_lane_serial_drain",
+        "_dispatch_lane_invoke",
+        "_dispatch_root_queue_drain_deferred_wlh",
+        "_dispatch_workloop_worker_thread",
+        "_pthread_wqthread",
+        "start_wqthread"
+      ]
+    },
+    {
+      "time": 13.767556958,
+      "thread": "0x3d8c6 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4511375,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.76758,
+      "thread": "0x3d8c8 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 4535042,
+      "stack": [
+        "start_wqthread",
+        "qos_class_main"
+      ]
+    },
+    {
+      "time": 13.76777225,
+      "thread": "0x3dc31 (yl_player_example, pid: 28447)",
+      "state": "Running",
+      "weight": 11210709,
+      "stack": [
+        "__psynch_cvwait",
+        "_pthread_cond_wait",
+        "WaitOnCondition",
+        "FigSemaphoreWaitRelative",
+        "0x1a65d9380",
+        "figThreadMain",
+        "_pthread_start",
+        "thread_start"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "QUAL_DART": {
+    "us": 332040760,
+    "position": 331810000,
+    "status": "playing",
+    "decoder": "software",
+    "drops": 0
+  },
+  "QUAL_SYSTEM": {
+    "status": "observed",
+    "droppedFrames": 0,
+    "windowOcclusionVisible": true,
+    "windowOcclusions": 0,
+    "totalFrames": 7920,
+    "layerCount": 1,
+    "corruptedFrames": 0,
+    "layerIdentity": "ObjectIdentifier(0x00000075ffa4e260)",
+    "surfaceHasBounds": true,
+    "totalFrameDelaySeconds": 1.0000000000000001e-07
+  },
+  "QUAL_CLOCK": {
+    "hostNs": 2209351549000,
+    "maximumAgeSeconds": 0.025181,
+    "maximumReadSeconds": 0.012532250000049316,
+    "maximumWorkerGapSeconds": 0.012276333333375078,
+    "samples": 33179,
+    "staleEvents": 0
+  },
+  "diagnosticOnly": true,
+  "nativeModes": [
+    "DIAG_TERMINAL_ENABLED opus"
+  ]
+}

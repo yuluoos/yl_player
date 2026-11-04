@@ -49,7 +49,7 @@ struct YlSoftwareDecodeServices {
   var admission = YlSoftwareDecodeAdmission.production
   var pool = YlSoftwareDecodePool.shared
   var identity: () -> YlSoftwareDecodeIdentity? = { .current }
-  var threads = 2
+  var threads: Int?
   var monitorProcess = true
   var observe: YlSoftwareVideoDecoder.Observe = YlSoftwareVideoDecoder.processObservation
 
@@ -68,8 +68,15 @@ struct YlSoftwareDecodeServices {
     if d.bit_depth == 8 { pixel = full ? kCVPixelFormatType_420YpCbCr8BiPlanarFullRange : kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange }
     else if d.bit_depth == 10 { pixel = full ? kCVPixelFormatType_420YpCbCr10BiPlanarFullRange : kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange }
     else { throw YlHardwareDecoderEvidence.unavailable() }
+    #if os(macOS)
+    // Serial dav1d avoids inter-worker condition waits on the measured AV1 path.
+    // The exact thread count remains part of admission; other formats keep two.
+    let threadCount = threads ?? (Int(d.codec) == YLFCodecAV1 ? 1 : 2)
+    #else
+    let threadCount = threads ?? 2
+    #endif
     let key = configuration.key(model: identity.model, osBuild: identity.osBuild,
-      decoderBuild: identity.decoderBuild, threads: threads, outputPixelFormat: pixel)
+      decoderBuild: identity.decoderBuild, threads: threadCount, outputPixelFormat: pixel)
     guard let limits = admission.limits(for: key) else { throw YlHardwareDecoderEvidence.unavailable() }
     let interval = min(250_000_000, max(1, limits.windowNs / 4))
     return try YlSoftwareVideoDecoder(configuration: configuration, key: key, admission: admission,

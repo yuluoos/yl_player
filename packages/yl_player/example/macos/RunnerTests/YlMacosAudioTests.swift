@@ -12,6 +12,68 @@ import YlFFmpegBridge
 
 final class YlMacosAudioTests: XCTestCase {
 
+  @MainActor
+  func testPausedFirstFrameIsSubmittedOnceAcrossImmediateNoticeAndDisplayTick() async throws {
+    final class Texture: YlTextureOutput {
+      let textureId: Int64 = 1
+      var submissions = 0
+      func publish(_ pixelBuffer: CVPixelBuffer?) { submissions += 1 }
+      func resize(width: Int, height: Int) {}
+      func clear() {}
+      func dispose() {}
+    }
+    final class Display: YlDisplayDriving {
+      var isPaused = false
+      func invalidate() {}
+    }
+    final class Events: YlPresentationOutput {
+      let ready: XCTestExpectation
+      init(_ ready: XCTestExpectation) { self.ready = ready }
+      let presentationGeneration: UInt64 = 1
+      let allowsBoundedPresentation = true
+      func acceptsPresentationFrame(generation: UInt64) -> Bool { generation == 1 }
+      func didAcceptPresentationFrame(generation: UInt64) {}
+      func didPublishFirstPresentationFrame() { ready.fulfill() }
+      func presentationDidTick(atHostTimeUs: Int64) {}
+      func emitPresentationDelta() {}
+    }
+    for tickFirst in [false, true] {
+      let texture = Texture()
+      var tick: (() -> Void)!
+      let ready = expectation(description: "first frame, tickFirst=\(tickFirst)")
+      let events = Events(ready)
+      let coordinator = YlPresentationCoordinator(services: .init(platform: .macos,
+        textureOutput: texture, makeDisplayDriver: { tick = $0; return Display() }),
+        lock: NSLock(), openedAt: CACurrentMediaTime(), positionEventIntervalMs: 200)
+      coordinator.output = events
+      coordinator.configureClock(nil, audioTime: { nil })
+      coordinator.flushFrames(generation: 1)
+      coordinator.installDisplayLink(paused: false)
+      var pixel: CVPixelBuffer?
+      XCTAssertEqual(CVPixelBufferCreate(nil, 16, 16, kCVPixelFormatType_32BGRA, nil, &pixel), kCVReturnSuccess)
+      coordinator.receive(.init(pixelBuffer: try XCTUnwrap(pixel), ptsUs: 0, durationUs: 41667,
+        keyframe: true, generation: 1, ownershipToken: nil))
+      if tickFirst { tick() }
+      await fulfillment(of: [ready], timeout: 1)
+      tick()
+      XCTAssertEqual(texture.submissions, 1, "Same paused frame must not be submitted by both publication routes")
+      XCTAssertTrue(coordinator.pendingFrames.isEmpty)
+      var nextPixel: CVPixelBuffer?
+      XCTAssertEqual(CVPixelBufferCreate(nil, 16, 16, kCVPixelFormatType_32BGRA, nil, &nextPixel), kCVReturnSuccess)
+      let next = try XCTUnwrap(nextPixel)
+      coordinator.receive(.init(pixelBuffer: next, ptsUs: 41667, durationUs: 41667,
+        keyframe: true, generation: 1, ownershipToken: nil))
+      coordinator.seek(to: 41667); tick()
+      XCTAssertEqual(texture.submissions, 2, "A new decoded image must still publish")
+      coordinator.clearFrameAndTexture()
+      coordinator.receive(.init(pixelBuffer: next, ptsUs: 83334, durationUs: 41667,
+        keyframe: true, generation: 1, ownershipToken: nil))
+      coordinator.seek(to: 83334); tick()
+      XCTAssertEqual(texture.submissions, 3, "Clearing the output must allow the retained image to publish again")
+      coordinator.disposeFrames(); coordinator.retireDisplay()
+    }
+  }
+
 
   @MainActor
   func testTraceGateRejectsAnotherProcessAndRun() async throws {
@@ -131,6 +193,57 @@ final class YlMacosAudioTests: XCTestCase {
       durationUs: 250_000, generation: 1))
     try renderer.play()
     return renderer
+  }
+
+  func testContinuousCandidateSubmissionDoesNotCompeteWithFreshClockSampler() throws {
+    for isolated in [false, true] {
+      let output = TestAudioOutput(), renderer = try clockRenderer(output)
+      defer { renderer.dispose() }
+      if isolated { renderer.onClockControlBegin = {} }
+      let host = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000) + 20_000
+      output.rawClock = .init(sampleTime: 960, sampleRate: 48_000, hostTimeUs: host)
+      guard case let .running(sample) = renderer.clockObservation(expectedGeneration: 1) else {
+        return XCTFail("Expected the real renderer's timestamped observation")
+      }
+      XCTAssertEqual(sample.positionUs, 1_020_000)
+      var reads = 0
+      output.clockRead = { reads += 1; return output.rawClock }
+      XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data([1]), ptsUs: 1_250_000,
+        durationUs: 250_000, generation: 1)), .scheduled)
+      XCTAssertEqual(reads, isolated ? 0 : 1,
+        "Continuous candidate append must not start a second native read beside its fresh sampler")
+      XCTAssertEqual(renderer.scheduledDurationUs, 500_000)
+      output.clockRead = nil
+      guard case let .running(after) = renderer.clockObservation(expectedGeneration: 1) else {
+        return XCTFail("Appending must preserve the native media/host anchor")
+      }
+      XCTAssertEqual(after.positionUs, 1_020_000)
+      XCTAssertEqual(after.hostTimeUs, host)
+      XCTAssertEqual(after.upperBoundUs, 1_500_000)
+    }
+  }
+
+  func testSubmissionReadsNativeClockAfterExpiryDrainOrControlChange() throws {
+    for boundary in ["expired", "drained", "rate", "pause", "reset"] {
+      let output = TestAudioOutput(), renderer = try clockRenderer(output)
+      defer { renderer.dispose() }
+      renderer.onClockControlBegin = {}
+      let now = Int64(ProcessInfo.processInfo.systemUptime * 1_000_000)
+      output.rawClock = .init(sampleTime: boundary == "drained" ? 12_000 : 960,
+        sampleRate: 48_000, hostTimeUs: now - (boundary == "expired" ? 200_000 : 20_000))
+      guard case .running = renderer.clockObservation(expectedGeneration: 1) else {
+        return XCTFail("Expected an observation before the boundary")
+      }
+      if boundary == "rate" { renderer.setRate(2) }
+      if boundary == "pause" { renderer.pause(); try renderer.play() }
+      if boundary == "reset" { renderer.reset(generation: 2) }
+      var reads = 0
+      output.clockRead = { reads += 1; return output.rawClock }
+      XCTAssertEqual(try renderer.enqueue(packet: .init(data: Data([1]), ptsUs: 1_250_000,
+        durationUs: 250_000, generation: boundary == "reset" ? 2 : 1)), .scheduled)
+      XCTAssertEqual(reads, 1, "\(boundary) must obtain the actual native position before re-anchoring")
+      output.clockRead = nil
+    }
   }
 
   func testSilenceSamplerCannotAdvanceAnotherGenerationOrPause() throws {
@@ -335,12 +448,12 @@ final class YlMacosAudioTests: XCTestCase {
 
   private func terminalContext(
     enabled: Bool = true, platform: YlApplePlatform = .macos,
-    localFiniteSeekable: Bool = true, hasBoundedPlan: Bool = false,
+    eligibleFiniteSource: Bool = true, hasBoundedPlan: Bool = false,
     codec: YlAudioCodec = .aac, sampleRate: Double = 48000,
     channels: Int = 2, rate: Float = 1
   ) -> YlAudioCompletionContext {
     .init(enabled: enabled, platform: platform,
-      localFiniteSeekable: localFiniteSeekable, hasBoundedPlan: hasBoundedPlan,
+      eligibleFiniteSource: eligibleFiniteSource, hasBoundedPlan: hasBoundedPlan,
       codec: codec, sampleRate: sampleRate, channels: channels, rate: rate)
   }
 
@@ -351,14 +464,52 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(platform: .ios)),
       .legacy(.platform))
     // The session derives this fact from the source recipe, duration and seekability.
-    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(localFiniteSeekable: false)),
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(eligibleFiniteSource: false)),
       .legacy(.source))
     XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(hasBoundedPlan: true)),
       .legacy(.bounded))
   }
 
+  func testOpusTerminalRetiresRenderedPCMButWaitsForRealTailCompletion() throws {
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(enabled: false, codec: .opus)),
+      .legacy(.disabled))
+    let ledger = YlManagedBufferLedger(), output = TerminalOutput()
+    let renderer = YlAudioRenderer(bufferScope: try ledger.makeScope(maxBytes: nil),
+      converter: YlAppleCompressedAudioConverter(), output: output)
+    defer { renderer.dispose() }
+    renderer.setCompletionContext(terminalContext(codec: .opus))
+    let head = Data([79,112,117,115,72,101,97,100,1,2,56,1,128,187,0,0,0,0,0])
+    try renderer.configure(stream: .init(codec: .opus, sampleRate: 48000, channelCount: 2,
+      magicCookie: head, generation: 1))
+    var lengths: [UInt32] = [], timestamps: [Int64] = []
+    output.onBuffer = { buffer in
+      lengths.append((buffer.payload as! AVAudioPCMBuffer).frameLength)
+      timestamps.append(buffer.ptsUs)
+    }
+    let silence = Data([0xfc, 0xff, 0xfe])
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: silence, ptsUs: -6500,
+      durationUs: 20000, generation: 1, skipSamples: 312)), .buffered)
+    XCTAssertTrue(lengths.isEmpty, "The first trimmed PCM remains the held tail")
+    XCTAssertEqual(try renderer.enqueue(packet: .init(data: silence, ptsUs: 13500,
+      durationUs: 20000, generation: 1)), .scheduled)
+    renderer.finishInput()
+    XCTAssertEqual(lengths, [648, 960])
+    XCTAssertEqual(timestamps, [0, 13500])
+    XCTAssertEqual(output.modes, [.renderedResource, .playedBack])
+    guard output.callbacks.count == 2 else { return XCTFail("Expected ordinary PCM and the actual nonempty tail") }
+    output.callbacks[0].resourcesReleased()
+    awaitTerminal { renderer.scheduledBytes == 7680 }
+    XCTAssertTrue(renderer.hasPendingPlayback, "A rendered notification cannot prove final playback")
+    output.renderedAudioTime = .init(sampleTime: 480000, sampleRate: 48000)
+    _ = renderer.renderedAudioTime
+    XCTAssertTrue(renderer.hasPendingPlayback, "Passing the tail on the node clock is not output completion")
+    output.callbacks[1].playedBack()
+    awaitTerminal { !renderer.hasPendingPlayback }
+    XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+  }
+
   func testTerminalPolicyRejectsUnsupportedStreamFormats() {
-    for codec: YlAudioCodec in [.mp3, .dts, .ac3, .eac3, .flac, .opus, .vorbis, .unsupported] {
+    for codec: YlAudioCodec in [.mp3, .dts, .ac3, .eac3, .flac, .vorbis, .unsupported] {
       XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(codec: codec)),
         .legacy(.format), "codec: \(codec)")
     }
@@ -383,12 +534,12 @@ final class YlMacosAudioTests: XCTestCase {
 
   func testTerminalPolicyReportsFirstExclusionDeterministically() {
     XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(enabled: false,
-      platform: .ios, localFiniteSeekable: false, hasBoundedPlan: true,
+      platform: .ios, eligibleFiniteSource: false, hasBoundedPlan: true,
       codec: .unsupported, rate: .nan)), .legacy(.disabled))
     XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(platform: .ios,
-      localFiniteSeekable: false, hasBoundedPlan: true, codec: .unsupported, rate: .nan)),
+      eligibleFiniteSource: false, hasBoundedPlan: true, codec: .unsupported, rate: .nan)),
       .legacy(.platform))
-    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(localFiniteSeekable: false,
+    XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(eligibleFiniteSource: false,
       hasBoundedPlan: true, codec: .unsupported, rate: .nan)), .legacy(.source))
     XCTAssertEqual(YlAudioCompletionPolicy.select(terminalContext(hasBoundedPlan: true,
       codec: .unsupported, rate: .nan)), .legacy(.bounded))
@@ -763,6 +914,7 @@ final class YlMacosAudioTests: XCTestCase {
     var selectedUptime: Double = 0
     var maxLagUs: Int64 = 0, positionUs: Int64 = 0, videoPTS: Int64 = -1
     var lateFrameDropCount: Int { actual.lateFrameDropCount }
+    func setPaused(_ paused: Bool) { actual.setPaused(paused) }
     var dropDiagnostics: [String: Any] {
       let snapshot = actual.dropDiagnostics
       return ["total": snapshot.total, "waitingEnqueues": snapshot.waitingEnqueues, "counts": Dictionary(uniqueKeysWithValues: YlFrameDropReason.allCases.map { ($0.rawValue, snapshot.counts[$0] ?? 0) }),

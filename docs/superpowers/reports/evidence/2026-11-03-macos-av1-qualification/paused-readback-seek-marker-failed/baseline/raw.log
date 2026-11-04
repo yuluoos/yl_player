@@ -1,0 +1,14 @@
+2026-11-03 08:07:55.367 yl_player_example[19645:169432] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 8d1b72258134561f3403bea2fce09da0df2d8f917ddd95dfeb46a4c7511e480b:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP file load
+[libdav1d @ 0x7978b08000] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x79789c1180] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7978b08000] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP file play
+QUAL_SAMPLE 5FE4107E-DF64-4314-9EFF-C20360BBC47E 12433055700166 2364588 21 168 170186000 879416
+PUBLIC_STEP file pause-seek-2000
+QUAL_SAMPLE 5FE4107E-DF64-4314-9EFF-C20360BBC47E 12435055604333 2364588 21 168 170186000 4642834
+QUAL_SAMPLE 5FE4107E-DF64-4314-9EFF-C20360BBC47E 12437055551791 2364588 21 168 170186000 4642834
+PUBLIC_DISPOSE {"transport":"file","elapsedUs":23461}
+QUAL_ERROR control prelude: Bad state: native displayed marker mismatch: seek-2000/2
+QUAL_FINISH 1

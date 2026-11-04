@@ -64,7 +64,22 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
       sessions.append(session); onCreate?(); return session
     }
   }
-  private final class Output: YlTextureOutput {
+  private final class TimedEndpoint: YlTimedVideoEndpoint {
+    private let lock = NSLock()
+    private var retired = false
+    var isRetired: Bool { lock.withLock { retired } }
+    func update(_ snapshot: YlPresentationClockSnapshot, generation: UInt64) {}
+    func enqueue(_ frame: YlFrameEnvelope) -> Bool { !isRetired }
+    func retire(removingImage: Bool, completion: @escaping () -> Void) {
+      lock.withLock { retired = true }; completion()
+    }
+  }
+  private final class Output: YlTextureOutput, YlTimedVideoOutput {
+    var supportsTimedVideo = false
+    var endpoints: [TimedEndpoint] = []
+    func makeTimedVideoEndpoint() -> (any YlTimedVideoEndpoint)? {
+      let endpoint = TimedEndpoint(); endpoints.append(endpoint); return endpoint
+    }
     let textureId: Int64 = 731
     var published = 0
     var pixel: CVPixelBuffer?
@@ -120,6 +135,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     let trace: Trace
     init(_ trace: Trace) { self.trace = trace }
     var lateFrameDropCount: Int { actual.lateFrameDropCount }
+    func setPaused(_ paused: Bool) { actual.setPaused(paused) }
     var pendingPTS: [Int64] { actual.pendingPTS }
     func enqueue(_ frame: YlFrameEnvelope) -> Bool { actual.enqueue(frame) }
     func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
@@ -495,6 +511,77 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     }
   }
 
+  func testAdmittedAV1HTTPUsesTimedQueueAcrossPausedSeekAndDisposal() async throws {
+    var stage = "template"
+    do {
+      struct NoHardware: YlVTSessionFactory {
+        func makeSession(formatDescription: CMVideoFormatDescription,
+                         output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
+          throw YlHardwareDecoderEvidence.unavailable()
+        }
+      }
+      let fixture = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "p03-av1-opus", withExtension: "mkv"))
+      let template = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file,
+        formatHint: .matroska), requireHardwareProbe: false)
+      defer { template.discard() }
+      let config = try XCTUnwrap(template.softwareConfiguration)
+      let key = config.key(model: "test", osBuild: "test", decoderBuild: "test", threads: 1,
+        outputPixelFormat: kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange)
+      var software = YlSoftwareDecodeServices()
+      software.threads = 1; software.monitorProcess = false; software.pool = YlSoftwareDecodePool()
+      software.identity = { .init(model: "test", osBuild: "test", decoderBuild: "test") }
+      software.admission = .init(entries: [key: .init(maxOwnedBytes: 32 * 1024 * 1024, maxFrames: 64,
+        maxPacketBytes: 1024 * 1024, windowNs: 1_000_000, maxCpuNs: 1_000_000, maxDecodeWallNs: 1_000_000)])
+      var ticks: UInt64 = 0
+      software.observe = { _ in
+        ticks += 1
+        return .init(monotonicNs: ticks, cumulativeCpuNs: ticks, decodeWallNs: 1, thermalNominal: true)
+      }
+      for bounded in [false, true] {
+        stage = "HTTP prepared bounded=\(bounded)"
+        let server = try ReactivationMediaServer(data: Data(contentsOf: fixture))
+        defer { server.close() }
+        let plan = bounded ? try YlBoundedBufferPlan(minDurationMs: 0, maxDurationMs: 2000,
+          maxBytes: 16 * 1024 * 1024) : nil
+        let prepared = try YlPreparedFallback(source: .init(uri: server.url.absoluteString,
+          kind: .network, formatHint: .matroska, boundedPlan: plan), requireHardwareProbe: false,
+          softwareServices: software)
+        let audio = TerminalFactory(), output = Output()
+        output.supportsTimedVideo = true
+        var services = YlPlatformServices(platform: .current, textureOutput: output,
+          makeDisplayDriver: { _ in Display() })
+        services.nativeViewType = "owned-test-view"
+        stage = "HTTP session bounded=\(bounded)"
+        let instance = try YlManagedPlaybackSession(playerId: 731, services: services,
+          configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
+          videoSessionFactory: NoHardware(), audioRendererFactory: audio, emit: { _ in })
+        let eligible = YlApplePlatform.current == .macos && !bounded
+        XCTAssertEqual(audio.renderers[0].usesSubmissionAnchor, eligible,
+          "Admitted finite HTTP AV1 must avoid per-buffer playedBack graph queries")
+        XCTAssertEqual(instance.isolatedAudioClockStatistics != nil, eligible,
+          "HTTP display ticks must consume the independent native-clock observation")
+        if eligible {
+          try instance.activate(); try instance.play()
+          try await AppleHostCharacterizations.waitFor { instance.timedVideoStatistics != nil }
+          XCTAssertEqual(output.endpoints.count, 1, "HTTP must arm the native timed queue without display ticks")
+          try instance.pause()
+          try instance.seek(toMs: 1000, cancellationToken: nil)
+          XCTAssertTrue(output.endpoints[0].isRetired, "Seek must retire the old HTTP video epoch")
+          try instance.play()
+          try await AppleHostCharacterizations.waitFor { output.endpoints.count == 2 }
+        } else {
+          XCTAssertNil(instance.timedVideoStatistics)
+          XCTAssertTrue(output.endpoints.isEmpty)
+        }
+        instance.dispose()
+        XCTAssertTrue(output.endpoints.allSatisfy(\.isRetired))
+      }
+    } catch {
+      let native = error as? NativePlayerError
+      XCTFail("\(stage): \(native?.code ?? String(describing: error))")
+    }
+  }
+
   func testTerminalSubmissionAnchorPreservesPausedPresentationAndResume() async throws {
     for initialPTS: Int64 in [0, 5_000_000] {
       let factory = TerminalFactory()
@@ -565,7 +652,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
   func testTerminalPipelineAnchorsTrimmedFirstSubmissionAndIgnoresDetachedGeneration() async throws {
     let factory = TerminalFactory(); factory.converter.trimUs = 500
     let pipeline = YlAudioPipeline(bufferBudget: try .make(configuration: .init(map: [:])), lock: NSLock(), generation: 7,
-      factory: factory, completionContext: .init(enabled: true, platform: .macos, localFiniteSeekable: true,
+      factory: factory, completionContext: .init(enabled: true, platform: .macos, eligibleFiniteSource: true,
         hasBoundedPlan: false, codec: .aac, sampleRate: 48000, channels: 2, rate: 1))
     let timeline = TerminalTimeline(); pipeline.timeline = timeline; pipeline.output = timeline
     var stream = YLFStreamInfo(); stream.codec = Int32(YLFCodecAAC); stream.sample_rate = 48000; stream.channel_count = 2
@@ -1453,8 +1540,8 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     control.releaseSeek.signal()
     await fulfillment(of: [completed], timeout: 10)
     let stages = trace.values
-    let required = ["audio.pause", "interrupt", "worker.finished", "join.end", "texture.cleared",
-                    "frames.flushed", "seek.held", "seek.finished", "converter.reset", "audio.reset",
+    let required = ["audio.pause", "interrupt", "frames.flushed", "worker.finished", "join.end", "texture.cleared",
+                    "seek.held", "seek.finished", "converter.reset", "audio.reset",
                     "video.retired", "video.created", "audio.play"]
     var previous = -1
     for stage in required {
@@ -1483,6 +1570,100 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     // Initial firstFrame was already sent: verify actual scheduler output at target.
     XCTAssertEqual(scheduler.pendingPTS, [100_000])
     XCTAssertNotNil(scheduler.frame(at: 100_000, generation: currentGeneration))
+  }
+
+  // An intentional pause must preserve a producer already waiting on capacity.
+  func testPausePreservesBlockedPresentationUntilResume() async throws {
+    let factory = Factory(), output = Output()
+    factory.automaticFrames = true
+    let scheduler = YlFrameScheduler(maxFrames: 1, enqueueWaitTimeout: 0.1,
+      collectDropDiagnostics: true)
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
+      generation: 17, videoSessionFactory: factory,
+      audioRendererFactory: AudioFactory(Trace()), presentationScheduler: scheduler,
+      emit: { _ in })
+    defer { instance.dispose() }
+    try instance.activate()
+    try instance.play()
+    try await AppleHostCharacterizations.waitFor { scheduler.dropDiagnostics.waitingEnqueues == 1 }
+    let queuedPTS = try XCTUnwrap(scheduler.pendingPTS.first)
+    let generation = try XCTUnwrap(factory.sessions.first?.lastGeneration)
+    try instance.pause()
+    let pastTimeout = expectation(description: "pause exceeds the active enqueue timeout")
+    DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) { pastTimeout.fulfill() }
+    await fulfillment(of: [pastTimeout], timeout: 1)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    XCTAssertEqual(scheduler.pendingPTS, [queuedPTS])
+    XCTAssertEqual(scheduler.dropDiagnostics.waitingEnqueues, 1)
+    try instance.play()
+    XCTAssertNotNil(scheduler.nextFrame(upTo: .max, generation: generation))
+    try await AppleHostCharacterizations.waitFor { !scheduler.pendingPTS.isEmpty }
+    XCTAssertGreaterThan(try XCTUnwrap(scheduler.pendingPTS.first), queuedPTS)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+  }
+
+  func testPausedSeekCancelsFullPresentationQueueBeforeJoiningDecoder() async throws {
+    let factory = Factory(), output = Output(), trace = Trace()
+    factory.automaticFrames = true
+    let scheduler = YlFrameScheduler(maxFrames: 1, collectDropDiagnostics: true)
+    let instance = try YlFallbackBackend(playerId: 731,
+      services: .init(platform: .current, textureOutput: output,
+        makeDisplayDriver: { _ in Display() }),
+      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
+      generation: 17, videoSessionFactory: factory,
+      audioRendererFactory: AudioFactory(Trace()), presentationScheduler: scheduler,
+      emit: { _ in })
+    defer { instance.dispose() }
+    try instance.activate()
+    try instance.play()
+    try await AppleHostCharacterizations.waitFor { scheduler.dropDiagnostics.waitingEnqueues == 1 }
+    try instance.pause()
+    let generation = try XCTUnwrap(factory.sessions.first?.lastGeneration)
+    // Release a broken implementation so RED fails instead of hanging XCTest.
+    DispatchQueue.global().asyncAfter(deadline: .now() + 0.5) {
+      if !trace.values.contains("seek.completed") {
+        trace.add("seek.rescued")
+        scheduler.flush(generation: generation + 1)
+      }
+    }
+    try instance.seek(toMs: 100, cancellationToken: nil)
+    trace.add("seek.completed")
+    XCTAssertFalse(trace.values.contains("seek.rescued"), "Paused seek depended on an external queue flush")
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    XCTAssertEqual(factory.sessions.first?.invalidations, 1)
+    XCTAssertEqual(factory.sessions.count, 2)
+  }
+
+  func testTeardownCancelsBlockedPresentationBeforeJoiningDecoder() async throws {
+    for action in ["stop", "deactivate", "dispose"] {
+      let factory = Factory(), output = Output()
+      factory.automaticFrames = true
+      let scheduler = YlFrameScheduler(maxFrames: 1, collectDropDiagnostics: true)
+      let instance = try YlFallbackBackend(playerId: 731,
+        services: .init(platform: .current, textureOutput: output,
+          makeDisplayDriver: { _ in Display() }),
+        configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
+        generation: 17, videoSessionFactory: factory,
+        audioRendererFactory: AudioFactory(Trace()), presentationScheduler: scheduler,
+        emit: { _ in })
+      defer { instance.dispose() }
+      try instance.activate()
+      try instance.play()
+      try await AppleHostCharacterizations.waitFor {
+        scheduler.dropDiagnostics.waitingEnqueues == 1
+      }
+      XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+      switch action {
+      case "stop": instance.stop()
+      case "deactivate": instance.deactivate()
+      default: instance.dispose()
+      }
+      XCTAssertEqual(scheduler.lateFrameDropCount, 0, "\(action) must cancel the wait, not time it out")
+      XCTAssertTrue(scheduler.pendingPTS.isEmpty)
+    }
   }
 
   // Removing lifecycle generation invalidation would revive disposed output.

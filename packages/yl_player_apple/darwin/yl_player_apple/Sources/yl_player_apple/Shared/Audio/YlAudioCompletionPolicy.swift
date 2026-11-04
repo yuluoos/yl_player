@@ -3,7 +3,7 @@
 struct YlAudioCompletionContext {
   let enabled: Bool
   let platform: YlApplePlatform
-  let localFiniteSeekable: Bool
+  let eligibleFiniteSource: Bool
   let hasBoundedPlan: Bool
   let codec: YlAudioCodec
   let sampleRate: Double
@@ -23,9 +23,9 @@ enum YlAudioCompletionPolicy: Equatable {
   static func select(_ context: YlAudioCompletionContext) -> Self {
     guard context.enabled else { return .legacy(.disabled) }
     guard context.platform == .macos else { return .legacy(.platform) }
-    guard context.localFiniteSeekable else { return .legacy(.source) }
+    guard context.eligibleFiniteSource else { return .legacy(.source) }
     guard !context.hasBoundedPlan else { return .legacy(.bounded) }
-    guard context.codec == .aac, context.sampleRate == 48_000,
+    guard [YlAudioCodec.aac, .opus].contains(context.codec), context.sampleRate == 48_000,
           context.channels == 2 else { return .legacy(.format) }
     guard context.rate == 1 else { return .legacy(.rate) }
     return .terminalCandidate

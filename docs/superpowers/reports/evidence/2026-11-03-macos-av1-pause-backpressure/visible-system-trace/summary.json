@@ -1,0 +1,75 @@
+{
+  "status": "completed-no-reproduction",
+  "productionQualification": false,
+  "targetExitStatus": 0,
+  "captureExitStatus": 0,
+  "framesSubmitted": 7200,
+  "systemTotalFrames": 7200,
+  "systemDroppedFrames": 0,
+  "systemCorruptedFrames": 0,
+  "minimumSubmissionLeadSeconds": 0.035959875333333,
+  "applicationLogElapsedSeconds": 302.00163279166736,
+  "referenceSamples": 301,
+  "allReferenceSamplesVisible": true,
+  "exposureEvents": [
+    "EXPOSURE change onList true activeSpace true visible true lock false above []",
+    "EXPOSURE start onList true activeSpace true visible true lock false above []",
+    "EXPOSURE play onList true activeSpace true visible true lock false above []"
+  ],
+  "tracePath": "/private/tmp/yl-av1-visible-system-trace/display.trace",
+  "traceApproximateSizeMiB": 146,
+  "requestedWindowSeconds": 5,
+  "exportedDurationSeconds": 10,
+  "exportedThreadIntervalStartRangeNs": [
+    0,
+    9985073666
+  ],
+  "threadStates": {
+    "Unknown": {
+      "intervals": 11,
+      "maxDurationNs": 9976666541,
+      "totalDurationNs": 15974208246
+    },
+    "Runnable": {
+      "intervals": 4180,
+      "maxDurationNs": 1019792,
+      "totalDurationNs": 62980374
+    },
+    "Running": {
+      "intervals": 7046,
+      "maxDurationNs": 999000,
+      "totalDurationNs": 335277238
+    },
+    "Interrupted": {
+      "intervals": 1218,
+      "maxDurationNs": 24875,
+      "totalDurationNs": 4576650
+    },
+    "Blocked": {
+      "intervals": 1235,
+      "maxDurationNs": 1001352584,
+      "totalDurationNs": 57297940324
+    },
+    "Idle": {
+      "intervals": 2957,
+      "maxDurationNs": 2536478208,
+      "totalDurationNs": 26192036113
+    },
+    "Preempted": {
+      "intervals": 429,
+      "maxDurationNs": 618584,
+      "totalDurationNs": 18029509
+    },
+    "Terminated": {
+      "intervals": 11,
+      "maxDurationNs": 9890661000,
+      "totalDurationNs": 10114951546
+    }
+  },
+  "limitations": [
+    "Standalone predecoded NV12 display control; no Flutter, real-time AV1 decoding or audio.",
+    "System Trace retained only a 10-second interval. Export metadata does not establish its alignment with the 302-second application log; not treated as a full-run timeline.",
+    "Runnable maximum 1.020 ms applies only to exported target-thread intervals; Blocked/Idle durations are not interpreted as missed deadlines.",
+    "No dropped frame occurred, so no failure enqueue ring was emitted. This result neither explains nor invalidates prior visible-control failures."
+  ]
+}

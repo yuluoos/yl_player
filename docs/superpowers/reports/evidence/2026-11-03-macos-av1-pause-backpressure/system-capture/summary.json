@@ -1,0 +1,29 @@
+{
+  "classification": "invalid-visibility-screen-locked",
+  "target": {
+    "arguments": "/private/tmp/yl-av1-20261103/control.nv12",
+    "type": "launched",
+    "return-exit-status": "1",
+    "name": "native-display-system-capture",
+    "pid": "29636",
+    "termination-reason": "exit(1)"
+  },
+  "capture": {
+    "start-date": "2026-11-02T21:15:46.606-08:00",
+    "end-date": "2026-11-02T21:16:25.112-08:00",
+    "duration": "38.506166",
+    "end-reason": "Target app exited",
+    "instruments-version": "27.2 (27B52)",
+    "template-name": "Animation Hitches",
+    "recording-mode": "Deferred",
+    "time-limit": "5 minutes, 15 seconds"
+  },
+  "finalSystemFrames": 853,
+  "finalDroppedFrames": 4,
+  "lastVisibleSampleFrames": 829,
+  "lastVisibleSampleDroppedFrames": 0,
+  "tracePath": "/private/tmp/yl-av1-system-capture/display.trace",
+  "cliExit": 54,
+  "control": "SIGINT requested after target exit during high-load finalization; trace saved and exports succeeded",
+  "productionQualification": false
+}

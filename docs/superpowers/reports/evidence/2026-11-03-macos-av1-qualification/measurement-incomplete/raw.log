@@ -1,0 +1,73 @@
+2026-11-02 23:27:20.557 yl_player_example[75225:410746] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 b6b215c53033b19485207b912f3f62ac149bbf55d4a4c56df883b95914a9fb53:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+[libdav1d @ 0x7a0aff9180] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7a0ae2e300] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7a0aff9180] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_PREFLIGHT {"waitUs":38393,"layer":{"layerCount":1,"corruptedFrames":0,"status":"observed","windowOcclusions":0,"droppedFrames":0,"totalFrameDelaySeconds":0.0,"layerIdentity":"ObjectIdentifier(0x0000007a09f0de00)","surfaceHasBounds":true,"totalFrames":1,"windowOcclusionVisible":true},"positionUs":0,"decoder":"software","firstFrameCompleted":true}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12127632692541 2364588 21 0 247308000 1479875
+QUAL_DART {"us":2025056,"position":1845000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12129632622250 2364588 21 0 247308000 47583792
+QUAL_DART {"us":4025356,"position":3912000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerCount":1,"corruptedFrames":0,"status":"observed","windowOcclusions":0,"droppedFrames":0,"totalFrameDelaySeconds":0.0,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","surfaceHasBounds":true,"totalFrames":120,"windowOcclusionVisible":true}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12131632605166 2364588 21 0 247308000 47583792
+QUAL_DART {"us":6024693,"position":5728000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12133632603625 2364588 21 0 247308000 47583792
+QUAL_DART {"us":8024873,"position":7795000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12135632582541 2364588 21 0 247308000 47583792
+QUAL_DART {"us":10025035,"position":9862000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerCount":1,"corruptedFrames":0,"status":"observed","windowOcclusions":0,"droppedFrames":0,"totalFrameDelaySeconds":0.0,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","surfaceHasBounds":true,"totalFrames":240,"windowOcclusionVisible":true}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12137632617666 2364588 21 0 247308000 47583792
+QUAL_DART {"us":12025227,"position":11712000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12139632599500 2364588 21 0 247308000 47583792
+QUAL_DART {"us":14025495,"position":13795000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerCount":1,"corruptedFrames":0,"status":"observed","windowOcclusions":0,"droppedFrames":0,"totalFrameDelaySeconds":0.0,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","surfaceHasBounds":true,"totalFrames":360,"windowOcclusionVisible":true}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12141632561250 2364588 21 0 247308000 47583792
+QUAL_DART {"us":16024769,"position":15878000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12143632516416 2364588 21 0 247308000 47583792
+QUAL_DART {"us":18023984,"position":17695000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12145632530000 2364588 21 0 247308000 47583792
+QUAL_DART {"us":20025162,"position":19762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerCount":1,"corruptedFrames":0,"status":"observed","windowOcclusions":0,"droppedFrames":0,"totalFrameDelaySeconds":0.0,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","surfaceHasBounds":true,"totalFrames":481,"windowOcclusionVisible":true}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12147632504958 2364588 21 0 247308000 47583792
+QUAL_DART {"us":22025376,"position":21829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12149632492458 2364588 21 0 247308000 47583792
+QUAL_DART {"us":24025539,"position":23929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"layerCount":1,"corruptedFrames":0,"status":"observed","windowOcclusions":0,"droppedFrames":0,"totalFrameDelaySeconds":0.0,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","surfaceHasBounds":true,"totalFrames":601,"windowOcclusionVisible":true}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12151632450958 2364588 21 0 247308000 47583792
+QUAL_DART {"us":26025257,"position":25729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12153632451000 2364588 21 0 247308000 47583792
+QUAL_DART {"us":28024920,"position":27812000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12155632557291 2364588 21 0 247308000 54528958
+QUAL_DART {"us":30025092,"position":29912000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"corruptedFrames":0,"windowOcclusionVisible":true,"totalFrames":721,"status":"observed","layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","windowOcclusions":0,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12157632406583 2364588 21 0 247308000 54528958
+QUAL_DART {"us":32030638,"position":31729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12159632375041 2364588 21 0 247308000 54528958
+QUAL_DART {"us":34025597,"position":33829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"corruptedFrames":0,"windowOcclusionVisible":true,"totalFrames":841,"status":"observed","layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","windowOcclusions":0,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12161632369208 2364588 21 0 247308000 54528958
+QUAL_DART {"us":36024951,"position":35929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12163633333208 2364588 21 0 247308000 54528958
+QUAL_DART {"us":38025338,"position":37745000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12165632496791 2364588 21 0 247308000 54528958
+QUAL_DART {"us":40024628,"position":39829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"corruptedFrames":0,"windowOcclusionVisible":true,"totalFrames":961,"status":"observed","layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","windowOcclusions":0,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12167633324208 2364588 21 0 247308000 54528958
+QUAL_DART {"us":42024789,"position":41912000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12169633313250 2364588 21 0 247308000 54528958
+QUAL_DART {"us":44024561,"position":43729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"corruptedFrames":0,"windowOcclusionVisible":true,"totalFrames":1081,"status":"observed","layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","windowOcclusions":0,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12171633311125 2364588 21 0 247308000 54528958
+QUAL_DART {"us":46024276,"position":45812000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12173633329666 2364588 21 0 247308000 54528958
+QUAL_DART {"us":48024915,"position":47895000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12175633345500 2364588 21 0 247308000 54528958
+QUAL_DART {"us":50025245,"position":49712000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"corruptedFrames":0,"windowOcclusionVisible":true,"totalFrames":1201,"status":"observed","layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","windowOcclusions":0,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12177633325458 2364588 21 0 247308000 54528958
+QUAL_DART {"us":52025597,"position":51762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12179633407208 2364588 21 0 247308000 54528958
+QUAL_DART {"us":54024913,"position":53845000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"corruptedFrames":0,"windowOcclusionVisible":true,"totalFrames":1321,"status":"observed","layerCount":1,"layerIdentity":"ObjectIdentifier(0x0000007a09f0e3a0)","windowOcclusions":0,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 7318C933-9007-4BA6-9B4B-1370B747C942 12181633342041 2364588 21 0 247308000 54528958
+QUAL_DART {"us":56025447,"position":55895000,"status":"playing","decoder":"software","drops":0}

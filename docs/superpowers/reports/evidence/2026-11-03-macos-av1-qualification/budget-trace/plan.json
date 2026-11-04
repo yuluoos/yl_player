@@ -1,0 +1,31 @@
+{
+  "diagnosticOnly": true,
+  "formalAcceptance": false,
+  "maximumSeconds": 1200,
+  "triggerNativeWallNs": 22000000,
+  "diagnosticTrialCeilingNs": 100000000,
+  "command": [
+    "xcrun",
+    "xctrace",
+    "record",
+    "--template",
+    "Time Profiler",
+    "--attach",
+    "12085",
+    "--recording-options",
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player/build/macos-av1-20261103-resumed/budget-trace/options.json",
+    "--notify-tracing-started",
+    "dev.ylplayer.budget.8af495e5f7404f93aa8fcb7bc6cbbebc",
+    "--time-limit",
+    "1250s",
+    "--window",
+    "10s",
+    "--output",
+    "/Users/yy2021_8689/Desktop/Flutter/yl_player/build/macos-av1-20261103-resumed/budget-trace/recording.trace"
+  ],
+  "pid": 12085,
+  "sdkImages": {
+    "Contents/Frameworks/yl-player-apple.framework/Versions/A/yl-player-apple": "78376212fb801d64f015a018438a40c82e015a2e9e6c7de1aab6d4b235200b05",
+    "Contents/Frameworks/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d"
+  }
+}

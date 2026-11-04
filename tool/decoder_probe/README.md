@@ -110,10 +110,12 @@ the two sustained run receipts and raw logs before writing the profile. Its inpu
 is the optimized macOS example, two fresh process directories with `plan.json`,
 `raw.log` and `receipt.json`, and the protocol frozen before measurement. The
 baseline also produces `limits.json`; the verification launch plan must attest
-to its SHA-256. The format is AV1 Main 8-bit 4:2:0, 320×180 at 24 fps with two
-threads. Both runs must measure the identical target, every decoded frame and
-the actual output. When the first frame predates the timed layer, include its
-dequeue PTS and legacy layer metrics from that same run.
+to its SHA-256. The format is AV1 Main 8-bit 4:2:0, 320×180 at 24 fps with one
+thread. Both runs must measure the identical target, every decoded frame and
+the actual output. When the first frame predates the timed layer, retain the completed public
+first-frame milestone at position zero and the visible preview layer's one-frame,
+zero-drop metrics. Its layer identity must differ from the single timed layer
+observed throughout playback; both counters together must account for every frame.
 
 Package only an issued record. Sign the final application and recheck the two
 loaded decoder image hashes. If signing changes either image, the record no
@@ -128,8 +130,42 @@ candidate or grant provisional budgets. The pre-run protocol includes the full
 binds the protocol and a file-to-SHA-256 map of the app. The verification plan
 additionally binds the baseline limits file. Peak names and units follow
 `YlSoftwareDecodeLimits`. The issuer checks both processes' raw `QUAL_ID`,
-`QUAL_SAMPLE`, `QUAL_DART`, `QUAL_SYSTEM`, `QUAL_DECODED`, `QUAL_END` and
+`QUAL_SAMPLE`, `QUAL_DART`, `QUAL_CLOCK`, `QUAL_SYSTEM`, `QUAL_DECODED`, `QUAL_END` and
 `QUAL_FINISH` observations and rejects any failure or drop. The signed record
 carries both raw log digests so the approving publisher can trace it to the
 retained measurements. An example build with a changed decoder hash requires
 its own profile.
+
+`macos_capture/CaptureHost.swift` is included only in the isolated qualification
+host. After plugin registration, assign its published plugin to
+`YlAV1Capture.plugin`; the host reads existing clock/worker statistics from the
+frozen SDK layout. Missing clock observations, any stale event, an observed age
+above 100 ms, or a worker gap above 100 ms prevent issuance even with zero drops.
+This retains the existing timed-presentation acceptance contract.
+
+The current macOS protocol predeclares `fixedDecodeWallNs: 42000000` and the
+same 42 ms trial ceiling before either process starts. It is the 24 fps frame
+period rounded up, approved for this configuration; it is not derived from a
+short observed maximum. Baseline and verification both enforce it. The other
+resource limits retain measured maxima plus 25%, rounded as before. A failed
+older protocol remains failed and cannot be relabelled under this rule.
+
+Each current run also performs `public-file-http-paused-readback-seek-v1` before its uninterrupted
+20-minute segment. Both phases share the resource measurement pool, so CPU
+limits cover pause/seek/restart and displayed-buffer readback as well as steady
+playback. `QUAL_CONTINUOUS_START` records the actual decoded-frame offset;
+`QUAL_TOTAL_DECODED` and `QUAL_DECODED` must reconcile exactly. The issuer requires
+both transport prelude results, seven color markers each, actual HTTP 206, and
+disposal within three seconds. Include `PublicVerification.dart` in the isolated
+Flutter target as `public_verification.dart`, and route the example-only
+`captureContinuousStart` method to `YlAV1Capture.startContinuous()`.
+Read back each marker while paused. After `seekTo`, wait for progress in
+`[target + 250ms, target + 750ms)` before pausing: command acknowledgement can
+precede the new timeline event, so a lower-bound-only check can accept the old
+position and stop playback before the sought frame is displayed.
+Admitted finite, seekable HTTP AV1 shares the existing native timed queue with
+local AV1. Capture native system metrics at all seven paused markers, before
+each of the three seeks (before the old queue retires), and at completion.
+The issuer requires all eleven observations per transport to be visible and
+observed, with positive displayed counts and zero dropped/corrupted frames.
+Application scheduler counts alone do not qualify the native timed output.

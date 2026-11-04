@@ -130,17 +130,24 @@ final class YlAudioPipeline {
     return renderer
   }
 
-  func updateSourceEligibility(localFiniteSeekable: Bool) {
+  func updateSourceEligibility(eligibleFiniteSource: Bool) {
     guard let context = completionContext else { return }
     completionContext = .init(enabled: context.enabled, platform: context.platform,
-      localFiniteSeekable: localFiniteSeekable, hasBoundedPlan: context.hasBoundedPlan,
+      eligibleFiniteSource: eligibleFiniteSource, hasBoundedPlan: context.hasBoundedPlan,
       codec: context.codec, sampleRate: context.sampleRate, channels: context.channels, rate: desiredRate)
+  }
+
+  func enableTerminalCompletion(eligibleFiniteSource: Bool) {
+    guard let context = completionContext else { return }
+    completionContext = .init(enabled: true, platform: context.platform,
+      eligibleFiniteSource: eligibleFiniteSource, hasBoundedPlan: context.hasBoundedPlan,
+      codec: context.codec, sampleRate: context.sampleRate, channels: context.channels, rate: context.rate)
   }
 
   private func configureCompletion(_ renderer: YlAudioRenderer, stream: YLFStreamInfo) {
     guard let context = completionContext else { return }
     renderer.setCompletionContext(.init(enabled: context.enabled, platform: context.platform,
-      localFiniteSeekable: context.localFiniteSeekable, hasBoundedPlan: bufferBudget.boundedPlan != nil || context.hasBoundedPlan,
+      eligibleFiniteSource: context.eligibleFiniteSource, hasBoundedPlan: bufferBudget.boundedPlan != nil || context.hasBoundedPlan,
       codec: YlAudioCodec(bridgeCodec: stream.codec), sampleRate: Double(stream.sample_rate),
       channels: Int(stream.channel_count), rate: desiredRate))
   }

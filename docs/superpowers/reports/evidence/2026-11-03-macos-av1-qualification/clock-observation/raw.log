@@ -1,0 +1,45 @@
+2026-11-03 00:27:45.405 yl_player_example[98225:570450] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 e4e2beadb93afbd23de7d6eb0de7b1b0a62be1336eae0cad6726b30ee0f0d005:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+[libdav1d @ 0x76be144a80] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x76be366080] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x76be144a80] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_PREFLIGHT {"waitUs":30643,"layer":{"totalFrames":1,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"droppedFrames":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x00000076be36fde0)","corruptedFrames":0,"windowOcclusions":0,"status":"observed"},"positionUs":0,"decoder":"software","firstFrameCompleted":true}
+QUAL_CLOCK at=15752388208875 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 150, staleEvents: 0, rejectedObservations: 4, maximumReadSeconds: 0.011283208332315553, maximumAgeSeconds: 0.023631, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 1497291, hostTimeUs: 15752401098, lowerBoundUs: 0, upperBoundUs: 2274000, rate: 1.0))), lastReadHostTimeUs: Optional(15752383400)))
+QUAL_WORKER submitted=37 rejected=0 gap=0.010951374999422114 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15752388621375 2364588 21 168 178494000 833708
+QUAL_DART {"us":2022119,"position":1798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SLOW_CALL at=15753375501458 wall=81900709 observation=11833 thread=54299 qos=25
+QUAL_CLOCK at=15754388657541 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 339, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 3494208, hostTimeUs: 15754398020, lowerBoundUs: 0, upperBoundUs: 4274000, rate: 1.0))), lastReadHostTimeUs: Optional(15754383378)))
+QUAL_WORKER submitted=85 rejected=0 gap=0.01097016666608397 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15754388946958 2364588 21 168 178494000 81900709
+QUAL_DART {"us":4021222,"position":3898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":120,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"droppedFrames":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x00000076bef13660)","corruptedFrames":0,"windowOcclusions":0,"status":"observed"}
+QUAL_CLOCK at=15756388707000 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 538, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 5491145, hostTimeUs: 15756394943, lowerBoundUs: 0, upperBoundUs: 6274000, rate: 1.0))), lastReadHostTimeUs: Optional(15756373503)))
+QUAL_WORKER submitted=133 rejected=0 gap=0.011999666667179554 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15756389039750 2364588 21 168 178494000 81900709
+QUAL_DART {"us":6021795,"position":5731000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK at=15758388624875 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 739, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 7499666, hostTimeUs: 15758403477, lowerBoundUs: 0, upperBoundUs: 8254000, rate: 1.0))), lastReadHostTimeUs: Optional(15758383360)))
+QUAL_WORKER submitted=181 rejected=0 gap=0.011999666667179554 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15758388931250 2364588 21 168 178494000 81900709
+QUAL_DART {"us":8021985,"position":7764000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK at=15760388608625 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 939, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 9496583, hostTimeUs: 15760400402, lowerBoundUs: 0, upperBoundUs: 10274000, rate: 1.0))), lastReadHostTimeUs: Optional(15760383365)))
+QUAL_WORKER submitted=229 rejected=0 gap=0.011999666667179554 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15760388837000 2364588 21 168 178494000 81900709
+QUAL_DART {"us":10020460,"position":9798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":240,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"droppedFrames":0,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x00000076bef13660)","corruptedFrames":0,"windowOcclusions":0,"status":"observed"}
+QUAL_CLOCK at=15762388421500 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 1139, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 11505104, hostTimeUs: 15762408938, lowerBoundUs: 0, upperBoundUs: 12274000, rate: 1.0))), lastReadHostTimeUs: Optional(15762383367)))
+QUAL_WORKER submitted=277 rejected=0 gap=0.011999666667179554 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15762388690875 2364588 21 168 178494000 81900709
+QUAL_DART {"us":12021755,"position":11848000,"status":"playing","decoder":"software","drops":0}
+QUAL_CLOCK at=15764388663500 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 1339, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 13502041, hostTimeUs: 15764405862, lowerBoundUs: 0, upperBoundUs: 14274000, rate: 1.0))), lastReadHostTimeUs: Optional(15764382633)))
+QUAL_WORKER submitted=325 rejected=0 gap=0.011999666667179554 pending=true
+QUAL_SAMPLE E943A8D7-F62E-49F3-8357-5420C74DCD02 15764388993958 2364588 21 168 178494000 81900709
+QUAL_DART {"us":14022039,"position":13931000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":360,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":1.6666666666666667e-8,"droppedFrames":1,"layerCount":1,"layerIdentity":"ObjectIdentifier(0x00000076bef13660)","corruptedFrames":0,"windowOcclusions":0,"status":"observed"}
+QUAL_ERROR Bad state: system presentation failed {totalFrames: 360, windowOcclusionVisible: true, surfaceHasBounds: true, totalFrameDelaySeconds: 1.6666666666666667e-8, droppedFrames: 1, layerCount: 1, layerIdentity: ObjectIdentifier(0x00000076bef13660), corruptedFrames: 0, windowOcclusions: 0, status: observed}
+QUAL_CLOCK at=15765861129583 Optional(yl_player_apple.YlIsolatedAudioClockStatistics(samples: 1483, staleEvents: 1, rejectedObservations: 4, maximumReadSeconds: 0.12711354166640376, maximumAgeSeconds: 0.134641, lastObservation: Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 2, positionUs: 14964895, hostTimeUs: 15765868726, lowerBoundUs: 0, upperBoundUs: 15754000, rate: 1.0))), lastReadHostTimeUs: Optional(15765853536)))
+QUAL_WORKER submitted=360 rejected=0 gap=0.011999666667179554 pending=true
+QUAL_TIMED_DIAGNOSTICS {"anchors":19,"backpressureEvents":[],"blockedAttempts":0,"blockedPTS":null,"blockedSince":null,"enqueues":360,"events":[{"correctionUs":-6572.4999996337883,"uptime":15750.906603125},{"correctionUs":-5212.75,"uptime":15753.357248041668},{"correctionUs":45185.791000366211,"uptime":15753.397230541668}],"lateEnqueues":0,"lifetime":{"events":[],"samples":[{"pts":14671000,"reservationAlive":false,"sampleAlive":false},{"pts":14712000,"reservationAlive":false,"sampleAlive":false},{"pts":14754000,"reservationAlive":false,"sampleAlive":false},{"pts":14796000,"reservationAlive":false,"sampleAlive":false},{"pts":14837000,"reservationAlive":false,"sampleAlive":false},{"pts":14879000,"reservationAlive":false,"sampleAlive":false},{"pts":14921000,"reservationAlive":true,"sampleAlive":false},{"pts":14962000,"reservationAlive":true,"sampleAlive":false}]},"maximumBackwardCorrectionUs":6572.4999996337883,"maximumForwardCorrectionUs":45185.791000366211,"maximumLeadUs":49660.666999999434,"minimumLeadUs":6879.2089999999998,"readyChecks":null,"updates":1867}
+QUAL_END E943A8D7-F62E-49F3-8357-5420C74DCD02 2364588 21 168 178494000 81900709
+QUAL_DECODED 369
+QUAL_FINISH 1

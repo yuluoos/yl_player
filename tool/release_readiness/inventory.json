@@ -1058,6 +1058,21 @@
       "path": "docs/superpowers/reports/2026-11-01-macos-av1-single-thread.md",
       "sha256": "c3c7570d9c11ac253d1b598e82248a1ae0071bb0ed21c4d5585d046cce4b9090",
       "kind": "report"
+    },
+    "macos-av1-queue-timeout-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-av1-queue-timeout.md",
+      "sha256": "afb4dc909c7c06782587ae3a83708ed7cf935e76b97182d360ade611ef668b1d",
+      "kind": "report"
+    },
+    "macos-av1-pause-backpressure-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-av1-pause-backpressure.md",
+      "sha256": "668869b424e05b1b68dcd37e6ace38b3f3c060d697a64ab37ce6328f7424d0a5",
+      "kind": "report"
+    },
+    "macos-av1-qualification-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-av1-qualification.md",
+      "sha256": "1c336eb539c2c7b76c738cf134ae3a9485f545aaab826151fd088eaf0255506f",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1456,10 +1471,13 @@
         "coreaudio-bounds-20261029",
         "macos-format-matrix-20261031",
         "macos-format-followup-20261031",
-        "macos-av1-single-thread-20261101"
+        "macos-av1-single-thread-20261101",
+        "macos-av1-queue-timeout-20261103",
+        "macos-av1-pause-backpressure-20261103",
+        "macos-av1-qualification-20261103"
       ],
       "acceptance": null,
-      "nextAction": "diagnose-macos-av1-system-renderer-drops-before-single-thread-requalification"
+      "nextAction": "complete-current-build-full-format-matrix-and-device-coverage-after-exact-image-av1-qualification"
     },
     {
       "requirement": "CAP-JS",

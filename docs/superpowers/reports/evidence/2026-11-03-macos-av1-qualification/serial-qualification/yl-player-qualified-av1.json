@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "key": {
+    "model": "MacBookPro17,1",
+    "osBuild": "26A434",
+    "decoderBuild": "be49c02af31ddee2ebb7566f09b70db5b2f947a90c187baffe6befb54057e5ea:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d",
+    "codec": 12,
+    "profile": 0,
+    "bitDepth": 8,
+    "chroma": 420,
+    "width": 320,
+    "height": 180,
+    "fpsNumerator": 24,
+    "fpsDenominator": 1,
+    "threads": 1,
+    "outputPixelFormat": 875704438
+  },
+  "limits": {
+    "windowNs": 1000000000,
+    "maxDecodeWallNs": 42000000,
+    "maxOwnedBytes": 3014656,
+    "maxFrames": 27,
+    "maxPacketBytes": 4096,
+    "maxCpuNs": 204000000
+  },
+  "baselineSHA256": "4c0045d4a1c91ce20a462b1bb049b3c17ea1dd519b17ae56f786d814eeab7ed7",
+  "verificationSHA256": "acfa281d699028c5b923b7f9cffc3d8e6f0f5ced22f2b5700509dba049c59d92"
+}

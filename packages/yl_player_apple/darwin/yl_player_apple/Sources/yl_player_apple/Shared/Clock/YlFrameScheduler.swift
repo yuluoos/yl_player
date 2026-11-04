@@ -51,6 +51,8 @@ final class YlFrameScheduler {
   private var droppedFrames = 0
   private let collectDropDiagnostics: Bool
   private var waitingEnqueues = 0
+  private var pauseBegan: TimeInterval?
+  private var pausedSeconds: TimeInterval = 0
   private var dropCounts: [YlFrameDropReason: Int] = [:]
   private var dropEvents: [YlFrameDropEvent] = []
   private var previousTick: (uptime: TimeInterval, positionUs: Int64)?
@@ -84,6 +86,24 @@ final class YlFrameScheduler {
   }
 
   func configureBounded(_ plan: YlBoundedBufferPlan?) { lock.withLock { boundedPlan = plan } }
+
+  func setPaused(_ paused: Bool) {
+    lock.lock()
+    if paused, pauseBegan == nil {
+      pauseBegan = ProcessInfo.processInfo.systemUptime
+    } else if !paused, let pauseBegan {
+      pausedSeconds += ProcessInfo.processInfo.systemUptime - pauseBegan
+      self.pauseBegan = nil
+    }
+    lock.broadcast()
+    lock.unlock()
+  }
+
+  // Condition lock held. Explicit pause freezes this clock, preserving the
+  // remaining active wait budget even if pause/resume precede a waiter's wakeup.
+  private var activeWaitTime: TimeInterval {
+    (pauseBegan ?? ProcessInfo.processInfo.systemUptime) - pausedSeconds
+  }
   var bufferedDurationUs: Int64 { lock.withLock { durationLocked } }
   private var durationLocked: Int64 {
     guard let first = frames.first, let last = frames.last else { return 0 }
@@ -153,17 +173,23 @@ final class YlFrameScheduler {
       }
     }
     let waitStarted = collectDropDiagnostics ? ProcessInfo.processInfo.systemUptime : nil
-    let deadline = Date(timeIntervalSinceNow: enqueueWaitTimeout)
+    let deadline = activeWaitTime + enqueueWaitTimeout
     while boundedPlan == nil && compatibility.usesBackpressure && frames.count >= frameLimit {
       if collectDropDiagnostics { waitingEnqueues += 1 }
-      let signalled = lock.wait(until: deadline)
+      let signalled: Bool
+      if pauseBegan != nil {
+        lock.wait()
+        signalled = true
+      } else {
+        signalled = lock.wait(until: Date(timeIntervalSinceNow: deadline - activeWaitTime))
+      }
       if collectDropDiagnostics { waitingEnqueues -= 1 }
       guard !disposed,
             activeGeneration == nil || activeGeneration == frame.generation else {
         lock.unlock()
         return false
       }
-      guard signalled else {
+      guard signalled || pauseBegan != nil || activeWaitTime < deadline else {
         recordDrop(.enqueueTimeout, first: frame, waitStarted: waitStarted)
         lock.unlock()
         return false

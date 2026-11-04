@@ -1,0 +1,14 @@
+{
+  "packets": 28904,
+  "ptsRule": "nearest(N*1000/24) milliseconds for every video packet",
+  "strictlyIncreasing": true,
+  "lastVideoPtsMs": 1204292,
+  "fullDecodeExit": 0,
+  "strictDecoderFlags": [
+    "-xerror",
+    "-err_detect",
+    "explode"
+  ],
+  "probeWarning": "Opus packet-header parser warning present; strict full audio/video decode exited 0",
+  "sha256": "fb92d296e8f48e5cecf6c317b0458c299de61a6bcaecb4ffa09a90d935b56707"
+}

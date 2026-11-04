@@ -1,0 +1,11 @@
+{
+  "purpose": "isolate-render-deadline-loss",
+  "maximumSeconds": 200,
+  "maximumFrames": 4320,
+  "leadSeconds": 0.05,
+  "timerSeconds": 0.01,
+  "stopAtFirstDrop": true,
+  "productionQualification": false,
+  "sourceSha256": "013a75e2e644be6f5459c926f46b0a83755ceea79cdb3c13083cd762f976a4d4",
+  "binarySha256": "7e9c321a13ce17b77e1cbc47cc6258019d95be96d624f1846ad6a649ea881856"
+}

@@ -1,0 +1,37 @@
+2026-11-03 02:42:01 -0800 
+Assertion status system-wide:
+   BackgroundTask                 0
+   ApplePushServiceTask           0
+   UserIsActive                   1
+   PreventUserIdleDisplaySleep    1
+   SoftwareUpdateTask             0
+   PreventSystemSleep             0
+   PreventSystemSleepSecurityIndicator 0
+   ExternalMedia                  0
+   InternalPreventDisplaySleep    1
+   PreventUserIdleSystemSleep     1
+   NetworkClientActive            0
+Listed by owning process:
+   pid 38702(caffeinate): [0x00005cf80001905e] 00:00:06 PreventUserIdleSystemSleep named: "caffeinate command-line tool"  
+	Details: caffeinate asserting on behalf of Process ID 38701 for 1350 secs
+	Created for PID: 38701. 
+	Localized=THE CAFFEINATE TOOL IS PREVENTING SLEEP.
+	Timeout will fire in 1344 secs Action=TimeoutActionRelease
+   pid 38702(caffeinate): [0x00005cf80005905f] 00:00:06 PreventUserIdleDisplaySleep named: "caffeinate command-line tool"  
+	Details: caffeinate asserting on behalf of Process ID 38701 for 1350 secs
+	Created for PID: 38701. 
+	Localized=THE CAFFEINATE TOOL IS PREVENTING SLEEP.
+	Timeout will fire in 1344 secs Action=TimeoutActionRelease
+   pid 38702(caffeinate): [0x00005cf800099060] 00:00:06 UserIsActive named: "caffeinate command-line tool"  
+	Details: caffeinate asserting on behalf of Process ID 38701 for 1350 secs
+	Created for PID: 38701. 
+	Localized=THE CAFFEINATE TOOL IS PREVENTING SLEEP.
+	Timeout will fire in 1344 secs Action=TimeoutActionRelease
+   pid 415(WindowServer): [0x0000001f00098049] 00:00:00 UserIsActive named: "com.apple.iohideventsystem.queue.tickle serviceID:10000095b service:AppleMultitouchDevice product:Apple Internal Keyboard / Trackpad eventType:11"  
+   pid 358(powerd): [0x000026a30001884d] 03:51:55 PreventUserIdleSystemSleep named: "Powerd - Prevent sleep while display is on"  
+   pid 358(powerd): [0x0000001b0009800b] 06:36:18 UserIsActive named: "com.apple.powerd.ws.initialize"  
+   pid 358(powerd): [0x00005bf7001083fc] 00:01:26 InternalPreventDisplaySleep named: "com.apple.powermanagement.delayDisplayOff"  
+	Timeout will fire in 213 secs Action=TimeoutActionTurnOff
+Kernel Assertions: 0x104=USB,MAGICWAKE
+   id=537  level=255 0x4=USB creat= description=com.apple.usb.externaldevice.00100000 owner=USB 2.0 BILLBOARD
+   id=541  level=255 0x100=MAGICWAKE creat= description=en0 owner=IOSkywalkNetworkBSDClient

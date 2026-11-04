@@ -1,0 +1,68 @@
+{
+  "baseline": {
+    "QUAL_DART": {
+      "us": 1204525730,
+      "position": 1204350000,
+      "status": "completed",
+      "decoder": "software",
+      "drops": 0
+    },
+    "QUAL_CLOCK": {
+      "hostNs": 19663542349125,
+      "maximumAgeSeconds": 0.025565,
+      "maximumReadSeconds": 0.01397108333549113,
+      "maximumWorkerGapSeconds": 0.015860874998907093,
+      "samples": 120450,
+      "staleEvents": 0
+    },
+    "QUAL_DECODED": 28904,
+    "QUAL_TOTAL_DECODED": 29429,
+    "QUAL_CONTINUOUS_START": 525,
+    "peaks": {
+      "maxOwnedBytes": 2364588,
+      "maxFrames": 21,
+      "maxPacketBytes": 168,
+      "maxCpuNs": 236438000,
+      "maxDecodeWallNs": 3519458
+    },
+    "elapsedSeconds": 1222.9772814579992,
+    "exitSeconds": 0.038832791,
+    "controlSystemObservations": [
+      11,
+      11
+    ]
+  },
+  "verification": {
+    "QUAL_DART": {
+      "us": 1204525561,
+      "position": 1204343000,
+      "status": "completed",
+      "decoder": "software",
+      "drops": 0
+    },
+    "QUAL_CLOCK": {
+      "hostNs": 20886520262291,
+      "maximumAgeSeconds": 0.025696,
+      "maximumReadSeconds": 0.01610849999997299,
+      "maximumWorkerGapSeconds": 0.015938958335027564,
+      "samples": 120450,
+      "staleEvents": 0
+    },
+    "QUAL_DECODED": 28904,
+    "QUAL_TOTAL_DECODED": 29426,
+    "QUAL_CONTINUOUS_START": 522,
+    "peaks": {
+      "maxOwnedBytes": 2364588,
+      "maxFrames": 21,
+      "maxPacketBytes": 168,
+      "maxCpuNs": 225582000,
+      "maxDecodeWallNs": 4898042
+    },
+    "elapsedSeconds": 1222.7600397079987,
+    "exitSeconds": 0.039136709,
+    "controlSystemObservations": [
+      11,
+      11
+    ]
+  }
+}

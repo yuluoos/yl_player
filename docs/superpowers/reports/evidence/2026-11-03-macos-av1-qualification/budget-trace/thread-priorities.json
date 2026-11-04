@@ -1,0 +1,266 @@
+{
+  "pid": 12085,
+  "hostNs": 7336098150958,
+  "threads": [
+    {
+      "thread": 8459206752,
+      "name": "",
+      "currentPriority": 46,
+      "basePriority": 46,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 6757517000,
+      "systemNs": 3586091000
+    },
+    {
+      "thread": 6091206880,
+      "name": "",
+      "currentPriority": 56,
+      "basePriority": 56,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3888345000,
+      "systemNs": 2258271000
+    },
+    {
+      "thread": 6091780320,
+      "name": "",
+      "currentPriority": 37,
+      "basePriority": 37,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3836183000,
+      "systemNs": 2205839000
+    },
+    {
+      "thread": 6092353760,
+      "name": "",
+      "currentPriority": 37,
+      "basePriority": 37,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 5095950000,
+      "systemNs": 954881000
+    },
+    {
+      "thread": 6092927200,
+      "name": "com.apple.NSEventThread",
+      "currentPriority": 46,
+      "basePriority": 46,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 339000,
+      "systemNs": 222000
+    },
+    {
+      "thread": 6093500640,
+      "name": "",
+      "currentPriority": 37,
+      "basePriority": 37,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3009434000,
+      "systemNs": 1734845000
+    },
+    {
+      "thread": 6096220384,
+      "name": "io.flutter.raster",
+      "currentPriority": 47,
+      "basePriority": 47,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 2585000,
+      "systemNs": 2128000
+    },
+    {
+      "thread": 6098366688,
+      "name": "io.flutter.io",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 55000,
+      "systemNs": 58000
+    },
+    {
+      "thread": 6098940128,
+      "name": "io.worker.1",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3000,
+      "systemNs": 7000
+    },
+    {
+      "thread": 6099513568,
+      "name": "io.worker.2",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3000,
+      "systemNs": 3000
+    },
+    {
+      "thread": 6100087008,
+      "name": "io.worker.3",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 1000,
+      "systemNs": 11000
+    },
+    {
+      "thread": 6100660448,
+      "name": "io.worker.4",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 1000,
+      "systemNs": 10000
+    },
+    {
+      "thread": 6101758176,
+      "name": "dart:io EventHandler",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 17773000,
+      "systemNs": 11188000
+    },
+    {
+      "thread": 6106149088,
+      "name": "dav1d-worker",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 438211000,
+      "systemNs": 328379000
+    },
+    {
+      "thread": 6107246816,
+      "name": "dav1d-worker",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 457118000,
+      "systemNs": 328177000
+    },
+    {
+      "thread": 6107820256,
+      "name": "com.apple.audio.toolbox.AUScheduledParameterRefresher",
+      "currentPriority": 37,
+      "basePriority": 37,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 1000,
+      "systemNs": 4000
+    },
+    {
+      "thread": 6108393696,
+      "name": "com.apple.coremedia.sharedRootQueue.47",
+      "currentPriority": 47,
+      "basePriority": 47,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 2632000,
+      "systemNs": 4318000
+    },
+    {
+      "thread": 6108967136,
+      "name": "com.apple.coremedia.imagequeue.coreanimation.common",
+      "currentPriority": 54,
+      "basePriority": 54,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 1407985000,
+      "systemNs": 725553000
+    },
+    {
+      "thread": 6110114016,
+      "name": "",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3778130000,
+      "systemNs": 2173757000
+    },
+    {
+      "thread": 6094074080,
+      "name": "com.apple.audio.IOThread.client",
+      "currentPriority": 97,
+      "basePriority": 97,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 4728829000,
+      "systemNs": 714885000
+    },
+    {
+      "thread": 6109540576,
+      "name": "",
+      "currentPriority": 37,
+      "basePriority": 37,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 3118595000,
+      "systemNs": 1800833000
+    },
+    {
+      "thread": 6111834336,
+      "name": "com.apple.coremedia.rootQueue.fP-48.mP-47",
+      "currentPriority": 47,
+      "basePriority": 47,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 10874000,
+      "systemNs": 12723000
+    },
+    {
+      "thread": 6112407776,
+      "name": "com.apple.coremedia.videomediaconverter",
+      "currentPriority": 49,
+      "basePriority": 49,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 6475773000,
+      "systemNs": 1079972000
+    },
+    {
+      "thread": 6112981216,
+      "name": "com.apple.coremedia.rootQueue.fP-48.mP-47",
+      "currentPriority": 47,
+      "basePriority": 47,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 10796000,
+      "systemNs": 12425000
+    },
+    {
+      "thread": 0,
+      "name": "",
+      "currentPriority": 56,
+      "basePriority": 56,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 0,
+      "systemNs": 7000
+    },
+    {
+      "thread": 6105051360,
+      "name": "DartWorker",
+      "currentPriority": 31,
+      "basePriority": 31,
+      "maxPriority": 63,
+      "state": 3,
+      "userNs": 76000,
+      "systemNs": 68000
+    }
+  ]
+}

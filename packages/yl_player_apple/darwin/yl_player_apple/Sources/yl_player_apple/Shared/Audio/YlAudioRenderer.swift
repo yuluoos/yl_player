@@ -399,6 +399,8 @@ final class YlAudioRenderer: YlAudioRendering {
   private var configuredCodec: YlAudioCodec?
   private var completionGeneration: UInt64 = 0
   private var clockControlVersion: UInt64 = 0
+  private var sampledSubmissionTime: (nodeUs: Double, hostUs: Int64, endHostUs: Double,
+                                     epoch: UInt64, version: UInt64)?
   private var scheduledBufferCount = 0
   private var disposed = false
   private var outputInvalidationFailure: NativePlayerError?
@@ -476,6 +478,23 @@ final class YlAudioRenderer: YlAudioRendering {
     onClockControlBegin == nil ? output.renderedAudioTime : output.presentationAudioTime
   }
 
+  private var submissionNodeTime: Double? {
+    let now = ProcessInfo.processInfo.systemUptime * 1_000_000
+    if onClockControlBegin != nil, let node = lock.withLock({ () -> Double? in
+      guard let sample = sampledSubmissionTime, playbackRequested, scheduledBufferCount > 0,
+            sample.epoch == completionGeneration, sample.version == clockControlVersion,
+            abs(now - Double(sample.hostUs)) <= 100_000, now < sample.endHostUs else { return nil }
+      return sample.nodeUs
+    }) {
+      // The sampler proves this interval is still queued. Appending preserves
+      // its anchor, so a competing native read cannot add useful information.
+      return node
+    }
+    // Initial submission, drainage and controls still need the actual node
+    // position to establish a new anchor; never extrapolate a new anchor.
+    return Self.nodeMicroseconds(renderedOutputTime)
+  }
+
   /// Observes this renderer's consumed/rendered audio timeline for one generation.
   /// A reset or disposal invalidates older observations. This is an output-node
   /// measurement, not a measurement of physical speaker or display latency.
@@ -513,6 +532,12 @@ final class YlAudioRenderer: YlAudioRendering {
       let mapped = Double(anchor.mediaUs) + elapsed
       guard mapped.isFinite, mapped >= 0, mapped < Double(Int64.max) else { return .invalid }
       let media = Int64(mapped.rounded(.towardZero))
+      if onClockControlBegin != nil, media < end {
+        sampledSubmissionTime = (node, host,
+          Double(host) + (Double(end) - Double(media)) / Double(rate), epoch, version)
+      } else {
+        sampledSubmissionTime = nil
+      }
       // Completion position describes a different instant from this native pair.
       // A later callback can legitimately be ahead; neither reject this pair nor
       // combine its host time with the callback's position. The checks above
@@ -721,7 +746,7 @@ final class YlAudioRenderer: YlAudioRendering {
       try submitTerminal(submissions)
       return submissions.isEmpty ? .buffered : .scheduled
     }
-    let nodeUs = Self.nodeMicroseconds(renderedOutputTime)
+    let nodeUs = submissionNodeTime
     lock.lock()
     guard !disposed, configuredGeneration == packet.generation else {
       lock.unlock()
@@ -750,6 +775,7 @@ final class YlAudioRenderer: YlAudioRendering {
       needsAnchor = needsAnchor || lastNodeUs - renderAnchor.nodeUs >= Double(scheduledEndUs - renderAnchor.mediaUs)
     }
     if needsAnchor {
+      sampledSubmissionTime = nil
       // Exclude silent node time on refill. Pause preserves the last node time;
       // only stop/reset makes a missing render timestamp mean sample zero.
       renderAnchor = (nodeUs ?? lastNodeUs, startUs)
@@ -866,7 +892,7 @@ final class YlAudioRenderer: YlAudioRendering {
     lock.withLock { clockControlVersion &+= 1; playbackRate = clampedRate }
     if let context = completionContext {
       completionContext = .init(enabled: context.enabled, platform: context.platform,
-        localFiniteSeekable: context.localFiniteSeekable, hasBoundedPlan: context.hasBoundedPlan,
+        eligibleFiniteSource: context.eligibleFiniteSource, hasBoundedPlan: context.hasBoundedPlan,
         codec: context.codec, sampleRate: context.sampleRate, channels: context.channels, rate: clampedRate)
     }
     output.rate = clampedRate
@@ -966,7 +992,7 @@ final class YlAudioRenderer: YlAudioRendering {
           output.supportsTerminalCompletion,
           let context = completionContext, let stream = configuredStream,
           YlAudioCompletionPolicy.select(context) == .terminalCandidate,
-          stream.codec == .aac, stream.sampleRate == 48000, stream.channelCount == 2 else {
+          [YlAudioCodec.aac, .opus].contains(stream.codec), stream.sampleRate == 48000, stream.channelCount == 2 else {
       terminal = nil
       cancelTailTimer()
       output.setInvalidationHandler(nil)
@@ -1009,7 +1035,7 @@ final class YlAudioRenderer: YlAudioRendering {
       guard let buffer = resource.buffer, let mode = resource.mode,
             lock.withLock({ !disposed && completionGeneration == resource.epoch &&
               configuredGeneration == buffer.generation }) else { continue }
-      let nodeUs = Self.nodeMicroseconds(renderedOutputTime)
+      let nodeUs = submissionNodeTime
       let snapshot = lock.withLock { () -> (UInt64, UInt64?, Bool, Bool) in
         updatePlayedPosition(nodeUs: nodeUs)
         let start = max(0, resource.ptsUs)
@@ -1018,7 +1044,10 @@ final class YlAudioRenderer: YlAudioRendering {
         if let anchor = renderAnchor, let end = scheduledEndUs {
           exhausted = lastNodeUs - anchor.nodeUs >= Double(end - anchor.mediaUs)
         }
-        if exhausted { renderAnchor = (nodeUs ?? lastNodeUs, start); scheduledEndUs = start }
+        if exhausted {
+          sampledSubmissionTime = nil
+          renderAnchor = (nodeUs ?? lastNodeUs, start); scheduledEndUs = start
+        }
         scheduledEndUs = max(scheduledEndUs ?? start, end.overflow ? Int64.max : end.partialValue)
         if playedPositionUs == nil { playedPositionUs = start }
         let first = !firstSubmissionSent

@@ -9,6 +9,16 @@ struct YlSoftwareDecodeObservation {
   let decodeWallNs: UInt64; let thermalNominal: Bool?
 }
 
+/// Optional measurement of the same charges and CPU windows used for admission.
+struct YlSoftwareDecodeMeasurement: Equatable {
+  var maxOwnedBytes = 0
+  var maxFrames = 0
+  var maxPacketBytes = 0
+  var maxCpuNs: UInt64 = 0
+  var maxDecodeWallNs: UInt64 = 0
+  var decodedFrames = 0
+}
+
 /// One process-wide ownership ledger, shared by current/candidate/all player leases.
 /// The strictest live lease bounds the aggregate. Retired leases remain live until
 /// their final retained frame/token releases; no seek/generation operation resets it.
@@ -21,6 +31,16 @@ final class YlSoftwareDecodePool {
   fileprivate var history = [YlSoftwareDecodeObservation]()
   fileprivate var longestWindow: UInt64 = 0
   fileprivate var mayRestartAfterIdle = false
+  fileprivate var measurement: YlSoftwareDecodeMeasurement?
+  init(measuring: Bool = false) {
+    measurement = measuring ? .init() : nil
+  }
+  var measured: YlSoftwareDecodeMeasurement? {
+    lock.lock(); defer { lock.unlock() }; return measurement
+  }
+  func recordDecodedFrame() {
+    lock.lock(); defer { lock.unlock() }; measurement?.decodedFrames += 1
+  }
   var ownedBytes: Int { lock.lock(); defer { lock.unlock() }; return bytes }
 }
 
@@ -79,6 +99,12 @@ final class YlSoftwareDecodeBudget {
     else { throw fail() }
     // Local sums cannot overflow after the checked nonnegative aggregate sums.
     pool.bytes = total.partialValue; pool.frames = frameTotal.partialValue
+    if var value = pool.measurement {
+      value.maxOwnedBytes = max(value.maxOwnedBytes, pool.bytes)
+      value.maxFrames = max(value.maxFrames, pool.frames)
+      if frames == 0 { value.maxPacketBytes = max(value.maxPacketBytes, bytes) }
+      pool.measurement = value
+    }
     ownedBytes += bytes; ownedFrames += frames
     return Token(owner: self, bytes: bytes, frames: frames)
   }
@@ -108,6 +134,10 @@ final class YlSoftwareDecodeBudget {
   }
 
   private func observeLocked(_ observation: YlSoftwareDecodeObservation) throws {
+    if var value = pool.measurement {
+      value.maxDecodeWallNs = max(value.maxDecodeWallNs, observation.decodeWallNs)
+      pool.measurement = value
+    }
     guard !closed, observation.thermalNominal == true,
       observation.decodeWallNs <= limits.maxDecodeWallNs else { throw fail() }
     if let previous = pool.history.last {
@@ -133,6 +163,10 @@ final class YlSoftwareDecodeBudget {
         ? observation.monotonicNs - live.windowNs : 0
       let first = pool.history.last(where: { $0.monotonicNs <= boundary }) ?? pool.history.first
       if let first = first {
+        if var value = pool.measurement {
+          value.maxCpuNs = max(value.maxCpuNs, observation.cumulativeCpuNs - first.cumulativeCpuNs)
+          pool.measurement = value
+        }
         guard observation.cumulativeCpuNs - first.cumulativeCpuNs <= live.maxCpuNs else {
           throw fail()
         }

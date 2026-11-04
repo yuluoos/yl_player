@@ -1,0 +1,48 @@
+2026-11-03 09:37:37.328 yl_player_example[28447:252051] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 7353ec7f9a98b6c654f37c559f67a9f160183abbd1f3d6d5f8a68d94b148c006:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP file load
+[libdav1d @ 0x7648278000] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7648129b80] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7648278000] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP file play
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17815010465666 2364588 21 168 98098000 256250
+PUBLIC_STEP file pause-seek-2000
+PUBLIC_SEEK_RETURN file target=2000 position=3436 revision=36
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17817010844291 2364588 21 168 169529000 736209
+PUBLIC_SEEK_WAIT file target=2000 position=2275 revision=43
+PUBLIC_STEP file pause-seek-1250
+PUBLIC_SEEK_RETURN file target=1250 position=2434 revision=47
+PUBLIC_SEEK_WAIT file target=1250 position=1708 revision=54
+PUBLIC_STEP file pause-seek-0
+PUBLIC_SEEK_RETURN file target=0 position=1709 revision=56
+PUBLIC_SEEK_WAIT file target=0 position=253 revision=64
+PUBLIC_STEP file await-completed
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17819010849208 2364588 21 168 212653000 768625
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17821010844208 2364588 21 168 212653000 843541
+PUBLIC_PLAYBACK {"transport":"file","decoder":"software","completed":true,"markers":[{"phase":"play","marker":0,"rgb":[254,0,0],"positionUs":440000},{"phase":"play","marker":1,"rgb":[0,254,0],"positionUs":1438000},{"phase":"play","marker":2,"rgb":[0,0,255],"positionUs":2437000},{"phase":"play","marker":3,"rgb":[255,255,255],"positionUs":3436000},{"phase":"seek-2000","marker":2,"rgb":[0,0,255],"positionUs":2276000},{"phase":"seek-1250","marker":1,"rgb":[0,254,0],"positionUs":1709000},{"phase":"seek-0","marker":0,"rgb":[254,0,0],"positionUs":255000}],"requests":[],"pixelVerificationMethod":"native-renderer-displayed-buffer","readbackWhilePaused":true,"acousticOutputVerified":false}
+PUBLIC_DISPOSE {"transport":"file","elapsedUs":29478}
+QUAL_ID MacBookPro17,1 26A434 7353ec7f9a98b6c654f37c559f67a9f160183abbd1f3d6d5f8a68d94b148c006:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+PUBLIC_STEP http load
+[libdav1d @ 0x7648278380] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7648129b80] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7648278380] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_STEP http play
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17823965555666 2364588 21 168 212653000 843541
+PUBLIC_STEP http pause-seek-2000
+PUBLIC_SEEK_RETURN http target=2000 position=3500 revision=35
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17825965574625 2364588 21 168 212653000 997750
+PUBLIC_SEEK_WAIT http target=2000 position=2264 revision=42
+PUBLIC_STEP http pause-seek-1250
+PUBLIC_SEEK_RETURN http target=1250 position=2445 revision=46
+PUBLIC_SEEK_WAIT http target=1250 position=1724 revision=52
+PUBLIC_STEP http pause-seek-0
+PUBLIC_SEEK_RETURN http target=0 position=1725 revision=54
+PUBLIC_SEEK_WAIT http target=0 position=468 revision=62
+PUBLIC_STEP http await-completed
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17827965672875 2364588 21 168 214422000 997750
+PUBLIC_DROP_STATE {"transport":"http","positionUs":1705000,"status":"playing","drops":1,"revision":71}
+QUAL_SCHEDULER {"dropDiagnostics":"YlFrameDropDiagnostics(total: 1, waitingEnqueues: 0, counts: [:], events: [])","drops":1,"hostNs":17828501349291,"pendingPTS":[1708000,1750000,1792000,1833000,1875000,1917000,1958000,2000000]}
+QUAL_SAMPLE 4A9DDFF2-6066-47A1-B7FB-3BC80A30C49C 17829965577916 2364588 21 168 214422000 997750
+PUBLIC_DISPOSE {"transport":"http","elapsedUs":25065}
+QUAL_ERROR control prelude: Bad state: scheduler dropped a frame
+QUAL_FINISH 1

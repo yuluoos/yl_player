@@ -19,10 +19,47 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def freeze_limits(peaks, config):
+    require(config['fixedDecodeWallNs'] == 42000000
+            and config['trialCeilings']['maxDecodeWallNs'] == 42000000,
+            'invalid fixed decode deadline')
+    limits = {'windowNs': config['cpuWindowNs'], 'maxDecodeWallNs': config['fixedDecodeWallNs']}
+    for name, unit in zip(LIMIT_NAMES[:-1], (65536, 1, 4096, 1000000)):
+        limits[name] = min(config['trialCeilings'][name], math.ceil(peaks[name]*1.25/unit)*unit)
+    require(all(peaks[name] <= limits[name] for name in LIMIT_NAMES), 'unqualified limits')
+    return limits
+
+
 def observations(directory, phase, expected_frames):
     receipt = json.loads((directory/'receipt.json').read_text())
     require(receipt['passed'] is True and receipt['exit'] == 0, f'{phase} did not pass')
     raw = (directory/'raw.log').read_bytes()
+    public = [line[line.index('PUBLIC_'):] for line in raw.decode().splitlines() if 'PUBLIC_' in line]
+    playback = [json.loads(line.split(' ', 1)[1]) for line in public if line.startswith('PUBLIC_PLAYBACK ')]
+    disposal = [json.loads(line.split(' ', 1)[1]) for line in public if line.startswith('PUBLIC_DISPOSE ')]
+    require(not any(line.startswith('PUBLIC_ERROR ') for line in public)
+            and [x['transport'] for x in playback] == ['file', 'http']
+            and [x['transport'] for x in disposal] == ['file', 'http']
+            and all(0 <= x['elapsedUs'] <= 3000000 for x in disposal), 'incomplete control prelude')
+    expected_markers = [('play', 0), ('play', 1), ('play', 2), ('play', 3),
+                        ('seek-2000', 2), ('seek-1250', 1), ('seek-0', 0)]
+    colors = ([255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 255])
+    expected_system_phases = ['play-0', 'play-1', 'play-2', 'play-3',
+        'before-seek-2000', 'seek-2000', 'before-seek-1250', 'seek-1250',
+        'before-seek-0', 'seek-0', 'completed']
+    for record in playback:
+        require(record['completed'] is True and record['decoder'] == 'software'
+                and record['pixelVerificationMethod'] == 'native-renderer-displayed-buffer'
+                and record['readbackWhilePaused'] is True
+                and [(m['phase'], m['marker']) for m in record['markers']] == expected_markers
+                and all(len(m['rgb']) == 3 and all(abs(a-b) <= 40 for a, b in zip(m['rgb'], colors[m['marker']]))
+                        for m in record['markers']), 'unverified control prelude output')
+        require([m['phase'] for m in record['systemSamples']] == expected_system_phases
+                and all(m['status'] == 'observed' and m['totalFrames'] > 0
+                        and m['droppedFrames'] == m['corruptedFrames'] == 0
+                        and m['windowOcclusionVisible'] is True for m in record['systemSamples']),
+                'unverified control prelude system output')
+    require(any(x['status'] == 206 for x in playback[1]['requests']), 'unverified HTTP prelude')
     lines = [line[line.index('QUAL_'):] for line in raw.decode().splitlines() if 'QUAL_' in line]
     require(not any(line.startswith(('QUAL_ERROR', 'QUAL_BAD', 'QUAL_DROP')) for line in lines),
             f'{phase} contains a playback, power, thermal or drop failure')
@@ -38,19 +75,38 @@ def observations(directory, phase, expected_frames):
             'continuous software playback unverified')
     require(all(0 < b['us'] - a['us'] <= 5000000 and b['position'] >= a['position']
                 for a, b in zip(ticks, ticks[1:])), 'playback observation gap')
+    clocks = [json.loads(x.split(' ', 1)[1]) for x in lines if x.startswith('QUAL_CLOCK ')]
+    require(len(clocks) >= 500 and all(x['samples'] > 0 and x['staleEvents'] == 0
+            and 0 <= x['maximumAgeSeconds'] <= 0.1
+            and 0 <= x['maximumWorkerGapSeconds'] <= 0.1 for x in clocks),
+            'clock freshness or worker cadence unverified')
+    require(all(0 < b['hostNs'] - a['hostNs'] <= 5000000000
+                for a, b in zip(clocks, clocks[1:])), 'clock observation gap')
     systems = [json.loads(x.split(' ', 1)[1]) for x in lines if x.startswith('QUAL_SYSTEM ')]
     require(len(systems) >= 240 and all(x['status'] == 'observed' and x['droppedFrames'] == x['corruptedFrames'] == 0
                             for x in systems), 'system output unverified')
     decoded = [int(x.split()[1]) for x in lines if x.startswith('QUAL_DECODED ')]
     require([n for n in decoded if n] == [expected_frames], 'incomplete decoder output')
+    starts = [int(x.split()[1]) for x in lines if x.startswith('QUAL_CONTINUOUS_START ')]
+    total = [int(x.split()[1]) for x in lines if x.startswith('QUAL_TOTAL_DECODED ')]
+    require(len(starts) == 1 and starts[0] > 0 and total == [starts[0]+expected_frames],
+            'unaccounted decoded frame offset')
     timed = systems[-1]['totalFrames']
     if timed != expected_frames:
-        # A separate legacy layer can show and dequeue PTS zero before the timed
-        # endpoint attaches. Require evidence from this process to count it.
+        # The public paused-first-frame milestone can precede the timed layer.
+        # Count its one displayed frame only with observed, distinct layer identity.
+        initial = [json.loads(x.split(' ', 1)[1]) for x in lines if x.startswith('QUAL_PREFLIGHT ')]
         require(timed == expected_frames - 1 and
-                [x for x in lines if x.startswith('QUAL_LEGACY_DEQUEUE ')] == ['QUAL_LEGACY_DEQUEUE 0'] and
-                any(x.startswith('QUAL_LEGACY total=') and int(x.split()[1][6:]) > 0 and x.endswith(' drops=0')
-                    for x in lines), 'unaccounted displayed frames')
+                len(initial) == 1 and initial[0]['firstFrameCompleted'] is True and
+                initial[0]['positionUs'] == 0 and initial[0]['decoder'] == 'software',
+                'unaccounted displayed frames')
+        preview = initial[0]['layer']
+        require(preview['status'] == 'observed' and preview['totalFrames'] == 1 and
+                preview['droppedFrames'] == preview['corruptedFrames'] == 0 and
+                preview['surfaceHasBounds'] is True and preview['windowOcclusionVisible'] is True and
+                bool(preview['layerIdentity']) and bool(systems[0]['layerIdentity']) and
+                all(x['layerIdentity'] == systems[0]['layerIdentity'] != preview['layerIdentity'] for x in systems),
+                'unaccounted displayed frames')
     samples = [x.split() for x in lines if x.startswith('QUAL_SAMPLE ')]
     require(len(samples) >= 500 and all(0 < int(b[2]) - int(a[2]) <= 5000000000
             for a, b in zip(samples, samples[1:])), 'incomplete resource observations')
@@ -63,7 +119,8 @@ def observations(directory, phase, expected_frames):
 def issue(app, baseline, verification, protocol):
     config = json.loads(protocol.read_bytes())
     require(config['independentProcesses'] == 2 and config['minimumPlaybackSeconds'] >= 1200
-            and config['requiredDroppedFrames'] == 0 and config['expectedVideoPackets'] > 0, 'invalid protocol')
+            and config['requiredDroppedFrames'] == 0 and config['expectedVideoPackets'] > 0
+            and config['controlPrelude'] == 'public-file-http-paused-readback-seek-v1', 'invalid protocol')
     second = observations(verification, 'verification', config['expectedVideoPackets'])
     first = observations(baseline, 'baseline', config['expectedVideoPackets'])
     require(first[0] == second[0] and first[1] != second[1] and first[3] != second[3]
@@ -74,9 +131,7 @@ def issue(app, baseline, verification, protocol):
     limits_file = (baseline/'limits.json').read_bytes()
     require(b['limitsSha256'] == digest(limits_file), 'verification did not attest to the frozen limits')
     limits = json.loads(limits_file)
-    expected_limits = {'windowNs': config['cpuWindowNs']}
-    for name, unit in zip(LIMIT_NAMES, (65536, 1, 4096, 1000000, 1000000)):
-        expected_limits[name] = min(config['trialCeilings'][name], math.ceil(first[2][name]*1.25/unit)*unit)
+    expected_limits = freeze_limits(first[2], config)
     require(limits == expected_limits and all(max(first[2][n], second[2][n]) <= limits[n] for n in LIMIT_NAMES),
             'unqualified limits')
     plist = plistlib.loads((app/'Contents/Info.plist').read_bytes())
@@ -87,7 +142,7 @@ def issue(app, baseline, verification, protocol):
     require(files == a['product'], 'target must be the frozen example app')
     video = config['videoConfiguration']
     require(video == dict(codec=12, profile=0, bitDepth=8, chroma=420, width=320, height=180,
-                          fpsNumerator=24, fpsDenominator=1, threads=2, outputPixelFormat=875704438),
+                          fpsNumerator=24, fpsDenominator=1, threads=1, outputPixelFormat=875704438),
             'unmeasured video configuration')
     require(files[config['fixturePath']] == config['fixtureSha256'], 'qualification fixture changed')
     model, os_build, images = first[0]

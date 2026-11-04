@@ -1,0 +1,23 @@
+{
+  "diagnosticOnly": true,
+  "phases": [
+    {
+      "seconds": 90,
+      "nativeCalls": "overlapping reader and pump"
+    },
+    {
+      "seconds": 90,
+      "nativeCalls": "external lock around reader and pump queries/schedule"
+    },
+    {
+      "seconds": 90,
+      "nativeCalls": "only isolated reader; pump schedules from actual played-back callbacks"
+    }
+  ],
+  "sameEngine": true,
+  "hardwareRateUnchanged": true,
+  "clientRate": 48000,
+  "blockFrames": 960,
+  "maxBlocks": 5,
+  "sourceSha256": "3b126e5f405ddb74634db6dd4dc58bdd4624af5aa98f85ae292d87a101b2449a"
+}

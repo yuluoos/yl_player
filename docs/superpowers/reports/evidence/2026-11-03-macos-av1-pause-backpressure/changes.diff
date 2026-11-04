@@ -1,0 +1,214 @@
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift
+index 223271e6..e12fc3a3 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift
+@@ -51,6 +51,8 @@ final class YlFrameScheduler {
+   private var droppedFrames = 0
+   private let collectDropDiagnostics: Bool
+   private var waitingEnqueues = 0
++  private var pauseBegan: TimeInterval?
++  private var pausedSeconds: TimeInterval = 0
+   private var dropCounts: [YlFrameDropReason: Int] = [:]
+   private var dropEvents: [YlFrameDropEvent] = []
+   private var previousTick: (uptime: TimeInterval, positionUs: Int64)?
+@@ -84,6 +86,24 @@ final class YlFrameScheduler {
+   }
+ 
+   func configureBounded(_ plan: YlBoundedBufferPlan?) { lock.withLock { boundedPlan = plan } }
++
++  func setPaused(_ paused: Bool) {
++    lock.lock()
++    if paused, pauseBegan == nil {
++      pauseBegan = ProcessInfo.processInfo.systemUptime
++    } else if !paused, let pauseBegan {
++      pausedSeconds += ProcessInfo.processInfo.systemUptime - pauseBegan
++      self.pauseBegan = nil
++    }
++    lock.broadcast()
++    lock.unlock()
++  }
++
++  // Condition lock held. Explicit pause freezes this clock, preserving the
++  // remaining active wait budget even if pause/resume precede a waiter's wakeup.
++  private var activeWaitTime: TimeInterval {
++    (pauseBegan ?? ProcessInfo.processInfo.systemUptime) - pausedSeconds
++  }
+   var bufferedDurationUs: Int64 { lock.withLock { durationLocked } }
+   private var durationLocked: Int64 {
+     guard let first = frames.first, let last = frames.last else { return 0 }
+@@ -153,17 +173,23 @@ final class YlFrameScheduler {
+       }
+     }
+     let waitStarted = collectDropDiagnostics ? ProcessInfo.processInfo.systemUptime : nil
+-    let deadline = Date(timeIntervalSinceNow: enqueueWaitTimeout)
++    let deadline = activeWaitTime + enqueueWaitTimeout
+     while boundedPlan == nil && compatibility.usesBackpressure && frames.count >= frameLimit {
+       if collectDropDiagnostics { waitingEnqueues += 1 }
+-      let signalled = lock.wait(until: deadline)
++      let signalled: Bool
++      if pauseBegan != nil {
++        lock.wait()
++        signalled = true
++      } else {
++        signalled = lock.wait(until: Date(timeIntervalSinceNow: deadline - activeWaitTime))
++      }
+       if collectDropDiagnostics { waitingEnqueues -= 1 }
+       guard !disposed,
+             activeGeneration == nil || activeGeneration == frame.generation else {
+         lock.unlock()
+         return false
+       }
+-      guard signalled else {
++      guard signalled || pauseBegan != nil || activeWaitTime < deadline else {
+         recordDrop(.enqueueTimeout, first: frame, waitStarted: waitStarted)
+         lock.unlock()
+         return false
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift
+index 29bd7d6a..31bbd7e6 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift
+@@ -10,6 +10,7 @@ protocol YlPresentationScheduling: AnyObject {
+   var bufferedDurationUs: Int64 { get }
+   func configureBounded(_ plan: YlBoundedBufferPlan?)
+   func setRate(_ rate: Double)
++  func setPaused(_ paused: Bool)
+   func enqueue(_ frame: YlFrameEnvelope) -> Bool
+   func nextFrame(upTo positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
+   func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope?
+@@ -204,8 +205,10 @@ final class YlPresentationCoordinator: YlAudioTimeline {
+     markTimedAudioReady()
+   }
+   func position(atHostTimeUs time: Int64) -> Int64 { mediaClock.position(atHostTimeUs: time) }
++  func pauseFrameEnqueues() { frameScheduler.setPaused(true) }
+   func play(atHostTimeUs time: Int64) {
+     mediaClock.play(atHostTimeUs: time)
++    frameScheduler.setPaused(false)
+     requestTimedStart()
+     synchronizeTimedPresentation()
+   }
+diff --git a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift
+index 97e8dd7b..2d53aa1e 100644
+--- a/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift
++++ b/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift
+@@ -316,6 +316,8 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
+     if stopping { recovery.cancelBudget() }
+     reconnectToCancel?.cancel()
+     presentation.retireDisplay()
++    // Release a producer waiting for presentation capacity before joining it.
++    presentation.flushFrames(generation: currentGeneration)
+     currentAudioRenderer?.pause()
+     presentation.pause(atHostTimeUs: Self.hostTimeUs())
+     YlFallbackTeardownTransaction(
+@@ -333,7 +335,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
+         mediaToClose?.close()
+       }
+     ).run()
+-    presentation.flushFrames(generation: currentGeneration)
+     boundedStarted = false; boundedProducerLimited = false
+     bufferBudget.bufferScope?.beginMediaGeneration()
+     stateLock.withLock {
+@@ -511,6 +512,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
+ 
+   func pause() throws {
+       if stateLock.withLock({ completionSent }) { emitState(); return }
++      presentation.pauseFrameEnqueues()
+       stateLock.withLock {
+         if playing { livePausedAt = CACurrentMediaTime() }
+         playing = false
+@@ -660,6 +662,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
+     reconnectToCancel?.cancel()
+     presentation.stopAudioClock()
+     presentation.retireDisplay()
++    presentation.disposeFrames()
+     YlFallbackTeardownTransaction(
+       cancelInput: { [self] in
+         tokenToCancel?.cancel()
+@@ -671,7 +674,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
+           cancelVideoSubmissions()
+           video.discardDecoder()
+           audio.discardRenderer()
+-          presentation.disposeFrames()
+         }
+         mediaToClose?.close()
+       }
+diff --git a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift
+index 26c4a073..6ce26105 100644
+--- a/tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift
++++ b/tool/consumer_fixtures/apple_flutter/RunnerTests/YlManagedFallbackCharacterizationTests.swift
+@@ -120,6 +120,7 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
+     let trace: Trace
+     init(_ trace: Trace) { self.trace = trace }
+     var lateFrameDropCount: Int { actual.lateFrameDropCount }
++    func setPaused(_ paused: Bool) { actual.setPaused(paused) }
+     var pendingPTS: [Int64] { actual.pendingPTS }
+     func enqueue(_ frame: YlFrameEnvelope) -> Bool { actual.enqueue(frame) }
+     func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
+@@ -1485,6 +1486,68 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
+     XCTAssertNotNil(scheduler.frame(at: 100_000, generation: currentGeneration))
+   }
+ 
++  // An intentional pause must preserve a producer already waiting on capacity.
++  func testPausePreservesBlockedPresentationUntilResume() async throws {
++    let factory = Factory(), output = Output()
++    factory.automaticFrames = true
++    let scheduler = YlFrameScheduler(maxFrames: 1, enqueueWaitTimeout: 0.1,
++      collectDropDiagnostics: true)
++    let instance = try YlFallbackBackend(playerId: 731,
++      services: .init(platform: .current, textureOutput: output,
++        makeDisplayDriver: { _ in Display() }),
++      configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
++      generation: 17, videoSessionFactory: factory,
++      audioRendererFactory: AudioFactory(Trace()), presentationScheduler: scheduler,
++      emit: { _ in })
++    defer { instance.dispose() }
++    try instance.activate()
++    try instance.play()
++    try await AppleHostCharacterizations.waitFor { scheduler.dropDiagnostics.waitingEnqueues == 1 }
++    let queuedPTS = try XCTUnwrap(scheduler.pendingPTS.first)
++    let generation = try XCTUnwrap(factory.sessions.first?.lastGeneration)
++    try instance.pause()
++    let pastTimeout = expectation(description: "pause exceeds the active enqueue timeout")
++    DispatchQueue.global().asyncAfter(deadline: .now() + 0.2) { pastTimeout.fulfill() }
++    await fulfillment(of: [pastTimeout], timeout: 1)
++    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
++    XCTAssertEqual(scheduler.pendingPTS, [queuedPTS])
++    XCTAssertEqual(scheduler.dropDiagnostics.waitingEnqueues, 1)
++    try instance.play()
++    XCTAssertNotNil(scheduler.nextFrame(upTo: .max, generation: generation))
++    try await AppleHostCharacterizations.waitFor { !scheduler.pendingPTS.isEmpty }
++    XCTAssertGreaterThan(try XCTUnwrap(scheduler.pendingPTS.first), queuedPTS)
++    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
++  }
++
++  func testTeardownCancelsBlockedPresentationBeforeJoiningDecoder() async throws {
++    for action in ["stop", "deactivate", "dispose"] {
++      let factory = Factory(), output = Output()
++      factory.automaticFrames = true
++      let scheduler = YlFrameScheduler(maxFrames: 1, collectDropDiagnostics: true)
++      let instance = try YlFallbackBackend(playerId: 731,
++        services: .init(platform: .current, textureOutput: output,
++          makeDisplayDriver: { _ in Display() }),
++        configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared(),
++        generation: 17, videoSessionFactory: factory,
++        audioRendererFactory: AudioFactory(Trace()), presentationScheduler: scheduler,
++        emit: { _ in })
++      defer { instance.dispose() }
++      try instance.activate()
++      try instance.play()
++      try await AppleHostCharacterizations.waitFor {
++        scheduler.dropDiagnostics.waitingEnqueues == 1
++      }
++      XCTAssertEqual(scheduler.lateFrameDropCount, 0)
++      switch action {
++      case "stop": instance.stop()
++      case "deactivate": instance.deactivate()
++      default: instance.dispose()
++      }
++      XCTAssertEqual(scheduler.lateFrameDropCount, 0, "\(action) must cancel the wait, not time it out")
++      XCTAssertTrue(scheduler.pendingPTS.isEmpty)
++    }
++  }
++
+   // Removing lifecycle generation invalidation would revive disposed output.
+   func testStopAndDisposeRejectHeldDecodeOutputAndReleasePackets() async throws {
+     let factory = Factory(), output = Output()

@@ -1,0 +1,79 @@
+{
+  "devices" : [
+    {
+      "architecture" : "arm64",
+      "deviceId" : "00008103-000571C03CD9001E",
+      "deviceName" : "My Mac",
+      "modelName" : "MacBook Pro",
+      "osBuildNumber" : "26A434",
+      "osVersion" : "27.0.1",
+      "platform" : "macOS"
+    }
+  ],
+  "testNodes" : [
+    {
+      "children" : [
+        {
+          "children" : [
+            {
+              "children" : [
+                {
+                  "children" : [
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1\") is not equal to (\"0\") - stop must cancel the wait, not time it out",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+                        "lineNumber" : 1513
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1\") is not equal to (\"0\") - deactivate must cancel the wait, not time it out",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+                        "lineNumber" : 1513
+                      }
+                    },
+                    {
+                      "name" : "XCTAssertEqual failed: (\"1\") is not equal to (\"0\") - dispose must cancel the wait, not time it out",
+                      "nodeType" : "Failure Message",
+                      "sourceLocation" : {
+                        "filePath" : "/Users/yy2021_8689/Desktop/Flutter/yl_player/packages/yl_player/example/macos/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+                        "lineNumber" : 1513
+                      }
+                    }
+                  ],
+                  "duration" : "1秒",
+                  "durationInSeconds" : 1.0541160106658936,
+                  "name" : "testTeardownCancelsBlockedPresentationBeforeJoiningDecoder()",
+                  "nodeIdentifier" : "YlManagedFallbackCharacterizationTests/testTeardownCancelsBlockedPresentationBeforeJoiningDecoder()",
+                  "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testTeardownCancelsBlockedPresentationBeforeJoiningDecoder",
+                  "nodeType" : "Test Case",
+                  "result" : "Failed"
+                }
+              ],
+              "name" : "YlManagedFallbackCharacterizationTests",
+              "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests",
+              "nodeType" : "Test Suite",
+              "result" : "Failed"
+            }
+          ],
+          "name" : "RunnerTests",
+          "nodeIdentifierURL" : "test://com.apple.xcode/Runner/RunnerTests",
+          "nodeType" : "Unit test bundle",
+          "result" : "Failed"
+        }
+      ],
+      "name" : "Runner",
+      "nodeType" : "Test Plan",
+      "result" : "Failed"
+    }
+  ],
+  "testPlanConfigurations" : [
+    {
+      "configurationId" : "1",
+      "configurationName" : "Test Scheme Action"
+    }
+  ]
+}

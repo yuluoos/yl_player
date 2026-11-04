@@ -15,6 +15,24 @@ final class YlSoftwareDecodeBudgetTests: XCTestCase {
     thermal: Bool? = true) -> YlSoftwareDecodeObservation {
     .init(monotonicNs: time, cumulativeCpuNs: cpu, decodeWallNs: wall, thermalNominal: thermal)
   }
+  func testMeasurementRetainsPeaksAfterReleaseAndRetirement() throws {
+    let pool = YlSoftwareDecodePool(measuring: true)
+    let budget = try YlSoftwareDecodeBudget(limits: limits, pool: pool)
+    let frame = try budget.reserve(bytes: 60, frames: 1)
+    let packet = try budget.reserve(bytes: 20, frames: 0)
+    try budget.observe(observation(0, 10, wall: 2))
+    try budget.observe(observation(50, 35, wall: 7))
+    packet.release(); frame.release(); budget.retire()
+    let peaks = try XCTUnwrap(pool.measured)
+    XCTAssertEqual(peaks.maxOwnedBytes, 80)
+    XCTAssertEqual(peaks.maxFrames, 1)
+    XCTAssertEqual(peaks.maxPacketBytes, 20)
+    XCTAssertEqual(peaks.maxCpuNs, 25)
+    XCTAssertEqual(peaks.maxDecodeWallNs, 7)
+    XCTAssertEqual(pool.ownedBytes, 0)
+    XCTAssertNil(YlSoftwareDecodePool().measured)
+  }
+
   func testExactAdmissionAndEmptyProductionTable() {
     let admission = YlSoftwareDecodeAdmission(entries: [key(): limits])
     XCTAssertEqual(admission.limits(for: key()), limits)

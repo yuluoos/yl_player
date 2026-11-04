@@ -1,0 +1,40 @@
+{
+  "fixture": "320x180 24fps limited-range AV1 Main 8-bit repeated original compressed picture packets with continuous stereo Opus test tones",
+  "platform": "MacBookPro17,1 / 26A434 / arm64 Release",
+  "independentProcesses": 2,
+  "minimumPlaybackSeconds": 1200,
+  "requiredTerminalState": "completed",
+  "requiredDroppedFrames": 0,
+  "requiredDecoderMode": "software",
+  "expectedVideoPackets": 28904,
+  "thermal": "Every real software-budget observation must be nominal, low power disabled",
+  "resourceObservationNs": 250000000,
+  "maximumSummaryGapSeconds": 5,
+  "cpuWindowNs": 1000000000,
+  "freezeRule": "Add 25% headroom to observed maxima; round owned bytes to 64 KiB, frames to 1, compressed packet bytes to 4 KiB, CPU and decode wall to 1 ms; clamp to predeclared trial ceilings.",
+  "trialCeilings": {
+    "maxOwnedBytes": 33554432,
+    "maxFrames": 64,
+    "maxPacketBytes": 1048576,
+    "maxCpuNs": 1000000000,
+    "maxDecodeWallNs": 100000000
+  },
+  "eligibility": "A failed first process cannot define budgets. The second process must use the identical frozen executable, codec library, exact device, asset and the first process limits. Neither a prior debug observation nor a stand-alone bridge probe qualifies production.",
+  "videoConfiguration": {
+    "codec": 12,
+    "profile": 0,
+    "bitDepth": 8,
+    "chroma": 420,
+    "width": 320,
+    "height": 180,
+    "fpsNumerator": 24,
+    "fpsDenominator": 1,
+    "threads": 2,
+    "outputPixelFormat": 875704438
+  },
+  "fixturePath": "Contents/Frameworks/App.framework/Versions/A/Resources/flutter_assets/assets/test_media/format_matrix/qual-av1.mkv",
+  "fixtureSha256": "8bbd5974ff2d62761cffb8b232716ab391cf884b28c4e21bb8c1879ba58da119",
+  "visibility": "Every system performance observation must report windowOcclusionVisible=true. Any dropped or corrupt frame fails, including startup. AppKit occlusion entry count must stay equal to its pre-play value, including intervals between samples.",
+  "preflight": "The mounted Flutter native view must have a display layer with nonempty bounds on the visible window before play. Capture starts before the play call and retains PTS zero. Await the public firstFrame milestone and Flutter endOfFrame before inspecting the native view and starting playback.",
+  "capture": "Unmodified SDK dynamic image; host-injected exact-key trial services, optional native budget measurement, existing bounded endpoint diagnostics."
+}

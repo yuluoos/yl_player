@@ -1088,6 +1088,7 @@ final class YlAppleSessionCoordinator: NSObject {
     let prepared = try YlPreparedFallback(
       source: source,
       requireHardwareProbe: false,
+      softwareServices: services.softwareDecodeServices,
       configuration: configuration.forLoad(source),
       cancellationToken: token,
       commitEvents: candidateEvents,
@@ -1133,7 +1134,8 @@ final class YlAppleSessionCoordinator: NSObject {
     return .dashProgram(source: source, prepared: try YlPreparedDashProgram(program: program,
       resources: resources, scope: scope, cancellation: token, constraints: constraints,
       decoderPolicy: source.loadOptions?.decoderPolicy ?? .systemDefault,
-      autoplay: source.loadOptions?.autoplay ?? false, startPositionMs: source.loadOptions?.startPositionMs ?? 0))
+      autoplay: source.loadOptions?.autoplay ?? false, startPositionMs: source.loadOptions?.startPositionMs ?? 0,
+      softwareServices: services.softwareDecodeServices))
   }
 
   private func prepareHeaderedHls(

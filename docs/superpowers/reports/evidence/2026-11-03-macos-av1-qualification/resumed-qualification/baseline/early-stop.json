@@ -1,0 +1,8 @@
+{
+  "reason": "clock stale event violates frozen acceptance; terminate instead of completing a known-failed 20-minute run",
+  "staleEvents": 1,
+  "maximumReadSeconds": 0.09386804166570073,
+  "maximumAgeSeconds": 0.101473,
+  "displayDropsAtLastObserved35Seconds": 0,
+  "termination": "Process already exited on presentation failure before attempted stop"
+}

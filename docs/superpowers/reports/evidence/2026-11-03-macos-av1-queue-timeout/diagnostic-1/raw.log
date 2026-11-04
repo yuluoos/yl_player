@@ -1,0 +1,27 @@
+2026-11-02 20:23:49.863 yl_player_example[12936:82338] Running with merged UI and platform thread. Experimental.
+[libdav1d @ 0x7c26134e00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7c25d0f700] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7c26134e00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_ID MacBookPro17,1 26A434 0aee2971f0c3f1ee75d464902261cb43f767ad4e870f6f63558729525a703ba6:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+QUAL_SAMPLE 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 1114992460166 0 0 0 0 0
+QUAL_NATIVE_THREADS 1
+QUAL_PREFLIGHT {"waitUs":35834,"layer":{"layerCount":1,"windowOcclusionVisible":true,"totalFrameDelaySeconds":0.0,"totalFrames":1,"surfaceHasBounds":true,"windowOcclusions":0,"droppedFrames":0,"status":"observed","corruptedFrames":0}}
+QUAL_SAMPLE 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 1116994514541 2364588 21 168 175700000 2041250
+QUAL_DART {"us":2023598,"position":1932000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 1119009217666 2364588 21 168 175700000 2041250
+QUAL_DART {"us":4022085,"position":3748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"windowOcclusions":0,"status":"observed","totalFrames":120,"surfaceHasBounds":true,"corruptedFrames":0,"droppedFrames":0,"layerCount":1,"windowOcclusionVisible":true,"totalFrameDelaySeconds":0.0}
+QUAL_SAMPLE 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 1121009280000 2364588 21 168 175700000 2041250
+QUAL_DART {"us":6022512,"position":5832000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 1123009375625 2364588 21 168 175700000 2041250
+QUAL_DART {"us":8022831,"position":7915000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 1125049227208 2364588 21 168 175700000 2041250
+QUAL_DART {"us":10023167,"position":9748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"windowOcclusions":0,"status":"observed","totalFrames":240,"surfaceHasBounds":true,"corruptedFrames":0,"droppedFrames":2,"layerCount":1,"windowOcclusionVisible":true,"totalFrameDelaySeconds":0.0}
+QUAL_ERROR Bad state: system presentation failed {windowOcclusions: 0, status: observed, totalFrames: 240, surfaceHasBounds: true, corruptedFrames: 0, droppedFrames: 2, layerCount: 1, windowOcclusionVisible: true, totalFrameDelaySeconds: 0.0}
+QUAL_DROP_DETAIL enqueueTimeout at=1125.4742717916668 pts=10380000 pending=[10047000, 10088000, 10130000, 10172000, 10213000, 10255000, 10297000, 10338000]
+QUAL_DROP enqueueTimeout 1
+QUAL_DECODED 250
+QUAL_END 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 2364588 21 168 175700000 2041250
+QUAL_END 79FBFF36-2E42-487A-9EA9-DB51CB2D5087 2364588 21 168 175700000 2041250
+QUAL_FINISH 1

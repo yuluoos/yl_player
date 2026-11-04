@@ -1,0 +1,16 @@
+{
+  "reason": "External build load subsided after failed traced diagnosis; user committed idle unlocked formal runs",
+  "previousSystemLoad": [
+    294.14,
+    343.43,
+    275.21
+  ],
+  "latestSystemLoad": [
+    32.77,
+    156.12,
+    242.69
+  ],
+  "latestCpuIdlePercent": 64.34,
+  "sdkOrCeilingsChanged": false,
+  "previousFailuresRetained": true
+}

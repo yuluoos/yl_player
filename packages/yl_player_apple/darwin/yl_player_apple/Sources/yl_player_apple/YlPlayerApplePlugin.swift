@@ -26,6 +26,12 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
   /// Flutter's SDR pipeline; protected FairPlay output remains a secure view.
   /// Configure once at registration, before creating any players on this engine.
   public static func register(with registrar: FlutterPluginRegistrar, useFlutterTexture: Bool) {
+    register(with: registrar, useFlutterTexture: useFlutterTexture, configureServices: { _ in })
+  }
+
+  /// Internal host composition seam. Public registration always uses production admission.
+  static func register(with registrar: FlutterPluginRegistrar, useFlutterTexture: Bool,
+      configureServices: @escaping (inout YlPlatformServices) -> Void) {
     #if os(iOS)
     let messenger = registrar.messenger()
     let hostMessenger = messenger
@@ -60,6 +66,7 @@ public final class YlPlayerApplePlugin: NSObject, FlutterPlugin {
     let engineIdentity = ObjectIdentifier(messenger as AnyObject)
     let registry = YlApplePlayerRegistry(makeServices: { options in
       var result = try services(options)
+      configureServices(&result)
       result.mediaDeliveryService = { try YlMediaDeliveryRegistry.service(for: engineIdentity) }
       return result
     },

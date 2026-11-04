@@ -1,0 +1,781 @@
+2026-11-02 23:32:16.019 yl_player_example[79942:432101] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 e4e2beadb93afbd23de7d6eb0de7b1b0a62be1336eae0cad6726b30ee0f0d005:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+[libdav1d @ 0x759ca82300] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x759dc49180] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x759ca82300] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_PREFLIGHT {"waitUs":153757,"layer":{"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffdea0)","totalFrames":1,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":0.0,"windowOcclusions":0,"status":"observed"},"positionUs":0,"decoder":"software","firstFrameCompleted":true}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12422960779000 2364588 21 168 195816000 651750
+QUAL_DART {"us":2024462,"position":1829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12424960747041 2364588 21 168 195816000 850125
+QUAL_DART {"us":4024256,"position":3929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","layerCount":1,"totalFrames":120,"corruptedFrames":0,"totalFrameDelaySeconds":0.0,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12426960696958 2364588 21 168 195816000 850125
+QUAL_DART {"us":6024294,"position":5762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12428960696708 2364588 21 168 195816000 1164042
+QUAL_DART {"us":8024687,"position":7879000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12430960703583 2364588 21 168 195816000 1313625
+QUAL_DART {"us":10024209,"position":9729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","layerCount":1,"totalFrames":240,"corruptedFrames":0,"totalFrameDelaySeconds":0.0,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12432960701500 2364588 21 168 195816000 1313625
+QUAL_DART {"us":12024166,"position":11846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12434960662916 2364588 21 168 195816000 1313625
+QUAL_DART {"us":14025366,"position":13912000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","layerCount":1,"totalFrames":360,"corruptedFrames":0,"totalFrameDelaySeconds":0.0,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12436960662250 2364588 21 168 195816000 5859084
+QUAL_DART {"us":16024789,"position":15712000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12438960625666 2364588 21 168 195816000 5859084
+QUAL_DART {"us":18024030,"position":17796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12440960638291 2364588 21 168 195816000 5859084
+QUAL_DART {"us":20024267,"position":19896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","layerCount":1,"totalFrames":481,"corruptedFrames":0,"totalFrameDelaySeconds":0.0,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12442960620041 2364588 21 168 195816000 5859084
+QUAL_DART {"us":22024626,"position":21729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12444960604458 2364588 21 168 195816000 5859084
+QUAL_DART {"us":24023978,"position":23812000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","layerCount":1,"totalFrames":601,"corruptedFrames":0,"totalFrameDelaySeconds":0.0,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12446960650041 2364588 21 168 195816000 5859084
+QUAL_DART {"us":26024558,"position":25896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12448960596041 2364588 21 168 195816000 5859084
+QUAL_DART {"us":28023854,"position":27729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12450960653208 2364588 21 168 195816000 5859084
+QUAL_DART {"us":30024274,"position":29779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":721,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12452960619958 2364588 21 168 195816000 5859084
+QUAL_DART {"us":32024766,"position":31862000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12454960614583 2364588 21 168 195816000 5859084
+QUAL_DART {"us":34023241,"position":33696000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":841,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12456960602041 2364588 21 168 195816000 5859084
+QUAL_DART {"us":36024843,"position":35779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12458960582041 2364588 21 168 195816000 5859084
+QUAL_DART {"us":38024184,"position":37862000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12460960649333 2364588 21 168 195816000 5859084
+QUAL_DART {"us":40024509,"position":39929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":961,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12462960571541 2364588 21 168 195816000 5859084
+QUAL_DART {"us":42024779,"position":41779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12464960557958 2364588 21 168 195816000 5859084
+QUAL_DART {"us":44024337,"position":43846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1081,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12466960553416 2364588 21 168 195816000 5859084
+QUAL_DART {"us":46023879,"position":45929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12468960669750 2364588 21 168 195816000 5859084
+QUAL_DART {"us":48024221,"position":47762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12470960535250 2364588 21 168 195816000 5859084
+QUAL_DART {"us":50024556,"position":49829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1201,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12472960524958 2364588 21 168 195816000 5859084
+QUAL_DART {"us":52023883,"position":51896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12474960593583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":54024310,"position":53696000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1321,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12476960607083 2364588 21 168 195816000 9631792
+QUAL_DART {"us":56024141,"position":55779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12478960636666 2364588 21 168 195816000 9631792
+QUAL_DART {"us":58024429,"position":57862000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12480960584916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":60024805,"position":59929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1441,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12482960617250 2364588 21 168 195816000 9631792
+QUAL_DART {"us":62024156,"position":61762000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12484960585625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":64024767,"position":63862000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1561,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12486960630250 2364588 21 168 195816000 9631792
+QUAL_DART {"us":66024431,"position":65712000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12488960778125 2364588 21 168 195816000 9631792
+QUAL_DART {"us":68024710,"position":67796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12490960548541 2364588 21 168 195816000 9631792
+QUAL_DART {"us":70024080,"position":69846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1681,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12492960580416 2364588 21 168 195816000 9631792
+QUAL_DART {"us":72024481,"position":71929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12494960603416 2364588 21 168 195816000 9631792
+QUAL_DART {"us":74023942,"position":73729000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1801,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12496960616541 2364588 21 168 195816000 9631792
+QUAL_DART {"us":76024582,"position":75813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12498960638583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":78024008,"position":77896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12500960638541 2364588 21 168 195816000 9631792
+QUAL_DART {"us":80024495,"position":79713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":1921,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12502960648875 2364588 21 168 195816000 9631792
+QUAL_DART {"us":82023281,"position":81813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12504960661208 2364588 21 168 195816000 9631792
+QUAL_DART {"us":84024877,"position":83879000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2041,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12506960647291 2364588 21 168 195816000 9631792
+QUAL_DART {"us":86024241,"position":85946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12508960658458 2364588 21 168 195816000 9631792
+QUAL_DART {"us":88024672,"position":87779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12510960649166 2364588 21 168 195816000 9631792
+QUAL_DART {"us":90024141,"position":89863000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2161,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12512960704791 2364588 21 168 195816000 9631792
+QUAL_DART {"us":92025063,"position":91946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12514960707208 2364588 21 168 195816000 9631792
+QUAL_DART {"us":94024019,"position":93779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2281,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12516960743916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":96024600,"position":95846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12518960748041 2364588 21 168 195816000 9631792
+QUAL_DART {"us":98023887,"position":97896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12520960753958 2364588 21 168 195816000 9631792
+QUAL_DART {"us":100024220,"position":99713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2401,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":3.3333333333333334e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12522960769375 2364588 21 168 195816000 9631792
+QUAL_DART {"us":102024518,"position":101813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12524960815666 2364588 21 168 195816000 9631792
+QUAL_DART {"us":104023862,"position":103846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2521,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12526960809083 2364588 21 168 195816000 9631792
+QUAL_DART {"us":106024531,"position":105913000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12528960796625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":108024861,"position":107713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12530960888583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":110024197,"position":109796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2641,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12532960816916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":112024483,"position":111879000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12534960834708 2364588 21 168 195816000 9631792
+QUAL_DART {"us":114024839,"position":113696000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2761,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12536960852125 2364588 21 168 195816000 9631792
+QUAL_DART {"us":116024235,"position":115779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12538960867375 2364588 21 168 195816000 9631792
+QUAL_DART {"us":118024492,"position":117846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12540960915833 2364588 21 168 195816000 9631792
+QUAL_DART {"us":120024810,"position":119913000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":2881,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12542960907500 2364588 21 168 195816000 9631792
+QUAL_DART {"us":122024072,"position":121713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12544960323750 2364588 21 168 195816000 9631792
+QUAL_DART {"us":124024499,"position":123779000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3001,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12546960404916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":126023996,"position":125829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12548960409333 2364588 21 168 195816000 9631792
+QUAL_DART {"us":128024303,"position":127879000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12550960447791 2364588 21 168 195816000 9631792
+QUAL_DART {"us":130024816,"position":129913000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3121,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12552960396458 2364588 21 168 195816000 9631792
+QUAL_DART {"us":132024196,"position":131763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12554960478583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":134024657,"position":133829000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3241,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12556960507625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":136024267,"position":135879000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12558960511041 2364588 21 168 195816000 9631792
+QUAL_DART {"us":138024766,"position":137946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12560960447541 2364588 21 168 195816000 9631792
+QUAL_DART {"us":140023863,"position":139763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3361,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12562960536583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":142023520,"position":141830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12564960545625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":144023899,"position":143929000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3481,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12566960531458 2364588 21 168 195816000 9631792
+QUAL_DART {"us":146024172,"position":145746000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12568960534791 2364588 21 168 195816000 9631792
+QUAL_DART {"us":148023852,"position":147796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12570960581500 2364588 21 168 195816000 9631792
+QUAL_DART {"us":150024431,"position":149863000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3601,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12572960657500 2364588 21 168 195816000 9631792
+QUAL_DART {"us":152024368,"position":151896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12574960607625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":154024293,"position":153713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3721,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12576960650125 2364588 21 168 195816000 9631792
+QUAL_DART {"us":156023668,"position":155796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12578960640833 2364588 21 168 195816000 9631792
+QUAL_DART {"us":158024154,"position":157880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12580960722541 2364588 21 168 195816000 9631792
+QUAL_DART {"us":160024631,"position":159913000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3841,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12582960666083 2364588 21 168 195816000 9631792
+QUAL_DART {"us":162023852,"position":161713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12584960751083 2364588 21 168 195816000 9631792
+QUAL_DART {"us":164024325,"position":163796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":3961,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12586960737000 2364588 21 168 195816000 9631792
+QUAL_DART {"us":166024227,"position":165880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12588960775250 2364588 21 168 195816000 9631792
+QUAL_DART {"us":168024771,"position":167946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12590960737375 2364588 21 168 195816000 9631792
+QUAL_DART {"us":170024359,"position":169746000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4081,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12592960749916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":172023871,"position":171813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12594960825833 2364588 21 168 195816000 9631792
+QUAL_DART {"us":174024229,"position":173896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4201,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12596960889583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":176023870,"position":175730000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12598960941208 2364588 21 168 195816000 9631792
+QUAL_DART {"us":178024561,"position":177796000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12600960791625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":180023936,"position":179863000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4321,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12602960936875 2364588 21 168 195816000 9631792
+QUAL_DART {"us":182024201,"position":181946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12604960889041 2364588 21 168 195816000 9631792
+QUAL_DART {"us":184024787,"position":183780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4441,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12606960836666 2364588 21 168 195816000 9631792
+QUAL_DART {"us":186024050,"position":185880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12608960880125 2364588 21 168 195816000 9631792
+QUAL_DART {"us":188024369,"position":187946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12610959995333 2364588 21 168 195816000 9631792
+QUAL_DART {"us":190024095,"position":189746000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4562,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12612960861000 2364588 21 168 195816000 9631792
+QUAL_DART {"us":192024181,"position":191780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12614960846250 2364588 21 168 195816000 9631792
+QUAL_DART {"us":194024450,"position":193846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4682,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12616960839625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":196024975,"position":195913000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12618959890083 2364588 21 168 195816000 9631792
+QUAL_DART {"us":198024278,"position":197946000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12620960121375 2364588 21 168 195816000 9631792
+QUAL_DART {"us":200024468,"position":199746000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4802,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12622960694125 2364588 21 168 195816000 9631792
+QUAL_DART {"us":202024736,"position":201830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12624960875375 2364588 21 168 195816000 9631792
+QUAL_DART {"us":204023475,"position":203896000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":4922,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12626960210416 2364588 21 168 195816000 9631792
+QUAL_DART {"us":206023951,"position":205696000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12628960836958 2364588 21 168 195816000 9631792
+QUAL_DART {"us":208024232,"position":207763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12630960841291 2364588 21 168 195816000 9631792
+QUAL_DART {"us":210023680,"position":209846000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5042,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12632960881333 2364588 21 168 195816000 9631792
+QUAL_DART {"us":212024006,"position":211897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12634960842833 2364588 21 168 195816000 9631792
+QUAL_DART {"us":214024066,"position":213713000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5162,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12636960870708 2364588 21 168 195816000 9631792
+QUAL_DART {"us":216024392,"position":215780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12638960307208 2364588 21 168 195816000 9631792
+QUAL_DART {"us":218024708,"position":217847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12640960823958 2364588 21 168 195816000 9631792
+QUAL_DART {"us":220023708,"position":219930000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5282,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12642960841416 2364588 21 168 195816000 9631792
+QUAL_DART {"us":222024040,"position":221763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12644960874958 2364588 21 168 195816000 9631792
+QUAL_DART {"us":224024360,"position":223847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5402,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12646960839625 2364588 21 168 195816000 9631792
+QUAL_DART {"us":226023747,"position":225897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12648960834708 2364588 21 168 195816000 9631792
+QUAL_DART {"us":228024037,"position":227697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12650960508583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":230024390,"position":229763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5522,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12652960183958 2364588 21 168 195816000 9631792
+QUAL_DART {"us":232024700,"position":231813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12654960878791 2364588 21 168 195816000 9631792
+QUAL_DART {"us":234023762,"position":233880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5642,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12656960341125 2364588 21 168 195816000 9631792
+QUAL_DART {"us":236024442,"position":235947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12658960843750 2364588 21 168 195816000 9631792
+QUAL_DART {"us":238024748,"position":237763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12660960809166 2364588 21 168 195816000 9631792
+QUAL_DART {"us":240024118,"position":239830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5762,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12662960867916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":242024483,"position":241880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12664960832916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":244023939,"position":243697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":5882,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12666960824875 2364588 21 168 195816000 9631792
+QUAL_DART {"us":246024642,"position":245780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12668960881458 2364588 21 168 195816000 9631792
+QUAL_DART {"us":248023911,"position":247813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12670960843750 2364588 21 168 195816000 9631792
+QUAL_DART {"us":250024322,"position":249880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6002,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12672960793666 2364588 21 168 195816000 9631792
+QUAL_DART {"us":252024569,"position":251697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12674960713208 2364588 21 168 195816000 9631792
+QUAL_DART {"us":254024000,"position":253763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6122,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12676960664375 2364588 21 168 195816000 9631792
+QUAL_DART {"us":256023821,"position":255830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12678960587583 2364588 21 168 195816000 9631792
+QUAL_DART {"us":258024112,"position":257913000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12680960485208 2364588 21 168 195816000 9631792
+QUAL_DART {"us":260023808,"position":259697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6242,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12682960394958 2364588 21 168 195816000 9631792
+QUAL_DART {"us":262024096,"position":261763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12684960414458 2364588 21 168 195816000 9631792
+QUAL_DART {"us":264024464,"position":263830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6362,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12686960305083 2364588 21 168 195816000 9631792
+QUAL_DART {"us":266024097,"position":265880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12688960250250 2364588 21 168 195816000 9631792
+QUAL_DART {"us":268024411,"position":267930000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12690960845916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":270024732,"position":269730000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6482,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12692960821333 2364588 21 168 195816000 9631792
+QUAL_DART {"us":272023998,"position":271797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12694960648916 2364588 21 168 195816000 9631792
+QUAL_DART {"us":274024431,"position":273880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6602,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12696960822833 2364588 21 168 195816000 9631792
+QUAL_DART {"us":276023986,"position":275930000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12698960689666 2364588 21 168 195816000 9631792
+QUAL_DART {"us":278024287,"position":277763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12700960851541 2364588 21 168 195816000 14505750
+QUAL_DART {"us":280024665,"position":279813000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6722,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12702959991208 2364588 21 168 195816000 14505750
+QUAL_DART {"us":282024009,"position":281847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12704960861208 2364588 21 168 195816000 14505750
+QUAL_DART {"us":284023972,"position":283930000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6842,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12706960710791 2364588 21 168 195816000 14505750
+QUAL_DART {"us":286024573,"position":285747000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12708960613041 2364588 21 168 195816000 14505750
+QUAL_DART {"us":288023824,"position":287863000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12710960828333 2364588 21 168 195816000 14505750
+QUAL_DART {"us":290024169,"position":289897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":6962,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12712960848166 2364588 21 168 195816000 14505750
+QUAL_DART {"us":292024563,"position":291697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12714960675625 2364588 21 168 195816000 14505750
+QUAL_DART {"us":294023888,"position":293763000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7082,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12716960828375 2364588 21 168 195816000 14505750
+QUAL_DART {"us":296024402,"position":295814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12718960866083 2364588 21 168 195816000 14505750
+QUAL_DART {"us":298024724,"position":297880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12720961326458 2364588 21 168 195816000 14505750
+QUAL_DART {"us":300024116,"position":299697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7202,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12722961299833 2364588 21 168 195816000 14505750
+QUAL_DART {"us":302025453,"position":301764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12724960867083 2364588 21 168 195816000 14505750
+QUAL_DART {"us":304025866,"position":303830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7322,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12726961327833 2364588 21 168 195816000 14505750
+QUAL_DART {"us":306024745,"position":305914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12728960830375 2364588 21 168 195816000 14505750
+QUAL_DART {"us":308025119,"position":307697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12730961193750 2364588 21 168 195816000 14505750
+QUAL_DART {"us":310025208,"position":309730000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7442,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12732960496458 2364588 21 168 195816000 14505750
+QUAL_DART {"us":312025534,"position":311797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12734961278375 2364588 21 168 195816000 14505750
+QUAL_DART {"us":314025857,"position":313847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7562,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12736960853041 2364588 21 168 195816000 14505750
+QUAL_DART {"us":316024873,"position":315930000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12738959898958 2364588 21 168 195816000 14505750
+QUAL_DART {"us":318025226,"position":317764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12740961243458 2364588 21 168 195816000 14505750
+QUAL_DART {"us":320025176,"position":319847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7682,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12742960650125 2364588 21 168 195816000 14505750
+QUAL_DART {"us":322025613,"position":321697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12744960828041 2364588 21 168 195816000 14505750
+QUAL_DART {"us":324024080,"position":323780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7802,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12746961196375 2364588 21 168 195816000 14505750
+QUAL_DART {"us":326025154,"position":325830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12748961206958 2364588 21 168 195816000 14505750
+QUAL_DART {"us":328026088,"position":327914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12750961872750 2364588 21 168 195816000 14505750
+QUAL_DART {"us":330025688,"position":329697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":7922,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12752959975958 2364588 21 168 195816000 14505750
+QUAL_DART {"us":332023608,"position":331797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12754959993708 2364588 21 168 195816000 14505750
+QUAL_DART {"us":334023533,"position":333897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8042,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12756960015875 2364588 21 168 195816000 14505750
+QUAL_DART {"us":336025065,"position":335697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12758960035833 2364588 21 168 195816000 14505750
+QUAL_DART {"us":338025421,"position":337797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12760960072000 2364588 21 168 195816000 14505750
+QUAL_DART {"us":340025761,"position":339897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8162,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12762960074041 2364588 21 168 195816000 14505750
+QUAL_DART {"us":342023685,"position":341947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12764960086541 2364588 21 168 195816000 14505750
+QUAL_DART {"us":344023336,"position":343781000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8282,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12766960175875 2364588 21 168 195816000 14505750
+QUAL_DART {"us":346023689,"position":345864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12768960159291 2364588 21 168 195816000 14505750
+QUAL_DART {"us":348024234,"position":347947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12770960161416 2364588 21 168 195816000 14505750
+QUAL_DART {"us":350025656,"position":349780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8402,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12772960172916 2364588 21 168 195816000 14505750
+QUAL_DART {"us":352023759,"position":351830000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12774960207875 2364588 21 168 195816000 14505750
+QUAL_DART {"us":354023856,"position":353914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8523,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12776960240583 2364588 21 168 195816000 14505750
+QUAL_DART {"us":356025409,"position":355730000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12778960226000 2364588 21 168 195816000 14505750
+QUAL_DART {"us":358026427,"position":357814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12780960362458 2364588 21 168 195816000 14505750
+QUAL_DART {"us":360023884,"position":359880000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8643,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12782960342125 2364588 21 168 195816000 14505750
+QUAL_DART {"us":362025289,"position":361947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12784960301208 2364588 21 168 195816000 14505750
+QUAL_DART {"us":364023907,"position":363780000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8763,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12786960368916 2364588 21 168 195816000 14505750
+QUAL_DART {"us":366024519,"position":365814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12788960360541 2364588 21 168 195816000 14505750
+QUAL_DART {"us":368023556,"position":367897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12790960437750 2364588 21 168 195816000 14505750
+QUAL_DART {"us":370024965,"position":369947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":8883,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":5.0000000000000004e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12792960410541 2364588 21 168 195816000 14505750
+QUAL_DART {"us":372025305,"position":371747000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12794960413000 2364588 21 168 196630000 14505750
+QUAL_DART {"us":374024484,"position":373847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","layerCount":1,"totalFrames":9003,"corruptedFrames":0,"totalFrameDelaySeconds":6.666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12796960424625 2364588 21 168 196630000 14505750
+QUAL_DART {"us":376024012,"position":375897000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12798960431041 2364588 21 168 196630000 14505750
+QUAL_DART {"us":378024877,"position":377714000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12800960447000 2364588 21 168 205019000 14505750
+QUAL_DART {"us":380024145,"position":379764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9123,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":6.666666666666667e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12802960489666 2364588 21 168 205019000 14505750
+QUAL_DART {"us":382024401,"position":381797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12804960506125 2364588 21 168 205019000 14505750
+QUAL_DART {"us":384024157,"position":383881000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9243,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":8.333333333333333e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12806960535208 2364588 21 168 205019000 14505750
+QUAL_DART {"us":386024632,"position":385931000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12808960557250 2364588 21 168 205019000 14505750
+QUAL_DART {"us":388023401,"position":387747000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12810960549500 2364588 21 168 205019000 14505750
+QUAL_DART {"us":390024719,"position":389831000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9363,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":8.333333333333333e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12812960611875 2364588 21 168 205019000 14505750
+QUAL_DART {"us":392024188,"position":391881000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12814960673750 2364588 21 168 205019000 14505750
+QUAL_DART {"us":394023250,"position":393947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9483,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":8.333333333333333e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12816960647291 2364588 21 168 205019000 14505750
+QUAL_DART {"us":396024276,"position":395747000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12818960645666 2364588 21 168 205019000 14505750
+QUAL_DART {"us":398024699,"position":397814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12820960650000 2364588 21 168 205019000 14505750
+QUAL_DART {"us":400024499,"position":399864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9603,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":8.333333333333333e-8,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12822960679583 2364588 21 168 205019000 14505750
+QUAL_DART {"us":402024854,"position":401947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12824960726583 2364588 21 168 205019000 14505750
+QUAL_DART {"us":404023857,"position":403731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9723,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12826960713541 2364588 21 168 205019000 14505750
+QUAL_DART {"us":406024691,"position":405797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12828960774875 2364588 21 168 205019000 14505750
+QUAL_DART {"us":408023982,"position":407864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12830960791041 2364588 21 168 205019000 14505750
+QUAL_DART {"us":410024426,"position":409931000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9843,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12832960787666 2364588 21 168 205019000 14505750
+QUAL_DART {"us":412024368,"position":411765000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12834960800166 2364588 21 168 205019000 14505750
+QUAL_DART {"us":414024771,"position":413864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":9963,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12836960828125 2364588 21 168 205019000 14505750
+QUAL_DART {"us":416024314,"position":415697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12838960808791 2364588 21 168 205019000 14505750
+QUAL_DART {"us":418024596,"position":417747000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12840960870166 2364588 21 168 205019000 14505750
+QUAL_DART {"us":420023967,"position":419831000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10083,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12842960840791 2364588 21 168 205019000 14505750
+QUAL_DART {"us":422023869,"position":421947000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12844960789708 2364588 21 168 205019000 14505750
+QUAL_DART {"us":424024940,"position":423764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10203,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12846960302666 2364588 21 168 205019000 14505750
+QUAL_DART {"us":426024469,"position":425847000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12848960844125 2364588 21 168 205019000 14505750
+QUAL_DART {"us":428023650,"position":427931000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12850960833958 2364588 21 168 205019000 14505750
+QUAL_DART {"us":430024051,"position":429714000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10323,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12852960853583 2364588 21 168 205019000 14505750
+QUAL_DART {"us":432024376,"position":431797000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12854960793833 2364588 21 168 205019000 14505750
+QUAL_DART {"us":434025844,"position":433864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10443,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12856960925541 2364588 21 168 205019000 14505750
+QUAL_DART {"us":436024672,"position":435914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12858960859583 2364588 21 168 205019000 14505750
+QUAL_DART {"us":438024041,"position":437714000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12860960848833 2364588 21 168 205019000 14505750
+QUAL_DART {"us":440024474,"position":439798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10563,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12862960926333 2364588 21 168 205019000 14505750
+QUAL_DART {"us":442024022,"position":441881000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12864959996666 2364588 21 168 205019000 14505750
+QUAL_DART {"us":444024575,"position":443697000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10683,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12866960858833 2364588 21 168 205019000 14505750
+QUAL_DART {"us":446023895,"position":445781000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12868960841833 2364588 21 168 205019000 14505750
+QUAL_DART {"us":448023994,"position":447831000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12870960679791 2364588 21 168 205019000 14505750
+QUAL_DART {"us":450024697,"position":449898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10803,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12872960884541 2364588 21 168 205019000 14505750
+QUAL_DART {"us":452024035,"position":451948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12874960864375 2364588 21 168 205307000 14505750
+QUAL_DART {"us":454024277,"position":453764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":10923,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12876960878375 2364588 21 168 205307000 14505750
+QUAL_DART {"us":456023152,"position":455864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12878960576125 2364588 21 168 205307000 14505750
+QUAL_DART {"us":458024893,"position":457714000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12880960882958 2364588 21 168 205307000 14505750
+QUAL_DART {"us":460024271,"position":459798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11043,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12882960188666 2364588 21 168 205307000 14505750
+QUAL_DART {"us":462024727,"position":461864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12884960845625 2364588 21 168 205307000 14505750
+QUAL_DART {"us":464024073,"position":463931000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11163,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12886960076791 2364588 21 168 205307000 14505750
+QUAL_DART {"us":466024841,"position":465731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12888960515416 2364588 21 168 205307000 14505750
+QUAL_DART {"us":468024574,"position":467781000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12890960811291 2364588 21 168 205307000 14505750
+QUAL_DART {"us":470023762,"position":469864000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11283,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12892960860500 2364588 21 168 205307000 15033291
+QUAL_DART {"us":472024219,"position":471914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12894960875250 2364588 21 168 205307000 15033291
+QUAL_DART {"us":474024815,"position":473748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11403,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12896960822208 2364588 21 168 205307000 15033291
+QUAL_DART {"us":476024388,"position":475814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12898960874083 2364588 21 168 205307000 15033291
+QUAL_DART {"us":478024866,"position":477848000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12900960841458 2364588 21 168 205307000 15033291
+QUAL_DART {"us":480024223,"position":479931000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11523,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12902960847125 2364588 21 168 205307000 15033291
+QUAL_DART {"us":482024422,"position":481731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12904960817375 2364588 21 168 205307000 15033291
+QUAL_DART {"us":484024671,"position":483814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11643,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12906960864291 2364588 21 168 205307000 15033291
+QUAL_DART {"us":486024007,"position":485898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12908960737166 2364588 21 168 205307000 15033291
+QUAL_DART {"us":488024218,"position":487748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12910960808750 2364588 21 168 205307000 15033291
+QUAL_DART {"us":490024533,"position":489814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11763,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12912960593083 2364588 21 168 205307000 15033291
+QUAL_DART {"us":492023977,"position":491898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12914960835625 2364588 21 168 205307000 15033291
+QUAL_DART {"us":494024395,"position":493731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":11883,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12916960146583 2364588 21 168 205307000 15033291
+QUAL_DART {"us":496024193,"position":495831000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12918960844500 2364588 21 168 205307000 15033291
+QUAL_DART {"us":498024522,"position":497881000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12920960880541 2364588 21 168 205307000 15033291
+QUAL_DART {"us":500023845,"position":499948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12003,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.0000000000000001e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12922960429500 2364588 21 168 205307000 15033291
+QUAL_DART {"us":502024066,"position":501764000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12924960858166 2364588 21 168 205307000 15033291
+QUAL_DART {"us":504023829,"position":503814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12123,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.3333333333333334e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12926960848791 2364588 21 168 205307000 32830750
+QUAL_DART {"us":506024220,"position":505914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12928960823958 2364588 21 168 205307000 32830750
+QUAL_DART {"us":508024476,"position":507748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12930960848583 2364588 21 168 205307000 32830750
+QUAL_DART {"us":510024768,"position":509814000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12243,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.3333333333333334e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12932959922958 2364588 21 168 205307000 32830750
+QUAL_DART {"us":512023975,"position":511881000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12934960865583 2364588 21 168 205307000 32830750
+QUAL_DART {"us":514024272,"position":513714000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12363,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.3333333333333334e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12936960834833 2364588 21 168 205307000 32830750
+QUAL_DART {"us":516023652,"position":515798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12938960831291 2364588 21 168 205307000 32830750
+QUAL_DART {"us":518024067,"position":517898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12940959919875 2364588 21 168 205307000 32830750
+QUAL_DART {"us":520024795,"position":519948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12483,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.3333333333333334e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12942960823083 2364588 21 168 205307000 32830750
+QUAL_DART {"us":522024138,"position":521731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12944960853458 2364588 21 168 205307000 32830750
+QUAL_DART {"us":524024519,"position":523831000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12603,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.3333333333333334e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12946960304375 2364588 21 168 205307000 32830750
+QUAL_DART {"us":526024106,"position":525881000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12948960094375 2364588 21 168 205307000 32830750
+QUAL_DART {"us":528024453,"position":527914000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12950960833375 2364588 21 168 205307000 32830750
+QUAL_DART {"us":530024633,"position":529715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12724,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.3333333333333334e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12952960753458 2364588 21 168 205307000 32830750
+QUAL_DART {"us":532023804,"position":531781000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12954960359708 2364588 21 168 205307000 32830750
+QUAL_DART {"us":534024042,"position":533898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12844,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12956960843041 2364588 21 168 205307000 32830750
+QUAL_DART {"us":536024372,"position":535715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12958960828208 2364588 21 168 205307000 32830750
+QUAL_DART {"us":538024586,"position":537798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12960960817875 2364588 21 168 205307000 32830750
+QUAL_DART {"us":540023814,"position":539848000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":12964,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12962960846208 2364588 21 168 205307000 32830750
+QUAL_DART {"us":542024056,"position":541915000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12964960859250 2364588 21 168 205307000 32830750
+QUAL_DART {"us":544024308,"position":543715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13084,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12966960854666 2364588 21 168 205307000 32830750
+QUAL_DART {"us":546024772,"position":545781000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12968960856916 2364588 21 168 205307000 32830750
+QUAL_DART {"us":548023946,"position":547798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12970960624833 2364588 21 168 205307000 32830750
+QUAL_DART {"us":550024254,"position":549898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13204,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12972960790250 2364588 21 168 205307000 32830750
+QUAL_DART {"us":552024518,"position":551715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12974960843583 2364588 21 168 205307000 32830750
+QUAL_DART {"us":554024694,"position":553798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13324,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12976960596833 2364588 21 168 205307000 32830750
+QUAL_DART {"us":556023972,"position":555865000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12978960856166 2364588 21 168 205307000 32830750
+QUAL_DART {"us":558024220,"position":557948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12980960668875 2364588 21 168 205307000 43798417
+QUAL_DART {"us":560024555,"position":559765000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13444,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12982960845500 2364588 21 168 205307000 43798417
+QUAL_DART {"us":562023800,"position":561798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12984960902166 2364588 21 168 205307000 43798417
+QUAL_DART {"us":564024125,"position":563898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13564,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.6666666666666665e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12986960218708 2364588 21 168 205307000 43798417
+QUAL_DART {"us":566024416,"position":565715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12988960836750 2364588 21 168 205307000 43798417
+QUAL_DART {"us":568024643,"position":567765000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12990960862250 2364588 21 168 205307000 43798417
+QUAL_DART {"us":570023877,"position":569848000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13684,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12992960726416 2364588 21 168 205307000 43798417
+QUAL_DART {"us":572024068,"position":571948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12994960886208 2364588 21 168 205307000 43798417
+QUAL_DART {"us":574024317,"position":573731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13804,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12996960862125 2364588 21 168 205307000 43798417
+QUAL_DART {"us":576023785,"position":575798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 12998960854000 2364588 21 168 205307000 43798417
+QUAL_DART {"us":578023991,"position":577831000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13000960133458 2364588 21 168 205307000 43798417
+QUAL_DART {"us":580024439,"position":579898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":13924,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13002960830166 2364588 21 168 205307000 43798417
+QUAL_DART {"us":582024794,"position":581948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13004960902541 2364588 21 168 205307000 43798417
+QUAL_DART {"us":584023997,"position":583731000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14044,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13006960682833 2364588 21 168 205307000 43798417
+QUAL_DART {"us":586024842,"position":585815000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13008960480708 2364588 21 168 205307000 43798417
+QUAL_DART {"us":588023184,"position":587898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13010960283375 2364588 21 168 205307000 43798417
+QUAL_DART {"us":590024473,"position":589698000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14164,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13012960864250 2364588 21 168 205307000 43798417
+QUAL_DART {"us":592024727,"position":591781000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13014960826541 2364588 21 168 205307000 43798417
+QUAL_DART {"us":594024060,"position":593848000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14284,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13016960844916 2364588 21 168 205307000 43798417
+QUAL_DART {"us":596024301,"position":595898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13018960874500 2364588 21 168 205307000 43798417
+QUAL_DART {"us":598024522,"position":597748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13020960850583 2364588 21 168 205307000 43798417
+QUAL_DART {"us":600023854,"position":599815000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14404,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":1.833333333333333e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13022960836125 2364588 21 168 205307000 43798417
+QUAL_DART {"us":602023778,"position":601915000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13024959949833 2364588 21 168 205307000 43798417
+QUAL_DART {"us":604023980,"position":603715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14524,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13026960847291 2364588 21 168 205307000 43798417
+QUAL_DART {"us":606024593,"position":605798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13028960855583 2364588 21 168 205307000 43798417
+QUAL_DART {"us":608023877,"position":607848000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13030960552541 2364588 21 168 205307000 43798417
+QUAL_DART {"us":610024224,"position":609948000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14644,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13032960513833 2364588 21 168 205307000 43798417
+QUAL_DART {"us":612024508,"position":611765000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13034960841375 2364588 21 168 205307000 43798417
+QUAL_DART {"us":614023789,"position":613832000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14764,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13036960862625 2364588 21 168 205307000 43798417
+QUAL_DART {"us":616024218,"position":615898000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13038960454333 2364588 21 168 205307000 43798417
+QUAL_DART {"us":618024542,"position":617715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13040960467250 2364588 21 168 205307000 43798417
+QUAL_DART {"us":620023948,"position":619782000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":14884,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13042960832500 2364588 21 168 205307000 43798417
+QUAL_DART {"us":622024284,"position":621865000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13044960012291 2364588 21 168 205307000 43798417
+QUAL_DART {"us":624024525,"position":623932000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":15004,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13046960840083 2364588 21 168 205307000 43798417
+QUAL_DART {"us":626023920,"position":625715000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13048960849875 2364588 21 168 205307000 43798417
+QUAL_DART {"us":628023131,"position":627765000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13050960033000 2364588 21 168 205307000 43798417
+QUAL_DART {"us":630023937,"position":629865000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":15124,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13052960874958 2364588 21 168 205307000 43798417
+QUAL_DART {"us":632024155,"position":631882000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13054960778500 2364588 21 168 205307000 43798417
+QUAL_DART {"us":634024595,"position":633932000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":15244,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13056960118708 2364588 21 168 205307000 43798417
+QUAL_DART {"us":636024629,"position":635748000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13058960840916 2364588 21 168 205307000 43798417
+QUAL_DART {"us":638023184,"position":637798000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13060960810916 2364588 21 168 205307000 43798417
+QUAL_DART {"us":640024399,"position":639832000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"droppedFrames":0,"surfaceHasBounds":true,"windowOcclusionVisible":true,"layerIdentity":"ObjectIdentifier(0x000000759dffe120)","totalFrames":15364,"layerCount":1,"corruptedFrames":0,"totalFrameDelaySeconds":2.0000000000000002e-7,"windowOcclusions":0,"status":"observed"}
+QUAL_SAMPLE A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 13062960721750 2364588 21 168 205307000 43798417
+QUAL_DART {"us":642024625,"position":641915000,"status":"playing","decoder":"software","drops":0}
+QUAL_ERROR Bad state: failure=YlFailure(category: resource, code: resource.exhausted, retryable: false, scope: session, diagnosticId: apple-849035ae-bc6c-40c5-a1b5-4501bc498158), drops=0
+QUAL_TIMED_DIAGNOSTICS {"lifetime":{"events":[{"phase":"retire.requested","uptime":13064.365835583334},{"phase":"retire.requested","uptime":13064.366082208335},{"phase":"flush.begin","uptime":13064.366088625},{"phase":"flush.completed","uptime":13064.367893666667},{"phase":"layer.removed","uptime":13064.369832166667},{"phase":"preview.cleared","uptime":13064.369877583335}],"samples":[{"pts":642680000,"reservationAlive":false,"sampleAlive":false},{"pts":642722000,"reservationAlive":false,"sampleAlive":false},{"pts":642764000,"reservationAlive":false,"sampleAlive":false},{"pts":642805000,"reservationAlive":false,"sampleAlive":false},{"pts":642847000,"reservationAlive":false,"sampleAlive":false},{"pts":642889000,"reservationAlive":false,"sampleAlive":false},{"pts":642930000,"reservationAlive":false,"sampleAlive":false},{"pts":642972000,"reservationAlive":false,"sampleAlive":false}]}}
+QUAL_END A36BFDC3-3569-48CD-AFB4-D3E4E0CBE23C 2364588 21 168 205307000 127590084
+QUAL_DECODED 15441
+QUAL_FINISH 1

@@ -1,0 +1,15 @@
+{
+  "Hangs": {
+    "detectPriorityInversions": false,
+    "hangsThreshold": 250
+  },
+  "Points of Interest": {
+    "excludeOSLogs": false
+  },
+  "Time Profiler": {
+    "contextSwitchSampling": true,
+    "highFrequencySampling": false,
+    "recordKernelStacks": false,
+    "recordWaitingThreads": true
+  }
+}

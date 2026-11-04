@@ -37,6 +37,7 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
   private var handle: YLFSoftwareVideoDecoderRef?
   private let accounting: YlSoftwareAccounting
   private let compressed: YlVideoDecodeBudget
+  private let measurementPool: YlSoftwareDecodePool?
   private let observe: Observe
   private let onFrame: (YlVideoFrame) -> Void
   private let onError: (NativePlayerError) -> Void
@@ -70,6 +71,7 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
     let budget = try YlSoftwareDecodeBudget(limits: limits, pool: pool)
     accounting = YlSoftwareAccounting(budget, bufferScope)
     compressed = YlVideoDecodeBudget(maxBytes: maxInFlightBytes)
+    measurementPool = pool.measured == nil ? nil : pool
     self.observe = observe; self.onFrame = onFrame; self.onError = onError
     pixelFormat = key.outputPixelFormat
     usesSDMatrixForUntaggedOutput = Int(key.codec) == YLFCodecAV1 &&
@@ -186,6 +188,7 @@ final class YlSoftwareVideoDecoder: YlVideoDecoderResource {
       let keyframe = pendingKeyframes.removeValue(forKey: ptsUs) ?? false
       pendingKeyframes = pendingKeyframes.filter { $0.key > ptsUs }
       pendingTiming = pendingTiming.filter { $0.key > ptsUs }
+      measurementPool?.recordDecodedFrame()
       frames.append(.init(pixelBuffer: pixel, ptsUs: ptsUs, durationUs: durationUs,
         keyframe: keyframe, generation: generation, ownershipToken: nil, reservation: timing))
     }

@@ -1,0 +1,36 @@
+2026-11-03 00:22:39.752 yl_player_example[96461:559833] Running with merged UI and platform thread. Experimental.
+QUAL_ID MacBookPro17,1 26A434 e4e2beadb93afbd23de7d6eb0de7b1b0a62be1336eae0cad6726b30ee0f0d005:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d false
+[libdav1d @ 0x7c57e26a00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7c57db0a00] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x7c57e26a00] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+QUAL_PREFLIGHT {"waitUs":109402,"layer":{"totalFrames":1,"droppedFrames":0,"layerIdentity":"ObjectIdentifier(0x0000007c57ff46e0)","layerCount":1,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"corruptedFrames":0,"status":"observed","windowOcclusions":0},"positionUs":0,"decoder":"software","firstFrameCompleted":true}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15448031283000 233920 2 107 49471000 325375
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15450021794708 2364588 21 168 163065000 857709
+QUAL_DART {"us":2057753,"position":1787000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15452021739875 2364588 21 168 163065000 1443000
+QUAL_DART {"us":4057975,"position":3853000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":120,"droppedFrames":0,"layerIdentity":"ObjectIdentifier(0x0000007c57ff7d40)","layerCount":1,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"corruptedFrames":0,"status":"observed","windowOcclusions":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15454021000333 2364588 21 168 163065000 1443000
+QUAL_DART {"us":6057421,"position":5903000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15456021584750 2364588 21 168 163065000 1443000
+QUAL_DART {"us":8057693,"position":7703000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15458020801500 2364588 21 168 163065000 65675458
+QUAL_DART {"us":10057940,"position":9820000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":240,"droppedFrames":0,"layerIdentity":"ObjectIdentifier(0x0000007c57ff7d40)","layerCount":1,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"corruptedFrames":0,"status":"observed","windowOcclusions":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15460021128041 2364588 21 168 163065000 65675458
+QUAL_DART {"us":12057513,"position":11903000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15462021783041 2364588 21 168 163065000 65675458
+QUAL_DART {"us":14057718,"position":13720000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":360,"droppedFrames":0,"layerIdentity":"ObjectIdentifier(0x0000007c57ff7d40)","layerCount":1,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":0.0,"corruptedFrames":0,"status":"observed","windowOcclusions":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15464021788375 2364588 21 168 163065000 65675458
+QUAL_DART {"us":16057807,"position":15787000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15466021726416 2364588 21 168 163065000 65675458
+QUAL_DART {"us":18057471,"position":17887000,"status":"playing","decoder":"software","drops":0}
+QUAL_SAMPLE 0E4F8978-54CB-4C65-928A-EB0E03B409CE 15468021796375 2364588 21 168 163065000 65675458
+QUAL_DART {"us":20057940,"position":19720000,"status":"playing","decoder":"software","drops":0}
+QUAL_SYSTEM {"totalFrames":481,"droppedFrames":1,"layerIdentity":"ObjectIdentifier(0x0000007c57ff7d40)","layerCount":1,"windowOcclusionVisible":true,"surfaceHasBounds":true,"totalFrameDelaySeconds":3.3333333333333334e-8,"corruptedFrames":0,"status":"observed","windowOcclusions":0}
+QUAL_ERROR Bad state: system presentation failed {totalFrames: 481, droppedFrames: 1, layerIdentity: ObjectIdentifier(0x0000007c57ff7d40), layerCount: 1, windowOcclusionVisible: true, surfaceHasBounds: true, totalFrameDelaySeconds: 3.3333333333333334e-8, corruptedFrames: 0, status: observed, windowOcclusions: 0}
+QUAL_TIMED_DIAGNOSTICS {"anchors":18,"backpressureEvents":[],"blockedAttempts":0,"blockedPTS":null,"blockedSince":null,"enqueues":481,"events":[{"correctionUs":-9974.8330000005662,"uptime":15465.853450250001},{"correctionUs":49680.625,"uptime":15465.893046500001}],"lateEnqueues":0,"lifetime":{"events":[],"samples":[{"pts":19711000,"reservationAlive":false,"sampleAlive":false},{"pts":19753000,"reservationAlive":false,"sampleAlive":false},{"pts":19795000,"reservationAlive":false,"sampleAlive":false},{"pts":19836000,"reservationAlive":false,"sampleAlive":false},{"pts":19878000,"reservationAlive":false,"sampleAlive":false},{"pts":19920000,"reservationAlive":true,"sampleAlive":false},{"pts":19961000,"reservationAlive":true,"sampleAlive":false},{"pts":20002000,"reservationAlive":true,"sampleAlive":false}]},"maximumBackwardCorrectionUs":9974.8330000005662,"maximumForwardCorrectionUs":49680.625,"maximumLeadUs":49929.125,"minimumLeadUs":4340.2090000000007,"readyChecks":null,"updates":2488}
+QUAL_END 0E4F8978-54CB-4C65-928A-EB0E03B409CE 2364588 21 168 163065000 65675458
+QUAL_DECODED 490
+QUAL_FINISH 1

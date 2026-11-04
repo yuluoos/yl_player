@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A71F00000000000000000004 /* yl-player-media-core in Frameworks */ = {isa = PBXBuildFile; productRef = A71F00000000000000000003 /* yl-player-media-core */; };
+		A71F00000000000000000002 /* yl-player-apple in Frameworks */ = {isa = PBXBuildFile; productRef = A71F00000000000000000001 /* yl-player-apple */; };
 		07DB2C47F79A77D6C58C098C /* YlAudioRendererTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C049944E1B8644354058B45F /* YlAudioRendererTests.swift */; };
 		09F2AC1D995ECDA28980FBDE /* YlRtmpDemandTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D02B05DFDBA0961EA15654 /* YlRtmpDemandTests.swift */; };
 		0CDB332D567945BE06C95DD9 /* dash-sidx-v1.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 578B7BC67B897FF955320AC2 /* dash-sidx-v1.mp4 */; };
@@ -97,6 +99,7 @@
 		8CF99C96FA9AD2CCC43AEDC8 /* p03-vp9-hidden.webm in Resources */ = {isa = PBXBuildFile; fileRef = C627561040E2814B7059E8FB /* p03-vp9-hidden.webm */; };
 		4248AFA6E79209A80AF54C83 /* p03-av1-main10.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 3F61150D3AAA648A4973F775 /* p03-av1-main10.mkv */; };
 		077C6711994546FBD06CB948 /* p03-av1-main8.mkv in Resources */ = {isa = PBXBuildFile; fileRef = AEAA94C60C5DA73A488340E5 /* p03-av1-main8.mkv */; };
+		87BA21398CF02F2A155B64C8 /* p03-av1-opus.mkv in Resources */ = {isa = PBXBuildFile; fileRef = 4D8798B6A3749037D934A43F /* p03-av1-opus.mkv */; };
 		315ADDA4F1CD32A1B130F870 /* p03-ps-avc-mp3.mpg in Resources */ = {isa = PBXBuildFile; fileRef = C70C114F4266E6B23D98C260 /* p03-ps-avc-mp3.mpg */; };
 		FED92D2B7E02FC3947E6C5E8 /* YlDashHlsCompilerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD38FBD644F0A24BC6FF727F /* YlDashHlsCompilerTests.swift */; };
 		FFBCC078A9FDB4AED906D2AB /* YlOpenedMediaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 716DDC92C7595A0C545C4C0B /* YlOpenedMediaTests.swift */; };
@@ -214,6 +217,7 @@
 		C627561040E2814B7059E8FB /* p03-vp9-hidden.webm */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-vp9-hidden.webm"; sourceTree = "<group>"; };
 		3F61150D3AAA648A4973F775 /* p03-av1-main10.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-main10.mkv"; sourceTree = "<group>"; };
 		AEAA94C60C5DA73A488340E5 /* p03-av1-main8.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-main8.mkv"; sourceTree = "<group>"; };
+		4D8798B6A3749037D934A43F /* p03-av1-opus.mkv */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-av1-opus.mkv"; sourceTree = "<group>"; };
 		C70C114F4266E6B23D98C260 /* p03-ps-avc-mp3.mpg */ = {isa = PBXFileReference; lastKnownFileType = file; path = "p03-ps-avc-mp3.mpg"; sourceTree = "<group>"; };
 		D494DF03624CC31BDBBECFE1 /* YlFFmpegBridgeTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlFFmpegBridgeTests.swift; sourceTree = "<group>"; };
 		DAE800408ADB80F5557F031B /* YlHlsManifestRewriterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = YlHlsManifestRewriterTests.swift; sourceTree = "<group>"; };
@@ -248,6 +252,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A71F00000000000000000002 /* yl-player-apple in Frameworks */,
+				A71F00000000000000000004 /* yl-player-media-core in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,6 +340,7 @@
 				C627561040E2814B7059E8FB /* p03-vp9-hidden.webm */,
 				3F61150D3AAA648A4973F775 /* p03-av1-main10.mkv */,
 				AEAA94C60C5DA73A488340E5 /* p03-av1-main8.mkv */,
+				4D8798B6A3749037D934A43F /* p03-av1-opus.mkv */,
 				C70C114F4266E6B23D98C260 /* p03-ps-avc-mp3.mpg */,
 				B0F28468D082E79CEF463F71 /* hevc_dts.mp4 */,
 				60350605200EC95D89C7F3E6 /* hls_encrypted_segment0.ts */,
@@ -411,6 +418,7 @@
 		331C8080294A63A400263BE5 /* RunnerTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 331C8087294A63A400263BE5 /* Build configuration list for PBXNativeTarget "RunnerTests" */;
+			packageProductDependencies = (A71F00000000000000000001 /* yl-player-apple */, A71F00000000000000000003 /* yl-player-media-core */,);
 			buildPhases = (
 				331C807D294A63A400263BE5 /* Sources */,
 				331C807F294A63A400263BE5 /* Resources */,
@@ -516,6 +524,7 @@
 				8CF99C96FA9AD2CCC43AEDC8 /* p03-vp9-hidden.webm in Resources */,
 				4248AFA6E79209A80AF54C83 /* p03-av1-main10.mkv in Resources */,
 				077C6711994546FBD06CB948 /* p03-av1-main8.mkv in Resources */,
+				87BA21398CF02F2A155B64C8 /* p03-av1-opus.mkv in Resources */,
 				315ADDA4F1CD32A1B130F870 /* p03-ps-avc-mp3.mpg in Resources */,
 				1972DFE6A5F4B910CE1E8EC4 /* hevc_dts.mp4 in Resources */,
 				74E5B3981FFCA6DA0A3D6F66 /* hls_encrypted_segment0.ts in Resources */,
@@ -1019,6 +1028,8 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		A71F00000000000000000003 /* yl-player-media-core */ = {isa = XCSwiftPackageProductDependency; productName = "yl-player-media-core"; };
+		A71F00000000000000000001 /* yl-player-apple */ = {isa = XCSwiftPackageProductDependency; productName = "yl-player-apple"; };
 		78A3181F2AECB46A00862997 /* FlutterGeneratedPluginSwiftPackage */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FlutterGeneratedPluginSwiftPackage;
