@@ -39,7 +39,7 @@ def check_discovery(lib, path, expected):
         lib.ylf_close(c.byref(context))
     return len(expected) * 2 + 1
 
-def run(framework):
+def load_bridge(framework):
     lib = c.CDLL(str(framework.resolve()))
     lib.ylf_dolby_create.argtypes = [c.c_int32, c.c_int32, c.c_int32, c.c_uint64]
     lib.ylf_dolby_create.restype = c.c_void_p
@@ -48,6 +48,10 @@ def run(framework):
     for name in ['ylf_dolby_reset', 'ylf_dolby_free']:
         getattr(lib,name).argtypes=[c.c_void_p]
         getattr(lib,name).restype=None
+    return lib
+
+def run(framework):
+    lib = load_bridge(framework)
     assert not lib.ylf_dolby_create(0,48000,2,3)
     assert not lib.ylf_dolby_create(6,48000,6,3)
     cases=[('mkv-avc-ac3-51',6,6,0x60f),('mkv-avc-eac3',7,2,3)]

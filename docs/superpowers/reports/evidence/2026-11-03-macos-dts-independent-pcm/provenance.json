@@ -1,0 +1,18 @@
+{
+  "repository": "https://github.com/OxideAV/oxideav-dts.git",
+  "revision": "ec55712f152b93a7638aab3e5c297532d7aa23ae",
+  "referenceSourceUnmodified": true,
+  "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02) (Homebrew)",
+  "cargo": "cargo 1.94.0 (Homebrew)",
+  "ffprobeVersion": "ffprobe version 8.0.1 Copyright (c) 2007-2025 the FFmpeg developers",
+  "hostBuild": "26A434",
+  "driverSha256": "6461a3659f2888e69c6689115c0d4bd2e2a2a542a05361e77f2f15488f7fb758",
+  "lockSha256": "ee5ec1af8ee7174ce9ae16551e49daddef81d96cc719a7c1c91092eda4464e04",
+  "dynamicLibraries": [
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.40.3)"
+  ],
+  "negativeControls": {
+    "one_frame_late": "frame 12017, channel 0: error 0.002223771531134844",
+    "channels_exchanged": "frame 12016, channel 0: error 0.04156898381188512"
+  }
+}

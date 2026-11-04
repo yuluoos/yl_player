@@ -1078,6 +1078,16 @@
       "path": "docs/superpowers/reports/2026-11-03-macos-qualified-format-matrix.md",
       "sha256": "bc78f15633e53d8e0427025388eb5e4e41fdd3e03244b3c8bb75f1a6778f729d",
       "kind": "report"
+    },
+    "macos-dolby-independent-pcm-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-dolby-independent-pcm.md",
+      "sha256": "7fa0290c2eaea7c953d08a203491d39a40b8b367a9044200fd0da57f77775d66",
+      "kind": "report"
+    },
+    "macos-dts-independent-pcm-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-dts-independent-pcm.md",
+      "sha256": "e1e5cc28d82349cb407a265bcdc14eafa774af341e5642b516a7ea8ddc811b0c",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1480,10 +1490,12 @@
         "macos-av1-queue-timeout-20261103",
         "macos-av1-pause-backpressure-20261103",
         "macos-av1-qualification-20261103",
-        "macos-qualified-format-matrix-20261103"
+        "macos-qualified-format-matrix-20261103",
+        "macos-dolby-independent-pcm-20261103",
+        "macos-dts-independent-pcm-20261103"
       ],
       "acceptance": null,
-      "nextAction": "qualify-remaining-device-reference-and-output-boundaries-after-40-of-40-macos-format-matrix"
+      "nextAction": "qualify-independent-pcm-across-track-switches-and-remaining-device-output-boundaries"
     },
     {
       "requirement": "CAP-JS",

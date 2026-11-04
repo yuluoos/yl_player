@@ -1,0 +1,409 @@
+{
+  "matrixId": "fc94900d-23d4-433d-860e-9359c81c037f",
+  "buildSha256": "0d16457b02dc4cb6e53b8e7ed4aea06cd34136be3e3cbe82430e0495e0db8dbf",
+  "bridgeSha256": "4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d",
+  "referenceBinarySha256": "6784eba2ece02dea8c8151b30d6383fb44723f805f7c6367a8562fa36ca4f030",
+  "peakLimit": 0.0002,
+  "cases": [
+    {
+      "caseId": "mkv-avc-ac3-51",
+      "mediaSha256": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+      "packetCount": 125,
+      "firstPacketPtsUs": -5000,
+      "channels": 6,
+      "frames": 192000,
+      "bridgeFloat32Sha256": "c3e22f34d97e31df07ae35733b2080c0e43ef9536cacaed0c5d7ec00422603ac",
+      "referenceS16Sha256": "8808bc915ed17d2e2d9ddebcd7275bd532d3ddaaa5d1bc05a4c84cca5dceb7a9",
+      "peakByChannel": [
+        9.848177433013916e-05,
+        5.893409252166748e-05,
+        7.990933954715729e-05,
+        3.2067298889160156e-05,
+        6.964057683944702e-05,
+        6.703659892082214e-05
+      ],
+      "publicWindows": [
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 0,
+          "startFrame": 12240,
+          "frames": 8192,
+          "peakByChannel": [
+            3.8661062717437744e-05,
+            3.744661808013916e-05,
+            4.0568411350250244e-05,
+            3.195926547050476e-05,
+            4.03132289648056e-05,
+            3.83574515581131e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 1,
+          "startFrame": 60240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.151277244091034e-05,
+            3.730878233909607e-05,
+            3.9324164390563965e-05,
+            3.204867243766785e-05,
+            4.113093018531799e-05,
+            4.1270628571510315e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 2,
+          "startFrame": 108240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.134234040975571e-05,
+            4.219263792037964e-05,
+            3.859028220176697e-05,
+            3.188103437423706e-05,
+            4.087388515472412e-05,
+            3.845617175102234e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 3,
+          "startFrame": 156240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.166271537542343e-05,
+            4.0728598833084106e-05,
+            4.201941192150116e-05,
+            3.182142972946167e-05,
+            4.214048385620117e-05,
+            3.528594970703125e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "seek-1250",
+          "marker": 1,
+          "startFrame": 65040,
+          "frames": 8192,
+          "peakByChannel": [
+            4.034861922264099e-05,
+            4.070252180099487e-05,
+            4.003569483757019e-05,
+            3.2003968954086304e-05,
+            4.2304396629333496e-05,
+            4.201941192150116e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "seek-2250",
+          "marker": 2,
+          "startFrame": 113040,
+          "frames": 8192,
+          "peakByChannel": [
+            3.8778409361839294e-05,
+            3.8973987102508545e-05,
+            3.94945964217186e-05,
+            3.1948089599609375e-05,
+            4.260381683707237e-05,
+            3.8798898458480835e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "seek-0",
+          "marker": 0,
+          "startFrame": 5040,
+          "frames": 8192,
+          "peakByChannel": [
+            3.7901103496551514e-05,
+            4.055630415678024e-05,
+            3.94284725189209e-05,
+            3.195926547050476e-05,
+            3.8567930459976196e-05,
+            4.089251160621643e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 0,
+          "startFrame": 12240,
+          "frames": 8192,
+          "peakByChannel": [
+            3.8661062717437744e-05,
+            3.744661808013916e-05,
+            4.0568411350250244e-05,
+            3.195926547050476e-05,
+            4.03132289648056e-05,
+            3.83574515581131e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 1,
+          "startFrame": 60240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.151277244091034e-05,
+            3.730878233909607e-05,
+            3.9324164390563965e-05,
+            3.204867243766785e-05,
+            4.113093018531799e-05,
+            4.1270628571510315e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 2,
+          "startFrame": 108240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.134234040975571e-05,
+            4.219263792037964e-05,
+            3.859028220176697e-05,
+            3.188103437423706e-05,
+            4.087388515472412e-05,
+            3.845617175102234e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 3,
+          "startFrame": 156240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.166271537542343e-05,
+            4.0728598833084106e-05,
+            4.201941192150116e-05,
+            3.182142972946167e-05,
+            4.214048385620117e-05,
+            3.528594970703125e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "seek-1250",
+          "marker": 1,
+          "startFrame": 65040,
+          "frames": 8192,
+          "peakByChannel": [
+            4.034861922264099e-05,
+            4.070252180099487e-05,
+            4.003569483757019e-05,
+            3.2003968954086304e-05,
+            4.2304396629333496e-05,
+            4.201941192150116e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "seek-2250",
+          "marker": 2,
+          "startFrame": 113040,
+          "frames": 8192,
+          "peakByChannel": [
+            3.8778409361839294e-05,
+            3.8973987102508545e-05,
+            3.94945964217186e-05,
+            3.1948089599609375e-05,
+            4.260381683707237e-05,
+            3.8798898458480835e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "seek-0",
+          "marker": 0,
+          "startFrame": 5040,
+          "frames": 8192,
+          "peakByChannel": [
+            3.7901103496551514e-05,
+            4.055630415678024e-05,
+            3.94284725189209e-05,
+            3.195926547050476e-05,
+            3.8567930459976196e-05,
+            4.089251160621643e-05
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "mkv-avc-eac3",
+      "mediaSha256": "e96d6cd701ad473140a919b8ba2849bad8616c1865e36973642a636432da4a36",
+      "packetCount": 125,
+      "firstPacketPtsUs": -5000,
+      "channels": 2,
+      "frames": 192000,
+      "bridgeFloat32Sha256": "9be7b037b4e1a3a8f2f40ea288b5c3564d0cb2c74a38729c4c18b3c6faab2f1e",
+      "referenceS16Sha256": "ef1c242d485fcb581168fa9ca33c051a7d6c1f8f117f284946c0fbf6e4449a57",
+      "peakByChannel": [
+        7.833912968635559e-05,
+        8.292309939861298e-05
+      ],
+      "publicWindows": [
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 0,
+          "startFrame": 12240,
+          "frames": 8192,
+          "peakByChannel": [
+            6.967410445213318e-05,
+            5.951058119535446e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 1,
+          "startFrame": 60240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.272535443305969e-05,
+            4.250183701515198e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 2,
+          "startFrame": 108240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.231184720993042e-05,
+            3.868713974952698e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "play",
+          "marker": 3,
+          "startFrame": 156240,
+          "frames": 8192,
+          "peakByChannel": [
+            5.304068326950073e-05,
+            5.1662325859069824e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "seek-1250",
+          "marker": 1,
+          "startFrame": 65040,
+          "frames": 8192,
+          "peakByChannel": [
+            6.912276148796082e-05,
+            7.097236812114716e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "seek-2250",
+          "marker": 2,
+          "startFrame": 113040,
+          "frames": 8192,
+          "peakByChannel": [
+            4.3204985558986664e-05,
+            4.537031054496765e-05
+          ]
+        },
+        {
+          "transport": "file",
+          "phase": "seek-0",
+          "marker": 0,
+          "startFrame": 5040,
+          "frames": 8192,
+          "peakByChannel": [
+            3.6785611882805824e-05,
+            3.7219375371932983e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 0,
+          "startFrame": 12240,
+          "frames": 8192,
+          "peakByChannel": [
+            6.967410445213318e-05,
+            5.951058119535446e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 1,
+          "startFrame": 60240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.272535443305969e-05,
+            4.250183701515198e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 2,
+          "startFrame": 108240,
+          "frames": 8192,
+          "peakByChannel": [
+            4.231184720993042e-05,
+            3.868713974952698e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "play",
+          "marker": 3,
+          "startFrame": 156240,
+          "frames": 8192,
+          "peakByChannel": [
+            5.304068326950073e-05,
+            5.1662325859069824e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "seek-1250",
+          "marker": 1,
+          "startFrame": 65040,
+          "frames": 8192,
+          "peakByChannel": [
+            6.912276148796082e-05,
+            7.097236812114716e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "seek-2250",
+          "marker": 2,
+          "startFrame": 113040,
+          "frames": 8192,
+          "peakByChannel": [
+            4.3204985558986664e-05,
+            4.537031054496765e-05
+          ]
+        },
+        {
+          "transport": "http",
+          "phase": "seek-0",
+          "marker": 0,
+          "startFrame": 5040,
+          "frames": 8192,
+          "peakByChannel": [
+            3.6785611882805824e-05,
+            3.7219375371932983e-05
+          ]
+        }
+      ]
+    }
+  ]
+}

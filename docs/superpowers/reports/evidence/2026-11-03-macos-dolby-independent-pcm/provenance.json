@@ -1,0 +1,56 @@
+{
+  "referenceRepository": "https://github.com/OxideAV/oxideav-ac3.git",
+  "referenceCommit": "1a2e96db770d5d113811d97df3a59e1dbfc2bb5f",
+  "referenceSourceUnmodified": true,
+  "driverSha256": "c6f62f50e8ab587dbdae52e460e5f39e3b10eb57dd9427a2148d4402faee0be5",
+  "lockSha256": "970b59e56e59156d50b7397adff203744e4d78dc462aa8c133cc5c6a77522dee",
+  "rustc": "rustc 1.94.0 (4a4ef493e 2026-03-02) (Homebrew)",
+  "cargo": "cargo 1.94.0 (Homebrew)",
+  "referenceLibraries": [
+    "\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1359.40.3)"
+  ],
+  "ffprobe": "ffprobe version 8.0.1 Copyright (c) 2007-2025 the FFmpeg developers",
+  "hostBuild": "26A434",
+  "negativeControls": {
+    "reference_one_frame_late": "frame 12241, channel 0: error 0.0014649927616119385",
+    "left_right_swapped": "frame 12240, channel 0: error 0.011497698724269867"
+  },
+  "appleSystemDecode": {
+    "mkv-avc-ac3-51": [
+      "File:           build/macos-dolby-reference/mkv-avc-ac3-51.wav",
+      "File type ID:   WAVE",
+      "Num Tracks:     1",
+      "----",
+      "Data format:     6 ch,  48000 Hz, Float32, interleaved",
+      "                no channel layout.",
+      "estimated duration: 3.994000 sec",
+      "audio bytes: 4601088",
+      "audio packets: 191712",
+      "bit rate: 9216000 bits per second",
+      "packet size upper bound: 24",
+      "maximum packet size: 24",
+      "audio data file offset: 4096",
+      "optimized",
+      "source bit depth: F32",
+      "----"
+    ],
+    "mkv-avc-eac3": [
+      "File:           build/macos-dolby-reference/mkv-avc-eac3.wav",
+      "File type ID:   WAVE",
+      "Num Tracks:     1",
+      "----",
+      "Data format:     2 ch,  48000 Hz, Float32, interleaved",
+      "Channel layout: Stereo (L R)",
+      "estimated duration: 3.994000 sec",
+      "audio bytes: 1533696",
+      "audio packets: 191712",
+      "bit rate: 3072000 bits per second",
+      "packet size upper bound: 8",
+      "maximum packet size: 8",
+      "audio data file offset: 4096",
+      "optimized",
+      "source bit depth: F32",
+      "----"
+    ]
+  }
+}
