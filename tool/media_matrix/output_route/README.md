@@ -24,3 +24,5 @@ python3 -B tool/media_matrix/output_route/run.py APP /tmp/yl-route-probe OUT3 --
 ```sh
 python3 -B tool/media_matrix/output_route/av1_endpoint.py QUALIFIED_PUBLIC_APP /tmp/yl-route-probe NEW_OUT
 ```
+
+对本地 AV1 做同样的设备往返切换时，在 `failure-reload` 命令末尾加 `--av1`。测试宿主须包含已冻结的 `assets/test_media/format_matrix/qual-av1.mkv`，并通过 `package_macos_matrix.py --profile` 装入与 SDK 匹配的档位。测试从第 1170 秒开始，在每次建会话后核对软件解码，最后等待素材自然结束。

@@ -1,6 +1,7 @@
 """Exercise two explicitly chosen physical macOS output devices in one public playback."""
 import argparse
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -17,7 +18,7 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def collect(app, probe, pair, out, mode):
+def collect(app, probe, pair, out, mode, av1=False):
     out.mkdir(parents=True, exist_ok=False)
     def snapshot(*args):
         return json.loads(subprocess.check_output([probe, *args]))
@@ -30,7 +31,7 @@ def collect(app, probe, pair, out, mode):
             and devices[i]['transport'] in PHYSICAL for i in pair), 'chosen pair is not available')
     other = first if original == second else second
     product = freeze(app)
-    result = dict(mode=mode, reloads=[], inventory=inventory, productSha256=product['sha256'], phases=[], passed=False)
+    result = dict(fixture='qual-av1.mkv' if av1 else 'long_60fps_h264_aac.mkv', mode=mode, reloads=[], inventory=inventory, productSha256=product['sha256'], phases=[], passed=False)
     def save():
         (out/'result.json').write_text(json.dumps(result, indent=2, ensure_ascii=False)+'\n')
     save()
@@ -41,7 +42,8 @@ def collect(app, probe, pair, out, mode):
     awaiting_failure = False
     attempted_change = False
     with (out/'player.log').open('wb') as log, (out/'observations.jsonl').open('w') as observations:
-        proc = subprocess.Popen([app/'Contents/MacOS/yl_player_example'], stdin=subprocess.PIPE, text=True, stdout=log, stderr=log)
+        proc = subprocess.Popen([app/'Contents/MacOS/yl_player_example'], env=dict(os.environ, YL_ROUTE_AV1='1' if av1 else '0'),
+                                stdin=subprocess.PIPE, text=True, stdout=log, stderr=log)
         result['pid'] = proc.pid
         try:
             with (out/'player.log').open() as reader:
@@ -67,6 +69,9 @@ def collect(app, probe, pair, out, mode):
                                     f'unexpected public failure: {event}')
                             last_state = event
                             continue
+                        if av1 and event['status'] == 'playing':
+                            require(event['decoder'] == 'software' and event['positionUs'] >= 1170000000,
+                                    'expected software AV1 in the qualification fixture tail')
                         if expected_session is None:
                             expected_session = event['session']
                             if expected_audio is None:
@@ -155,7 +160,8 @@ if __name__ == '__main__':
         parser.add_argument(key, type=Path)
     parser.add_argument('--devices', nargs=2, type=int, required=True)
     parser.add_argument('--mode', choices=('same-session', 'explicit-reload', 'failure-reload'), default='same-session')
+    parser.add_argument('--av1', action='store_true', help='Use the qualified AV1/Opus fixture')
     args = parser.parse_args()
-    result = collect(args.app.resolve(), args.probe.resolve(), args.devices, args.out, args.mode)
+    result = collect(args.app.resolve(), args.probe.resolve(), args.devices, args.out, args.mode, args.av1)
     print(json.dumps({k: result.get(k) for k in ('passed','error','finalDefault','completed')}))
     sys.exit(0 if result['passed'] else 1)

@@ -30,3 +30,15 @@ AirPods 初始输出通过。切到扬声器后，默认设备确实变化，播
 两次重载均在采集器同时观察到原会话公开失败和 HAL 输出停止后发起。真实端点的验证范围为本机本地 H.264/AAC。既有 AV1 准入绑定旧版 SDK 的映像哈希，新映像仍需独立取得资格。
 
 最后一个会话自然结束，测试进程退出 0。完成时默认设备为原 AirPods。[验收回执](evidence/2026-11-03-macos-output-route/failure-reload/result.json) · [同步端点观测](evidence/2026-11-03-macos-output-route/failure-reload/observations.jsonl) · [公共事件](evidence/2026-11-03-macos-output-route/failure-reload/public-events.jsonl)
+
+## 已准入 AV1 的真实设备往返切换
+
+同一播放器进程在 AirPods Pro（103）和内置扬声器（91）间往返。Flutter 测试宿主使用正常公共注册、已签发的优化 Swift SDK 和对应档位，从本地 AV1/Opus 资格素材的 1170 秒处开始播放。每次切换均先观察到旧会话公开报告 `render.audio_engine_failed` 且 HAL 输出停止，再通过公开 load 从失败位置重载。三个会话均使用软件解码，保留同一选中音轨。采集器在每个阶段核对 PID 的运行中输出设备和实际推进的媒体时间。[对应准入档位](2026-11-03-macos-route-av1-qualification.md)
+
+| 运行中唯一输出设备 | 公共会话 | 输出期间的媒体时间（秒） |
+| --- | --- | ---: |
+| 103 | apple-1-s1 | 1170.000 → 1170.998 |
+| 91 | apple-1-s2 | 1171.514 → 1172.485 |
+| 103 | apple-1-s3 | 1173.174 → 1174.441 |
+
+末会话自然完成，应用退出 0，最终默认设备为原 AirPods。此次往返覆盖本地文件。HTTP 的既有证据覆盖默认端点上的连续播放与定位，USB 输出仍待实测。[回执](evidence/2026-11-03-macos-av1-output-roundtrip/result.json) · [公共事件](evidence/2026-11-03-macos-av1-output-roundtrip/public-events.jsonl) · [逐次端点观测](evidence/2026-11-03-macos-av1-output-roundtrip/observations.jsonl)

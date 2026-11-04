@@ -21,8 +21,11 @@ Future<void> main() async {
   Timer? timer;
   StreamSubscription<void>? commands;
   try {
+    final av1 = Platform.environment['YL_ROUTE_AV1'] == '1';
     final bytes = await rootBundle.load(
-      'assets/test_media/long_60fps_h264_aac.mkv',
+      av1
+          ? 'assets/test_media/format_matrix/qual-av1.mkv'
+          : 'assets/test_media/long_60fps_h264_aac.mkv',
     );
     final file = File('${directory.path}/route.mkv');
     await file.writeAsBytes(
@@ -51,12 +54,16 @@ Future<void> main() async {
       await session.ready.timeout(const Duration(seconds: 15));
       await session.play();
       await session.firstFrame.timeout(const Duration(seconds: 10));
+      if (av1 && player.state.decoderMode != YlDecoderMode.software) {
+        throw StateError('Expected qualified AV1 software decoding');
+      }
       timer = Timer.periodic(const Duration(milliseconds: 200), (_) {
         final s = player.state;
         report('state', {
           'session': s.sessionId?.value,
           'status': s.status.name,
           'positionUs': s.timeline.position.inMicroseconds,
+          'decoder': s.decoderMode.name,
           'audio': s.audioTracks
               .where((t) => t.isSelected)
               .map((t) => t.id)
@@ -68,7 +75,9 @@ Future<void> main() async {
       });
     }
 
-    await playFrom(Duration.zero);
+    await playFrom(
+      av1 ? const Duration(minutes: 19, seconds: 30) : Duration.zero,
+    );
     commands = stdin
         .transform(utf8.decoder)
         .transform(const LineSplitter())
