@@ -339,8 +339,7 @@ final class YlAudioRenderer: YlAudioRendering {
       self?.terminalQueue.async { [weak self] in
         guard let self else { return }
         self.operations.lock(); defer { self.operations.unlock() }
-        guard self.terminal != nil,
-              self.lock.withLock({ !self.disposed && self.completionGeneration == epoch }) else { return }
+        guard self.lock.withLock({ !self.disposed && self.completionGeneration == epoch }) else { return }
         // The graph is no longer usable: fence and stop before retiring owners.
         // Never submit the held tail to an invalidated graph as a fallback.
         let failure = NativePlayerError(category: "render", code: "render.audio_engine_failed",
@@ -995,7 +994,16 @@ final class YlAudioRenderer: YlAudioRendering {
           [YlAudioCodec.aac, .opus].contains(stream.codec), stream.sampleRate == 48000, stream.channelCount == 2 else {
       terminal = nil
       cancelTailTimer()
+      #if os(macOS)
+      // Ordinary playback has no isolated clock observer to report graph loss.
+      if configuredStream != nil && onClockControlBegin == nil {
+        installOutputInvalidation()
+      } else {
+        output.setInvalidationHandler(nil)
+      }
+      #else
       output.setInvalidationHandler(nil)
+      #endif
       lock.withLock { submissionAnchorEnabled = false; terminalPending = false }
       return
     }

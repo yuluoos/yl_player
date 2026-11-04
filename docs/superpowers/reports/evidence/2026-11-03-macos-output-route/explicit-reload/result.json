@@ -1,0 +1,202 @@
+{
+  "mode": "explicit-reload",
+  "reloads": [
+    {
+      "kind": "reload",
+      "previous": "apple-1-s1",
+      "positionUs": 2591000
+    },
+    {
+      "kind": "reload",
+      "previous": "apple-1-s2",
+      "positionUs": 5085000
+    }
+  ],
+  "inventory": {
+    "default": 103,
+    "devices": [
+      {
+        "id": 103,
+        "canBeDefault": 1,
+        "name": "AirPods Pro - Find My",
+        "transport": "blue"
+      },
+      {
+        "id": 91,
+        "canBeDefault": 1,
+        "name": "MacBook Pro扬声器",
+        "transport": "bltn"
+      }
+    ]
+  },
+  "productSha256": "e358064f2d56a24eecacac908d3ee1ed29404fd207aa1bad620fc4ab7c3de85d",
+  "phases": [
+    {
+      "label": "original",
+      "id": 103,
+      "start": {
+        "hostSeconds": 53114.418779583,
+        "outputDevices": [
+          103
+        ],
+        "process": 144,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s1",
+          "status": "playing",
+          "positionUs": 1045000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 53115.44530125,
+        "outputDevices": [
+          103
+        ],
+        "process": 144,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s1",
+          "status": "playing",
+          "positionUs": 2122000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    },
+    {
+      "label": "alternate",
+      "id": 91,
+      "start": {
+        "hostSeconds": 53116.546563333,
+        "outputDevices": [
+          91
+        ],
+        "process": 144,
+        "default": 91,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s2",
+          "status": "playing",
+          "positionUs": 2601000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 53117.557366083,
+        "outputDevices": [
+          91
+        ],
+        "process": 144,
+        "default": 91,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s2",
+          "status": "playing",
+          "positionUs": 3587000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    },
+    {
+      "label": "returned",
+      "id": 103,
+      "start": {
+        "hostSeconds": 53118.61154375,
+        "outputDevices": [
+          103
+        ],
+        "process": 144,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s3",
+          "status": "playing",
+          "positionUs": 5095000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 53119.626496291,
+        "outputDevices": [
+          103
+        ],
+        "process": 144,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s3",
+          "status": "playing",
+          "positionUs": 6076000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "pid": 58754,
+  "interruptions": [
+    {
+      "hostSeconds": 53115.823980041,
+      "outputDevices": [],
+      "process": 144,
+      "default": 91,
+      "runningOutput": 0,
+      "public": {
+        "kind": "state",
+        "session": "apple-1-s1",
+        "status": "playing",
+        "positionUs": 2591000,
+        "audio": [
+          "audio-1"
+        ],
+        "failure": null
+      }
+    },
+    {
+      "hostSeconds": 53117.989065583,
+      "outputDevices": [],
+      "process": 144,
+      "default": 103,
+      "runningOutput": 0,
+      "public": {
+        "kind": "state",
+        "session": "apple-1-s2",
+        "status": "playing",
+        "positionUs": 4098000,
+        "audio": [
+          "audio-1"
+        ],
+        "failure": null
+      }
+    }
+  ],
+  "exit": 0,
+  "completed": true,
+  "finalDefault": 103
+}

@@ -1,0 +1,68 @@
+{
+  "inventory": {
+    "default": 103,
+    "devices": [
+      {
+        "id": 103,
+        "canBeDefault": 1,
+        "name": "AirPods Pro - Find My",
+        "transport": "blue"
+      },
+      {
+        "id": 91,
+        "canBeDefault": 1,
+        "name": "MacBook Pro扬声器",
+        "transport": "bltn"
+      }
+    ]
+  },
+  "productSha256": "411646fb65c57fbd4c3928c8e3eef99fb7f3135a50f80427abba16354d2c3e13",
+  "phases": [
+    {
+      "label": "original",
+      "id": 103,
+      "start": {
+        "hostSeconds": 52864.544094958,
+        "outputDevices": [
+          103
+        ],
+        "process": 144,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s1",
+          "status": "playing",
+          "positionUs": 1215000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 52865.757543708,
+        "outputDevices": [
+          103
+        ],
+        "process": 144,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s1",
+          "status": "playing",
+          "positionUs": 2261000,
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    }
+  ],
+  "passed": false,
+  "pid": 57911,
+  "error": "alternate: no sustained process output and playback progress on device 91",
+  "finalDefault": 103
+}
