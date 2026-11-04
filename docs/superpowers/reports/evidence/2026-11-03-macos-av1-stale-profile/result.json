@@ -1,0 +1,18 @@
+{
+  "exit": 1,
+  "elapsedSeconds": 0.6318947079998907,
+  "errors": [
+    "PUBLIC_ERROR YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-f48c1b01-24ae-47f2-8ac9-e5c94118eb51)"
+  ],
+  "steps": [
+    "PUBLIC_STEP file load"
+  ],
+  "dispose": [
+    {
+      "transport": "file",
+      "elapsedUs": 1395
+    }
+  ],
+  "finish": "PUBLIC_FINISH 1",
+  "passed": true
+}

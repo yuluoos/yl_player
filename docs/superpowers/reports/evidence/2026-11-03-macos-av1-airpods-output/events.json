@@ -1,0 +1,118 @@
+[
+  {
+    "ns": 56676759677875,
+    "line": "PUBLIC_STEP file load"
+  },
+  {
+    "ns": 56676883096583,
+    "line": "PUBLIC_STEP file play"
+  },
+  {
+    "ns": 56680494118958,
+    "line": "PUBLIC_STEP file pause-seek-2000"
+  },
+  {
+    "ns": 56680496221375,
+    "line": "PUBLIC_SEEK_RETURN file target=2000 position=3434 revision=37"
+  },
+  {
+    "ns": 56681004536708,
+    "line": "PUBLIC_SEEK_WAIT file target=2000 position=2478 revision=44"
+  },
+  {
+    "ns": 56681016565791,
+    "line": "PUBLIC_STEP file pause-seek-1250"
+  },
+  {
+    "ns": 56681018112916,
+    "line": "PUBLIC_SEEK_RETURN file target=1250 position=2448 revision=48"
+  },
+  {
+    "ns": 56681521245875,
+    "line": "PUBLIC_SEEK_WAIT file target=1250 position=1722 revision=54"
+  },
+  {
+    "ns": 56681528563958,
+    "line": "PUBLIC_STEP file pause-seek-0"
+  },
+  {
+    "ns": 56681545498333,
+    "line": "PUBLIC_SEEK_RETURN file target=0 position=1698 revision=58"
+  },
+  {
+    "ns": 56682038066541,
+    "line": "PUBLIC_SEEK_WAIT file target=0 position=466 revision=65"
+  },
+  {
+    "ns": 56682040540875,
+    "line": "PUBLIC_STEP file await-completed"
+  },
+  {
+    "ns": 56685888857583,
+    "line": "PUBLIC_PLAYBACK {\"transport\":\"file\",\"decoder\":\"software\",\"completed\":true,\"markers\":[{\"phase\":\"play\",\"marker\":0,\"rgb\":[254,0,0],\"positionUs\":490000},{\"phase\":\"play\",\"marker\":1,\"rgb\":[0,254,0],\"positionUs\":1480000},{\"phase\":\"play\",\"marker\":2,\"rgb\":[0,0,255],\"positionUs\":2465000},{\"phase\":\"play\",\"marker\":3,\"rgb\":[255,255,255],\"positionUs\":3461000},{\"phase\":\"seek-2000\",\"marker\":2,\"rgb\":[0,0,255],\"positionUs\":2479000},{\"phase\":\"seek-1250\",\"marker\":1,\"rgb\":[0,254,0],\"positionUs\":1723000},{\"phase\":\"seek-0\",\"marker\":0,\"rgb\":[254,0,0],\"positionUs\":467000}],\"requests\":[],\"systemSamples\":[{\"phase\":\"play-0\",\"surfaceHasBounds\":true,\"totalFrames\":12,\"corruptedFrames\":0,\"status\":\"observed\",\"windowOcclusions\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5dda9e0)\",\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"windowOcclusionVisible\":true},{\"phase\":\"play-1\",\"windowOcclusionVisible\":true,\"surfaceHasBounds\":true,\"corruptedFrames\":0,\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"status\":\"observed\",\"layerIdentity\":\"ObjectIdentifier(0x00000077a5dda9e0)\",\"totalFrames\":36,\"windowOcclusions\":0},{\"phase\":\"play-2\",\"surfaceHasBounds\":true,\"totalFrames\":60,\"corruptedFrames\":0,\"status\":\"observed\",\"windowOcclusions\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5dda9e0)\",\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"windowOcclusionVisible\":true},{\"phase\":\"play-3\",\"windowOcclusionVisible\":true,\"surfaceHasBounds\":true,\"corruptedFrames\":0,\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"status\":\"observed\",\"layerIdentity\":\"ObjectIdentifier(0x00000077a5dda9e0)\",\"totalFrames\":84,\"windowOcclusions\":0},{\"phase\":\"before-seek-2000\",\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5dda9e0)\",\"status\":\"observed\",\"windowOcclusionVisible\":true,\"totalFrames\":84,\"layerCount\":1,\"corruptedFrames\":0,\"windowOcclusions\":0,\"surfaceHasBounds\":true},{\"phase\":\"seek-2000\",\"surfaceHasBounds\":true,\"windowOcclusionVisible\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a532c5a0)\",\"totalFrames\":13,\"status\":\"observed\",\"windowOcclusions\":0,\"totalFrameDelaySeconds\":1.6666666666666667e-8,\"layerCount\":1,\"droppedFrames\":0,\"corruptedFrames\":0},{\"phase\":\"before-seek-1250\",\"status\":\"observed\",\"windowOcclusions\":0,\"totalFrames\":13,\"totalFrameDelaySeconds\":1.6666666666666667e-8,\"layerCount\":1,\"windowOcclusionVisible\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a532c5a0)\",\"droppedFrames\":0,\"corruptedFrames\":0,\"surfaceHasBounds\":true},{\"phase\":\"seek-1250\",\"surfaceHasBounds\":true,\"totalFrames\":13,\"corruptedFrames\":0,\"status\":\"observed\",\"windowOcclusions\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a532fa20)\",\"layerCount\":1,\"totalFrameDelaySeconds\":1.6666666666666667e-8,\"droppedFrames\":0,\"windowOcclusionVisible\":true},{\"phase\":\"before-seek-0\",\"status\":\"observed\",\"totalFrames\":13,\"corruptedFrames\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a532fa20)\",\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusionVisible\":true,\"windowOcclusions\":0,\"surfaceHasBounds\":true,\"totalFrameDelaySeconds\":1.6666666666666667e-8},{\"phase\":\"seek-0\",\"totalFrameDelaySeconds\":0.0,\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusions\":0,\"corruptedFrames\":0,\"status\":\"observed\",\"surfaceHasBounds\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a532fb60)\",\"totalFrames\":13,\"windowOcclusionVisible\":true},{\"phase\":\"completed\",\"totalFrameDelaySeconds\":0.0,\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusions\":0,\"corruptedFrames\":0,\"status\":\"observed\",\"surfaceHasBounds\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a532fb60)\",\"totalFrames\":96,\"windowOcclusionVisible\":true}],\"pixelVerificationMethod\":\"native-renderer-displayed-buffer\",\"readbackWhilePaused\":true,\"acousticOutputVerified\":false}"
+  },
+  {
+    "ns": 56685919798541,
+    "line": "PUBLIC_DISPOSE {\"transport\":\"file\",\"elapsedUs\":31016}"
+  },
+  {
+    "ns": 56685922615541,
+    "line": "PUBLIC_STEP http load"
+  },
+  {
+    "ns": 56685939780583,
+    "line": "PUBLIC_STEP http play"
+  },
+  {
+    "ns": 56689592667375,
+    "line": "PUBLIC_STEP http pause-seek-2000"
+  },
+  {
+    "ns": 56689593000458,
+    "line": "PUBLIC_SEEK_RETURN http target=2000 position=3445 revision=37"
+  },
+  {
+    "ns": 56689924301208,
+    "line": "PUBLIC_SEEK_WAIT http target=2000 position=2299 revision=41"
+  },
+  {
+    "ns": 56690088109208,
+    "line": "PUBLIC_STEP http pause-seek-1250"
+  },
+  {
+    "ns": 56690088546291,
+    "line": "PUBLIC_SEEK_RETURN http target=1250 position=2431 revision=45"
+  },
+  {
+    "ns": 56690588150750,
+    "line": "PUBLIC_SEEK_WAIT http target=1250 position=1722 revision=50"
+  },
+  {
+    "ns": 56690595225375,
+    "line": "PUBLIC_STEP http pause-seek-0"
+  },
+  {
+    "ns": 56690595524666,
+    "line": "PUBLIC_SEEK_RETURN http target=0 position=1698 revision=54"
+  },
+  {
+    "ns": 56690924563125,
+    "line": "PUBLIC_SEEK_WAIT http target=0 position=297 revision=59"
+  },
+  {
+    "ns": 56691104680375,
+    "line": "PUBLIC_STEP http await-completed"
+  },
+  {
+    "ns": 56694938629000,
+    "line": "PUBLIC_PLAYBACK {\"transport\":\"http\",\"decoder\":\"software\",\"completed\":true,\"markers\":[{\"phase\":\"play\",\"marker\":0,\"rgb\":[254,0,0],\"positionUs\":452000},{\"phase\":\"play\",\"marker\":1,\"rgb\":[0,254,0],\"positionUs\":1437000},{\"phase\":\"play\",\"marker\":2,\"rgb\":[0,0,255],\"positionUs\":2455000},{\"phase\":\"play\",\"marker\":3,\"rgb\":[255,255,255],\"positionUs\":3473000},{\"phase\":\"seek-2000\",\"marker\":2,\"rgb\":[0,0,255],\"positionUs\":2300000},{\"phase\":\"seek-1250\",\"marker\":1,\"rgb\":[0,254,0],\"positionUs\":1723000},{\"phase\":\"seek-0\",\"marker\":0,\"rgb\":[254,0,0],\"positionUs\":297000}],\"requests\":[{\"method\":\"GET\",\"range\":null,\"status\":200},{\"method\":\"GET\",\"range\":\"bytes=0-\",\"status\":206}],\"systemSamples\":[{\"phase\":\"play-0\",\"status\":\"observed\",\"totalFrames\":12,\"corruptedFrames\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80140)\",\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusionVisible\":true,\"windowOcclusions\":0,\"surfaceHasBounds\":true,\"totalFrameDelaySeconds\":0.0},{\"phase\":\"play-1\",\"surfaceHasBounds\":true,\"totalFrames\":35,\"corruptedFrames\":0,\"status\":\"observed\",\"windowOcclusions\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80140)\",\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"windowOcclusionVisible\":true},{\"phase\":\"play-2\",\"status\":\"observed\",\"totalFrames\":59,\"corruptedFrames\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80140)\",\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusionVisible\":true,\"windowOcclusions\":0,\"surfaceHasBounds\":true,\"totalFrameDelaySeconds\":0.0},{\"phase\":\"play-3\",\"surfaceHasBounds\":true,\"totalFrames\":84,\"corruptedFrames\":0,\"status\":\"observed\",\"windowOcclusions\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80140)\",\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"windowOcclusionVisible\":true},{\"phase\":\"before-seek-2000\",\"totalFrameDelaySeconds\":0.0,\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusions\":0,\"corruptedFrames\":0,\"status\":\"observed\",\"surfaceHasBounds\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80140)\",\"totalFrames\":84,\"windowOcclusionVisible\":true},{\"phase\":\"seek-2000\",\"status\":\"observed\",\"windowOcclusions\":0,\"totalFrames\":9,\"totalFrameDelaySeconds\":1.6666666666666667e-8,\"layerCount\":1,\"windowOcclusionVisible\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f801e0)\",\"droppedFrames\":0,\"corruptedFrames\":0,\"surfaceHasBounds\":true},{\"phase\":\"before-seek-1250\",\"surfaceHasBounds\":true,\"windowOcclusionVisible\":true,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f801e0)\",\"totalFrames\":12,\"status\":\"observed\",\"windowOcclusions\":0,\"totalFrameDelaySeconds\":1.6666666666666667e-8,\"layerCount\":1,\"droppedFrames\":0,\"corruptedFrames\":0},{\"phase\":\"seek-1250\",\"status\":\"observed\",\"totalFrames\":13,\"corruptedFrames\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80000)\",\"layerCount\":1,\"droppedFrames\":0,\"windowOcclusionVisible\":true,\"windowOcclusions\":0,\"surfaceHasBounds\":true,\"totalFrameDelaySeconds\":1.6666666666666667e-8},{\"phase\":\"before-seek-0\",\"totalFrameDelaySeconds\":1.6666666666666667e-8,\"droppedFrames\":0,\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f80000)\",\"status\":\"observed\",\"windowOcclusionVisible\":true,\"totalFrames\":13,\"layerCount\":1,\"corruptedFrames\":0,\"windowOcclusions\":0,\"surfaceHasBounds\":true},{\"phase\":\"seek-0\",\"windowOcclusionVisible\":true,\"surfaceHasBounds\":true,\"corruptedFrames\":0,\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"status\":\"observed\",\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f801e0)\",\"totalFrames\":8,\"windowOcclusions\":0},{\"phase\":\"completed\",\"windowOcclusionVisible\":true,\"surfaceHasBounds\":true,\"corruptedFrames\":0,\"layerCount\":1,\"totalFrameDelaySeconds\":0.0,\"droppedFrames\":0,\"status\":\"observed\",\"layerIdentity\":\"ObjectIdentifier(0x00000077a5f801e0)\",\"totalFrames\":95,\"windowOcclusions\":0}],\"pixelVerificationMethod\":\"native-renderer-displayed-buffer\",\"readbackWhilePaused\":true,\"acousticOutputVerified\":false}"
+  },
+  {
+    "ns": 56694983578500,
+    "line": "PUBLIC_DISPOSE {\"transport\":\"http\",\"elapsedUs\":44920}"
+  },
+  {
+    "ns": 56694985127916,
+    "line": "PUBLIC_FINISH 0"
+  }
+]

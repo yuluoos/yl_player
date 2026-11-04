@@ -14,3 +14,9 @@
 首轮按预定规则冻结 CPU 上限 277 ms/秒，单次解码沿用 42 ms 上限。第二轮在相同制品和冻结预算下通过。[基线回执](evidence/2026-11-03-macos-route-av1-qualification/baseline/receipt.json) · [复验回执](evidence/2026-11-03-macos-route-av1-qualification/verification/receipt.json)
 
 将签发档位装入正常公共注册的 Release 宿主，严格签名及两个映像哈希校验通过。公共路径在 18.514 秒内完成文件和 HTTP Range 两路真实软件解码、三次暂停定位及画面回读，每路均自然结束并释放。验证宿主位于 `build/macos-route-av1-efe30316/qualified-public.app`。完整格式矩阵的既有证据仍绑定其原始制品。[公共回执](evidence/2026-11-03-macos-route-av1-qualification/public/receipt.json) · [证据清单](evidence/2026-11-03-macos-route-av1-qualification/sha256.json)
+
+## 新版 macOS SDK 拒绝旧 AV1 档位
+
+本地 AV1 文件通过正常公共插件入口加载时，带旧档位的宿主在 load 阶段返回 `decoder.unavailable`（不可重试），随后在 1.395 ms 内释放。宿主按预期退出 1，负向验证通过。此次运行只覆盖文件入口。[运行结果](evidence/2026-11-03-macos-av1-stale-profile/result.json) · [公共日志](evidence/2026-11-03-macos-av1-stale-profile/public-output.txt)
+
+测试复制上轮已通过的公共 Release 应用，将其档位资源换成同一 M1、同一系统和视频配置下实际签发的旧档位，并对副本重新签名、验证深度签名。两个准入键仅 `decoderBuild` 不同。新版宿主的 Swift 映像为 `e27b5a10…`，旧档位绑定 `63049f36…`，codec 均为 `4a2083b4…`。先前使用匹配档位的同一新版宿主已完成文件和 HTTP 播放。[预定条件与完整哈希](evidence/2026-11-03-macos-av1-stale-profile/protocol.json)

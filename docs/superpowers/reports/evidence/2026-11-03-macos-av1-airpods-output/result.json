@@ -1,0 +1,89 @@
+{
+  "endpoint": {
+    "id": 103,
+    "canBeDefault": 1,
+    "name": "AirPods Pro - Find My",
+    "transport": "blue"
+  },
+  "productSha256": "db06f87bc02e28145ce0fe74c7a5804d1a9edcd8c9c7e734bcd58f2b2cff5ec8",
+  "profileSha256": "b0798ad917898d36728bc84371dbdcb0459f9c88ba6e6398e72c9db1ebf201af",
+  "profileKey": {
+    "model": "MacBookPro17,1",
+    "osBuild": "26A434",
+    "decoderBuild": "e27b5a10648bdeb86b05455d8b766f20be644f459ab558fe97aaa010541716a2:4a2083b42c52de082d170f1aced30c6fff67b8e93e40961068b2b2ac0e62dd5d",
+    "codec": 12,
+    "profile": 0,
+    "bitDepth": 8,
+    "chroma": 420,
+    "width": 320,
+    "height": 180,
+    "fpsNumerator": 24,
+    "fpsDenominator": 1,
+    "threads": 1,
+    "outputPixelFormat": 875704438
+  },
+  "passed": true,
+  "pid": 62403,
+  "windows": [
+    {
+      "transport": "file",
+      "phase": "play",
+      "samples": 30,
+      "active": 30
+    },
+    {
+      "transport": "file",
+      "phase": "seek-2000",
+      "samples": 4,
+      "active": 4
+    },
+    {
+      "transport": "file",
+      "phase": "seek-1250",
+      "samples": 4,
+      "active": 4
+    },
+    {
+      "transport": "file",
+      "phase": "seek-0",
+      "samples": 3,
+      "active": 3
+    },
+    {
+      "transport": "file",
+      "phase": "until-completed",
+      "samples": 32,
+      "active": 32
+    },
+    {
+      "transport": "http",
+      "phase": "play",
+      "samples": 31,
+      "active": 31
+    },
+    {
+      "transport": "http",
+      "phase": "seek-2000",
+      "samples": 3,
+      "active": 3
+    },
+    {
+      "transport": "http",
+      "phase": "seek-1250",
+      "samples": 3,
+      "active": 3
+    },
+    {
+      "transport": "http",
+      "phase": "seek-0",
+      "samples": 2,
+      "active": 2
+    },
+    {
+      "transport": "http",
+      "phase": "until-completed",
+      "samples": 32,
+      "active": 32
+    }
+  ]
+}

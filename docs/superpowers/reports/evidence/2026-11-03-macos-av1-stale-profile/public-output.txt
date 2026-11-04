@@ -1,0 +1,8 @@
+2026-11-03 21:04:19.784 yl_player_example[62202:634809] Running with merged UI and platform thread. Experimental.
+PUBLIC_STEP file load
+[libdav1d @ 0x74920c8380] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+[matroska,webm @ 0x7493996f80] Failed to open codec in avformat_find_stream_info
+[libdav1d @ 0x74920c8380] Codec (libdav1d) not on whitelist 'dca,ac3,eac3,vorbis'
+PUBLIC_DISPOSE {"transport":"file","elapsedUs":1395}
+PUBLIC_ERROR YlFailure(category: decoder, code: decoder.unavailable, retryable: false, scope: command, diagnosticId: apple-f48c1b01-24ae-47f2-8ac9-e5c94118eb51)
+PUBLIC_FINISH 1
