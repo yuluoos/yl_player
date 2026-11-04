@@ -1103,6 +1103,11 @@
       "path": "docs/superpowers/reports/2026-11-03-macos-output-route.md",
       "sha256": "4f1e2572f5e39a9baefc720054a51698936e2638d0c3dfec7b23d78adb52d9cd",
       "kind": "report"
+    },
+    "macos-route-av1-qualification-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-route-av1-qualification.md",
+      "sha256": "f7ebd81dc2c2348cb98736788ed5f240560c78c0bdbfda0e26c0a97bb1547fb9",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1510,10 +1515,11 @@
         "macos-dts-independent-pcm-20261103",
         "macos-switch-independent-pcm-20261103",
         "macos-public-track-switch-20261103",
-        "macos-output-route-20261103"
+        "macos-output-route-20261103",
+        "macos-route-av1-qualification-20261103"
       ],
       "acceptance": null,
-      "nextAction": "qualify-av1-on-updated-sdk-and-remaining-device-output-boundaries"
+      "nextAction": "qualify-remaining-device-and-output-boundaries"
     },
     {
       "requirement": "CAP-JS",
