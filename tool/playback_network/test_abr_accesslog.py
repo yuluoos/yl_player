@@ -14,6 +14,17 @@ from abr_accesslog import cleanup_owned, observe_owned
 from abr_accesslog import summarize
 
 class AccessLogTests(unittest.TestCase):
+    def test_supplemental_eof_observation_preserves_original_deadline(self):
+        for elapsed, completed, on_time in [(139.9, True, True), (140.1, True, False),
+                                             (164.9, False, False)]:
+            receipt = {'errors': []}
+            abr_accesslog.record_stall_eof(receipt, dict(elapsed=elapsed, completed=completed,
+                                                       position=119.736))
+            observation = receipt['stallEofObservation']
+            self.assertEqual(observation['completedBy140s'], on_time)
+            self.assertEqual(observation['eofElapsedSeconds'], elapsed if completed else None)
+            self.assertEqual(bool(receipt['errors']), not on_time)
+
     def test_prepared_production_race_requires_cancelled_candidate_and_actual_pts(self):
         marker = dict(sessionId='same', scenario='seek-prepared', candidatePrepared=17.51,
             commandStarted=17.52, commandCompleted=17.53, released=17.54, tokenCancelled=True,

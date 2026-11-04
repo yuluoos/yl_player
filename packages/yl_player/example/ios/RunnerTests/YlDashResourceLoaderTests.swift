@@ -1785,7 +1785,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
         intentRevision: publicHost?.acknowledgedTransportRevision ?? 0,
         credentialRevision: currentCredentialContext()?.revision ?? 0)
     }
-    while ProcessInfo.processInfo.systemUptime - started < 140 {
+    // Keep collecting through the injected outage for the separate EOF observation.
+    let observationSeconds: TimeInterval = env["YL_ABR_PROBE_STALL_EOF"] == "1" ? 165 : 140
+    while ProcessInfo.processInfo.systemUptime - started < observationSeconds {
       let item = try XCTUnwrap(player.currentItem)
       if item.presentationSize.width == 640 { sawHigh = true }
       if sawHigh && item.presentationSize.width == 320 { sawDownshift = true }

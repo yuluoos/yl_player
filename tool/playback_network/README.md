@@ -559,6 +559,13 @@ of the local readiness/redirect test; it does not enable production recovery.
 
 ## Production iOS recovery capture
 
+For the physical iOS `downshift-and-25s-body-stall-v1` profile, add
+`--observe-stall-eof` to collect up to 165 seconds of playback observations.
+The extra 25 seconds cover the injected media outage. The receipt records
+`stallEofObservation.completedBy140s` separately from the observed EOF time.
+A late or missing EOF still fails the original 140-second gate. The outer
+240-second process deadline and the player's own timeouts are unchanged.
+
 Add `--production-recovery` to the physical-device, 120-second `auto-reload`,
 `normal`, `manifest-only` capture. This selects the typed public host with the
 production dispatcher enabled; the probe never installs a diagnostic candidate.

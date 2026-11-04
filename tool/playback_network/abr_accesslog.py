@@ -795,6 +795,15 @@ def observe_owned(out, token, executable):
     return (pid, identity) if identity else None
 
 
+def record_stall_eof(receipt, last):
+    eof_elapsed = last['elapsed'] if last['completed'] else None
+    on_time = eof_elapsed is not None and eof_elapsed <= 140
+    receipt['stallEofObservation'] = dict(completedBy140s=on_time, eofElapsedSeconds=eof_elapsed,
+                                          finalPositionSeconds=last['position'])
+    if not on_time:
+        receipt['errors'].append('no observed EOF by original 140s deadline')
+
+
 def wait_for_native(process, command, observe, timeout=240):
     deadline = time.monotonic() + timeout
     while (code := process.poll()) is None:
@@ -946,6 +955,10 @@ def run(args):
         receipt['fixture']=create(out/'fixture', duration_seconds=duration_seconds,
                                   direct_hls_control=direct)
         profile=load_profiles(args.profiles)[args.profile];receipt['profileSha256']=profile.sha256
+        observe_stall_eof = getattr(args, 'observe_stall_eof', False)
+        if observe_stall_eof and not (production and profile.id == 'downshift-and-25s-body-stall-v1'
+                                      and args.production_command == 'none' and fault_rate is None):
+            raise ValueError('supplemental EOF observation requires the 25s production stall profile')
         destination='platform=macOS,arch=arm64'
         if args.device:
             if not re.fullmatch('[0-9A-Fa-f-]{36}',args.device):raise ValueError('invalid simulator identifier')
@@ -979,6 +992,7 @@ def run(args):
             YL_ABR_PROBE_FAULT_URL=fault_url,YL_ABR_PROBE_TOKEN=token,YL_ABR_PROBE_URL=f'http://{host}:{server.server_port}/manifest.mpd',YL_ABR_PROBE_DIRECTORY=str(out),
             YL_ABR_PROBE_DEVICE='1' if physical_device else '0', YL_ABR_PROBE_OWNED_HOST=host if physical_device else '',
             YL_ABR_PROBE_SECONDS=str(duration_seconds), YL_ABR_PROBE_DIRECT_HLS='1' if direct else '0',
+            YL_ABR_PROBE_STALL_EOF='1' if observe_stall_eof else '0',
             YL_ABR_PROBE_RECOVERY_ACTION=recovery_action,
             YL_ABR_PROBE_PRODUCTION_RECOVERY='1' if production else '0',
             YL_ABR_PROBE_PRODUCTION_COMMAND=getattr(args, 'production_command', 'none'),
@@ -1020,6 +1034,8 @@ def run(args):
             raise ValueError('missing final ABR observation')
         if physical_device and not all(isinstance(row, dict) and row.get('captureDeviceKind') == 'physical' for row in rows):
             raise ValueError('physical capture requires native device identity')
+        if observe_stall_eof:
+            record_stall_eof(receipt, rows[-1])
         from proxy_boundaries import proxy_trace_version, record_proxy_observation
         if proxy_trace_version(rows) in (1, 2, 3, 4, 5, 6, 7) and not direct:
             proxy_rows=read_rows(out/'proxy-requests.jsonl')
@@ -1219,6 +1235,7 @@ def main():
     budget_requirements.add_argument('--require-budget-renewal', action='store_true', help='require v3 exhausted first round, real high-frame renewal, and successful attempt three after a second downshift')
     budget_requirements.add_argument('--require-budget-exhaustion', action='store_true', help='require a second downshift after attempt two, eligible windows and no third reservation')
     p.add_argument('--require-production-install', action='store_true', help='fail unless same-session production recovery actually installs; incompatible with new Load')
+    p.add_argument('--observe-stall-eof', action='store_true', help='observe EOF for up to 25s beyond the original 140s gate on the 25s outage profile')
     p.add_argument('--production-recovery', action='store_true', help='observe automatic production public-host recovery; no diagnostic installation')
     p.add_argument('--public-policy-race', action='store_true',
                    help='typed public caps/fixed command after candidate readiness; requires cancellation')
