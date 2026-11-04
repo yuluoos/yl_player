@@ -1,0 +1,244 @@
+{
+  "transport": "http",
+  "fixture": "qual-av1.mkv",
+  "mode": "failure-reload",
+  "reloads": [
+    {
+      "kind": "reload",
+      "previous": "apple-1-s1",
+      "positionUs": 1171634000
+    },
+    {
+      "kind": "reload",
+      "previous": "apple-1-s2",
+      "positionUs": 1173281000
+    }
+  ],
+  "inventory": {
+    "default": 103,
+    "devices": [
+      {
+        "id": 103,
+        "canBeDefault": 1,
+        "name": "AirPods Pro - Find My",
+        "transport": "blue"
+      },
+      {
+        "id": 91,
+        "canBeDefault": 1,
+        "name": "MacBook Pro扬声器",
+        "transport": "bltn"
+      }
+    ]
+  },
+  "productSha256": "96bedbd09a3ccce744000a6ecf09c7c69454e23f999303c2f2df4c169bb89dc3",
+  "phases": [
+    {
+      "label": "original",
+      "id": 103,
+      "start": {
+        "hostSeconds": 57091.316322333,
+        "outputDevices": [
+          103
+        ],
+        "process": 143,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s1",
+          "status": "playing",
+          "positionUs": 1170076000,
+          "decoder": "software",
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 57092.330002958,
+        "outputDevices": [
+          103
+        ],
+        "process": 143,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s1",
+          "status": "playing",
+          "positionUs": 1171110000,
+          "decoder": "software",
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    },
+    {
+      "label": "alternate",
+      "id": 91,
+      "start": {
+        "hostSeconds": 57093.634247333,
+        "outputDevices": [
+          91
+        ],
+        "process": 143,
+        "default": 91,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s2",
+          "status": "playing",
+          "positionUs": 1171634000,
+          "decoder": "software",
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 57094.687611375,
+        "outputDevices": [
+          91
+        ],
+        "process": 143,
+        "default": 91,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s2",
+          "status": "playing",
+          "positionUs": 1172663000,
+          "decoder": "software",
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    },
+    {
+      "label": "returned",
+      "id": 103,
+      "start": {
+        "hostSeconds": 57095.971582666,
+        "outputDevices": [
+          103
+        ],
+        "process": 143,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s3",
+          "status": "playing",
+          "positionUs": 1173281000,
+          "decoder": "software",
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      },
+      "end": {
+        "hostSeconds": 57096.986590458,
+        "outputDevices": [
+          103
+        ],
+        "process": 143,
+        "default": 103,
+        "runningOutput": 1,
+        "public": {
+          "kind": "state",
+          "session": "apple-1-s3",
+          "status": "playing",
+          "positionUs": 1174301000,
+          "decoder": "software",
+          "audio": [
+            "audio-1"
+          ],
+          "failure": null
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "pid": 64166,
+  "httpLoads": [
+    {
+      "kind": "http",
+      "session": "apple-1-s1",
+      "load": 1,
+      "ranges": [
+        "bytes=0-",
+        "bytes=19027801-",
+        "bytes=18473984-"
+      ]
+    },
+    {
+      "kind": "http",
+      "session": "apple-1-s2",
+      "load": 2,
+      "ranges": [
+        "bytes=0-",
+        "bytes=19027801-",
+        "bytes=18505594-"
+      ]
+    },
+    {
+      "kind": "http",
+      "session": "apple-1-s3",
+      "load": 3,
+      "ranges": [
+        "bytes=0-",
+        "bytes=19027801-",
+        "bytes=18537194-"
+      ]
+    }
+  ],
+  "interruptions": [
+    {
+      "hostSeconds": 57093.150746958,
+      "outputDevices": [],
+      "process": 143,
+      "default": 91,
+      "runningOutput": 0,
+      "public": {
+        "kind": "state",
+        "session": "apple-1-s1",
+        "status": "failed",
+        "positionUs": 1171634000,
+        "decoder": "software",
+        "audio": [
+          "audio-1"
+        ],
+        "failure": "render.audio_engine_failed"
+      }
+    },
+    {
+      "hostSeconds": 57095.465622041,
+      "outputDevices": [],
+      "process": 143,
+      "default": 103,
+      "runningOutput": 0,
+      "public": {
+        "kind": "state",
+        "session": "apple-1-s2",
+        "status": "failed",
+        "positionUs": 1173281000,
+        "decoder": "software",
+        "audio": [
+          "audio-1"
+        ],
+        "failure": "render.audio_engine_failed"
+      }
+    }
+  ],
+  "exit": 0,
+  "completed": true,
+  "finalDefault": 103
+}

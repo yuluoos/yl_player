@@ -18,7 +18,7 @@ def require(condition, message):
         raise RuntimeError(message)
 
 
-def collect(app, probe, pair, out, mode, av1=False):
+def collect(app, probe, pair, out, mode, av1=False, transport='file'):
     out.mkdir(parents=True, exist_ok=False)
     def snapshot(*args):
         return json.loads(subprocess.check_output([probe, *args]))
@@ -31,7 +31,7 @@ def collect(app, probe, pair, out, mode, av1=False):
             and devices[i]['transport'] in PHYSICAL for i in pair), 'chosen pair is not available')
     other = first if original == second else second
     product = freeze(app)
-    result = dict(fixture='qual-av1.mkv' if av1 else 'long_60fps_h264_aac.mkv', mode=mode, reloads=[], inventory=inventory, productSha256=product['sha256'], phases=[], passed=False)
+    result = dict(transport=transport, fixture='qual-av1.mkv' if av1 else 'long_60fps_h264_aac.mkv', mode=mode, reloads=[], inventory=inventory, productSha256=product['sha256'], phases=[], passed=False)
     def save():
         (out/'result.json').write_text(json.dumps(result, indent=2, ensure_ascii=False)+'\n')
     save()
@@ -42,7 +42,7 @@ def collect(app, probe, pair, out, mode, av1=False):
     awaiting_failure = False
     attempted_change = False
     with (out/'player.log').open('wb') as log, (out/'observations.jsonl').open('w') as observations:
-        proc = subprocess.Popen([app/'Contents/MacOS/yl_player_example'], env=dict(os.environ, YL_ROUTE_AV1='1' if av1 else '0'),
+        proc = subprocess.Popen([app/'Contents/MacOS/yl_player_example'], env=dict(os.environ, YL_ROUTE_TRANSPORT=transport, YL_ROUTE_AV1='1' if av1 else '0'),
                                 stdin=subprocess.PIPE, text=True, stdout=log, stderr=log)
         result['pid'] = proc.pid
         try:
@@ -56,6 +56,8 @@ def collect(app, probe, pair, out, mode, av1=False):
                         event = json.loads(line.split(' ', 1)[1])
                         if event['kind'] == 'error':
                             raise RuntimeError(event['detail'])
+                        if event['kind'] == 'http':
+                            result.setdefault('httpLoads', []).append(event)
                         if event['kind'] == 'reload':
                             require(previous_session and event['previous'] == previous_session, 'unexpected reload')
                             result['reloads'].append(event)
@@ -132,6 +134,11 @@ def collect(app, probe, pair, out, mode, av1=False):
                 result['exit'] = proc.wait(timeout=85)
                 result['completed'] = any('"status":"completed"' in line for line in (out/'player.log').read_text().splitlines())
                 require(result['exit'] == 0 and result['completed'], 'playback did not complete naturally')
+                if transport == 'http':
+                    sessions = [p['start']['public']['session'] for p in result['phases']]
+                    loads = result.get('httpLoads', [])
+                    require([e['session'] for e in loads if e['ranges']] == list(dict.fromkeys(sessions)),
+                            'missing per-session HTTP range receipt')
                 require(verify(app, product), 'app changed during playback')
 
         except Exception as error:
@@ -161,7 +168,8 @@ if __name__ == '__main__':
     parser.add_argument('--devices', nargs=2, type=int, required=True)
     parser.add_argument('--mode', choices=('same-session', 'explicit-reload', 'failure-reload'), default='same-session')
     parser.add_argument('--av1', action='store_true', help='Use the qualified AV1/Opus fixture')
+    parser.add_argument('--transport', choices=('file', 'http'), default='file')
     args = parser.parse_args()
-    result = collect(args.app.resolve(), args.probe.resolve(), args.devices, args.out, args.mode, args.av1)
+    result = collect(args.app.resolve(), args.probe.resolve(), args.devices, args.out, args.mode, args.av1, args.transport)
     print(json.dumps({k: result.get(k) for k in ('passed','error','finalDefault','completed')}))
     sys.exit(0 if result['passed'] else 1)

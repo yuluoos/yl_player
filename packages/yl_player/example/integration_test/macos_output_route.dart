@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:yl_player/yl_player.dart';
 
+import 'support/range_media_server.dart';
+
 void report(String kind, Map<String, Object?> data) {
   stdout.writeln('ROUTE_EVENT ${jsonEncode({'kind': kind, ...data})}');
 }
@@ -18,19 +20,23 @@ Future<void> main() async {
     options: const YlPlayerOptions(audioPolicy: YlAudioPolicy.appManaged),
   );
   var code = 1;
+  RangeMediaServer? server;
   Timer? timer;
   StreamSubscription<void>? commands;
   try {
     final av1 = Platform.environment['YL_ROUTE_AV1'] == '1';
-    final bytes = await rootBundle.load(
-      av1
-          ? 'assets/test_media/format_matrix/qual-av1.mkv'
-          : 'assets/test_media/long_60fps_h264_aac.mkv',
-    );
+    final asset = av1
+        ? 'assets/test_media/format_matrix/qual-av1.mkv'
+        : 'assets/test_media/long_60fps_h264_aac.mkv';
     final file = File('${directory.path}/route.mkv');
-    await file.writeAsBytes(
-      bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
-    );
+    if (Platform.environment['YL_ROUTE_TRANSPORT'] == 'http') {
+      server = await RangeMediaServer.start(asset: asset);
+    } else {
+      final bytes = await rootBundle.load(asset);
+      await file.writeAsBytes(
+        bytes.buffer.asUint8List(bytes.offsetInBytes, bytes.lengthInBytes),
+      );
+    }
     await player.setVolume(0.15);
     runApp(
       MaterialApp(
@@ -45,10 +51,18 @@ Future<void> main() async {
     );
     await WidgetsBinding.instance.endOfFrame;
     final end = Completer<void>();
+    var loadCount = 0;
     Future<void> playFrom(Duration position) async {
       timer?.cancel();
+      final origin = server;
+      final uri = origin?.mediaUri.replace(
+        path: '/route.mkv',
+        query: 'load=${++loadCount}',
+      );
       final session = await player.load(
-        YlFileSource(file.path),
+        uri == null
+            ? YlFileSource(file.path)
+            : YlNetworkSource(uri, intent: YlStreamIntent.onDemand),
         options: YlLoadOptions(startPosition: position),
       );
       await session.ready.timeout(const Duration(seconds: 15));
@@ -56,6 +70,24 @@ Future<void> main() async {
       await session.firstFrame.timeout(const Duration(seconds: 10));
       if (av1 && player.state.decoderMode != YlDecoderMode.software) {
         throw StateError('Expected qualified AV1 software decoding');
+      }
+      if (origin != null) {
+        final ranges = origin.requests
+            .where(
+              (r) =>
+                  r.uri.query == uri!.query &&
+                  r.method == 'GET' &&
+                  r.statusCode == HttpStatus.partialContent,
+            )
+            .map((r) => r.header('range'))
+            .toList();
+        if (ranges.isEmpty)
+          throw StateError('No HTTP range read for load $loadCount');
+        report('http', {
+          'session': player.state.sessionId?.value,
+          'load': loadCount,
+          'ranges': ranges,
+        });
       }
       timer = Timer.periodic(const Duration(milliseconds: 200), (_) {
         final s = player.state;
@@ -104,6 +136,7 @@ Future<void> main() async {
     await commands?.cancel();
     timer?.cancel();
     await player.dispose().timeout(const Duration(seconds: 3));
+    await server?.close();
     await directory.delete(recursive: true);
     report('finish', {'code': code});
     await stdout.flush();

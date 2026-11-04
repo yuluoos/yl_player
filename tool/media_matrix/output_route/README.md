@@ -26,3 +26,5 @@ python3 -B tool/media_matrix/output_route/av1_endpoint.py QUALIFIED_PUBLIC_APP /
 ```
 
 对本地 AV1 做同样的设备往返切换时，在 `failure-reload` 命令末尾加 `--av1`。测试宿主须包含已冻结的 `assets/test_media/format_matrix/qual-av1.mkv`，并通过 `package_macos_matrix.py --profile` 装入与 SDK 匹配的档位。测试从第 1170 秒开始，在每次建会话后核对软件解码，最后等待素材自然结束。
+
+在 AV1 往返命令上追加 `--transport http` 可覆盖受管 HTTP。测试使用回环 Range 服务，为每次公开 load 分配独立查询标识，并记录获 206 响应的 GET 范围及对应会话。采集器要求每个实际输出的会话均有对应的 Range 回执。

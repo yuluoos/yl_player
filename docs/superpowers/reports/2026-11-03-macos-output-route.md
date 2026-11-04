@@ -41,4 +41,16 @@ AirPods 初始输出通过。切到扬声器后，默认设备确实变化，播
 | 91 | apple-1-s2 | 1171.514 → 1172.485 |
 | 103 | apple-1-s3 | 1173.174 → 1174.441 |
 
-末会话自然完成，应用退出 0，最终默认设备为原 AirPods。此次往返覆盖本地文件。HTTP 的既有证据覆盖默认端点上的连续播放与定位，USB 输出仍待实测。[回执](evidence/2026-11-03-macos-av1-output-roundtrip/result.json) · [公共事件](evidence/2026-11-03-macos-av1-output-roundtrip/public-events.jsonl) · [逐次端点观测](evidence/2026-11-03-macos-av1-output-roundtrip/observations.jsonl)
+末会话自然完成，应用退出 0，最终默认设备为原 AirPods。此次往返覆盖本地文件。[回执](evidence/2026-11-03-macos-av1-output-roundtrip/result.json) · [公共事件](evidence/2026-11-03-macos-av1-output-roundtrip/public-events.jsonl) · [逐次端点观测](evidence/2026-11-03-macos-av1-output-roundtrip/observations.jsonl)
+
+## HTTP Range AV1 的设备往返切换
+
+使用同一已签发 SDK，经回环 HTTP 服务播放有限、可定位的 AV1/Opus 素材，从 1170 秒开始。每次 load 均使用独立查询标识。三个会话分别取得对应标识的 Range GET 206 回执，均使用软件解码。两次切换均先观察到旧会话公开报告 `render.audio_engine_failed`、进程音频输出停止，才从失败位置显式重载。HAL 核对的是同一播放器 PID 64166 的实际输出设备。
+
+| 公共会话 | 唯一运行中输出（103 为 AirPods，91 为内置扬声器） | 首帧检查时已记录的 206 GET 数 | 输出期间媒体时间（秒） |
+| --- | --- | ---: | ---: |
+| apple-1-s1 | 103 | 3 | 1170.076 → 1171.110 |
+| apple-1-s2 | 91 | 3 | 1171.634 → 1172.663 |
+| apple-1-s3 | 103 | 3 | 1173.281 → 1174.301 |
+
+最后一个会话自然结束，播放器退出 0，默认设备恢复为 AirPods。本轮覆盖回环 HTTP 和上述两个端点，USB 输出仍待实测。[验收回执与 Range 记录](evidence/2026-11-03-macos-http-av1-output-roundtrip/result.json) · [公共事件](evidence/2026-11-03-macos-http-av1-output-roundtrip/public-events.jsonl) · [同步设备观测](evidence/2026-11-03-macos-http-av1-output-roundtrip/observations.jsonl)
