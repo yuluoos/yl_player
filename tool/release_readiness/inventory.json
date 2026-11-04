@@ -1108,6 +1108,11 @@
       "path": "docs/superpowers/reports/2026-11-03-macos-route-av1-qualification.md",
       "sha256": "f7ebd81dc2c2348cb98736788ed5f240560c78c0bdbfda0e26c0a97bb1547fb9",
       "kind": "report"
+    },
+    "macos-av1-speaker-output-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-av1-speaker-output.md",
+      "sha256": "4f7fe765020c2e9a349c64585dbb4a3f844ef080485d37e521dc314b2bdd35b4",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1516,7 +1521,8 @@
         "macos-switch-independent-pcm-20261103",
         "macos-public-track-switch-20261103",
         "macos-output-route-20261103",
-        "macos-route-av1-qualification-20261103"
+        "macos-route-av1-qualification-20261103",
+        "macos-av1-speaker-output-20261103"
       ],
       "acceptance": null,
       "nextAction": "qualify-remaining-device-and-output-boundaries"

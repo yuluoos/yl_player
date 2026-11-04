@@ -18,3 +18,9 @@ python3 -B tool/media_matrix/output_route/run.py APP /tmp/yl-route-probe OUT3 --
 `same-session` 要求同一会话在新端点持续播放。`explicit-reload` 在 HAL 显示旧输出停止后，通过测试进程的标准输入请求调用方显式重载。每轮会记录端点、PID 的实际输出和公共媒体时间，最后等待自然结束。默认音量由应用自身设为 15%。
 
 修复验收使用 `failure-reload`。仅在原会话进入 `failed`、错误码为 `render.audio_engine_failed` 且进程已停止输出后才请求显式重载。
+
+已签发 AV1 档位的公共验证宿主可单独观测当前默认物理端点。以下命令要求文件和 HTTP 在首次播放、三次定位恢复及片尾阶段均取得该 PID 在目标设备运行输出的 HAL 样本。
+
+```sh
+python3 -B tool/media_matrix/output_route/av1_endpoint.py QUALIFIED_PUBLIC_APP /tmp/yl-route-probe NEW_OUT
+```
