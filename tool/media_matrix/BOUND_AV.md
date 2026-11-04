@@ -159,6 +159,41 @@ python3 -B tool/media_matrix/run_bound_flutter_matrix.py --platform ios --app /a
 python3 -B tool/media_matrix/run_bound_flutter_matrix.py --platform android --apk /absolute/frozen.apk --serial OWNED_SERIAL --out /absolute/new-run
 ```
 
+For a signed macOS matrix that includes software AV1, build the qualification
+host in arm64 Release with Swift optimization and the explicit
+`DEBUG YL_BOUND_AV YL_VIDEO_PERFORMANCE_PROBE` compilation conditions. The
+observer activates when a matrix plan is present. Run the existing two-process
+AV1 qualification on that optimized SDK and issue its exact-image profile.
+Build the matrix frontend from the same source. On macOS, keep the Xcode
+host in Debug for the native observation contract and compile the Dart test in
+Profile mode (AOT). From the example directory:
+
+```sh
+flutter build macos --profile --config-only -t integration_test/bound_av_test.dart
+xcodebuild build -workspace macos/Runner.xcworkspace -scheme Runner \
+  -configuration Debug FLUTTER_BUILD_MODE=profile -destination 'platform=macOS,arch=arm64' \
+  -derivedDataPath /tmp/yl-matrix CODE_SIGNING_ALLOWED=NO \
+  'OTHER_SWIFT_FLAGS=$(inherited) -D YL_BOUND_AV'
+```
+
+The native collector uses its existing Debug observer protocol. The Dart test
+logs its actual Flutter mode. Its macOS binding services widget and resize
+requests and lets idle vsync stop. Paused readbacks still use the original
+150ms interval. Package the frontend, measured frameworks and issued profile
+into a new app:
+
+```sh
+python3 -B tool/media_matrix/package_macos_matrix.py \
+  /absolute/debug/yl_player_example.app /absolute/qualification.app \
+  /absolute/matrix.app --profile /absolute/yl-player-qualified-av1.json
+```
+
+The packager removes Xcode's absolute PackageFrameworks search paths from the
+Debug launcher and package wrappers. Both measured frameworks retain their
+captured bytes. The outer signature seals the profile with this app. Run the
+44-cell collector on the resulting frozen bundle. For an initial non-AV1
+observation preflight, omit `--profile` and use a separate output path.
+
 The fixed catalog has 22 inputs in each of file and explicit managed HTTP: 40
 required cells, two diagnostic MPEG-2 cells and two corrupt-input cells. Each
 cell gets an independent run/session under one matrix/product identity. Failure

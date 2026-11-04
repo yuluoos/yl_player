@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -16,11 +17,14 @@ import 'support/bound_cleanup.dart';
 /// Apple samples the attached native view; Android samples Flutter composition.
 /// Neither observation certifies physical screen/speaker synchronization.
 void main() {
-  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isMacOS || Platform.isIOS) {
-    // Native views need ordinary live widget/layout updates between observations.
+  final binding = Platform.isMacOS
+      ? (_MacOSMatrixBinding()
+          ..framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.benchmark)
+      : IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isIOS) {
     binding.framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
   }
+  debugPrint('MATRIX_FLUTTER_MODE profile=$kProfileMode debug=$kDebugMode');
   const bridge = MethodChannel('yl_player_example/debug/bound_av');
   String? failure;
   binding.allTestsPassed.future.then((passed) async {
@@ -285,7 +289,8 @@ void main() {
             await session.play().timeout(const Duration(seconds: 12));
             // The microphone needs the *next* audible tone transition to map
             // captured device samples back to this seek without using item time.
-            final captureEndMs = continuousSourcePull && plan['acoustic'] != null
+            final captureEndMs =
+                continuousSourcePull && plan['acoustic'] != null
                 ? (target ~/ 1000 + 1) * 1000 + 650
                 : target + 650;
             await captureUntil(
@@ -355,4 +360,25 @@ void main() {
       rethrow;
     }
   });
+}
+
+/// Let the Flutter framework schedule the frames needed by the native view.
+/// Benchmark policy prevents the test binding from requesting another vsync
+/// unconditionally at the end of every draw.
+class _MacOSMatrixBinding extends IntegrationTestWidgetsFlutterBinding {
+  @override
+  void scheduleFrame() => _requestFrame(super.scheduleFrame);
+
+  @override
+  void scheduleForcedFrame() => _requestFrame(super.scheduleForcedFrame);
+
+  void _requestFrame(VoidCallback request) {
+    final policy = framePolicy;
+    framePolicy = LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
+    try {
+      request();
+    } finally {
+      framePolicy = policy;
+    }
+  }
 }

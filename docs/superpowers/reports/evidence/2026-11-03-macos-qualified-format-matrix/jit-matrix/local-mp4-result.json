@@ -1,0 +1,194 @@
+{
+  "acousticMeasurements": [
+    {
+      "firstUs": 130000,
+      "lastUs": 930000,
+      "marker": 0,
+      "pairs": 6,
+      "phase": "play"
+    },
+    {
+      "firstUs": 1070000,
+      "lastUs": 1870000,
+      "marker": 1,
+      "pairs": 6,
+      "phase": "play"
+    },
+    {
+      "firstUs": 2030000,
+      "lastUs": 2970000,
+      "marker": 2,
+      "pairs": 7,
+      "phase": "play"
+    },
+    {
+      "firstUs": 3130000,
+      "lastUs": 3870000,
+      "marker": 3,
+      "pairs": 6,
+      "phase": "play"
+    },
+    {
+      "firstUs": 1330000,
+      "lastUs": 1830000,
+      "marker": 1,
+      "pairs": 4,
+      "phase": "seek-1250"
+    },
+    {
+      "firstUs": 2370000,
+      "lastUs": 2870000,
+      "marker": 2,
+      "pairs": 4,
+      "phase": "seek-2250"
+    },
+    {
+      "firstUs": 150000,
+      "lastUs": 950000,
+      "marker": 0,
+      "pairs": 6,
+      "phase": "seek-0"
+    }
+  ],
+  "artifactsUnchanged": true,
+  "collectionCompleted": true,
+  "collectorError": null,
+  "deviceCleanupCompleted": null,
+  "errors": [],
+  "executionTarget": {
+    "id": "macos",
+    "kind": "host"
+  },
+  "fullAcceptance": false,
+  "measurements": [
+    {
+      "caseId": "mp4-avc-aac",
+      "windows": [
+        {
+          "channels": [
+            {
+              "amplitude": 0.039943950917737704,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.03994648711880088,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03998609176044532,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.039955094870299725,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.039960481309206534,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.04001571952856608,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03998291279945021,
+              "channel": 0,
+              "frequencyHz": 1100
+            },
+            {
+              "amplitude": 0.03994198238204142,
+              "channel": 1,
+              "frequencyHz": 1155
+            }
+          ],
+          "marker": 3,
+          "phase": "play"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.0399618446676819,
+              "channel": 0,
+              "frequencyHz": 660
+            },
+            {
+              "amplitude": 0.0399264985707527,
+              "channel": 1,
+              "frequencyHz": 715
+            }
+          ],
+          "marker": 1,
+          "phase": "seek-1250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.0399399104365709,
+              "channel": 0,
+              "frequencyHz": 880
+            },
+            {
+              "amplitude": 0.039948352500431945,
+              "channel": 1,
+              "frequencyHz": 935
+            }
+          ],
+          "marker": 2,
+          "phase": "seek-2250"
+        },
+        {
+          "channels": [
+            {
+              "amplitude": 0.03996247107896674,
+              "channel": 0,
+              "frequencyHz": 440
+            },
+            {
+              "amplitude": 0.039789432926626116,
+              "channel": 1,
+              "frequencyHz": 495
+            }
+          ],
+          "marker": 0,
+          "phase": "seek-0"
+        }
+      ]
+    }
+  ],
+  "negativeFramework": false,
+  "negativeIdentity": false,
+  "processExit": -15,
+  "publicTestPassed": true,
+  "renderPullAcceptance": true,
+  "renderPullErrors": [],
+  "renderPullRows": 1,
+  "requiredRows": 1,
+  "runtimeIdentityVerified": true,
+  "scopeAcceptance": true,
+  "statusRunMatches": true,
+  "supportedRows": 1
+}

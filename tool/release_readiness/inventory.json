@@ -1073,6 +1073,11 @@
       "path": "docs/superpowers/reports/2026-11-03-macos-av1-qualification.md",
       "sha256": "1c336eb539c2c7b76c738cf134ae3a9485f545aaab826151fd088eaf0255506f",
       "kind": "report"
+    },
+    "macos-qualified-format-matrix-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-qualified-format-matrix.md",
+      "sha256": "bc78f15633e53d8e0427025388eb5e4e41fdd3e03244b3c8bb75f1a6778f729d",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1461,7 +1466,7 @@
       "requirement": "CAP-FORMAT",
       "platform": "macos",
       "implementation": "partial",
-      "verification": "failed",
+      "verification": "not_run",
       "evidence": [
         "p03",
         "remaining-acceptance-20261026",
@@ -1474,10 +1479,11 @@
         "macos-av1-single-thread-20261101",
         "macos-av1-queue-timeout-20261103",
         "macos-av1-pause-backpressure-20261103",
-        "macos-av1-qualification-20261103"
+        "macos-av1-qualification-20261103",
+        "macos-qualified-format-matrix-20261103"
       ],
       "acceptance": null,
-      "nextAction": "complete-current-build-full-format-matrix-and-device-coverage-after-exact-image-av1-qualification"
+      "nextAction": "qualify-remaining-device-reference-and-output-boundaries-after-40-of-40-macos-format-matrix"
     },
     {
       "requirement": "CAP-JS",
