@@ -212,10 +212,11 @@ class FixtureServer(ThreadingHTTPServer):
     # A queue of eight triggered macOS SYN cookies in an eight-connection burst.
     request_queue_size = 32
 
-    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None, connection_mode="close", connection_key=None):
+    def __init__(self, root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host=None, connection_mode="close", connection_key=None, queue_when_busy=False):
         if connection_mode not in ("close", "http11-close", "http11-keepalive"):
             raise ValueError("invalid connection mode")
         self.connection_mode = connection_mode
+        self.queue_when_busy = queue_when_busy
         self.connection_key = connection_key
         self.connection_ids = {}
         self.lifecycle_origin = now()
@@ -239,6 +240,15 @@ class FixtureServer(ThreadingHTTPServer):
         self.timeline_mode = 'first-get' if start_on_first_get else 'server-start'
         self.started = not start_on_first_get
         super().__init__((host, port), Handler)
+
+    def get_request(self):
+        # Leave queued sockets in the kernel until a worker can accept one.
+        # Return to serve_forever periodically so shutdown can interrupt the wait.
+        if self.queue_when_busy:
+            with self.handlers:
+                if not self.handlers.wait_for(lambda: self.active < 8, timeout=0.1):
+                    raise BlockingIOError()
+        return super().get_request()
 
     def process_request(self, request, client_address):
         token = None
@@ -472,8 +482,8 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def make_server(root, profile, log, port=0, now=time.monotonic, sleep=time.sleep,
-                start_on_first_get=False, run_id=None, owned_host=None, connection_mode="close", connection_key=None):
-    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host, connection_mode, connection_key)
+                start_on_first_get=False, run_id=None, owned_host=None, connection_mode="close", connection_key=None, queue_when_busy=False):
+    return FixtureServer(root, profile, log, port, now, sleep, start_on_first_get, run_id, owned_host, connection_mode, connection_key, queue_when_busy)
 
 
 def summarize_connections(rows, expected_mode):

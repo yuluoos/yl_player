@@ -220,6 +220,30 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(trace['rejections'][0]['active'],8)
         self.assertEqual(self.records(),[])
 
+    def test_backlogged_request_is_served_when_a_handler_finishes(self):
+        self.start(queue_when_busy=True)
+        address = ('127.0.0.1', self.server.server_port)
+        peers = []
+        try:
+            for count in range(1, 9):
+                peers.append(socket.create_connection(address, timeout=2))
+                with self.server.handlers:
+                    self.assertTrue(self.server.handlers.wait_for(
+                        lambda: self.server.active == count, timeout=1))
+            from contextlib import closing
+            import select
+            with closing(http.client.HTTPConnection(*address, timeout=2)) as pending:
+                pending.request('GET', '/segment.m4s')
+                self.assertFalse(select.select([pending.sock], [], [], 0.15)[0])
+                peers.pop().close()
+                self.assertEqual(pending.getresponse().read(), self.payload)
+        finally:
+            for peer in peers:
+                peer.close()
+        self.assertTrue(self.server.wait_handlers())
+        self.assertEqual(self.server.rejected_requests, 0)
+        self.assertEqual(self.server.requests, 9)
+
     def test_lifecycle_keeps_full_rejection_count_when_samples_are_bounded(self):
         self.start();peers=[]
         try:

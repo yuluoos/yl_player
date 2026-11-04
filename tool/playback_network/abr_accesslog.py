@@ -919,6 +919,7 @@ def run(args):
         auto_scenario = getattr(args, 'auto_scenario', 'normal')
         if auto_scenario not in ('normal', 'pause-first', 'pause-during-preparation', 'pause-during-metadata', 'seek-during-preparation', 'caps-during-preparation', 'fixed-during-preparation') or (auto_scenario != 'normal' and recovery_action != 'auto-reload'):
             raise ValueError('invalid automatic recovery scenario')
+        receipt['queueWhenBusy'] = getattr(args, 'queue_when_busy', False)
         receipt['connectionMode'] = getattr(args, 'connection_mode', 'close')
         if receipt['connectionMode'] not in ('close','http11-close','http11-keepalive'):
             raise ValueError('invalid connection mode')
@@ -969,6 +970,7 @@ def run(args):
             raise ValueError('triggered fault requires an initial-only static profile')
         server=make_server(out/'fixture',profile,log,0,start_on_first_get=True,run_id='abr-accesslog',
                            owned_host=host if physical_device else None, connection_mode=receipt['connectionMode'],
+                           queue_when_busy=receipt['queueWhenBusy'],
                            **({'connection_key':connection_key} if connection_key is not None else {}))
         fault_url=''
         if fault_rate is not None:
@@ -1220,6 +1222,8 @@ def main():
     p.add_argument('--client-network-log', action='store_true',
                    help='export the owned test process network log and link Foundation tasks (implies --transaction-connections)')
     p.add_argument('--packet-interface',help='explicit owned IPv4 capture interface; macOS administrator authentication, bounded to this TCP service')
+    p.add_argument('--queue-when-busy', action='store_true',
+                   help='Leave connections in the listener backlog while all eight fixture handlers are busy')
     p.add_argument('--connection-mode',choices=('close','http11-close','http11-keepalive'),default='close')
     p.add_argument('--profiles',type=Path,default=Path(__file__).with_name('profiles.json'))
     p.add_argument('--duration-seconds',type=int,choices=(40,120),default=40)

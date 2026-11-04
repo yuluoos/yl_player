@@ -566,6 +566,12 @@ The extra 25 seconds cover the injected media outage. The receipt records
 A late or missing EOF still fails the original 140-second gate. The outer
 240-second process deadline and the player's own timeouts are unchanged.
 
+Use `--queue-when-busy` to isolate a media outage from fixture overload.
+When all eight handlers are busy, incoming connections wait in the existing
+listener backlog. The default fixture closes additional connections immediately.
+The receipt records the selected behavior in `queueWhenBusy`. Use the same
+connection mode, media profile and player build when comparing both behaviors.
+
 Add `--production-recovery` to the physical-device, 120-second `auto-reload`,
 `normal`, `manifest-only` capture. This selects the typed public host with the
 production dispatcher enabled; the probe never installs a diagnostic candidate.
