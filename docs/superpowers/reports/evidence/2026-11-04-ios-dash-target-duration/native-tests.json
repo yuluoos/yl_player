@@ -1,0 +1,84 @@
+{
+  "target-red-signed": {
+    "result": "Failed",
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "testFailures": [
+      {
+        "failureText": "XCTAssertTrue failed",
+        "targetName": "RunnerTests",
+        "testIdentifier": 1,
+        "testIdentifierString": "YlDashHlsCompilerTests/testTargetDurationSharedAcrossAudioAndVideoUsesPublishedExtinf()",
+        "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashHlsCompilerTests/testTargetDurationSharedAcrossAudioAndVideoUsesPublishedExtinf",
+        "testName": "testTargetDurationSharedAcrossAudioAndVideoUsesPublishedExtinf()"
+      }
+    ],
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "00008140-000C49CC3493001C",
+      "deviceName": "iPhone",
+      "modelName": "iPhone 16",
+      "osBuildNumber": "24B119",
+      "osVersion": "27.2",
+      "platform": "iOS"
+    }
+  },
+  "target-green": {
+    "result": "Passed",
+    "passedTests": 81,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "testFailures": [],
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "00008140-000C49CC3493001C",
+      "deviceName": "iPhone",
+      "modelName": "iPhone 16",
+      "osBuildNumber": "24B119",
+      "osVersion": "27.2",
+      "platform": "iOS"
+    }
+  },
+  "audio-stale-red": {
+    "result": "Failed",
+    "passedTests": 0,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "testFailures": [
+      {
+        "failureText": "XCTAssertFalse failed",
+        "targetName": "RunnerTests",
+        "testIdentifier": 1,
+        "testIdentifierString": "YlDashResourceLoaderTests/testProductionRecoveryKeepsBufferedItemWhenLastTransferPredatesPreparation()",
+        "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashResourceLoaderTests/testProductionRecoveryKeepsBufferedItemWhenLastTransferPredatesPreparation",
+        "testName": "testProductionRecoveryKeepsBufferedItemWhenLastTransferPredatesPreparation()"
+      }
+    ],
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "00008140-000C49CC3493001C",
+      "deviceName": "iPhone",
+      "modelName": "iPhone 16",
+      "osBuildNumber": "24B119",
+      "osVersion": "27.2",
+      "platform": "iOS"
+    }
+  },
+  "audio-fresh": {
+    "result": "Passed",
+    "passedTests": 5,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "testFailures": [],
+    "device": {
+      "architecture": "arm64",
+      "deviceId": "00008140-000C49CC3493001C",
+      "deviceName": "iPhone",
+      "modelName": "iPhone 16",
+      "osBuildNumber": "24B119",
+      "osVersion": "27.2",
+      "platform": "iOS"
+    }
+  }
+}

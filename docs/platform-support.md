@@ -106,6 +106,13 @@ These are specific controlled observations, not complete CAP-ABR/CAP-LIVE,
 physical A/V, minimum-OS, long-play or P08 SLO qualification. See the
 [P04 stage report](superpowers/reports/2026-09-26-remaining-04-abr-live.md).
 
+On iPhone 16 (iOS 27.2), the owned 120-second AVC/AAC DASH programme completed
+a 25-second media outage in automatic mode. With eight server handlers and
+excess connections queued, both HTTP/1.1 connection modes resumed the same
+public session, recovered 640-pixel-wide output, and reached EOF within the
+140-second deadline. The observed frame publication gaps were 11.5–11.6 seconds.
+[Device results and capture commands](superpowers/reports/2026-11-03-ios-dash-rebuffer.md)
+
 ## RTMP foundation scope
 
 RTMP accepts automatic/FLV format and automatic/live intent. It is live,

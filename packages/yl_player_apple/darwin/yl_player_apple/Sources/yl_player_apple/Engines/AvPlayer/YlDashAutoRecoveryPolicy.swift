@@ -34,6 +34,8 @@ struct YlDashAutoRecoveryPolicy {
   private var target: Variant?
   private var anchor: Sample?
   private var windows = 0
+  static let preparationSeconds: TimeInterval = 2
+  private var lastByteProgress: Double?
   private var last: Sample?
   private var pending: Ticket?
   private var inFlight: Ticket?
@@ -93,6 +95,11 @@ struct YlDashAutoRecoveryPolicy {
       anchor = nil; windows = 0; pending = nil; inFlight = nil; last = nil; return nil
     }
     let previous = last
+    if let previous {
+      if s.bytes > previous.bytes { lastByteProgress = s.time }
+    } else {
+      lastByteProgress = nil
+    }
     last = s
     if s.current == target {
       reason = "highOutput"; sawHigh = true; anchor = nil; windows = 0; pending = nil
@@ -148,7 +155,10 @@ struct YlDashAutoRecoveryPolicy {
   func authorizes(_ ticket: Ticket, _ s: Sample) -> Bool {
     eligible(s) && last.map {
       s.time >= $0.time && s.position >= $0.position && s.bytes >= $0.bytes &&
-        s.transfer >= $0.transfer && s.requests >= $0.requests
+        s.transfer >= $0.transfer && s.requests >= $0.requests &&
+        // A qualified window can contain only transfers from before an outage.
+        // Keep the buffered item unless the current item is still receiving media.
+        (s.bytes > $0.bytes || lastByteProgress.map { s.time - $0 <= Self.preparationSeconds } == true)
     } == true && s.catalog == ticket.catalog && s.current.map { $0.bandwidth < (target?.bandwidth ?? 0) } == true && s.generation == ticket.generation && s.intentRevision == ticket.intentRevision && s.credentialRevision == ticket.credentialRevision &&
       inFlight?.id == ticket.id && s.time >= ticket.due && s.time <= ticket.due + 5
   }

@@ -120,15 +120,24 @@ enum YlDashHlsCompiler {
         guard !safe.contains("\""), !safe.contains("\\") else { throw YlDashBounds.unsupported }
         return safe
       }
+      let locale = Locale(identifier: "en_US_POSIX")
+      func extinf(_ seconds: Double) -> String {
+        String(format: "%.6f", locale: locale, seconds)
+      }
+      // RFC 8216 sections 4.3.3.1 and 6.2.4: one target for all renditions,
+      // measured using the rounded EXTINF values actually written to the playlists.
+      var longestSeconds = 0.0
+      for path in videoPaths + audioPaths {
+        for track in path {
+          for segment in track.segments {
+            longestSeconds = max(longestSeconds, Double(segment.ticks) / Double(segment.scale))
+          }
+        }
+      }
+      let target = max(1, Int64(Double(extinf(longestSeconds))!.rounded()))
       for name in names where name != "master" {
         let videoIndex = videoNames.firstIndex(of: name)
         let tracks = videoIndex.map { videoPaths[$0] } ?? audioPaths[audioNames.firstIndex(of: name)!]
-        var target: Int64 = 1
-        for track in tracks {
-          for segment in track.segments {
-            target = max(target, segment.ticks / segment.scale + (segment.ticks % segment.scale == 0 ? 0 : 1))
-          }
-        }
         var playlist = "#EXTM3U\n#EXT-X-VERSION:7\n#EXT-X-PLAYLIST-TYPE:VOD\n#EXT-X-TARGETDURATION:\(target)\n#EXT-X-MEDIA-SEQUENCE:0\n"
         for (index, track) in tracks.enumerated() {
           if index > 0 { try append("#EXT-X-DISCONTINUITY\n", to: &playlist) }
@@ -136,7 +145,7 @@ enum YlDashHlsCompiler {
           let range = track.initialization.range.map { ",BYTERANGE=\"\($0)\"" } ?? ""
           try append("#EXT-X-MAP:URI=\"\(initial)\"\(range)\n", to: &playlist)
           for segment in track.segments {
-            let seconds = String(format: "%.6f", locale: Locale(identifier: "en_US_POSIX"), Double(segment.ticks) / Double(segment.scale))
+            let seconds = extinf(Double(segment.ticks) / Double(segment.scale))
             try append("#EXTINF:\(seconds),\n", to: &playlist)
             if let range = segment.resource.range { try append("#EXT-X-BYTERANGE:\(range)\n", to: &playlist) }
             try append("\(try escapedMedia(segment.resource))\n", to: &playlist)

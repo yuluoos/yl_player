@@ -44,7 +44,7 @@ final class YlDashAutoRecoveryController {
     guard let ticket else { return }
     activeTicket = ticket
     let started = clock()
-    let deadline = started + 2
+    let deadline = started + YlDashAutoRecoveryPolicy.preparationSeconds
     var event: [String: Any] = ["attempt": ticket.attempt, "due": ticket.due,
       "elapsed": started, "positionBefore": sample.position, "generation": ticket.generation,
       "ticketIntentRevision": ticket.intentRevision, "ticketCredentialRevision": ticket.credentialRevision,
@@ -73,7 +73,7 @@ final class YlDashAutoRecoveryController {
       self.events.append(event)
       self.onEvent?(event)
     })
-    schedule(2) { [weak self] in
+    schedule(YlDashAutoRecoveryPolicy.preparationSeconds) { [weak self] in
       guard let self, self.activeTicket?.id == ticket.id else { return }
       self.invalidate()
     }

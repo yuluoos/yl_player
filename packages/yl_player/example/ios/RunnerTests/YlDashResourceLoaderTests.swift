@@ -686,6 +686,19 @@ final class YlDashResourceLoaderTests: XCTestCase {
       requests: requests ?? Int(time), overdue: 1, intentRevision: intent, credentialRevision: credential)
   }
 
+  func testProductionRecoveryKeepsBufferedItemWhenLastTransferPredatesPreparation() throws {
+    var policy = YlDashAutoRecoveryPolicy()
+    for time in [0.0, 1, 9] { _ = policy.observe(productionSample(time, high: time == 0)) }
+    func stalled(_ time: Double) -> YlDashAutoRecoveryPolicy.Sample {
+      productionSample(time, requests: 14, bytes: 3_500_000, transfer: 14)
+    }
+    _ = policy.observe(stalled(10))
+    _ = policy.observe(stalled(17))
+    let ticket = try XCTUnwrap(policy.observe(stalled(17.5)))
+    XCTAssertFalse(policy.authorizes(ticket, stalled(17.6)))
+    XCTAssertTrue(policy.authorizes(ticket, productionSample(17.6)))
+  }
+
   func testProductionRecoveryUsesDynamicBandwidthAndTwoWindows() throws {
     var p = YlDashAutoRecoveryPolicy()
     XCTAssertNil(p.observe(productionSample(0, high: true)))

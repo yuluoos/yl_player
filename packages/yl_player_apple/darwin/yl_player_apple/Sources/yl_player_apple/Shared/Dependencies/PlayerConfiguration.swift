@@ -2,6 +2,7 @@ import yl_player_media_core
 import Foundation
 
 struct PlayerConfiguration {
+  static let smoothBufferSeconds: TimeInterval = 30
   let managesAudioSession: Bool
   private(set) var bufferMode: String
   let decoderPolicy: String
@@ -18,14 +19,14 @@ struct PlayerConfiguration {
       ["rtmp", "rtmps"].contains(source?.url?.scheme?.lowercased() ?? "") || source?.formatHint == .flv || source?.url?.pathExtension.lowercased() == "flv")
     let resolved = goal == .automatic && confirmedLive ? YlBufferGoal.smoothPlayback : goal
     result.bufferMode = resolved == .smoothPlayback ? "stable" : (resolved == .lowLatency ? "lowLatency" : "automatic")
-    result.preferredForwardBufferDuration = result.bufferMode == "stable" ? 30 : (result.bufferMode == "lowLatency" ? 2 : 10)
+    result.preferredForwardBufferDuration = result.bufferMode == "stable" ? Self.smoothBufferSeconds : (result.bufferMode == "lowLatency" ? 2 : 10)
     return result
   }
 
   func forLiveMode(_ mode: YlNativeLiveMode) -> Self {
     var result = self
     result.bufferMode = mode == .lowLatency ? "lowLatency" : "stable"
-    result.preferredForwardBufferDuration = mode == .lowLatency ? 2 : 30
+    result.preferredForwardBufferDuration = mode == .lowLatency ? 2 : Self.smoothBufferSeconds
     return result
   }
 
@@ -48,7 +49,7 @@ struct PlayerConfiguration {
     )
     preferredForwardBufferDuration = switch bufferMode {
     case "lowLatency": 2
-    case "stable": 30
+    case "stable": Self.smoothBufferSeconds
     default: 10
     }
   }

@@ -75,6 +75,21 @@ final class YlDashHlsCompilerTests: XCTestCase {
   private func withSounds(_ sounds: String, start: Int = 0) -> String {
     period(start: start).replacingOccurrences(of: "</Period>", with: sounds + "</Period>")
   }
+  func testTargetDurationSharedAcrossAudioAndVideoUsesPublishedExtinf() throws {
+    for (entries, expected) in [
+      ("<S d=\"1001\" r=\"2\"/><S d=\"997\"/>", 1),
+      ("<S d=\"1500\" r=\"1\"/><S d=\"1000\"/>", 2)
+    ] {
+      let audio = sound("aac").replacingOccurrences(of: "duration=\"2\"", with: "timescale=\"1000\"")
+        .replacingOccurrences(of: ".m4s\"/>", with: ".m4s\"><SegmentTimeline>\(entries)</SegmentTimeline></SegmentTemplate>")
+      let xml = withSounds(audio).replacingOccurrences(of: "timescale=\"1\" duration=\"2\"", with: "timescale=\"1\" duration=\"1\"")
+      let result = try compile(mpd(xml))
+      XCTAssertEqual(result.manifests.count, 3)
+      for (url, data) in result.manifests where url != result.rootURL {
+        XCTAssertTrue(String(decoding: data, as: UTF8.self).contains("#EXT-X-TARGETDURATION:\(expected)\n"))
+      }
+    }
+  }
   func testMultipleAudioRenditionsCompileIndependently() throws {
     let result = try compile(mpd(withSounds(sound("english") + sound("french", language: "fr", bandwidth: 96000))))
     let master = String(data: result.manifests[result.rootURL]!, encoding: .utf8)!

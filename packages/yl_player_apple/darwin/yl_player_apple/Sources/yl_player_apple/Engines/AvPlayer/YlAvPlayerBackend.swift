@@ -942,7 +942,16 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     boundAudio = YlBoundFlutterProbe.current?.observeAvPlayer(player, item: item)
     #endif
     let effectiveConfiguration = self.effectiveConfiguration
-    item.preferredForwardBufferDuration = effectiveConfiguration.preferredForwardBufferDuration
+    var forwardBuffer = effectiveConfiguration.preferredForwardBufferDuration
+    if services.platform == .ios, dashAudioCatalog != nil,
+       effectiveConfiguration.bufferMode == "automatic", effectiveConfiguration.maxBufferBytes == nil,
+       effectiveConfiguration.network.maxRetries > 0 {
+      // A delayed alternate audio segment also holds up buffered video. Cover one
+      // upstream read in automatic mode, within the smooth-playback buffer limit.
+      let readWindow = TimeInterval(effectiveConfiguration.network.readTimeoutMs) / 1_000
+      forwardBuffer = max(forwardBuffer, min(readWindow, PlayerConfiguration.smoothBufferSeconds))
+    }
+    item.preferredForwardBufferDuration = forwardBuffer
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
     videoOutput = makeVideoOutput([
