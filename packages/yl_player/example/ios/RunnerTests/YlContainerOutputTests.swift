@@ -124,7 +124,8 @@ private struct ContainerReference: Decodable {
       }
       return (frames, -1)
     }
-    func verify(_ rows: [ContainerPCM.Block], target: Int64, file: StaticString = #filePath, line: UInt = #line) throws {
+    @discardableResult
+    func verify(_ rows: [ContainerPCM.Block], target: Int64, file: StaticString = #filePath, line: UInt = #line) throws -> [Float] {
       let start = start(at: target)
       XCTAssertEqual(try XCTUnwrap(rows.first, file: file, line: line).pts, start.pts, accuracy: 1, file: file, line: line)
       XCTAssertTrue(rows.allSatisfy { $0.samples.count == channels && $0.rate == Double(rate) }, file: file, line: line)
@@ -156,6 +157,7 @@ private struct ContainerReference: Decodable {
       XCTAssertEqual(last.pts + Int64(last.samples[0].count) * 1_000_000 / Int64(rate),
         expectedLast.ptsUs + Int64(expectedLast.count) * 1_000_000 / Int64(rate), accuracy: 1, file: file, line: line)
       print("P03_PCM_BOUNDARY track=\(track) channels=\(channels) target=\(target) frames=\(samples.count/channels) first=\(rows.first!.pts) last=\(last.pts) pinned_reference_windows=true")
+      return samples
     }
   }
   let tracks: [Track]
@@ -347,9 +349,12 @@ private struct ContainerReference: Decodable {
       })
     defer { backend.dispose() }
     try backend.activate()
+    let fixtureHash = try ContainerBoundAV.fileHash(url)
+    let identity = try XCTUnwrap(YlSoftwareDecodeIdentity.current)
     for index in [2,3,4,1] {
       try backend.pause()
       try await Task.detached { try backend.seek(toMs: 2500, cancellationToken: nil) }.value
+      let previous = try XCTUnwrap(state?.audioTracks.first(where: \.isSelected)?.id)
       try backend.selectAudioTrack("audio-\(index)")
       let pcm = audio.pcm
       try backend.play()
@@ -360,7 +365,23 @@ private struct ContainerReference: Decodable {
       XCTAssertTrue(errors.isEmpty, errors.map(\.code).joined(separator: ","))
       XCTAssertEqual(state?.status, "completed")
       let track = try XCTUnwrap(reference.tracks.first { $0.track == index && ($0.channels == 6 || index != 1) })
-      try track.verify(pcm.evidence, target: 2_500_000)
+      let selected = try XCTUnwrap(state?.audioTracks.first(where: \.isSelected)?.id)
+      XCTAssertEqual(selected, "audio-\(index)")
+      XCTAssertNotEqual(selected, previous)
+      let blocks = pcm.evidence
+      let samples = try track.verify(blocks, target: 2_500_000)
+      let capture: [String: Any] = [
+        "previous": previous, "selected": selected, "targetUs": 2_500_000,
+        "fixtureSha256": fixtureHash, "decoderBuild": identity.decoderBuild,
+        "rate": blocks.first!.rate, "channels": blocks.first!.samples.count,
+        "ptsUs": blocks.map(\.pts), "frames": blocks.map { $0.samples[0].count },
+        "pcmF32LE": samples.withUnsafeBytes { Data($0).base64EncodedString() },
+      ]
+      let data = try JSONSerialization.data(withJSONObject: capture, options: [.sortedKeys])
+      let attachment = XCTAttachment(data: data, uniformTypeIdentifier: "public.json")
+      attachment.name = "switched-audio-\(index).json"
+      attachment.lifetime = .keepAlways
+      add(attachment)
     }
   }
 

@@ -9,12 +9,12 @@ def sha(data):
     return hashlib.sha256(data).hexdigest()
 
 
-def read_packets(path):
+def read_packets(path, audio_index=0):
     metadata = json.loads(subprocess.check_output([
-        'ffprobe', '-v', 'error', '-select_streams', 'a:0', '-show_packets', '-show_streams',
+        'ffprobe', '-v', 'error', '-select_streams', f'a:{audio_index}', '-show_packets', '-show_streams',
         '-show_entries', 'packet=pts,size,data_hash:stream=time_base', '-show_data_hash', 'sha256',
         '-of', 'json', str(path)]))
-    stream = subprocess.check_output(['ffmpeg', '-v', 'error', '-i', str(path), '-map', '0:a:0',
+    stream = subprocess.check_output(['ffmpeg', '-v', 'error', '-i', str(path), '-map', f'0:a:{audio_index}',
                                       '-c:a', 'copy', '-f', 'data', '-'])
     time_base = Fraction(metadata['streams'][0]['time_base'])
     packets = []

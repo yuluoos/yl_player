@@ -1,0 +1,77 @@
+{
+  "fixtureSha256": "f52bb20706bf1947e11a7ccfec295560381415e264e4c41bdeb624ff288cb8be",
+  "decoderBuild": "69a1fa85d7302fffb35c118323759bac46a91c0fe1f28ddcf452538d0ed0c464:0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764",
+  "rate": 48000,
+  "targetUs": 2500000,
+  "peakLimit": 0.0002,
+  "switches": [
+    {
+      "previous": 1,
+      "selected": 2,
+      "codec": "eac3",
+      "channels": 2,
+      "firstPtsUs": 2500000,
+      "firstReferenceFrame": 120240,
+      "retainedFrames": 71760,
+      "blocks": 47,
+      "peakByChannel": [
+        5.110912024974823e-05,
+        5.661137402057648e-05
+      ],
+      "referenceSha256": "ef1c242d485fcb581168fa9ca33c051a7d6c1f8f117f284946c0fbf6e4449a57",
+      "capturedSha256": "cf3878e417e4c1410d2b47b2832681f68c4e04a8afa8da03abf380af608ac387"
+    },
+    {
+      "previous": 2,
+      "selected": 3,
+      "codec": "dts",
+      "channels": 2,
+      "firstPtsUs": 2500000,
+      "firstReferenceFrame": 120000,
+      "retainedFrames": 72000,
+      "blocks": 141,
+      "peakByChannel": [
+        4.6566128730773926e-07,
+        5.583278834819794e-07
+      ],
+      "referenceSha256": "b235347644d501fc358ac8b1f4759666cbd213ec7b38749ad5e66409c7ca9d2d",
+      "capturedSha256": "8c480e2d5e00386facb00035ac41af4a6e140efed43486fbb83da1acce5b9c3c"
+    },
+    {
+      "previous": 3,
+      "selected": 4,
+      "codec": "flac",
+      "channels": 2,
+      "firstPtsUs": 2500000,
+      "firstReferenceFrame": 120000,
+      "retainedFrames": 72000,
+      "blocks": 16,
+      "peakByChannel": [
+        0.0,
+        0.0
+      ],
+      "referenceSha256": "d1f0eeff4fd0cf480302eade8f8d92539d1f51596b6a4c36f40d85196facda2a",
+      "capturedSha256": "7faa4c62cd31b5c8acc84043b72fba8da236a15b95955daa2aca716c21db8bba"
+    },
+    {
+      "previous": 4,
+      "selected": 1,
+      "codec": "ac3-51",
+      "channels": 6,
+      "firstPtsUs": 2500000,
+      "firstReferenceFrame": 120240,
+      "retainedFrames": 71760,
+      "blocks": 47,
+      "peakByChannel": [
+        0.00010336935520172119,
+        5.336664617061615e-05,
+        6.828457117080688e-05,
+        3.196299076080322e-05,
+        8.283928036689758e-05,
+        9.262934327125549e-05
+      ],
+      "referenceSha256": "8808bc915ed17d2e2d9ddebcd7275bd532d3ddaaa5d1bc05a4c84cca5dceb7a9",
+      "capturedSha256": "d81fdce32da5872c2f537f1f805b46c16e702c93a092d9a774f5106d3b660ec5"
+    }
+  ]
+}

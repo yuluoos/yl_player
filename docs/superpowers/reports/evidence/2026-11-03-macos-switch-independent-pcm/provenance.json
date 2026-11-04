@@ -1,0 +1,13 @@
+{
+  "test": "RunnerTests/YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail",
+  "sourceCommit": "6a5cd85b36c6ba4efe1d9753a49f93ec05812045",
+  "hostBuild": "26A434",
+  "originalExportManifestSha256": "d8413e6bf0967731afbf54ea699e324ceb82cec95405aaf39020ca40ab99dd6e",
+  "originalTestSummarySha256": "f7435dcbcf423d229b26d6ab9d906f1cb7897d841067280d268f8546f60f2c9e",
+  "ffmpegVersion": "ffmpeg version 8.0.1 Copyright (c) 2000-2025 the FFmpeg developers",
+  "referenceBinaryHashes": {
+    "yl_reference": "6784eba2ece02dea8c8151b30d6383fb44723f805f7c6367a8562fa36ca4f030",
+    "yl_dts_reference": "ea0e82fd989cf761661fc7651a46640603afca0d65dbe74cba2fd0cf70ad5232"
+  },
+  "staleEac3PrefixOnDtsRejected": "frame 120000, channel 0: error 0.012385948561131954"
+}
