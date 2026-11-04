@@ -20,7 +20,7 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
     def require(value):
         if not value:raise ValueError('invalid transaction connection evidence')
     def identity(row):return row['proxyID'].lower(),row['requestID']
-    require(observation is not None and lifecycle_observation is not None and lifecycle['version']==2)
+    require(observation is not None and lifecycle_observation is not None and lifecycle['version'] in (2, 3))
     validated={identity(row):row for row in observation['requests']}
     main={identity(row):row for row in boundaries}
     require(main.keys()==validated.keys() and len(main)==len(boundaries))
@@ -55,6 +55,10 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
         attached[ident]=row
     tokens={}
     for row in lifecycle['connections']:tokens.setdefault(row['connectionToken'],[]).append(row['connectionId'])
+    rejections = {}
+    if lifecycle['version'] == 3:
+        for rejection in lifecycle['rejections']:
+            rejections.setdefault(rejection['connectionToken'], []).append(rejection['reason'])
     results=[];complete=lifecycle_observation['complete'] and bool(main)
     for ident,row in main.items():
         extra=attached.get(ident);transactions=[]
@@ -65,9 +69,13 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
                 token=item['connectionToken'];matches=tokens.get(token,[])
                 missing_endpoint=('unsupported-endpoint' if extra['version']>=2 and item['endpointFields']==15
                                   else 'endpoint-unavailable')
+                rejected = rejections.get(token, [])
                 binding=('proxy' if item['proxyConnection'] else missing_endpoint if token is None else
-                         'ambiguous' if len(matches)>1 else 'unmatched' if not matches else 'bound')
+                         'ambiguous' if len(matches)+len(rejected)>1 else 'rejected' if rejected else
+                         'unmatched' if not matches else 'bound')
                 transactions.append(dict(item,connectionId=matches[0] if binding=='bound' else None,binding=binding))
+                if binding == 'rejected':
+                    transactions[-1]['rejectionReason'] = rejected[0]
                 complete=complete and binding=='bound'
             complete=complete and not validated[ident]['transactionMetrics']['truncated']
         results.append(dict(proxyID=row['proxyID'],requestID=row['requestID'],availability=availability,transactions=transactions))
@@ -75,7 +83,7 @@ def summarize_connections(sidecar, boundaries, observation, lifecycle, lifecycle
             results[-1]['foundationTaskID']=extra['foundationTaskID']
     return dict(version=1,availability='reported',complete=bool(complete),requests=results,
         retryCauseProven=False,unsentProven=False,capabilityAccepted=False,
-        interpretation='Only a unique capture-scoped endpoint token binds a transaction to an accepted connection. Missing metrics, unavailable or unsupported endpoints, proxies, unmatched and repeated tuples remain unbound; zero transactions never proves no packets.')
+        interpretation='Only a unique capture-scoped endpoint token binds a transaction to an accepted connection. A unique rejected socket carries its admission reason without a parsed request identity. Missing metrics, unavailable or unsupported endpoints, proxies, unmatched and repeated tuples remain unbound; zero transactions never proves no packets.')
 
 
 def record_connections(receipt, sidecar, boundaries, observation, lifecycle, lifecycle_observation):

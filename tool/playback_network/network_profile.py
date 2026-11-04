@@ -241,13 +241,20 @@ class FixtureServer(ThreadingHTTPServer):
         super().__init__((host, port), Handler)
 
     def process_request(self, request, client_address):
+        token = None
+        if self.connection_key is not None:
+            from transaction_connections import connection_token
+            token = connection_token(self.connection_key, client_address, request.getsockname())
         with self.handlers:
             if self.active >= 8 or self.requests >= 10000:
                 # Bounded threads/log; overload is not a shaped media request.
                 self.rejected_requests += 1
                 if len(self.lifecycle_rejections) < 32:
-                    self.lifecycle_rejections.append(dict(elapsed=self.shaper.now()-self.lifecycle_origin,
-                        reason='activeLimit' if self.active >= 8 else 'connectionLimit', active=self.active))
+                    rejection = dict(elapsed=self.shaper.now()-self.lifecycle_origin,
+                        reason='activeLimit' if self.active >= 8 else 'connectionLimit', active=self.active)
+                    if token is not None:
+                        rejection['connectionToken'] = token
+                    self.lifecycle_rejections.append(rejection)
                 self.shutdown_request(request)
                 return
             self.active += 1
@@ -256,10 +263,8 @@ class FixtureServer(ThreadingHTTPServer):
             self.lifecycle_connections[self.requests] = dict(connectionId=self.requests,
                 acceptedSeconds=self.shaper.now()-self.lifecycle_origin, closedSeconds=None,
                 activeAtAdmission=self.active, requestIds=[], unrecordedRequests=0, closeReason=None)
-            if self.connection_key is not None:
-                from transaction_connections import connection_token
-                self.lifecycle_connections[self.requests]['connectionToken'] = connection_token(
-                    self.connection_key,request.getpeername(),request.getsockname())
+            if token is not None:
+                self.lifecycle_connections[self.requests]['connectionToken'] = token
             self.active_sockets.add(request)
             self.handlers.notify_all()
         super().process_request(request, client_address)
@@ -291,7 +296,7 @@ class FixtureServer(ThreadingHTTPServer):
         # Snapshot after server_close for complete evidence; no addresses/headers.
         import copy
         with self.handlers:
-            return copy.deepcopy(dict(version=2 if self.connection_key is not None else 1, acceptedCount=self.requests,
+            return copy.deepcopy(dict(version=3 if self.connection_key is not None else 1, acceptedCount=self.requests,
                 rejectedCount=self.rejected_requests,
                 droppedRejections=self.rejected_requests-len(self.lifecycle_rejections),
                 connections=list(self.lifecycle_connections.values()), rejections=self.lifecycle_rejections))

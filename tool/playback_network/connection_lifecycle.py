@@ -12,7 +12,7 @@ def summarize_lifecycle(trace, rows):
         try:return type(value) in (float,int) and math.isfinite(value) and value >= 0
         except OverflowError:return False
     require(isinstance(trace,dict) and set(trace)=={'version','acceptedCount','rejectedCount','droppedRejections','connections','rejections'})
-    require(type(trace['version']) is int and trace['version'] in (1,2))
+    require(type(trace['version']) is int and trace['version'] in (1,2,3))
     require(integer(trace['acceptedCount']) and integer(trace['rejectedCount'],2**53-1) and integer(trace['droppedRejections'],2**53-1))
     connections=trace['connections'];rejects=trace['rejections']
     require(isinstance(connections,list) and len(connections)==trace['acceptedCount'])
@@ -28,8 +28,8 @@ def summarize_lifecycle(trace, rows):
     require(request_ids==set(range(1,len(rows)+1)))
     missing=[];unclosed=[];closed_reasons={};previous=0;unrecorded=0
     for index,c in enumerate(connections,1):
-        require(isinstance(c,dict) and set(c)=={'connectionId','acceptedSeconds','closedSeconds','activeAtAdmission','requestIds','unrecordedRequests','closeReason'} | ({'connectionToken'} if trace['version']==2 else set()))
-        if trace['version']==2:require(isinstance(c['connectionToken'],str) and re.fullmatch('[0-9a-f]{64}',c['connectionToken']))
+        require(isinstance(c,dict) and set(c)=={'connectionId','acceptedSeconds','closedSeconds','activeAtAdmission','requestIds','unrecordedRequests','closeReason'} | ({'connectionToken'} if trace['version']>=2 else set()))
+        if trace['version']>=2:require(isinstance(c['connectionToken'],str) and re.fullmatch('[0-9a-f]{64}',c['connectionToken']))
         require(type(c['connectionId']) is int and c['connectionId']==index and finite(c['acceptedSeconds']) and c['acceptedSeconds']>=previous)
         previous=c['acceptedSeconds'];require(integer(c['activeAtAdmission'],8) and c['activeAtAdmission']>0)
         require(c['closeReason'] in (None,'handlerEnded','absoluteDeadline','serverShutdown','handlerError','requestRecordLimit'))
@@ -49,7 +49,9 @@ def summarize_lifecycle(trace, rows):
     require(not by_connection)
     previous=0
     for rejection in rejects:
-        require(isinstance(rejection,dict) and set(rejection)=={'elapsed','reason','active'})
+        require(isinstance(rejection,dict) and set(rejection)=={'elapsed','reason','active'} | ({'connectionToken'} if trace['version']==3 else set()))
+        if trace['version'] == 3:
+            require(isinstance(rejection['connectionToken'], str) and re.fullmatch('[0-9a-f]{64}', rejection['connectionToken']))
         require(finite(rejection['elapsed']) and rejection['elapsed']>=previous);previous=rejection['elapsed']
         require(rejection['reason'] in ('activeLimit','connectionLimit') and integer(rejection['active'],8))
         if rejection['reason']=='activeLimit':require(rejection['active']==8)

@@ -815,17 +815,20 @@ byte-count or cross-clock heuristic assigns an unknown transaction or request.
 
 For new owned IPv4 captures, add `--transaction-connections` to
 `abr_accesslog.py`. The native probe writes `transaction-connections.jsonl`,
-and server lifecycle v2 records the same capture-scoped HMAC of each actual
-client/server address and port tuple. Raw endpoints and the random key are not
+and server lifecycle v3 records the same capture-scoped HMAC of each admitted
+socket and each recorded admission rejection. Lifecycle v2 only has tokens
+for admitted sockets. Raw endpoints and the random key are not
 exported. The launch manifest containing the key is temporary; the saved
 `probe.xctestrun` omits it. This option requires a probe built with connection
 capture support; missing sidecars remain unknown and fail the optional check.
 
 `python3 tool/playback_network/transaction_connections.py CAPTURE_DIRECTORY`
 recomputes the connection observation from saved raw files. Only a token unique
-among accepted server connections establishes a connection binding; it does not
+among the recorded sockets establishes a connection binding; it does not
 by itself prove HTTP parsing. Use the bound connection's lifecycle `requestIds`
-and the request's correlation ID to establish parsing. Repeated tuples, proxy
+and the request's correlation ID to establish parsing. A unique match to a
+rejected socket reports `binding=rejected` and the listener's rejection reason.
+It has no HTTP receipt and the strict admission check still fails. Repeated tuples, proxy
 connections, missing endpoints and absent callbacks remain unbound. Empty
 transactions are explicit and never prove no packets. Strict transaction-time
 and task-correlation failures are retained even when connection binding succeeds.

@@ -62,6 +62,22 @@ class TransactionConnectionTests(unittest.TestCase):
                 result=self.summarize();self.assertIsNone(result['requests'][0]['transactions'][0]['connectionId']);self.assertFalse(result['complete'])
                 self.trace=trace;self.sidecar=sidecar
 
+    def test_rejection_identifies_a_socket_without_claiming_a_parsed_request(self):
+        self.trace.update(version=3, rejectedCount=1, rejections=[
+            dict(elapsed=.3, reason='activeLimit', active=8, connectionToken='c'*64)])
+        self.sidecar[0]['transactions'][0]['connectionToken'] = 'c'*64
+        # This transaction has no parsed HTTP request on the server.
+        self.boundaries[0].pop('serverRequestID')
+        self.boundaries[0].update(outcome=3)
+        self.server[0].pop('proxyTraceID')
+        result = self.summarize()
+        item = result['requests'][0]['transactions'][0]
+        self.assertEqual((item['binding'], item['rejectionReason']), ('rejected', 'activeLimit'))
+        self.assertIsNone(item['connectionId'])
+        self.assertFalse(result['complete'])
+        self.trace['connections'][0]['connectionToken'] = 'c'*64
+        self.assertEqual(self.summarize()['requests'][0]['transactions'][0]['binding'], 'ambiguous')
+
     def test_missing_callback_is_unknown_and_zero_transactions_is_explicit(self):
         self.sidecar=[]
         result=self.summarize();self.assertEqual(result['requests'][0]['availability'],'unknown');self.assertFalse(result['complete'])

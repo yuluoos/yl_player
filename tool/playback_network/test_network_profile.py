@@ -178,7 +178,7 @@ class ServerTests(unittest.TestCase):
         expected=connection_token(key,conn.getsockname(),conn.getpeername())
         with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.requests==1,timeout=2))
         conn.close();self.assertTrue(self.server.wait_handlers())
-        trace=self.lifecycle();self.assertEqual(trace['version'],2)
+        trace=self.lifecycle();self.assertEqual(trace['version'],3)
         self.assertEqual(trace['connections'][0]['connectionToken'],expected)
         self.assertNotIn(key.decode(),json.dumps(trace));self.assertNotIn('127.0.0.1',json.dumps(trace))
         self.assertEqual(summarize_lifecycle(trace,[])['withoutParsedRequest'],[1])
@@ -200,18 +200,22 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(summary['withoutParsedRequest'],[1]);self.assertTrue(summary['complete'])
 
     def test_lifecycle_records_admission_rejection_before_any_request(self):
-        self.start();peers=[]
+        from transaction_connections import connection_token
+        key = b'0123456789abcdef' * 4
+        self.start(connection_key=key);peers=[]
         try:
             for n in range(8):
                 peers.append(socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2))
                 with self.server.handlers:self.assertTrue(self.server.handlers.wait_for(lambda:self.server.active==n+1,timeout=2))
             extra=socket.create_connection(('127.0.0.1',self.server.server_port),timeout=2)
+            expected = connection_token(key, extra.getsockname(), extra.getpeername())
             try:self.assertEqual(extra.recv(1),b'')
             finally:extra.close()
         finally:
             for peer in peers:peer.close()
         self.assertTrue(self.server.wait_handlers());trace=self.lifecycle()
         self.assertEqual(trace['acceptedCount'],8);self.assertEqual(trace['rejectedCount'],1)
+        self.assertEqual(trace['rejections'][0]['connectionToken'], expected)
         self.assertEqual(trace['rejections'][0]['reason'],'activeLimit')
         self.assertEqual(trace['rejections'][0]['active'],8)
         self.assertEqual(self.records(),[])
