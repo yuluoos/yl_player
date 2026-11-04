@@ -294,3 +294,19 @@ actual microphone windows with displayed marker pixels using host timestamps.
 Each required marker needs two matches at least 100 ms apart. Capture gaps,
 an audible marker before launch, unrelated run IDs, and absent transitions
 reject the row. The result measures the owned fixture at marker resolution.
+
+## Public audio track switching on macOS
+
+Build the macOS matrix test entry and package the qualified observation SDK as
+described above. The dedicated collection loads the owned four-track fixture
+once as a file and once via managed HTTP. It selects each track with the public
+session API and verifies the emitted selection events and native PCM together.
+Use the pinned independent decoders from the native track-switch comparison.
+
+```sh
+python3 -B tool/run_with_display_awake.py python3 -B tool/media_matrix/run_bound_flutter_apple.py \
+  --platform macos --app /absolute/public-switch.app --out /absolute/new-collection \
+  --track-switch-tools /absolute/yl_reference /absolute/yl_dts_reference
+python3 -B tool/media_matrix/public_switch_pcm.py /absolute/new-collection \
+  /absolute/new-collection/flutter.log /absolute/yl_reference /absolute/yl_dts_reference
+```

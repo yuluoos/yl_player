@@ -63,7 +63,13 @@ def main():
     parser.add_argument('--negative-identity',action='store_true')
     parser.add_argument('--negative-framework',action='store_true')
     parser.add_argument('--macos-acoustic-app', type=Path, help='Authorized built-in microphone helper for the local MP4 cell')
+    parser.add_argument('--track-switch-tools', nargs=2, type=Path, metavar=('DOLBY', 'DTS'),
+                        help='Run macOS four-track file and HTTP switches with independent reference executables')
     args=parser.parse_args()
+    if args.track_switch_tools and not __debug__:
+        parser.error('PCM verification requires Python assertions enabled')
+    if args.track_switch_tools and (args.platform != 'macos' or args.case_id or args.matrix_id or args.macos_acoustic_app or args.transport != 'file'):
+        parser.error('track-switch mode owns its local and managed HTTP cases')
     if args.macos_acoustic_app and (args.platform, args.case_id, args.transport) != ('macos','mp4-avc-aac','file'):
         parser.error('microphone capture requires the local macOS MP4 cell')
     if not args.case_id and (args.transport!='file' or args.matrix_id):parser.error('--case required for transport/matrix selection')
@@ -75,6 +81,9 @@ def main():
     plan=dict(schema=1,runId=str(uuid.uuid4()),platform=args.platform,artifactKind='apple-public-flutter-debug-app',
         buildSha256=product['sha256'],testSha256=product['sha256'],productManifest=product['manifest'],
         planned=[planned_case(catalog,args.case_id,args.platform,args.transport)] if args.case_id else planned_controls(catalog),phases=PHASES,negativeFramework=args.negative_framework)
+    if args.track_switch_tools:
+        from public_switch_pcm import configure_plan
+        configure_plan(plan)
     plan['executionTarget']=dict(kind='physical' if args.device else 'simulator' if args.simulator else 'host',id=args.device or args.simulator or 'macos')
     if args.matrix_id:plan['matrixId']=args.matrix_id
     if args.macos_acoustic_app:
@@ -160,7 +169,12 @@ def main():
         rows[0]['acoustic'] = dict(acoustic, sessionId=rows[0]['publicSessionId'])
     write(out/'status.json',status)
     with gzip.open(out/'rows.json.gz','wb') as stream:stream.write(canonical(rows))
-    result=acceptance(plan,rows,status,verify(app,product) and cleanup and collection_completed and collector_error is None)
+    stable=verify(app,product) and cleanup and collection_completed and collector_error is None
+    if args.track_switch_tools:
+        from public_switch_pcm import switch_result
+        result=switch_result(plan,rows,status,stable,(out/'flutter.log').read_text(errors='replace'),*args.track_switch_tools)
+    else:
+        result=acceptance(plan,rows,status,stable)
     result.update(collectionCompleted=collection_completed,deviceCleanupCompleted=cleanup if device else None,collectorError=collector_error,executionTarget=plan['executionTarget'])
     result.update(processExit=process.returncode,negativeIdentity=args.negative_identity,negativeFramework=args.negative_framework)
     write(out/'result.json',result)

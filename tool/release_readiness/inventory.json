@@ -1093,6 +1093,11 @@
       "path": "docs/superpowers/reports/2026-11-03-macos-switch-independent-pcm.md",
       "sha256": "88238851bf969130e6d2a1ff26e2a72d1c0db02dacc0a7b20cc8a20dddd06589",
       "kind": "report"
+    },
+    "macos-public-track-switch-20261103": {
+      "path": "docs/superpowers/reports/2026-11-03-macos-public-track-switch.md",
+      "sha256": "035b879364dcf597e64c3cd84e829d431f1bde2667b62092fbb28371962d5156",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1498,10 +1503,11 @@
         "macos-qualified-format-matrix-20261103",
         "macos-dolby-independent-pcm-20261103",
         "macos-dts-independent-pcm-20261103",
-        "macos-switch-independent-pcm-20261103"
+        "macos-switch-independent-pcm-20261103",
+        "macos-public-track-switch-20261103"
       ],
       "acceptance": null,
-      "nextAction": "qualify-public-track-switch-audio-route-and-remaining-device-output-boundaries"
+      "nextAction": "qualify-audio-route-changes-and-remaining-device-output-boundaries"
     },
     {
       "requirement": "CAP-JS",

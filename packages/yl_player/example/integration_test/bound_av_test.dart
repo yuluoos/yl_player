@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 import 'package:crypto/crypto.dart';
@@ -11,6 +12,7 @@ import 'package:yl_player/yl_player.dart';
 import 'support/paused_frame_capture.dart';
 import 'support/bound_source.dart';
 import 'support/bound_cleanup.dart';
+import 'support/apple_strict_support.dart' show stateWhere;
 
 /// Built once and launched with a host-frozen plan. Only public APIs drive playback.
 /// The opt-in native bridge observes this same session and verifies installed bytes.
@@ -49,8 +51,10 @@ void main() {
       for (final raw in plan['planned'] as List) {
         final item = Map<String, dynamic>.from(raw as Map);
         debugPrint('P03_PUBLIC begin ${item['caseId']}');
+        final switchOrder = (plan['trackSwitchOrder'] as List?)?.cast<String>();
+        final folder = switchOrder == null ? 'format_matrix' : 'pcm_alignment';
         final data = await rootBundle.load(
-          'assets/test_media/format_matrix/${item['file']}',
+          'assets/test_media/$folder/${item['file']}',
         );
         final bytes = data.buffer.asUint8List(
           data.offsetInBytes,
@@ -264,7 +268,10 @@ void main() {
             'sessionId': sessionId,
             'phase': 'play',
           });
-          for (final target in [1250, 2250, 0]) {
+          final targets = switchOrder == null
+              ? [1250, 2250, 0]
+              : List.filled(switchOrder.length, 2500);
+          for (final (index, target) in targets.indexed) {
             await session.pause().timeout(const Duration(seconds: 12));
             await bridge.invokeMethod('seekPhase', {
               'sessionId': sessionId,
@@ -286,6 +293,28 @@ void main() {
             } else {
               await bridge.invokeMethod('awaitPhase', {'sessionId': sessionId});
             }
+            String? previous;
+            if (switchOrder != null) {
+              final before = await stateWhere(
+                player,
+                (s) =>
+                    s.sessionId == session.id &&
+                    s.timeline.position.inMilliseconds == target,
+              );
+              previous = before.audioTracks.singleWhere((t) => t.isSelected).id;
+              final requested = switchOrder[index];
+              expect(before.audioTracks.map((t) => t.id), contains(requested));
+              expect(previous, isNot(requested));
+              await session
+                  .selectAudioTrack(requested)
+                  .timeout(const Duration(seconds: 12));
+              await stateWhere(
+                player,
+                (s) =>
+                    s.sessionId == session.id &&
+                    s.audioTracks.any((t) => t.isSelected && t.id == requested),
+              );
+            }
             await session.play().timeout(const Duration(seconds: 12));
             // The microphone needs the *next* audible tone transition to map
             // captured device samples back to this seek without using item time.
@@ -294,11 +323,24 @@ void main() {
                 ? (target ~/ 1000 + 1) * 1000 + 650
                 : target + 650;
             await captureUntil(
-              () =>
-                  player!.state.timeline.position.inMilliseconds >=
-                  captureEndMs,
+              () => switchOrder != null
+                  ? player!.state.status == YlPlaybackStatus.completed
+                  : player!.state.timeline.position.inMilliseconds >=
+                        captureEndMs,
               minimumNativeClockUs: captureEndMs * 1000,
             );
+            if (switchOrder != null) {
+              final state = player.state;
+              final selected = state.audioTracks
+                  .singleWhere((t) => t.isSelected)
+                  .id;
+              expect(selected, switchOrder[index]);
+              expect(state.sessionId, session.id);
+              expect(state.status, YlPlaybackStatus.completed);
+              stdout.writeln(
+                'P03_TRACK_SWITCH ${jsonEncode({'runId': plan['runId'], 'buildSha256': plan['buildSha256'], 'sessionId': sessionId, 'transport': item['transport'], 'previous': previous, 'selected': selected, 'ordinal': index, 'targetMs': target, 'completed': true})}',
+              );
+            }
             // End the continuous source-pull phase before retaining its PCM.
             if (continuousSourcePull) {
               await session.pause().timeout(const Duration(seconds: 12));

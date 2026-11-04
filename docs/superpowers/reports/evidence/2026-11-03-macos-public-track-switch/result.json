@@ -1,0 +1,275 @@
+{
+  "collectionCompleted": true,
+  "collectorError": null,
+  "deviceCleanupCompleted": null,
+  "errors": [],
+  "events": [
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 0,
+      "previous": "audio-1",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-2",
+      "sessionId": "apple-1-s1",
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 1,
+      "previous": "audio-2",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-3",
+      "sessionId": "apple-1-s1",
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 2,
+      "previous": "audio-3",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-4",
+      "sessionId": "apple-1-s1",
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 3,
+      "previous": "audio-4",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-1",
+      "sessionId": "apple-1-s1",
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 0,
+      "previous": "audio-1",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-2",
+      "sessionId": "apple-2-s1",
+      "targetMs": 2500,
+      "transport": "http"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 1,
+      "previous": "audio-2",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-3",
+      "sessionId": "apple-2-s1",
+      "targetMs": 2500,
+      "transport": "http"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 2,
+      "previous": "audio-3",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-4",
+      "sessionId": "apple-2-s1",
+      "targetMs": 2500,
+      "transport": "http"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "completed": true,
+      "ordinal": 3,
+      "previous": "audio-4",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-1",
+      "sessionId": "apple-2-s1",
+      "targetMs": 2500,
+      "transport": "http"
+    }
+  ],
+  "executionTarget": {
+    "id": "macos",
+    "kind": "host"
+  },
+  "negativeFramework": false,
+  "negativeIdentity": false,
+  "peakLimit": 0.0002,
+  "processExit": -15,
+  "scopeAcceptance": true,
+  "switches": [
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 2,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 0,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        3.7614256143569946e-05,
+        3.902614116668701e-05
+      ],
+      "previous": "audio-1",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-2",
+      "sessionId": "apple-1-s1",
+      "startFrame": 125040,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 2,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 1,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        3.3527612686157227e-07,
+        3.9068982005119324e-07
+      ],
+      "previous": "audio-2",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-3",
+      "sessionId": "apple-1-s1",
+      "startFrame": 124800,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 2,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 2,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        0.0,
+        0.0
+      ],
+      "previous": "audio-3",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-4",
+      "sessionId": "apple-1-s1",
+      "startFrame": 124800,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 6,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 3,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        4.1365623474121094e-05,
+        4.281476140022278e-05,
+        4.110857844352722e-05,
+        3.188103437423706e-05,
+        4.4685788452625275e-05,
+        4.08003106713295e-05
+      ],
+      "previous": "audio-4",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-1",
+      "sessionId": "apple-1-s1",
+      "startFrame": 125040,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "file"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 2,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 0,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        3.7614256143569946e-05,
+        3.902614116668701e-05
+      ],
+      "previous": "audio-1",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-2",
+      "sessionId": "apple-2-s1",
+      "startFrame": 125040,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "http"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 2,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 1,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        3.3527612686157227e-07,
+        3.9068982005119324e-07
+      ],
+      "previous": "audio-2",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-3",
+      "sessionId": "apple-2-s1",
+      "startFrame": 124800,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "http"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 2,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 2,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        0.0,
+        0.0
+      ],
+      "previous": "audio-3",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-4",
+      "sessionId": "apple-2-s1",
+      "startFrame": 124800,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "http"
+    },
+    {
+      "buildSha256": "6713afe4cf7778182b02c07193305af51dfc34b05509ebaad9235874a7ca4a96",
+      "channels": 6,
+      "completed": true,
+      "frames": 8192,
+      "ordinal": 3,
+      "pairedPixels": 3,
+      "peakByChannel": [
+        4.1365623474121094e-05,
+        4.281476140022278e-05,
+        4.110857844352722e-05,
+        3.188103437423706e-05,
+        4.4685788452625275e-05,
+        4.08003106713295e-05
+      ],
+      "previous": "audio-4",
+      "runId": "2d1717f4-60b7-41bd-88b1-9b1d8ff371c8",
+      "selected": "audio-1",
+      "sessionId": "apple-2-s1",
+      "startFrame": 125040,
+      "startUs": 2600000,
+      "targetMs": 2500,
+      "transport": "http"
+    }
+  ]
+}
