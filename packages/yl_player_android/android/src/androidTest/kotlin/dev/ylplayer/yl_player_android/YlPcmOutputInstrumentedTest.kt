@@ -65,11 +65,11 @@ class YlPcmOutputInstrumentedTest {
                 assertTrue("Swapped/leaked right channel",amplitude(left,base+55,rate)<l*0.1)
                 assertTrue("Swapped/leaked left channel",amplitude(right,base,rate)<r*0.1)
                 if (surround) {
-                    // FFmpeg's stereo matrix retains center and the appropriate
-                    // surround at sqrt(1/2); LFE is excluded from this downmix.
+                    // The pinned AC-3 fixture carries Lo/Ro metadata: center
+                    // -4.5 dB and surround -6 dB. LFE remains excluded.
                     for ((samples,own,rear) in listOf(Triple(left,l,4),Triple(right,r,5))) {
-                        assertEquals(sqrt(0.5),amplitude(samples,base+110,rate)/own,0.08)
-                        assertEquals(sqrt(0.5),amplitude(samples,base+rear*55,rate)/own,0.08)
+                        assertEquals(0.5946035385131836,amplitude(samples,base+110,rate)/own,0.08)
+                        assertEquals(0.5,amplitude(samples,base+rear*55,rate)/own,0.08)
                         assertTrue(amplitude(samples,60.0+second*10,rate)<own*0.1)
                     }
                 }

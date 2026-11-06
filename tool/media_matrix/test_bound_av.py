@@ -46,6 +46,29 @@ class BoundAVTest(unittest.TestCase):
                 raw=struct.pack('<8192f',*values[::2])
                 w.update(channels=1,pcmF32LE=base64.b64encode(raw).decode(),pcmSha256=hashlib.sha256(raw).hexdigest())
         self.assertTrue(self.result()['scopeAcceptance'])
+    def surround_result(self, center, surround, media_hash='18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3'):
+        self.plan['planned'][0].update(caseId='mkv-avc-ac3-51',mediaHash=media_hash)
+        self.row.update(caseId='mkv-avc-ac3-51',mediaHash=media_hash)
+        for phase in self.row['phases']:
+            for w in phase['pcmWindows']:
+                base=440+w['marker']*220
+                raw=struct.pack('<16384f',*(
+                    .04*(math.sin(2*math.pi*(base+c*55)*i/48000)
+                         +center*math.sin(2*math.pi*(base+110)*i/48000)
+                         +surround*math.sin(2*math.pi*(base+(4+c)*55)*i/48000))
+                    for i in range(8192) for c in range(2)))
+                w.update(pcmF32LE=base64.b64encode(raw).decode(),pcmSha256=hashlib.sha256(raw).hexdigest())
+        return self.result()
+
+    def test_ac3_downmix_uses_frozen_source_metadata(self):
+        self.assertTrue(self.surround_result(.5946035385131836,.5)['scopeAcceptance'])
+
+    def test_ac3_downmix_rejects_old_default_coefficients(self):
+        self.assertIn('pcm_downmix',self.surround_result(math.sqrt(.5),math.sqrt(.5))['errors'])
+
+    def test_ac3_downmix_reference_cannot_be_borrowed_for_other_media(self):
+        self.assertFalse(self.surround_result(.5946035385131836,.5,'f'*64)['scopeAcceptance'])
+
     def test_http_requires_actual_source_binding_and_owned_server_receipt(self):
         self.plan['planned'][0]['transport']='http'
         self.assertFalse(self.result()['scopeAcceptance'])

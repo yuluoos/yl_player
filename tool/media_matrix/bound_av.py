@@ -62,8 +62,13 @@ def pcm_window(window, row, case, phase, marker):
         if channels==2 and not mono:
             require(amplitude(samples,base+(1-channel)*55,48000)<own*0.1,'pcm_channel_swap')
             if case['caseId']=='mkv-avc-ac3-51':
-                for mixed in (base+110,base+(4+channel)*55):
-                    require(abs(amplitude(samples,mixed,48000)/own-math.sqrt(.5))<.08,'pcm_downmix')
+                # This frozen AC-3 source carries Lo/Ro levels -4.5 dB / -6 dB.
+                # Independently decoded metadata: 125 frames, FFmpeg 8.0.1.
+                # Android honors source coefficients since d99481b3; do not
+                # accept the old metadata-ignoring sqrt(1/2) matrix.
+                require(case['mediaHash']=='18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3','pcm_downmix_reference')
+                for mixed,level in ((base+110,.5946035385131836),(base+(4+channel)*55,.5)):
+                    require(abs(amplitude(samples,mixed,48000)/own-level)<.08,'pcm_downmix')
                 require(amplitude(samples,60+marker*10,48000)<own*.1,'pcm_lfe_leak')
         measured.append(dict(channel=channel,frequencyHz=hz,amplitude=own))
     return dict(phase=phase,marker=marker,channels=measured)
