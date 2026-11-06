@@ -348,7 +348,13 @@ def verify_product(host, platform, manager, derived=None, expect_tests=True, con
     require(expected_path in commands, "Built host lacks framework runtime search path")
     floor = "12.0" if platform == "macos" else "15.0"
     require_minimum_os(commands, floor, "Built host")
-    plugin_binaries = [frameworks / "yl_player_apple.framework/yl_player_apple"] if manager == "cocoapods" else list(executable.parent.glob("*.debug.dylib")) or [executable]
+    plugin_name = "yl_player_apple" if manager == "cocoapods" else "yl-player-apple"
+    plugin_binaries = [frameworks / f"{plugin_name}.framework/{plugin_name}"]
+    if manager == "swiftpm":
+        host_binaries = list(executable.parent.glob("*.debug.dylib")) or [executable]
+        host_links = "\n".join(run(["otool", "-L", str(path)], ROOT, f"{platform}-{manager}-host-linkage", capture=True) for path in host_binaries)
+        version = "Versions/A/" if platform == "macos" else ""
+        require(f"@rpath/{plugin_name}.framework/{version}{plugin_name}" in host_links, "Built host does not link the dynamic SwiftPM plugin")
     require(all(path.is_file() for path in plugin_binaries), "Linked plugin binary missing")
     links = "\n".join(run(["otool", "-L", str(path)], ROOT, f"{platform}-{manager}-plugin-linkage", capture=True) for path in plugin_binaries)
     require("YlFFmpegBridge.framework/" in links, "Consumer plugin has no dynamic bridge linkage")
