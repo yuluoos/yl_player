@@ -261,14 +261,30 @@ void main() {
           debugPrint(
             'P03_PUBLIC playAckUs=${initialCaptureTimer.elapsedMicroseconds}',
           );
-          await session.firstFrame.timeout(const Duration(seconds: 10));
-          debugPrint(
-            'P03_PUBLIC firstFrameUs=${initialCaptureTimer.elapsedMicroseconds}',
-          );
-          lifecycle['firstFrame'] = true;
-          await captureUntil(
-            () => player!.state.status == YlPlaybackStatus.completed,
-          );
+          Future<void> observeFirstFrame() async {
+            await session.firstFrame.timeout(const Duration(seconds: 10));
+            debugPrint(
+              'P03_PUBLIC firstFrameUs=${initialCaptureTimer.elapsedMicroseconds}',
+            );
+            lifecycle['firstFrame'] = true;
+          }
+
+          if (Platform.isAndroid) {
+            // Start observing composition while the public first-frame event is
+            // pending, so event delivery cannot consume the first marker window.
+            // Both the public lifecycle and raw output must still pass.
+            await Future.wait<void>([
+              observeFirstFrame(),
+              captureUntil(
+                () => player!.state.status == YlPlaybackStatus.completed,
+              ),
+            ]);
+          } else {
+            await observeFirstFrame();
+            await captureUntil(
+              () => player!.state.status == YlPlaybackStatus.completed,
+            );
+          }
           lifecycle['completed'] = true;
           debugPrint('P03_PUBLIC completed $sessionId');
           await bridge.invokeMethod('retain', {

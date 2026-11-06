@@ -67,8 +67,10 @@ def main():
         except (ValueError,UnicodeDecodeError):time.sleep(1);continue
         if isinstance(status,dict):break
     write(out/'status.json',status)
-    extracted=subprocess.run(adb+['exec-out','run-as',package,'cat',remote+'rows.jsonl'],capture_output=True)
-    write(out/'extraction.json',dict(exitCode=extracted.returncode))
+    # Shell v2 preserves output framing and the remote exit status; exec-out
+    # returned a truncated PCM JSON stream with exit 0 during device acceptance.
+    extracted=subprocess.run(adb+['shell','-T','run-as',package,'cat',remote+'rows.jsonl'],capture_output=True)
+    write(out/'extraction.json',dict(command=extracted.args,exitCode=extracted.returncode))
     (out/'extract.log').write_bytes(extracted.stderr)
     with gzip.open(out/'extracted.jsonl.gz','wb') as stream:stream.write(extracted.stdout)
     rows,parsed=parse_rows(extracted.stdout)
