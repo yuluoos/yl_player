@@ -74,6 +74,30 @@ PERF-BASELINE / RELEASE-CONSUMERS / RELEASE-CI及platform=all。
 当前产品决定以需求v2.2为准：PD-01、PD-02、PD-03均已确认。历史P08计划中的
 “PD-02/03尚未确认”不是当前阻塞；具体DRM/Dolby/设备/参考缺口仍需独立解决。
 
+## 2026-11-05 台账同步
+
+审核基线更新为 `5bbcd1fd`，源码清单同步到该提交，修正 `platform-support.md`
+报告哈希。源码清单相比此前有59个文件身份变化；本次更新仅登记当前待验收源码，
+不把历史制品的通过结果迁移到当前构建，也不改变任何组的实现/验收状态。
+
+- iOS CAP-ABR、CAP-DASH、REG-NET、REG-BUF 引入[弱网综合记录](../../docs/superpowers/reports/2026-11-03-ios-dash-rebuffer.md)
+  的最终结果：同签名制品在服务端满载排队条件下，25秒媒体正文断流的连接复用和
+  逐请求关闭两轮均通过，公开画质五阶段也通过。最低系统、跨设备、重复长播及
+  物理音画同步仍待验收；主动拒绝连接的混合故障及历史无线单播根因继续独立保留。
+  两个已达20条引用上限的组用最新报告替换旧的10月26日汇总引用；旧报告仍在证据索引中。
+- macOS CAP-DECODE、REG-DEC、PERF-BASELINE 补充[路由修复后的AV1资格](../../docs/superpowers/reports/2026-11-03-macos-route-av1-qualification.md)，
+  记录本机对应映像的两轮长播、公开file/HTTP播放和旧档位拒绝。其他设备、编码及
+  完整性能基线仍开放。[40/40格式矩阵](../../docs/superpowers/reports/2026-11-03-macos-qualified-format-matrix.md)
+  保留原构建身份，CAP-FORMAT仍待其他设备、最低系统和输出边界验收。
+- macOS REG-AUDIO 补充已有独立PCM、公开音轨切换、扬声器/AirPods及
+  [输出切换记录](../../docs/superpowers/reports/2026-11-03-macos-output-route.md)。切换恢复方式是
+  旧会话明确报错后从失败位置显式重载；USB、中断、后台恢复及多播放器完整验收仍开放。
+
+102行组级状态保持不变：实现为67项implemented、34项partial、1项unreviewed；
+验收为70项not_run、30项external_missing、2项failed（Android/iOS CAP-FORMAT）。
+这些是完整组的状态，不是尚未实现的功能数量或从未执行的测试数量。
+没有新增完整验收声明；DRM、Dolby、设备/物理输出、性能目标及远程CI仍阻止发布就绪。
+
 ## P08 combined engineering and readiness entry
 
 `YL_FLUTTER=/path/to/flutter sh tool/check_p08.sh --validate` runs all benchmark
