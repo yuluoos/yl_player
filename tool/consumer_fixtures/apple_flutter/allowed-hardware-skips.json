@@ -55,21 +55,29 @@
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins and YL_P03_BOUND_PLAN absent; bound evidence jobs never skip. Every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
+      "source_sha256": "9054e46fd1d6a110f34337252c3694311806b64594dc2b4c29b4ebde62d9b428",
       "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
       "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition.",
       "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition.",
-      "p03_strict_reconciliation": "Added mandatory strict progressive, VP9 and audio output tests plus real buffer-scope accounting. Those tests do not pass allowSimulatorHardwareSkip; the two existing opt-in Simulator skip callsites, predicate and exact message remain unchanged."
+      "p03_strict_reconciliation": "Added mandatory strict progressive, VP9 and audio output tests plus real buffer-scope accounting. Those tests do not pass allowSimulatorHardwareSkip; the two existing opt-in Simulator skip callsites, predicate and exact message remain unchanged.",
+      "track_switch_evidence_reconciliation": {
+        "from_sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
+        "reason": "Commit 8670cd9d returns already-verified PCM samples and attaches track-switch PCM/decoder identity evidence. The two opt-in Simulator hardware-skip callsites, predicate and exact message are unchanged; no skip added or widened."
+      }
     },
     "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": {
       "message": "iOS Simulator has no hardware decoder for this fixture; no output acceptance.",
       "condition": "Only initial decoder.video_hardware_unavailable before playback begins and YL_P03_BOUND_PLAN absent; bound evidence jobs never skip. Every other error fails; Simulator only. macOS and physical iOS require actual pixels/PCM.",
       "source": "RunnerTests/YlContainerOutputTests.swift",
-      "source_sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
+      "source_sha256": "9054e46fd1d6a110f34337252c3694311806b64594dc2b4c29b4ebde62d9b428",
       "evidence": "P03 output-ios and output-ios-diagnostic xcresults: exact unavailable code, 64 other focused tests pass. No output support claim.",
       "p03_pcm_reconciliation": "Added four mandatory PCM controls, six-channel layout/frequency checks and real converter pcmFormat/reservesOutputBuffers forwarding in the observation wrapper. Existing two initial-creation Simulator skips remain explicitly opt-in; four new controls cannot inherit these skips. No new skip entries or widened condition.",
       "p03_pcm_alignment_reconciliation": "Five additional mandatory tests, including DASH-owned negative PCM clipping; fresh converter per renderer in real track switching. Existing opt-in Simulator skip predicates/messages remain unchanged; no new skip or wider condition.",
-      "p03_strict_reconciliation": "Added mandatory strict progressive, VP9 and audio output tests plus real buffer-scope accounting. Those tests do not pass allowSimulatorHardwareSkip; the two existing opt-in Simulator skip callsites, predicate and exact message remain unchanged."
+      "p03_strict_reconciliation": "Added mandatory strict progressive, VP9 and audio output tests plus real buffer-scope accounting. Those tests do not pass allowSimulatorHardwareSkip; the two existing opt-in Simulator skip callsites, predicate and exact message remain unchanged.",
+      "track_switch_evidence_reconciliation": {
+        "from_sha256": "6325ed78dbc9f11b89498f66d13a6eb57abfe588470d59d121878b91cc45e00a",
+        "reason": "Commit 8670cd9d returns already-verified PCM samples and attaches track-switch PCM/decoder identity evidence. The two opt-in Simulator hardware-skip callsites, predicate and exact message are unchanged; no skip added or widened."
+      }
     }
   },
   "hardening_r19": {

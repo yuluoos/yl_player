@@ -81,8 +81,9 @@ Future<void> main() async {
             )
             .map((r) => r.header('range'))
             .toList();
-        if (ranges.isEmpty)
+        if (ranges.isEmpty) {
           throw StateError('No HTTP range read for load $loadCount');
+        }
         report('http', {
           'session': player.state.sessionId?.value,
           'load': loadCount,
@@ -102,8 +103,9 @@ Future<void> main() async {
               .toList(),
           'failure': s.failure?.code,
         });
-        if (!end.isCompleted && s.status == YlPlaybackStatus.completed)
+        if (!end.isCompleted && s.status == YlPlaybackStatus.completed) {
           end.complete();
+        }
       });
     }
 

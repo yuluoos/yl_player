@@ -489,7 +489,7 @@ void main() {
       manifest,
       matches(
         RegExp(
-          r'\.library\(\s*name:\s*"yl-player-apple",\s*'
+          r'\.library\(\s*name:\s*"yl-player-apple",\s*type:\s*\.dynamic,\s*'
           r'targets:\s*\["yl_player_apple"\]\s*\)',
         ),
       ),

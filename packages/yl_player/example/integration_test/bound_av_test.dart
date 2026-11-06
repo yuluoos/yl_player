@@ -256,8 +256,15 @@ void main() {
             );
           }
 
+          final initialCaptureTimer = Stopwatch()..start();
           await session.play().timeout(const Duration(seconds: 12));
+          debugPrint(
+            'P03_PUBLIC playAckUs=${initialCaptureTimer.elapsedMicroseconds}',
+          );
           await session.firstFrame.timeout(const Duration(seconds: 10));
+          debugPrint(
+            'P03_PUBLIC firstFrameUs=${initialCaptureTimer.elapsedMicroseconds}',
+          );
           lifecycle['firstFrame'] = true;
           await captureUntil(
             () => player!.state.status == YlPlaybackStatus.completed,

@@ -4,6 +4,9 @@ analyzer:
   exclude:
     # Archived evidence includes standalone probes preserved by hash manifests.
     - docs/superpowers/reports/evidence/**
+    # Templates are copied/renamed into an isolated Flutter host (decoder_probe/README.md).
+    - tool/decoder_probe/macos_capture/PublicVerification.dart
+    - tool/decoder_probe/macos_capture/Qualification.dart
   errors:
     invalid_use_of_visible_for_testing_member: error
 

@@ -658,9 +658,13 @@ final class YlHardwareVTSessionFactory: YlVTSessionFactory {
                    output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
     let codec = CMFormatDescriptionGetMediaSubType(formatDescription)
     let requiresHardware = policy == .hardwareRequired || codec == kCMVideoCodecType_VP9
+    // Xcode 26.2 (Swift 6.2.3) first declares this API for iOS. A runtime
+    // availability check alone still fails to compile against earlier SDKs.
+    #if os(macOS) || compiler(>=6.2.3)
     if codec == kCMVideoCodecType_VP9 {
       if #available(macOS 11.0, iOS 26.2, *) { VTRegisterSupplementalVideoDecoderIfAvailable(codec) }
     }
+    #endif
     guard codec == kCMVideoCodecType_H264 || codec == kCMVideoCodecType_HEVC
             || codec == kCMVideoCodecType_DolbyVisionHEVC || codec == kCMVideoCodecType_VP9 || codec == kCMVideoCodecType_AV1,
           !requiresHardware || (YlVTSessionPropertyReader.isSupported && VTIsHardwareDecodeSupported(codec)) else {
