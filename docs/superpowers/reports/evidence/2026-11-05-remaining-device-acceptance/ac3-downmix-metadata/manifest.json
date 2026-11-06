@@ -1,0 +1,39 @@
+{
+  "fixture": "packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-ac3-51.mkv",
+  "mediaSha256": "18195270c5a74b210131e9b1242ba87ab22de60de185c6443751b1aec39672a3",
+  "extractorSha256": "15e5e152cc889f16bd2dc901f4cf9b3828685485f8d539652ded49abfa136c8c",
+  "resultSha256": "8ff259bdcd7bb0a06769577f746c9338cc48276545af46198f4904f77ef85c2b",
+  "source": "AV_FRAME_DATA_DOWNMIX_INFO from independently installed FFmpeg 8.0.1; no product PCM used to choose coefficients",
+  "productPolicyCommit": "d99481b3ab780585df81a3a7014eef763f785dda",
+  "executionCommand": [
+    "./extract",
+    "packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-ac3-51.mkv"
+  ],
+  "reproductionCompilerCommand": [
+    "cc",
+    "extract.c",
+    "-I/opt/homebrew/Cellar/ffmpeg/8.0.1_4/include",
+    "-L/opt/homebrew/Cellar/ffmpeg/8.0.1_4/lib",
+    "-lavformat",
+    "-lavcodec",
+    "-lavutil",
+    "-o",
+    "extract"
+  ],
+  "actualCompilerCommand": [
+    "cc",
+    "/private/tmp/yl-remaining-device-20261105/ac3_downmix_metadata.c",
+    "-I/opt/homebrew/Cellar/ffmpeg/8.0.1_4/include",
+    "-L/opt/homebrew/Cellar/ffmpeg/8.0.1_4/lib",
+    "-lavformat",
+    "-lavcodec",
+    "-lavutil",
+    "-o",
+    "/private/tmp/yl-remaining-device-20261105/ac3_downmix_metadata"
+  ],
+  "actualExecutionCommand": [
+    "/private/tmp/yl-remaining-device-20261105/ac3_downmix_metadata",
+    "packages/yl_player/example/assets/test_media/format_matrix/mkv-avc-ac3-51.mkv"
+  ],
+  "cwd": "/Users/yy2021_8689/.codex/worktrees/remaining-device-acceptance/yl_player"
+}

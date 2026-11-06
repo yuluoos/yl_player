@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineCommit": "5bbcd1fdbe4ce5e0ba9f510c3e0a0a85613c008b",
+  "baselineCommit": "4084e2e718adc01b1e7582cc6d8fa0bbcf8bf915",
   "requirements": {
     "path": "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md",
     "sha256": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3"
@@ -80,7 +80,7 @@
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "f1809113db1a99f5f638303340f5707ae7a39a77ce671f4beb40da47add94f24",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlEac3AudioInstrumentedTest.kt": "7e40735b7cc87de692dfd89eb8768bcf25dc0f70fb95d6173de55d570b60c59f",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlFormatDecodeInstrumentedTest.kt": "9eb6dc344b9bf6b182b504eab671c85aa0e07e6fc7827dba915d29c7748a5572",
-      "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmOutputInstrumentedTest.kt": "72534948626da69ac01ba9fba945dbd3ac8df73a4d8b78a5703f896369b72279",
+      "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmOutputInstrumentedTest.kt": "e3da266afbc5036739ec9b6078818e0aa2a130a330b34e18d2abeed18afcbecd",
       "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlPcmReference.kt": "e17c6b2bb6a0420b20815e94a692382eadf511c4eaf90b4cd958afb5b0658a2c",
       "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundFlutterProbe.kt": "7514f52566adaff39969909b5b71db275c7db52df5db9c79d562d53930302a2d",
       "packages/yl_player_android/android/src/boundAv/kotlin/dev/ylplayer/yl_player_android/YlBoundMedia3Audio.kt": "3b2732c1990862bc79934d2453d29bf69799d134512a63eb2bef412987d7144f",
@@ -335,7 +335,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoPipeline.swift": "a86a5eb41b24749e94c68e147d4f5284c641436cee1036a258c6ab50f22f72d5",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoSubmissionQueue.swift": "21c94b895929f624d415507fcf7e4d3629c17c5db45d751c2eea1db13c6ee42c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoSurfaceMailbox.swift": "a4ef195f32d672c6a816ddd63d76becb6213083e8e90dc6b805bd21e2139f308",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoToolboxDecoder.swift": "3864963726895cc5247b2d7f17903b5f7ccb51cb5a134271c741e76a465d2356",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/VideoToolbox/YlVideoToolboxDecoder.swift": "18b95b69ad8f1dd528c391dbd35980dc9c7692f9f71bd3d7c832a54c33ce41be",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/YlPlayerApplePlugin.swift": "d77c94bb0caad20b61cb68d437697528c8871d2a4ecfd6bd862017ed060794ef",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/iOS/YlIosAudioSession.swift": "e2d2631ecc914f5d31387ea264be883e80ba32326f69d47ef8afc325a9932044",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/iOS/YlIosLifecycle.swift": "41799049a5868a54f16896ce836eec05db340dcf164314d516c48a60a8cf7341",
@@ -609,7 +609,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "cdd0715726cb1fee0b18029da1ed176e9ae4cf360b7a97f8312e5972068ca9a4"
+    "sha256": "194902e337470752de0fc290fe92adb0284dbd849bc85bab56ac3b28a27c5c06"
   },
   "evidence": {
     "p01": {
@@ -1121,6 +1121,11 @@
       "path": "docs/superpowers/reports/2026-11-03-ios-dash-rebuffer.md",
       "sha256": "17abc36fe7837b15e186e9ee0e7eef6bf428f599012d3af1653b2c6981d74505",
       "kind": "report"
+    },
+    "remaining-device-acceptance-20261105": {
+      "path": "docs/superpowers/reports/2026-11-05-remaining-device-acceptance.md",
+      "sha256": "786310334165030773177249a6c6bf5e86d8ecd8b5aa89df2ddd581d3598de4c",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1485,10 +1490,11 @@
         "p03",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "remaining-device-acceptance-20261105"
       ],
       "acceptance": null,
-      "nextAction": "close-required-format-cells-on-one-build"
+      "nextAction": "qualify-av1-and-hevc-main10-file-http-on-capable-hardware-after-36-of-40-same-build-passes"
     },
     {
       "requirement": "CAP-FORMAT",
@@ -1502,10 +1508,11 @@
         "remaining-local-acceptance-20261028",
         "audio-consumed-packet-20261029",
         "coreaudio-bounds-20261029",
-        "ios-format-physical-followup-20261029"
+        "ios-format-physical-followup-20261029",
+        "remaining-device-acceptance-20261105"
       ],
       "acceptance": null,
-      "nextAction": "complete-full-same-build-format-qualification-after-33-physical-regressions"
+      "nextAction": "prove-local-mp4-played-sample-clock-after-39-of-40-same-build-passes"
     },
     {
       "requirement": "CAP-FORMAT",
@@ -2724,10 +2731,11 @@
         "audio-consumed-packet-20261029",
         "coreaudio-bounds-20261029",
         "audio-disposal-20261030",
-        "macos-route-av1-qualification-20261103"
+        "macos-route-av1-qualification-20261103",
+        "remaining-device-acceptance-20261105"
       ],
       "acceptance": null,
-      "nextAction": "freeze-eligible-baselines-and-versioned-targets-before-optimization"
+      "nextAction": "obtain-eligible-devices-output-calibration-and-frozen-targets-before-formal-baselines"
     },
     {
       "requirement": "RELEASE-CONSUMERS",
@@ -2741,25 +2749,27 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "remaining-device-acceptance-20261105"
       ],
       "acceptance": null,
-      "nextAction": "review-five-consumer-opt-in-compat-evidence-and-default-toolchain-release-policy"
+      "nextAction": "resolve-default-toolchain-policy-after-five-local-compat-consumer-build-link-passes"
     },
     {
       "requirement": "RELEASE-CI",
       "platform": "all",
-      "implementation": "unreviewed",
+      "implementation": "partial",
       "verification": "not_run",
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-acceptance-deadlines-20261028"
+        "android-acceptance-deadlines-20261028",
+        "remaining-device-acceptance-20261105"
       ],
       "acceptance": null,
-      "nextAction": "record-final-source-bound-remote-ci-results"
+      "nextAction": "run-final-candidate-on-old-apple-sdk-and-matching-frozen-builder-remote-ci"
     }
   ]
 }

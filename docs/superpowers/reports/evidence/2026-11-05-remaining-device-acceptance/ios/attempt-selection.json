@@ -1,0 +1,31 @@
+[
+  {
+    "caseId": "mov-hevc-aac",
+    "transport": "http",
+    "originalRunId": "bb95d2f6-ef76-4402-a1fd-194fd47b4b61",
+    "originalExit": 1,
+    "selectedRunId": "b1e89628-c3f9-46d5-9afc-dba4383b1df3",
+    "selectedExit": 0,
+    "command": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "-B",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-device-acceptance/yl_player/tool/media_matrix/run_bound_flutter_apple.py",
+      "--case",
+      "mov-hevc-aac",
+      "--transport",
+      "http",
+      "--matrix-id",
+      "6798a92a-7f86-4917-b208-f3c64cc42bd2",
+      "--out",
+      "/private/tmp/yl-remaining-device-20261105/ios-final-recheck/mov-hevc-aac-http",
+      "--platform",
+      "ios",
+      "--app",
+      "/Users/yy2021_8689/.codex/worktrees/remaining-device-acceptance/yl_player/packages/yl_player/example/build/remaining-device-ios/Build/Products/Debug-iphoneos/Runner.app",
+      "--device",
+      "00008140-000C49CC3493001C",
+      "--flutter",
+      "/private/tmp/yl-remaining-device-20261105/flutter/bin/flutter"
+    ]
+  }
+]

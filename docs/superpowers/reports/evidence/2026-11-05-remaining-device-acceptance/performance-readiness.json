@@ -1,0 +1,28 @@
+{
+  "blockers": [
+    {
+      "nextAction": "collect-qualified-minimum-os-32bit-profile",
+      "profile": "android-api24-low-memory",
+      "reason": "baseline-missing"
+    },
+    {
+      "nextAction": "collect-calibrated-output-and-thermal-profile",
+      "profile": "ios15-physical",
+      "reason": "baseline-missing"
+    },
+    {
+      "nextAction": "qualify-content-output-and-freeze-product-limits",
+      "profile": "macos-apple-silicon",
+      "reason": "baseline-missing"
+    },
+    {
+      "nextAction": "collect-minimum-os-intel-profile",
+      "profile": "macos12-intel",
+      "reason": "baseline-missing"
+    }
+  ],
+  "passed": 0,
+  "profiles": 4,
+  "ready": false,
+  "schemaVersion": 1
+}
