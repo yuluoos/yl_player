@@ -19,6 +19,21 @@ class RuntimeEvidenceTests(unittest.TestCase):
     def test_exact_runtime_pass(self):
         self.verify()
 
+    def test_failure_retains_identity_assertion_and_location(self):
+        self.tree['testNodes'][0].update(result='Failed', children=[{
+            'nodeType': 'Failure Message',
+            'name': 'XCTAssertEqual failed: actual frames 0, expected 1',
+            'sourceLocation': {'filePath': '/fixture/Playback.swift', 'lineNumber': 42},
+        }])
+        with self.assertRaises(RuntimeError) as caught:
+            self.verify()
+        diagnostic = str(caught.exception)
+        self.assertIn('Native XCTest contains nonpassing cases', diagnostic)
+        self.assertIn(self.identity, diagnostic)
+        self.assertIn('actual frames 0, expected 1', diagnostic)
+        self.assertIn('/fixture/Playback.swift', diagnostic)
+        self.assertIn('42', diagnostic)
+
     def test_omission_cannot_hide_behind_same_count(self):
         self.tree['testNodes'][0]['nodeIdentifier'] = 'Fixture/testOther()'
         with self.assertRaisesRegex(RuntimeError, 'identities'):

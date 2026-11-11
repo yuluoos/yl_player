@@ -265,8 +265,14 @@ def verify_runtime(tree, summary, expected, platform, evidence=None):
     if set(ids) != expected:
         raise RuntimeError(f'Native case identities differ: missing={expected-set(ids)}, extra={set(ids)-expected}')
     counts = {result: sum(node['result'] == result for node in nodes) for result in ['Passed', 'Skipped', 'Failed']}
-    if any(node['result'] not in {'Passed', 'Skipped'} for node in nodes):
-        raise RuntimeError('Native XCTest contains nonpassing cases')
+    nonpassing = [node for node in nodes if node['result'] not in {'Passed', 'Skipped'}]
+    if nonpassing:
+        # xcodebuild -quiet lists test names without the assertion messages.
+        # Preserve the xcresult details in CI stdout as well as the attachment.
+        failures = [{key: node[key] for key in ('nodeIdentifier', 'result', 'children') if key in node}
+                    for node in nonpassing]
+        raise RuntimeError('Native XCTest contains nonpassing cases:\n' +
+                           json.dumps(failures, indent=2, ensure_ascii=False))
     fixtures = Path(__file__).resolve().parent
     allowed = set(json.loads((fixtures / 'allowed-hardware-skips.json').read_text())[platform])
     for node in nodes:
