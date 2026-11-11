@@ -251,6 +251,30 @@
     "download-retry-check.log.gz": {
       "sha256": "9cfc4edb269cbd1042b9121a5ffe47f3cf8e2e8b59c71648ba529df85812a367",
       "size": 1126
+    },
+    "verifier-download-retry.log.gz": {
+      "sha256": "d33445ee67cf9fcba124ecf750de54d30bfa00963c7739c67b28131120867c71",
+      "size": 1012
+    },
+    "cancellable-gates-tests.log.gz": {
+      "sha256": "ee3f7e81523e52c3883bac8854c6e81e73de39f1561f3bc63d148e88830e360c",
+      "size": 54
+    },
+    "c456-artifacts-final.json": {
+      "sha256": "a0af0e79498acd91eaae7e0778e060e0060259c90ebebc1d8af7d20c01e532ec",
+      "size": 2647
+    },
+    "verifier-retry-negative-tests.log.gz": {
+      "sha256": "659c9f00d3461c330d26c5d26e86161d4b2aa92d2a5921ed7898e4822bef6439",
+      "size": 1058
+    },
+    "c456-apple-consumers.zip": {
+      "sha256": "f425759d20e58da38a12761b256754e488b80a49bbf5299a4b40a3b47ecb6dfc",
+      "size": 1493269
+    },
+    "remote-c456-consumers.json": {
+      "sha256": "2d67699985910ddbfd22c25a358f14c1599820edf5a88ed54cfc2d06a62159e5",
+      "size": 5722
     }
   },
   "candidateCommit": "87bfced3485ca37d7078bb5b32bb2668a7f4151b",

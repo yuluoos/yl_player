@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineCommit": "256f85d1b8cdf7a1ef0cfa6f1119f85a4ff8d7a0",
+  "baselineCommit": "3f4497f8faa8eea927d9b6a57798dd232522bc12",
   "requirements": {
     "path": "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md",
     "sha256": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3"
@@ -505,7 +505,7 @@
       "packages/yl_player_media_core/tool/apple_ffmpeg/test_vp9_metadata.m": "02c7184af251078f08f99c77b5689ac1da020f24c53e45c444f1039429032961",
       "packages/yl_player_media_core/tool/apple_ffmpeg/test_vp9_metadata.sh": "9b49b7a7fced5a182953c97a5f2037b6fdb9141ef1f7cb4911107baa2534a9b3",
       "packages/yl_player_media_core/tool/apple_ffmpeg/toolchain_identity.py": "b454b481c9e615b661146f556dd61e77914ddfcbb197528b15fc455a36740648",
-      "packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py": "f6f18c565536dcde24ebf263660033ac43135c185eba5c812602f1c2383e6b9b",
+      "packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py": "9d26634b51815818176089504c2c3652f8c9827f2db277eb9c962efdd5f43a51",
       "packages/yl_player_media_core/tool/apple_ffmpeg/vorbis_delay_fixture.py": "72d687f105f48d46105bbc1ff60a68caba9a0aacbf50c3d80120af90bc44b348",
       "packages/yl_player_media_core/tool/apple_ffmpeg/vorbis_reference_encoder.c": "5014f9b1dcb1f95b333059e8d8f23bb2f1e2fc4e8fd6efa9bc9d460e68f77a1f",
       "packages/yl_player_media_delivery/CHANGELOG.md": "ea6f9b5c286dbf3981a9f3972d786de4122b99977dd889cd6bd73cc0a2aabaf4",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "220de58ee6b100d14867fd64703d20d8693e229d5129e1ef6fd1e0cd918ce721"
+    "sha256": "0d3ef4c199c8874792820f183cc65e8871a112ecac42cc250064d134647b0fd8"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "ff41d14a399752e4a875669f7dc7e8cf52e2ec5c5d30af59bb4e6bdc93519804",
+      "sha256": "29c912f2f3a7beed1edba330992b55f574945da68c2c1dba7a1930351324b943",
       "kind": "report"
     }
   },

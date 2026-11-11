@@ -1,0 +1,65 @@
+{
+  "total_count": 3,
+  "artifacts": [
+    {
+      "id": 13841745466,
+      "node_id": "MDg6QXJ0aWZhY3QxMzg0MTc0NTQ2Ng==",
+      "name": "apple-consumer-evidence",
+      "size_in_bytes": 1493269,
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13841745466",
+      "archive_download_url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13841745466/zip",
+      "expired": false,
+      "digest": "sha256:f425759d20e58da38a12761b256754e488b80a49bbf5299a4b40a3b47ecb6dfc",
+      "created_at": "2026-11-11T08:46:40Z",
+      "updated_at": "2026-11-11T08:46:40Z",
+      "expires_at": "2027-02-09T08:15:44Z",
+      "workflow_run": {
+        "id": 42985635336,
+        "repository_id": 1355650423,
+        "head_repository_id": 1355650423,
+        "head_branch": "codex/ci-gates-20261111",
+        "head_sha": "c456a84c48ff295c31cf2d84fd332ac97db8e48f"
+      }
+    },
+    {
+      "id": 13840586949,
+      "node_id": "MDg6QXJ0aWZhY3QxMzg0MDU4Njk0OQ==",
+      "name": "android-api-24-failure",
+      "size_in_bytes": 63696,
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13840586949",
+      "archive_download_url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13840586949/zip",
+      "expired": false,
+      "digest": "sha256:f6af58f563b7df76507dbf0900fdf475439092bedd79e63c5bdc72cf1e62862c",
+      "created_at": "2026-11-11T08:38:01Z",
+      "updated_at": "2026-11-11T08:38:01Z",
+      "expires_at": "2027-02-09T08:15:44Z",
+      "workflow_run": {
+        "id": 42985635336,
+        "repository_id": 1355650423,
+        "head_repository_id": 1355650423,
+        "head_branch": "codex/ci-gates-20261111",
+        "head_sha": "c456a84c48ff295c31cf2d84fd332ac97db8e48f"
+      }
+    },
+    {
+      "id": 13839657879,
+      "node_id": "MDg6QXJ0aWZhY3QxMzgzOTY1Nzg3OQ==",
+      "name": "android-consumer-evidence",
+      "size_in_bytes": 9689,
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13839657879",
+      "archive_download_url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13839657879/zip",
+      "expired": false,
+      "digest": "sha256:56bbe108d430524a865b125f9ad95c1a0d342e0aae2acc758856a4638405f0e3",
+      "created_at": "2026-11-11T08:25:12Z",
+      "updated_at": "2026-11-11T08:25:12Z",
+      "expires_at": "2027-02-09T08:15:44Z",
+      "workflow_run": {
+        "id": 42985635336,
+        "repository_id": 1355650423,
+        "head_repository_id": 1355650423,
+        "head_branch": "codex/ci-gates-20261111",
+        "head_sha": "c456a84c48ff295c31cf2d84fd332ac97db8e48f"
+      }
+    }
+  ]
+}
