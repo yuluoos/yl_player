@@ -3,11 +3,23 @@
 import AppKit
 import AVFAudio
 import Foundation
+import Darwin
 import VideoToolbox
 import XCTest
 import YlFFmpegBridge
 
 final class YlMacosVideoTests: XCTestCase {
+  // This diagnostic symbol is exported on the running OS but is absent from
+  // older SDK headers. Query it dynamically; absence is unknown, never true.
+  private static func coreAnimationCompatibility(_ buffer: CVPixelBuffer) -> Any {
+    guard let handle = dlopen(nil, RTLD_LAZY) else { return NSNull() }
+    defer { dlclose(handle) }
+    guard let symbol = dlsym(handle, "CVPixelBufferIsCompatibleWithAttributes") else { return NSNull() }
+    typealias Check = @convention(c) (CVPixelBuffer, CFDictionary?) -> UInt8
+    let check = unsafeBitCast(symbol, to: Check.self)
+    return check(buffer, [kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey: true] as CFDictionary) != 0
+  }
+
   private func diagnosticFrame(_ pts: Int64, generation: UInt64 = 1, payload: AnyObject = NSObject()) -> YlFrameEnvelope {
     .init(payload: payload, ptsUs: pts, durationUs: 40_000, keyframe: false, generation: generation)
   }
@@ -257,10 +269,7 @@ final class YlMacosVideoTests: XCTestCase {
             outputPixelFormat = CVPixelBufferGetPixelFormatType(frame.pixelBuffer)
             let buffer = frame.pixelBuffer
             outputSurfaceDiagnostics = [
-              "coreAnimationCompatible": CVPixelBufferIsCompatibleWithAttributes(
-                buffer,
-                [kCVPixelBufferIOSurfaceCoreAnimationCompatibilityKey: true] as CFDictionary
-              ),
+              "coreAnimationCompatible": Self.coreAnimationCompatibility(buffer),
               "pixelFormat": CVPixelBufferGetPixelFormatType(buffer),
               "width": CVPixelBufferGetWidth(buffer),
               "height": CVPixelBufferGetHeight(buffer),
