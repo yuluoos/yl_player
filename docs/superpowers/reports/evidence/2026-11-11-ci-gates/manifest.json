@@ -207,6 +207,50 @@
     "xcode272-vorbis-final.log": {
       "sha256": "88c7f71596f5def9e4ecdf743c3b3f9e88f43bd9c6e6f0115094bd048867e18a",
       "size": 19028
+    },
+    "sparse-select-result.txt": {
+      "sha256": "54be6f48e39613e93ed5942cb37cca81a88defac5cce4c596caf8b128ad8d1f5",
+      "size": 110
+    },
+    "c456-artifacts.json": {
+      "sha256": "e91dc5c7ce15fd117e9887578f8d5cf904d3476df6cc5f129a8493a2398aef6e",
+      "size": 1778
+    },
+    "sparse-link-tests.log": {
+      "sha256": "1c66cdeb470f39b8e955bbac0c97d649639d8e960befe6025880b44506c24b88",
+      "size": 363
+    },
+    "sparse-consumer-gate-tests.log": {
+      "sha256": "093e7528e1e542cf43b5f9d87074bd7417f6ff66c95085b4a19205a067d52bd4",
+      "size": 111
+    },
+    "runtime-diagnostics-tests.log": {
+      "sha256": "661513acc0aef1cb30487f2fab0d04614adf133fe9f2ee5100a6d3fe33eff3ed",
+      "size": 122
+    },
+    "ci-gates-final-tests.log": {
+      "sha256": "acc60c7a6252165d8e2e0e61388ebb7bf8c146a28217da9cc396c6242238ee20",
+      "size": 111
+    },
+    "sparse-ffmpeg-verify.log": {
+      "sha256": "ab4938c580838546e5dcccd48e7bd7c42af7c60401c40f98eb3c328428c70466",
+      "size": 1152
+    },
+    "sparse-migration-tests.log": {
+      "sha256": "c32be02afbef51211a091a4a5d96e164297d957edf11e7b13baa94c6cf833eb0",
+      "size": 102
+    },
+    "c456-apple-unit-annotations.json": {
+      "sha256": "8c5eec47b2fd8966c8a315df3bf5f8895ba7f5f4a4d27cbf29a70bd488e38334",
+      "size": 791
+    },
+    "remote-c456-ci-progress.json": {
+      "sha256": "5dbd101a5ee6d942dfe5bdc69682ebabb3dbeec7e9d333efa9d8a644908144b9",
+      "size": 40797
+    },
+    "download-retry-check.log.gz": {
+      "sha256": "9cfc4edb269cbd1042b9121a5ffe47f3cf8e2e8b59c71648ba529df85812a367",
+      "size": 1126
     }
   },
   "candidateCommit": "87bfced3485ca37d7078bb5b32bb2668a7f4151b",

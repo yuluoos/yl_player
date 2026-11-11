@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "cf8cc57a2ca433d6882a938bcfae026ee835e490a2ec88ac33920a69ba3a3524",
+      "sha256": "ff41d14a399752e4a875669f7dc7e8cf52e2ec5c5d30af59bb4e6bdc93519804",
       "kind": "report"
     }
   },
@@ -2777,7 +2777,7 @@
         "ci-gates-20261111"
       ],
       "acceptance": null,
-      "nextAction": "verify-old-swift-fixture-fixes-and-resolve-api24-decoder-unavailable"
+      "nextAction": "diagnose-native-apple-runtime-and-api24-decoder-failures-with-retained-evidence"
     }
   ]
 }
