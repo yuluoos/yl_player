@@ -169,7 +169,7 @@ jobs:
 
   android-integration:
     needs: [changes, android-unit]
-    if: always() && needs.changes.outputs.android == 'true' && needs.android-unit.result == 'success'
+    if: ${{ !cancelled() && needs.changes.outputs.android == 'true' && needs.android-unit.result == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 75
     strategy:
@@ -240,7 +240,7 @@ jobs:
 
   ios-integration:
     needs: [changes, foundation]
-    if: always() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success'
+    if: ${{ !cancelled() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success' }}
     runs-on: macos-15
     timeout-minutes: 75
     permissions:
@@ -275,7 +275,7 @@ jobs:
 
   macos-integration:
     needs: [changes, foundation]
-    if: always() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success'
+    if: ${{ !cancelled() && needs.changes.outputs.apple == 'true' && needs.foundation.result == 'success' }}
     runs-on: macos-15
     timeout-minutes: 75
     permissions:
@@ -451,7 +451,7 @@ jobs:
 
   release-gates:
     needs: [changes, foundation, android-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
-    if: always() && needs.changes.outputs.full == 'true'
+    if: ${{ !cancelled() && needs.changes.outputs.full == 'true' }}
     runs-on: macos-15
     timeout-minutes: 60
     permissions:

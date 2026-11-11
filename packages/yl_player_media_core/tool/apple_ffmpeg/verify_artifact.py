@@ -10,7 +10,6 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
-import urllib.request
 
 ACCEPTED_LOCK_SHA256 = '4e882bf9b555514f767299ab37f19bf35597f1f3b9a4d51e8e399c72f6acf9f7'
 
@@ -22,6 +21,16 @@ def sha(path):
 def require(condition, reason):
     if not condition:
         raise SystemExit(reason)
+
+
+def download_source(url, target):
+    # TLS resets from the source mirrors must not bypass verification or force
+    # a whole CI rebuild. Each retry replaces the file; hashes below remain final.
+    subprocess.run([
+        'curl', '--fail', '--location', '--retry', '3', '--retry-all-errors',
+        '--connect-timeout', '30', '--max-time', '180', '--retry-max-time', '600',
+        '--output', str(target), url,
+    ], check=True)
 
 
 def verify():
@@ -57,13 +66,13 @@ def verify():
         if os.environ.get('YL_OPUS_ARCHIVE'):
             opus_archive.write_bytes(Path(os.environ['YL_OPUS_ARCHIVE']).read_bytes())
         else:
-            urllib.request.urlretrieve(opus_pins['OPUS_URL'], opus_archive)
+            download_source(opus_pins['OPUS_URL'], opus_archive)
         require(sha(opus_archive) == opus_pins['OPUS_SHA256'], 'Opus archive mismatch')
         dav1d_archive = work / 'dav1d.tar.xz'
         if os.environ.get('YL_DAV1D_ARCHIVE'):
             dav1d_archive.write_bytes(Path(os.environ['YL_DAV1D_ARCHIVE']).read_bytes())
         else:
-            urllib.request.urlretrieve(dav1d_pins['DAV1D_URL'], dav1d_archive)
+            download_source(dav1d_pins['DAV1D_URL'], dav1d_archive)
         require(sha(dav1d_archive) == dav1d_pins['DAV1D_SHA256'], 'dav1d archive mismatch')
         archive, signature = work / 'source.tar.xz', work / 'source.tar.xz.asc'
         for target, variable, url in (
@@ -73,7 +82,7 @@ def verify():
             if os.environ.get(variable):
                 target.write_bytes(Path(os.environ[variable]).read_bytes())
             else:
-                urllib.request.urlretrieve(url, target)
+                download_source(url, target)
         require(sha(archive) == pins['FFMPEG_SHA256'], 'source archive mismatch')
         require(sha(signature) == expected['signed_source']['signature_sha256'], 'source signature mismatch')
         key = script / 'FFMPEG_RELEASE_KEY.asc'
