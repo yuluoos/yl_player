@@ -52,6 +52,7 @@ print_contract() {
     'OPUS_FLAGS=--disable-shared,--enable-static,--disable-doc,--disable-extra-programs,--disable-intrinsics,--disable-asm,--disable-rtcd,--disable-deep-plc,--disable-dred,--disable-osce,--disable-qext' \
     'DAV1D_FLAGS=static,release,pic,tools=false,tests=false,examples=false,docs=false,arm64-asm=true,x86_64-asm=false' \
     'NORMALIZATION=relative-source,fixed-install-prefix,prefix-map,bridge-no-debug,zero-ar-date,linker-content-uuid,oso-prefix,sorted-plist-libraries' \
+    'TOOLCHAIN_IDENTITY=developer-relative-paths,explicit-compiler-target,tool-and-sdk-hashes' \
     'TARGETS=iphoneos-arm64,iphonesimulator-arm64,iphonesimulator-x86_64,macosx-arm64,macosx-x86_64'
 }
 
@@ -72,15 +73,11 @@ inputs={p:sha(package/p) for p in ['darwin/native/YlFFmpegBridge/YlFFmpegBridge.
  'tool/apple_ffmpeg/patches/dav1d-owned-pictures.patch',
  'tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch',
  'darwin/native/YlFFmpegBridge/module.modulemap','tool/apple_ffmpeg/ffmpeg-9.0.1.lock',
- 'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/opus-1.6.1.lock','LICENSES/Opus-BSD.txt','tool/apple_ffmpeg/build_xcframework.sh']}
-toolchain={'xcode':run('xcodebuild','-version'),'clang':run('xcrun','clang','--version'),
- 'meson':run('meson','--version'),'ninja':run('ninja','--version')}
-for name in ['clang','ld','ar','ranlib']:
- p=pathlib.Path(run('xcrun','--find',name));toolchain[name+'_path']=str(p);toolchain[name+'_sha256']=sha(p)
-for sdk in ['iphoneos','iphonesimulator','macosx']:
- p=pathlib.Path(run('xcrun','--sdk',sdk,'--show-sdk-path'))
- toolchain[sdk]={'path':str(p),'version':run('xcrun','--sdk',sdk,'--show-sdk-version'),
-  'build':run('xcrun','--sdk',sdk,'--show-sdk-build-version'),'settings_sha256':sha(p/'SDKSettings.json')}
+ 'tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc','tool/apple_ffmpeg/opus-1.6.1.lock','LICENSES/Opus-BSD.txt',
+ 'tool/apple_ffmpeg/build_xcframework.sh','tool/apple_ffmpeg/toolchain_identity.py']}
+sys.path.insert(0,str(package/'tool/apple_ffmpeg'))
+from toolchain_identity import capture
+toolchain=capture()
 contract=run('bash',str(package/'tool/apple_ffmpeg/build_xcframework.sh'),'--print-contract').splitlines()
 files={}
 for p in sorted(artifact.rglob('*')):
@@ -92,6 +89,7 @@ opus_pins=dict(line.split('=',1) for line in (package/'tool/apple_ffmpeg/opus-1.
 current={'opus_source':opus_pins,'schema':1,'inputs':inputs,'configure_contract':contract,'toolchain':toolchain,'files':files}
 if str(action)=='write':
  current['signed_source']=json.loads(receipt.read_text())
+ current['builder_host']={'uname':list(os.uname()),'developer_dir':os.environ.get('DEVELOPER_DIR') or run('xcode-select','-p')}
  lock.write_text(json.dumps(current,indent=2,sort_keys=True)+'\n')
  print('Candidate manifest written; requires independent --rebuild-check before acceptance.')
 else:

@@ -1,4 +1,14 @@
 {
+  "builder_host": {
+    "developer_dir": "/Applications/Xcode.app/Contents/Developer",
+    "uname": [
+      "Darwin",
+      "yuluodeMacBook-Pro.local",
+      "27.2.0",
+      "Darwin Kernel Version 27.2.0: Wed Oct 14 23:46:57 PDT 2026; root:xnu-13432.41.4~25/RELEASE_ARM64_T8103",
+      "arm64"
+    ]
+  },
   "configure_contract": [
     "FFMPEG_VERSION=9.0.1",
     "FFMPEG_URL=https://ffmpeg.org/releases/ffmpeg-9.0.1.tar.xz",
@@ -46,6 +56,7 @@
     "OPUS_FLAGS=--disable-shared,--enable-static,--disable-doc,--disable-extra-programs,--disable-intrinsics,--disable-asm,--disable-rtcd,--disable-deep-plc,--disable-dred,--disable-osce,--disable-qext",
     "DAV1D_FLAGS=static,release,pic,tools=false,tests=false,examples=false,docs=false,arm64-asm=true,x86_64-asm=false",
     "NORMALIZATION=relative-source,fixed-install-prefix,prefix-map,bridge-no-debug,zero-ar-date,linker-content-uuid,oso-prefix,sorted-plist-libraries",
+    "TOOLCHAIN_IDENTITY=developer-relative-paths,explicit-compiler-target,tool-and-sdk-hashes",
     "TARGETS=iphoneos-arm64,iphonesimulator-arm64,iphonesimulator-x86_64,macosx-arm64,macosx-x86_64"
   ],
   "files": {
@@ -66,7 +77,7 @@
       "size": 84
     },
     "ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "bb636c178640968b4df6748a54729eda3059cbe8b2f0768309aa8ba3c10c1591",
+      "sha256": "a1ccb3533080ed2fd4abb2c74a75985c2389142983fe3837684c1f97746d6b03",
       "size": 4326176
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": {
@@ -82,7 +93,7 @@
       "size": 84
     },
     "ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": {
-      "sha256": "e07cbd1e9a6cbcc7e66ddaa6af10a62736be51e84b98db0964f6cdac55609dec",
+      "sha256": "413ee36fd260b5aa49126cd7df6864c9263a72221650ef2a879782279239fbcd",
       "size": 8705952
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Headers": {
@@ -107,7 +118,7 @@
       "size": 617
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": {
-      "sha256": "0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764",
+      "sha256": "4b1ec87a8012bd61477482d3bfc9ad51d15e167efad837dc0d4f0c67a44c32d5",
       "size": 8701360
     },
     "macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/Current": {
@@ -128,12 +139,13 @@
     "darwin/native/YlFFmpegBridge/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
     "tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
     "tool/apple_ffmpeg/build_dav1d.sh": "1d543be91e6698ba4aa4827c185d4688226b761fa393417d44913041d0536544",
-    "tool/apple_ffmpeg/build_xcframework.sh": "ee72d88c8cb4fe759bf63151d3e17b36a453d4431a6de2acccfd650a0d9d0cef",
+    "tool/apple_ffmpeg/build_xcframework.sh": "e5c75776ff81f0664e4dfc423c73f77f86df0b5282af5cd9abef9d10a4e30ad2",
     "tool/apple_ffmpeg/dav1d.lock": "3db908cd475c4bfb194825c260c65f73c588d82b2a315a5c8bbbc107e84c3db3",
     "tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30",
     "tool/apple_ffmpeg/opus-1.6.1.lock": "d91f5633571220a721741124bf96490a9d88880b7ae5d324a624ac41012e656b",
     "tool/apple_ffmpeg/patches/dav1d-owned-pictures.patch": "de4cf4bf7944d396ba2c4350abddd12559218599bd6eed8823c5e7fecb3dc13c",
-    "tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch": "2c64fba387b9240cdc7d65ef5fcea52a965389b88d88d3d0ad472dcd9d26f851"
+    "tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch": "2c64fba387b9240cdc7d65ef5fcea52a965389b88d88d3d0ad472dcd9d26f851",
+    "tool/apple_ffmpeg/toolchain_identity.py": "b454b481c9e615b661146f556dd61e77914ddfcbb197528b15fc455a36740648"
   },
   "opus_source": {
     "OPUS_SHA256": "6ffcb593207be92584df15b32466ed64bbec99109f007c82205f0194572411a1",
@@ -158,35 +170,37 @@
     ]
   },
   "toolchain": {
-    "ar_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar",
-    "ar_sha256": "37ce0999654a9a265bd5ba6cd737d995f18d4c96f63ca117178b47d26d38fb1d",
-    "clang": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
-    "clang_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
-    "clang_sha256": "06e3d64f541c65a93acd176690bdaae13a3d7db092c8b98b392d4c6d0d03f176",
+    "ar_path": "$DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar",
+    "ar_sha256": "acf2c08a490b2655b8b6214649564f8a9c89557d84f24c23e81e36683ab4a5b2",
+    "clang": "Apple clang version 21.0.0 (clang-2100.4.1.1)\nTarget: arm64-apple-macos12.0\nThread model: posix\nInstalledDir: $DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "clang_path": "$DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang",
+    "clang_sha256": "04988adaddb282c8c074a1a55f8221452f18f64df3ca0006135f62031710377b",
+    "compilerVersionTarget": "arm64-apple-macos12.0",
+    "identityFormat": 2,
     "iphoneos": {
-      "build": "24A94232",
-      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
-      "settings_sha256": "569805cc3f63c4b414a7dcc2766d9ff780caba748a5526ee6b785a56a7a0417d",
-      "version": "27.1"
+      "build": "24B8118",
+      "path": "$DEVELOPER_DIR/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk",
+      "settings_sha256": "8c5d2efa53dbdb9b602c45e77c5eac5b21165317408fe37ddf14c7aa9c8b9031",
+      "version": "27.2"
     },
     "iphonesimulator": {
-      "build": "24A94232",
-      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
-      "settings_sha256": "e68503e5e534e9194af5efe8c636ca8b824e2d8237c5f38ec84aa4d155bc8418",
-      "version": "27.1"
+      "build": "24B8118",
+      "path": "$DEVELOPER_DIR/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk",
+      "settings_sha256": "deb9d0f0fcacac1ba3b606f6b2772fa043ef64814b848cb1deb78f7997f96759",
+      "version": "27.2"
     },
-    "ld_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld",
-    "ld_sha256": "58d1a357fb0ce0940a2b8afb1d1531e8e858ee1bfa6b93122c1c87758cfa2103",
+    "ld_path": "$DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/ld",
+    "ld_sha256": "40bb100edb05d0f5c2758aa74cda23355e91cd625af61f03fe8e7ec4a8e3938e",
     "macosx": {
-      "build": "26A425",
-      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
-      "settings_sha256": "7b93ad7e534cc4b31c6a4e39d19b5e0288acf2168c2649479a796d1cb51939fb",
-      "version": "27.0"
+      "build": "26B118",
+      "path": "$DEVELOPER_DIR/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+      "settings_sha256": "82165b15ee21419d4cffaba8895797391b908ac9499ba70f561f3e1bd16758d6",
+      "version": "27.2"
     },
     "meson": "1.9.2",
     "ninja": "1.13.0.git.kitware.jobserver-pipe-1",
-    "ranlib_path": "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib",
-    "ranlib_sha256": "3065bbf15d6f61764801afdb75f6285d7f4dac239b023131d3aecea176470439",
-    "xcode": "Xcode 27.1\nBuild version 27A9275"
+    "ranlib_path": "$DEVELOPER_DIR/Toolchains/XcodeDefault.xctoolchain/usr/bin/libtool",
+    "ranlib_sha256": "ffb5df9296321a96ca3c41e03b434680bdfe9eb7f6536ebbe6e38fb2b8ec5a75",
+    "xcode": "Xcode 27.2\nBuild version 27B52"
   }
 }

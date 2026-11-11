@@ -1,6 +1,6 @@
 #!/bin/sh
-# Keep the accepted self-hashed recipe and provenance byte-for-byte unchanged.
-# Its optional candidate directory also lets it verify the relocated artifact.
+# Supply the current package location to the self-hashed build recipe.
+# Its candidate interface verifies without rewriting the accepted lock.
 set -eu
 script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
 package_root=$(CDPATH= cd -- "$script_dir/../.." && pwd)

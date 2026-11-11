@@ -16,11 +16,47 @@ class AudioPullTest(unittest.TestCase):
         folder=Path(cls.build.name)
         (folder/'main.swift').write_text('''import AVFoundation
 import MediaToolbox
+let mode = CommandLine.arguments[1]
+if mode.hasPrefix("tap-") {
+  let finalized = UnsafeMutablePointer<Int32>.allocate(capacity: 1)
+  finalized.initialize(to: 0)
+  var callbacks = MTAudioProcessingTapCallbacks(version: kMTAudioProcessingTapCallbacksVersion_0,
+    clientInfo: UnsafeMutableRawPointer(finalized),
+    init: { _, info, storage in storage.pointee = info },
+    finalize: { tap in MTAudioProcessingTapGetStorage(tap).assumingMemoryBound(to: Int32.self).pointee += 1 },
+    prepare: nil, unprepare: nil, process: { _, _, _, _, _, _ in })
+  func newTap() -> (OSStatus, MTAudioProcessingTap?) {
+    YlBoundAvPlayerAudio.createTap { output in
+      MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks, kMTAudioProcessingTapCreationFlag_PreEffects, output)
+    }
+  }
+  let outcome: [String: Any] = autoreleasepool {
+    let result: (OSStatus, MTAudioProcessingTap?)
+    if mode == "tap-legacy" {
+      result = YlBoundAvPlayerAudio.createTap { (output: UnsafeMutablePointer<Unmanaged<MTAudioProcessingTap>?>) in
+        let (status, tap) = newTap()
+        output.pointee = tap.map { Unmanaged.passRetained($0) }
+        return status
+      }
+    } else {
+      result = YlBoundAvPlayerAudio.createTap { (output: UnsafeMutablePointer<MTAudioProcessingTap?>) in
+        let (status, tap) = newTap()
+        output.pointee = tap
+        return status
+      }
+    }
+    return ["status": result.0, "created": result.1 != nil]
+  }
+  var value = outcome
+  value["finalized"] = finalized.pointee
+  finalized.deinitialize(count: 1); finalized.deallocate()
+  print(String(data: try JSONSerialization.data(withJSONObject: value), encoding: .utf8)!)
+  exit(0)
+}
 let storage = YlBoundAvPlayerAudio.Storage()
 storage.format = AudioStreamBasicDescription(mSampleRate: 48000, mFormatID: kAudioFormatLinearPCM,
   mFormatFlags: kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked, mBytesPerPacket: 8,
   mFramesPerPacket: 1, mBytesPerFrame: 8, mChannelsPerFrame: 2, mBitsPerChannel: 32, mReserved: 0)
-let mode = CommandLine.arguments[1]
 let range = CMTimeRange(start: .zero, duration: CMTime(value: 256, timescale: 48000))
 var samples = [Float](repeating: 0.25, count: 512)
 samples.withUnsafeMutableBytes { bytes in
@@ -36,7 +72,9 @@ let value: [String: Any] = ["drops": storage.drops, "blocks": blocks.count,
 print(String(data: try JSONSerialization.data(withJSONObject: value), encoding: .utf8)!)
 ''')
         cls.executable=folder/'test'
-        subprocess.run(['xcrun','swiftc','-D','DEBUG','-D','YL_BOUND_AV',str(SOURCE),str(folder/'main.swift'),'-o',str(cls.executable)],check=True,capture_output=True)
+        subprocess.run(['xcrun','swiftc','-D','DEBUG','-D','YL_BOUND_AV',
+                        '-module-cache-path',str(folder/'module-cache'),
+                        str(SOURCE),str(folder/'main.swift'),'-o',str(cls.executable)],check=True)
     def invoke(self,mode):
         return json.loads(subprocess.check_output([str(self.executable),mode],text=True))
     def test_empty_untimed_error_does_not_erase_real_pcm(self):
@@ -46,5 +84,9 @@ print(String(data: try JSONSerialization.data(withJSONObject: value), encoding: 
         result=self.invoke('timed');self.assertEqual(1,result['drops']);self.assertEqual(0,result['blocks'])
     def test_error_with_frames_still_invalidates_evidence(self):
         result=self.invoke('nonempty');self.assertEqual(1,result['drops']);self.assertEqual(0,result['blocks'])
+    def test_legacy_tap_create_transfers_and_releases_retained_ownership_once(self):
+        self.assertEqual(dict(status=0,created=True,finalized=1),self.invoke('tap-legacy'))
+    def test_direct_tap_create_preserves_automatic_ownership(self):
+        self.assertEqual(dict(status=0,created=True,finalized=1),self.invoke('tap-direct'))
 
 if __name__=='__main__':unittest.main()

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Verify the accepted immutable artifact without assuming the builder's host.
 
-The original self-hashed build_xcframework.sh remains the reproduction recipe.
+The self-hashed build_xcframework.sh is the reproduction recipe.
 No build, lock write, or current-machine toolchain comparison occurs here.
 """
 import hashlib
@@ -12,7 +12,7 @@ import subprocess
 import tempfile
 import urllib.request
 
-ACCEPTED_LOCK_SHA256 = '8cfab46fc97f3c320515406b20802cd4dcae56514252c361316c1bc1bde2ffce'
+ACCEPTED_LOCK_SHA256 = '4e882bf9b555514f767299ab37f19bf35597f1f3b9a4d51e8e399c72f6acf9f7'
 
 
 def sha(path):

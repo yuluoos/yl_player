@@ -54,14 +54,30 @@ final class YlBoundAvPlayerAudio {
         let value = Unmanaged<Storage>.fromOpaque(MTAudioProcessingTapGetStorage(tap)).takeUnretainedValue()
         value.record(status: status, buffers: buffers, frames: frames.pointee, range: range)
       })
-    var tap: MTAudioProcessingTap?
-    let result = MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks,
-      kMTAudioProcessingTapCreationFlag_PreEffects, &tap)
+    let (result, tap) = Self.createTap { output in
+      MTAudioProcessingTapCreate(kCFAllocatorDefault, &callbacks,
+        kMTAudioProcessingTapCreationFlag_PreEffects, output)
+    }
     guard result == noErr, let tap else { failure = "tap create \(result)"; return }
     let parameters = AVMutableAudioMixInputParameters(track: tracks[0])
     parameters.audioTapProcessor = tap
     let mix = AVMutableAudioMix(); mix.inputParameters = [parameters]
     state = next; item.audioMix = mix
+  }
+
+  // Select by the imported SDK signature: older SDKs expose a retained
+  // Unmanaged output; newer SDKs transfer that ownership directly to Swift.
+  static func createTap(_ create: (UnsafeMutablePointer<MTAudioProcessingTap?>) -> OSStatus)
+    -> (OSStatus, MTAudioProcessingTap?) {
+    var tap: MTAudioProcessingTap?
+    let status = create(&tap)
+    return (status, tap)
+  }
+  static func createTap(_ create: (UnsafeMutablePointer<Unmanaged<MTAudioProcessingTap>?>) -> OSStatus)
+    -> (OSStatus, MTAudioProcessingTap?) {
+    var tap: Unmanaged<MTAudioProcessingTap>?
+    let status = create(&tap)
+    return (status, tap?.takeRetainedValue())
   }
 
   /// Drop the item's reference. Finalization is observed, not inferred from nil.

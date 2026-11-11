@@ -53,8 +53,8 @@ otherwise the verifier obtains the exact pinned public archives and FFmpeg signa
 
 `--rebuild-check` requires the exact toolchain recorded in the lock, builds all
 five targets in a fresh temporary directory, and compares every byte and
-symlink target. The original self-hashed builder's `--verify` remains a
-historical exact-host interface; use the separate consumer verifier above on
+symlink target. The self-hashed builder's `--verify` requires the recorded
+build toolchain; use the separate consumer verifier above on
 other hosts. Neither interface refreshes the lock. An accepted replacement
 artifact requires reviewing and explicitly updating the consumer verifier's
 accepted-lock digest along with its new provenance.
@@ -75,6 +75,17 @@ pinned release inputs; checksum and signature validation still run.
 `YL_KEEP_FFMPEG_BUILD=1` retains temporary build evidence. The lock records
 the required Xcode, SDK and compiler inputs; full binaries, including signing
 metadata, are compared without exclusions.
+
+The accepted build baseline was renewed with Xcode **27.2 / 27B52** on
+2026-11-11 after an independent clean five-target rebuild matched every byte.
+It uses Meson 1.9.2 and the Ninja executable distributed by the `ninja==1.13.0`
+Python package (reported version `1.13.0.git.kitware.jobserver-pipe-1`).
+`toolchain_identity.py` records explicit compiler target, developer-relative
+tool paths, tool binary hashes, and SDK versions/builds/settings hashes.
+The builder host is retained as provenance; its hostname and default host
+compiler target are not cross-compilation inputs. The recipe embeds the real
+Xcode installation path in FFmpeg configuration, so reproduction uses the
+bundle at `/Applications/Xcode.app` (a symlink to a different path is insufficient).
 
 Keep the scripts, lock files, license, and notices with every binary
 distribution so recipients can replace the LGPL component. Distribution
@@ -149,4 +160,4 @@ Test-only libaom and libvpx produce independent planar reference outputs; neithe
 is linked into the distributed framework. Short test success never creates a
 production software admission entry.
 
-The relocated package uses `build_relocated_xcframework.sh` for checks of the accepted artifact. It forwards the relocated artifact and unchanged lock to the original, self-hashed `build_xcframework.sh` recipe; the recipe and recorded provenance remain byte-for-byte unchanged. Explicit candidate commands continue to use the original recipe.
+The relocated package uses `build_relocated_xcframework.sh` for checks of the accepted artifact. It forwards the current artifact and lock locations to the self-hashed `build_xcframework.sh` recipe. Verification and reproduction do not rewrite the accepted artifact or lock; explicit candidate commands create a separately reviewed replacement.

@@ -685,6 +685,19 @@ final class YlDashResourceLoaderTests: XCTestCase {
       requests: requests ?? Int(time), overdue: 1, intentRevision: intent, credentialRevision: credential)
   }
 
+  func testProductionRecoveryKeepsBufferedItemWhenLastTransferPredatesPreparation() throws {
+    var policy = YlDashAutoRecoveryPolicy()
+    for time in [0.0, 1, 9] { _ = policy.observe(productionSample(time, high: time == 0)) }
+    func stalled(_ time: Double) -> YlDashAutoRecoveryPolicy.Sample {
+      productionSample(time, requests: 14, bytes: 3_500_000, transfer: 14)
+    }
+    _ = policy.observe(stalled(10))
+    _ = policy.observe(stalled(17))
+    let ticket = try XCTUnwrap(policy.observe(stalled(17.5)))
+    XCTAssertFalse(policy.authorizes(ticket, stalled(17.6)))
+    XCTAssertTrue(policy.authorizes(ticket, productionSample(17.6)))
+  }
+
   func testProductionRecoveryUsesDynamicBandwidthAndTwoWindows() throws {
     var p = YlDashAutoRecoveryPolicy()
     XCTAssertNil(p.observe(productionSample(0, high: true)))
@@ -1784,7 +1797,9 @@ final class YlDashResourceLoaderTests: XCTestCase {
         intentRevision: publicHost?.acknowledgedTransportRevision ?? 0,
         credentialRevision: currentCredentialContext()?.revision ?? 0)
     }
-    while ProcessInfo.processInfo.systemUptime - started < 140 {
+    // Keep collecting through the injected outage for the separate EOF observation.
+    let observationSeconds: TimeInterval = env["YL_ABR_PROBE_STALL_EOF"] == "1" ? 165 : 140
+    while ProcessInfo.processInfo.systemUptime - started < observationSeconds {
       let item = try XCTUnwrap(player.currentItem)
       if item.presentationSize.width == 640 { sawHigh = true }
       if sawHigh && item.presentationSize.width == 320 { sawDownshift = true }

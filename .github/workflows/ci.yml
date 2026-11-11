@@ -342,12 +342,31 @@ jobs:
   ffmpeg-reproducibility:
     needs: changes
     if: needs.changes.outputs.artifact == 'true'
-    runs-on: macos-15
+    runs-on: xcode-27
     timeout-minutes: 180
+    env:
+      DEVELOPER_DIR: /Applications/Xcode.app/Contents/Developer
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v7
+      - name: Install pinned Xcode 27.2 build dependencies
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+          HOMEBREW_NO_INSTALL_UPGRADE: '1'
+        run: |
+          # The recipe embeds tool paths in FFmpeg's configuration string.
+          # Match the canonical installation path used by the accepted build.
+          test -d /Applications/Xcode_27.2.app
+          test -L /Applications/Xcode.app
+          # xcrun resolves symlinks, so the bundle itself needs this path.
+          sudo rm /Applications/Xcode.app
+          sudo mv /Applications/Xcode_27.2.app /Applications/Xcode.app
+          xcodebuild -version
+          brew install pkgconf gnupg
+          python3 -m venv "$RUNNER_TEMP/ffmpeg-tools"
+          "$RUNNER_TEMP/ffmpeg-tools/bin/python" -m pip install meson==1.9.2 ninja==1.13.0
+          echo "$RUNNER_TEMP/ffmpeg-tools/bin" >> "$GITHUB_PATH"
       - name: Exact clean FFmpeg reproduction
         run: sh packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh --rebuild-check
 
