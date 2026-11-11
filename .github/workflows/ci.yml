@@ -24,6 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          sparse-checkout: |
+            .github/workflows/ci.yml
+          sparse-checkout-cone-mode: false
           fetch-depth: 0
       - id: select
         env:
@@ -110,6 +113,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
           fetch-depth: 0
       - uses: actions/setup-java@v6
         with:
@@ -136,6 +143,10 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
           fetch-depth: 0
       - uses: subosito/flutter-action@v2
         with:
@@ -149,6 +160,12 @@ jobs:
         env:
           YL_BASE_REF: ${{ needs.changes.outputs.base }}
         run: sh tool/check_player_v2.sh --quick --stage apple-unit
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: apple-unit-runtime-evidence
+          path: packages/yl_player/example/build/apple-evidence
+          if-no-files-found: error
 
   android-integration:
     needs: [changes, android-unit]
@@ -163,6 +180,11 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -196,7 +218,20 @@ jobs:
         run: |
           mkdir -p android-failure
           adb devices -l > android-failure/devices.txt
-          if [ -n "$YL_ANDROID_DEVICE_ID" ]; then adb -s "$YL_ANDROID_DEVICE_ID" logcat -d > android-failure/logcat.txt; fi
+          if [ -n "$YL_ANDROID_DEVICE_ID" ]; then
+            adb -s "$YL_ANDROID_DEVICE_ID" logcat -d > android-failure/logcat.txt
+            adb -s "$YL_ANDROID_DEVICE_ID" shell dumpsys media.codec > android-failure/media-codec-service.txt 2>&1 || true
+            # Keep the image's actual codec declarations, including included files.
+            # This distinguishes absent decoder candidates from a playback regression.
+            adb -s "$YL_ANDROID_DEVICE_ID" shell '
+              for codec_file in /system/etc/media_codecs*.xml /vendor/etc/media_codecs*.xml /odm/etc/media_codecs*.xml; do
+                if [ -f "$codec_file" ]; then
+                  echo "CODEC_CONFIGURATION $codec_file"
+                  cat "$codec_file"
+                fi
+              done
+            ' > android-failure/media-codec-configurations.txt 2>&1 || true
+          fi
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
@@ -212,6 +247,11 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
@@ -242,6 +282,11 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
@@ -270,6 +315,11 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
       - uses: actions/setup-java@v6
         with:
           distribution: temurin
@@ -305,6 +355,11 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            .github
+            packages
+            tool
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'
@@ -350,6 +405,9 @@ jobs:
       contents: read
     steps:
       - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            packages/yl_player_media_core
       - name: Install pinned Xcode 27.2 build dependencies
         env:
           HOMEBREW_NO_AUTO_UPDATE: '1'
@@ -368,7 +426,28 @@ jobs:
           "$RUNNER_TEMP/ffmpeg-tools/bin/python" -m pip install meson==1.9.2 ninja==1.13.0
           echo "$RUNNER_TEMP/ffmpeg-tools/bin" >> "$GITHUB_PATH"
       - name: Exact clean FFmpeg reproduction
-        run: sh packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh --rebuild-check
+        run: |
+          source packages/yl_player_media_core/tool/apple_ffmpeg/ffmpeg-9.0.1.lock
+          source packages/yl_player_media_core/tool/apple_ffmpeg/opus-1.6.1.lock
+          source packages/yl_player_media_core/tool/apple_ffmpeg/dav1d.lock
+          sources="$RUNNER_TEMP/ffmpeg-sources"
+          mkdir -p "$sources"
+          # curl's default retry policy excludes TLS connection resets (exit 35).
+          # Retry downloads only; the recipe still verifies every hash/signature.
+          download() {
+            curl --fail --location --retry 3 --retry-all-errors \
+              --connect-timeout 30 --max-time 180 --retry-max-time 600 \
+              --output "$2" "$1"
+          }
+          export YL_FFMPEG_ARCHIVE="$sources/ffmpeg.tar.xz"
+          export YL_FFMPEG_SIGNATURE="$sources/ffmpeg.tar.xz.asc"
+          export YL_OPUS_ARCHIVE="$sources/opus.tar.gz"
+          export YL_DAV1D_ARCHIVE="$sources/dav1d.tar.xz"
+          download "$FFMPEG_URL" "$YL_FFMPEG_ARCHIVE"
+          download "$FFMPEG_SIGNATURE_URL" "$YL_FFMPEG_SIGNATURE"
+          download "$OPUS_URL" "$YL_OPUS_ARCHIVE"
+          download "$DAV1D_URL" "$YL_DAV1D_ARCHIVE"
+          sh packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh --rebuild-check
 
   release-gates:
     needs: [changes, foundation, android-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
