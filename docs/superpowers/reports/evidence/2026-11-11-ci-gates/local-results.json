@@ -1,0 +1,55 @@
+{
+  "commit": "87bfced3485ca37d7078bb5b32bb2668a7f4151b",
+  "checks": [
+    {
+      "check": "candidate",
+      "log": "xcode272-build.log.gz",
+      "exitCode": 0
+    },
+    {
+      "check": "independent-rebuild",
+      "log": "xcode272-rebuild.log.gz",
+      "exitCode": 0
+    },
+    {
+      "check": "strict-and-foreign-verifier",
+      "log": "xcode272-artifact-tests.log",
+      "exitCode": 0
+    },
+    {
+      "check": "software-video-source-and-artifact",
+      "log": "xcode272-software-video-final.log",
+      "exitCode": 0
+    },
+    {
+      "check": "vorbis-source-and-artifact",
+      "log": "xcode272-vorbis-final.log",
+      "exitCode": 0
+    },
+    {
+      "check": "audio-tap-ownership",
+      "log": "audio-pull-ownership-tests.log",
+      "exitCode": 0
+    },
+    {
+      "check": "toolchain-and-ci-gate",
+      "log": "xcode272-tooling-tests.log",
+      "exitCode": 0
+    },
+    {
+      "check": "accepted-fixture-migration",
+      "log": "fixture-drift-final.log",
+      "exitCode": 0
+    },
+    {
+      "check": "runtime-evidence",
+      "log": "runtime-evidence-tests.log",
+      "exitCode": 0
+    }
+  ],
+  "notes": [
+    "Runtime evidence: 9 passed, 1 expected environment-bound skip.",
+    "Initial audio aggregate passed AC3/EAC3, Opus and Opus demux; stopped before Vorbis because reference prefix was absent. Vorbis subsequently passed separately.",
+    "Initial software-video invocation lacked aomdec; installing Homebrew aom allowed the complete source/artifact pixel comparison to pass."
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "xcode": {
+    "expected": "Xcode 27.1\nBuild version 27A9275",
+    "actual": "Xcode 27.2\nBuild version 27B52",
+    "matches": false
+  },
+  "clang": {
+    "expected": "Apple clang version 21.0.0 (clang-2100.3.34.2)\nTarget: arm64-apple-darwin27.0.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "actual": "Apple clang version 21.0.0 (clang-2100.4.1.1)\nTarget: arm64-apple-darwin27.2.0\nThread model: posix\nInstalledDir: /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin",
+    "matches": false
+  },
+  "meson": {
+    "expected": "1.9.2",
+    "actual": null,
+    "matches": false
+  },
+  "ninja": {
+    "expected": "1.13.0.git.kitware.jobserver-pipe-1",
+    "actual": null,
+    "matches": false
+  },
+  "iphoneos": {
+    "expected": {
+      "build": "24A94232",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+      "settings_sha256": "569805cc3f63c4b414a7dcc2766d9ff780caba748a5526ee6b785a56a7a0417d",
+      "version": "27.1"
+    },
+    "actual": {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.2.sdk",
+      "version": "27.2",
+      "build": "24B8118",
+      "settings_sha256": "8c5d2efa53dbdb9b602c45e77c5eac5b21165317408fe37ddf14c7aa9c8b9031"
+    },
+    "matches": false
+  },
+  "iphonesimulator": {
+    "expected": {
+      "build": "24A94232",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+      "settings_sha256": "e68503e5e534e9194af5efe8c636ca8b824e2d8237c5f38ec84aa4d155bc8418",
+      "version": "27.1"
+    },
+    "actual": {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.2.sdk",
+      "version": "27.2",
+      "build": "24B8118",
+      "settings_sha256": "deb9d0f0fcacac1ba3b606f6b2772fa043ef64814b848cb1deb78f7997f96759"
+    },
+    "matches": false
+  },
+  "macosx": {
+    "expected": {
+      "build": "26A425",
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+      "settings_sha256": "7b93ad7e534cc4b31c6a4e39d19b5e0288acf2168c2649479a796d1cb51939fb",
+      "version": "27.0"
+    },
+    "actual": {
+      "path": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.2.sdk",
+      "version": "27.2",
+      "build": "26B118",
+      "settings_sha256": "82165b15ee21419d4cffaba8895797391b908ac9499ba70f561f3e1bd16758d6"
+    },
+    "matches": false
+  }
+}

@@ -100,6 +100,13 @@ PERF-BASELINE / RELEASE-CONSUMERS / RELEASE-CI及platform=all。
 
 ## P08 combined engineering and readiness entry
 
+2026-11-11 构建门禁补验见 [CI 报告](../../docs/superpowers/reports/2026-11-11-ci-gates.md)：
+FFmpeg 已接受 Xcode 27.2 新基线，本地独立重建和远端逐字节复现均通过；当前
+远端四种 Apple 独立消费者、Android 消费者/JVM/API 36 通过。API 24 视频 load
+仍报 decoder.unavailable；旧 Swift 测试兼容修复另行复验。RELEASE-CI 从 not_run
+更新为 failed，组级计数为 69 not_run、30 external_missing、3 failed。
+源码快照匹配，但没有将这些子项通过升级为完整组验收，releaseReady 仍为 false。
+
 `YL_FLUTTER=/path/to/flutter sh tool/check_p08.sh --validate` runs all benchmark
 Python tests, all example Dart unit tests, the threshold registry and the current
 release inventory. A successful diagnostic run explicitly does not admit a

@@ -1,0 +1,77 @@
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=0
+gpg: no gpg-agent running in this session
+gpg: Signature made Wed Aug 12 11:42:43 2026 +08
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+Verified 18 canonical file/symlink entries, all recipe/configuration inputs, accepted builder provenance and signed source; lock unchanged.
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/test_build_contract.sh exit=0
+gpg: no gpg-agent running in this session
+gpg: Signature made Wed Aug 12 11:42:43 2026 +08
+gpg:                using RSA key FCF986EA15E6E293A5644F10B4322F04D67658D8
+gpg:                issuer "ffmpeg-devel@ffmpeg.org"
+gpg: Good signature from "FFmpeg release signing key <ffmpeg-devel@ffmpeg.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+      FCF986EA15E6E293A5644F10B4322F04D67658D8
+Verified 18 canonical file/symlink entries, all recipe/configuration inputs, accepted builder provenance and signed source; lock unchanged.
+NEGATIVE source immutable-verify exit=1
+input mismatch: darwin/native/YlFFmpegBridge/YlFFmpegBridge.m
+
+NEGATIVE vorbis-patch immutable-verify exit=1
+input mismatch: tool/apple_ffmpeg/patches/vorbis-aarch64-zero-coupling.patch
+
+NEGATIVE dav1d-patch immutable-verify exit=1
+input mismatch: tool/apple_ffmpeg/patches/dav1d-owned-pictures.patch
+
+NEGATIVE dav1d-license immutable-verify exit=1
+input mismatch: LICENSES/dav1d-BSD.txt
+
+NEGATIVE opus-license immutable-verify exit=1
+input mismatch: LICENSES/Opus-BSD.txt
+
+NEGATIVE configuration immutable-verify exit=1
+input mismatch: tool/apple_ffmpeg/build_xcframework.sh
+
+NEGATIVE slice immutable-verify exit=1
+artifact mismatch
+
+NEGATIVE Opus archive immutable-verify: rejected intended hash mismatch
+NEGATIVE dav1d archive immutable-verify: rejected intended hash mismatch
+Apple FFmpeg contract passed: 3 slices, 5 architectures, 5 Swift symbols, 9 intended-reason negative checks; lock unchanged.
+
+--rebuild-check exit=1
+toolchain mismatch
+  meson: expected='1.9.2' actual='foreign-verifier-version'
+  ninja: expected='1.13.0.git.kitware.jobserver-pipe-1' actual='foreign-verifier-version'
+  xcode: expected='Xcode 27.2\nBuild version 27B52' actual='Xcode foreign verifier host'
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+input mismatch: darwin/native/YlFFmpegBridge/YlFFmpegBridge.m
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+input mismatch: tool/apple_ffmpeg/build_xcframework.sh
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+input mismatch: tool/apple_ffmpeg/ffmpeg-9.0.1.lock
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+input mismatch: tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+artifact mismatch
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+artifact mismatch
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+source archive mismatch
+
+/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-foreign-verifier-3uhflcd_/packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py exit=1
+source signature mismatch
+
+PASS: intact artifact on foreign verifier host; 9 intended-reason mutation negatives; incompatible reproduction host rejected; lock unchanged.

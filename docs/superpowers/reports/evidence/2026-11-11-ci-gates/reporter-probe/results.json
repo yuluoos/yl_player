@@ -1,0 +1,24 @@
+[
+  {
+    "mode": "github-default",
+    "command": [
+      "/Users/yuluo/flutter /flutter/bin/cache/dart-sdk/bin/dart",
+      "test",
+      "test/marker_test.dart"
+    ],
+    "exitCode": 1,
+    "markerSeenSeconds": 5.537005709000001
+  },
+  {
+    "mode": "expanded",
+    "command": [
+      "/Users/yuluo/flutter /flutter/bin/cache/dart-sdk/bin/dart",
+      "test",
+      "--reporter",
+      "expanded",
+      "test/marker_test.dart"
+    ],
+    "exitCode": 0,
+    "markerSeenSeconds": 0.4909989159999997
+  }
+]

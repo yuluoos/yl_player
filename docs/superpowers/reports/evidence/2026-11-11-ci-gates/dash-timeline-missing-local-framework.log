@@ -1,0 +1,37 @@
+...............EE.E.
+======================================================================
+ERROR: test_real_program_documents (test_program_document.ProgramDocumentTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/dash_timeline/test_program_document.py", line 22, in test_real_program_documents
+    native = build_modules(out/'native', include_delivery=False)
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/media_delivery/native_build.py", line 72, in build_modules
+    raise FileNotFoundError(f"Required framework is unavailable: {directory / name}")
+FileNotFoundError: Required framework is unavailable: /Users/yuluo/flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.xcframework/macos-arm64_x86_64/FlutterMacOS
+
+======================================================================
+ERROR: test_managed_program_resources (test_program_resources.ProgramResourceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/dash_timeline/test_program_resources.py", line 22, in test_managed_program_resources
+    native = build_modules(out/'native', include_delivery=False)
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/media_delivery/native_build.py", line 72, in build_modules
+    raise FileNotFoundError(f"Required framework is unavailable: {directory / name}")
+FileNotFoundError: Required framework is unavailable: /Users/yuluo/flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.xcframework/macos-arm64_x86_64/FlutterMacOS
+
+======================================================================
+ERROR: test_original_packet_times_and_ownership (test_sample_source.SampleSourceTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/dash_timeline/test_sample_source.py", line 17, in test_original_packet_times_and_ownership
+    native = build_modules(out/'native', include_delivery=False)
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/media_delivery/native_build.py", line 72, in build_modules
+    raise FileNotFoundError(f"Required framework is unavailable: {directory / name}")
+FileNotFoundError: Required framework is unavailable: /Users/yuluo/flutter/bin/cache/artifacts/engine/darwin-x64/FlutterMacOS.xcframework/macos-arm64_x86_64/FlutterMacOS
+
+----------------------------------------------------------------------
+Ran 20 tests in 10.661s
+
+FAILED (errors=3)
+Swift program checks: 1518 (independent Fraction cases: 1494)
+Exact sample window checks: 8

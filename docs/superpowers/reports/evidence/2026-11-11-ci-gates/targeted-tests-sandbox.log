@@ -1,0 +1,101 @@
+.........F........Android test log: /var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-runner-70dnyz3n/yl-android-test.hybe1vbz
+Android test receipt: /var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-runner-70dnyz3n/yl-android-test.hybe1vbz.receipt.json
+...Android test log: /var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-runner-ti3iio1y/yl-android-test.omlv7r6u
+Android test receipt: /var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-runner-ti3iio1y/yl-android-test.omlv7r6u.receipt.json
+.EAndroid test log: /var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-runner-fw0xavvh/yl-android-test.wnikrb3u
+Android test receipt: /var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-runner-fw0xavvh/yl-android-test.wnikrb3u.receipt.json
+............
+======================================================================
+ERROR: test_configuration_cannot_expand_production_deadlines (tool.test_android_integration_runner.AndroidIntegrationRunnerTests) (name='YL_ANDROID_RUN_TIMEOUT_SECONDS', value='601')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 211, in test_configuration_cannot_expand_production_deadlines
+    result=subprocess.run(['sh',str(ROOT/'run_android_integration.sh'),'suite.dart'],
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 507, in run
+    stdout, stderr = process.communicate(input, timeout=timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1134, in communicate
+    stdout, stderr = self._communicate(input, endtime, timeout)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1980, in _communicate
+    self._check_timeout(endtime, orig_timeout, stdout, stderr)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1178, in _check_timeout
+    raise TimeoutExpired(
+subprocess.TimeoutExpired: Command '['sh', '/Users/yuluo/Desktop/GIT/yl_player/tool/run_android_integration.sh', 'suite.dart']' timed out after 2 seconds
+
+======================================================================
+ERROR: test_signals_cleanup_owned_group_without_touching_other_process (tool.test_android_integration_runner.AndroidIntegrationRunnerTests) (signal=<Signals.SIGTERM: 15>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 169, in test_signals_cleanup_owned_group_without_touching_other_process
+    self.assert_child_stopped()
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 109, in assert_child_stopped
+    result=subprocess.run(['ps','-p',str(pid),'-o','stat='],capture_output=True,text=True)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1821, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 1] Operation not permitted: 'ps'
+
+======================================================================
+ERROR: test_signals_cleanup_owned_group_without_touching_other_process (tool.test_android_integration_runner.AndroidIntegrationRunnerTests) (signal=<Signals.SIGINT: 2>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 169, in test_signals_cleanup_owned_group_without_touching_other_process
+    self.assert_child_stopped()
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 109, in assert_child_stopped
+    result=subprocess.run(['ps','-p',str(pid),'-o','stat='],capture_output=True,text=True)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1821, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 1] Operation not permitted: 'ps'
+
+======================================================================
+ERROR: test_signals_cleanup_owned_group_without_touching_other_process (tool.test_android_integration_runner.AndroidIntegrationRunnerTests) (signal=<Signals.SIGHUP: 1>)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 169, in test_signals_cleanup_owned_group_without_touching_other_process
+    self.assert_child_stopped()
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 109, in assert_child_stopped
+    result=subprocess.run(['ps','-p',str(pid),'-o','stat='],capture_output=True,text=True)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1821, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 1] Operation not permitted: 'ps'
+
+======================================================================
+ERROR: test_successful_leader_does_not_leave_child_running (tool.test_android_integration_runner.AndroidIntegrationRunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 133, in test_successful_leader_does_not_leave_child_running
+    self.assert_child_stopped()
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 109, in assert_child_stopped
+    result=subprocess.run(['ps','-p',str(pid),'-o','stat='],capture_output=True,text=True)
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 505, in run
+    with Popen(*popenargs, **kwargs) as process:
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 951, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework/Versions/3.9/lib/python3.9/subprocess.py", line 1821, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+PermissionError: [Errno 1] Operation not permitted: 'ps'
+
+======================================================================
+FAIL: test_deadline_kills_owned_term_ignoring_descendant (tool.test_android_integration_runner.AndroidIntegrationRunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 125, in test_deadline_kills_owned_term_ignoring_descendant
+    code,r=self.run_case('child')
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 95, in run_case
+    self.assertFalse(timed_out,'runner exceeded bounded failure deadline')
+AssertionError: True is not false : runner exceeded bounded failure deadline
+
+----------------------------------------------------------------------
+Ran 37 tests in 83.514s
+
+FAILED (failures=1, errors=5)

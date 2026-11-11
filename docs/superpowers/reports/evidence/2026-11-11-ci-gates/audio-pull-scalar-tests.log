@@ -1,0 +1,14 @@
+/Users/yuluo/Desktop/GIT/yl_player/packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundAvPlayerAudio.swift:34:24: warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+ 32 |     item.audioMix = nil
+ 33 |     epoch += 1
+ 34 |     let tracks = asset.tracks(withMediaType: .audio)
+    |                        `- warning: 'tracks(withMediaType:)' was deprecated in macOS 13.0: Use loadTracks(withMediaType:) instead [#DeprecatedDeclaration]
+ 35 |     guard tracks.count == 1 else { failure = "tap requires exactly one audio track"; return }
+ 36 |     let next = Storage()
+
+[#DeprecatedDeclaration]: <https://docs.swift.org/compiler/documentation/diagnostics/deprecated-declaration>
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 6.408s
+
+OK

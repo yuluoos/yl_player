@@ -1,0 +1,198 @@
+Audio codec regression: 31 checks, 0 failures
+YL_OPUS_FIXTURES={"files": {"10-1.mkv": {"bytes": 57113, "sha256": "7b07687a5476c51ca27b258877f9bc5bc09050ec745f07cfeb3e0988a8833b1b"}, "10-1.pcm": {"bytes": 768000, "sha256": "f9c7417dcc77bf97e32840dc023ddb092ab3ae1f722e1c488f22ad8082e801bd"}, "10-2.mkv": {"bytes": 70193, "sha256": "1913d514db5a730eeddc20e7197dca7fa56f015f268dbda011f844926bc5bc69"}, "10-2.pcm": {"bytes": 1536000, "sha256": "414abdf181915755482c475919acfa5a0fcb7712a4f34c41daf834c36377202e"}, "120-1.mkv": {"bytes": 33318, "sha256": "0f1428f2fb4f61405a1fc1845f57d1ea66bdb28fd241c38305ad00674e2357f2"}, "120-1.pcm": {"bytes": 768000, "sha256": "dba4f08f99e5941f45ab2262dd1b35d00622f6ce34016401152fa278708be7e2"}, "120-2.mkv": {"bytes": 49611, "sha256": "12f9555db9d1b3091cd284356011545465c051b6729ee6d4e063cc2680d98e3b"}, "120-2.pcm": {"bytes": 1536000, "sha256": "70217b146f02b36f6efb828d9b074420bee5f575635941f464fe2be52c432d1c"}, "2.5-1.mkv": {"bytes": 52453, "sha256": "78dee7025baf3116686df4e7ef0ed54f0bb6a5b07d2c7a946c1cf226cc385173"}, "2.5-1.pcm": {"bytes": 768000, "sha256": "c042c0e5d14ff79c94b873728e33434e06f45d7f06ee4ab47b36fd5c8fa28c8f"}, "2.5-2.mkv": {"bytes": 92036, "sha256": "5d8bff411f7cb52c1fc7eb16c2c8eed5b8fa92fadb214facaa45a4735db600ed"}, "2.5-2.pcm": {"bytes": 1536000, "sha256": "41bc96f6182e4b4dd7e47d9059e4d0cee0e12de715aa21b9b477c0ebc3dedc07"}, "20-1.mkv": {"bytes": 58326, "sha256": "6b081fc7b0d04e5c0732c61740bdc7940bf85be6f1ce5dffc02c212b8e0686e0"}, "20-1.pcm": {"bytes": 768000, "sha256": "64f9480ff7e88aa61fadce06f838bc4f4f22a452867a88e009f037b14468edb7"}, "20-2.mkv": {"bytes": 62921, "sha256": "8bfa0341006263ac133d01d7727c74772fd5f320aa02dd16b9914ccd9648c4fa"}, "20-2.pcm": {"bytes": 1536000, "sha256": "142cfb40a90fd18d571fbde4a785165d0d913d5a3c1186f5d347ae1a5bb7121f"}, "40-1.mkv": {"bytes": 33502, "sha256": "7058d2357460a978d836b3f7a31a4ca0b90f0ec608b8be4a970b01220b431cb1"}, "40-1.pcm": {"bytes": 768000, "sha256": "dba4f08f99e5941f45ab2262dd1b35d00622f6ce34016401152fa278708be7e2"}, "40-2.mkv": {"bytes": 49592, "sha256": "ac3bb2bc6522116a3feb51893fcf1cc15186b460f194c4b06e4613e192693217"}, "40-2.pcm": {"bytes": 1536000, "sha256": "4e8660c8ac8c18b111e76ad1b0eec29976bd554e560e42f17522ae2c52083fbd"}, "5-1.mkv": {"bytes": 58075, "sha256": "3c166016cae9ee24490673031bf5d73d43646c77125185432a38a6629f4b0a0b"}, "5-1.pcm": {"bytes": 768000, "sha256": "c19938e6a3a841eb3ea8e6e534ce23cb6d0586e3e4835de1aaec7e8e1f60b5de"}, "5-2.mkv": {"bytes": 78306, "sha256": "29bdc29ee5f9dc05277f212fa987c331366e534d77d06d69d8d7e55eae30c47c"}, "5-2.pcm": {"bytes": 1536000, "sha256": "4ac35fafade07993c531894bba1f69e3fa8142fba1bebab7ec7cfdec242a5c56"}, "60-1.mkv": {"bytes": 33138, "sha256": "0be0bbf51a19be6cb1c135c0348b54d5ae46c04a18dc22495e32076480fbc356"}, "60-1.pcm": {"bytes": 768000, "sha256": "dba4f08f99e5941f45ab2262dd1b35d00622f6ce34016401152fa278708be7e2"}, "60-2.mkv": {"bytes": 49148, "sha256": "dfe1cbeb71cdbffc3c87f384929ebd22962896d0469d406b59b86b64d0642f2f"}, "60-2.pcm": {"bytes": 1536000, "sha256": "ce584438b623d20220b37b244e4e372e579c27e1093638fae048d7730c38296a"}, "gain-1.mkv": {"bytes": 58326, "sha256": "5a3eb9a40b42c22f1d192f26428d01800972b70799be7b042fad21e2d4637764"}, "gain-1.pcm": {"bytes": 768000, "sha256": "1f1e228e1ec42e081fb0379cb3e386c0ec97eeeeda32ef69e85782f3c1c7a704"}, "gain-2.mkv": {"bytes": 62921, "sha256": "a8b24b4a1b865c367df1bf345df83ef75e59036141f7cb9a64f749dba48e935d"}, "gain-2.pcm": {"bytes": 1536000, "sha256": "3f7694f793ec2806569a72d11b124917c643e4445d3a2364be71c3c89b2d55cd"}, "hybrid-1.mkv": {"bytes": 15694, "sha256": "24f240e3652a75071ab8c31bf60b54e3f09ceb2aaf1bebbd3d1ed776f9025bcc"}, "hybrid-1.pcm": {"bytes": 768000, "sha256": "d2e5f8dc57e6fed418485cc942615a804b33d2b1d0c96bcb0ad6952bf71cbeb9"}, "hybrid-2.mkv": {"bytes": 15144, "sha256": "e502601231ffdea7f365a103a2bedaeb3c1d3e925f1cc17812cf05cbd45444bc"}, "hybrid-2.pcm": {"bytes": 1536000, "sha256": "716c67ba835fb58f432bc33e4be5e325a4519e0f0333852af7b7f029aa5ddfd2"}, "hybrid10-1.mkv": {"bytes": 16618, "sha256": "3546aba6964f8216041de5b065d535dce47e3783a38b934fa920f7a7d6786c06"}, "hybrid10-1.pcm": {"bytes": 768000, "sha256": "8aa24f1239356c60487d29a71836d2144023759e36783e9c1093559d0b22bbfd"}, "hybrid10-2.mkv": {"bytes": 17527, "sha256": "b151e9c11521b3051253a5804d35cb20f1a1a4a541671bd2c19d98a9b2e02723"}, "hybrid10-2.pcm": {"bytes": 1536000, "sha256": "0ab8ea3a8210237e790a3045b5a89af4a5105aefee62f07e5e3c7d3b13d621b9"}, "medium-1.mkv": {"bytes": 9225, "sha256": "c044f41b70f09384c1a0607fc71196d8bfcdb46905a2511c810ba5638c86309d"}, "medium-1.pcm": {"bytes": 768000, "sha256": "aa57581ca898c97ada45c1012fdab37408052e15871b50d8daed547e3ca68488"}, "medium-2.mkv": {"bytes": 9189, "sha256": "83006225205045f85168265d895ec55d84e8fb135c29728149439fc933d014d4"}, "medium-2.pcm": {"bytes": 1536000, "sha256": "ff9b5d1abdd88cc1052e57e3b40e94897bf4f8b39d06e798c5f211e5d189eb6e"}, "narrow-1.mkv": {"bytes": 8258, "sha256": "de239af49e99ea64baf23a34f06ac9533ea6a9b8ef9852fcf1b495483754da77"}, "narrow-1.pcm": {"bytes": 768000, "sha256": "5f23dfc26004c4d2ae1de208115783774ea5cc5c17e50d7e04e231cb89cc367b"}, "narrow-2.mkv": {"bytes": 7848, "sha256": "6bd52a1ce7647c73a59d834333d0af68ad2fa10603af1d7cd52d6d55a29987df"}, "narrow-2.pcm": {"bytes": 1536000, "sha256": "67578048505733282b28f3c44b6bcb144533db3e527ecc2daade2cddf70aeb12"}, "silk10-1.mkv": {"bytes": 11375, "sha256": "4e601300bafaf49ad264ecb01367fb3553cf4f383c47b3537a3550389f73550e"}, "silk10-1.pcm": {"bytes": 768000, "sha256": "094ed089e86e73cf1ca1462c528f7a403e820abdd40a883f8e00829bff712076"}, "silk10-2.mkv": {"bytes": 11364, "sha256": "1ae79459b2397ed93b543212f3990afed25559a9168bd902dff735e13f2599eb"}, "silk10-2.pcm": {"bytes": 1536000, "sha256": "70012fa721ad3abb9105880110eb5800831e37a75720327c23a000a3f0f59f1a"}, "silk20-1.mkv": {"bytes": 10259, "sha256": "b2ddf289363f1a07fa9e7feb42d229e79b2480f6c12a353c21c6445dfd78a972"}, "silk20-1.pcm": {"bytes": 768000, "sha256": "b18c87fdb3f5d8e1791601300bb4dcd075870554b4583f483480dcd7d7544606"}, "silk20-2.mkv": {"bytes": 10260, "sha256": "9c5fac6934212213ed776c347c7f9927ac3cba174519cc2ebb072ed08f3506d3"}, "silk20-2.pcm": {"bytes": 1536000, "sha256": "2815315d23954b13dbdb8cd30c2ad3828220630ca43ce913e7c903b11e6c908c"}, "silk40-1.mkv": {"bytes": 9713, "sha256": "aca5d137fc2426b159ee9d9795cd8e49cb24c5292091eaddc3025851df6e1616"}, "silk40-1.pcm": {"bytes": 768000, "sha256": "70a5648e29ea1d7298a13ae62f22470334db683155f0acbd9714420ddc3fd154"}, "silk40-2.mkv": {"bytes": 9674, "sha256": "71c0cd201382f6ce2bd92df38d0741b6b40a8767bbd9ef430bb7e8b2cf7f88a8"}, "silk40-2.pcm": {"bytes": 1536000, "sha256": "b21265d462e0e15596ed73980952aff5e05d4c8b02ba0cb6bc922939a02e55c5"}, "speech-1.mkv": {"bytes": 9515, "sha256": "079471d427e9d8798a58255b53a088f668fcca19fe46e0f54fcf42eb74501254"}, "speech-1.pcm": {"bytes": 768000, "sha256": "88e3a506c359721689d307816534b0cc3a4a8e3b17a47241d7ae0969e49a7584"}, "speech-2.mkv": {"bytes": 9492, "sha256": "c5fd60f5f581a3dcc60d02ce8dde5331961e6d62c6249f15fe3798a2cb178a0c"}, "speech-2.pcm": {"bytes": 1536000, "sha256": "540fe5a8793ea799ed195086493ff136ac184213d121a6bc852378102bd0bf5e"}}, "generator": "ffmpeg version 9.0.2 Copyright (c) 2000-2026 the FFmpeg developers"}
+Opus source mode=2.5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.10 dB
+Opus 2ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.13 dB
+Opus bridge: 15306 checks, 0 failures
+Opus source mode=5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus 2ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus bridge: 8906 checks, 0 failures
+Opus source mode=10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus bridge: 5706 checks, 0 failures
+Opus source mode=20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.17 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.15 dB
+Opus bridge: 3306 checks, 0 failures
+Opus source mode=60
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.17 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.16 dB
+Opus bridge: 3034 checks, 0 failures
+Opus source mode=120
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.17 dB
+Opus 2ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.15 dB
+Opus bridge: 2772 checks, 0 failures
+Opus source mode=speech
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 3036 checks, 0 failures
+Opus source mode=silk10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.79 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.81 dB
+Opus bridge: 5708 checks, 0 failures
+Opus source mode=silk20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.81 dB
+Opus bridge: 4110 checks, 0 failures
+Opus source mode=silk40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.83 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.82 dB
+Opus bridge: 3308 checks, 0 failures
+Opus source mode=narrow
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=322.16 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.90 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=medium
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.83 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=hybrid
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.19 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.50 dB
+Opus bridge: 4108 checks, 0 failures
+Opus source mode=hybrid10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=90.26 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=87.18 dB
+Opus bridge: 5708 checks, 0 failures
+Opus source mode=gain
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.12 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.13 dB
+Opus bridge: 4106 checks, 0 failures
+Opus artifact mode=2.5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.10 dB
+Opus 2ch: packets=1601 frames=192000 skip=120 padding=0 SNR=70.13 dB
+Opus bridge: 15306 checks, 0 failures
+Opus artifact mode=5
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus 2ch: packets=801 frames=192000 skip=120 padding=120 SNR=70.12 dB
+Opus bridge: 8906 checks, 0 failures
+Opus artifact mode=10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=70.14 dB
+Opus bridge: 5706 checks, 0 failures
+Opus artifact mode=20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=70.13 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.17 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=70.15 dB
+Opus bridge: 3306 checks, 0 failures
+Opus artifact mode=60
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.17 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=70.16 dB
+Opus bridge: 3034 checks, 0 failures
+Opus artifact mode=120
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.17 dB
+Opus 2ch: packets=34 frames=192000 skip=312 padding=3528 SNR=70.15 dB
+Opus bridge: 2772 checks, 0 failures
+Opus artifact mode=speech
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=67 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 3036 checks, 0 failures
+Opus artifact mode=silk10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.79 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=321.81 dB
+Opus bridge: 5708 checks, 0 failures
+Opus artifact mode=silk20
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.84 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.81 dB
+Opus bridge: 4110 checks, 0 failures
+Opus artifact mode=silk40
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.83 dB
+Opus 2ch: packets=101 frames=192000 skip=312 padding=1608 SNR=321.82 dB
+Opus bridge: 3308 checks, 0 failures
+Opus artifact mode=narrow
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=322.16 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.90 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=medium
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.83 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=321.82 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=hybrid
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.19 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=85.50 dB
+Opus bridge: 4108 checks, 0 failures
+Opus artifact mode=hybrid10
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=401 frames=192000 skip=312 padding=168 SNR=90.26 dB
+Opus 2ch: packets=401 frames=192000 skip=312 padding=168 SNR=87.18 dB
+Opus bridge: 5708 checks, 0 failures
+Opus artifact mode=gain
+Opus transitions 1ch: modeMask=7 transitions=4
+Opus transitions 2ch: modeMask=7 transitions=4
+Opus 1ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.12 dB
+Opus 2ch: packets=201 frames=192000 skip=312 padding=648 SNR=76.13 dB
+Opus bridge: 4106 checks, 0 failures
+pass0 startPTS=-7000 streamStart=0 skip=312
+pass1 startPTS=-7000 streamStart=0 skip=312
+Opus demux: 844 checks, 0 failures
+/Users/yuluo/Desktop/GIT/yl_player/packages/yl_player_media_core/tool/apple_ffmpeg/test_vorbis.sh: line 8: YL_TEST_VORBIS_REFERENCE: Set test-only Xiph reference install prefix

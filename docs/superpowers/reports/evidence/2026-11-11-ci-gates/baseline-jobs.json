@@ -1,0 +1,1093 @@
+{
+  "total_count": 13,
+  "jobs": [
+    {
+      "id": 129932943555,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQJtgww",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129932943555",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129932943555",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-10T15:35:00Z",
+      "started_at": "2026-11-10T15:35:02Z",
+      "completed_at": "2026-11-10T15:36:33Z",
+      "name": "changes",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:35:03Z",
+          "completed_at": "2026-11-10T15:35:03Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:35:03Z",
+          "completed_at": "2026-11-10T15:36:29Z"
+        },
+        {
+          "name": "Run full=false",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:36:29Z",
+          "completed_at": "2026-11-10T15:36:31Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:36:31Z",
+          "completed_at": "2026-11-10T15:36:31Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-10T15:36:31Z",
+          "completed_at": "2026-11-10T15:36:31Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129932943555",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000929,
+      "runner_name": "GitHub Actions 1000000929",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129933927915,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQKpl6w",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129933927915",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129933927915",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-10T15:36:34Z",
+      "started_at": "2026-11-10T15:36:36Z",
+      "completed_at": "2026-11-10T15:48:10Z",
+      "name": "android-consumer",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:36:37Z",
+          "completed_at": "2026-11-10T15:36:41Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:36:41Z",
+          "completed_at": "2026-11-10T15:45:04Z"
+        },
+        {
+          "name": "Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:45:04Z",
+          "completed_at": "2026-11-10T15:45:06Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-10T15:45:06Z",
+          "completed_at": "2026-11-10T15:45:31Z"
+        },
+        {
+          "name": "Run android-actions/setup-android@v3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-10T15:45:31Z",
+          "completed_at": "2026-11-10T15:45:41Z"
+        },
+        {
+          "name": "Run gradle/actions/setup-gradle@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:45:41Z",
+          "completed_at": "2026-11-10T15:45:54Z"
+        },
+        {
+          "name": "Build independent Android consumer",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-10T15:45:54Z",
+          "completed_at": "2026-11-10T15:47:45Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-10T15:47:45Z",
+          "completed_at": "2026-11-10T15:47:47Z"
+        },
+        {
+          "name": "Post Run gradle/actions/setup-gradle@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-10T15:47:47Z",
+          "completed_at": "2026-11-10T15:48:04Z"
+        },
+        {
+          "name": "Post Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-10T15:48:04Z",
+          "completed_at": "2026-11-10T15:48:06Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-10T15:48:06Z",
+          "completed_at": "2026-11-10T15:48:06Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-11-10T15:48:06Z",
+          "completed_at": "2026-11-10T15:48:07Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-11-10T15:48:07Z",
+          "completed_at": "2026-11-10T15:48:07Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129933927915",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000933,
+      "runner_name": "GitHub Actions 1000000933",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129933927940,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQKpmBA",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129933927940",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129933927940",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-10T15:36:34Z",
+      "started_at": "2026-11-10T15:36:36Z",
+      "completed_at": "2026-11-10T15:47:24Z",
+      "name": "ffmpeg-reproducibility",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:36:37Z",
+          "completed_at": "2026-11-10T15:36:39Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:36:39Z",
+          "completed_at": "2026-11-10T15:47:14Z"
+        },
+        {
+          "name": "Exact clean FFmpeg reproduction",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 3,
+          "started_at": "2026-11-10T15:47:14Z",
+          "completed_at": "2026-11-10T15:47:17Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:47:17Z",
+          "completed_at": "2026-11-10T15:47:18Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-10T15:47:18Z",
+          "completed_at": "2026-11-10T15:47:22Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129933927940",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": 1000000930,
+      "runner_name": "GitHub Actions 1000000930",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129933928031,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQKpmXw",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129933928031",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129933928031",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-10T15:36:34Z",
+      "started_at": "2026-11-10T15:36:37Z",
+      "completed_at": "2026-11-10T15:44:09Z",
+      "name": "foundation",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:36:37Z",
+          "completed_at": "2026-11-10T15:36:39Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:36:39Z",
+          "completed_at": "2026-11-10T15:40:40Z"
+        },
+        {
+          "name": "Fetch pinned Apple migration provenance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:40:40Z",
+          "completed_at": "2026-11-10T15:40:43Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-10T15:40:43Z",
+          "completed_at": "2026-11-10T15:41:23Z"
+        },
+        {
+          "name": "Quick common gate",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5,
+          "started_at": "2026-11-10T15:41:23Z",
+          "completed_at": "2026-11-10T15:41:23Z"
+        },
+        {
+          "name": "Full drift, artifact, and foundation stages",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 6,
+          "started_at": "2026-11-10T15:41:23Z",
+          "completed_at": "2026-11-10T15:44:03Z"
+        },
+        {
+          "name": "Post Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-10T15:44:03Z",
+          "completed_at": "2026-11-10T15:44:03Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-10T15:44:03Z",
+          "completed_at": "2026-11-10T15:44:04Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-10T15:44:04Z",
+          "completed_at": "2026-11-10T15:44:07Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129933928031",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": 1000000931,
+      "runner_name": "GitHub Actions 1000000931",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129933928123,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQKpmuw",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129933928123",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129933928123",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-10T15:36:34Z",
+      "started_at": "2026-11-10T15:36:37Z",
+      "completed_at": "2026-11-10T16:31:04Z",
+      "name": "apple-consumers",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:36:38Z",
+          "completed_at": "2026-11-10T15:36:40Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:36:40Z",
+          "completed_at": "2026-11-10T15:47:35Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:47:35Z",
+          "completed_at": "2026-11-10T15:49:01Z"
+        },
+        {
+          "name": "Run actions/cache@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-10T15:49:01Z",
+          "completed_at": "2026-11-10T15:49:12Z"
+        },
+        {
+          "name": "Select iOS Simulator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-10T15:49:12Z",
+          "completed_at": "2026-11-10T15:52:36Z"
+        },
+        {
+          "name": "Build independent Apple consumers",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:52:37Z",
+          "completed_at": "2026-11-10T16:29:54Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-10T16:29:54Z",
+          "completed_at": "2026-11-10T16:30:01Z"
+        },
+        {
+          "name": "Post Run actions/cache@v5",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-10T16:30:01Z",
+          "completed_at": "2026-11-10T16:30:03Z"
+        },
+        {
+          "name": "Post Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-10T16:30:03Z",
+          "completed_at": "2026-11-10T16:30:20Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-11-10T16:30:21Z",
+          "completed_at": "2026-11-10T16:30:24Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-11-10T16:30:24Z",
+          "completed_at": "2026-11-10T16:30:54Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129933928123",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": 1000000932,
+      "runner_name": "GitHub Actions 1000000932",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129933930141,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQKpunQ",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129933930141",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129933930141",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-11-10T15:36:34Z",
+      "started_at": "2026-11-10T15:36:36Z",
+      "completed_at": "2026-11-10T15:42:06Z",
+      "name": "android-unit",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:36:36Z",
+          "completed_at": "2026-11-10T15:36:38Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:36:38Z",
+          "completed_at": "2026-11-10T15:38:08Z"
+        },
+        {
+          "name": "Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:38:09Z",
+          "completed_at": "2026-11-10T15:38:09Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-10T15:38:09Z",
+          "completed_at": "2026-11-10T15:38:26Z"
+        },
+        {
+          "name": "Run flutter pub get",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-10T15:38:26Z",
+          "completed_at": "2026-11-10T15:38:28Z"
+        },
+        {
+          "name": "Android JVM once",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:38:28Z",
+          "completed_at": "2026-11-10T15:42:02Z"
+        },
+        {
+          "name": "Post Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-10T15:42:02Z",
+          "completed_at": "2026-11-10T15:42:04Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-10T15:42:04Z",
+          "completed_at": "2026-11-10T15:42:04Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-11-10T15:42:04Z",
+          "completed_at": "2026-11-10T15:42:04Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-11-10T15:42:04Z",
+          "completed_at": "2026-11-10T15:42:04Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129933930141",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000934,
+      "runner_name": "GitHub Actions 1000000934",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129933930852,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQKpxZA",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129933930852",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129933930852",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-10T15:36:34Z",
+      "started_at": "2026-11-10T15:36:34Z",
+      "completed_at": "2026-11-10T15:36:34Z",
+      "name": "apple-unit",
+      "steps": [
+
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129933930852",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 129937378358,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQN8MNg",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129937378358",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129937378358",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-10T15:42:07Z",
+      "started_at": "2026-11-10T15:42:09Z",
+      "completed_at": "2026-11-10T15:57:54Z",
+      "name": "android-integration (36)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:42:09Z",
+          "completed_at": "2026-11-10T15:42:12Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:42:12Z",
+          "completed_at": "2026-11-10T15:50:43Z"
+        },
+        {
+          "name": "Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:50:43Z",
+          "completed_at": "2026-11-10T15:50:43Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-10T15:50:43Z",
+          "completed_at": "2026-11-10T15:51:09Z"
+        },
+        {
+          "name": "Run android-actions/setup-android@v3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-10T15:51:09Z",
+          "completed_at": "2026-11-10T15:51:15Z"
+        },
+        {
+          "name": "Enable KVM",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:51:15Z",
+          "completed_at": "2026-11-10T15:51:16Z"
+        },
+        {
+          "name": "Run flutter pub get",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-10T15:51:16Z",
+          "completed_at": "2026-11-10T15:51:17Z"
+        },
+        {
+          "name": "Boot exact API emulator",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-11-10T15:51:17Z",
+          "completed_at": "2026-11-10T15:52:59Z"
+        },
+        {
+          "name": "Required Android API integration shard",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 9,
+          "started_at": "2026-11-10T15:52:59Z",
+          "completed_at": "2026-11-10T15:57:49Z"
+        },
+        {
+          "name": "Capture failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-10T15:57:49Z",
+          "completed_at": "2026-11-10T15:57:50Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-10T15:57:50Z",
+          "completed_at": "2026-11-10T15:57:51Z"
+        },
+        {
+          "name": "Post Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-10T15:57:51Z",
+          "completed_at": "2026-11-10T15:57:51Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-10T15:57:51Z",
+          "completed_at": "2026-11-10T15:57:51Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-11-10T15:57:51Z",
+          "completed_at": "2026-11-10T15:57:52Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-11-10T15:57:52Z",
+          "completed_at": "2026-11-10T15:57:52Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129937378358",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000935,
+      "runner_name": "GitHub Actions 1000000935",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129937378614,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQN8NNg",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129937378614",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129937378614",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-10T15:42:07Z",
+      "started_at": "2026-11-10T15:42:09Z",
+      "completed_at": "2026-11-10T15:52:18Z",
+      "name": "android-integration (24)",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T15:42:09Z",
+          "completed_at": "2026-11-10T15:42:12Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T15:42:12Z",
+          "completed_at": "2026-11-10T15:51:01Z"
+        },
+        {
+          "name": "Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-11-10T15:51:01Z",
+          "completed_at": "2026-11-10T15:51:02Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-11-10T15:51:02Z",
+          "completed_at": "2026-11-10T15:51:31Z"
+        },
+        {
+          "name": "Run android-actions/setup-android@v3",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-11-10T15:51:31Z",
+          "completed_at": "2026-11-10T15:51:37Z"
+        },
+        {
+          "name": "Enable KVM",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-11-10T15:51:37Z",
+          "completed_at": "2026-11-10T15:51:37Z"
+        },
+        {
+          "name": "Run flutter pub get",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-11-10T15:51:37Z",
+          "completed_at": "2026-11-10T15:51:39Z"
+        },
+        {
+          "name": "Boot exact API emulator",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 8,
+          "started_at": "2026-11-10T15:51:39Z",
+          "completed_at": "2026-11-10T15:52:13Z"
+        },
+        {
+          "name": "Required Android API integration shard",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 9,
+          "started_at": "2026-11-10T15:52:13Z",
+          "completed_at": "2026-11-10T15:52:13Z"
+        },
+        {
+          "name": "Capture failure diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-10T15:52:13Z",
+          "completed_at": "2026-11-10T15:52:15Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-10T15:52:15Z",
+          "completed_at": "2026-11-10T15:52:16Z"
+        },
+        {
+          "name": "Post Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-11-10T15:52:16Z",
+          "completed_at": "2026-11-10T15:52:16Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@v6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-11-10T15:52:16Z",
+          "completed_at": "2026-11-10T15:52:16Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 22,
+          "started_at": "2026-11-10T15:52:16Z",
+          "completed_at": "2026-11-10T15:52:16Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 23,
+          "started_at": "2026-11-10T15:52:16Z",
+          "completed_at": "2026-11-10T15:52:16Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129937378614",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": 1000000936,
+      "runner_name": "GitHub Actions 1000000936",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129938650478,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQPJ1bg",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129938650478",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129938650478",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-10T15:44:10Z",
+      "started_at": "2026-11-10T15:44:10Z",
+      "completed_at": "2026-11-10T15:44:10Z",
+      "name": "macos-integration",
+      "steps": [
+
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129938650478",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 129938650888,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQPJ3CA",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129938650888",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129938650888",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-10T15:44:10Z",
+      "started_at": "2026-11-10T15:44:10Z",
+      "completed_at": "2026-11-10T15:44:10Z",
+      "name": "ios-integration",
+      "steps": [
+
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129938650888",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    },
+    {
+      "id": 129966612862,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQp0hfg",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129966612862",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129966612862",
+      "status": "completed",
+      "conclusion": "failure",
+      "created_at": "2026-11-10T16:31:05Z",
+      "started_at": "2026-11-10T16:31:22Z",
+      "completed_at": "2026-11-10T16:34:45Z",
+      "name": "release-gates",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-11-10T16:31:23Z",
+          "completed_at": "2026-11-10T16:31:26Z"
+        },
+        {
+          "name": "Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-11-10T16:31:26Z",
+          "completed_at": "2026-11-10T16:34:41Z"
+        },
+        {
+          "name": "Require every automated full-matrix result",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 3,
+          "started_at": "2026-11-10T16:34:41Z",
+          "completed_at": "2026-11-10T16:34:41Z"
+        },
+        {
+          "name": "Run subosito/flutter-action@v2",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4,
+          "started_at": "2026-11-10T16:34:41Z",
+          "completed_at": "2026-11-10T16:34:41Z"
+        },
+        {
+          "name": "Public surface, publication, and final hygiene",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 5,
+          "started_at": "2026-11-10T16:34:41Z",
+          "completed_at": "2026-11-10T16:34:41Z"
+        },
+        {
+          "name": "Post Run actions/checkout@v7",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-11-10T16:34:41Z",
+          "completed_at": "2026-11-10T16:34:42Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-11-10T16:34:42Z",
+          "completed_at": "2026-11-10T16:34:43Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129966612862",
+      "labels": [
+        "macos-15"
+      ],
+      "runner_id": 1000000937,
+      "runner_name": "GitHub Actions 1000000937",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 129966615589,
+      "run_id": 42845842176,
+      "workflow_name": "CI",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/yuluoos/yl_player/actions/runs/42845842176",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOUM2Vd88AAAAeQp0sJQ",
+      "head_sha": "35dfc0cb8c0d00b7fe4a21f9d0ef6fd9fd31c12b",
+      "url": "https://api.github.com/repos/yuluoos/yl_player/actions/jobs/129966615589",
+      "html_url": "https://github.com/yuluoos/yl_player/actions/runs/42845842176/job/129966615589",
+      "status": "completed",
+      "conclusion": "skipped",
+      "created_at": "2026-11-10T16:31:05Z",
+      "started_at": "2026-11-10T16:31:05Z",
+      "completed_at": "2026-11-10T16:31:04Z",
+      "name": "quick-aggregate",
+      "steps": [
+
+      ],
+      "check_run_url": "https://api.github.com/repos/yuluoos/yl_player/check-runs/129966615589",
+      "labels": [
+        "ubuntu-latest"
+      ],
+      "runner_id": null,
+      "runner_name": null,
+      "runner_group_id": null,
+      "runner_group_name": null
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+
+::group::❌ host must react while test is still running (failed)
+YL_ANDROID_LIFECYCLE_BACKGROUND_READY
+Expected: true
+  Actual: <false>
+host never saw the live marker
+
+package:matcher             expect
+test/marker_test.dart 11:5  main.<fn>
+::endgroup::
+
+::error::0 tests passed, 1 failed.

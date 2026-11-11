@@ -1,0 +1,21 @@
+FF
+======================================================================
+FAIL: test_boot_isolated_api24_outputs_only_verified_device (tool.test_android_scripts.AndroidScriptsTest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_scripts.py", line 142, in test_boot_isolated_api24_outputs_only_verified_device
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : 
+
+======================================================================
+FAIL: test_github_environment_delivers_markers_before_test_completion (tool.test_android_integration_runner.AndroidIntegrationRunnerTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/yuluo/Desktop/GIT/yl_player/tool/test_android_integration_runner.py", line 200, in test_github_environment_delivers_markers_before_test_completion
+    self.assertEqual(code, 0)
+AssertionError: 19 != 0
+
+----------------------------------------------------------------------
+Ran 2 tests in 5.569s
+
+FAILED (failures=2)

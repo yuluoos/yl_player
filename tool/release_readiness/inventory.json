@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineCommit": "4084e2e718adc01b1e7582cc6d8fa0bbcf8bf915",
+  "baselineCommit": "256f85d1b8cdf7a1ef0cfa6f1119f85a4ff8d7a0",
   "requirements": {
     "path": "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md",
     "sha256": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3"
@@ -277,7 +277,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Dependencies/YlStringMap.swift": "1f89dc94f7e13a8be137796e006a2cdb7c925d1b774dd4446f71402646b6d2d9",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleFailureMapper.swift": "3f33d80163aadc450a997953471a5e1e42db01bbf7a48a6d4b80c02b393406f4",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlAppleSafeDiagnostics.swift": "d415b9726ffd2b101304167c2291b425ccb526418fd6c7fe9f4ab4a2545ed44b",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundAvPlayerAudio.swift": "aefc77026c67358d389c9769e8cb46256bbb08810a46409f10d8c3724d3a369d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundAvPlayerAudio.swift": "ad1430222048b26ac2d096983530cf7993668a5d7c279eb4524980e2dabf4aa7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundFlutterProbe.swift": "0f03a73345b93e4c2e706d9137ed875e7dae2e3e43d16b82d38fb4ee5db328f9",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Diagnostics/YlBoundLaunchPlan.swift": "5116be98d23c1f3e0e4ddb4ea0d2ff2f7f9da7835927077354cecc282d63219c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/FFmpeg/YlBoundedPacketQueue.swift": "6fad34bb8dfb15052fddbc1eeb782fe12657151281e4d38812edcc2864e58586",
@@ -403,7 +403,7 @@
       "packages/yl_player_media_core/LICENSES/Opus-BSD.txt": "01e1167d54a096d123cf6dfbbeb19587278845c6481d2d66d545669846079551",
       "packages/yl_player_media_core/LICENSES/dav1d-BSD.txt": "dd92c3c2247c5651606fc23a5e2d6a1ebc5ace9a3e49cbde0e12f05ad1cb1ee5",
       "packages/yl_player_media_core/README.md": "b9e2edcb7328b5f53a93fcd77cb32b3a0ea5edadecf147c659ddbd6c25f44706",
-      "packages/yl_player_media_core/THIRD_PARTY_NOTICES.md": "24187480ff15b522c1fb183489bd0c9a65a648131937df74d6a30ce6bed5c2cd",
+      "packages/yl_player_media_core/THIRD_PARTY_NOTICES.md": "a1be9dac8d9b128238d82ef5b48cde8cc136f6c87f39444fec1a232d3c090045",
       "packages/yl_player_media_core/darwin/native/YlFFmpegBridge/YlFELBridge.inc": "1e3e2ce10591b2b8561f1b6676beee313326d4796f7126a2a3a46e55d70d9973",
       "packages/yl_player_media_core/darwin/native/YlFFmpegBridge/YlFFmpegBridge.m": "76afc0ab473e58dea3b0142ac9ef97eaed9734e69338c4cb5eb80d92f71a0348",
       "packages/yl_player_media_core/darwin/native/YlFFmpegBridge/YlSoftwareVideoBridge.inc": "4a8fe81ef2e28948d480e0c5444d8ef587faa49c237318d77344585cb83fa498",
@@ -415,18 +415,18 @@
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/Info.plist": "0d607ac3ede166cb2d2667d809276f7f03729cfbdf19fb71eb9fc4c6efe4e4c1",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/Modules/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
-      "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": "bb636c178640968b4df6748a54729eda3059cbe8b2f0768309aa8ba3c10c1591",
+      "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64/YlFFmpegBridge.framework/YlFFmpegBridge": "a1ccb3533080ed2fd4abb2c74a75985c2389142983fe3837684c1f97746d6b03",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Headers/YlFFmpegBridge.h": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Info.plist": "0d607ac3ede166cb2d2667d809276f7f03729cfbdf19fb71eb9fc4c6efe4e4c1",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/Modules/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
-      "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": "e07cbd1e9a6cbcc7e66ddaa6af10a62736be51e84b98db0964f6cdac55609dec",
+      "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/ios-arm64_x86_64-simulator/YlFFmpegBridge.framework/YlFFmpegBridge": "413ee36fd260b5aa49126cd7df6864c9263a72221650ef2a879782279239fbcd",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Headers": "6774b89acf9d9ec10f97d6a5be8b06586a700fc2d465e87ca93430dfa8a67f6b",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Modules": "3396171550aedf6d82519e58a8d5fb7911cd4e20cbb772c51d53e87efd674965",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Resources": "a5a2bb9461b9f8e8fe5be0c5a9c453bc5770eb962890488b302ebfa846842ca6",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Headers/YlFFmpegBridge.h": "60300ce10de7ac6e218fe79df67adb131d5cbb6f4bee0484b72a882ed4829418",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Modules/module.modulemap": "07b626cfd01759b3d6586317975779dadc3afad2611abbdf92e03ca7db0bea40",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/Resources/Info.plist": "097145d1489eacbd5520fe157c30d39807fce8830cafffc53b37077e6d270249",
-      "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "0ecc7576d6671e9fed564b1712d5adb460f02c00a9b79a840543cb767c7b2764",
+      "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge": "4b1ec87a8012bd61477482d3bfc9ad51d15e167efad837dc0d4f0c67a44c32d5",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/Current": "68a65c548625c8436a337b1f025d41bb7c559fbca7aed668f693444913c64539",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/YlFFmpegBridge": "8cee0e96c86fd4b2ac30d5e4c89c940c30c55c44d43a62f27f5a65e3ea70a193",
       "packages/yl_player_media_core/darwin/yl_player_media_core/Package.swift": "9caf4c6390277b844da66d6907e47a3fbcf7205d9022db374c7a5ac02336879e",
@@ -458,11 +458,11 @@
       "packages/yl_player_media_core/lib/yl_player_media_core.dart": "ca8356be01ac0a08eabe7401cab6ddda580ea57cbc5310b739b7373c60e85071",
       "packages/yl_player_media_core/pubspec.yaml": "727f969553095142304393fb0f0754cc154027cf9fb71c427c71f095de852d63",
       "packages/yl_player_media_core/tool/apple_ffmpeg/FFMPEG_RELEASE_KEY.asc": "397b3becedcd5a98769967ff1ff8501ddc89f8368b8f766e4701377d7dbaabe5",
-      "packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock": "8cfab46fc97f3c320515406b20802cd4dcae56514252c361316c1bc1bde2ffce",
+      "packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock": "4e882bf9b555514f767299ab37f19bf35597f1f3b9a4d51e8e399c72f6acf9f7",
       "packages/yl_player_media_core/tool/apple_ffmpeg/build_dav1d.sh": "1d543be91e6698ba4aa4827c185d4688226b761fa393417d44913041d0536544",
-      "packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh": "c00bfcd4cb66f140adc0856a3cdf4b99822125518d22ee83bca48c101030e0fc",
+      "packages/yl_player_media_core/tool/apple_ffmpeg/build_relocated_xcframework.sh": "e15c2cca63938351f5e6f28e3d177e0a2948f3db3b67debe0e19cb9abcce98a2",
       "packages/yl_player_media_core/tool/apple_ffmpeg/build_vorbis_reference.sh": "133e84eeb32dcf8070d392b44d31cdf465f30b24ddcb66733cb8a39bec986fe8",
-      "packages/yl_player_media_core/tool/apple_ffmpeg/build_xcframework.sh": "ee72d88c8cb4fe759bf63151d3e17b36a453d4431a6de2acccfd650a0d9d0cef",
+      "packages/yl_player_media_core/tool/apple_ffmpeg/build_xcframework.sh": "e5c75776ff81f0664e4dfc423c73f77f86df0b5282af5cd9abef9d10a4e30ad2",
       "packages/yl_player_media_core/tool/apple_ffmpeg/dav1d.lock": "3db908cd475c4bfb194825c260c65f73c588d82b2a315a5c8bbbc107e84c3db3",
       "packages/yl_player_media_core/tool/apple_ffmpeg/ffmpeg-9.0.1.lock": "80af0e63635f1ee913cbb4aded6380d2d56f9eaa014d19e34f3ef16ddef38e30",
       "packages/yl_player_media_core/tool/apple_ffmpeg/opus-1.6.1.lock": "d91f5633571220a721741124bf96490a9d88880b7ae5d324a624ac41012e656b",
@@ -504,7 +504,8 @@
       "packages/yl_player_media_core/tool/apple_ffmpeg/test_vorbis_coupling.c": "7f9b4d72779ddd3b5b36a917eba9739db2e84cab9229190f564424df27e1b5e9",
       "packages/yl_player_media_core/tool/apple_ffmpeg/test_vp9_metadata.m": "02c7184af251078f08f99c77b5689ac1da020f24c53e45c444f1039429032961",
       "packages/yl_player_media_core/tool/apple_ffmpeg/test_vp9_metadata.sh": "9b49b7a7fced5a182953c97a5f2037b6fdb9141ef1f7cb4911107baa2534a9b3",
-      "packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py": "efa420fd3003bdc5e47928db80d2fb1caf0a4f743b08b3755df4f13872101b3a",
+      "packages/yl_player_media_core/tool/apple_ffmpeg/toolchain_identity.py": "b454b481c9e615b661146f556dd61e77914ddfcbb197528b15fc455a36740648",
+      "packages/yl_player_media_core/tool/apple_ffmpeg/verify_artifact.py": "f6f18c565536dcde24ebf263660033ac43135c185eba5c812602f1c2383e6b9b",
       "packages/yl_player_media_core/tool/apple_ffmpeg/vorbis_delay_fixture.py": "72d687f105f48d46105bbc1ff60a68caba9a0aacbf50c3d80120af90bc44b348",
       "packages/yl_player_media_core/tool/apple_ffmpeg/vorbis_reference_encoder.c": "5014f9b1dcb1f95b333059e8d8f23bb2f1e2fc4e8fd6efa9bc9d460e68f77a1f",
       "packages/yl_player_media_delivery/CHANGELOG.md": "ea6f9b5c286dbf3981a9f3972d786de4122b99977dd889cd6bd73cc0a2aabaf4",
@@ -609,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "194902e337470752de0fc290fe92adb0284dbd849bc85bab56ac3b28a27c5c06"
+    "sha256": "220de58ee6b100d14867fd64703d20d8693e229d5129e1ef6fd1e0cd918ce721"
   },
   "evidence": {
     "p01": {
@@ -1125,6 +1126,11 @@
     "remaining-device-acceptance-20261105": {
       "path": "docs/superpowers/reports/2026-11-05-remaining-device-acceptance.md",
       "sha256": "786310334165030773177249a6c6bf5e86d8ecd8b5aa89df2ddd581d3598de4c",
+      "kind": "report"
+    },
+    "ci-gates-20261111": {
+      "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
+      "sha256": "cf8cc57a2ca433d6882a938bcfae026ee835e490a2ec88ac33920a69ba3a3524",
       "kind": "report"
     }
   },
@@ -2750,26 +2756,28 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "remaining-device-acceptance-20261105"
+        "remaining-device-acceptance-20261105",
+        "ci-gates-20261111"
       ],
       "acceptance": null,
-      "nextAction": "resolve-default-toolchain-policy-after-five-local-compat-consumer-build-link-passes"
+      "nextAction": "review-complete-consumer-acceptance-with-current-run-raw-artifacts"
     },
     {
       "requirement": "RELEASE-CI",
       "platform": "all",
       "implementation": "partial",
-      "verification": "not_run",
+      "verification": "failed",
       "evidence": [
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-acceptance-deadlines-20261028",
-        "remaining-device-acceptance-20261105"
+        "remaining-device-acceptance-20261105",
+        "ci-gates-20261111"
       ],
       "acceptance": null,
-      "nextAction": "run-final-candidate-on-old-apple-sdk-and-matching-frozen-builder-remote-ci"
+      "nextAction": "verify-old-swift-fixture-fixes-and-resolve-api24-decoder-unavailable"
     }
   ]
 }
