@@ -180,6 +180,27 @@ if case in ['child','leader-exit']:
         self.assertEqual(command[command.index('-d')+1],'owned-5580')
         self.assertTrue(r['cleanup']['complete'])
 
+    def test_github_environment_delivers_markers_before_test_completion(self):
+        self.env['GITHUB_ACTIONS'] = 'true'
+        self.executable('flutter', '''
+# GitHub's default reporter buffers print messages until the test completes.
+# Model a test that cannot complete until the host reacts to its live marker.
+live = '--reporter' in sys.argv and sys.argv[sys.argv.index('--reporter')+1] == 'expanded'
+if live: print('YL_ANDROID_LIFECYCLE_BACKGROUND_READY', flush=True)
+deadline = time.monotonic() + 1
+while 'KEYCODE_HOME' not in pathlib.Path(os.environ['CALLS']).read_text():
+    if time.monotonic() >= deadline: sys.exit(19)
+    time.sleep(.01)
+print('YL_ANDROID_LIFECYCLE_FOREGROUND_READY', flush=True)
+while 'start' not in pathlib.Path(os.environ['CALLS']).read_text():
+    if time.monotonic() >= deadline: sys.exit(20)
+    time.sleep(.01)
+''')
+        code, receipt = self.run_case('normal')
+        self.assertEqual(code, 0)
+        self.assertEqual([c['kind'] for c in receipt['commands'] if c['kind'] in ('background', 'foreground')],
+                         ['background', 'foreground'])
+
     def test_configuration_cannot_expand_production_deadlines(self):
         for name,value in [('YL_ANDROID_RUN_TIMEOUT_SECONDS','601'),
                            ('YL_ANDROID_ADB_TIMEOUT_SECONDS','16'),

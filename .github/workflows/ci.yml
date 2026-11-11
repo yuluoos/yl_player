@@ -74,6 +74,15 @@ jobs:
           fetch-depth: 0
       - name: Fetch pinned Apple migration provenance
         run: git fetch --no-tags --depth=1 origin ce368c55ad291b163b02157b487dbbf798a69892
+      - name: Install media verification tools
+        env:
+          HOMEBREW_NO_AUTO_UPDATE: '1'
+          HOMEBREW_NO_INSTALL_UPGRADE: '1'
+        run: |
+          brew install ffmpeg gnupg
+          ffmpeg -version
+          ffprobe -version
+          gpg --version
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.44.0'

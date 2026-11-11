@@ -176,8 +176,12 @@ class Runner:
                 raise Failed(2)
             self.adb_command('previous-logcat', ['logcat', '-d'], deadline)
             self.adb_command('clear-logcat', ['logcat', '-c'], deadline)
+            # GitHub's default reporter buffers print messages until a test
+            # finishes. Lifecycle tests wait for the host to act on those same
+            # messages, so their reporter must stream while the test runs.
             process, record = self.spawn('flutter', [self.flutter, 'test', self.suite, *self.extra,
-                '-d', self.serial, '--timeout', '5m', '--dart-define=YL_ANDROID_API=' + api], self.log)
+                '-d', self.serial, '--reporter', 'expanded', '--timeout', '5m',
+                '--dart-define=YL_ANDROID_API=' + api], self.log)
             while process.poll() is None:
                 self.check_deadline(deadline, record)
                 self.lifecycle(deadline)

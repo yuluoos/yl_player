@@ -122,9 +122,12 @@ fi''')
         for subdir in ("cmdline-tools/latest/bin", "platform-tools", "emulator"):
             (sdk / subdir).mkdir(parents=True)
         self.env.update(ANDROID_HOME=str(sdk), YL_ANDROID_API="24")
-        self.executable(sdk / "cmdline-tools/latest/bin/sdkmanager", 'echo "$*" >> "$CALL_LOG"')
+        self.executable(sdk / "cmdline-tools/latest/bin/sdkmanager", '''echo "$*" >> "$CALL_LOG"
+for package in "$@"; do
+  if [ "$package" = emulator ]; then touch "$TEST_ROOT/emulator-installed"; fi
+done''')
         self.executable(sdk / "cmdline-tools/latest/bin/avdmanager",
-                        'while [ "$1" != -n ]; do shift; done\nshift\necho "$1" > "$TEST_ROOT/avd-name"')
+                        'test -f "$TEST_ROOT/emulator-installed"\nwhile [ "$1" != -n ]; do shift; done\nshift\necho "$1" > "$TEST_ROOT/avd-name"')
         self.executable(sdk / "platform-tools/adb", '''echo "ADB $*" >> "$CALL_LOG"
 case "$*" in
   *sys.boot_completed*) echo 1;;

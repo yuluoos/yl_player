@@ -17,7 +17,7 @@ YL_ANDROID_IMAGE="system-images;android-${YL_ANDROID_API};google_apis;${YL_ANDRO
 YL_ADB="$ANDROID_HOME/platform-tools/adb"
 YL_SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
 YL_AVDMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager"
-"$YL_SDKMANAGER" "$YL_ANDROID_IMAGE" >&2
+"$YL_SDKMANAGER" platform-tools emulator "$YL_ANDROID_IMAGE" >&2
 printf 'no\n' | "$YL_AVDMANAGER" create avd -n "$YL_ANDROID_AVD" -k "$YL_ANDROID_IMAGE" --device pixel_2 >&2
 YL_DEVICE_ID="emulator-$YL_ANDROID_PORT"
 if "$YL_ADB" devices | awk 'NR > 1 {print $1}' | grep -qx "$YL_DEVICE_ID"; then
