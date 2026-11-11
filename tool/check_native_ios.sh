@@ -82,9 +82,21 @@ fi
 xcrun simctl bootstatus "$simulator_id" -b
 
 cd "$repo_root/packages/yl_player/example"
-flutter test integration_test/hls_playback_test.dart -d "$simulator_id"
-flutter test integration_test/apple_default_positive_test.dart -d "$simulator_id"
-flutter test integration_test/state_update_cadence_test.dart -d "$simulator_id"
+# Keep launch/VM-service diagnostics even when Flutter never starts a test.
+# CI bounds this step and uploads these logs after a timeout as well as failure.
+for test_file in \
+  integration_test/hls_playback_test.dart \
+  integration_test/apple_default_positive_test.dart \
+  integration_test/state_update_cadence_test.dart
+do
+  integration_log="$evidence/$(basename "$test_file").log"
+  if flutter test "$test_file" -d "$simulator_id" --verbose --reporter expanded --timeout 5m >"$integration_log" 2>&1; then
+    cat "$integration_log"
+  else
+    cat "$integration_log"
+    exit 1
+  fi
+done
 
 # The aggregator includes managed network, bounded buffers, hardwareRequired,
 # session replacement/ACK ordering and audio policy lifecycle on both platforms.

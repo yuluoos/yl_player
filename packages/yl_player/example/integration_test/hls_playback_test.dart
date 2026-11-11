@@ -7,7 +7,10 @@ import 'support/playback_sessions.dart';
 import 'support/authenticated_hls_server.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // AVPlayer's first-frame event requires the native view to be mounted.
+  // Keep rendering while the test awaits asynchronous playback events.
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized().framePolicy =
+      LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   testWidgets('opens HLS and produces a native texture first frame', (
     WidgetTester tester,

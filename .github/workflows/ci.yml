@@ -139,6 +139,10 @@ jobs:
     if: needs.changes.outputs.full != 'true' && needs.changes.outputs.apple == 'true'
     runs-on: macos-15
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ios, macos]
     permissions:
       contents: read
     steps:
@@ -156,15 +160,14 @@ jobs:
           cache: true
       - run: flutter pub get
       - name: Boot exact iOS Simulator
+        if: matrix.platform == 'ios'
         run: echo "YL_IOS_SIMULATOR_ID=$(sh tool/boot_ci_ios_simulator.sh)" >> "$GITHUB_ENV"
-      - name: Affected Apple unit suites
-        env:
-          YL_BASE_REF: ${{ needs.changes.outputs.base }}
-        run: sh tool/check_player_v2.sh --quick --stage apple-unit
+      - name: Affected Apple unit suite
+        run: sh tool/check_native_${{ matrix.platform }}.sh --unit-only
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: apple-unit-runtime-evidence
+          name: apple-unit-${{ matrix.platform }}-runtime-evidence
           path: packages/yl_player/example/build/apple-evidence
           if-no-files-found: error
 
@@ -265,10 +268,11 @@ jobs:
         if: needs.changes.outputs.full == 'true'
         run: sh tool/check_player_v2.sh --full --stage ios
       - name: Affected iOS integration without duplicate unit suite
+        timeout-minutes: 20
         if: needs.changes.outputs.full != 'true'
         run: sh tool/check_native_ios.sh --integration-only
       - uses: actions/upload-artifact@v4
-        if: always() && needs.changes.outputs.full == 'true'
+        if: always()
         with:
           name: ios-exact-runtime-evidence
           path: packages/yl_player/example/build/apple-evidence
@@ -301,7 +305,7 @@ jobs:
         if: needs.changes.outputs.full != 'true'
         run: sh tool/check_native_macos.sh --integration-only
       - uses: actions/upload-artifact@v4
-        if: always() && needs.changes.outputs.full == 'true'
+        if: always()
         with:
           name: macos-exact-runtime-evidence
           path: packages/yl_player/example/build/apple-evidence

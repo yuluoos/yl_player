@@ -1,0 +1,99 @@
+{
+  "runId": 42992291095,
+  "headSha": "25b191b49b04f5392aeea9b908d8114d4814d51b",
+  "artifactId": 13842607810,
+  "artifactSha256": "671e5c00f65387370cea9f2803eaba5bc8f5fe2b36d1a20271fc4c54c4a0da8c",
+  "artifactDigestMatched": true,
+  "configurationIncludes": {
+    "/system/etc/media_codecs.xml": [
+      "media_codecs_google_audio.xml",
+      "media_codecs_google_telephony.xml",
+      "media_codecs_google_video.xml"
+    ],
+    "/system/etc/media_codecs_google_audio.xml": [],
+    "/system/etc/media_codecs_google_telephony.xml": [],
+    "/system/etc/media_codecs_google_video.xml": [],
+    "/system/etc/media_codecs_performance.xml": []
+  },
+  "videoDecoderDeclarations": [
+    {
+      "configuration": "/system/etc/media_codecs_google_video.xml",
+      "name": "OMX.google.mpeg4.decoder",
+      "mimeType": "video/mp4v-es",
+      "update": false
+    },
+    {
+      "configuration": "/system/etc/media_codecs_google_video.xml",
+      "name": "OMX.google.h263.decoder",
+      "mimeType": "video/3gpp",
+      "update": false
+    },
+    {
+      "configuration": "/system/etc/media_codecs_google_video.xml",
+      "name": "OMX.google.h264.decoder",
+      "mimeType": "video/avc",
+      "update": false
+    },
+    {
+      "configuration": "/system/etc/media_codecs_google_video.xml",
+      "name": "OMX.google.hevc.decoder",
+      "mimeType": "video/hevc",
+      "update": false
+    },
+    {
+      "configuration": "/system/etc/media_codecs_google_video.xml",
+      "name": "OMX.google.vp8.decoder",
+      "mimeType": "video/x-vnd.on2.vp8",
+      "update": false
+    },
+    {
+      "configuration": "/system/etc/media_codecs_google_video.xml",
+      "name": "OMX.google.vp9.decoder",
+      "mimeType": "video/x-vnd.on2.vp9",
+      "update": false
+    },
+    {
+      "configuration": "/system/etc/media_codecs_performance.xml",
+      "name": "OMX.google.h263.decoder",
+      "mimeType": "video/3gpp",
+      "update": true
+    },
+    {
+      "configuration": "/system/etc/media_codecs_performance.xml",
+      "name": "OMX.google.h264.decoder",
+      "mimeType": "video/avc",
+      "update": true
+    },
+    {
+      "configuration": "/system/etc/media_codecs_performance.xml",
+      "name": "OMX.google.hevc.decoder",
+      "mimeType": "video/hevc",
+      "update": true
+    },
+    {
+      "configuration": "/system/etc/media_codecs_performance.xml",
+      "name": "OMX.google.mpeg4.decoder",
+      "mimeType": "video/mp4v-es",
+      "update": true
+    },
+    {
+      "configuration": "/system/etc/media_codecs_performance.xml",
+      "name": "OMX.google.vp8.decoder",
+      "mimeType": "video/x-vnd.on2.vp8",
+      "update": true
+    },
+    {
+      "configuration": "/system/etc/media_codecs_performance.xml",
+      "name": "OMX.google.vp9.decoder",
+      "mimeType": "video/x-vnd.on2.vp9",
+      "update": true
+    }
+  ],
+  "h264DecoderNames": [
+    "OMX.google.h264.decoder"
+  ],
+  "admissionPolicySource": "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlHardwareCodecSelector.kt",
+  "admissionPolicySha256": "ce49c7ce7cb30458441b283ee9ce4461204f143bb3195a703bb8487cb3db62d6",
+  "conclusion": "Captured API 24 image configuration declares only OMX.google software video decoders. Its only H264 decoder is excluded by the existing hardwarePreferred admission policy. Positive progressive playback requires another API 24 device with an admissible decoder. No decoder policy or test assertion was weakened.",
+  "limitation": "media.codec dumpsys output was empty; this is configuration evidence plus the observed decoder.unavailable failure, not a live MediaCodecList enumeration."
+}

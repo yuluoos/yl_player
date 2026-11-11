@@ -711,8 +711,18 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     defer { instance.dispose() }
     try instance.activate()
     let retiredInvalidation = try XCTUnwrap(factory.outputs[0].invalidationCallback())
+    XCTAssertEqual(Int(streams[0].codec), YLFCodecAAC)
+    XCTAssertEqual(Int(streams[1].codec), YLFCodecOpus)
+    // Both fixture tracks are eligible at 1x. Rebuilding at 2x must retain
+    // the rate exclusion. Eligibility returns only when a new track is built.
+    try instance.setPlaybackSpeed(2)
     try instance.selectAudioTrack("audio-\(streams[1].index)", cancellationToken: nil)
     XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor)
+    try instance.setPlaybackSpeed(1)
+    XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor, "Rate changes cannot re-arm an existing renderer")
+    XCTAssertEqual(Int(streams[2].codec), YLFCodecOpus)
+    try instance.selectAudioTrack("audio-\(streams[2].index)", cancellationToken: nil)
+    XCTAssertTrue(factory.renderers.last!.usesSubmissionAnchor)
     retiredInvalidation()
     try instance.selectAudioTrack("audio-\(streams[0].index)", cancellationToken: nil)
     XCTAssertTrue(factory.renderers.last!.usesSubmissionAnchor)

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineCommit": "3f4497f8faa8eea927d9b6a57798dd232522bc12",
+  "baselineCommit": "05e2ece1233321b2fd177e53755665ab52611f55",
   "requirements": {
     "path": "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md",
     "sha256": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3"
@@ -531,7 +531,7 @@
       "packages/yl_player_platform_interface/LICENSE": "54bac49375e118f24f71b6f59ba659775667440695a137ae1c9a399a668c2aa0",
       "packages/yl_player_platform_interface/README.md": "df781c5b18a7cc9978425010fa2c34521db3b37b24b3b5071f7e87646c0259d2",
       "packages/yl_player_platform_interface/analysis_options.yaml": "df692318073ecc5f3b8a759a1f9338eb21995900d3c2bc1fbcd2c7780a1c7c6e",
-      "packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart": "057ed54d4012ad52f9e63f7385e2a0a86e66ed1825c0909a82e2630bb15d63ec",
+      "packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart": "80befb76da60a95b6f9f307ff54ff75fd799cafcc03916bbeea7c9db36dd38b3",
       "packages/yl_player_platform_interface/lib/src/drm/drm_config.dart": "5d7394c18f7102a4fe4084d0b90cb553322cf8c09499515fc0236ea66c62c6ff",
       "packages/yl_player_platform_interface/lib/src/drm/drm_transport.dart": "36187192ee95c9878eed22bd9464b2617c1b9f209f63c6199278384b617e0517",
       "packages/yl_player_platform_interface/lib/src/model/capabilities.dart": "b6f0881c6fb686b340c332bfca0cf941ef40c2972d2511a79a6bd54c509beb61",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "0d3ef4c199c8874792820f183cc65e8871a112ecac42cc250064d134647b0fd8"
+    "sha256": "c1f649644de765f875282a46a465e08b16efe123158461f735243e775d273a66"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "29c912f2f3a7beed1edba330992b55f574945da68c2c1dba7a1930351324b943",
+      "sha256": "e1d34b9cd1cc254caf1a031c905e82e58efe5b14b0e2988818f3fc071facef51",
       "kind": "report"
     }
   },

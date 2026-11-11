@@ -1,0 +1,601 @@
+{
+  "device": {
+    "model": "CPH2065",
+    "androidRelease": "12",
+    "api": 31,
+    "architecture": "arm64-v8a",
+    "transport": "USB physical device"
+  },
+  "flutterVersion": "3.47.9",
+  "suiteCount": 5,
+  "passedTestCount": 10,
+  "receipts": [
+    {
+      "schemaVersion": 1,
+      "serial": "OWNED_USB_API31_DEVICE",
+      "suite": "integration_test/android_progressive_playback_test.dart",
+      "limits": {
+        "runSeconds": 600.0,
+        "adbSeconds": 15.0,
+        "cleanupSeconds": 30.0
+      },
+      "elapsedSeconds": 146.553838416,
+      "primaryExitCode": 0,
+      "exitCode": 0,
+      "signal": null,
+      "errorType": null,
+      "commands": [
+        {
+          "kind": "api",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "getprop",
+            "ro.build.version.sdk"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "stderrLog": "/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-android-test.1lemmua4.api.stderr",
+          "pid": 96118,
+          "groupRetired": true
+        },
+        {
+          "kind": "previous-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-d"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 96119,
+          "groupRetired": true
+        },
+        {
+          "kind": "clear-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-c"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 96120,
+          "groupRetired": true
+        },
+        {
+          "kind": "flutter",
+          "command": [
+            "/Users/yuluo/flutter /flutter/bin/flutter",
+            "test",
+            "integration_test/android_progressive_playback_test.dart",
+            "-d",
+            "OWNED_USB_API31_DEVICE",
+            "--reporter",
+            "expanded",
+            "--timeout",
+            "5m",
+            "--dart-define=YL_ANDROID_API=31"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 96121,
+          "groupRetired": true
+        },
+        {
+          "kind": "background",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "input",
+            "keyevent",
+            "KEYCODE_HOME"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98076,
+          "groupRetired": true
+        },
+        {
+          "kind": "foreground",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "am",
+            "start",
+            "-n",
+            "dev.ylplayer.yl_player_example/dev.ylplayer.yl_player_example.MainActivity"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98081,
+          "groupRetired": true
+        }
+      ],
+      "cleanup": {
+        "complete": true,
+        "foregroundRestored": true,
+        "errors": [],
+        "groups": [
+          {
+            "pgid": 96118,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 96119,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 96120,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 96121,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98076,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98081,
+            "leaderReturnCode": 0,
+            "remaining": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "serial": "OWNED_USB_API31_DEVICE",
+      "suite": "integration_test/android_hls_playback_test.dart",
+      "limits": {
+        "runSeconds": 600.0,
+        "adbSeconds": 15.0,
+        "cleanupSeconds": 30.0
+      },
+      "elapsedSeconds": 27.643674292,
+      "primaryExitCode": 0,
+      "exitCode": 0,
+      "signal": null,
+      "errorType": null,
+      "commands": [
+        {
+          "kind": "api",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "getprop",
+            "ro.build.version.sdk"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "stderrLog": "/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-android-test.cquubvgm.api.stderr",
+          "pid": 98092,
+          "groupRetired": true
+        },
+        {
+          "kind": "previous-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-d"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98111,
+          "groupRetired": true
+        },
+        {
+          "kind": "clear-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-c"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98112,
+          "groupRetired": true
+        },
+        {
+          "kind": "flutter",
+          "command": [
+            "/Users/yuluo/flutter /flutter/bin/flutter",
+            "test",
+            "integration_test/android_hls_playback_test.dart",
+            "-d",
+            "OWNED_USB_API31_DEVICE",
+            "--reporter",
+            "expanded",
+            "--timeout",
+            "5m",
+            "--dart-define=YL_ANDROID_API=31"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98113,
+          "groupRetired": true
+        }
+      ],
+      "cleanup": {
+        "complete": true,
+        "foregroundRestored": true,
+        "errors": [],
+        "groups": [
+          {
+            "pgid": 98092,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98111,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98112,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98113,
+            "leaderReturnCode": 0,
+            "remaining": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "serial": "OWNED_USB_API31_DEVICE",
+      "suite": "integration_test/android_session_replacement_test.dart",
+      "limits": {
+        "runSeconds": 600.0,
+        "adbSeconds": 15.0,
+        "cleanupSeconds": 30.0
+      },
+      "elapsedSeconds": 32.654777792,
+      "primaryExitCode": 0,
+      "exitCode": 0,
+      "signal": null,
+      "errorType": null,
+      "commands": [
+        {
+          "kind": "api",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "getprop",
+            "ro.build.version.sdk"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "stderrLog": "/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-android-test.fgtgxrmx.api.stderr",
+          "pid": 98438,
+          "groupRetired": true
+        },
+        {
+          "kind": "previous-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-d"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98439,
+          "groupRetired": true
+        },
+        {
+          "kind": "clear-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-c"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98440,
+          "groupRetired": true
+        },
+        {
+          "kind": "flutter",
+          "command": [
+            "/Users/yuluo/flutter /flutter/bin/flutter",
+            "test",
+            "integration_test/android_session_replacement_test.dart",
+            "-d",
+            "OWNED_USB_API31_DEVICE",
+            "--reporter",
+            "expanded",
+            "--timeout",
+            "5m",
+            "--dart-define=YL_ANDROID_API=31"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98441,
+          "groupRetired": true
+        }
+      ],
+      "cleanup": {
+        "complete": true,
+        "foregroundRestored": true,
+        "errors": [],
+        "groups": [
+          {
+            "pgid": 98438,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98439,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98440,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98441,
+            "leaderReturnCode": 0,
+            "remaining": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "serial": "OWNED_USB_API31_DEVICE",
+      "suite": "integration_test/android_multi_player_rollback_test.dart",
+      "limits": {
+        "runSeconds": 600.0,
+        "adbSeconds": 15.0,
+        "cleanupSeconds": 30.0
+      },
+      "elapsedSeconds": 28.34705025,
+      "primaryExitCode": 0,
+      "exitCode": 0,
+      "signal": null,
+      "errorType": null,
+      "commands": [
+        {
+          "kind": "api",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "getprop",
+            "ro.build.version.sdk"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "stderrLog": "/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-android-test.tuvlgxdd.api.stderr",
+          "pid": 98773,
+          "groupRetired": true
+        },
+        {
+          "kind": "previous-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-d"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98774,
+          "groupRetired": true
+        },
+        {
+          "kind": "clear-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-c"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98775,
+          "groupRetired": true
+        },
+        {
+          "kind": "flutter",
+          "command": [
+            "/Users/yuluo/flutter /flutter/bin/flutter",
+            "test",
+            "integration_test/android_multi_player_rollback_test.dart",
+            "-d",
+            "OWNED_USB_API31_DEVICE",
+            "--reporter",
+            "expanded",
+            "--timeout",
+            "5m",
+            "--dart-define=YL_ANDROID_API=31"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 98776,
+          "groupRetired": true
+        }
+      ],
+      "cleanup": {
+        "complete": true,
+        "foregroundRestored": true,
+        "errors": [],
+        "groups": [
+          {
+            "pgid": 98773,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98774,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98775,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 98776,
+            "leaderReturnCode": 0,
+            "remaining": false
+          }
+        ]
+      }
+    },
+    {
+      "schemaVersion": 1,
+      "serial": "OWNED_USB_API31_DEVICE",
+      "suite": "integration_test/state_update_cadence_test.dart",
+      "limits": {
+        "runSeconds": 600.0,
+        "adbSeconds": 15.0,
+        "cleanupSeconds": 30.0
+      },
+      "elapsedSeconds": 34.641805125000005,
+      "primaryExitCode": 0,
+      "exitCode": 0,
+      "signal": null,
+      "errorType": null,
+      "commands": [
+        {
+          "kind": "api",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "shell",
+            "getprop",
+            "ro.build.version.sdk"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "stderrLog": "/var/folders/l3/0mzb_4ps0ddfqlqc30q_p34c0000gn/T/yl-android-test.svd_qmic.api.stderr",
+          "pid": 99302,
+          "groupRetired": true
+        },
+        {
+          "kind": "previous-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-d"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 99303,
+          "groupRetired": true
+        },
+        {
+          "kind": "clear-logcat",
+          "command": [
+            "adb",
+            "-s",
+            "OWNED_USB_API31_DEVICE",
+            "logcat",
+            "-c"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 99304,
+          "groupRetired": true
+        },
+        {
+          "kind": "flutter",
+          "command": [
+            "/Users/yuluo/flutter /flutter/bin/flutter",
+            "test",
+            "integration_test/state_update_cadence_test.dart",
+            "-d",
+            "OWNED_USB_API31_DEVICE",
+            "--reporter",
+            "expanded",
+            "--timeout",
+            "5m",
+            "--dart-define=YL_ANDROID_API=31"
+          ],
+          "timedOut": false,
+          "exitCode": 0,
+          "pid": 99305,
+          "groupRetired": true
+        }
+      ],
+      "cleanup": {
+        "complete": true,
+        "foregroundRestored": true,
+        "errors": [],
+        "groups": [
+          {
+            "pgid": 99302,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 99303,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 99304,
+            "leaderReturnCode": 0,
+            "remaining": false
+          },
+          {
+            "pgid": 99305,
+            "leaderReturnCode": 0,
+            "remaining": false
+          }
+        ]
+      }
+    }
+  ],
+  "releaseEvidence": false,
+  "notes": [
+    "Supplemental API 31 physical-device evidence; does not satisfy exact API 24 or API 36 shards.",
+    "Device serial redacted from this published derivative; raw originals remain local.",
+    "First attempt reached the existing 600 second bound while installing SDK Build-Tools 36; retry passed without relaxing limits.",
+    "Local Flutter differs from CI 3.44.0; its automatic lockfile and analysis configuration changes are not retained.",
+    "Tests ran in the shared working tree while diagnostics-redaction commit 05e2ece1 was added; HEAD at receipt is provenance, not a clean-checkout build identity."
+  ],
+  "headShaAtReceipt": "05e2ece1233321b2fd177e53755665ab52611f55"
+}

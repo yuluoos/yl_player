@@ -9,7 +9,10 @@ import 'support/playback_sessions.dart';
 import 'support/authenticated_hls_server.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // AVPlayer's first-frame event requires the native view to be mounted.
+  // Keep rendering while the test awaits asynchronous playback events.
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized().framePolicy =
+      LiveTestWidgetsFlutterBindingFramePolicy.fullyLive;
 
   testWidgets('macOS HLS reaches first frame, advances, pauses, and disposes', (
     WidgetTester tester,
@@ -17,6 +20,7 @@ void main() {
     final server = await AuthenticatedHlsServer.start();
     addTearDown(server.close);
     final controller = await YlPlayerController.create();
+    addTearDown(controller.dispose);
 
     await tester.pumpWidget(
       MaterialApp(
@@ -60,10 +64,11 @@ void main() {
       rethrow;
     }
 
-    await sessionFor(controller).pause();
-    await controller.states
+    final paused = controller.states
         .firstWhere((state) => state.status == YlPlaybackStatus.paused)
         .timeout(const Duration(seconds: 5));
+    await sessionFor(controller).pause();
+    await paused;
     expect(controller.textureId.value, isNotNull);
     expect(controller.state.engine, YlPlaybackEngine.avPlayer);
     expect(
