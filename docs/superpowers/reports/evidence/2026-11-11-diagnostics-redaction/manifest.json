@@ -1,0 +1,59 @@
+{
+  "baselineCommit": "25b191b49b04f5392aeea9b908d8114d4814d51b",
+  "scope": "REG-DIAG Dart redaction helper; no physical or native runtime acceptance",
+  "source": {
+    "packages/yl_player_platform_interface/lib/src/diagnostics/safe_diagnostics.dart": "80befb76da60a95b6f9f307ff54ff75fd799cafcc03916bbeea7c9db36dd38b3",
+    "packages/yl_player_platform_interface/test/safe_diagnostics_redaction_test.dart": "616de27374910ed9d192476ecd1308ecefde19c42754ff2f9814a17abcf26f01"
+  },
+  "results": {
+    "initialRegression": {
+      "passed": 2,
+      "failed": 7,
+      "cases": 9
+    },
+    "expandedSuite": {
+      "passed": 186,
+      "failed": 2,
+      "failures": "platform_conformance 80ms lifecycle timeouts"
+    },
+    "serialFollowup": {
+      "passed": 108,
+      "failed": 0
+    },
+    "releaseReadinessPromoted": false
+  },
+  "files": {
+    "analyze-final.log.gz": {
+      "sha256": "9b8e995f1fb61b244f211e9385742dcdcb27074d9811a81809a19918f5b064a9",
+      "bytes": 92
+    },
+    "analyze.log.gz": {
+      "sha256": "e7ac33ba8c090e6f12922f98df437e5bed90a5c2d868e214efc12cc5f60c88c4",
+      "bytes": 524
+    },
+    "final-tests.log.gz": {
+      "sha256": "20e79443eb2dac3d468e4822bfdec7778301c8e030c0efccdbf5903800a6cd3a",
+      "bytes": 2759
+    },
+    "format.log.gz": {
+      "sha256": "a66cab2cab58c485c2453af6e2a4857e21e55a15278c8fe5d758c96e249431ff",
+      "bytes": 67
+    },
+    "green.log.gz": {
+      "sha256": "d82babe8350573363c9fe5485c20f3e0cce8ef976fa418b52fc273364a493d2d",
+      "bytes": 1577
+    },
+    "red.log.gz": {
+      "sha256": "5481172f8659dbb7cb9664d15deaa772942df823752cbb100972620e8905da9d",
+      "bytes": 630
+    },
+    "safe_diagnostics-before.dart.gz": {
+      "sha256": "dd547689ff6fa4b854fc7efa35a885793d507b5a22cc25eaa9446b6f5b115cfd",
+      "bytes": 4184
+    },
+    "serial-tests.log.gz": {
+      "sha256": "c169184faefdbef3a0a1144690f384996e5fdcc5d65b1e3ee035bd1ebea44cb0",
+      "bytes": 2332
+    }
+  }
+}

@@ -203,6 +203,20 @@ abstract final class YlSafeDiagnostics {
       '[$_httpTokenCharacters]*$_sensitiveNameTerm'
       '[$_httpTokenCharacters]*)';
 
+  // Values can contain spaces, escaped quotes, or even unterminated quoted
+  // strings. Once a credential assignment starts, do not guess its end.
+  static const _credentialNamePattern =
+      '[$_httpTokenCharacters]*'
+      r'(?:password|passwd|credential|secret|token|key|auth)'
+      '[$_httpTokenCharacters]*';
+  static final RegExp _credentialAssignmentPattern = RegExp(
+    '(?<![$_httpTokenCharacters])(?:'
+    '["\x27]$_credentialNamePattern["\x27]\\s*[:=]|'
+    '$_credentialNamePattern\\s*=)[\\s\\S]*',
+    caseSensitive: false,
+  );
+  static const _headerValuePattern = r'[^\r\n]*(?:\r?\n[ \t]+[^\r\n]*)*';
+
   static final RegExp _credentialPattern = RegExp(
     r'\b(?:bearer|basic)\s+\S+|'
     '(?<![$_httpTokenCharacters])[$_httpTokenCharacters]*'
@@ -213,7 +227,7 @@ abstract final class YlSafeDiagnostics {
   );
   static final RegExp _genericHeaderPattern = RegExp(
     '(?<![$_httpTokenCharacters])'
-    '[$_httpTokenCharacters]+\\s*:\\s*\\S+',
+    '[$_httpTokenCharacters]+[ \\t]*:[ \\t]*$_headerValuePattern',
   );
   static final RegExp _lineBreakPattern = RegExp(r'[\r\n]+');
   static final RegExp _pathPattern = RegExp(
@@ -223,7 +237,7 @@ abstract final class YlSafeDiagnostics {
   static final RegExp _queryPattern = RegExp(r'\?[^\s#]*');
   static final RegExp _sensitiveHeaderPattern = RegExp(
     '(?<![$_httpTokenCharacters])'
-    '$_sensitiveHeaderNamePattern\\s*:\\s*[^\\r\\n]*',
+    '$_sensitiveHeaderNamePattern[ \\t]*:[ \\t]*$_headerValuePattern',
     caseSensitive: false,
   );
   static final RegExp _stackFramePattern = RegExp(
@@ -240,9 +254,17 @@ abstract final class YlSafeDiagnostics {
   );
 
   /// Produces a bounded diagnostic string with sensitive shapes removed.
+  /// Credential assignments discard the remaining text because their value
+  /// boundaries may be ambiguous. This heuristic is not a boundary for raw
+  /// native exceptions; use [messageForCode] for those.
   static String redact(String input) {
     var output = input.replaceAll(_uriPattern, _redactedUri);
+    output = output.replaceAll(
+      _credentialAssignmentPattern,
+      _redactedCredential,
+    );
     output = output.replaceAll(_sensitiveHeaderPattern, _redactedHeader);
+    output = output.replaceAll(_genericHeaderPattern, _redactedHeader);
     output = output.replaceAll(_queryPattern, _redactedQuery);
     output = output.replaceAll(_credentialPattern, _redactedCredential);
     output = output.replaceAll(_pathPattern, _redactedPath);
@@ -254,6 +276,8 @@ abstract final class YlSafeDiagnostics {
   }
 
   /// Returns a safe public message, using a fixed fallback for unsafe input.
+  /// Use [messageForCode] for untrusted native prose, including encoded values
+  /// that cannot be recognized by shape.
   static String publicMessage(String input) {
     if (_containsUnsafeShape(input)) {
       return _fallbackMessage;
@@ -264,6 +288,7 @@ abstract final class YlSafeDiagnostics {
   static bool _containsUnsafeShape(String input) =>
       _uriPattern.hasMatch(input) ||
       _genericHeaderPattern.hasMatch(input) ||
+      _credentialAssignmentPattern.hasMatch(input) ||
       _credentialPattern.hasMatch(input) ||
       _lineBreakPattern.hasMatch(input) ||
       _stackFramePattern.hasMatch(input) ||
