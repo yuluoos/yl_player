@@ -405,10 +405,15 @@ jobs:
 
   quick-aggregate:
     needs: [changes, foundation, android-unit, apple-unit, android-integration, ios-integration, macos-integration, android-consumer, apple-consumers, ffmpeg-reproducibility]
-    if: always() && needs.changes.outputs.full != 'true'
+    if: ${{ !cancelled() && needs.changes.outputs.full != 'true' }}
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
+        with:
+          # Aggregation reads only job results, not media or binary fixtures.
+          sparse-checkout: tool/check_player_v2.sh
+          sparse-checkout-cone-mode: false
       - name: Fail closed on each selected quick or affected job
         env:
           YL_RESULT_FOUNDATION: ${{ needs.foundation.result }}

@@ -67,8 +67,12 @@ samples.withUnsafeMutableBytes { bytes in
   storage.record(status: noErr, buffers: &buffers, frames: 256, range: range)
 }
 let blocks = storage.blocks
-let value: [String: Any] = ["drops": storage.drops, "blocks": blocks.count,
-  "frames": blocks.first?.samples.first?.count ?? 0, "sample": blocks.first?.samples.first?.first ?? 0]
+// Resolve optional scalars before erasing their types. Older Swift/Foundation
+// can otherwise box the nonempty sample as __SwiftValue instead of a number.
+let frameCount: Int = blocks.first?.samples.first?.count ?? 0
+let firstSample: Float = blocks.first?.samples.first?.first ?? 0
+let value: [String: Any] = ["drops": Int(storage.drops), "blocks": blocks.count,
+  "frames": frameCount, "sample": Double(firstSample)]
 print(String(data: try JSONSerialization.data(withJSONObject: value), encoding: .utf8)!)
 ''')
         cls.executable=folder/'test'

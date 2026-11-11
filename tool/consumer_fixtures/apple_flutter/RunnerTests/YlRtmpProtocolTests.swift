@@ -16,7 +16,13 @@ final class YlRtmpProtocolTests: XCTestCase {
     XCTAssertEqual(second.payload, Data([0x27]))
   }
   func testAmfReadsKnownConnectResultAndRejectsTruncatedString() throws {
-    let bytes = Data([2,0,7] + Array("_result".utf8) + [0,0x3f,0xf0,0,0,0,0,0,0,5,3,0,4] + Array("code".utf8) + [2,0,3] + Array("yes".utf8) + [0,0,9])
+    var bytes = Data([2,0,7])
+    bytes.append(contentsOf: "_result".utf8)
+    bytes.append(contentsOf: [0,0x3f,0xf0,0,0,0,0,0,0,5,3,0,4])
+    bytes.append(contentsOf: "code".utf8)
+    bytes.append(contentsOf: [2,0,3])
+    bytes.append(contentsOf: "yes".utf8)
+    bytes.append(contentsOf: [0,0,9])
     let values = try YlRtmpAmf.decode(bytes)
     XCTAssertEqual(values[0] as? String, "_result")
     XCTAssertEqual(values[1] as? Double, 1)
