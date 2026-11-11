@@ -1,0 +1,29 @@
+{
+  "baseCommit": "1b4107d8f01815e943bd570961434dc76f9b9e6f",
+  "source": "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift",
+  "sourceSha256": "7b4be4264126649aa0734d2ca1d1dea5a7184fbccdfcc940204a5dce5af3fb93",
+  "device": {
+    "model": "iPhone 16",
+    "os": "27.2",
+    "xcode": "27.2",
+    "flutter": "3.47.9"
+  },
+  "before": {
+    "passed": 1,
+    "failed": 1,
+    "failure": "low-latency HLS first frame timed out after 45 seconds",
+    "traceOutputConfiguredPositionSeconds": 0.268118584
+  },
+  "after": {
+    "iphone": {
+      "passed": 2,
+      "failed": 0
+    },
+    "macos": {
+      "passed": 1,
+      "failed": 0
+    }
+  },
+  "rawVerboseLogs": "Retained locally; public excerpts exclude device inventory and debug service tokens",
+  "remoteVerification": "pending"
+}

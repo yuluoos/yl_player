@@ -158,6 +158,7 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     ]
   )
   private var videoOutputConfigured = true
+  private var videoOutputPixelFormat = kCVPixelFormatType_32BGRA
   private var displayLink: (any YlDisplayDriving)?
   private var periodicObserver: Any?
   private var itemStatusObservation: NSKeyValueObservation?
@@ -954,11 +955,17 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     item.preferredForwardBufferDuration = forwardBuffer
     player.automaticallyWaitsToMinimizeStalling = effectiveConfiguration.bufferMode != "lowLatency"
     applyQualityConstraint(qualityConstraint, to: item)
+    // HLS may start decoding before asynchronous asset metadata is available.
+    // Install its 10-bit output before playback so low-latency streams do not
+    // lose their first frames when metadata later selects the same precision.
+    let adaptiveNativeOutput = services.nativeViewType != nil && isAdaptiveHls
+    videoOutputPixelFormat = adaptiveNativeOutput
+      ? kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange : kCVPixelFormatType_32BGRA
     videoOutput = makeVideoOutput([
-      kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA,
+      kCVPixelBufferPixelFormatTypeKey as String: videoOutputPixelFormat,
       kCVPixelBufferIOSurfacePropertiesKey as String: [:],
     ])
-    videoOutputConfigured = services.nativeViewType == nil
+    videoOutputConfigured = services.nativeViewType == nil || adaptiveNativeOutput
     item.add(videoOutput)
     refreshFramePolicy()
     player.replaceCurrentItem(with: item)
@@ -1576,6 +1583,11 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
     return true
   }
 
+  private var isAdaptiveHls: Bool {
+    guard let source = lastSource, let url = source.url else { return false }
+    return YlEngineRouter.resolvedFormat(source, url: url) == .hls
+  }
+
   private func loadMetadata(_ item: AVPlayerItem, generation: UInt64) {
     guard metadataTask == nil else { return }
     // State publication must never synchronously inspect a network asset. On
@@ -1606,19 +1618,20 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
         if self.services.nativeViewType != nil {
           // Adaptive HLS can change precision after its initial track metadata.
           // Keep that output at 10 bits; fixed SDR files retain the 8-bit path.
-          let adaptive = self.lastSource?.url.map {
-            YlEngineRouter.resolvedFormat(self.lastSource!, url: $0) == .hls
-          } ?? false
+          let adaptive = self.isAdaptiveHls
           if selectedFormat.map(YlHDRVideoPolicy.isHDR) == true || adaptive {
             let pixelFormat = selectedFormat.map(YlHDRVideoPolicy.pixelFormat)
             let hdrPixelFormat = pixelFormat == kCVPixelFormatType_420YpCbCr10BiPlanarFullRange
               ? kCVPixelFormatType_420YpCbCr10BiPlanarFullRange : kCVPixelFormatType_420YpCbCr10BiPlanarVideoRange
-            item.remove(self.videoOutput)
-            self.videoOutput = self.makeVideoOutput([
-              kCVPixelBufferPixelFormatTypeKey as String: hdrPixelFormat,
-              kCVPixelBufferIOSurfacePropertiesKey as String: [:],
-            ])
-            item.add(self.videoOutput)
+            if self.videoOutputPixelFormat != hdrPixelFormat {
+              item.remove(self.videoOutput)
+              self.videoOutputPixelFormat = hdrPixelFormat
+              self.videoOutput = self.makeVideoOutput([
+                kCVPixelBufferPixelFormatTypeKey as String: hdrPixelFormat,
+                kCVPixelBufferIOSurfacePropertiesKey as String: [:],
+              ])
+              item.add(self.videoOutput)
+            }
           }
           self.videoOutputConfigured = true
         }

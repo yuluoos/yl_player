@@ -383,6 +383,122 @@
     "pixel-diagnostic-compat-summary.json.gz": {
       "sha256": "3235967fa375a89d73a22a5faadf7037df06a667552b07b0037f5beb6c2b51b4",
       "size": 399
+    },
+    "iphone-hls-before-test-output.log.gz": {
+      "sha256": "cd60260e1ee3ce3c7881c0793b0263895248178f907f20c26787406143fab400",
+      "size": 1053
+    },
+    "iphone-full-identities.json.gz": {
+      "sha256": "44b4fe4c59a44a9552f993f625f08453cf32a7a3b6e6d8d6c68760938b9e40a3",
+      "size": 38579
+    },
+    "remote-1b4107d8-ios-summary.json.gz": {
+      "sha256": "f7b12c99eb48d009cc18d5125cfd60e086050289dc89c7fadbfc82414262e991",
+      "size": 2243
+    },
+    "1b4107d8-jobs-final.json.gz": {
+      "sha256": "acd9fecb5bf6e11a2ac6d7c4d2d338671eccef6fa13b64b1c414502bfa30c336",
+      "size": 2864
+    },
+    "iphone-full-tests.json.gz": {
+      "sha256": "c9bcd197a849e6dcb7710c6eedd8671798db0346e4a7b7a1b6cb19bec849b0b6",
+      "size": 50615
+    },
+    "remote-1b4107d8-artifacts.json": {
+      "sha256": "a8d05feb8376cb0b93b6358dc839307a316e695c1ad170669677d29b5c395b2d",
+      "size": 6149
+    },
+    "remote-1b4107d8-macos-tests.json.gz": {
+      "sha256": "d70ee4ecc348d77e2bfa99098b56e77e4974036a71e47cabe859aee300e80926",
+      "size": 52269
+    },
+    "iphone-focused-native.log.gz": {
+      "sha256": "d31e9825b192f1f84d2dc2d2dfb32baaede6b6db08a717fede695b889d86b269",
+      "size": 971
+    },
+    "macos-two-failures-before-summary.json.gz": {
+      "sha256": "49bfc50a9b8f342b73f814de9f8b62bcc0c74bfd27dad210fdeb6c9b515acb9e",
+      "size": 739
+    },
+    "remote-1b4107d8-macos-summary.json.gz": {
+      "sha256": "babb93046922b43d1ec0766aeb27b122636c0c6e858afab196f65deeed6fcf14",
+      "size": 810
+    },
+    "macos-two-fixture-migration.log.gz": {
+      "sha256": "be64b2808d7ef797459851e4a1af50268aec6836c01d09762350633f47b5023f",
+      "size": 55
+    },
+    "iphone-native-validation.json": {
+      "sha256": "6760fe0d886e359d41d742970bbab75284f4d666f5c16f534c02733c93743f42",
+      "size": 1581
+    },
+    "remote-1b4107d8-ios-hls.log.gz": {
+      "sha256": "1d0ed2e3406ea5e6d2980870379928d382d6792ac4f4acc7b868e00b770637e6",
+      "size": 111021
+    },
+    "remote-1b4107d8-ios-tests.json.gz": {
+      "sha256": "92aed01bd8d2b56c0fe685b90c074e6a67cf88bcb9317670fa3bade8c4de9e94",
+      "size": 50714
+    },
+    "iphone-full-summary.json.gz": {
+      "sha256": "01fa919672494f27a223512d7b94e5eeb3025144c1bed138d05eb1f92f8bbd10",
+      "size": 1075
+    },
+    "remote-1b4107d8-ios-unit.json": {
+      "sha256": "1e0acc2ec006c8f9ff0118b5e6956fa6c23ada67a36ca9f8604abf3e032c3cc5",
+      "size": 26379
+    },
+    "macos-two-failures-after.log.gz": {
+      "sha256": "116efd540d89976d7058a4286232f024b0a57b30ca491a2fc3117b66086590ea",
+      "size": 4900
+    },
+    "remote-1b4107d8-ios-native.log.gz": {
+      "sha256": "aaaf85a1cf673cee5f25749cf8de038b6fa7ae7ac1ec380f7b67d4208c082f59",
+      "size": 3443
+    },
+    "macos-two-failures-after-summary.json.gz": {
+      "sha256": "8d7c8350a22a515fa4b057fbf5d881d03c0fd1be20374b0dc0650234ebf1392c",
+      "size": 614
+    },
+    "iphone-full-native.log.gz": {
+      "sha256": "e873c0560b4e28ebc758382b27bcc8f801f2575faa913c01bc4c7d16f9159bb0",
+      "size": 969
+    },
+    "remote-1b4107d8-macos-native.log.gz": {
+      "sha256": "7a7c5dbb7eac0b57dbd8eb62633d05191bebd725bbe3e70176185032c828db8e",
+      "size": 3034
+    },
+    "iphone-focused-identities.json.gz": {
+      "sha256": "026a70a3d5e9f02a38396aa27494ea0b1a7f2d419b3acf844df4fe30b75beefb",
+      "size": 1190
+    },
+    "remote-1b4107d8-macos-hls.log.gz": {
+      "sha256": "a9f11583bfbded1f7403320c9392b896a3ba022d7bfa110815a78989b7e1a06f",
+      "size": 1615
+    },
+    "iphone-focused-summary.json.gz": {
+      "sha256": "7f44b90e27b69de4c21d1758f045af783e54df2d56c29b5f05c40e7e1e6e096d",
+      "size": 875
+    },
+    "iphone-focused-tests.json.gz": {
+      "sha256": "9846d7d914ab48396a3c52b02c1236be1116a50eaff8a86d1f6c236a5fa7fc5e",
+      "size": 2826
+    },
+    "macos-hls-output-initialization-fixed.log.gz": {
+      "sha256": "5f669dd9ab91e2170f0da0610bef12461c336d3c853d47eab945b7d670ab043f",
+      "size": 2313
+    },
+    "iphone-hls-initialization-trace.log.gz": {
+      "sha256": "718fd7641e829574146dcc5aeaa600b72a70554a93244211cc1bf49aaf3faa07",
+      "size": 529
+    },
+    "iphone-hls-fixed-test-output.log.gz": {
+      "sha256": "4aa0f641ed7320602e1b0d69985ce8e72ef470070861daba394bbd574f0d0b18",
+      "size": 227
+    },
+    "hls-output-initialization.json": {
+      "sha256": "a70821d7126f8c326aa3bb6d714ff7440afb26774c81b949cab053d1bac8a192",
+      "size": 845
     }
   },
   "candidateCommit": "87bfced3485ca37d7078bb5b32bb2668a7f4151b",

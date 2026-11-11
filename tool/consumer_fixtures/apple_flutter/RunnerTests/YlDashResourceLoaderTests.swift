@@ -3923,6 +3923,7 @@ final class YlDashResourceLoaderTests: XCTestCase {
   @MainActor
   func testLoadCapsPixelAspectRatioRejectsAndRetiredFailureCannotPoisonNewItem() async throws {
     let data = mpd
+    let replacement = try XCTUnwrap(Bundle(for: Self.self).url(forResource: "h264_aac", withExtension: "mp4"))
     let prepared = try YlPreparedHlsAsset(originURL: origin, isDash: true,
       videoConstraints: .init(maxWidth: 320, maxHeight: 180, maxBitrate: nil), headers: [:],
       configuration: .init(map: [:]), cancellationToken: .init(),
@@ -3931,20 +3932,20 @@ final class YlDashResourceLoaderTests: XCTestCase {
     CVBufferSetAttachment(pixels.buffer, kCVImageBufferPixelAspectRatioKey,
       [kCVImageBufferPixelAspectRatioHorizontalSpacingKey: 2, kCVImageBufferPixelAspectRatioVerticalSpacingKey: 1] as CFDictionary, .shouldPropagate)
     let output = AppleTestTexture()
-    var tick: (() -> Void)?, failures = 0, frames = 0
+    var tick: (() -> Void)?, failures: [String] = [], frames = 0
     let backend = YlAvPlayerBackend(playerId: 99,
       services: .init(platform: .current, textureOutput: output, makeDisplayDriver: { tick = $0; return AppleTestDisplay() }),
       configuration: .init(map: ["audioPolicy": "appManaged"]), makeVideoOutput: { _ in pixels }, emit: {
-        if case .failure = $0.event { failures += 1 }; if case .firstFrame = $0.event { frames += 1 }
+        if case .failure(let error) = $0.event { failures.append(error.code) }; if case .firstFrame = $0.event { frames += 1 }
       })
     defer { backend.dispose() }
     try backend.stagePreparedHls(source: .init(uri: origin.absoluteString, kind: .network, formatHint: .dash), prepared: prepared, resume: false)
     try backend.activate()
     XCTAssertNil(backend.copyPixelBuffer()?.takeRetainedValue())
     // Replace before the queued failure reaches main: it belongs to the old item.
-    try backend.open(.init(uri: "https://origin.test/new.mp4", kind: .network, formatHint: .mp4))
+    try backend.open(.init(uri: replacement.absoluteString, kind: .file, formatHint: .mp4))
     for _ in 0..<12 { await Task.yield() }
-    XCTAssertEqual(failures, 0)
+    XCTAssertTrue(failures.isEmpty, "Unexpected failures: \(failures)")
     XCTAssertNotNil(backend.copyPixelBuffer()?.takeRetainedValue())
     tick?()
     XCTAssertEqual(output.frames.count, 1); XCTAssertEqual(frames, 1)

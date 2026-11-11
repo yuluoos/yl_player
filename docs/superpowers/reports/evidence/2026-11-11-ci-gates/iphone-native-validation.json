@@ -1,0 +1,58 @@
+{
+  "headSha": "1b4107d8f01815e943bd570961434dc76f9b9e6f",
+  "device": {
+    "model": "iPhone 16",
+    "os": "27.2",
+    "osBuild": "24B119",
+    "transport": "USB",
+    "paired": true,
+    "developerMode": "enabled"
+  },
+  "unsignedBuild": {
+    "exitCode": 0,
+    "codeSigningAllowed": false,
+    "productFiles": {
+      "Runner": {
+        "sha256": "2839afcfffbd98df5352d76814020a0d649d1180ac3472c67acbf3270724f9f0",
+        "size": 72472
+      },
+      "Runner.debug.dylib": {
+        "sha256": "7977ad30e730c52263720bb821e712d54f2d39bc52c534ef2828eb20408021ce",
+        "size": 951592
+      },
+      "PlugIns/RunnerTests.xctest/RunnerTests": {
+        "sha256": "a658fb2dbfa3926d221bcb2db66cf8aea12a89c492353090f48e0cf2139f3058",
+        "size": 20846640
+      }
+    }
+  },
+  "installed": true,
+  "testsExecuted": true,
+  "releaseEvidence": false,
+  "initialSigningCheck": {
+    "exitCode": 65,
+    "team": "JAKM34U2X8",
+    "missing": [
+      "iOS Development certificate with private key",
+      "iOS App Development provisioning profile for dev.ylplayer.ylPlayerExample"
+    ]
+  },
+  "signedBuild": {
+    "exitCode": 0,
+    "automaticProvisioning": true,
+    "team": "JAKM34U2X8"
+  },
+  "focusedResult": {
+    "passed": 34,
+    "failed": 0,
+    "skipped": 0
+  },
+  "fullSuite": {
+    "passed": 903,
+    "failed": 0,
+    "skipped": 0,
+    "identitiesVerified": true,
+    "compiledHeadSha": "1b4107d8f01815e943bd570961434dc76f9b9e6f"
+  },
+  "scope": "Complete canonical iOS native unit suite, physical device supplemental evidence; not minimum OS or remote CI acceptance"
+}

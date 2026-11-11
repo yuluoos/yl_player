@@ -393,7 +393,9 @@ final class YlManagedFallbackCharacterizationTests: XCTestCase {
     try instance.pause()
     try instance.seek(toMs: 750, cancellationToken: nil)
     try instance.selectAudioTrack("audio-\(streams[1].index)", cancellationToken: nil)
-    XCTAssertFalse(factory.renderers.last!.usesSubmissionAnchor)
+    XCTAssertEqual(Int(streams[1].codec), YLFCodecOpus)
+    XCTAssertEqual(factory.renderers.last!.usesSubmissionAnchor, YlApplePlatform.current == .macos,
+      "The accepted stereo Opus track has the same terminal eligibility as AAC")
     try instance.selectAudioTrack("audio-\(streams[0].index)", cancellationToken: nil)
     try instance.setPlaybackSpeed(2); try instance.setPlaybackSpeed(1)
     try instance.seek(toMs: 0, cancellationToken: nil)

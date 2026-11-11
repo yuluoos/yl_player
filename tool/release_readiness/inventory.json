@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "baselineCommit": "05e2ece1233321b2fd177e53755665ab52611f55",
+  "baselineCommit": "1b4107d8f01815e943bd570961434dc76f9b9e6f",
   "requirements": {
     "path": "docs/superpowers/specs/2026-09-20-playback-expansion-requirements.md",
     "sha256": "5bb5963e63a8330f80c72a7351aee478ecd912b2f85cd4162f5526b4ed99c1d3"
@@ -214,7 +214,7 @@
       "packages/yl_player_apple/analysis_options.yaml": "c1e9534c05acb3643e72a82ad3d92d56d2ba9b0df2add014c18f7e1d462f24e4",
       "packages/yl_player_apple/darwin/yl_player_apple.podspec": "1bbdf223867a388493e6dd04ea46d9a5c4b6965baf3f5ba239b9a7e934992dc0",
       "packages/yl_player_apple/darwin/yl_player_apple/Package.swift": "21b410eb8a33d2b284aa03949b912e9df1780d814d964ad4c40efd4abe4235fe",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "524fc0b5839b82c00ef560b7a05d72ac26dd9e2dc7ec3cc3ee8f9173aa282ca7",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "7b4be4264126649aa0734d2ca1d1dea5a7184fbccdfcc940204a5dce5af3fb93",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift": "b206ecc951c295fecc1a82b25ebd8fe4c3e0e366182229b6e0c98811fcde0e36",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryController.swift": "5412426a496ba6c0d5cea534fd5dfe9e9ac8bba86fa3bd71e0fab76632993e6f",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift": "03c2d013ccd473903ad472448c63fe2ac2dc5eb2ca5e721f184d26a2d418dd9b",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "c1f649644de765f875282a46a465e08b16efe123158461f735243e775d273a66"
+    "sha256": "c2ea498d94f56d5f0106c69e291bdcdc1f29a70f5c9790c5d6577fb42bc331aa"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "703cc27a20c5d1b9e950bb401c3f14426bf7ae13abfb94b7adcdce734f925104",
+      "sha256": "5a449a246ef6da93e834884e0c10a34b5564d42c57c2f93090e8db3c48ac86df",
       "kind": "report"
     }
   },

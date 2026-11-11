@@ -1,0 +1,593 @@
+{
+  "headSha": "1b4107d8f01815e943bd570961434dc76f9b9e6f",
+  "runId": 43000493138,
+  "runUrl": "https://github.com/yuluoos/yl_player/actions/runs/43000493138",
+  "artifact": {
+    "id": 13846966951,
+    "node_id": "MDg6QXJ0aWZhY3QxMzg0Njk2Njk1MQ==",
+    "name": "apple-unit-ios-runtime-evidence",
+    "size_in_bytes": 103681609,
+    "url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13846966951",
+    "archive_download_url": "https://api.github.com/repos/yuluoos/yl_player/actions/artifacts/13846966951/zip",
+    "expired": false,
+    "digest": "sha256:181dbc8e34345edc5a8641e8ccaeb95a92c5c25b8eb01d788bacb3de81c357a8",
+    "created_at": "2026-11-11T10:21:59Z",
+    "updated_at": "2026-11-11T10:21:59Z",
+    "expires_at": "2027-02-09T10:04:24Z",
+    "workflow_run": {
+      "id": 43000493138,
+      "repository_id": 1355650423,
+      "head_repository_id": 1355650423,
+      "head_branch": "codex/ci-gates-20261111",
+      "head_sha": "1b4107d8f01815e943bd570961434dc76f9b9e6f"
+    }
+  },
+  "summary": {
+    "totalTestCount": 903,
+    "passedTests": 869,
+    "failedTests": 33,
+    "skippedTests": 1
+  },
+  "failures": [
+    {
+      "children": [
+        {
+          "name": "AppleHostCharacterizations.swift:367: failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.93s",
+      "durationInSeconds": 0.9265120029449463,
+      "name": "testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "nodeIdentifier": "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:292: failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.048s",
+      "durationInSeconds": 0.04752004146575928,
+      "name": "testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "nodeIdentifier": "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:343: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.027s",
+      "durationInSeconds": 0.027032017707824707,
+      "name": "testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "nodeIdentifier": "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:223: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.008s",
+      "durationInSeconds": 0.007992029190063477,
+      "name": "testDTSActualPixelsPCMAndSeek()",
+      "nodeIdentifier": "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testDTSActualPixelsPCMAndSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:223: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.0066s",
+      "durationInSeconds": 0.006585955619812012,
+      "name": "testEAC3ActualPixelsPCMAndSeek()",
+      "nodeIdentifier": "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:223: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.0089s",
+      "durationInSeconds": 0.008880019187927246,
+      "name": "testFLACActualPixelsPCMAndSeek()",
+      "nodeIdentifier": "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testFLACActualPixelsPCMAndSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:288: failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.0069s",
+      "durationInSeconds": 0.006850004196166992,
+      "name": "testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "nodeIdentifier": "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:284: failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.03s",
+      "durationInSeconds": 0.030159950256347656,
+      "name": "testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "nodeIdentifier": "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:193: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.013s",
+      "durationInSeconds": 0.01308298110961914,
+      "name": "testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "nodeIdentifier": "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:193: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.013s",
+      "durationInSeconds": 0.01262199878692627,
+      "name": "testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "nodeIdentifier": "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlContainerOutputTests.swift:193: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.029s",
+      "durationInSeconds": 0.028861045837402344,
+      "name": "testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "nodeIdentifier": "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6493: failed - absolute-base: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        },
+        {
+          "name": "YlDashResourceLoaderTests.swift:6493: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.074s",
+      "durationInSeconds": 0.07361900806427002,
+      "name": "testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.048s",
+      "durationInSeconds": 0.04801201820373535,
+      "name": "testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.045s",
+      "durationInSeconds": 0.04485893249511719,
+      "name": "testProgramAudioIdentitySurvivesCatalogAddition()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.066s",
+      "durationInSeconds": 0.06558597087860107,
+      "name": "testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.072s",
+      "durationInSeconds": 0.0716249942779541,
+      "name": "testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.039s",
+      "durationInSeconds": 0.03859102725982666,
+      "name": "testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6036: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.054s",
+      "durationInSeconds": 0.05404400825500488,
+      "name": "testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        },
+        {
+          "name": "YlDashResourceLoaderTests.swift:6440: Failed due to unwaited expectation 'candidate pending'.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.054s",
+      "durationInSeconds": 0.053524017333984375,
+      "name": "testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.039s",
+      "durationInSeconds": 0.03879499435424805,
+      "name": "testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.05s",
+      "durationInSeconds": 0.05035102367401123,
+      "name": "testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.053s",
+      "durationInSeconds": 0.05278003215789795,
+      "name": "testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.036s",
+      "durationInSeconds": 0.03594398498535156,
+      "name": "testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.033s",
+      "durationInSeconds": 0.03312504291534424,
+      "name": "testProgramNativeJointBaseline()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramNativeJointBaseline",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.063s",
+      "durationInSeconds": 0.06267201900482178,
+      "name": "testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.036s",
+      "durationInSeconds": 0.03607797622680664,
+      "name": "testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6120: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        },
+        {
+          "name": "YlDashResourceLoaderTests.swift:6416: Failed due to unwaited expectation 'video fragment pending'.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.022s",
+      "durationInSeconds": 0.022237062454223633,
+      "name": "testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlDashResourceLoaderTests.swift:6235: failed - Load mode 0: decoder.unavailable",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        },
+        {
+          "name": "YlDashResourceLoaderTests.swift:6235: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.063s",
+      "durationInSeconds": 0.06341207027435303,
+      "name": "testPublicProgramLoadCommandsAndManagedPolicy()",
+      "nodeIdentifier": "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "NativeBackendFixtures.swift:26: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        },
+        {
+          "name": "YlFallbackBackendTests.swift:293: Failed due to unwaited expectation 'second FLV connection'.",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.018s",
+      "durationInSeconds": 0.01782095432281494,
+      "name": "testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "nodeIdentifier": "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "NativeBackendFixtures.swift:26: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.0098s",
+      "durationInSeconds": 0.00982201099395752,
+      "name": "testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "nodeIdentifier": "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "AppleHostCharacterizations.swift:39: failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.042s",
+      "durationInSeconds": 0.041500091552734375,
+      "name": "testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "nodeIdentifier": "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "AppleHostCharacterizations.swift:39: failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.039s",
+      "durationInSeconds": 0.03882110118865967,
+      "name": "testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "nodeIdentifier": "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    },
+    {
+      "children": [
+        {
+          "name": "YlManagedFallbackCharacterizationTests.swift:1870: failed: caught error: \"Playback operation failed.\"",
+          "nodeType": "Failure Message",
+          "result": "Failed"
+        }
+      ],
+      "duration": "0.015s",
+      "durationInSeconds": 0.015193939208984375,
+      "name": "testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+      "nodeIdentifier": "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+      "nodeIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload",
+      "nodeType": "Test Case",
+      "result": "Failed"
+    }
+  ],
+  "allFailedCasesPassedOnPhysicalIPhone": true,
+  "physicalComparisonLimitations": [
+    "Xcode 27.2 / iOS 27.2 vs CI Xcode 16.4 simulator",
+    "focused selection is not a complete suite"
+  ],
+  "explicitDecoderUnavailableCases": 8,
+  "genericPlaybackFailureCases": 25
+}
