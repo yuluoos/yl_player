@@ -82,27 +82,20 @@ fi
 xcrun simctl bootstatus "$simulator_id" -b
 
 cd "$repo_root/packages/yl_player/example"
-# Keep launch/VM-service diagnostics even when Flutter never starts a test.
-# CI bounds this step and uploads these logs after a timeout as well as failure.
+# Discover the authenticated VM endpoint from the launched process history.
+# Streaming-only discovery can miss the startup line on a busy Simulator.
 for test_file in \
   integration_test/hls_playback_test.dart \
   integration_test/apple_default_positive_test.dart \
-  integration_test/state_update_cadence_test.dart
+  integration_test/state_update_cadence_test.dart \
+  integration_test/apple_strict_policy_test.dart
 do
   integration_log="$evidence/$(basename "$test_file").log"
-  if flutter test "$test_file" -d "$simulator_id" --verbose --reporter expanded --timeout 5m >"$integration_log" 2>&1; then
+  if python3 -B "$repo_root/tool/run_ios_simulator_integration.py" \
+    --simulator "$simulator_id" --test "$test_file" --evidence "$evidence" >"$integration_log" 2>&1; then
     cat "$integration_log"
   else
     cat "$integration_log"
     exit 1
   fi
 done
-
-# The aggregator includes managed network, bounded buffers, hardwareRequired,
-# session replacement/ACK ordering and audio policy lifecycle on both platforms.
-if flutter test integration_test/apple_strict_policy_test.dart -d "$simulator_id" --reporter expanded >"$evidence/strict-integration.log" 2>&1; then
-  cat "$evidence/strict-integration.log"
-else
-  cat "$evidence/strict-integration.log"
-  exit 1
-fi

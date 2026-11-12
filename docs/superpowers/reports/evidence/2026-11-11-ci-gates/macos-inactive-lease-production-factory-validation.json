@@ -1,0 +1,24 @@
+{
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "videoFactory": "production default; no injected factory",
+  "tests": [
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualHostRejectedAudioReloadStaysSafeAndLaterReloadRecovers",
+      "passed": 20,
+      "repetitions": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualHostReloadRebuildsInvalidAudioAndFencesRetiredSession",
+      "passed": 20,
+      "repetitions": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testExclusiveReplacementJoinsInactiveOwnerWithoutReactivatingIt",
+      "passed": 20,
+      "repetitions": 20
+    }
+  ],
+  "totalRepetitions": 60,
+  "failedRepetitions": 0,
+  "skippedRepetitions": 0
+}

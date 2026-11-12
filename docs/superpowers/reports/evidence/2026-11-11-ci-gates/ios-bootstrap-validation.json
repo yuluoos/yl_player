@@ -1,0 +1,19 @@
+{
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "flutter": "3.47.9",
+  "xcode": "27.2",
+  "hls": {
+    "exitCode": 0,
+    "passed": 2
+  },
+  "intentionalFailure": {
+    "exitCode": 1,
+    "failed": 1
+  },
+  "unitTests": 3,
+  "nativeScriptTests": 7,
+  "migrationTests": 4,
+  "temporaryProbeRemoved": true,
+  "exampleEntrypointRestored": true,
+  "runnerSha256": "af1c11084652149f7518de21063899836293e939979dbdae99ae163b84361291"
+}

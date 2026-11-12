@@ -1,0 +1,65 @@
+{
+  "ios": {
+    "identitiesMatch": true,
+    "count": 904,
+    "failed": [
+      "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    ],
+    "skipped": [
+      "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
+    ]
+  },
+  "macos": {
+    "identitiesMatch": true,
+    "count": 957,
+    "failed": [
+      "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()",
+      "YlMacosAudioTests/testActualTimedNativeActivationObservation()"
+    ],
+    "skipped": [],
+    "focusedPassed": [
+      "YlMacosOpenCoordinatorTests/testExclusiveReplacementJoinsInactiveOwnerWithoutReactivatingIt()",
+      "YlMacosAudioTests/testActualHostRejectedAudioReloadStaysSafeAndLaterReloadRecovers()",
+      "YlMacosAudioTests/testTraceGateRequiresNotificationAndWritesSettledReceipt()",
+      "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()"
+    ]
+  },
+  "head": "610d23e6af7b190e099894bbdc8c2a6954b53b4c",
+  "runId": 43189051397,
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "iosFailureIdentitiesUnchangedFromCI117": true,
+  "all33RemoteIOSFailuresPassedOnPhysicalDevice": true,
+  "runPassed": false
+}

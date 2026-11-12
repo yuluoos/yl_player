@@ -1,0 +1,36 @@
+{
+  "head": "610d23e6af7b190e099894bbdc8c2a6954b53b4c",
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "testBundleBinarySha256": "25bd3686dd509a276fa75bee9a73538ad717b3e4ef23fe58e0770bfb011cecef",
+  "platform": "iOS physical device",
+  "device": "iPhone 16",
+  "counts": {
+    "totalTestCount": 904,
+    "passedTests": 904,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "canonicalIdentitiesMatch": true,
+  "artifacts": [
+    {
+      "path": "iphone-inactive-lease-signed-full.log.gz",
+      "sha256": "4825e844af68800dac53d031e6ccbaafa3e4b8ef16a9ecc4f1798dff3218ac40"
+    },
+    {
+      "path": "iphone-inactive-lease-signed-full-validation.log.gz",
+      "sha256": "6adb36ebf1e7d5498cdb799e786d23cb479df7a5a8f5e5f3d99d6355abe5046f"
+    },
+    {
+      "path": "iphone-inactive-lease-signed-full-summary.json.gz",
+      "sha256": "590d80fecbb334c454222c15005943f5aca41f27f03ee18a569a4f4bc5db40de"
+    },
+    {
+      "path": "iphone-inactive-lease-signed-full-tests.json.gz",
+      "sha256": "948f25bf6f80523fa539f2745f6cbd8ada54166080942142072ff97a3056d9d4"
+    },
+    {
+      "path": "iphone-inactive-lease-signed-full-case-identities.json.gz",
+      "sha256": "42b9cf1b0acd774b0f344cda388e5bfb5d5ba1cfc5b83e5b6cb41ef35c1660ab"
+    }
+  ]
+}

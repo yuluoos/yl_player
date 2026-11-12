@@ -1957,29 +1957,6 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertNil(output.renderedAudioTime)
   }
 
-  private final class ReloadVideoFactory: YlVTSessionFactory {
-    private let factory = YlHardwareVTSessionFactory(policy: .systemDefault)
-    private let lock = NSLock()
-    private var observations: [String] = []
-    var diagnostics: String { lock.withLock { observations.joined(separator: ", ") } }
-    func makeSession(formatDescription: CMVideoFormatDescription,
-                     output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
-      try makeSession(formatDescription: formatDescription, outputPixelFormat: nil, output: output)
-    }
-    func makeSession(formatDescription: CMVideoFormatDescription, outputPixelFormat: OSType?,
-                     output: @escaping (YlVTDecodedImage) -> Void) throws -> YlVTSession {
-      do {
-        let session = try factory.makeSession(formatDescription: formatDescription,
-          outputPixelFormat: outputPixelFormat, output: output)
-        lock.withLock { observations.append(session.hardwareEvidence.mode.rawValue) }
-        return session
-      } catch {
-        lock.withLock { observations.append(String(describing: error)) }
-        throw error
-      }
-    }
-  }
-
   private final class ReloadAudioFactory: YlAudioRendererMaking {
     var wrapsCallbacks = true
     var onSubmissionMode: ((YlAudioOutputCompletionMode) -> Void)?
@@ -2777,11 +2754,10 @@ final class YlMacosAudioTests: XCTestCase {
   private func verifyHostAudioReload(rejectFirstReload: Bool) async throws {
     let factory = ReloadAudioFactory(), ledger = YlManagedBufferLedger()
     let registry = ApplePublicationRegistry(), callbacks = AppleRecordingCallbacks()
-    let videoFactory = ReloadVideoFactory()
     let host = YlApplePlayerHost(playerId: 739, suffix: "audio-reload-739",
       options: .init(decoderPolicy: .systemDefault, audioPolicy: .appManaged, positionUpdateIntervalMs: 100),
       services: registry.services(), callbacks: callbacks, bufferLedger: ledger,
-      videoSessionFactory: videoFactory, audioRendererFactory: factory, audioTerminalCandidateEnabled: true)
+      audioRendererFactory: factory, audioTerminalCandidateEnabled: true)
     defer { host.close() }
     try host.attach(); try host.setVolume(volume: 0)
     let fixture = URL(fileURLWithPath: #filePath).deletingLastPathComponent()
@@ -2830,7 +2806,7 @@ final class YlMacosAudioTests: XCTestCase {
         _ = try await host.load(request: request("rejected", start: 1000))
         XCTFail("A native output that cannot start must not commit")
       } catch let error as PigeonError {
-        XCTAssertEqual(error.code, "render.audio_engine_failed", videoFactory.diagnostics)
+        XCTAssertEqual(error.code, "render.audio_engine_failed")
         let failure = try XCTUnwrap(error.details as? AppleFailureMessage)
         XCTAssertEqual(failure.category, .render)
         XCTAssertFalse(failure.retryable)
