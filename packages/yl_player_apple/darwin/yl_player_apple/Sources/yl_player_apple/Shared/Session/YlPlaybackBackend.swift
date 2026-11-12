@@ -67,7 +67,11 @@ final class YlBackendSlot {
     let preparedBeforeQuiescing = preparesWhileRetaining ? try prepare() : nil
     let previous = current
     let previousWasActive = previous.isActive
-    if previousWasActive || compatibility.retainsReplacementHls { previous.quiesceForReplacement() }
+    // A terminally failed owner can be inactive while its worker still holds
+    // the unique decoder lease. Exclusive replacement must join that retirement.
+    if previousWasActive || compatibility.retainsReplacementHls || requiresExclusiveResources {
+      previous.quiesceForReplacement()
+    }
     defer { if compatibility.retainsReplacementHls { previous.finishReplacement() } }
     do {
       let candidate = try preparedBeforeQuiescing ?? prepare()

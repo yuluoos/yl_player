@@ -302,10 +302,10 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackModels.swift": "6d5d8bed04bc376d4df93c2b89d7a134860c1c6adfce70a317d93f6a208ea8c0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlFallbackRecoveryPolicy.swift": "d062f5520531a391e6cc39f68f83e144ef69aeb906a5d095fe87bdb514e38bd1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlLiveCatchUpPolicy.swift": "6469f46c1943558147def9a066ca2afe2bd1255e6663f37d9e83062f0067ae1b",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift": "88b378988ed97806038e3be4807edcbdbf7ce776797ea731b31ca9eae6261e0c",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlManagedPlaybackSession.swift": "5d4c0c2ba084114b9ae43c1fb6f32a378b5f88a191e26ec06312ce7a6a57faae",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlOpenCoordinator.swift": "07015f666bdbbb657469d6666aff3a966011bb35540219c49a74762727131641",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlatformServices.swift": "0034881a7eeae79d2218bbba9a6d30ce4215128569ceefaaf1cff78bff6ff0cf",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlaybackBackend.swift": "23062743db61b949529615e90cb1daffdfebcfc5d26762c122046bbf748c135d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlPlaybackBackend.swift": "b5a91d0d1d73485a5b07385e74ca467142d13fd6927ded5b0754ce774097a624",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlRecoveryCoordinator.swift": "c25f89e6609c6b030d36b55bc3a9b3a51b51c685bb2d4d8cdad31f890be2b5ed",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Session/YlSourceRouter.swift": "8d95baf02249ce16c33605b18463d69a3f85f78c2c7ee1fdbb2fd9fbe471d166",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/SourceRouting/YlEngineRouter.swift": "ff4547fa82e172ac7a365252a721d93b6466701f039a445afff5e40edf41bec1",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "2fdee4142a22c94ac73f0690bbc194c3fe732ac9d43659590bc680cdee0eb179"
+    "sha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "d7503bdeda5d136cb3f17cbb96c170fda2790ecacdaf24bb2044000ec1e208df",
+      "sha256": "d5bd8753781fac1d05469bc31bc0e2a518e835f0e7f5363134e3dcc437a4619c",
       "kind": "report"
     }
   },

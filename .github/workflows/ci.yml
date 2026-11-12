@@ -271,6 +271,10 @@ jobs:
         timeout-minutes: 20
         if: needs.changes.outputs.full != 'true'
         run: sh tool/check_native_ios.sh --integration-only
+      - name: Collect iOS simulator startup diagnostics on failure
+        if: failure()
+        timeout-minutes: 3
+        run: python3 -B tool/collect_ios_simulator_diagnostics.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

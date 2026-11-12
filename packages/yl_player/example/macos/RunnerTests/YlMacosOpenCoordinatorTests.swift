@@ -21,7 +21,8 @@ final class YlMacosOpenCoordinatorTests: XCTestCase {
       isActive = true
     }
 
-    func quiesceForReplacement() { isActive = false }
+    var onQuiesce: (() -> Void)?
+    func quiesceForReplacement() { isActive = false; onQuiesce?() }
     private(set) var stopCount = 0
     func stop() { stopCount += 1 }
     func deactivate() { isActive = false }
@@ -100,6 +101,38 @@ final class YlMacosOpenCoordinatorTests: XCTestCase {
     })
     XCTAssertFalse(previous.isActive)
     XCTAssertTrue(slot.current === previous)
+  }
+
+  func testExclusiveReplacementJoinsInactiveOwnerWithoutReactivatingIt() throws {
+    for rejectCandidate in [false, true] {
+      let previous = BackendSpy(active: false)
+      let pool = YlHardwareDecoderLeasePool(maxConcurrentLeases: 1)
+      var retiredLease: YlHardwareDecoderLease? = try pool.acquire()
+      previous.onQuiesce = { retiredLease?.release(); retiredLease = nil }
+      let slot = YlBackendSlot(initial: previous, compatibility: .init(platform: .macos))
+      let candidate = BackendSpy(active: false)
+      var reachedCandidate = false
+      do {
+        _ = try slot.replace(requiresExclusiveResources: true) {
+          let lease = try pool.acquire()
+          defer { lease.release() }
+          reachedCandidate = true
+          if rejectCandidate {
+            throw NativePlayerError(category: "render", code: "render.audio_engine_failed", message: "injected")
+          }
+          return candidate
+        }
+        XCTAssertFalse(rejectCandidate)
+        XCTAssertTrue(slot.current === candidate)
+      } catch let error as NativePlayerError {
+        XCTAssertTrue(rejectCandidate)
+        XCTAssertEqual(error.code, "render.audio_engine_failed")
+        XCTAssertTrue(slot.current === previous)
+      }
+      XCTAssertTrue(reachedCandidate, "Inactive does not mean its decoder lease has been released")
+      XCTAssertEqual(previous.activationCount, 0)
+      XCTAssertFalse(previous.isActive)
+    }
   }
 
   func testBackendSlotExposesActiveRollbackThatNeedsAsyncRecovery() {

@@ -382,8 +382,16 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
     let positionGeneration = stateLock.withLock { generation }
     let positionBeforeReplacement = presentation.position(atHostTimeUs: Self.hostTimeUs())
     stateLock.lock()
-    guard !disposed, active else {
+    guard !disposed else {
       stateLock.unlock()
+      return
+    }
+    guard active else {
+      stateLock.unlock()
+      // Failure publishes an inactive state before asynchronous decoder disposal.
+      // Join that worker even when it has already detached its resources: the
+      // native invalidation and lease release may still be in progress.
+      demux.performSync {}
       return
     }
     if generation == positionGeneration {

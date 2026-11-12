@@ -1,0 +1,63 @@
+{
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "tests": [
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualHostRejectedAudioReloadStaysSafeAndLaterReloadRecovers",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualHostReloadRebuildsInvalidAudioAndFencesRetiredSession",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testBackendSlotDisposesCandidateWhenActivationFails",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testBackendSlotDoesNotActivateInactivePreviousOnPrepareFailure",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testBackendSlotDoesNotSynchronouslyReactivateExternalOnlyBackend",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testBackendSlotExposesActiveRollbackThatNeedsAsyncRecovery",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testBackendSlotQuiescesBeforePreparingAndRollsBackOnFailure",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testExclusiveReplacementJoinsInactiveOwnerWithoutReactivatingIt",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testRecoveryOnlyStartsAfterLatestOperationHasFinished",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testSecondOpenCancelsFirstCompletionAndOnlyNewestCommits",
+      "repetitions": 20,
+      "passed": 20
+    },
+    {
+      "identity": "test://com.apple.xcode/Runner/RunnerTests/YlMacosOpenCoordinatorTests/testSlotStopInvalidatesGenerationAndRemainsReplaceable",
+      "repetitions": 20,
+      "passed": 20
+    }
+  ],
+  "totalRepetitions": 220,
+  "failedRepetitions": 0,
+  "skippedRepetitions": 0
+}

@@ -708,6 +708,134 @@
       "sha256": "07e6ba97164f6366999a93194c824243d09890a7f2966032e1f2b89b970bf778",
       "size": 1605
     },
+    "ci117-android-api-24-failure.zip": {
+      "sha256": "78c200bca6411b3884e13508a347c81133a760aa75f0d9282cbb831e6d45acfe",
+      "size": 62710
+    },
+    "ci117-android-consumer-evidence.zip": {
+      "sha256": "0d7e42d25c1076ba51ad752a1cfa33b23bd1d2c00a3a375ff59907e0d29565b8",
+      "size": 9689
+    },
+    "ci117-apple-consumer-evidence.zip": {
+      "sha256": "d79903626c1b0b0262994942a8a7115994d971c0a1b73705ea3bf27a3bbae186",
+      "size": 1493378
+    },
+    "ci117-artifact-verification.json": {
+      "sha256": "4ab9110caadaa0843d03faec70b53c0be1ab033f90318668af6650a3f562a3c2",
+      "size": 1471
+    },
+    "ci117-artifacts.json.gz": {
+      "sha256": "0d27b839a53c846350f10c03b1c09d885562d82e920d9becc3c27bd92c4534dc",
+      "size": 1081
+    },
+    "ci117-audio-matrix.json.gz": {
+      "sha256": "5cfb7f930f6e380a3c6f9f39d155f143c87ceaf382db98cf16060fff46e5e0e6",
+      "size": 709
+    },
+    "ci117-decoded-eof-background.json.gz": {
+      "sha256": "3e7dbd850bb49bde544f011f40df9118bc35e30e83f821239584abb5534c60b9",
+      "size": 549
+    },
+    "ci117-ios-hls_playback_test.dart.log.gz": {
+      "sha256": "677a07e4f1b3dd515037f1f267dbd76fbca560a3a29ac8b4662f2eca9814ef74",
+      "size": 115341
+    },
+    "ci117-ios-native.log.gz": {
+      "sha256": "5a22a83c46996016702a15f2ed807d5c54126a04aa4392c06f2f9ad296d40b69",
+      "size": 3439
+    },
+    "ci117-ios-summary.json.gz": {
+      "sha256": "ecbf558bace45034ee97c184e80268ba6e294c121cb8a7259b6cc0fb5ee0c046",
+      "size": 2240
+    },
+    "ci117-ios-tests.json.gz": {
+      "sha256": "a79c52b34e034fa0eb4a3a47dec496f47cf48a99045ac15d73d845e9268f9f5e",
+      "size": 50740
+    },
+    "ci117-jobs.json.gz": {
+      "sha256": "6c5c8003d0d8819ac132271988fa7f79861f72e6c7ca318008e1f677e64affaa",
+      "size": 2865
+    },
+    "ci117-macos-apple_strict_policy_test.dart.log.gz": {
+      "sha256": "41f93d9b6bdf600ee9d8ea97cdaa0fcd818fad6aa1f237a2dfcc31bca088a9e5",
+      "size": 1603
+    },
+    "ci117-macos-avi_policy_test.dart.log.gz": {
+      "sha256": "84d0142d9b8b56d1d5e6ed5b138ce5bd8822c994c106f3c44202377efaf69f07",
+      "size": 1259
+    },
+    "ci117-macos-flv_intent_test.dart.log.gz": {
+      "sha256": "819ed45717089c8224398891fc7e91eb1420d011c24d6415885fe1f3a6f0ced2",
+      "size": 1138
+    },
+    "ci117-macos-macos_hls_playback_test.dart.log.gz": {
+      "sha256": "de5ff289746cdea9606a1fdb14d4d7ae4e736913f9b14690c1bdf6c96040b98d",
+      "size": 1128
+    },
+    "ci117-macos-macos_http_flv_playback_test.dart.log.gz": {
+      "sha256": "14f68d0c18f4721c5897562f99865cbfef094bc7c6a87920c1ebef28000e915b",
+      "size": 1130
+    },
+    "ci117-macos-macos_mkv_playback_test.dart.log.gz": {
+      "sha256": "a87cc841511ea9d5f2089b7a42295ac065b38cd6edff31c1b08544e1189e9c15",
+      "size": 1233
+    },
+    "ci117-macos-macos_network_mkv_playback_test.dart.log.gz": {
+      "sha256": "efbe45c5e2fce8271ebb9ff237e5fc143df147090b3af92d053227efd4579112",
+      "size": 1176
+    },
+    "ci117-macos-mpegts_policy_test.dart.log.gz": {
+      "sha256": "af9f432bc569a36bf1e347085a8bf167062517cf47d2837ef8799b4d2267a5a8",
+      "size": 1228
+    },
+    "ci117-macos-native.log.gz": {
+      "sha256": "f9d149bd03fbd5a8646ac7ea18d6cd038e69f13bfabb8163767c04cae1155ce9",
+      "size": 3097
+    },
+    "ci117-macos-state_update_cadence_test.dart.log.gz": {
+      "sha256": "a766b9df1a00bdf7bf92f3fe0ec4578f7e7059a7944fe7f844bafbed8cfcbfe7",
+      "size": 1260
+    },
+    "ci117-macos-summary.json.gz": {
+      "sha256": "3cb988c36e4f543b79c2b46adcb22799bc434744c2a1d7278db32c798191d76e",
+      "size": 948
+    },
+    "ci117-macos-tests.json.gz": {
+      "sha256": "a95bf8ca2ddce3fb5ade089b1f8e6c4e5d1967bedd61f1da6474cd339150f597",
+      "size": 52718
+    },
+    "ci117-macos-vorbis_policy_test.dart.log.gz": {
+      "sha256": "ab6af5679cbdf771455ee8dcdd64f0edb4442f7e04b5e039527ca73cf1055070",
+      "size": 1264
+    },
+    "ci117-macos-vp9_policy_test.dart.log.gz": {
+      "sha256": "294d445170fc33b1410df3ec1760e43d03998796aa28643f7b33b15e4d6266b3",
+      "size": 1178
+    },
+    "ci117-rejected-reload-crash.ips.gz": {
+      "sha256": "110bbbd1eb0358506e8b5cef2cfcb21033f649198981a824b1dac390b2367fe0",
+      "size": 10817
+    },
+    "ci117-run.json.gz": {
+      "sha256": "41536853eb38026da991050d935b8deeb4fbb4e1500632e5f9e22b92871c8b07",
+      "size": 1595
+    },
+    "ci117-testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay-console.log.gz": {
+      "sha256": "ab2e20145108534bab4f2b10497107ddc3d0389cc536f048b8c57a464c2f67b2",
+      "size": 249
+    },
+    "ci117-testActualHostRejectedAudioReloadStaysSafeAndLaterReloadRecovers-console.log.gz": {
+      "sha256": "29f3a1bc5fb9d29162d3fbb8a0c74d1ec8b3ed687a70a181b81d38db076acf33",
+      "size": 2120
+    },
+    "ci117-testActualTerminalAdapterFrameSequenceMatrix-console.log.gz": {
+      "sha256": "be142872a60d772a1d692f00c971f7a07ea8bc362e254827676654facad0b0cf",
+      "size": 490
+    },
+    "ci117-testTraceGateRequiresNotificationAndWritesSettledReceipt-console.log.gz": {
+      "sha256": "1ba22acb460ce8dcc86d25fbe7f89801438bfca114b7aee5980afeb7f256fa3b",
+      "size": 253
+    },
     "clock-diagnostics-devices.json.gz": {
       "sha256": "2e9dd6f65143de90c8e32404c6be12e982b9138d530a6fc56dbcdd08ff504e74",
       "size": 143
@@ -1168,6 +1296,42 @@
       "sha256": "38ac70ed6f7a5ed69ce5cb3497859887b338b465c5590f6cc17aa2b1f013c65e",
       "size": 2697
     },
+    "macos-49e8cd86-audio-case-identities.json.gz": {
+      "sha256": "7c0d7ef0b7205a466df78bc3573dba96ab8e94a8df8622cd56aa29c31797308f",
+      "size": 303
+    },
+    "macos-49e8cd86-audio-rows.json.gz": {
+      "sha256": "3afc62d2f6bb407a2400368d58a126d2c63a6f3df2cf9e3d9c4bdb5cb78cfdff",
+      "size": 861
+    },
+    "macos-49e8cd86-audio-summary.json.gz": {
+      "sha256": "41ec1c505409d82fc73ceb26d34c65a7d271ba051d6dc9eac5ff11c514e0d341",
+      "size": 629
+    },
+    "macos-49e8cd86-audio-tests.json.gz": {
+      "sha256": "1d61d6062ee462e30d78a3399bfd022ae0d43f41ae4e99d910c71b699b174d08",
+      "size": 799
+    },
+    "macos-49e8cd86-audio.log.gz": {
+      "sha256": "80eff41f2506eeeefee98d3b14f8c9d5681b193767fd19933b9dde06bfc597dd",
+      "size": 8469
+    },
+    "macos-ci117-followup-repeat-console-0.log.gz": {
+      "sha256": "20b5e81cd3840d548fe6b8182c613bd0fbfd25fdfa9783916bcdab6266553b7d",
+      "size": 2225
+    },
+    "macos-ci117-followup-repeat-summary.json.gz": {
+      "sha256": "db758b92675725579a9324c2f4be7feee6b06212ccf4e7f0a4bdd72ed033ef13",
+      "size": 1077
+    },
+    "macos-ci117-followup-repeat-tests.json.gz": {
+      "sha256": "35366ca57d3349c1d4e6655d26f319358f1e681abbfed0b637e522fc48569517",
+      "size": 2801
+    },
+    "macos-ci117-followup-repeat.log.gz": {
+      "sha256": "e069842cfaf0d3ae8ca5a4f751e92ba929ba8e953795e0a22e5b6842274b27f5",
+      "size": 2486
+    },
     "macos-hls-before-control.log.gz": {
       "sha256": "caaace79c04374b2dfef8aea4fd8f23a77ccbda74206fdbd82523fb1f89cc904",
       "size": 2769
@@ -1179,6 +1343,54 @@
     "macos-hls-output-initialization-fixed.log.gz": {
       "sha256": "5f669dd9ab91e2170f0da0610bef12461c336d3c853d47eab945b7d670ab043f",
       "size": 2313
+    },
+    "macos-inactive-lease-after-summary.json.gz": {
+      "sha256": "18f63abb40f333a132206dd8399077fa7e0d76e8447145cce08e75f2dff96361",
+      "size": 555
+    },
+    "macos-inactive-lease-after-tests.json.gz": {
+      "sha256": "7dcb20beb7cfcbc098a75d1c126c3f08119d8733dc73a2869bb2939eb1d2741b",
+      "size": 5757
+    },
+    "macos-inactive-lease-after.log.gz": {
+      "sha256": "0157cd3b1a71e6b069af7b72dbdb1e83bb5eb73bc65f845d32e98ec9e02a2104",
+      "size": 2131
+    },
+    "macos-inactive-lease-before-summary.json.gz": {
+      "sha256": "93309684318c48c097910eec50b128fabc60724b6370ba3372efec460d0ca99b",
+      "size": 740
+    },
+    "macos-inactive-lease-before-tests.json.gz": {
+      "sha256": "163a0ea07fabdb108e025741a0cee6b31546ca5380b56018ba4c4ce5744a8900",
+      "size": 779
+    },
+    "macos-inactive-lease-before.log.gz": {
+      "sha256": "1d9f1b0e4f683928e97374fd778fa377870c49c6a4c296e5fd2735e9715055ea",
+      "size": 1919
+    },
+    "macos-inactive-lease-repeat-validation.json": {
+      "sha256": "e06bb0c24560a699d86730e34640f5477e20ef98367569bcf7b464818fb13635",
+      "size": 2452
+    },
+    "macos-reload-video-evidence-console-0.log.gz": {
+      "sha256": "b45992af2dda6651758b61eecf56dcaf127aabeb7e55f1de7f2d0b46e5cdc4ca",
+      "size": 1420
+    },
+    "macos-reload-video-evidence-hang.sample.gz": {
+      "sha256": "c5f97ff77c9be5bb8d7ee2d45da1fe70dddcd18906c2f0428ed912e1f2136713",
+      "size": 72513
+    },
+    "macos-reload-video-evidence-summary.json.gz": {
+      "sha256": "16c56a1da6aaec392611503cc233fbb7f10c7ffe8793e24972d7674b64fe31f9",
+      "size": 761
+    },
+    "macos-reload-video-evidence-tests.json.gz": {
+      "sha256": "11c6323a943050fb84b4419c918ced0ae1e84583f0642f098e05a63cbbc5eb9a",
+      "size": 1525
+    },
+    "macos-reload-video-evidence.log.gz": {
+      "sha256": "50a8b7cc6f6bf1837b600932640980fa4d59f2c8ff340797f53a1e8930d3405e",
+      "size": 2488
     },
     "macos-two-failures-after-summary.json.gz": {
       "sha256": "8d7c8350a22a515fa4b057fbf5d881d03c0fd1be20374b0dc0650234ebf1392c",
