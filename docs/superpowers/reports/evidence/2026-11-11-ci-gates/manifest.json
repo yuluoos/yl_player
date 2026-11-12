@@ -671,6 +671,34 @@
     "local-20261112-native-fixed.log.gz": {
       "sha256": "ccf999f3b147a15a4810d9a45b00bb5c9a8eda2206a907d6ccc93eeb4d6cfdb8",
       "size": 4943
+    },
+    "local-20261112-final-apple_strict_policy.log.gz": {
+      "sha256": "fdac50fa13008978e4aaad19157fe6dc054c40098cab6099a7604edd58634787",
+      "size": 2160
+    },
+    "local-20261112-final-avi_policy.log.gz": {
+      "sha256": "ea6dca0950645935ecefaa7a7a5f69293f752d8d27d86ada1989d3f9ef34e825",
+      "size": 1289
+    },
+    "local-20261112-final-mpegts_policy.log.gz": {
+      "sha256": "9dabb5b3cbbe9108dadf7f331fe020100d9f3f0ed5760197d17505ea3f1e718c",
+      "size": 1374
+    },
+    "local-20261112-final-state_update_cadence.log.gz": {
+      "sha256": "833ab3fd5bdb8daac7987fa063e165c85ad6e265cd42a0bae51df2822b738e1f",
+      "size": 1261
+    },
+    "local-20261112-final-vorbis_policy.log.gz": {
+      "sha256": "768a42c46470e84bc8dddc9d5dc2a16351c752d45029f53ce67105dec830f8ea",
+      "size": 1294
+    },
+    "local-20261112-final-vp9_policy.log.gz": {
+      "sha256": "0bb243df6e6ad63006b6d87fadb0d796b8fb01d230ac28fcd8399b9c1688c4d2",
+      "size": 1200
+    },
+    "local-20261112-fixed-apple_strict_policy.log.gz": {
+      "sha256": "4bbee2c1af6a89601880d23b237443c0012e75532666f09040b5c4eb6a8e1ba4",
+      "size": 1686
     }
   },
   "candidateCommit": "87bfced3485ca37d7078bb5b32bb2668a7f4151b",

@@ -141,8 +141,46 @@ void main() {
       expect(controller.state.sessionId, isNull);
     },
   );
+  for (final (format, fixture) in [
+    (YlMediaFormat.mp4, 'mp4-avc-aac.mp4'),
+    (YlMediaFormat.mov, 'mov-hevc-aac.mov'),
+    (YlMediaFormat.avi, 'avi-avc-mp3.avi'),
+    (YlMediaFormat.mpegTs, 'ts-avc-ac3.ts'),
+    (YlMediaFormat.mpegPs, 'ps-avc-mp3.mpg'),
+  ]) {
+    testWidgets(
+      'owned ${format.name} enforces strict policies during playback',
+      (tester) async {
+        final server = await RangeMediaServer.start(
+          asset: 'assets/test_media/format_matrix/$fixture',
+        );
+        addTearDown(server.close);
+        final controller = await appleController(tester);
+        await exercisePolicyPlayback(
+          controller,
+          YlNetworkSource(
+            server.mediaUri,
+            format: format,
+            networkPolicy: strictNetwork,
+          ),
+        );
+        for (final options in [
+          const YlLoadOptions(bufferStrategy: strictBuffer),
+          const YlLoadOptions(
+            decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+          ),
+        ]) {
+          await exercisePolicyPlayback(
+            controller,
+            YlNetworkSource(server.mediaUri, format: format),
+            options: options,
+          );
+        }
+      },
+    );
+  }
   testWidgets(
-    'unsupported strict routes reject before any upstream request or replacement',
+    'unsupported HLS policies and bounded DASH reject before I/O or replacement',
     (tester) async {
       final server = await RangeMediaServer.start(
         asset: 'assets/test_media/h264_aac.mkv',
@@ -154,14 +192,7 @@ void main() {
       );
       await readyAndPlay(controller, old);
       final requests = server.requests.length;
-      for (final format in [
-        YlMediaFormat.hls,
-        YlMediaFormat.mp4,
-        YlMediaFormat.mov,
-        YlMediaFormat.avi,
-        YlMediaFormat.mpegTs,
-        YlMediaFormat.mpegPs,
-      ]) {
+      for (final format in [YlMediaFormat.hls]) {
         for (final (policy, options) in [
           (strictNetwork, const YlLoadOptions()),
           (
@@ -190,6 +221,15 @@ void main() {
           expect(server.requests.length, requests);
         }
       }
+      await expectLater(
+        controller.load(
+          YlNetworkSource(server.mediaUri, format: YlMediaFormat.dash),
+          options: const YlLoadOptions(bufferStrategy: strictBuffer),
+        ),
+        failureCode(YlFailureCodes.policyUnsupported),
+      );
+      expect(controller.state.sessionId, old.id);
+      expect(server.requests.length, requests);
       await old.pause();
       await old.play();
     },
