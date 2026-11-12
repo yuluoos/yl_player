@@ -1,0 +1,20 @@
+{
+  "runId": 43152134891,
+  "headSha": "994136d7e4ff365340e78ddc0f2d68539db19250",
+  "artifactId": 13915410015,
+  "name": "android-api-24-failure",
+  "size": 66776,
+  "sha256": "47bf82839247ed56cc8dc03527fccccb0e5cf005ff2853bb4bba6cac19a861a6",
+  "verified": true,
+  "failureCodes": [
+    "decoder.unavailable"
+  ],
+  "h264Decoder": "OMX.google.h264.decoder",
+  "localUsbDevice": {
+    "model": "CPH2065",
+    "android": "12",
+    "api": 31
+  },
+  "minimumApi24Satisfied": false,
+  "userDisposition": "User confirmed no API 24 device/farm is available; retain as external blocker."
+}

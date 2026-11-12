@@ -71,6 +71,7 @@ final class YlDashProgramBackend: YlPlaybackBackend {
   var isActive: Bool { locked { active && !disposed } }
   var videoSelection: YlNativeVideoSelection { locked { selection } }
   var playbackIntent: Bool { locked { playing } }
+  var playbackDiagnostics: String { locked { pipeline }?.playbackDiagnostics ?? "no accepted Period" }
   var requiresAsyncActivation: Bool { locked { pipeline == nil && initialPeriod == nil && !completed && !stopped && !disposed } }
   var requiresExternalRollbackActivation: Bool { requiresAsyncActivation }
   func needsAsyncActivation(forcePlay: Bool) -> Bool {

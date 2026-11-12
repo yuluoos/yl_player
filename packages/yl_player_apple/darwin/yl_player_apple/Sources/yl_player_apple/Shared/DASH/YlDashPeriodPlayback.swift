@@ -162,6 +162,22 @@ final class YlDashPeriodPlayback {
     return max(decodedVideoEnd, (try? prepared.position.converted(to: 1_000_000, rounding: .floor)) ?? 0)
   }
 
+  /// Scalar diagnostics only: never join the demux queue or read the native
+  /// audio graph when reporting a stalled Period transition.
+  var playbackDiagnostics: String {
+    timingLock.lock()
+    let drained = drainedAudio
+    timingLock.unlock()
+    let statistics = clock.isolatedAudioClockStatistics
+    return "audioInputDrained=\(drained) audioPending=\(audio?.hasPendingPlayback ?? false) "
+      + "audioDurationUs=\(audio?.scheduledDurationUs ?? 0) audioBytes=\(audio?.scheduledBytes ?? 0) "
+      + "videoInputDrained=\(videoInputDrained) pendingVideoPTS=\(scheduler.pendingPTS) "
+      + "clockSamples=\(statistics?.samples ?? 0) clockStale=\(statistics?.staleEvents ?? 0) "
+      + "clockRejected=\(statistics?.rejectedObservations ?? 0) "
+      + "clockLastReadHostUs=\(statistics?.lastReadHostTimeUs ?? -1) "
+      + "clockObservation=\(String(describing: statistics?.lastObservation))"
+  }
+
   private func receive(_ frame: YlVideoFrame) {
     timingLock.lock()
     let value = pendingTimes.removeValue(forKey: frame.ptsUs)
