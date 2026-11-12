@@ -268,6 +268,10 @@
       "sha256": "67480968ff2069c4df94411df92b038e8ab09caa6349d9c6d4acc1dee4a7ea13",
       "size": 584
     },
+    "ci-113-apple-consumer-evidence.zip": {
+      "sha256": "da1dfb1cf0f5ad1a89b2cf629e304698ce1609e27b4d8acf7f4d86744c45f6c4",
+      "size": 1491793
+    },
     "ci-113-artifact-verification.json": {
       "sha256": "679e155dbeba911c417a5c33a0ec7bc5e304c8f91807aa36ef4572bfaed76679",
       "size": 1711
@@ -303,6 +307,14 @@
     "ci-113-macos-audio-frame-matrix.json.gz": {
       "sha256": "4f4a9f65688ff570274eabc3ac221c5fe7818a5514858ce634e176750adc5509",
       "size": 696
+    },
+    "ci-113-macos-audio-system.log.gz": {
+      "sha256": "6e7cdc2ddfa60c8f271e4c2a5f6587d0ff4ee20c0e750e1d6b48917a80c4ac88",
+      "size": 3768
+    },
+    "ci-113-macos-failure-console.json.gz": {
+      "sha256": "9a9765387d3fa8d036bd8f841538c9e13fbe340c50d23115671f6814a48c2be3",
+      "size": 1047
     },
     "ci-113-macos-integration-apple_strict_policy_test.dart.log.gz": {
       "sha256": "0b7af8f7a129741a788461f4487f8cfd9d8bbf57be2337e990a7ed68580b8d61",
@@ -360,6 +372,98 @@
       "sha256": "6b7e3e469866474b0b4205f9923b0d76ca0e52a9eaed1ab8e21d63a5c901a182",
       "size": 52416
     },
+    "ci-114-artifact-verification.json": {
+      "sha256": "84512414be24b7bf1c84bb813d3afd3e6fff4590115e9aa893b9f8edbcd30ba1",
+      "size": 1580
+    },
+    "ci-114-artifacts.json.gz": {
+      "sha256": "4ccf4e528ba1f47f2133598f5ae4cb0c0334c6b69fcc1b18d00ecf9901b5a748",
+      "size": 1086
+    },
+    "ci-114-ios-integration-apple_default_positive_test.dart.log.gz": {
+      "sha256": "d9b1f4011ab7745bc563e9763edd196b1c65e1628551d86e4fdc2fa5eaae30da",
+      "size": 91112
+    },
+    "ci-114-ios-integration-hls_playback_test.dart.log.gz": {
+      "sha256": "5c32fd36a13fe7b4e5917b6d92030884b5bdc7893c5468184d5338c7144ca986",
+      "size": 115801
+    },
+    "ci-114-ios-native.log.gz": {
+      "sha256": "24043c29f1b0ffb4dc6472dd4416a9732d169f0a6718cc1b9c6bccc64c53d9e5",
+      "size": 3456
+    },
+    "ci-114-ios-summary.json.gz": {
+      "sha256": "75ebb47bd22b5e8e8be6505d6c003b64d68ca8d042ae2ac387a509969ebd5be2",
+      "size": 2243
+    },
+    "ci-114-ios-tests.json.gz": {
+      "sha256": "85223c0bf6cb20d799bf35ae25a5c6333be41c424a193fe421c8657a46778121",
+      "size": 50520
+    },
+    "ci-114-ios-verification.json": {
+      "sha256": "ef30fde7dc0bec4f0c97ce74035fda9a45570a28c9cfe8ab6a8e0f190808a35d",
+      "size": 3298
+    },
+    "ci-114-jobs.json.gz": {
+      "sha256": "a1819c2fafb91dbb9c805463b2a057e28079280aa5c18e76d96c06add89c5364",
+      "size": 2881
+    },
+    "ci-114-macos-integration-apple_strict_policy_test.dart.log.gz": {
+      "sha256": "b95fbda897febe8be24def7df41464355582d8b60af8b74f65845ebe080807e4",
+      "size": 1603
+    },
+    "ci-114-macos-integration-avi_policy_test.dart.log.gz": {
+      "sha256": "416b07104032f38b1dfdecbb16237da15f27f5650534ac236b546a9803f95ae7",
+      "size": 1259
+    },
+    "ci-114-macos-integration-flv_intent_test.dart.log.gz": {
+      "sha256": "fb672a0f6e08fe1fb8a7c6aa17b37002b87fda09abb4da06e4d4d5084d1f4d65",
+      "size": 1140
+    },
+    "ci-114-macos-integration-macos_hls_playback_test.dart.log.gz": {
+      "sha256": "ad3c6eac411fbcd7f63f54b66ae47c02b0425539aefd261516c4f4f3a40367b8",
+      "size": 1128
+    },
+    "ci-114-macos-integration-macos_http_flv_playback_test.dart.log.gz": {
+      "sha256": "7de511c278f68920b2f212d7b13ead76732201dd6d4e2b8fb0bb11a7ee59c665",
+      "size": 1131
+    },
+    "ci-114-macos-integration-macos_mkv_playback_test.dart.log.gz": {
+      "sha256": "b26de6e9979cf19b387f7e11a049421a4a8dac78f29c34fc8f21b591f7fa1c7e",
+      "size": 1233
+    },
+    "ci-114-macos-integration-macos_network_mkv_playback_test.dart.log.gz": {
+      "sha256": "4ba28ceeff5f68b170e3a6ba690532f424642cec47b3f2f231f912dcc8f1fa3c",
+      "size": 1176
+    },
+    "ci-114-macos-integration-mpegts_policy_test.dart.log.gz": {
+      "sha256": "026754c19edf13f7df4282a1a9c3e265280a4c3fa63e7bf4a70aca89004219e4",
+      "size": 1228
+    },
+    "ci-114-macos-integration-state_update_cadence_test.dart.log.gz": {
+      "sha256": "7076490ad997b24c4937d1145ec196614eb1300c70270009f3ee4bc4cd637557",
+      "size": 1259
+    },
+    "ci-114-macos-integration-vorbis_policy_test.dart.log.gz": {
+      "sha256": "a7b2557ad0f52d7a5f73994b21ad4cba415969c6fa983ce621179a38d36e3825",
+      "size": 1264
+    },
+    "ci-114-macos-integration-vp9_policy_test.dart.log.gz": {
+      "sha256": "ba6aa019834b9454acc09e60dabe7f53f3ff24bf2c930fcbc53c18867b312d4c",
+      "size": 1181
+    },
+    "ci-114-macos-native.log.gz": {
+      "sha256": "5495304eb8d9595ca50155295d83966c146b120a4de4a1ede4ebb550688e5472",
+      "size": 3095
+    },
+    "ci-114-macos-summary.json.gz": {
+      "sha256": "1cc9371d8cde9ce4ebe97efa87a963158abee47fc804424dfc80d072b78ce22b",
+      "size": 1151
+    },
+    "ci-114-macos-tests.json.gz": {
+      "sha256": "c04ab237f0384e4e7a42aa97eb4caf8670b6c98197f2fdc58ec2dc30aa616d13",
+      "size": 52636
+    },
     "ci-gates-final-tests.log": {
       "sha256": "acc60c7a6252165d8e2e0e61388ebb7bf8c146a28217da9cc396c6242238ee20",
       "size": 111
@@ -367,6 +471,10 @@
     "ci-runtime-gates-tests.log.gz": {
       "sha256": "54e96a32bf48bd75fc94c0aa505bbbad4dfaac06bf0741956b045c61b4d94fff",
       "size": 55
+    },
+    "dash-output-clock-validation.json": {
+      "sha256": "d603ae2ded8d5e7c1db46f932727ead468cd86fb69d32e80f92d2ee0c70a7dec",
+      "size": 573
     },
     "dash-timeline-missing-local-framework.log": {
       "sha256": "fea36af52c22c353ab440db7e29dd0f45bfa54bad3e2a766757ff17c4b3ef6ee",
@@ -476,6 +584,18 @@
       "sha256": "0dfbf0eb494a0e9b1d01936c40f6a6f5e250b607cd779d778550dbb4c172d6b8",
       "size": 3067
     },
+    "local-20261112-dash-clock-fixture-checks.log.gz": {
+      "sha256": "634d7752e78fed5506036f803f4e81d5e9f1c896bd7011feeaa68419a84944fc",
+      "size": 55
+    },
+    "local-20261112-dash-clock-provenance.log.gz": {
+      "sha256": "97b2020e7363f8de77e0ebe54aaf8e9a4b74f39b282c6ef1292e3d74d110d575",
+      "size": 136
+    },
+    "local-20261112-dash-clock-runtime-checks.log.gz": {
+      "sha256": "0c4cd40a1d3dc76e6aa8ac6a89812939fecdbfd42a5eef721f5079a6c1a9029d",
+      "size": 67
+    },
     "local-20261112-dash-diagnostics-repeat-summary.json.gz": {
       "sha256": "0e303f66b60d161be8ee22734bfc74ea8678d41dedde8d99372c0c2adea70e6a",
       "size": 782
@@ -487,6 +607,38 @@
     "local-20261112-dash-diagnostics-repeat.log.gz": {
       "sha256": "35ed414939e5e3d7129c67781c5c44e21591a2c772aa143fc4d7ad4ad5b8def7",
       "size": 4970
+    },
+    "local-20261112-dash-output-clock-green-case-identities.json.gz": {
+      "sha256": "1d1de583c780b24a416c4828bc1fa45ad3bb5ce82079e4c40aa0287235bdfcb8",
+      "size": 1072
+    },
+    "local-20261112-dash-output-clock-green-summary.json.gz": {
+      "sha256": "af4c8f4ec001f83fc3e0b75b0c06b6eb418e2f3f01264249a9b523ef49613c8a",
+      "size": 790
+    },
+    "local-20261112-dash-output-clock-green-tests.json.gz": {
+      "sha256": "8ea582e3e0f40c5c29e5bf0a536199eda23483a25a1ae6ac4c9e220b6d08c6c1",
+      "size": 2408
+    },
+    "local-20261112-dash-output-clock-green.log.gz": {
+      "sha256": "847e19b5dea66e421e8b5fa9d84abfc6d35abb01f14f14277324bff6005ee50e",
+      "size": 4912
+    },
+    "local-20261112-dash-output-clock-red-activities.json.gz": {
+      "sha256": "c2d316f7aefdc0acfc135093ecf2384d5454dbb67ca363c80b3b1a3c64b0f75d",
+      "size": 656
+    },
+    "local-20261112-dash-output-clock-red-configured.log.gz": {
+      "sha256": "ad97eac1cd4a7914fecf89ac0f2415e2324fa7095c721d764b4b0385a4f75c0f",
+      "size": 4037
+    },
+    "local-20261112-dash-output-clock-red-summary.json.gz": {
+      "sha256": "baa7683849f98cf6cb9879b1729e1a8f0467fdc2fa9f4d169e3ae524c8078dd6",
+      "size": 596
+    },
+    "local-20261112-dash-output-clock-red.log.gz": {
+      "sha256": "50fc65908777794986ec2ae418850cdf21e6ef9692d58b68ba009ee0f3eda8a6",
+      "size": 395
     },
     "local-20261112-final-apple_strict_policy.log.gz": {
       "sha256": "fdac50fa13008978e4aaad19157fe6dc054c40098cab6099a7604edd58634787",
@@ -519,6 +671,22 @@
     "local-20261112-http404-preserve-hls.log.gz": {
       "sha256": "f358fdc6d542b591b94d5f9dd8ded8511ced5414ed7a39498272a07020411520",
       "size": 1143
+    },
+    "local-20261112-iphone-dash-clock-case-identities.json.gz": {
+      "sha256": "033e632ed28d4ff2f61790aabc0f81d9520bd6ff0f2afc7aac3d3de423256401",
+      "size": 1068
+    },
+    "local-20261112-iphone-dash-clock-summary.json.gz": {
+      "sha256": "9c7ac9b1e5e334d6edce722d1328fd99e3a8a7e088eb542a2c791c0b236b0356",
+      "size": 783
+    },
+    "local-20261112-iphone-dash-clock-tests.json.gz": {
+      "sha256": "9561c7f402ada848af30c148a425546f650e4d4567ba132adbce0c79209f1cc1",
+      "size": 2396
+    },
+    "local-20261112-iphone-dash-clock.log.gz": {
+      "sha256": "e6c534d7d32f00801d2dc93f18dc01973afd59946c082810426f4edb7bd4bf50",
+      "size": 8254
     },
     "local-20261112-iphone-focused-signed-summary.json.gz": {
       "sha256": "d139b31f564964602c996421132202eaa86aa17ca40ff77eb78a08d7d330829d",
@@ -575,6 +743,10 @@
     "local-20261112-native-repeat-configured.log.gz": {
       "sha256": "f57954f84085461d484fb8abacde2f4671f23ac55cb60e6c7c6fda0db2d425e4",
       "size": 4067
+    },
+    "local-20261112-readiness-3fa26bb3.json.gz": {
+      "sha256": "7f98cadb32a2f674676133998a9ad5c2e95241e34f2cbf00650ca58bad3dbc04",
+      "size": 3444
     },
     "local-20261112-timed-isolated-observations.json.gz": {
       "sha256": "7436a23f2150e78c206123ab6038f36e2cf60712d53ead85de936c818b0bbb3f",

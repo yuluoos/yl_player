@@ -1,0 +1,24 @@
+{
+  "baseCommit": "3fa26bb315d897d61f0b9eb833d25082d7dd1ee2",
+  "sourceHash": "c00aea68be3adb4cf6daf8da9061865c303d53d3c194bda441c9090e9a009322",
+  "regressionBeforeFix": {
+    "total": 1,
+    "passed": 0,
+    "failed": 1
+  },
+  "macos": {
+    "total": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "canonicalIdentitySetMatches": true
+  },
+  "iphone": {
+    "total": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "canonicalIdentitySetMatches": true
+  },
+  "scope": "complete YlDashSampleSourceNativeTests class; not the full platform suite"
+}

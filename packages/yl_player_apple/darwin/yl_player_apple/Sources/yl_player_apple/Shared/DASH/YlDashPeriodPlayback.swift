@@ -44,11 +44,24 @@ final class YlDashPeriodPlayback {
       let stream = first.source.stream
       let codec = YlAudioCodec(bridgeCodec: stream.codec)
       guard codec != .unsupported else { throw Self.invalid("unsupported audio codec") }
+      // The isolated clock requires output-node host time. Input rendering can
+      // run ahead of output and violate the clock's freshness window, including
+      // at a short final PCM buffer. This also aligns native clock domains and
+      // revokes cached observations before controls or graph invalidation.
+      renderer.onClockControlBegin = { [weak clock] in clock?.invalidateIsolatedAudioClock() }
       try renderer.configure(stream: .init(codec: codec, sampleRate: Double(stream.sample_rate),
         channelCount: Int(stream.channel_count), magicCookie: first.source.codecConfiguration,
         generation: generation, channelMask: stream.channel_layout_mask))
-      renderer.onOutputFailure = onError
       audio = renderer; audioConverter = converter
+      renderer.onOutputFailure = { [weak self] error in
+        // Native graph notifications must not synchronously reenter pause or
+        // disposal while an audio control operation owns the native graph.
+        DispatchQueue.main.async { [weak self] in
+          guard let self else { return }
+          self.timingLock.lock(); let active = !self.disposed; self.timingLock.unlock()
+          if active { self.onError(error) }
+        }
+      }
       clock.enableIsolatedAudioClock(read: { [weak self, weak renderer] generation in
         guard let self, let renderer else { return .invalid }
         let observation = renderer.clockObservation(expectedGeneration: generation)

@@ -253,7 +253,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashHlsCompiler.swift": "a09b9eb0a1889da8b408c3410babb53b127abbd6b3b5d44dd7c9833cc6242916",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashManagedResourceHop.swift": "bba91a3fd55cf600961e869213efe1649e59322a001523b5802972fdcf44f390",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPCMClipper.swift": "cf64ee6b002d09726017b217053c467602c2b627c584a800e04496f56281a952",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "00383809150a79e942e71a21b34fc62f9532773c31e06c207420287d678a5841",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "d5a6ac03bbc0130fbfc609dd8a2040858d78d894a8f2a4d19d8d1e35f481e65d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPreparedPeriod.swift": "aee85146f67f2fd7a876e30da727f32c3f7a256da5d8fa84198deab9157f422d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramDocument.swift": "628a151441c278d6aa6d9fab18c646931408288504b0e5ec15e7a6929012e4c2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramLoader.swift": "7e89791487ebd9c280d2771789c57d921526cc070880868818f6f5dbd8571b96",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "3e6e4088daf800b6980f2f08c326da474129108b139c9d1c0ac20ddedbf3ba37"
+    "sha256": "c00aea68be3adb4cf6daf8da9061865c303d53d3c194bda441c9090e9a009322"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "2c7f8db4d03fa3afe37148805b515896dd598210f2cb6df0c6acac592f22bf32",
+      "sha256": "80a87bd92578a9e7c8f9ef76da3b114357a5370ca3181fba7200d816bd7f7422",
       "kind": "report"
     }
   },

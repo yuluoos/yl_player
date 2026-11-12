@@ -5740,6 +5740,38 @@ private final class DashPassiveVTSession: YlVTSession {
   func invalidate() {}
 }
 
+/// Model a render-ahead input node while the actual output timestamp stays
+/// current. No native audio device or video decoder is needed for this gate.
+private final class DashRenderAheadAudioOutput: YlAudioOutputDriving {
+  private let lock = NSLock()
+  private var playing = false
+  private var callbacks: [() -> Void] = []
+  private var inputReads = 0, outputReads = 0
+  var volume: Float = 1
+  var rate: Float = 1
+  var aligned = false
+  var clockInvalidation: (() -> Void)?
+  var reads: (input: Int, output: Int) { lock.withLock { (inputReads, outputReads) } }
+  func setClockInvalidationHandler(_ handler: (() -> Void)?) { clockInvalidation = handler }
+  var renderedAudioTime: YlRenderedAudioTime? { read(input: true) }
+  var presentationAudioTime: YlRenderedAudioTime? { read(input: false) }
+  private func read(input: Bool) -> YlRenderedAudioTime {
+    lock.withLock {
+      if input { inputReads += 1 } else { outputReads += 1 }
+      return .init(sampleTime: playing ? 960 : 0, sampleRate: 48_000,
+        hostTimeUs: YlDashPeriodPlayback.now + (input ? 250_000 : 0))
+    }
+  }
+  func configure(sampleRate: Double, channelCount: Int) throws {}
+  func configure(format: AVAudioFormat, aligningClockDomains: Bool) throws { aligned = aligningClockDomains }
+  func configure(sampleRate: Double, channelCount: Int, aligningClockDomains: Bool) throws { aligned = aligningClockDomains }
+  func schedule(_ buffer: YlScheduledAudioBuffer, completion: @escaping () -> Void) { lock.withLock { callbacks.append(completion) } }
+  func play() throws { lock.withLock { playing = true } }
+  func pause() { lock.withLock { playing = false } }
+  func reset() { lock.withLock { callbacks.removeAll() } }
+  func dispose() { reset() }
+}
+
 private final class DashCatalogClockPlayer: AVPlayer {
   var measuredTime = CMTime.zero
   var resetClockOnReplacement = false
@@ -6963,5 +6995,56 @@ private final class AbrProxyBoundaryFile: @unchecked Sendable {
       do { try file?.close() } catch { writeFailed = true }
       file = nil
     }
+  }
+}
+
+
+extension YlDashSampleSourceNativeTests {
+  @MainActor func testPeriodUsesOutputClockAndRevokesItOnGraphInvalidation() async throws {
+    let encoded = try JSONDecoder().decode([String: String].self, from: Data(contentsOf:
+      XCTUnwrap(Bundle(for: Self.self).url(forResource: "p01-program-fixtures", withExtension: "json"))))
+    let files = encoded.compactMapValues { Data(base64Encoded: $0) }
+    let server = try DashHTTPServer(); defer { server.close() }
+    server.handler = { request in
+      guard let data = files[String(request.path.dropFirst())] else { return (404, [:], Data()) }
+      return (200, [:], data)
+    }
+    let url = server.url("/audio-removed.mpd"), token = YlOpenCancellationToken()
+    let scope = try YlManagedBufferLedger(maxBytes: 64 * 1024 * 1024).makeScope(maxBytes: nil)
+    let resources = YlDashProgramResources(source: url, headers: [:], credentials: [:],
+      configuration: .init(map: [:]), scope: scope)
+    let program = try YlDashProgramLoader.load(url: url, resources: resources, cancellation: token)
+    let prepared = try YlPreparedDashProgram(program: program, resources: resources, scope: scope, cancellation: token)
+    defer { prepared.discard() }
+    let output = DashRenderAheadAudioOutput()
+    var errors: [String] = []
+    let pipeline = try YlDashPeriodPlayback(prepared: XCTUnwrap(prepared.takeInitial()), generation: 1,
+      scope: scope, policy: .hardwareRequired, videoFactory: DashPassiveVTFactory(), audioOutput: output,
+      onError: { errors.append($0.code) })
+    defer { pipeline.dispose() }
+    try pipeline.pump(cancellation: token)
+    try pipeline.play()
+    for _ in 0..<50 where pipeline.clock.position(atHostTimeUs: YlDashPeriodPlayback.now) == 0 {
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    XCTAssertTrue(output.aligned)
+    XCTAssertGreaterThan(pipeline.clock.position(atHostTimeUs: YlDashPeriodPlayback.now), 0,
+      "A future input-node timestamp must not freeze a valid output clock")
+    XCTAssertEqual(output.reads.input, 0)
+    XCTAssertGreaterThan(output.reads.output, 0)
+    pipeline.pause()
+    XCTAssertFalse(pipeline.clock.presentationSnapshot(atHostTimeUs: YlDashPeriodPlayback.now).playing)
+    pipeline.setRate(2); try pipeline.play()
+    for _ in 0..<50 where !pipeline.clock.presentationSnapshot(atHostTimeUs: YlDashPeriodPlayback.now).playing {
+      try await Task.sleep(nanoseconds: 10_000_000)
+    }
+    let resumed = pipeline.clock.presentationSnapshot(atHostTimeUs: YlDashPeriodPlayback.now)
+    XCTAssertTrue(resumed.playing); XCTAssertEqual(resumed.rate, 2)
+    XCTAssertNotNil(output.clockInvalidation)
+    output.clockInvalidation?()
+    let invalidated = pipeline.clock.presentationSnapshot(atHostTimeUs: YlDashPeriodPlayback.now)
+    XCTAssertFalse(invalidated.playing); XCTAssertTrue(invalidated.waitingForClock)
+    for _ in 0..<50 where errors.isEmpty { try await Task.sleep(nanoseconds: 10_000_000) }
+    XCTAssertEqual(errors, ["render.audio_engine_failed"])
   }
 }

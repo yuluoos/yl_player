@@ -1,0 +1,49 @@
+{
+  "runId": 43157682059,
+  "sourceCommit": "3fa26bb315d897d61f0b9eb833d25082d7dd1ee2",
+  "allDownloadsMatchGitHubDigest": true,
+  "artifacts": [
+    {
+      "name": "macos-exact-runtime-evidence",
+      "id": 13918191176,
+      "size_in_bytes": 15342,
+      "digest": "sha256:0051b94067e1a646e28adc08c95575ff6080b36ff47168117a541413b5d3edec"
+    },
+    {
+      "name": "ios-exact-runtime-evidence",
+      "id": 13917179304,
+      "size_in_bytes": 212153,
+      "digest": "sha256:d2d2e12fd87fa0cffc368840593bb2935fdd59e5e0a2e099d799124699eb0e73"
+    },
+    {
+      "name": "apple-consumer-evidence",
+      "id": 13917024641,
+      "size_in_bytes": 1494692,
+      "digest": "sha256:11c86157e80b8a0f354ae89a337b1a36d083b55cbf248d51cda2314d4063661c"
+    },
+    {
+      "name": "apple-unit-ios-runtime-evidence",
+      "id": 13917017453,
+      "size_in_bytes": 91226768,
+      "digest": "sha256:4ce8645371d305de9700a6fc97e7ee3fff93cb5d1ae965eccfcf52d4956c912d"
+    },
+    {
+      "name": "apple-unit-macos-runtime-evidence",
+      "id": 13917003903,
+      "size_in_bytes": 119386502,
+      "digest": "sha256:0d8e7d4c5b60f23f26d69b139e4d8171eacee1f00c87bde2ee57cb3b07e3948d"
+    },
+    {
+      "name": "android-consumer-evidence",
+      "id": 13916881139,
+      "size_in_bytes": 9687,
+      "digest": "sha256:7769eb828a158d2ef97d72db5e83d6a9bb6c5b6bdc25a2480daedf5bd6853040"
+    },
+    {
+      "name": "android-api-24-failure",
+      "id": 13916737944,
+      "size_in_bytes": 65305,
+      "digest": "sha256:34860ed0dbe845d76d2888f632bf75b44e3363b3e74595605da8e0129afcf94a"
+    }
+  ]
+}
