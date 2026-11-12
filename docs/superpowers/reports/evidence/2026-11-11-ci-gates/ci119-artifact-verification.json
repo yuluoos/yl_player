@@ -1,0 +1,36 @@
+{
+  "runId": 43198641605,
+  "headSha": "cd4138e5aaf5b29f8a14fdb085c6a302fb9ed2fd",
+  "artifacts": [
+    {
+      "id": 13937620183,
+      "name": "macos-exact-runtime-evidence",
+      "digest": "sha256:682bc6f3cb9070b2474e8917ee041453280dcb8ccb8e80b2333826041e547aa7",
+      "size": 15338
+    },
+    {
+      "id": 13937175105,
+      "name": "ios-exact-runtime-evidence",
+      "digest": "sha256:c4a789c1080922012a96de88a91dfa1ab4dc72e429896654e3a6ba95dceec35b",
+      "size": 7035
+    },
+    {
+      "id": 13935435662,
+      "name": "android-api-24-failure",
+      "digest": "sha256:6b7e1f7251dc50b0d78c87655b13fdfe08930b13946a03dd17747526db27bdfb",
+      "size": 66133
+    },
+    {
+      "id": 13935378210,
+      "name": "apple-unit-macos-runtime-evidence",
+      "digest": "sha256:512fd3110a3322c61e0e00800052a2455ce74e4df333bd895250b8d436c821ad",
+      "size": 119160023
+    },
+    {
+      "id": 13934212830,
+      "name": "android-consumer-evidence",
+      "digest": "sha256:c161b23453337146100abbd405029912ca2c77131c97efda6c77a993b98c3e15",
+      "size": 9696
+    }
+  ]
+}

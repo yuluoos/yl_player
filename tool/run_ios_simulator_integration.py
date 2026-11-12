@@ -35,6 +35,15 @@ def validate_results(path):
     print(json.dumps({'passed': len(cases), 'cases': sorted(cases)}), flush=True)
 
 
+def terminate_after_test(run, simulator, bundle):
+    # Cleanup must not replace the driver's exit code (or its original error).
+    try:
+        run(['xcrun', 'simctl', 'terminate', simulator, bundle],
+            timeout=15, capture=True, check=False)
+    except (subprocess.TimeoutExpired, OSError) as error:
+        print(f'Test application cleanup did not finish: {error}', flush=True)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--simulator', required=True)
@@ -74,9 +83,8 @@ def main():
         driver.write_text("import 'package:integration_test/integration_test_driver.dart';\n"
                           "Future<void> main() => integrationDriver(writeResponseOnFailure: true);\n")
         run(['flutter', 'build', 'ios', '--no-pub', '--simulator', '--debug', '--target', str(entry)], timeout=600)
-        run(['xcrun', 'simctl', 'terminate', args.simulator, bundle], capture=True, check=False)
         run(['xcrun', 'simctl', 'install', args.simulator, 'build/ios/iphonesimulator/Runner.app'])
-        launched = run(['xcrun', 'simctl', 'launch', args.simulator, bundle,
+        launched = run(['xcrun', 'simctl', 'launch', '--terminate-running-process', args.simulator, bundle,
                         '--enable-dart-profiling', '--disable-vm-service-publication',
                         '--enable-checked-mode', '--verify-entry-points'], capture=True)
         (evidence / 'launch.log').write_text(launched.stdout + launched.stderr)
@@ -109,7 +117,7 @@ def main():
                 raise SystemExit(driven.returncode)
             validate_results(receipt)
         finally:
-            run(['xcrun', 'simctl', 'terminate', args.simulator, bundle], capture=True, check=False)
+            terminate_after_test(run, args.simulator, bundle)
 
 
 if __name__ == '__main__':

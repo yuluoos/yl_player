@@ -1,0 +1,30 @@
+{
+  "ios": {
+    "executed": false,
+    "conclusion": "cancelled",
+    "failed": null,
+    "reason": "Hosted runner not acquired; see check annotations"
+  },
+  "macos": {
+    "identitiesMatch": true,
+    "count": 957,
+    "passed": 955,
+    "failed": [
+      "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()",
+      "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()"
+    ],
+    "skipped": [],
+    "focusedResults": {
+      "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()": "Failed",
+      "YlMacosAudioTests/testActualHostRejectedAudioReloadStaysSafeAndLaterReloadRecovers()": "Passed",
+      "YlMacosAudioTests/testTraceGateRequiresNotificationAndWritesSettledReceipt()": "Passed",
+      "YlMacosOpenCoordinatorTests/testExclusiveReplacementJoinsInactiveOwnerWithoutReactivatingIt()": "Passed"
+    }
+  },
+  "head": "cd4138e5aaf5b29f8a14fdb085c6a302fb9ed2fd",
+  "runId": 43198641605,
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "iosFailureIdentitiesUnchangedFromCI118": null,
+  "allRemoteIOSFailuresPassedOnPhysicalDevice": null,
+  "runPassed": false
+}

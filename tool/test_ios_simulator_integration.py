@@ -1,8 +1,10 @@
 import json
 from pathlib import Path
 import tempfile
+import subprocess
 import unittest
-from run_ios_simulator_integration import service_uri, validate_results
+from unittest.mock import Mock
+from run_ios_simulator_integration import service_uri, validate_results, terminate_after_test
 
 
 class SimulatorBootstrapTests(unittest.TestCase):
@@ -26,6 +28,17 @@ class SimulatorBootstrapTests(unittest.TestCase):
                     validate_results(path)
             path.write_text(json.dumps({'ciCases': {'actual case': 'success'}}))
             validate_results(path)
+
+    def test_cleanup_timeout_preserves_original_driver_failure(self):
+        run = Mock(side_effect=subprocess.TimeoutExpired('simctl terminate', 15))
+        with self.assertRaises(SystemExit) as failure:
+            try:
+                raise SystemExit(7)
+            finally:
+                terminate_after_test(run, 'simulator', 'test.bundle')
+        self.assertEqual(failure.exception.code, 7)
+        run.assert_called_once_with(['xcrun', 'simctl', 'terminate', 'simulator', 'test.bundle'],
+                                    timeout=15, capture=True, check=False)
 
 
 if __name__ == '__main__':
