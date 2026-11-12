@@ -1,0 +1,42 @@
+{
+  "baseCommit": "3334ffc6",
+  "sourceHash": "2fdee4142a22c94ac73f0690bbc194c3fe732ac9d43659590bc680cdee0eb179",
+  "testFixture": {
+    "path": "tool/consumer_fixtures/apple_flutter/RunnerTests/YlAppleSessionTests.swift",
+    "sha256": "ffdddd910a94ce24ab2799b9391af1362b11b2d3d79dc5f09fa5f1e728ba1ce5"
+  },
+  "coverage": "complete canonical iOS native suite on iPhone 16 iOS 27.2",
+  "outcome": "passed",
+  "counts": {
+    "total": 904,
+    "passed": 904,
+    "failed": 0,
+    "skipped": 0
+  },
+  "artifacts": [
+    {
+      "path": "docs/superpowers/reports/evidence/2026-11-11-ci-gates/iphone-recording-isolation-full.log.gz",
+      "sha256": "5049c4d5c4cf0b41f37ab17f055a2bf6f9ba35c70dcfb641e7cd8793c8690c08"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-11-11-ci-gates/iphone-recording-isolation-full-validation.log.gz",
+      "sha256": "6adb36ebf1e7d5498cdb799e786d23cb479df7a5a8f5e5f3d99d6355abe5046f"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-11-11-ci-gates/iphone-recording-isolation-full-case-identities.json.gz",
+      "sha256": "ae908ce99612ac2c9133d70180731145e2cdaae733ac1e72707362d683387a40"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-11-11-ci-gates/iphone-recording-isolation-full-summary.json.gz",
+      "sha256": "9191b826a519f91a75fa8102f0562ce4b5b96ff9c37eecb68bb7b4dfba0d7df1"
+    },
+    {
+      "path": "docs/superpowers/reports/evidence/2026-11-11-ci-gates/iphone-recording-isolation-full-tests.json.gz",
+      "sha256": "6c1f338c438831781d2d01ddfb2794cd6ae9e50015696fc7357e304f322af313"
+    }
+  ],
+  "limitations": [
+    "Does not replace the earlier 902/904 failed run.",
+    "Does not qualify iOS Simulator hardware decoding or older physical iOS versions."
+  ]
+}

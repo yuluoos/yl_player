@@ -462,6 +462,10 @@ final class AppleTestDisplay: YlDisplayDriving {
   var isPaused = true
   func invalidate() {}
 }
+// Async protocol calls otherwise run on the generic executor while host
+// assertions read these arrays on MainActor. Keep recording and inspection
+// on the same executor, including the acknowledgement suspension points.
+@MainActor
 final class AppleRecordingCallbacks: ApplePlayerFlutterApiProtocol {
   var traffic = [(String, Int64?)]()
   var states = [AppleStateMessage]()
