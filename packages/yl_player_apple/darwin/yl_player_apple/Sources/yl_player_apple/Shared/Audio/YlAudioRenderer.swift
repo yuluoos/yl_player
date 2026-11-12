@@ -477,6 +477,10 @@ final class YlAudioRenderer: YlAudioRendering {
     onClockControlBegin == nil ? output.renderedAudioTime : output.presentationAudioTime
   }
 
+  var playbackClockDiagnostics: String {
+    (output as? YlSystemAudioOutput)?.clockDiagnostics ?? "nativeOutputClock=unavailable"
+  }
+
   private var submissionNodeTime: Double? {
     let now = ProcessInfo.processInfo.systemUptime * 1_000_000
     if onClockControlBegin != nil, let node = lock.withLock({ () -> Double? in
@@ -1593,6 +1597,18 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   private var configured = false
   private var disposed = false
   private var outputClockAligned = false
+  // Captured by the existing clock read, never by the failure-reporting path.
+  private var lastPresentationClock: (readHostUs: Int64, outputHostUs: Int64?,
+    outputSample: Int64, outputRate: Double, playerHostUs: Int64?,
+    playerSample: Int64, playerRate: Double)?
+
+  var clockDiagnostics: String {
+    let value = invalidationLock.withLock { lastPresentationClock }
+    guard let value else { return "nativeOutputClock=unobserved" }
+    return "nativeReadHostUs=\(value.readHostUs) outputHostUs=\(value.outputHostUs ?? -1) "
+      + "outputSample=\(value.outputSample) outputRate=\(value.outputRate) "
+      + "playerHostUs=\(value.playerHostUs ?? -1) playerSample=\(value.playerSample) playerRate=\(value.playerRate)"
+  }
 
   init(engine: AVAudioEngine = AVAudioEngine()) {
     self.engine = engine
@@ -1649,8 +1665,14 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
           let playerTime = player.playerTime(forNodeTime: AVAudioTime(hostTime: outputTime.hostTime)),
           playerTime.isHostTimeValid, playerTime.isSampleTimeValid,
           playerTime.sampleRate.isFinite, playerTime.sampleRate > 0 else { return nil }
+    let hostUs = Self.hostMicroseconds(playerTime.hostTime)
+    let captured = (readHostUs: Int64(ProcessInfo.processInfo.systemUptime * 1_000_000),
+      outputHostUs: Self.hostMicroseconds(outputTime.hostTime),
+      outputSample: outputTime.sampleTime, outputRate: outputTime.sampleRate,
+      playerHostUs: hostUs, playerSample: playerTime.sampleTime, playerRate: playerTime.sampleRate)
+    invalidationLock.withLock { lastPresentationClock = captured }
     return .init(sampleTime: playerTime.sampleTime, sampleRate: playerTime.sampleRate,
-      hostTimeUs: Self.hostMicroseconds(playerTime.hostTime))
+      hostTimeUs: hostUs)
   }
 
   private static func hostMicroseconds(_ value: UInt64) -> Int64? {

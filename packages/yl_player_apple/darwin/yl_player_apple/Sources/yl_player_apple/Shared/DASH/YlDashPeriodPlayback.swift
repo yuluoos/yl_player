@@ -188,7 +188,8 @@ final class YlDashPeriodPlayback {
       + "clockSamples=\(statistics?.samples ?? 0) clockStale=\(statistics?.staleEvents ?? 0) "
       + "clockRejected=\(statistics?.rejectedObservations ?? 0) "
       + "clockLastReadHostUs=\(statistics?.lastReadHostTimeUs ?? -1) "
-      + "clockObservation=\(String(describing: statistics?.lastObservation))"
+      + "clockObservation=\(String(describing: statistics?.lastObservation)) "
+      + (audio?.playbackClockDiagnostics ?? "nativeOutputClock=unavailable")
   }
 
   private func receive(_ frame: YlVideoFrame) {

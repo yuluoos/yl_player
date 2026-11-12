@@ -232,7 +232,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioCompletionPolicy.swift": "87789208448534120fefdd5882dfb9d5722d38df6e8dbffd42768e7b0cb709ac",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioOwnershipCoordinator.swift": "43ea3c7612111d4038c07827bcea0ee4fd8ac4b6bbcc429d85ec1977de6d0a6c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioPipeline.swift": "e405250c54c1dd9b55d743db6df877811eff7364f2163737a850ae0ca5286259",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "275cb367142ba423f56aabe82772a571a8b19a0e88476444d37ca170c07f70c6",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioRenderer.swift": "7559ba99191a44dbd9236a333d587e63bea437b10a1c38ffa86dea0ffaec2d7b",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioSessionDriving.swift": "627cc82c1d28587b41605d2b6b5dd1fd1aaea3a8c35804035534ee1786188deb",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlAudioTerminalState.swift": "db205b02848ed0f86b15ade78b6cafb70918d85c7690cdea73b18dfb5f97d5a0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlDtsAudioConverter.swift": "4def46c3d3bd89deb797e7d847b0f37f5e3f0c2f78bf2f3b41cd3e5e7bc891ff",
@@ -253,7 +253,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashHlsCompiler.swift": "a09b9eb0a1889da8b408c3410babb53b127abbd6b3b5d44dd7c9833cc6242916",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashManagedResourceHop.swift": "bba91a3fd55cf600961e869213efe1649e59322a001523b5802972fdcf44f390",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPCMClipper.swift": "cf64ee6b002d09726017b217053c467602c2b627c584a800e04496f56281a952",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "d5a6ac03bbc0130fbfc609dd8a2040858d78d894a8f2a4d19d8d1e35f481e65d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "ffac4723301cffa85a8330a8c7344be678df0c18ab8342908303b1e46afae2eb",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPreparedPeriod.swift": "aee85146f67f2fd7a876e30da727f32c3f7a256da5d8fa84198deab9157f422d",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramDocument.swift": "628a151441c278d6aa6d9fab18c646931408288504b0e5ec15e7a6929012e4c2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramLoader.swift": "7e89791487ebd9c280d2771789c57d921526cc070880868818f6f5dbd8571b96",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "c00aea68be3adb4cf6daf8da9061865c303d53d3c194bda441c9090e9a009322"
+    "sha256": "2fdee4142a22c94ac73f0690bbc194c3fe732ac9d43659590bc680cdee0eb179"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "80a87bd92578a9e7c8f9ef76da3b114357a5370ca3181fba7200d816bd7f7422",
+      "sha256": "203648124d69156a8294a5e95b05ee4a19576ad9a75b58c4c786d7f01eb67bcc",
       "kind": "report"
     }
   },

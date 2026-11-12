@@ -46,7 +46,10 @@ final class YlDashHlsCompilerTests: XCTestCase {
       backend.deactivate()
       try backend.activate()
     }
-    try await AppleHostCharacterizations.waitFor { !failures.isEmpty || states.last?.status == "ready" }
+    // The accepted item's ready state can remain published while restoration
+    // loads its new item's media groups. Only this restoration's rejection
+    // satisfies the expectation; silently choosing a default must time out.
+    try await AppleHostCharacterizations.waitFor { !failures.isEmpty }
     XCTAssertEqual(failures.map(\.code), ["track.not_found"], "A missing selected identity must not silently choose the platform default")
     // A new load has no retained choice and still accepts a video-only asset.
     failures.removeAll()
