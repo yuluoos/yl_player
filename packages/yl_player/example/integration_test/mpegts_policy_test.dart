@@ -5,10 +5,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 import 'support/apple_strict_support.dart';
+import 'support/range_media_server.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
-  testWidgets('TS live and strict policies reject before network access', (
+  testWidgets('TS explicit live intent rejects before network access', (
     tester,
   ) async {
     var requests = 0;
@@ -22,36 +23,65 @@ void main() {
     try {
       final uri = Uri.parse('http://127.0.0.1:${server.port}/clip.ts');
       await expectLater(
-        player.load(YlNetworkSource(uri, intent: YlStreamIntent.live)),
-        failureCode('container.mpegts_live_unsupported'),
-      );
-      await expectLater(
-        player.load(YlNetworkSource(uri, networkPolicy: strictNetwork)),
-        failureCode('policy.unsupported'),
-      );
-      await expectLater(
         player.load(
-          YlNetworkSource(uri),
-          options: const YlLoadOptions(bufferStrategy: strictBuffer),
-        ),
-        failureCode('policy.unsupported'),
-      );
-      await expectLater(
-        player.load(
-          YlNetworkSource(uri),
-          options: const YlLoadOptions(
-            decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+          YlNetworkSource(
+            uri,
+            format: YlMediaFormat.mpegTs,
+            intent: YlStreamIntent.live,
           ),
         ),
-        failureCode('policy.unsupported'),
+        failureCode('container.mpegts_live_unsupported'),
       );
       expect(requests, 0);
+      await expectLater(
+        player.load(YlNetworkSource(uri)),
+        failureCode('network.http_status.500'),
+      );
+      expect(requests, greaterThan(0));
     } finally {
       await player.dispose();
       await tester.pumpWidget(const SizedBox.shrink());
       await server.close(force: true);
     }
   });
+
+  testWidgets(
+    'TS strict policies preserve playback, seeking and hardware evidence',
+    (tester) async {
+      final server = await RangeMediaServer.start(
+        asset: 'assets/test_media/format_matrix/ts-avc-ac3.ts',
+      );
+      final player = await appleController(tester);
+      try {
+        await exercisePolicyPlayback(
+          player,
+          YlNetworkSource(server.mediaUri, networkPolicy: strictNetwork),
+        );
+        for (final options in [
+          const YlLoadOptions(bufferStrategy: strictBuffer),
+          const YlLoadOptions(
+            decoderPolicyOverride: YlDecoderPolicy.hardwareRequired,
+          ),
+        ]) {
+          await exercisePolicyPlayback(
+            player,
+            YlNetworkSource(server.mediaUri),
+            options: options,
+          );
+        }
+        await expectLater(
+          player.load(
+            YlNetworkSource(server.mediaUri, intent: YlStreamIntent.live),
+          ),
+          failureCode('container.mpegts_live_unsupported'),
+        );
+      } finally {
+        await player.dispose();
+        await server.close();
+        await tester.pumpWidget(const SizedBox.shrink());
+      }
+    },
+  );
 
   testWidgets(
     'Malformed TS reports a safe container error and preserves current playback',
@@ -70,14 +100,27 @@ void main() {
       try {
         final session = await player.load(YlFileSource(file.path));
         await readyAndPlay(player, session);
-        try {
-          await player.load(YlFileSource(broken.path));
-          fail('Malformed TS committed');
-        } on YlPlayerException catch (error) {
-          expect(error.failure.code, 'container.mpegts_open_failed');
-          expect(error.failure.scope, YlFailureScope.command);
-          expect(error.failure.message, contains('MPEG-TS'));
-          expect(error.failure.message, isNot(contains('private-token')));
+        // An unidentifiable prefix fails inspection; an explicit format reaches
+        // that container's demuxer. Both failures must preserve the accepted session.
+        for (final format in [YlMediaFormat.automatic, YlMediaFormat.mpegTs]) {
+          try {
+            await player.load(YlFileSource(broken.path, format: format));
+            fail('Malformed TS committed');
+          } on YlPlayerException catch (error) {
+            expect(
+              error.failure.code,
+              format == YlMediaFormat.automatic
+                  ? 'container.unsupported'
+                  : 'container.mpegts_open_failed',
+            );
+            expect(error.failure.scope, YlFailureScope.command);
+            if (format != YlMediaFormat.automatic) {
+              expect(error.failure.message, contains('MPEG-TS'));
+            }
+            expect(error.failure.message, isNot(contains('private-token')));
+          }
+          expect(player.state.sessionId, session.id);
+          expect(player.state.failure, isNull);
         }
         expect(player.state.sessionId, session.id);
         expect(player.state.failure, isNull);

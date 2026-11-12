@@ -6405,7 +6405,8 @@ extension YlDashSampleSourceNativeTests {
       if !harness.errors.isEmpty { break }
       try await Task.sleep(nanoseconds: 10_000_000)
     }
-    XCTAssertEqual(harness.errors.last?.code, "track.not_found")
+    XCTAssertEqual(harness.errors.last?.code, "track.not_found",
+      "state=\(harness.states.last?.status ?? "none") positionMs=\(harness.states.last?.positionMs ?? -1) videoFrames=\(harness.video.count) audioSamples=\(harness.audio.count) lastAudioUs=\(harness.audio.last?.positionUs ?? -1)")
     XCTAssertEqual(harness.states.last?.audioTracks.first(where: \.isSelected)?.id, audio)
   }
 }

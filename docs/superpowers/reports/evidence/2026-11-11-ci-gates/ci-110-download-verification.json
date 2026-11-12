@@ -1,0 +1,34 @@
+{
+  "runId": 43006950431,
+  "commit": "8f49faab7e2353517dbe0b878ff37670f31290eb",
+  "artifacts": [
+    {
+      "artifactId": 13850506773,
+      "name": "macos-exact-runtime-evidence",
+      "size": 9267,
+      "sha256": "b4611a2cc2a2ef64cd5f7ccac39794d6907e56b937fcdaf359db598d23eb5c22",
+      "verified": true
+    },
+    {
+      "artifactId": 13850296129,
+      "name": "apple-unit-macos-runtime-evidence",
+      "size": 120088080,
+      "sha256": "912780f653f9d6c56bfe2d7bb0cf794f3913e1f67bb512ff75afd2ca462cb2c1",
+      "verified": true
+    },
+    {
+      "artifactId": 13850093522,
+      "name": "ios-exact-runtime-evidence",
+      "size": 209594,
+      "sha256": "986dc811d14dc9be4d8fc4db5038a95722a96f208bde4887aa923ddab13d333a",
+      "verified": true
+    },
+    {
+      "artifactId": 13848564580,
+      "name": "apple-unit-ios-runtime-evidence",
+      "size": 86433426,
+      "sha256": "802dab3d71cab73668ddc13c6e03f6f2586b767c14a5dca6ed210c7709a0c34b",
+      "verified": true
+    }
+  ]
+}

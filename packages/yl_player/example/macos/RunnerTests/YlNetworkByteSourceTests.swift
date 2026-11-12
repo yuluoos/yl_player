@@ -273,6 +273,22 @@ final class YlNetworkByteSourceTests: XCTestCase {
     XCTAssertNil(redirected.value(forHTTPHeaderField: "X-Private-Identity"))
     XCTAssertEqual(redirected.value(forHTTPHeaderField: "X-Display"), "ordinary")
     XCTAssertEqual(YlEngineRouter.assess(inspected).candidate, .headeredHls)
+    // Inspection is a public load boundary: do not leak the byte-source wrapper
+    // into failure mapping, which would erase the actionable network category/code.
+    for (status, code) in [(401, "network.http_status.401"), (403, "network.http_forbidden"),
+                           (404, "network.http_status.404"), (503, "network.http_status.503")] {
+      let failedURL = ScriptedURLProtocol.configure([.response(status: status)])
+      let failure = inspectionError {
+        try YlSourceInspector.inspect(.init(uri: failedURL.absoluteString, kind: .network),
+          configuration: .init(map: [:]), token: .init(), sessionConfiguration: configuration)
+      }
+      XCTAssertEqual(failure.code, code)
+      let mapped = YlAppleFailureMapper.message(failure, scope: .command)
+      XCTAssertEqual(mapped.code, code)
+      XCTAssertEqual(mapped.category, .network)
+      XCTAssertEqual(mapped.scope, .command)
+      XCTAssertFalse(mapped.message.contains(failedURL.host!))
+    }
   }
 
   private func makeSource(
@@ -310,6 +326,18 @@ final class YlNetworkByteSourceTests: XCTestCase {
       if count == 0 { return output }
       output.append(contentsOf: scratch.prefix(count))
     }
+  }
+
+  private func inspectionError(_ body: () throws -> Any) -> NativePlayerError {
+    do {
+      _ = try body()
+      XCTFail("Expected inspection failure")
+    } catch let error as NativePlayerError {
+      return error
+    } catch {
+      XCTFail("Inspection must preserve a typed native failure: \(type(of: error))")
+    }
+    return NativePlayerError(category: "test", code: "test.missing", message: "")
   }
 
   private func nativeError(_ body: () throws -> Any) -> NativePlayerError {
@@ -833,7 +861,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
     let source = YlAppleSourceDescriptor(uri: url.absoluteString, kind: .network,
       networkPolicy: .managed, networkConfiguration: .init(connectTimeoutMs: 25, readTimeoutMs: 25,
         maxRetries: 1, baseRetryDelayMs: 0, maxRetryDelayMs: 0, maxRedirects: 0))
-    XCTAssertEqual(nativeError {
+    XCTAssertEqual(inspectionError {
       try YlSourceInspector.inspect(source, configuration: .init(map: ["maxRetries": 0]),
         token: .init(), sessionConfiguration: session, managedTransportFactory: nil)
     }.code, "network.retry_exhausted")
@@ -909,7 +937,7 @@ final class YlNetworkByteSourceTests: XCTestCase {
     var source = YlAppleSourceDescriptor(uri: server.url.absoluteString, kind: .network,
       networkPolicy: .managed, networkConfiguration: .init(connectTimeoutMs: 1000, readTimeoutMs: 1000,
         maxRetries: 1, baseRetryDelayMs: 0, maxRetryDelayMs: 0, maxRedirects: 0))
-    XCTAssertEqual(nativeError { try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: .init()) }.code,
+    XCTAssertEqual(inspectionError { try YlSourceInspector.inspect(source, configuration: .init(map: [:]), token: .init()) }.code,
       "network.retry_exhausted")
     XCTAssertEqual(server.requests.count, 2)
     source.formatHint = .matroska

@@ -51,7 +51,7 @@ void main() {
         final rejected = expectLater(
           candidate,
           failureCode(
-            cancel ? YlFailureCodes.loadCancelled : 'network.http_status',
+            cancel ? YlFailureCodes.loadCancelled : 'network.http_status.404',
           ),
         );
         await entered.future.timeout(const Duration(seconds: 5));

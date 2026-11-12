@@ -1,0 +1,315 @@
+[
+  {
+    "anchors": [],
+    "buffers": 0,
+    "candidate": false,
+    "elapsedSeconds": 0.0023638749999008724,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 0,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 0,
+      "playedSubmissions": 0,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 0,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [],
+    "buffers": 1,
+    "candidate": false,
+    "elapsedSeconds": 0.14378291666662335,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 1024,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 1,
+      "playedSubmissions": 1,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 8192,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [],
+    "buffers": 3,
+    "candidate": false,
+    "elapsedSeconds": 0.18665250000003653,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 3072,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 3,
+      "playedSubmissions": 3,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 24576,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [],
+    "buffers": 3,
+    "candidate": false,
+    "elapsedSeconds": 0.19803258333331542,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 3072,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 3,
+      "playedSubmissions": 3,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": true,
+    "peakBytes": 24576,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [],
+    "buffers": 100,
+    "candidate": false,
+    "elapsedSeconds": 2.6307041666666464,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 102400,
+      "interiorZeroFrames": 17920
+    },
+    "modes": {
+      "playedCallbacks": 100,
+      "playedSubmissions": 100,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 196608,
+    "pending": false,
+    "starvation": true,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [],
+    "buffers": 2000,
+    "candidate": false,
+    "elapsedSeconds": 42.790090041666645,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 2048000,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 2000,
+      "playedSubmissions": 2000,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 196608,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [],
+    "buffers": 0,
+    "candidate": true,
+    "elapsedSeconds": 0.002335333333348899,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 0,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 0,
+      "playedSubmissions": 0,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 0,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [
+      [
+        1,
+        0
+      ]
+    ],
+    "buffers": 1,
+    "candidate": true,
+    "elapsedSeconds": 0.14432512500002304,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 1024,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 1,
+      "playedSubmissions": 1,
+      "renderedCallbacks": 0,
+      "renderedSubmissions": 0
+    },
+    "pausedEOF": false,
+    "peakBytes": 8192,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [
+      [
+        1,
+        0
+      ]
+    ],
+    "buffers": 3,
+    "candidate": true,
+    "elapsedSeconds": 0.18645812499994463,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 3072,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 1,
+      "playedSubmissions": 1,
+      "renderedCallbacks": 2,
+      "renderedSubmissions": 2
+    },
+    "pausedEOF": false,
+    "peakBytes": 24576,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [
+      [
+        1,
+        0
+      ]
+    ],
+    "buffers": 3,
+    "candidate": true,
+    "elapsedSeconds": 0.19797420833310753,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 3072,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 1,
+      "playedSubmissions": 1,
+      "renderedCallbacks": 2,
+      "renderedSubmissions": 2
+    },
+    "pausedEOF": true,
+    "peakBytes": 24576,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 0
+  },
+  {
+    "anchors": [
+      [
+        1,
+        0
+      ]
+    ],
+    "buffers": 100,
+    "candidate": true,
+    "elapsedSeconds": 2.535803666666652,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 102400,
+      "interiorZeroFrames": 13312
+    },
+    "modes": {
+      "playedCallbacks": 61,
+      "playedSubmissions": 61,
+      "renderedCallbacks": 39,
+      "renderedSubmissions": 39
+    },
+    "pausedEOF": false,
+    "peakBytes": 196608,
+    "pending": false,
+    "starvation": true,
+    "timerMaximumGapUs": 12899
+  },
+  {
+    "anchors": [
+      [
+        1,
+        0
+      ]
+    ],
+    "buffers": 2000,
+    "candidate": true,
+    "elapsedSeconds": 42.78864316666636,
+    "failures": [],
+    "liveHeapCheckpointRequested": false,
+    "marker": {
+      "errors": 0,
+      "frames": 2048000,
+      "interiorZeroFrames": 0
+    },
+    "modes": {
+      "playedCallbacks": 1,
+      "playedSubmissions": 1,
+      "renderedCallbacks": 1999,
+      "renderedSubmissions": 1999
+    },
+    "pausedEOF": false,
+    "peakBytes": 196608,
+    "pending": false,
+    "starvation": false,
+    "timerMaximumGapUs": 29185
+  }
+]

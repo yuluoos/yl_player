@@ -337,7 +337,7 @@ void main() {
         isA<YlPlayerException>().having(
           (error) => error.failure.code,
           'code',
-          'network.http_status',
+          'network.http_status.404',
         ),
       ),
     );

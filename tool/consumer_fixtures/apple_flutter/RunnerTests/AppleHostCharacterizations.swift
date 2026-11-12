@@ -336,7 +336,12 @@ extension AppleHostCharacterizations {
     XCTAssertTrue(f.host.isActive)
     try await Task.sleep(nanoseconds: 200_000_000)
     let b = try await f.load( AppleHostFixture.request("b", url: server.url.absoluteString, format: .matroska, autoplay: true))
-    try await waitFor { f.callbacks.states.last?.sessionId == b.sessionId }
+    // Opening already carries the candidate session ID, but its engine is
+    // unknown until the asynchronous committed state reaches callbacks.
+    try await waitFor {
+      f.callbacks.states.last?.sessionId == b.sessionId &&
+        f.callbacks.states.last?.engine == .managedFallback
+    }
     XCTAssertTrue(f.host.isActive)
     XCTAssertEqual(f.output.textureId, 81)
     XCTAssertEqual(f.output.disposals, 0)

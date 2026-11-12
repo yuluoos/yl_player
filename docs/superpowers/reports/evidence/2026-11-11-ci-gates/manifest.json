@@ -499,6 +499,178 @@
     "hls-output-initialization.json": {
       "sha256": "a70821d7126f8c326aa3bb6d714ff7440afb26774c81b949cab053d1bac8a192",
       "size": 845
+    },
+    "iphone-8f49faab-full-validation.json": {
+      "sha256": "6729792cdc747b9c211e1b9cd6b629bf1b2caabbc10ea4e0d6521495c416bbf5",
+      "size": 391
+    },
+    "iphone-8f49faab-case-identities.json.gz": {
+      "sha256": "d2aad72cd471dfd32c45cd09bf293dd316b0cf9bfc4c788654500dbbb8a57abd",
+      "size": 38581
+    },
+    "iphone-8f49faab-tests.json.gz": {
+      "sha256": "e796e135169ba55fea6d78281e9599ea1f90307147f4216adc4873460779c02b",
+      "size": 50599
+    },
+    "iphone-8f49faab-summary.json.gz": {
+      "sha256": "cf000e621702d1e699060d786fc6a6cb072c4dfacfcdef3e2d889eb5e2cf7ae5",
+      "size": 1078
+    },
+    "iphone-8f49faab-native.log.gz": {
+      "sha256": "9bcf4ce853e7a8165e7e707dd26a3c65849267fbd1778381f4cf44bf3f910c38",
+      "size": 6328
+    },
+    "ci-110-artifacts.json": {
+      "sha256": "c6a725574f5f50b7938f1c82dd27b51d349c627652d0bb16d3416492debd028d",
+      "size": 6148
+    },
+    "ci-110-audio-frames/15CD1D95-62FC-4A3E-851D-CC464CC84238.json": {
+      "sha256": "ab36687eaab21ba2835983add4bc9160dbe2cfc5dfac564486845498d8f99f58",
+      "size": 391
+    },
+    "ci-110-audio-frames/43576660-DC94-4B49-A37F-72770CBB77DA.json": {
+      "sha256": "71ed63c0b18f0907077500e199b17914232d9e818fc442cba8ae0ad8d65121a7",
+      "size": 384
+    },
+    "ci-110-audio-frames/55337DC0-0D23-4C1E-9A30-C91B2ED36465.json": {
+      "sha256": "6c010fe969b6d6b8acacff5c8eebe386f1fd33d6d6c4109315d4998290ee64d2",
+      "size": 376
+    },
+    "ci-110-audio-frames/5677D1CB-FD89-4696-849A-F396F933A253.json": {
+      "sha256": "f1386027e2d1e18e492bdbea3cd30b1f6bd76bb4823b81ccd12a22b59946d322",
+      "size": 403
+    },
+    "ci-110-audio-frames/7A8CE741-F942-4D22-A20D-39F888C9E039.json": {
+      "sha256": "736fad32a108a7e3e20125bf2e901c2a01523f9e1a2e0fbb1664c6958db75006",
+      "size": 380
+    },
+    "ci-110-audio-frames/8ABCE1AC-CDF9-44A6-9C25-7D02727059BA.json": {
+      "sha256": "5a4094289d0f336beeb934761db0164265bf20b2c1cf47c488e33151c7c1770f",
+      "size": 385
+    },
+    "ci-110-audio-frames/902C86EB-1228-4BCA-B4B4-82E0423A26F6.json": {
+      "sha256": "1bee5fdfb0f7367f23c5ba3f45fa456ad0d2b72b15881976e52d52836db2ebb3",
+      "size": 384
+    },
+    "ci-110-audio-frames/A38EA5FF-2A05-4C0F-B3A6-CEF3BA639589.json": {
+      "sha256": "aeb4abcb009b916f52163ed7f930ee301ff545c96fe2993639d368fb4c077213",
+      "size": 409
+    },
+    "ci-110-audio-frames/A4FCCCFF-430A-4F7E-9F54-620F4260736D.json": {
+      "sha256": "6853b501715bfbc0835debba14f52741ad678d0ab460f3c57974a1cbe4e624e3",
+      "size": 400
+    },
+    "ci-110-audio-frames/C68D0295-262D-4C99-927F-C396343A41E6.json": {
+      "sha256": "dd9b360b2a56bd22754c399f6f246eed0c3383b1d4bffe1a10c7e3fe1e1e8fcc",
+      "size": 375
+    },
+    "ci-110-audio-frames/E3DF5ABA-C0B5-493F-A18A-8D058B18B004.json": {
+      "sha256": "fe223a12fa9dac289c4fcb9bf7e1d823f1d687ca2ee99ec4f99b842cd4ae96c0",
+      "size": 381
+    },
+    "ci-110-audio-frames/E5B9EFB4-DBE0-4384-8FB4-7AD9DA3BBFAC.json": {
+      "sha256": "7c43328081a40e9f15adb3ca7ce3964c29db3ef4bc1278ff30a81da644406563",
+      "size": 380
+    },
+    "ci-110-ios-apple_default_positive_test.dart.log.gz": {
+      "sha256": "4c200fe2d276338ee361cc4521684e502bed1cfb9a4c7fdd9bd1e3e21360b5d6",
+      "size": 88833
+    },
+    "ci-110-ios-hls_playback_test.dart.log.gz": {
+      "sha256": "d80c277c606234e983c2942bfd649774c549e12de28b7865e145779d03372467",
+      "size": 114916
+    },
+    "ci-110-ios-native.log.gz": {
+      "sha256": "9b275b8864895cb9c8ed60fe3d6c39d621ac0de7ef991299551abe61e140d5d2",
+      "size": 3439
+    },
+    "ci-110-ios-summary.json.gz": {
+      "sha256": "c92dd9c00cd29f12612e9214c96c9c34cd2c8d21a3facfafc2012b237fa11bf5",
+      "size": 2242
+    },
+    "ci-110-ios-tests.json.gz": {
+      "sha256": "5a2a3550eefce4060bc137ed62a45b7dd7f685fa88f6f50a5a01f120a573f3da",
+      "size": 50515
+    },
+    "ci-110-jobs.json": {
+      "sha256": "4cd8e02a8bc533ee31ec81a324cc9584f4c6687898c5eaeb91c7f8ddc7691771",
+      "size": 47504
+    },
+    "ci-110-macos-failure-runtime.log.gz": {
+      "sha256": "b74ae4112d153c94f7ac9c752f6cffd89f05db2ece4a7fc0b89c7f310807490a",
+      "size": 1178
+    },
+    "ci-110-macos-flv_intent_test.dart.log.gz": {
+      "sha256": "1e4db1d187da33badceb7165fc61c6a7b9f46ee228f572311ec5b514830143b1",
+      "size": 1138
+    },
+    "ci-110-macos-macos_hls_playback_test.dart.log.gz": {
+      "sha256": "ac68f45abc99e337cf1b94e80e74e691a9e0111b423b1631f3706db0b0e8b218",
+      "size": 1128
+    },
+    "ci-110-macos-macos_http_flv_playback_test.dart.log.gz": {
+      "sha256": "bd61eb0f5587aa9827460859be631e6936609b70340b8e1e677988a213d3d586",
+      "size": 1130
+    },
+    "ci-110-macos-macos_mkv_playback_test.dart.log.gz": {
+      "sha256": "fcbbe3bb135df1a4326009d2a3e0dcab5ad401d920251142ccb1a60bd8a2642e",
+      "size": 1234
+    },
+    "ci-110-macos-macos_network_mkv_playback_test.dart.log.gz": {
+      "sha256": "f60c6fee176c1db0308526b7450e25e91458ad61ba75e3dcda4292a6053130ca",
+      "size": 1176
+    },
+    "ci-110-macos-mpegts_policy_test.dart.log.gz": {
+      "sha256": "f0102171f7d05ad204cb7b2277fffb14baf15715ee31632238469c103b1d1a1c",
+      "size": 2490
+    },
+    "ci-110-macos-native.log.gz": {
+      "sha256": "1edc5d0c628a56a1e7353eae55d24b8faeefa95f7b5f78dcfe04cd565d86a873",
+      "size": 3090
+    },
+    "ci-110-macos-summary.json.gz": {
+      "sha256": "4e5e5f13ffef152963001a956c06126bdec194152195c3f45d9bf6277a39f7d4",
+      "size": 924
+    },
+    "ci-110-macos-tests.json.gz": {
+      "sha256": "ff8f1a99caa9099118389c03ad388657341d3c6c4148b7e5264d475009e29b2d",
+      "size": 52556
+    },
+    "ci-110-download-verification.json": {
+      "sha256": "583a0cd06b474908fc1c1c1c1bbe4322a97dee5a07d8c40b23ba6d4e4d0c9575",
+      "size": 997
+    },
+    "local-20261112-apple_session_replacement.log.gz": {
+      "sha256": "ba4bbd387e48113d1eabe2df6cd851797dd491cc5a9ad7baa9cdf5bd7341f497",
+      "size": 1207
+    },
+    "local-20261112-audio-frame-matrix.json": {
+      "sha256": "58cccaa1190b8a9d19fc7a0da0e2071dc7eddd09746947203dd2b01f8158379b",
+      "size": 6628
+    },
+    "local-20261112-avi_policy.log.gz": {
+      "sha256": "0dfbf0eb494a0e9b1d01936c40f6a6f5e250b607cd779d778550dbb4c172d6b8",
+      "size": 3067
+    },
+    "local-20261112-http404-preserve-hls.log.gz": {
+      "sha256": "f358fdc6d542b591b94d5f9dd8ded8511ced5414ed7a39498272a07020411520",
+      "size": 1143
+    },
+    "local-20261112-mpegts_policy.log.gz": {
+      "sha256": "e0da779386cddd06033c1fa904deff82f22c4f497393c247bda83d362e1be259",
+      "size": 3973
+    },
+    "local-20261112-native-baseline.log.gz": {
+      "sha256": "acc686344923fade4c42a787994e920d9a520b2c82568a02c79073f3766ce466",
+      "size": 9975
+    },
+    "local-20261112-native-fixed-summary.json.gz": {
+      "sha256": "8a75f6977460edd1aeb57cdf7aff20e0bfce9284587bbd0bc951cd97c59bec6f",
+      "size": 866
+    },
+    "local-20261112-native-fixed.log.gz": {
+      "sha256": "ccf999f3b147a15a4810d9a45b00bb5c9a8eda2206a907d6ccc93eeb4d6cfdb8",
+      "size": 4943
     }
   },
   "candidateCommit": "87bfced3485ca37d7078bb5b32bb2668a7f4151b",

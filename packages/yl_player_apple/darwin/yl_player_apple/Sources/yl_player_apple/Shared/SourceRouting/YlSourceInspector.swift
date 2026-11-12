@@ -35,8 +35,15 @@ enum YlSourceInspector {
       defer { bytes.cancel() }
       var buffer = [UInt8](repeating: 0, count: maximumBytes)
       while prefix.count < maximumBytes {
-        let count = try buffer.withUnsafeMutableBytes {
-          try bytes.read(into: UnsafeMutableRawBufferPointer(rebasing: $0[..<(maximumBytes - prefix.count)]))
+        let count: Int
+        do {
+          count = try buffer.withUnsafeMutableBytes {
+            try bytes.read(into: UnsafeMutableRawBufferPointer(rebasing: $0[..<(maximumBytes - prefix.count)]))
+          }
+        } catch let YlByteSourceError.failed(error) {
+          // Unlike demux callbacks, inspection returns directly to the load
+          // coordinator. Preserve the transport failure across that boundary.
+          throw error
         }
         if count == 0 { break }
         prefix.append(contentsOf: buffer.prefix(count))
