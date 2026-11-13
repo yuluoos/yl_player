@@ -1,0 +1,21 @@
+{
+  "runId": 43365942740,
+  "headSha": "3d954bc494bc19b1788d8da855eb65325ad8db23",
+  "formalDriverReceiptPresent": true,
+  "cases": {
+    "opens HLS and produces a native texture first frame": "{\"methodName\":\"opens HLS and produces a native texture first frame\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following TestFailure was thrown running a test:\\nExpected: (YlPlaybackStatus:<YlPlaybackStatus.playing> or\\nYlPlaybackStatus:<YlPlaybackStatus.buffering>)\\n  Actual: YlPlaybackStatus:<YlPlaybackStatus.completed>\\n\\nWhen the exception was thrown, this was the stack:\\n#4      main.<anonymous closure> (file:///Users/runner/work/yl_player/yl_player/packages/yl_player/example/integration_test/hls_playback_test.dart:50:5)\\n<asynchronous suspension>\\n#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\\n<asynchronous suspension>\\n#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1952:5)\\n<asynchronous suspension>\\n#7      TestWidgetsFlutterBinding._createTestCompletionHandler.<anonymous closure> (package:flutter_test/src/binding.dart:1706:12)\\n<asynchronous suspension>\\n\\nThis was caught by the test expectation on the following line:\\n  file:///Users/runner/work/yl_player/yl_player/packages/yl_player/example/integration_test/hls_playback_test.dart line 50\\nThe test description was:\\n  opens HLS and produces a native texture first frame\\n═════════════════════════════════════════════════════════════════\\n\"}",
+    "rejecting a fallback source does not tear down current HLS": "success"
+  },
+  "passed": 1,
+  "failed": 1,
+  "suiteCompleteSemantics": [
+    {
+      "phase": "suiteComplete",
+      "allHandles": 2,
+      "testOwnedHandles": 1,
+      "platformEnabled": true
+    }
+  ],
+  "laterIntegrationFilesExecuted": false,
+  "gatePassed": false
+}
