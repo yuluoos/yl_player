@@ -697,6 +697,78 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
 
+  // Single render-thread writer; read only after engine.stop() has quiesced IO.
+  // The callback writes preallocated POD entries: no locks, allocation or logging.
+  private final class NativeRenderTrace {
+    private struct Entry {
+      var observedHost: UInt64 = 0, audioHost: UInt64 = 0
+      var sampleTime: Float64 = 0
+      var frames: UInt32 = 0, timeFlags: UInt32 = 0, actionFlags: UInt32 = 0
+    }
+    private let capacity = 20_000
+    private let entries: UnsafeMutablePointer<Entry>
+    private var count = 0, overflow = 0
+    private let node: AVAudioUnit
+    private var installed = false
+    private var removalStatus: OSStatus = noErr
+    private let anchorBefore: UInt64, anchorAfter: UInt64, anchorUTC: TimeInterval
+    private var timebase = mach_timebase_info_data_t()
+    private let sampleRate: Double
+    private static let notify: AURenderCallback = { raw, flags, stamp, _, frames, _ in
+      let trace = Unmanaged<NativeRenderTrace>.fromOpaque(raw).takeUnretainedValue()
+      if trace.count < trace.capacity {
+        trace.entries[trace.count] = Entry(observedHost: mach_absolute_time(), audioHost: stamp.pointee.mHostTime,
+          sampleTime: stamp.pointee.mSampleTime, frames: frames,
+          timeFlags: stamp.pointee.mFlags.rawValue, actionFlags: flags.pointee.rawValue)
+        trace.count += 1
+      } else { trace.overflow += 1 }
+      return noErr
+    }
+    init(node: AVAudioUnit) throws {
+      self.node = node
+      sampleRate = node.outputFormat(forBus: 0).sampleRate
+      anchorBefore = mach_absolute_time(); anchorUTC = Date().timeIntervalSince1970; anchorAfter = mach_absolute_time()
+      entries = .allocate(capacity: capacity); entries.initialize(repeating: Entry(), count: capacity)
+      mach_timebase_info(&timebase)
+      let status = AudioUnitAddRenderNotify(node.audioUnit, Self.notify, Unmanaged.passUnretained(self).toOpaque())
+      guard status == noErr else { throw NSError(domain: "NativeRenderTrace", code: Int(status)) }
+      installed = true
+    }
+    // Call only after stopping the engine, including on the error/defer path.
+    func close() {
+      guard installed else { return }
+      removalStatus = AudioUnitRemoveRenderNotify(node.audioUnit, Self.notify, Unmanaged.passUnretained(self).toOpaque())
+      precondition(removalStatus == noErr)
+      installed = false
+    }
+    var snapshot: [String: Any] {
+      precondition(!installed)
+      let rows: [[Any]] = (0..<count).map { index in
+        let e = entries[index]
+        return [e.observedHost, e.audioHost, e.sampleTime.isFinite ? e.sampleTime as Any : NSNull(),
+          e.frames, e.timeFlags, e.actionFlags]
+      }
+      return ["columns": ["observedHostTicks", "audioHostTicks", "sampleTime", "frames", "timeFlags", "actionFlags"],
+        "entries": rows, "capacity": capacity, "overflow": overflow, "removeStatus": removalStatus,
+        "sampleRate": sampleRate, "timebaseNumer": timebase.numer, "timebaseDenom": timebase.denom,
+        "preRenderMask": AudioUnitRenderActionFlags.unitRenderAction_PreRender.rawValue,
+        "postRenderMask": AudioUnitRenderActionFlags.unitRenderAction_PostRender.rawValue,
+        "sampleTimeValidMask": AudioTimeStampFlags.sampleTimeValid.rawValue,
+        "hostTimeValidMask": AudioTimeStampFlags.hostTimeValid.rawValue,
+        "anchorBeforeTicks": anchorBefore, "anchorAfterTicks": anchorAfter, "anchorUTC": anchorUTC,
+        "scope": "AVAudioUnitTimePitch pre/post render; wall elapsed, not CPU time or a HAL deadline"]
+    }
+    deinit { precondition(!installed); entries.deinitialize(count: capacity); entries.deallocate() }
+  }
+
+  private func attachRenderTrace(_ trace: NativeRenderTrace?, identity: [String: Any]) throws {
+    guard let trace else { return }
+    var row = identity; row["kind"] = "nativeRenderTrace"; row["trace"] = trace.snapshot
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]),
+      uniformTypeIdentifier: "public.json")
+    attachment.name = "native-render-trace"; attachment.lifetime = .keepAlways; add(attachment)
+  }
+
   private final class IntegrationMarkers {
     private let diagnostics: Bool
     init(diagnostics: Bool = true) { self.diagnostics = diagnostics }
@@ -706,21 +778,28 @@ final class YlMacosAudioTests: XCTestCase {
     private var firstMarker: Int?, lastMarker: Int?, nextSampleTime: Int64?
     private var markerJumps = 0, timestampJumps = 0
     private var discontinuities: [[String: Int64]] = []
+    private var firstTime: (sample: Int64, host: Int64, observed: Int64)?
+    private var lastTime: (sample: Int64, host: Int64, observed: Int64)?
     private var previousCallbackAt: TimeInterval?, maximumCallbackGapUs: Int64 = 0
     func consume(_ pcm: AVAudioPCMBuffer, at time: AVAudioTime? = nil) {
       lock.withLock {
         guard let channel = pcm.floatChannelData?[0] else { errors += 1; return }
         let sampleTime = time?.isSampleTimeValid == true ? time?.sampleTime : nil
+        let hostTime = time?.isHostTimeValid == true ? Int64(clamping: time!.hostTime) : -1
+        let observedHost = diagnostics ? Int64(clamping: mach_absolute_time()) : -1
         if diagnostics {
           let now = ProcessInfo.processInfo.systemUptime
           if let previousCallbackAt { maximumCallbackGapUs = max(maximumCallbackGapUs, Int64((now - previousCallbackAt) * 1_000_000)) }
           previousCallbackAt = now
           callbacks += 1
+          let stamp = (sample: sampleTime ?? -1, host: hostTime, observed: observedHost)
+          if firstTime == nil { firstTime = stamp }; lastTime = stamp
           if let sampleTime, let nextSampleTime, sampleTime != nextSampleTime {
             timestampJumps += 1
             if discontinuities.count < 32 {
               discontinuities.append(["callback": Int64(callbacks), "expectedSampleTime": nextSampleTime,
-                "sampleTime": sampleTime, "sampleTimeDelta": sampleTime - nextSampleTime])
+                "sampleTime": sampleTime, "sampleTimeDelta": sampleTime - nextSampleTime,
+                "hostTimeTicks": hostTime, "observedHostTicks": observedHost])
             }
           }
           nextSampleTime = sampleTime.map { $0 + Int64(pcm.frameLength) }
@@ -742,7 +821,8 @@ final class YlMacosAudioTests: XCTestCase {
                 if discontinuities.count < 32 {
                   discontinuities.append(["callback": Int64(callbacks), "offset": Int64(index),
                     "sampleTime": sampleTime ?? -1, "previousMarker": Int64(lastMarker),
-                    "marker": Int64(marker), "zerosBefore": Int64(zeros)])
+                    "marker": Int64(marker), "zerosBefore": Int64(zeros),
+                    "hostTimeTicks": hostTime, "observedHostTicks": observedHost])
                 }
               }
               lastMarker = marker
@@ -760,6 +840,8 @@ final class YlMacosAudioTests: XCTestCase {
        "trailingZeros": zeros, "firstMarker": firstMarker as Any? ?? NSNull(),
        "lastMarker": lastMarker as Any? ?? NSNull(), "markerJumps": markerJumps,
        "timestampJumps": timestampJumps, "maximumCallbackGapUs": maximumCallbackGapUs,
+       "firstCallbackTime": firstTime.map { ["sampleTime": $0.sample, "hostTimeTicks": $0.host, "observedHostTicks": $0.observed] } as Any? ?? NSNull(),
+       "lastCallbackTime": lastTime.map { ["sampleTime": $0.sample, "hostTimeTicks": $0.host, "observedHostTicks": $0.observed] } as Any? ?? NSNull(),
        "discontinuities": discontinuities]
     } }
   }
@@ -3003,10 +3085,12 @@ final class YlMacosAudioTests: XCTestCase {
     renderer.setCompletionContext(terminalContext(enabled: candidate))
     try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
     let player = try XCTUnwrap(engine.attachedNodes.compactMap { $0 as? AVAudioPlayerNode }.first)
+    let renderTrace = try captureDiagnostics ? NativeRenderTrace(
+      node: XCTUnwrap(engine.attachedNodes.compactMap { $0 as? AVAudioUnitTimePitch }.first)) : nil
     engine.mainMixerNode.outputVolume = 0
     player.installTap(onBus: 0, bufferSize: 1024, format: converter.pcmFormat) { pcm, time in markers.consume(pcm, at: time) }
     var tapInstalled = true
-    defer { if tapInstalled { player.removeTap(onBus: 0) }; renderer.dispose() }
+    defer { if tapInstalled { player.removeTap(onBus: 0) }; renderer.dispose(); engine.stop(); renderTrace?.close() }
     let eventsLock = NSLock(); var failures: [String] = []; var anchors: [[Int64]] = []
     renderer.onOutputFailure = { error in eventsLock.withLock { failures.append(error.code) } }
     renderer.onFirstPCMSubmitted = { generation, pts in eventsLock.withLock { anchors.append([Int64(generation), pts]) } }
@@ -3114,6 +3198,11 @@ final class YlMacosAudioTests: XCTestCase {
     if candidate && starvation { XCTAssertGreaterThan(output.snapshot["playedSubmissions"]!, 1) }
     player.removeTap(onBus: 0); tapInstalled = false
     renderer.dispose(); XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    if let renderTrace {
+      engine.stop(); renderTrace.close()
+      try attachRenderTrace(renderTrace, identity: ["buffers": count, "candidate": candidate,
+        "starvation": starvation, "pausedEOF": pausedEOF, "path": "matrix"])
+    }
     try probe("disposed", waitForCollector: resourceProbe)
     if probeURL != nil { RunLoop.current.run(until: Date(timeIntervalSinceNow: 2)); try probe("disposedLater") }
     if probeURL == nil && !resourceProbe &&
@@ -3138,8 +3227,9 @@ final class YlMacosAudioTests: XCTestCase {
     engine.connect(pitch, to: engine.mainMixerNode, format: converter.pcmFormat)
     engine.mainMixerNode.outputVolume = 0
     engine.prepare()
+    let renderTrace = try NativeRenderTrace(node: pitch)
     player.installTap(onBus: 0, bufferSize: 1024, format: converter.pcmFormat) { pcm, time in markers.consume(pcm, at: time) }
-    defer { player.removeTap(onBus: 0); player.stop(); engine.stop() }
+    defer { player.removeTap(onBus: 0); player.stop(); engine.stop(); renderTrace.close() }
     let lock = NSLock(); var completed = 0
     // Retain input independently of completion timing; this is a diagnostic
     // control, not the bounded production renderer or a replacement gate.
@@ -3165,6 +3255,8 @@ final class YlMacosAudioTests: XCTestCase {
       "elapsedSeconds": ProcessInfo.processInfo.systemUptime - start]
     let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
     attachment.name = "direct-native-audio-control"; attachment.lifetime = .keepAlways; add(attachment)
+    player.stop(); engine.stop(); renderTrace.close()
+    try attachRenderTrace(renderTrace, identity: ["buffers": count, "path": "directNativeControl"])
     withExtendedLifetime(retained) {}
   }
 

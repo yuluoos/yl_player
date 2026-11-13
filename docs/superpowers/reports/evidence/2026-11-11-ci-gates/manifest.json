@@ -52,6 +52,10 @@
       "sha256": "ffebac989be6559f01ed6cd6577fb4fd17f90b2f549b244a92d7cbb81db73967",
       "size": 4756
     },
+    "analyze-native-render-trace.py": {
+      "sha256": "fde884897a3dcfc146a4532a2cc3f087c278e4055593c2b5f8dbf43da465f67b",
+      "size": 4004
+    },
     "aom-install.log": {
       "sha256": "27351d905306766a501ceb0c0259d0d3b522d3d93de67f04d36b7b33b5da6402",
       "size": 240
@@ -199,6 +203,94 @@
     "audio-pull-scalar-tests.log": {
       "sha256": "feb3696691134349c4833481b0180a32560ac920608ab6b50bd82aa97f7ca025",
       "size": 902
+    },
+    "audio-render-trace-control-between-render-analysis.json.gz": {
+      "sha256": "336bb5f30850182b13af9a4dc1d05da7230f15f62b468898e0bd7960a18f114b",
+      "size": 1180
+    },
+    "audio-render-trace-control-between-render-row.json.gz": {
+      "sha256": "16839b37552e30eccf5742b33b51aa3db7700175dfaf8b8762b89e322717e49e",
+      "size": 13747
+    },
+    "audio-render-trace-control-between-render.json.gz": {
+      "sha256": "eccd3ba30dd5c65c77ffe985deea26c48321b61e1c4895da5cf178ca5c557433",
+      "size": 13392
+    },
+    "audio-render-trace-control-between-render.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "size": 20
+    },
+    "audio-render-trace-control-build.log.gz": {
+      "sha256": "5e646ea191cbcf68df32dfd5bcd2f81708746f700cfef28a9f2653d5fa3ea12a",
+      "size": 1174
+    },
+    "audio-render-trace-control-clean-analysis.json.gz": {
+      "sha256": "2be9c080850c3edaf3f654b17e992c45f8e8600879b3b4aaa9c6ead4d824e2bc",
+      "size": 1143
+    },
+    "audio-render-trace-control-clean-row.json.gz": {
+      "sha256": "6b0c5538e779d5110e338a28afdf50512a4d86c96943025b6ef0515a6f47c32a",
+      "size": 9958
+    },
+    "audio-render-trace-control-clean.json.gz": {
+      "sha256": "722af90c5e93d53e6dcb755f5933025293a3d6226450252d0e9a2b5b1a76e930",
+      "size": 9712
+    },
+    "audio-render-trace-control-clean.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "size": 20
+    },
+    "audio-render-trace-control-in-render-analysis.json.gz": {
+      "sha256": "f086bb6c9ec482506f9eb3732a6e5fe2099ac39fc5295e4c827cd5964a4eb669",
+      "size": 1190
+    },
+    "audio-render-trace-control-in-render-row.json.gz": {
+      "sha256": "b685e123bc2241594162189a2443c5d5d568847b6cb54781485f5ad25c41850b",
+      "size": 13891
+    },
+    "audio-render-trace-control-in-render.json.gz": {
+      "sha256": "fc9a25d90f84c2c0ddca5ca7502819806f191e55745945cfe9a12c593cbf7637",
+      "size": 13528
+    },
+    "audio-render-trace-control-in-render.log.gz": {
+      "sha256": "9ceffb7310338057cfe71a4ae1e2c98d2c485d81cdef906532a801f457a38d64",
+      "size": 20
+    },
+    "audio-render-trace-control.swift.txt.gz": {
+      "sha256": "9364f9006d6a763b1a618aa068efc581c5ed6f73f30deeff7bdfb66c625718ea",
+      "size": 3339
+    },
+    "audio-render-trace-final.log.gz": {
+      "sha256": "fa137ee8951ec7c9be28c3d13e64d50714a1fd3cbaa0dba9388a75b2fef55a40",
+      "size": 2439
+    },
+    "audio-render-trace-local-analysis.json.gz": {
+      "sha256": "3e8a9d95de65fae2c5409a269690aeab92e38566cec2e9631b0e287698727a38",
+      "size": 5897
+    },
+    "audio-render-trace-local-attachments.json.gz": {
+      "sha256": "8a191da84cb42ab3cd775c0234b594f49ded5a553bd8b124a3a1eebfaf6e3fc0",
+      "size": 236553
+    },
+    "audio-render-trace-local-summary.json.gz": {
+      "sha256": "7a98132e7913b6598141ab2dd1834632476c12b39d7c6a039e3dacd85338da86",
+      "size": 635
+    },
+    "audio-render-trace-local-tests.json.gz": {
+      "sha256": "bb9621a46e70ba93045fd7858d8d6ef1de8c664db9a4751f859165c07ed5da2e",
+      "size": 743
+    },
+    "audio-render-trace-local-validation.json": {
+      "sha256": "571fa1d5cd056164f2db18fd992d7795388e771ec9b1f2436ee3b22999fa349c",
+      "size": 1532
+    },
+    "audio-render-trace-matrix-synced.log.gz": {
+      "sha256": "740d0d0b188c5e1e563126d2eeb13c867940425c73b007528ccad9bf972ac768",
+      "size": 2435
+    },
+    "audio-render-trace-matrix.log.gz": {
+      "sha256": "474671d61834a25a26787af3a037127b1838a6771577e146c66eb73c2aaff87b",
+      "size": 506
     },
     "baseline-apple-consumers.zip": {
       "sha256": "6b538fa24e4e3143060f2b4344423e1e3b399d27a309b3690a67a287570f3762",

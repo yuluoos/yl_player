@@ -1,0 +1,31 @@
+{
+  "canonicalSourceSha256": "4bca3326ac8542e5afbd243eb49d655852215cede2f83eca353f4b64e323ad80",
+  "matrixRows": 12,
+  "allSamplesCompleteAndOrdered": true,
+  "traces": 12,
+  "allTracesUntruncatedAndPaired": true,
+  "standaloneControls": {
+    "clean": {
+      "maximumRenderElapsedUs": 113.08333333333333,
+      "maximumEntryGapUs": 10788.916666666666,
+      "sampleJumpCount": 0,
+      "overflow": 0
+    },
+    "in-render": {
+      "maximumRenderElapsedUs": 80036.75,
+      "maximumEntryGapUs": 91391.29166666666,
+      "sampleJumpCount": 1,
+      "overflow": 0
+    },
+    "between-render": {
+      "maximumRenderElapsedUs": 126.125,
+      "maximumEntryGapUs": 91249.20833333333,
+      "sampleJumpCount": 1,
+      "overflow": 0
+    }
+  },
+  "injection": "Standalone validation only: usleep(80000) after entry 199 (pre) or 200 (post). No sleep/injection in canonical test probe.",
+  "observability": "Pre/post interval elapsed is not CPU time. Audio timestamp is not HAL deadline. New probe allocates fixed 20000-entry storage before audio starts; writes POD values in callback; removes observer and serializes only after engine.stop.",
+  "validation": "Initial native build failed only due local Pods lock mismatch; pod install synchronized build. Intermediate matrix passed; final matrix with tap host anchors passed. Original sample/budget/completion assertions unchanged. Test identity counts unchanged (iOS 910/macOS 964 source).",
+  "productSourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea"
+}
