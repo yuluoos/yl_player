@@ -1,0 +1,23 @@
+{
+  "baseHead": "8fb864e7934bebd1914393eecd4bbabcaa99761a",
+  "sourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "baselineSourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "baseline": {
+    "result": "Failed",
+    "residualBytes": 89280,
+    "case": "YlMacosPresentationTests/testLegacyFirstFrameNoticeReleasesPayloadBeforeMainQueueDrains()"
+  },
+  "targeted": {
+    "passed": 45,
+    "failed": 0
+  },
+  "reloadRepetitions": {
+    "cases": 2,
+    "iterationsEach": 20,
+    "passedExecutions": 40,
+    "failedExecutions": 0
+  },
+  "fullMacOS": "pending",
+  "physicalIOS": "pending",
+  "remoteCI": "pending"
+}

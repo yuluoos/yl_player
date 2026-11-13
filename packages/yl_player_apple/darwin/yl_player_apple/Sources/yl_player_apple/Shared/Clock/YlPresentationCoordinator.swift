@@ -83,6 +83,12 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   private var currentFrameReservation: YlManagedBufferLedger.Token?
   private var currentPixelBuffer: CVPixelBuffer?
   private var firstFrameSent = false
+  private let firstNoticeLock = NSLock()
+  private var firstNoticeFrame: YlVideoFrame?
+  private var firstNoticeEpoch: UInt64 = 0
+  private var firstNoticeGeneration: UInt64?
+  private var firstNoticeComplete = false
+  private var firstNoticeDisposed = false
   private var firstFrameDurationMs: Int64?
   private var lastStateEmitAt = CFTimeInterval(0)
   private let timedLock = NSLock()
@@ -163,6 +169,7 @@ final class YlPresentationCoordinator: YlAudioTimeline {
       guard let self, self.timedLock.withLock({ self.timedEpoch == epoch }), !self.firstFrameSent,
             let output = self.output, output.acceptsPresentationFrame(generation: generation) else { return }
       self.firstFrameSent = true
+      self.completeFirstFrameNotice()
       self.firstFrameDurationMs = Int64((CACurrentMediaTime() - self.openStartedAt) * 1_000)
       output.didPublishFirstPresentationFrame()
     }
@@ -224,16 +231,23 @@ final class YlPresentationCoordinator: YlAudioTimeline {
   var audioTargetUs: Int64? { postSeekGate.audioTargetUs }
   func acceptsAudio(ptsUs: Int64) -> Bool { postSeekGate.acceptsAudio(ptsUs: ptsUs) }
   func flushFrames(generation: UInt64) {
+    clearFirstFrameNotice(generation: generation)
     stopTimedPresentation()
     timedLock.withLock { timedGeneration = generation; timedAudioReady = !timedRequiresAudioAnchor }
     frameScheduler.flush(generation: generation)
   }
-  func disposeFrames() { stopAudioClock(); stopTimedPresentation(); frameScheduler.dispose() }
+  func disposeFrames() {
+    clearFirstFrameNotice(disposed: true)
+    stopAudioClock(); stopTimedPresentation(); frameScheduler.dispose()
+  }
   func clearFrame() { currentPixelBuffer = nil }
   func clearFrameAndTexture() { currentPixelBuffer = nil; clearOutput(); currentFrameReservation = nil }
   func setDisplayPaused(_ paused: Bool) { displayLink?.isPaused = paused }
   func retireDisplay() { invalidateAudioClock(); displayLink?.invalidate(); displayLink = nil; stopTimedPresentation() }
-  func resetMilestones() { firstFrameDurationMs = nil; firstFrameSent = false }
+  func resetMilestones() {
+    firstFrameDurationMs = nil; firstFrameSent = false
+    firstNoticeLock.withLock { firstNoticeComplete = false }
+  }
 
   func clearOutput() { stopTimedPresentation(clearOutput: false); services.textureOutput.clear(); currentFrameReservation = nil }
 
@@ -263,17 +277,57 @@ final class YlPresentationCoordinator: YlAudioTimeline {
     // retain its decoded frame in a legacy UI closure while main is unavailable.
     // Keep the admission decision if the endpoint retires during enqueue.
     guard !timedAtAdmission, !usesTimedPresentation else { return }
+    enqueueFirstFrameNotice(frame)
+  }
+
+  // The main queue owns only a weak coordinator and an epoch. Payload ownership
+  // stays here so retirement can release it without waiting for main to drain.
+  private func enqueueFirstFrameNotice(_ frame: YlVideoFrame) {
+    let epoch: UInt64? = firstNoticeLock.withLock {
+      guard !firstNoticeDisposed, !firstNoticeComplete, firstNoticeFrame == nil,
+            firstNoticeGeneration == nil || firstNoticeGeneration == frame.generation else { return nil }
+      firstNoticeFrame = frame
+      return firstNoticeEpoch
+    }
+    guard let epoch else { return }
     DispatchQueue.main.async { [weak self] in
-      guard let self, !self.firstFrameSent, !self.usesTimedPresentation,
+      guard let self else { return }
+      let frame = self.firstNoticeLock.withLock { () -> YlVideoFrame? in
+        guard !self.firstNoticeDisposed, self.firstNoticeEpoch == epoch else { return nil }
+        let frame = self.firstNoticeFrame; self.firstNoticeFrame = nil
+        return frame
+      }
+      guard let frame, !self.firstFrameSent, !self.usesTimedPresentation,
             let output = self.output, output.acceptsPresentationFrame(generation: frame.generation)
       else { return }
       self.present(frame.pixelBuffer, reservation: frame.reservation)
       self.firstFrameSent = true
+      self.completeFirstFrameNotice()
       self.firstFrameDurationMs = Int64(
         (CACurrentMediaTime() - self.openStartedAt) * 1_000
       )
       output.didPublishFirstPresentationFrame()
     }
+  }
+
+  private func clearFirstFrameNotice(generation: UInt64? = nil, disposed: Bool = false) {
+    let retired = firstNoticeLock.withLock { () -> YlVideoFrame? in
+      firstNoticeEpoch &+= 1
+      if let generation { firstNoticeGeneration = generation }
+      firstNoticeDisposed = firstNoticeDisposed || disposed
+      let frame = firstNoticeFrame; firstNoticeFrame = nil
+      return frame
+    }
+    withExtendedLifetime(retired) {}
+  }
+
+  private func completeFirstFrameNotice() {
+    let retired = firstNoticeLock.withLock { () -> YlVideoFrame? in
+      firstNoticeComplete = true; firstNoticeEpoch &+= 1
+      let frame = firstNoticeFrame; firstNoticeFrame = nil
+      return frame
+    }
+    withExtendedLifetime(retired) {}
   }
 
   private func displayLinkTick() {

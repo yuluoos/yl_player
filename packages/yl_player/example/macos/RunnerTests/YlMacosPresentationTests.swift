@@ -623,6 +623,74 @@ final class YlMacosPresentationTests: XCTestCase {
   }
 
   @MainActor
+  func testLegacyFirstFrameNoticeReleasesPayloadBeforeMainQueueDrains() async throws {
+    final class Texture: YlTextureOutput {
+      let textureId: Int64 = 1
+      var publications = 0
+      var onPublish: (() -> Void)?
+      func publish(_ pixelBuffer: CVPixelBuffer?) { publications += 1; onPublish?() }
+      func resize(width: Int, height: Int) {}
+      func clear() {}
+      func dispose() {}
+    }
+    for phase in ["before-first", "after-first", "flush"] {
+      let texture = Texture(), sink = CandidatePresentationSink(), ledger = YlManagedBufferLedger()
+      let coordinator = YlPresentationCoordinator(services: .init(platform: .macos, textureOutput: texture,
+        makeDisplayDriver: { _ in AppleTestDisplay() }), lock: NSLock(), openedAt: 0, positionEventIntervalMs: 100)
+      coordinator.output = sink
+      coordinator.configureClock(nil, audioTime: { nil }); coordinator.flushFrames(generation: 1)
+      weak var retainedToken: YlManagedBufferLedger.Token?
+      weak var retainedPixel: AnyObject?
+      func decode(_ generation: UInt64) throws {
+        try autoreleasepool {
+          var value: CVPixelBuffer?
+          XCTAssertEqual(CVPixelBufferCreate(nil, 320, 180, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange,
+            nil, &value), kCVReturnSuccess)
+          let pixel = try XCTUnwrap(value)
+          let token = try XCTUnwrap(ledger.reserve(category: .queuedVideoFrames,
+            bytes: CVPixelBufferGetDataSize(pixel), generation: generation))
+          retainedToken = token; retainedPixel = pixel
+          coordinator.receive(.init(pixelBuffer: pixel, ptsUs: 0, durationUs: 40_000,
+            keyframe: true, generation: generation, ownershipToken: nil, reservation: token))
+        }
+      }
+      if phase == "after-first" {
+        let first = expectation(description: "Initial legacy notice publishes")
+        texture.onPublish = { first.fulfill() }
+        try decode(1)
+        await fulfillment(of: [first], timeout: 1)
+        texture.onPublish = nil
+        coordinator.clearFrameAndTexture()
+      }
+      try decode(1)
+      // No suspension before retirement: queued main work cannot release the
+      // frame for us. Check both its byte receipt and actual object ownership.
+      if phase == "flush" {
+        sink.presentationGeneration = 2; coordinator.flushFrames(generation: 2)
+      } else {
+        sink.presentationGeneration = 2; coordinator.disposeFrames()
+      }
+      coordinator.clearFrameAndTexture()
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0, phase)
+      XCTAssertNil(retainedToken, phase); XCTAssertNil(retainedPixel, phase)
+      let before = texture.publications
+      if phase == "flush" {
+        let fresh = expectation(description: "Replacement notice survives retired queued work")
+        texture.onPublish = { fresh.fulfill() }
+        try decode(2)
+        await fulfillment(of: [fresh], timeout: 1)
+        XCTAssertEqual(texture.publications, before + 1)
+      }
+      let drained = expectation(description: "Retired notice drained")
+      DispatchQueue.main.async { drained.fulfill() }
+      await fulfillment(of: [drained], timeout: 1)
+      if phase != "flush" { XCTAssertEqual(texture.publications, before) }
+      coordinator.disposeFrames(); coordinator.clearFrameAndTexture()
+      XCTAssertEqual(ledger.snapshot.currentBytes, 0)
+    }
+  }
+
+  @MainActor
   func testTimedDecodeDoesNotRetainFrameInLegacyMainQueueNotice() throws {
     let texture = RecordingTimedOutput(), sink = CandidatePresentationSink(), scheduler = YlFrameScheduler()
     var tick: (() -> Void)?

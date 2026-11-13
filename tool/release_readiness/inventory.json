@@ -243,7 +243,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift": "c449e0dcd311d56442a1aeb4086593949cb009fcf23510221a3d4dd8fa95bcf7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlIsolatedAudioClock.swift": "499d1fe43116ea76c2497b54c1bd2e304ec6790115989f6b24ea6f50a8ebbcf7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlMediaClock.swift": "9bb71a76e10daf3f75755f2c92a5c9c96df9a1e448c19210099c78616b674793",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift": "c021ae12f7b3a2941e33ef358a3d6d292a486e976714d65485c455f6f37768a0",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift": "dd2e398857e6cad5d7252c4b6075e6627705057402521e2d98f5327d29e866a1",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoPump.swift": "24448aa16dfd7313103a26efcd6be55c590385d1f3df88d034f28da7db02aaaf",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoReadinessTrace.swift": "8fd44afe6418b88716bcf69ee204dc2e87d2600ba7905eced7feb322cf827c2b",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoWindow.swift": "2ef00dbd238e274d13584162c158ef875da7c94842c4ef9fc5a8e8bdca019eec",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea"
+    "sha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "ccfa3218484113a0914d9f22eb466ade399ab0028459f568e30a80263263e132",
+      "sha256": "d3ac9aa04d45c1231353785236329431a7dfabbd610ba79a62f3f0c2fed147aa",
       "kind": "report"
     }
   },
