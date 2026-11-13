@@ -1,0 +1,532 @@
+[
+  {
+    "identity": {
+      "buffers": 2000,
+      "candidate": false,
+      "path": "matrix",
+      "pausedEOF": false,
+      "starvation": false
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "FAF617A5-82E2-4E96-BE63-5D1E2AEE6A48.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_FD1E44E4-89B1-483F-A0DD-811F095AE5F5.json",
+      "timestamp": 1794565831.783
+    },
+    "gaps": [
+      {
+        "nativeGap": {
+          "previousPreIndex": 2506,
+          "nextPreIndex": 2508,
+          "nativeSkippedStart": 642048,
+          "nativeSkippedEndExclusive": 648952,
+          "nativeSkippedFrames": 6904,
+          "intersectionWithInputFrames": 6904,
+          "previousRenderElapsedUs": 124.04166666666667,
+          "betweenNotificationsUs": 139982.875
+        },
+        "nextRenderObservedHostTicks": 24314536084,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -134804.7083333333,
+            "event": {
+              "timestamp": "2026-11-13 10:29:51.406593+0000",
+              "machTimestamp": 24311300771,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254111387914342404,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "196371                 HALS_IOThread.mm:130   Deadline is prior to Start time - this will cause a workgroup error. Start Time: 24311170269 Deadline Time: 24311072616"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": -134770.75,
+            "event": {
+              "timestamp": "2026-11-13 10:29:51.406627+0000",
+              "machTimestamp": 24311301586,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "162679          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 845.9166666666666,
+            "event": {
+              "timestamp": "2026-11-13 10:29:51.542243+0000",
+              "machTimestamp": 24314556386,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      },
+      {
+        "nativeGap": {
+          "previousPreIndex": 8926,
+          "nextPreIndex": 8928,
+          "nativeSkippedStart": 2292472,
+          "nativeSkippedEndExclusive": 2296312,
+          "nativeSkippedFrames": 3840,
+          "intersectionWithInputFrames": 0,
+          "previousRenderElapsedUs": 11458.083333333334,
+          "betweenNotificationsUs": 78980.54166666667
+        },
+        "nextRenderObservedHostTicks": 25138225406,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -78317.08333333333,
+            "event": {
+              "timestamp": "2026-11-13 10:30:25.783469+0000",
+              "machTimestamp": 25136345796,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "162679          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 675.875,
+            "event": {
+              "timestamp": "2026-11-13 10:30:25.862462+0000",
+              "machTimestamp": 25138241627,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254460929532760068,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:238   HALS_OverloadMessage: Overload possibly due to HAL client proc exceeding io cycle budget."
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 676.5833333333333,
+            "event": {
+              "timestamp": "2026-11-13 10:30:25.862462+0000",
+              "machTimestamp": 25138241644,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "path": "directNativeControl"
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "D9B284EF-AA22-4C8E-AE7B-6B7A53C3B009.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_7049DC9D-0EA0-48D1-B884-7754C984A5DB.json",
+      "timestamp": 1794565885.54
+    },
+    "gaps": [
+      {
+        "nativeGap": {
+          "previousPreIndex": 2,
+          "nextPreIndex": 4,
+          "nativeSkippedStart": 1024,
+          "nativeSkippedEndExclusive": 1736,
+          "nativeSkippedFrames": 712,
+          "intersectionWithInputFrames": 200,
+          "previousRenderElapsedUs": 14593.5,
+          "betweenNotificationsUs": 11000.125
+        },
+        "nextRenderObservedHostTicks": 25296422699,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -10807.791666666666,
+            "event": {
+              "timestamp": "2026-11-13 10:30:32.442532+0000",
+              "machTimestamp": 25296163312,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": " 44087          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 186.5,
+            "event": {
+              "timestamp": "2026-11-13 10:30:32.453526+0000",
+              "machTimestamp": 25296427175,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254460929532760068,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:238   HALS_OverloadMessage: Overload possibly due to HAL client proc exceeding io cycle budget."
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 186.79166666666666,
+            "event": {
+              "timestamp": "2026-11-13 10:30:32.453526+0000",
+              "machTimestamp": 25296427182,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      },
+      {
+        "nativeGap": {
+          "previousPreIndex": 2160,
+          "nextPreIndex": 2162,
+          "nativeSkippedStart": 554184,
+          "nativeSkippedEndExclusive": 554960,
+          "nativeSkippedFrames": 776,
+          "intersectionWithInputFrames": 776,
+          "previousRenderElapsedUs": 53.666666666666664,
+          "betweenNotificationsUs": 12559.916666666666
+        },
+        "nextRenderObservedHostTicks": 25573047008,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -12472.083333333332,
+            "event": {
+              "timestamp": "2026-11-13 10:30:43.966880+0000",
+              "machTimestamp": 25572747678,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254111387914342404,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "193183                 HALS_IOThread.mm:130   Deadline is prior to Start time - this will cause a workgroup error. Start Time: 25572734888 Deadline Time: 25572642461"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": -11304.75,
+            "event": {
+              "timestamp": "2026-11-13 10:30:43.968048+0000",
+              "machTimestamp": 25572775694,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": " 44087          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 805.75,
+            "event": {
+              "timestamp": "2026-11-13 10:30:43.980158+0000",
+              "machTimestamp": 25573066346,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      },
+      {
+        "nativeGap": {
+          "previousPreIndex": 6360,
+          "nextPreIndex": 6362,
+          "nativeSkippedStart": 1630160,
+          "nativeSkippedEndExclusive": 1630860,
+          "nativeSkippedFrames": 700,
+          "intersectionWithInputFrames": 700,
+          "previousRenderElapsedUs": 83.16666666666667,
+          "betweenNotificationsUs": 11201.583333333334
+        },
+        "nextRenderObservedHostTicks": 26110985761,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -11202.166666666666,
+            "event": {
+              "timestamp": "2026-11-13 10:31:06.382265+0000",
+              "machTimestamp": 26110716909,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254111387914342404,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "193183                 HALS_IOThread.mm:130   Deadline is prior to Start time - this will cause a workgroup error. Start Time: 26110701697 Deadline Time: 26110630461"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": -10848.833333333332,
+            "event": {
+              "timestamp": "2026-11-13 10:31:06.382618+0000",
+              "machTimestamp": 26110725389,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": " 44087          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 431.16666666666663,
+            "event": {
+              "timestamp": "2026-11-13 10:31:06.393898+0000",
+              "machTimestamp": 26110996109,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "candidate": true,
+      "path": "matrix",
+      "pausedEOF": false,
+      "starvation": false
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "C6EE6048-5AA2-46CA-B108-F6A56BDD4390.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_19875EFE-4FC5-47D1-9D80-C28F1B27F4D5.json",
+      "timestamp": 1794565942.104
+    },
+    "gaps": [
+      {
+        "nativeGap": {
+          "previousPreIndex": 6924,
+          "nextPreIndex": 6926,
+          "nativeSkippedStart": 1773056,
+          "nativeSkippedEndExclusive": 1784620,
+          "nativeSkippedFrames": 11564,
+          "intersectionWithInputFrames": 11564,
+          "previousRenderElapsedUs": 70.33333333333333,
+          "betweenNotificationsUs": 218431.29166666666
+        },
+        "nextRenderObservedHostTicks": 27545926946,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -218160.04166666666,
+            "event": {
+              "timestamp": "2026-11-13 10:32:05.964523+0000",
+              "machTimestamp": 27540691105,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254111387914342404,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "236051                 HALS_IOThread.mm:130   Deadline is prior to Start time - this will cause a workgroup error. Start Time: 27540680345 Deadline Time: 27540139259"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": -217997.0,
+            "event": {
+              "timestamp": "2026-11-13 10:32:05.964686+0000",
+              "machTimestamp": 27540695018,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": " 86715          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 866.9583333333333,
+            "event": {
+              "timestamp": "2026-11-13 10:32:06.183550+0000",
+              "machTimestamp": 27545947753,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      },
+      {
+        "nativeGap": {
+          "previousPreIndex": 9762,
+          "nextPreIndex": 9764,
+          "nativeSkippedStart": 2511148,
+          "nativeSkippedEndExclusive": 2520940,
+          "nativeSkippedFrames": 9792,
+          "intersectionWithInputFrames": 0,
+          "previousRenderElapsedUs": 61.75,
+          "betweenNotificationsUs": 201022.375
+        },
+        "nextRenderObservedHostTicks": 27914086526,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -200891.54166666666,
+            "event": {
+              "timestamp": "2026-11-13 10:32:21.321774+0000",
+              "machTimestamp": 27909265129,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": " 86715          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 34.0,
+            "event": {
+              "timestamp": "2026-11-13 10:32:21.522700+0000",
+              "machTimestamp": 27914087342,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254460929532760068,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:238   HALS_OverloadMessage: Overload possibly due to HAL client proc exceeding io cycle budget."
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 34.375,
+            "event": {
+              "timestamp": "2026-11-13 10:32:21.522700+0000",
+              "machTimestamp": 27914087351,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "path": "directNativeControl"
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "712C1374-DE8F-420B-82B2-DE7D561B280C.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_9A6E4582-C91F-4211-830E-81915155918D.json",
+      "timestamp": 1794565995.981
+    },
+    "gaps": [
+      {
+        "nativeGap": {
+          "previousPreIndex": 2,
+          "nextPreIndex": 4,
+          "nativeSkippedStart": 1024,
+          "nativeSkippedEndExclusive": 1800,
+          "nativeSkippedFrames": 776,
+          "intersectionWithInputFrames": 264,
+          "previousRenderElapsedUs": 15882.416666666666,
+          "betweenNotificationsUs": 10905.5
+        },
+        "nextRenderObservedHostTicks": 27946867980,
+        "events": [
+          {
+            "deltaFromNextRenderEntryUs": -10771.833333333332,
+            "event": {
+              "timestamp": "2026-11-13 10:32:22.877788+0000",
+              "machTimestamp": 27946609456,
+              "processID": 7391,
+              "threadID": 26479,
+              "traceID": 253616276969361412,
+              "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "120839          HALC_ProxyIOContext.cpp:1622  HALC_ProxyIOContext::IOWorkLoop: skipping cycle due to overload"
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 216.08333333333331,
+            "event": {
+              "timestamp": "2026-11-13 10:32:22.888776+0000",
+              "machTimestamp": 27946873166,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254460929532760068,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:238   HALS_OverloadMessage: Overload possibly due to HAL client proc exceeding io cycle budget."
+            }
+          },
+          {
+            "deltaFromNextRenderEntryUs": 216.79166666666666,
+            "event": {
+              "timestamp": "2026-11-13 10:32:22.888776+0000",
+              "machTimestamp": 27946873183,
+              "processID": 227,
+              "threadID": 1237,
+              "traceID": 254461376209358852,
+              "processImagePath": "/usr/sbin/coreaudiod",
+              "subsystem": "com.apple.coreaudio",
+              "category": "AMCP",
+              "eventMessage": "  4355         HALS_OverloadMessage.cpp:245   HALS_OverloadMessage: Overload possibly due to safety violation."
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

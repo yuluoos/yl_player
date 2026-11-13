@@ -1,0 +1,73 @@
+{
+  "runId": 43407461843,
+  "hls": {
+    "firstFrame": {
+      "phase": "firstFrame.event",
+      "elapsedUs": 2028522,
+      "status": "playing",
+      "revision": 15,
+      "positionUs": 0,
+      "durationUs": 2005000,
+      "engine": "avPlayer",
+      "textureId": 0,
+      "lifecycle": "resumed"
+    },
+    "pumpBegin": {
+      "phase": "pump.begin",
+      "elapsedUs": 2028962,
+      "status": "playing",
+      "revision": 15,
+      "positionUs": 0,
+      "durationUs": 2005000,
+      "engine": "avPlayer",
+      "textureId": 0,
+      "lifecycle": "resumed"
+    },
+    "pumpEnd": {
+      "phase": "pump.end",
+      "elapsedUs": 2062938,
+      "status": "playing",
+      "revision": 18,
+      "positionUs": 0,
+      "durationUs": 2005000,
+      "engine": "avPlayer",
+      "textureId": 0,
+      "lifecycle": "resumed"
+    },
+    "assertions": {
+      "phase": "assertions.begin",
+      "elapsedUs": 2062977,
+      "status": "playing",
+      "revision": 18,
+      "positionUs": 0,
+      "durationUs": 2005000,
+      "engine": "avPlayer",
+      "textureId": 0,
+      "lifecycle": "resumed"
+    },
+    "pumpWallElapsedUs": 33976,
+    "cases": {
+      "opens HLS and produces a native texture first frame": "success",
+      "rejecting a fallback source does not tear down current HLS": "success"
+    }
+  },
+  "defaultPositive": {
+    "passed": 1,
+    "failed": 7,
+    "failureCode": "decoder.unavailable",
+    "failedCases": [
+      "local H264 AAC MKV uses native fallback and renders a frame",
+      "local MKV exposes and switches both AAC tracks",
+      "HTTP range MKV uses the native fallback",
+      "HTTP range MKV restores real-time playback after sustained 3x",
+      "HTTP range MKV completes a long video tail after audio ends",
+      "HTTP 200 sequential MKV rejects seek without losing playback",
+      "HTTP-FLV plays live and reconnects after a dropped socket"
+    ]
+  },
+  "notExecuted": [
+    "state_update_cadence_test.dart",
+    "apple_strict_policy_test.dart"
+  ],
+  "limits": "HLS long-pump failure did not reproduce in this run; it is not established as fixed. Physical-device native XCTest evidence does not replace this public Dart integration gate."
+}

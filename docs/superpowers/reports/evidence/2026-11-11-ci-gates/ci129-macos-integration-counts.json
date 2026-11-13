@@ -1,0 +1,51 @@
+{
+  "runId": 43407461843,
+  "files": [
+    {
+      "file": "apple_strict_policy_test.dart.log",
+      "passed": 21
+    },
+    {
+      "file": "avi_policy_test.dart.log",
+      "passed": 5
+    },
+    {
+      "file": "flv_intent_test.dart.log",
+      "passed": 3
+    },
+    {
+      "file": "macos_hls_playback_test.dart.log",
+      "passed": 1
+    },
+    {
+      "file": "macos_http_flv_playback_test.dart.log",
+      "passed": 1
+    },
+    {
+      "file": "macos_mkv_playback_test.dart.log",
+      "passed": 2
+    },
+    {
+      "file": "macos_network_mkv_playback_test.dart.log",
+      "passed": 3
+    },
+    {
+      "file": "mpegts_policy_test.dart.log",
+      "passed": 4
+    },
+    {
+      "file": "state_update_cadence_test.dart.log",
+      "passed": 1
+    },
+    {
+      "file": "vorbis_policy_test.dart.log",
+      "passed": 5
+    },
+    {
+      "file": "vp9_policy_test.dart.log",
+      "passed": 3
+    }
+  ],
+  "passedTotal": 49,
+  "source": "Per-file completed Flutter test summaries in SHA-256-verified macos-exact-runtime-evidence artifact."
+}

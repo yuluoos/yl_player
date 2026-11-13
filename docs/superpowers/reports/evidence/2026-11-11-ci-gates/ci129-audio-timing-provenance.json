@@ -1,0 +1,43 @@
+{
+  "runId": 43407461843,
+  "headSha": "552edc8708a89e85e6b8c8de57c2b8ff996917da",
+  "sourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "artifact": {
+    "id": 14028499985,
+    "name": "apple-unit-macos-runtime-evidence",
+    "digest": "sha256:9a9d12cfba0939116abad3ef845a26c8854f56dfa96975ea4193da86c84e3a3e",
+    "size_in_bytes": 120753158
+  },
+  "matrixRows": 12,
+  "nativeControlRows": 2,
+  "traceRows": 14,
+  "exactTimelineLossMatches": 4,
+  "logExportCommand": [
+    "/usr/bin/log",
+    "show",
+    "--archive",
+    "/tmp/yl-ci-gates-20261113/ci129-macos-diagnostics/0_Test_My Mac_Diagnostics/My Mac_764ef2c6cc049be6b307a68086152d5c83e17bd2/test-session-systemlogs-2026.11.13_10-15-29-+0000.logarchive",
+    "--style",
+    "json",
+    "--info",
+    "--debug",
+    "--timezone",
+    "UTC",
+    "--start",
+    "@1794565747",
+    "--end",
+    "@1794566030",
+    "--predicate",
+    "process == \"coreaudiod\" OR eventMessage CONTAINS \"HALC_\" OR eventMessage CONTAINS \"HALS_\""
+  ],
+  "clockRowsExported": 47203,
+  "clockRowsRetained": 28,
+  "retainedMessageTerms": [
+    "Deadline is prior",
+    "skipping cycle",
+    "Overload possibly",
+    "Re-anchoring IO timeline"
+  ],
+  "method": "Match each trace by its unique exported attachment filename; the two direct-native controls have the same buffer-count identity. Associate CoreAudio events using raw mach host ticks, not UTC timestamps. Clip positive native skipped intervals to each known input region.",
+  "limits": "No claim of physical speaker output or virtual-device/guest/host scheduler root cause. Render elapsed includes preemption and excludes other HAL graph work; audio host timestamp is not a HAL deadline. The CoreAudio projection uses attachment timestamps plus/minus 30 seconds and explicit message terms; it is not a complete system-log inventory."
+}

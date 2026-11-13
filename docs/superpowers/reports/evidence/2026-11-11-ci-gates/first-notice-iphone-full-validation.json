@@ -1,0 +1,29 @@
+{
+  "head": "1e02d9a045fc3153d6a373966e0938d62292503d",
+  "sourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "platform": "ios",
+  "canonicalIdentitiesMatch": true,
+  "counts": {
+    "totalTestCount": 904,
+    "passedTests": 904,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "failures": [],
+  "artifacts": [
+    {
+      "path": "first-notice-iphone-full-log.gz",
+      "sha256": "5c2661dd3ce0c53c78e4c012bf45cde42f0f0a9310c3b71bbcd5100c37a333ff"
+    },
+    {
+      "path": "first-notice-iphone-full-summary.json.gz",
+      "sha256": "32ee65a6c21ba466095223fda0ea0b5147a066944bf67b395ef4516fd5d2865a"
+    },
+    {
+      "path": "first-notice-iphone-full-tests.json.gz",
+      "sha256": "c4241967090bb7f664e270cd3a6e2311a6381024746bc4ac36ac6338aeba8b70"
+    }
+  ],
+  "validationHead": "552edc8708a89e85e6b8c8de57c2b8ff996917da",
+  "testBundleBinarySha256": "eb0c12f1b3a1df83d6fb03dbe3fc9bc96de55d7bb35bb33380ec8f25f3ea0d80"
+}

@@ -1,0 +1,39 @@
+{
+  "runId": 43405138965,
+  "headSha": "1e02d9a045fc3153d6a373966e0938d62292503d",
+  "conclusion": "cancelled",
+  "replacedByRun": 43407461843,
+  "completeAcceptance": false,
+  "artifacts": [
+    {
+      "id": 14027602859,
+      "name": "android-api-36-failure",
+      "digest": "sha256:cf1c7e1f1d28e13a2144b6c5ecd6d702b3dc552e7dfdd8b561702e27bc90960b",
+      "size_in_bytes": 1222254
+    },
+    {
+      "id": 14027183948,
+      "name": "apple-consumer-evidence",
+      "digest": "sha256:227ca36cd1bbedfe39fe6e525906db27ce220b5704a8b90ced86d5ddf57628bc",
+      "size_in_bytes": 1347756
+    },
+    {
+      "id": 14027169637,
+      "name": "apple-unit-ios-runtime-evidence",
+      "digest": "sha256:0952f3de5430464c85374da371752a563d13d93ee19c3180dca82b4d61ce0890",
+      "size_in_bytes": 78623425
+    },
+    {
+      "id": 14027156601,
+      "name": "android-consumer-evidence",
+      "digest": "sha256:3df3474710f6d074c72023f06f68b0b0f05dc8f8f8c42eda059b9372331ea748",
+      "size_in_bytes": 9697
+    },
+    {
+      "id": 14026818460,
+      "name": "android-api-24-failure",
+      "digest": "sha256:3368c918c40d43157ad343b8b5a7dcd2fc5d3fa6b80c54cc73a8488e1d416d0e",
+      "size_in_bytes": 65365
+    }
+  ]
+}

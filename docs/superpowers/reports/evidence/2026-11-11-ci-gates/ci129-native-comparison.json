@@ -1,0 +1,64 @@
+{
+  "ios": {
+    "identitiesMatch": true,
+    "count": 904,
+    "passed": 870,
+    "failed": [
+      "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    ],
+    "skipped": [
+      "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
+    ]
+  },
+  "macos": {
+    "identitiesMatch": true,
+    "count": 958,
+    "passed": 957,
+    "failed": [
+      "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()"
+    ],
+    "skipped": []
+  },
+  "iosFailuresUnchangedFromCI118": true,
+  "allRemoteIOSFailuresPassedOnPhysicalDevice": true,
+  "head": "552edc8708a89e85e6b8c8de57c2b8ff996917da",
+  "runId": 43407461843,
+  "sourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "runPassed": false,
+  "physicalEvidence": "first-notice-iphone-full-validation.json",
+  "physicalSourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "physicalSourceMatches": true,
+  "iosFailuresUnchangedFromCI127": true
+}

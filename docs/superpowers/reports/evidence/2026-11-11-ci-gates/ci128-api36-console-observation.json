@@ -1,0 +1,23 @@
+{
+  "runId": 43405138965,
+  "jobId": 131819176059,
+  "url": "https://github.com/yuluoos/yl_player/actions/runs/43405138965/job/131819176059",
+  "source": "Read-only observation of authenticated GitHub Actions job UI via accessibility tree on 2026-11-13. Not a downloaded complete console log.",
+  "observedLines": [
+    "Running Gradle task 'assembleDebug'... 286.1s",
+    "Built build/app/outputs/flutter-apk/app-debug.apk",
+    "Installing build/app/outputs/flutter-apk/app-debug.apk... 833ms",
+    "No tests ran.",
+    "Android test receipt: /tmp/yl-android-test.u8zjzqz7.receipt.json",
+    "Error: Process completed with exit code 124."
+  ],
+  "conclusion": "Build and install completed; the wrapper exited by timeout before reporting a test result. This output does not establish a playback assertion or codec failure.",
+  "receiptMissingFromUploadedArtifact": true,
+  "logcatCorrelation": {
+    "processId": 4958,
+    "nativeFlutterLoaded": "11-13 10:06:48.195",
+    "dartVMServiceListening": "11-13 10:06:49.261",
+    "hostTestResult": "No tests ran; exit 124",
+    "limits": "The app and VM service did start. The available evidence does not identify whether host discovery, forwarding, connection, or test-isolate setup stalled."
+  }
+}

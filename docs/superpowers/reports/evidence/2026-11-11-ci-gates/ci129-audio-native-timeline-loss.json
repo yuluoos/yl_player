@@ -1,0 +1,216 @@
+[
+  {
+    "identity": {
+      "buffers": 2000,
+      "candidate": false,
+      "path": "matrix",
+      "pausedEOF": false,
+      "starvation": false
+    },
+    "matrixAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "13C62579-7541-4AA7-B798-45BADA7F0353.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "public.json_0_6C382C46-204D-4CFB-AFE1-37B3299C06A7.json",
+      "timestamp": 1794565831.061
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "FAF617A5-82E2-4E96-BE63-5D1E2AEE6A48.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_FD1E44E4-89B1-483F-A0DD-811F095AE5F5.json",
+      "timestamp": 1794565831.783
+    },
+    "inputTimelineStart": 1536,
+    "inputTimelineEndExclusive": 2049536,
+    "nativeAndTapFirstHostTicks": 23990355116,
+    "actualMissingFrames": 6904,
+    "predictedMissingFramesFromSkippedNativeIntervals": 6904,
+    "intervals": [
+      {
+        "previousPreIndex": 2506,
+        "nextPreIndex": 2508,
+        "nativeSkippedStart": 642048,
+        "nativeSkippedEndExclusive": 648952,
+        "nativeSkippedFrames": 6904,
+        "intersectionWithInputFrames": 6904,
+        "previousRenderElapsedUs": 124.04166666666667,
+        "betweenNotificationsUs": 139982.875
+      },
+      {
+        "previousPreIndex": 8926,
+        "nextPreIndex": 8928,
+        "nativeSkippedStart": 2292472,
+        "nativeSkippedEndExclusive": 2296312,
+        "nativeSkippedFrames": 3840,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 11458.083333333334,
+        "betweenNotificationsUs": 78980.54166666667
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "path": "directNativeControl"
+    },
+    "matrixAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "C26439C2-F7F2-4B6E-80B3-5C192BA557DC.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "direct-native-audio-control_0_C695C06A-482A-4BD2-B1B4-0DF8B2867D01.json",
+      "timestamp": 1794565885.451
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "D9B284EF-AA22-4C8E-AE7B-6B7A53C3B009.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_7049DC9D-0EA0-48D1-B884-7754C984A5DB.json",
+      "timestamp": 1794565885.54
+    },
+    "inputTimelineStart": 1536,
+    "inputTimelineEndExclusive": 2049536,
+    "nativeAndTapFirstHostTicks": 25295856961,
+    "actualMissingFrames": 1676,
+    "predictedMissingFramesFromSkippedNativeIntervals": 1676,
+    "intervals": [
+      {
+        "previousPreIndex": 2,
+        "nextPreIndex": 4,
+        "nativeSkippedStart": 1024,
+        "nativeSkippedEndExclusive": 1736,
+        "nativeSkippedFrames": 712,
+        "intersectionWithInputFrames": 200,
+        "previousRenderElapsedUs": 14593.5,
+        "betweenNotificationsUs": 11000.125
+      },
+      {
+        "previousPreIndex": 2160,
+        "nextPreIndex": 2162,
+        "nativeSkippedStart": 554184,
+        "nativeSkippedEndExclusive": 554960,
+        "nativeSkippedFrames": 776,
+        "intersectionWithInputFrames": 776,
+        "previousRenderElapsedUs": 53.666666666666664,
+        "betweenNotificationsUs": 12559.916666666666
+      },
+      {
+        "previousPreIndex": 6360,
+        "nextPreIndex": 6362,
+        "nativeSkippedStart": 1630160,
+        "nativeSkippedEndExclusive": 1630860,
+        "nativeSkippedFrames": 700,
+        "intersectionWithInputFrames": 700,
+        "previousRenderElapsedUs": 83.16666666666667,
+        "betweenNotificationsUs": 11201.583333333334
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "candidate": true,
+      "path": "matrix",
+      "pausedEOF": false,
+      "starvation": false
+    },
+    "matrixAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "589D1F1C-77BA-4A9A-AD76-C8317F8E5F6A.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "public.json_0_DDDE3596-3C21-4E38-8C2A-F479FE4845B8.json",
+      "timestamp": 1794565942.034
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "C6EE6048-5AA2-46CA-B108-F6A56BDD4390.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_19875EFE-4FC5-47D1-9D80-C28F1B27F4D5.json",
+      "timestamp": 1794565942.104
+    },
+    "inputTimelineStart": 1536,
+    "inputTimelineEndExclusive": 2049536,
+    "nativeAndTapFirstHostTicks": 26653917759,
+    "actualMissingFrames": 11564,
+    "predictedMissingFramesFromSkippedNativeIntervals": 11564,
+    "intervals": [
+      {
+        "previousPreIndex": 6924,
+        "nextPreIndex": 6926,
+        "nativeSkippedStart": 1773056,
+        "nativeSkippedEndExclusive": 1784620,
+        "nativeSkippedFrames": 11564,
+        "intersectionWithInputFrames": 11564,
+        "previousRenderElapsedUs": 70.33333333333333,
+        "betweenNotificationsUs": 218431.29166666666
+      },
+      {
+        "previousPreIndex": 9762,
+        "nextPreIndex": 9764,
+        "nativeSkippedStart": 2511148,
+        "nativeSkippedEndExclusive": 2520940,
+        "nativeSkippedFrames": 9792,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 61.75,
+        "betweenNotificationsUs": 201022.375
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "path": "directNativeControl"
+    },
+    "matrixAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "FE7DAB68-B44B-4893-B47B-0289D573ADF0.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "direct-native-audio-control_0_0ABDA2ED-FA1C-45CB-B77A-BACDB979F4C0.json",
+      "timestamp": 1794565995.884
+    },
+    "traceAttachment": {
+      "configurationName": "Test Scheme Action",
+      "deviceId": "764ef2c6cc049be6b307a68086152d5c83e17bd2",
+      "deviceName": "My Mac",
+      "exportedFileName": "712C1374-DE8F-420B-82B2-DE7D561B280C.json",
+      "isAssociatedWithFailure": false,
+      "suggestedHumanReadableName": "native-render-trace_0_9A6E4582-C91F-4211-830E-81915155918D.json",
+      "timestamp": 1794565995.981
+    },
+    "inputTimelineStart": 1536,
+    "inputTimelineEndExclusive": 2049536,
+    "nativeAndTapFirstHostTicks": 27946272263,
+    "actualMissingFrames": 264,
+    "predictedMissingFramesFromSkippedNativeIntervals": 264,
+    "intervals": [
+      {
+        "previousPreIndex": 2,
+        "nextPreIndex": 4,
+        "nativeSkippedStart": 1024,
+        "nativeSkippedEndExclusive": 1800,
+        "nativeSkippedFrames": 776,
+        "intersectionWithInputFrames": 264,
+        "previousRenderElapsedUs": 15882.416666666666,
+        "betweenNotificationsUs": 10905.5
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  }
+]
