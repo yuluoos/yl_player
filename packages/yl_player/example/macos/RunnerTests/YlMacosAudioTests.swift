@@ -699,14 +699,56 @@ final class YlMacosAudioTests: XCTestCase {
 
 
   private final class IntegrationMarkers {
+    private let diagnostics: Bool
+    init(diagnostics: Bool = true) { self.diagnostics = diagnostics }
     private let lock = NSLock()
     private var frames = 0, zeros = 0, gaps = 0, errors = 0
-    func consume(_ pcm: AVAudioPCMBuffer) {
+    private var callbacks = 0, totalFrames = 0, leadingZeros = 0
+    private var firstMarker: Int?, lastMarker: Int?, nextSampleTime: Int64?
+    private var markerJumps = 0, timestampJumps = 0
+    private var discontinuities: [[String: Int64]] = []
+    private var previousCallbackAt: TimeInterval?, maximumCallbackGapUs: Int64 = 0
+    func consume(_ pcm: AVAudioPCMBuffer, at time: AVAudioTime? = nil) {
       lock.withLock {
         guard let channel = pcm.floatChannelData?[0] else { errors += 1; return }
+        let sampleTime = time?.isSampleTimeValid == true ? time?.sampleTime : nil
+        if diagnostics {
+          let now = ProcessInfo.processInfo.systemUptime
+          if let previousCallbackAt { maximumCallbackGapUs = max(maximumCallbackGapUs, Int64((now - previousCallbackAt) * 1_000_000)) }
+          previousCallbackAt = now
+          callbacks += 1
+          if let sampleTime, let nextSampleTime, sampleTime != nextSampleTime {
+            timestampJumps += 1
+            if discontinuities.count < 32 {
+              discontinuities.append(["callback": Int64(callbacks), "expectedSampleTime": nextSampleTime,
+                "sampleTime": sampleTime, "sampleTimeDelta": sampleTime - nextSampleTime])
+            }
+          }
+          nextSampleTime = sampleTime.map { $0 + Int64(pcm.frameLength) }
+          totalFrames += Int(pcm.frameLength)
+        }
         for index in 0..<Int(pcm.frameLength) {
           let value = channel[index]
-          if value == 0 { if frames > 0 { zeros += 1 }; continue }
+          if value == 0 { if frames > 0 { zeros += 1 } else { leadingZeros += 1 }; continue }
+          // Fixtures encode exact binary fractions. Compare adjacent marker IDs
+          // separately from the original absolute sequence assertion so one gap
+          // does not look like hundreds of thousands of independent corruptions.
+          if diagnostics {
+            let scaled = Double(value) * 4194304 - 1
+            if scaled.isFinite && scaled >= 0 && scaled < 2097152 {
+              let marker = Int(scaled)
+              if firstMarker == nil { firstMarker = marker }
+              if let lastMarker, marker != (lastMarker + 1) % 2097152 {
+                markerJumps += 1
+                if discontinuities.count < 32 {
+                  discontinuities.append(["callback": Int64(callbacks), "offset": Int64(index),
+                    "sampleTime": sampleTime ?? -1, "previousMarker": Int64(lastMarker),
+                    "marker": Int64(marker), "zerosBefore": Int64(zeros)])
+                }
+              }
+              lastMarker = marker
+            }
+          }
           let expected = Float(frames % 2097152 + 1) / 4194304
           if value != expected { errors += 1 }
           frames += 1; gaps += zeros; zeros = 0
@@ -714,6 +756,13 @@ final class YlMacosAudioTests: XCTestCase {
       }
     }
     var snapshot: [String: Int] { lock.withLock { ["frames": frames, "interiorZeroFrames": gaps, "errors": errors] } }
+    var capture: [String: Any] { lock.withLock {
+      ["callbacks": callbacks, "totalFrames": totalFrames, "leadingZeros": leadingZeros,
+       "trailingZeros": zeros, "firstMarker": firstMarker as Any? ?? NSNull(),
+       "lastMarker": lastMarker as Any? ?? NSNull(), "markerJumps": markerJumps,
+       "timestampJumps": timestampJumps, "maximumCallbackGapUs": maximumCallbackGapUs,
+       "discontinuities": discontinuities]
+    } }
   }
   private final class IntegrationPCM: YlAudioPacketConverting {
     let pcmFormat = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: 48000, channels: 2, interleaved: false)
@@ -2942,14 +2991,21 @@ final class YlMacosAudioTests: XCTestCase {
                                 pausedEOF: Bool = false, probeDirectory: String? = nil, resourceProbe: Bool = false,
                                 captureAfterDrain: Bool = false) throws -> [String: Any] {
     let ledger = YlManagedBufferLedger(maxBytes: 196608), engine = AVAudioEngine()
-    let output = IntegrationOutput(engine: engine), converter = IntegrationPCM(), markers = IntegrationMarkers()
+    let captureDiagnostics = probeDirectory == nil && !resourceProbe
+    let output = IntegrationOutput(engine: engine), converter = IntegrationPCM(), markers = IntegrationMarkers(diagnostics: captureDiagnostics)
+    let submittedMarkers = IntegrationMarkers()
+    if captureDiagnostics {
+      output.onSubmit = { buffer in
+        if let pcm = buffer.payload as? AVAudioPCMBuffer { submittedMarkers.consume(pcm) }
+      }
+    }
     let renderer = YlAudioRenderer(maxScheduledDurationUs: 512016, maxScheduledBytes: 196608,
       bufferScope: try ledger.makeScope(maxBytes: 196608), converter: converter, output: output)
     renderer.setCompletionContext(terminalContext(enabled: candidate))
     try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000, channelCount: 2, magicCookie: Data(), generation: 1))
     let player = try XCTUnwrap(engine.attachedNodes.compactMap { $0 as? AVAudioPlayerNode }.first)
     engine.mainMixerNode.outputVolume = 0
-    player.installTap(onBus: 0, bufferSize: 1024, format: converter.pcmFormat) { pcm, _ in markers.consume(pcm) }
+    player.installTap(onBus: 0, bufferSize: 1024, format: converter.pcmFormat) { pcm, time in markers.consume(pcm, at: time) }
     var tapInstalled = true
     defer { if tapInstalled { player.removeTap(onBus: 0) }; renderer.dispose() }
     let eventsLock = NSLock(); var failures: [String] = []; var anchors: [[Int64]] = []
@@ -3040,6 +3096,8 @@ final class YlMacosAudioTests: XCTestCase {
     try probe("drained", waitForCollector: resourceProbe)
     let row: [String: Any] = ["candidate": candidate, "buffers": count, "starvation": starvation,
       "pausedEOF": pausedEOF, "liveHeapCheckpointRequested": recordedMidpoint, "marker": markers.snapshot, "modes": output.snapshot,
+      "captureDiagnosticsEnabled": captureDiagnostics,
+      "capture": markers.capture, "submittedMarker": submittedMarkers.snapshot, "submittedCapture": submittedMarkers.capture,
       "anchors": eventsLock.withLock { anchors }, "failures": eventsLock.withLock { failures },
       "peakBytes": ledger.snapshot.peakBytes, "pending": renderer.hasPendingPlayback,
       "timerMaximumGapUs": renderer.tailObservationGapUs, "elapsedSeconds": ProcessInfo.processInfo.systemUptime - start]
@@ -3059,7 +3117,56 @@ final class YlMacosAudioTests: XCTestCase {
     renderer.dispose(); XCTAssertEqual(ledger.snapshot.currentBytes, 0)
     try probe("disposed", waitForCollector: resourceProbe)
     if probeURL != nil { RunLoop.current.run(until: Date(timeIntervalSinceNow: 2)); try probe("disposedLater") }
+    if probeURL == nil && !resourceProbe &&
+        (markers.snapshot["frames"] != count * 1024 || markers.snapshot["errors"] != 0) {
+      // Keep the failed assertion above. This additional observation bypasses
+      // YlAudioRenderer and YlSystemAudioOutput, with all PCM queued in advance,
+      // to distinguish a package scheduling failure from native output/capture.
+      do { try observeDirectNativeAudio(count: count) }
+      catch {
+        let attachment = XCTAttachment(string: "directNativeControl failed; buffers=\(count); code=\((error as NSError).code)")
+        attachment.name = "direct-native-audio-control-error"; attachment.lifetime = .keepAlways; add(attachment)
+      }
+    }
     return row
+  }
+
+  private func observeDirectNativeAudio(count: Int) throws {
+    let engine = AVAudioEngine(), player = AVAudioPlayerNode(), pitch = AVAudioUnitTimePitch()
+    let converter = IntegrationPCM(), markers = IntegrationMarkers(), submitted = IntegrationMarkers()
+    engine.attach(player); engine.attach(pitch)
+    engine.connect(player, to: pitch, format: converter.pcmFormat)
+    engine.connect(pitch, to: engine.mainMixerNode, format: converter.pcmFormat)
+    engine.mainMixerNode.outputVolume = 0
+    engine.prepare()
+    player.installTap(onBus: 0, bufferSize: 1024, format: converter.pcmFormat) { pcm, time in markers.consume(pcm, at: time) }
+    defer { player.removeTap(onBus: 0); player.stop(); engine.stop() }
+    let lock = NSLock(); var completed = 0
+    // Retain input independently of completion timing; this is a diagnostic
+    // control, not the bounded production renderer or a replacement gate.
+    var retained: [AVAudioPCMBuffer] = []
+    for ordinal in 0..<count {
+      var value = Int64(ordinal)
+      let buffer = try XCTUnwrap(converter.convert(packet: .init(data: withUnsafeBytes(of: &value) { Data($0) },
+        ptsUs: Int64(ordinal) * 1024 * 1_000_000 / 48000, durationUs: 21334, generation: 1)))
+      let pcm = try XCTUnwrap(buffer.payload as? AVAudioPCMBuffer)
+      retained.append(pcm); submitted.consume(pcm)
+      player.scheduleBuffer(pcm, completionCallbackType: .dataPlayedBack) { _ in lock.withLock { completed += 1 } }
+    }
+    try engine.start(); player.play()
+    let start = ProcessInfo.processInfo.systemUptime
+    repeat {
+      RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.002))
+    } while ProcessInfo.processInfo.systemUptime - start < Double(count * 1024) / 48000 + 10 &&
+      (lock.withLock { completed } < count || markers.snapshot["frames"]! < count * 1024)
+    player.pause()
+    let row: [String: Any] = ["kind": "directNativeControl", "buffers": count,
+      "marker": markers.snapshot, "capture": markers.capture, "submittedMarker": submitted.snapshot,
+      "completedBuffers": lock.withLock { completed }, "retainedBuffers": retained.count,
+      "elapsedSeconds": ProcessInfo.processInfo.systemUptime - start]
+    let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: row, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
+    attachment.name = "direct-native-audio-control"; attachment.lifetime = .keepAlways; add(attachment)
+    withExtendedLifetime(retained) {}
   }
 
   private final class TerminalOutput: YlAudioOutputDriving {
