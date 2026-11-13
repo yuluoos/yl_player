@@ -1,0 +1,29 @@
+{
+  "runId": 43381434363,
+  "headSha": "f2c5b26a12f92e27d07e5da353e583d440b06873",
+  "all12SubmittedSequencesCompleteAndCorrect": true,
+  "legacyLongMissingSamples": 4392,
+  "legacyLongZerosReplacingMissingSamples": 4392,
+  "legacyLongMarkerJump": {
+    "callback": 130,
+    "marker": 622376,
+    "offset": 4712,
+    "previousMarker": 617983,
+    "sampleTime": 619200,
+    "zerosBefore": 4392
+  },
+  "legacyLongMaximumSubmissionGapUs": 163101,
+  "legacyShortCapturedFrames": 512,
+  "legacyShortLastMarker": 511,
+  "nativeControlMissingPrefixSamples": 56,
+  "nativeControlRetainedBuffers": 2000,
+  "nativeControlCompletedBuffers": 2000,
+  "matrixRowsPassed": 10,
+  "matrixRowsFailed": 2,
+  "directNativeControlPassed": 1,
+  "directNativeControlFailed": 1,
+  "localIndependentRenderDelayReproducesShort512": true,
+  "location": "Between native scheduling and AVAudioPlayerNode tap output; reproduced without YlAudioRenderer or YlSystemAudioOutput",
+  "remainingUnknown": "Exact source of CI native render scheduling/startup latency; physical speaker output was not captured",
+  "gatePassed": false
+}

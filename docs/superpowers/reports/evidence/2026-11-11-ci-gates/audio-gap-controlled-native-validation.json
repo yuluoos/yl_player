@@ -1,0 +1,153 @@
+{
+  "control": "raw AVAudioPlayerNode with prequeued, independently retained PCM; no yl_player renderer or output adapter",
+  "injectedDelaySeconds": 0.4,
+  "normalAndTapDelayAllFrames": true,
+  "renderDelayReproducesShort512Of3072": true,
+  "allNativeCompletionCallbacksDelivered": true,
+  "overloadEventsObserved": 0,
+  "intentionalFaultInjection": true,
+  "provesCIRootCause": false,
+  "rows": {
+    "clean": {
+      "buffers": 200,
+      "capture": {
+        "callbacks": 43,
+        "discontinuities": [],
+        "firstMarker": 0,
+        "lastMarker": 204799,
+        "leadingZeros": 1536,
+        "markerJumps": 0,
+        "maximumCallbackGapUs": 106828,
+        "timestampJumps": 0,
+        "totalFrames": 206400,
+        "trailingZeros": 64
+      },
+      "completed": 200,
+      "marker": {
+        "errors": 0,
+        "frames": 204800,
+        "interiorZeroFrames": 0
+      },
+      "mode": "clean"
+    },
+    "tap-stall": {
+      "buffers": 200,
+      "capture": {
+        "callbacks": 43,
+        "discontinuities": [],
+        "firstMarker": 0,
+        "lastMarker": 204799,
+        "leadingZeros": 1536,
+        "markerJumps": 0,
+        "maximumCallbackGapUs": 403482,
+        "timestampJumps": 0,
+        "totalFrames": 206400,
+        "trailingZeros": 64
+      },
+      "completed": 200,
+      "marker": {
+        "errors": 0,
+        "frames": 204800,
+        "interiorZeroFrames": 0
+      },
+      "mode": "tap-stall"
+    },
+    "render-clean": {
+      "buffers": 200,
+      "capture": {
+        "callbacks": 43,
+        "discontinuities": [],
+        "firstMarker": 0,
+        "lastMarker": 204799,
+        "leadingZeros": 1536,
+        "markerJumps": 0,
+        "maximumCallbackGapUs": 106717,
+        "timestampJumps": 0,
+        "totalFrames": 206400,
+        "trailingZeros": 64
+      },
+      "completed": 200,
+      "marker": {
+        "errors": 0,
+        "frames": 204800,
+        "interiorZeroFrames": 0
+      },
+      "mode": "render-clean"
+    },
+    "render-stall": {
+      "buffers": 200,
+      "capture": {
+        "callbacks": 58,
+        "discontinuities": [
+          {
+            "callback": 11,
+            "marker": 68608,
+            "offset": 3200,
+            "previousMarker": 49663,
+            "sampleTime": 48000,
+            "zerosBefore": 0
+          }
+        ],
+        "firstMarker": 0,
+        "lastMarker": 204799,
+        "leadingZeros": 1536,
+        "markerJumps": 1,
+        "maximumCallbackGapUs": 501273,
+        "timestampJumps": 0,
+        "totalFrames": 278400,
+        "trailingZeros": 91008
+      },
+      "completed": 200,
+      "marker": {
+        "errors": 136192,
+        "frames": 185856,
+        "interiorZeroFrames": 0
+      },
+      "mode": "render-stall"
+    },
+    "render-stall-short": {
+      "buffers": 3,
+      "capture": {
+        "callbacks": 16,
+        "discontinuities": [],
+        "firstMarker": 0,
+        "lastMarker": 1023,
+        "leadingZeros": 1536,
+        "markerJumps": 0,
+        "maximumCallbackGapUs": 106753,
+        "timestampJumps": 0,
+        "totalFrames": 76800,
+        "trailingZeros": 74240
+      },
+      "completed": 3,
+      "marker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      },
+      "mode": "render-stall-short"
+    },
+    "render-stall-short-early": {
+      "buffers": 3,
+      "capture": {
+        "callbacks": 16,
+        "discontinuities": [],
+        "firstMarker": 0,
+        "lastMarker": 511,
+        "leadingZeros": 1536,
+        "markerJumps": 0,
+        "maximumCallbackGapUs": 106695,
+        "timestampJumps": 0,
+        "totalFrames": 76800,
+        "trailingZeros": 74752
+      },
+      "completed": 3,
+      "marker": {
+        "errors": 0,
+        "frames": 512,
+        "interiorZeroFrames": 0
+      },
+      "mode": "render-stall-short-early"
+    }
+  }
+}

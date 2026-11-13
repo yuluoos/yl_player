@@ -1,0 +1,62 @@
+{
+  "ios": {
+    "identitiesMatch": true,
+    "count": 904,
+    "passed": 870,
+    "failed": [
+      "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    ],
+    "skipped": [
+      "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
+    ]
+  },
+  "macos": {
+    "identitiesMatch": true,
+    "count": 957,
+    "passed": 954,
+    "failed": [
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()",
+      "YlMacosAudioTests/testTimedClockRecoversAfterNativeReadDelay()"
+    ],
+    "skipped": []
+  },
+  "iosFailuresUnchangedFromCI118": true,
+  "allRemoteIOSFailuresPassedOnPhysicalDevice": true,
+  "head": "f2c5b26a12f92e27d07e5da353e583d440b06873",
+  "runId": 43381434363,
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "runPassed": false
+}

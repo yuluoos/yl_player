@@ -1,0 +1,38 @@
+{
+  "runId": 43381434363,
+  "headSha": "f2c5b26a12f92e27d07e5da353e583d440b06873",
+  "gatePassed": false,
+  "suites": {
+    "apple_default_positive_test": {
+      "passed": 1,
+      "failed": 7,
+      "allFailuresDecoderUnavailable": true,
+      "cases": {
+        "local H264 AAC MKV uses native fallback and renders a frame": "{\"methodName\":\"local H264 AAC MKV uses native fallback and renders a frame\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-a3ffc4c6-af98-40ce-8a44-4e66a0de1583)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  local H264 AAC MKV uses native fallback and renders a frame\\n═════════════════════════════════════════════════════════════════\\n\"}",
+        "local MKV exposes and switches both AAC tracks": "{\"methodName\":\"local MKV exposes and switches both AAC tracks\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-1259e20a-086d-43e8-83d6-ddad1646cf55)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  local MKV exposes and switches both AAC tracks\\n═════════════════════════════════════════════════════════════════\\n\"}",
+        "HTTP range MKV uses the native fallback": "{\"methodName\":\"HTTP range MKV uses the native fallback\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-73714a04-3e7f-43dc-b5e5-7606ecdceaaf)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  HTTP range MKV uses the native fallback\\n═════════════════════════════════════════════════════════════════\\n\"}",
+        "HTTP range MKV restores real-time playback after sustained 3x": "{\"methodName\":\"HTTP range MKV restores real-time playback after sustained 3x\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-4956bc0e-9ecc-43bf-a7ad-5e45928c6a1d)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  HTTP range MKV restores real-time playback after sustained 3x\\n═════════════════════════════════════════════════════════════════\\n\"}",
+        "HTTP range MKV completes a long video tail after audio ends": "{\"methodName\":\"HTTP range MKV completes a long video tail after audio ends\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-705c9b39-a04b-41c1-b966-ad49f516b588)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  HTTP range MKV completes a long video tail after audio ends\\n═════════════════════════════════════════════════════════════════\\n\"}",
+        "HTTP 200 sequential MKV rejects seek without losing playback": "{\"methodName\":\"HTTP 200 sequential MKV rejects seek without losing playback\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-7b069472-fedb-40fc-9ab2-fd33dcfb9a92)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  HTTP 200 sequential MKV rejects seek without losing playback\\n═════════════════════════════════════════════════════════════════\\n\"}",
+        "failed network MKV candidate preserves current HLS": "success",
+        "HTTP-FLV plays live and reconnects after a dropped socket": "{\"methodName\":\"HTTP-FLV plays live and reconnects after a dropped socket\",\"details\":\"══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞═════════════════\\nThe following YlPlayerException was thrown running a test:\\nYlFailure(category: decoder, code: decoder.unavailable,\\nretryable: false, scope: command, diagnosticId:\\napple-d3662a08-d7f9-4b22-866d-a30ea884c370)\\n\\nWhen the exception was thrown, this was the stack\\n\\nThe test description was:\\n  HTTP-FLV plays live and reconnects after a dropped socket\\n═════════════════════════════════════════════════════════════════\\n\"}"
+      }
+    },
+    "hls_playback_test": {
+      "passed": 2,
+      "failed": 0,
+      "allFailuresDecoderUnavailable": true,
+      "cases": {
+        "opens HLS and produces a native texture first frame": "success",
+        "rejecting a fallback source does not tear down current HLS": "success"
+      },
+      "firstFrameElapsedUs": 2040866,
+      "pumpDurationUs": 26563,
+      "assertionStatus": "playing"
+    }
+  },
+  "unexecutedSuites": [
+    "state_update_cadence_test",
+    "apple_strict_policy_test"
+  ]
+}
