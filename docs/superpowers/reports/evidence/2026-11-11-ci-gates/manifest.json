@@ -2292,6 +2292,50 @@
       "sha256": "9cfc4edb269cbd1042b9121a5ffe47f3cf8e2e8b59c71648ba529df85812a367",
       "size": 1126
     },
+    "first-notice-eof-before-attachments.json.gz": {
+      "sha256": "f60e0e6b967642480e341f8d7ec9b6ee2d294ec11e5ae4fc5322a6262635f9c5",
+      "size": 1266
+    },
+    "first-notice-eof-snapshot-count-diagnosis.json": {
+      "sha256": "6ab5f208d2c94075fbd3aa7129bd18ca1e1305484e93851e7f07bb37134fd57f",
+      "size": 1855
+    },
+    "first-notice-eof-snapshots-after-log.gz": {
+      "sha256": "f2a8c67629b899f74d35253c35d263b99d2311f14d6ee3efd69357ed6214a675",
+      "size": 2436
+    },
+    "first-notice-eof-snapshots-after-summary.json.gz": {
+      "sha256": "69e66a72c01afe7a17cb6fb4d58fedd069e144f23e9f83623d6d2ee9ad45478e",
+      "size": 647
+    },
+    "first-notice-eof-snapshots-after-tests.json.gz": {
+      "sha256": "36d45c659c9d82e6999992f1463ebbfd0a4ce7b21947e95bdde9ef486cea7b2d",
+      "size": 888
+    },
+    "first-notice-iphone-runner.py.txt.gz": {
+      "sha256": "a9a02c0f28b7e3830fdbed31ef00276b8833f6c2c7f7feb32c020afb011afd4e",
+      "size": 517
+    },
+    "first-notice-macos-full-log.gz": {
+      "sha256": "f88ad975bf5d7ab3dbf63546f1fdf84461944ad9b948caa14ee361b42e978af3",
+      "size": 475
+    },
+    "first-notice-macos-full-summary.json.gz": {
+      "sha256": "808aad31da9ab56c13700df5d32cf1bcc42b542621c3936da05dc07fe1d30c86",
+      "size": 1502
+    },
+    "first-notice-macos-full-tests.json.gz": {
+      "sha256": "6f00fecc17369a563acea80e61d65b07f125219e12514dc95f2f117ece9df4c2",
+      "size": 54812
+    },
+    "first-notice-macos-full-validation.json": {
+      "sha256": "1b448cdae63c083bc6695865b8330213defe7af1772d9b3ae776c40d87fcf9e5",
+      "size": 986
+    },
+    "first-notice-macos-runner.py.txt.gz": {
+      "sha256": "32d735a8790c9854ee3e12dcde9a2225d0007b8724a3e0e14dd1b115e1eca1d2",
+      "size": 501
+    },
     "first-notice-notice-after-log.gz": {
       "sha256": "2a8980f27d4e5012b076decd4fa7aeb0490dc0b999d3088d80cd46898b3aa2bf",
       "size": 5352
@@ -2331,6 +2375,14 @@
     "first-notice-reload-repeat-tests.json.gz": {
       "sha256": "62c97f11553ad7ccff3eccd82f9ef2577293893d704e884502f39751a72c7f10",
       "size": 1528
+    },
+    "first-notice-testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay-attachments.json.gz": {
+      "sha256": "fc0e882450eb7c2923752e122396c428ffa5a27bd5553425d190509c4165391b",
+      "size": 618
+    },
+    "first-notice-testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay-attachments.json.gz": {
+      "sha256": "5c9e70869fa0af56a65be786e0529f48438f03f9f733095d3f7cd96d9bfe3f3b",
+      "size": 606
     },
     "first-notice-validation.json": {
       "sha256": "993889f2189d49f4fb2250816d5fc885c70eeddafaf0195586e0b72d007abf90",

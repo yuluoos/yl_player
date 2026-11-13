@@ -1,0 +1,30 @@
+{
+  "head": "1e02d9a045fc3153d6a373966e0938d62292503d",
+  "sourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "platform": "macos",
+  "canonicalIdentitiesMatch": true,
+  "counts": {
+    "totalTestCount": 958,
+    "passedTests": 957,
+    "failedTests": 1,
+    "skippedTests": 0
+  },
+  "failures": [
+    "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()"
+  ],
+  "artifacts": [
+    {
+      "path": "first-notice-macos-full-log.gz",
+      "sha256": "f88ad975bf5d7ab3dbf63546f1fdf84461944ad9b948caa14ee361b42e978af3"
+    },
+    {
+      "path": "first-notice-macos-full-summary.json.gz",
+      "sha256": "808aad31da9ab56c13700df5d32cf1bcc42b542621c3936da05dc07fe1d30c86"
+    },
+    {
+      "path": "first-notice-macos-full-tests.json.gz",
+      "sha256": "6f00fecc17369a563acea80e61d65b07f125219e12514dc95f2f117ece9df4c2"
+    }
+  ],
+  "testBundleBinarySha256": "9f8aae267e81d974905452baa903bda762c961ff3d73f1ef110f65d6f12fc9aa"
+}

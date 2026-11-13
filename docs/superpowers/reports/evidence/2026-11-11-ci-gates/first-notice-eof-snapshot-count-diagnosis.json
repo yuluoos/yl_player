@@ -1,0 +1,65 @@
+{
+  "test": "YlMacosAudioTests/testActualDecodedCandidateEOFSuspendResumeDoesNotAutoplay()",
+  "sourceSha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5",
+  "rawStates": [
+    "0:0:idle:0",
+    "1:1:loading:0",
+    "2:2:ready:0",
+    "3:3:ready:0",
+    "6:5:playing:0",
+    "7:6:playing:0",
+    "9:7:playing:0",
+    "26:24:playing:949",
+    "44:42:playing:1952",
+    "61:59:playing:2944",
+    "79:77:playing:3946",
+    "83:81:completed:4026",
+    "85:83:paused:4026",
+    "86:84:paused:4026",
+    "94:92:buffering:4026",
+    "95:93:paused:0",
+    "96:94:playing:0",
+    "100:98:playing:149",
+    "118:116:playing:1141",
+    "136:134:playing:2144",
+    "154:152:playing:3146",
+    "172:170:completed:4026",
+    "173:171:completed:4026"
+  ],
+  "completedSnapshots": [
+    {
+      "sequence": 83,
+      "revision": 81,
+      "status": "completed",
+      "positionMs": 4026
+    },
+    {
+      "sequence": 172,
+      "revision": 170,
+      "status": "completed",
+      "positionMs": 4026
+    },
+    {
+      "sequence": 173,
+      "revision": 171,
+      "status": "completed",
+      "positionMs": 4026
+    }
+  ],
+  "completedTransitions": [
+    {
+      "sequence": 83,
+      "revision": 81,
+      "status": "completed",
+      "positionMs": 4026
+    },
+    {
+      "sequence": 172,
+      "revision": 170,
+      "status": "completed",
+      "positionMs": 4026
+    }
+  ],
+  "contract": "onState publishes full snapshots. Existing CompletionTransitions counts completed entry edges, including replay and new sessions, while retaining every publication. See docs/superpowers/reports/2026-10-20-remaining-engineering.md.",
+  "limit": "This public state sequence proves two observed completion transitions and three snapshots. It does not trace which caller emitted the repeated snapshot; the traffic timer is one known permitted publisher."
+}

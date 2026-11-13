@@ -2667,8 +2667,16 @@ final class YlMacosAudioTests: XCTestCase {
     try await AppleHostCharacterizations.waitFor({
       host.initialState.status == .completed && callbacks.states.contains { $0.status == .completed }
     }, timeout: 10)
-    func completions() -> Int { callbacks.states.filter { $0.status == .completed }.count }
+    func completions() -> Int { completionTransitions(callbacks.states) }
     XCTAssertEqual(completions(), 1); XCTAssertFalse(host.playbackIntent)
+    // Traffic refresh and explicit reads may republish the completed snapshot.
+    // Preserve every publication while counting the EOF transition only once.
+    let snapshotsAtEOF = callbacks.states.filter { $0.status == .completed }.count
+    host.refreshState(); host.refreshState()
+    try await AppleHostCharacterizations.waitFor({
+      callbacks.states.filter { $0.status == .completed }.count >= snapshotsAtEOF + 2
+    })
+    XCTAssertEqual(completions(), 1)
     XCTAssertFalse(oldRenderer.hasPendingPlayback); XCTAssertEqual(oldRenderer.scheduledBytes, 0)
     XCTAssertEqual(oldRenderer.usesSubmissionAnchor, candidate)
     let atEOF = retired.output.snapshot
@@ -2755,6 +2763,7 @@ final class YlMacosAudioTests: XCTestCase {
       "positionBeforeMs": position, "audioSampleBefore": audioTime, "audioSampleAfter": advancedAudioTime,
       "framesBeforeReplay": pausedFrames, "framesAfterReplay": registry.positivePublicFrames,
       "completed": completions(), "firstFrames": callbacks.frames.count,
+      "completedSnapshots": callbacks.states.filter { $0.status == .completed }.count,
       "ledgerAfterClose": ledger.snapshot.currentBytes,
       "publicationsBeforeLateCallback": beforeLate, "publicationsAfterLateCallback": publications(),
       "callbackObservation": "unobserved", "productionAdmission": false,
