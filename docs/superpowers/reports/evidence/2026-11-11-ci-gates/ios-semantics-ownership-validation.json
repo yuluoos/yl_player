@@ -1,0 +1,34 @@
+{
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "runnerSha256": "8a81a0be02e8ce2d52868d7f28faa11818b74e8f5a46cecf4e95981698fc5cf0",
+  "flutter": "3.47.9",
+  "xcode": "27.2",
+  "beforeHls": {
+    "passed": 1,
+    "failed": 1,
+    "cause": "platform-owned semantics handle added after first test baseline"
+  },
+  "afterHls": {
+    "passed": 2,
+    "failed": 0
+  },
+  "afterSimulatorRebootHls": {
+    "passed": 2,
+    "failed": 0
+  },
+  "intentionalLeak": {
+    "exitCode": 1,
+    "testOwnedHandlesAtEnd": 1
+  },
+  "deterministicPlatformTransition": {
+    "cleanCase": "success",
+    "intentionalLeakCase": "failed",
+    "exitCode": 1,
+    "testOwnedHandlesAtEnd": [
+      0,
+      1
+    ]
+  },
+  "pythonUnitTests": 4,
+  "playerSourceChanged": false
+}

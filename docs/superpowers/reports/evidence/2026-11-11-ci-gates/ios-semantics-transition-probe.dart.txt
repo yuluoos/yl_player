@@ -1,0 +1,17 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+
+void main() {
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  setUp(() => binding.platformDispatcher.semanticsEnabledTestValue = false);
+  tearDown(binding.platformDispatcher.clearSemanticsEnabledTestValue);
+  testWidgets('platform activation after baseline is not a test leak', (tester) async {
+    binding.platformDispatcher.semanticsEnabledTestValue = true;
+    await tester.pump();
+  });
+  testWidgets('real leak remains visible across platform activation', (tester) async {
+    tester.ensureSemantics();
+    binding.platformDispatcher.semanticsEnabledTestValue = true;
+    await tester.pump();
+  });
+}

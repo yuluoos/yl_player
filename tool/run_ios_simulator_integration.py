@@ -67,18 +67,60 @@ def main():
     # Preserve the executed test names, including failures, in the driver data.
     with tempfile.TemporaryDirectory(prefix='yl-ios-ci-', dir=example / '.dart_tool') as directory:
         entry = Path(directory) / 'entry.dart'
-        entry.write_text("import 'dart:async';\n"
-                         "import 'package:test_api/scaffolding.dart' show Timeout;\n"
-                         "import 'package:integration_test/integration_test.dart';\n"
-                         f"import '{target.as_uri()}' as suite;\n"
-                         "void main() {\n"
-                         "  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();\n"
-                         "  binding.defaultTestTimeout = const Timeout(Duration(minutes: 5));\n"
-                         "  unawaited(binding.allTestsPassed.future.then((_) {\n"
-                         "    binding.reportData = {...?binding.reportData,\n"
-                         "      'ciCases': binding.results.map((name, result) => MapEntry(name, result.toString()))};\n"
-                         "  }));\n"
-                         "  suite.main();\n}\n")
+        entry.write_text("""import 'dart:async';
+import 'package:flutter/semantics.dart';
+import 'package:flutter_test/flutter_test.dart' show setUp, tearDown;
+import 'package:test_api/scaffolding.dart' show Timeout;
+import 'package:integration_test/integration_test.dart';
+import '__YL_TEST_URI__' as suite;
+
+// iOS can enable platform semantics after a test records its leak baseline.
+// SemanticsBinding owns exactly one handle while platform semantics is enabled.
+// Keep real handles untouched and report test/application-owned handles to the
+// normal WidgetTester leak check; a platform request is not a test-owned leak.
+class CiIntegrationBinding extends IntegrationTestWidgetsFlutterBinding {
+  final semanticsObservations = <Map<String, Object?>>[];
+
+  @override
+  int get debugOutstandingSemanticsHandles {
+    final owned = super.debugOutstandingSemanticsHandles -
+        (platformDispatcher.semanticsEnabled ? 1 : 0);
+    assert(owned >= 0, 'Platform semantics ownership is inconsistent');
+    return owned;
+  }
+
+  void recordSemantics(String phase, {String? stack}) {
+    semanticsObservations.add({
+      'phase': phase,
+      'allHandles': super.debugOutstandingSemanticsHandles,
+      'testOwnedHandles': debugOutstandingSemanticsHandles,
+      'platformEnabled': platformDispatcher.semanticsEnabled,
+      if (stack != null) 'stack': stack,
+    });
+  }
+
+  @override
+  SemanticsHandle ensureSemantics() {
+    final handle = super.ensureSemantics();
+    recordSemantics('ensureSemantics', stack: StackTrace.current.toString());
+    return handle;
+  }
+}
+
+void main() {
+  final binding = CiIntegrationBinding();
+  binding.defaultTestTimeout = const Timeout(Duration(minutes: 5));
+  setUp(() => binding.recordSemantics('setUp'));
+  tearDown(() => binding.recordSemantics('tearDown'));
+  unawaited(binding.allTestsPassed.future.then((_) {
+    binding.recordSemantics('suiteComplete');
+    binding.reportData = {...?binding.reportData,
+      'ciSemantics': binding.semanticsObservations,
+      'ciCases': binding.results.map((name, result) => MapEntry(name, result.toString()))};
+  }));
+  suite.main();
+}
+""".replace('__YL_TEST_URI__', target.as_uri()))
         driver = Path(directory) / 'driver.dart'
         driver.write_text("import 'package:integration_test/integration_test_driver.dart';\n"
                           "Future<void> main() => integrationDriver(writeResponseOnFailure: true);\n")
