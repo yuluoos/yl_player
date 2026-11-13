@@ -1,0 +1,64 @@
+{
+  "runId": 43397003350,
+  "firstFrame": {
+    "phase": "firstFrame.event",
+    "elapsedUs": 2013844,
+    "status": "playing",
+    "revision": 15,
+    "positionUs": 0,
+    "durationUs": 2005000,
+    "engine": "avPlayer",
+    "textureId": 0,
+    "lifecycle": "resumed"
+  },
+  "pumpBegin": {
+    "phase": "pump.begin",
+    "elapsedUs": 2014280,
+    "status": "playing",
+    "revision": 15,
+    "positionUs": 0,
+    "durationUs": 2005000,
+    "engine": "avPlayer",
+    "textureId": 0,
+    "lifecycle": "resumed"
+  },
+  "pumpEnd": {
+    "phase": "pump.end",
+    "elapsedUs": 6964252,
+    "status": "completed",
+    "revision": 37,
+    "positionUs": 2004000,
+    "durationUs": 2005000,
+    "engine": "avPlayer",
+    "textureId": 0,
+    "lifecycle": "resumed"
+  },
+  "pumpWallElapsedUs": 4949972,
+  "completionDuringPump": {
+    "phase": "state",
+    "elapsedUs": 4100448,
+    "status": "completed",
+    "revision": 33,
+    "positionUs": 2004000,
+    "durationUs": 2005000,
+    "engine": "avPlayer",
+    "textureId": 0,
+    "lifecycle": "resumed"
+  },
+  "assertions": {
+    "phase": "assertions.begin",
+    "elapsedUs": 6964286,
+    "status": "completed",
+    "revision": 37,
+    "positionUs": 2004000,
+    "durationUs": 2005000,
+    "engine": "avPlayer",
+    "textureId": 0,
+    "lifecycle": "resumed"
+  },
+  "cases": {
+    "opens HLS and produces a native texture first frame": "failed",
+    "rejecting a fallback source does not tear down current HLS": "passed"
+  },
+  "interpretation": "First-frame event arrived while playing; pump returned after the 2.005-second clip had completed. Failure is the post-pump playing/buffering assertion. This evidence does not identify why Flutter pump took this long."
+}

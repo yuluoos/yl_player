@@ -1,0 +1,31 @@
+{
+  "runId": 43397003350,
+  "headSha": "1e6a2964d9c617d32f330dfa56a8bd13cb2f9058",
+  "artifact": {
+    "id": 14025186529,
+    "name": "apple-unit-macos-runtime-evidence",
+    "digest": "sha256:d779af8917163ed4defb37e98888023368613e78b9bd1790464b228d1b2c6fef",
+    "size_in_bytes": 119633954
+  },
+  "systemLogProjection": [
+    "timestamp",
+    "machTimestamp",
+    "processID",
+    "threadID",
+    "traceID",
+    "processImagePath",
+    "subsystem",
+    "category",
+    "eventMessage"
+  ],
+  "selectedClockEvents": 843,
+  "timeWindowUtc": [
+    "2026-11-13T09:12:28.325000+00:00",
+    "2026-11-13T09:15:20.204000+00:00"
+  ],
+  "method": "Original xcresult attachments and CoreAudio log archive. Render/coreaudiod association uses raw mach host ticks, not Date-to-log UTC conversion. The probe Date anchor and log wall timestamps differ by about 157 ms in this run; a narrow Date sampling interval is not a bound on that cross-source wall-clock difference.",
+  "matrixRows": 12,
+  "nativeControlRows": 2,
+  "traceRows": 14,
+  "limits": "TimePitch pre/post elapsed includes preemption and excludes other HAL graph work; audio host stamps are not deadlines. Native timeline skip intersection exactly predicts three observed PCM losses for these uninterrupted rate-1 fixtures, but does not identify the hypervisor/device/scheduler root cause."
+}

@@ -1,0 +1,150 @@
+[
+  {
+    "identity": {
+      "buffers": 3,
+      "candidate": true,
+      "path": "matrix",
+      "pausedEOF": false,
+      "starvation": false
+    },
+    "inputTimelineStart": 24960,
+    "inputTimelineEndExclusive": 28032,
+    "nativeAndTapFirstHostTicks": 27466547761,
+    "actualMissingFrames": 2560,
+    "predictedMissingFramesFromSkippedNativeIntervals": 2560,
+    "intervals": [
+      {
+        "previousPreIndex": 0,
+        "nextPreIndex": 2,
+        "nativeSkippedStart": 512,
+        "nativeSkippedEndExclusive": 24960,
+        "nativeSkippedFrames": 24448,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 75.125,
+        "betweenNotificationsUs": 519644.2916666667
+      },
+      {
+        "previousPreIndex": 2,
+        "nextPreIndex": 4,
+        "nativeSkippedStart": 25472,
+        "nativeSkippedEndExclusive": 49920,
+        "nativeSkippedFrames": 24448,
+        "intersectionWithInputFrames": 2560,
+        "previousRenderElapsedUs": 72.375,
+        "betweenNotificationsUs": 520698.375
+      },
+      {
+        "previousPreIndex": 4,
+        "nextPreIndex": 6,
+        "nativeSkippedStart": 50432,
+        "nativeSkippedEndExclusive": 74880,
+        "nativeSkippedFrames": 24448,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 152.66666666666666,
+        "betweenNotificationsUs": 519465.625
+      },
+      {
+        "previousPreIndex": 6,
+        "nextPreIndex": 8,
+        "nativeSkippedStart": 75392,
+        "nativeSkippedEndExclusive": 99840,
+        "nativeSkippedFrames": 24448,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 149.16666666666666,
+        "betweenNotificationsUs": 519527.125
+      },
+      {
+        "previousPreIndex": 8,
+        "nextPreIndex": 10,
+        "nativeSkippedStart": 100352,
+        "nativeSkippedEndExclusive": 124800,
+        "nativeSkippedFrames": 24448,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 147.70833333333334,
+        "betweenNotificationsUs": 519952.1666666667
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "candidate": true,
+      "path": "matrix",
+      "pausedEOF": false,
+      "starvation": false
+    },
+    "inputTimelineStart": 1536,
+    "inputTimelineEndExclusive": 2049536,
+    "nativeAndTapFirstHostTicks": 27711069890,
+    "actualMissingFrames": 11968,
+    "predictedMissingFramesFromSkippedNativeIntervals": 11968,
+    "intervals": [
+      {
+        "previousPreIndex": 1392,
+        "nextPreIndex": 1394,
+        "nativeSkippedStart": 356864,
+        "nativeSkippedEndExclusive": 361920,
+        "nativeSkippedFrames": 5056,
+        "intersectionWithInputFrames": 5056,
+        "previousRenderElapsedUs": 8062.916666666667,
+        "betweenNotificationsUs": 98113.125
+      },
+      {
+        "previousPreIndex": 4680,
+        "nextPreIndex": 4682,
+        "nativeSkippedStart": 1203648,
+        "nativeSkippedEndExclusive": 1210560,
+        "nativeSkippedFrames": 6912,
+        "intersectionWithInputFrames": 6912,
+        "previousRenderElapsedUs": 63.791666666666664,
+        "betweenNotificationsUs": 138443.875
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  },
+  {
+    "identity": {
+      "buffers": 2000,
+      "path": "directNativeControl"
+    },
+    "inputTimelineStart": 1536,
+    "inputTimelineEndExclusive": 2049536,
+    "nativeAndTapFirstHostTicks": 29008513346,
+    "actualMissingFrames": 264,
+    "predictedMissingFramesFromSkippedNativeIntervals": 264,
+    "intervals": [
+      {
+        "previousPreIndex": 2,
+        "nextPreIndex": 4,
+        "nativeSkippedStart": 1024,
+        "nativeSkippedEndExclusive": 1800,
+        "nativeSkippedFrames": 776,
+        "intersectionWithInputFrames": 264,
+        "previousRenderElapsedUs": 15763.583333333334,
+        "betweenNotificationsUs": 11142.5
+      },
+      {
+        "previousPreIndex": 8724,
+        "nextPreIndex": 8726,
+        "nativeSkippedStart": 2234632,
+        "nativeSkippedEndExclusive": 2235704,
+        "nativeSkippedFrames": 1072,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 128.16666666666669,
+        "betweenNotificationsUs": 17533.666666666668
+      },
+      {
+        "previousPreIndex": 8756,
+        "nextPreIndex": 8758,
+        "nativeSkippedStart": 2243896,
+        "nativeSkippedEndExclusive": 2244504,
+        "nativeSkippedFrames": 608,
+        "intersectionWithInputFrames": 0,
+        "previousRenderElapsedUs": 79.45833333333333,
+        "betweenNotificationsUs": 12063.916666666666
+      }
+    ],
+    "basis": "Input start inferred from leadingZeros - firstMarker at the common zero sample/host origin. Applies to these uninterrupted rate-1 fixtures only; native positive skipped intervals are clipped to the known input duration. No claim of physical speaker measurement or host scheduler root cause."
+  }
+]

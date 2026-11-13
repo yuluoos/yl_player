@@ -2040,6 +2040,194 @@
       "sha256": "0f35961804f6f695c29afcf0a3311d3a8b38995e0d0d0a51f07c70f457e1771c",
       "size": 1598
     },
+    "ci127-analyze-render-timing.py.txt.gz": {
+      "sha256": "1d1eb19311a99891aff5cbbb82a87f93e82478cb3160c61aad28608045bc1413",
+      "size": 1681
+    },
+    "ci127-android-api-24-failure.zip": {
+      "sha256": "24cf797c07ad7739693e00ef9468b4645500c0b07809a777077eca3e454fa292",
+      "size": 54509
+    },
+    "ci127-android-consumer-evidence.zip": {
+      "sha256": "5bd1b4c75ba59c86c329af25e0040143675be9a9923510796dd1d36d490992fa",
+      "size": 9692
+    },
+    "ci127-apple-consumer-evidence.zip": {
+      "sha256": "163e79f0be87a5f3abfb0c5eccbe3a60cc86fe5fb837b8d2e49e06e2f547a608",
+      "size": 1494821
+    },
+    "ci127-artifact-verification.json": {
+      "sha256": "5ae5a52e70744eb2f80a2963c9087c8f27e424d902690ed2951f6f9c801be4a9",
+      "size": 1533
+    },
+    "ci127-artifacts.json.gz": {
+      "sha256": "9dbce2e3c163be5ff3eabcd35c111ae8193a5ad53ae4f5f3ff439b1799568cef",
+      "size": 1078
+    },
+    "ci127-audio-clock-events.json.gz": {
+      "sha256": "2c4385e5a497e81e0708576d2c3d50c62cf0c6a70dedb63ee9913cb80c2e4981",
+      "size": 25055
+    },
+    "ci127-audio-native-timeline-loss.json": {
+      "sha256": "535d68521d1e73ce45931f98d59667aa1a5e8bb9a545e4f2f02774768e2bf9d6",
+      "size": 5450
+    },
+    "ci127-audio-render-coreaudio-correlation.json": {
+      "sha256": "00ef64ab781684c4a9f1b5960ebe661202a0ed1acbb90a2ee8a1c7fcb673f080",
+      "size": 21234
+    },
+    "ci127-audio-timing-analysis.log.gz": {
+      "sha256": "18768fd307cb8cb154407d9f261054af62e748fcf595488ab999edf9078ad4d4",
+      "size": 1458
+    },
+    "ci127-audio-timing-attachments.json.gz": {
+      "sha256": "b71a9fd548a206cd0ebbca8c7197ae2949dd5a1a7c943c044b8994d582ffda66",
+      "size": 351380
+    },
+    "ci127-audio-timing-provenance.json": {
+      "sha256": "f830da8dab15610cf78fc87b248fa6c04b073777b96b89180727a6ea7e8a2a42",
+      "size": 1342
+    },
+    "ci127-hls-pump-localization.json": {
+      "sha256": "8da2aae231c7de18c90ee3264fefdec43d0d48f4684b11e9500e6e9ef2f232fa",
+      "size": 1706
+    },
+    "ci127-ios-devices.log.gz": {
+      "sha256": "bdbe1dc15290bad89a09015f5fade2f5dadc2fc0fdaa90dfde0c3afaf50a63a8",
+      "size": 5765
+    },
+    "ci127-ios-hls_playback_test-flutter_driver_commands_0.log.gz": {
+      "sha256": "f1dec37a9a49a0899b13071e696f6ec4d05be194a6f181587d5b17e5837617c8",
+      "size": 2023
+    },
+    "ci127-ios-hls_playback_test-integration_response_data.json.gz": {
+      "sha256": "56efa634cdd6d34f57ea02a2e116a1e86fd7e7b20db214bb2ad3ecd4807fb0d9",
+      "size": 1837
+    },
+    "ci127-ios-hls_playback_test-launch.log.gz": {
+      "sha256": "755456fe0f40c816d3d1241575f19f23c99b873cb7a55c19e1041664e406ace5",
+      "size": 51
+    },
+    "ci127-ios-hls_playback_test-vm-service.json.gz": {
+      "sha256": "526d19a8e5b867177abf7cc864714425423e790ad47fd46fb282f7070740ffc6",
+      "size": 679
+    },
+    "ci127-ios-hls_playback_test.dart.log.gz": {
+      "sha256": "01abc47e0252704427f5a2d2220699e20cca6e9f6aecb957ebacf2303e0ddb77",
+      "size": 1259
+    },
+    "ci127-ios-native.log.gz": {
+      "sha256": "5f3ff5694c6640b054e79a4a4dbf95dc41eecc16ee22eb94dc320a3d7e5cf886",
+      "size": 3451
+    },
+    "ci127-ios-runner-log.log.gz": {
+      "sha256": "a5611b48205d62a247f81d4c7e3b4f58a21490e625935cd8eec4c819382bf369",
+      "size": 48298
+    },
+    "ci127-ios-summary.json.gz": {
+      "sha256": "6078b1a16e46e67a07823b60fff0e466d708a4e16558875216fd2db0f6b9716f",
+      "size": 2239
+    },
+    "ci127-ios-tests.json.gz": {
+      "sha256": "7b1eb4e8f02de2c8bb307f392348209f33b8a8239f888fece9e5cde08ffa81cd",
+      "size": 50838
+    },
+    "ci127-jobs.json.gz": {
+      "sha256": "889841c326dd6f1486dacf5e1d67c8372592a0112659f3796cf3e2ac4d89c537",
+      "size": 2904
+    },
+    "ci127-macos-apple_strict_policy_test.dart.log.gz": {
+      "sha256": "91bbe8afaa92e563b8b651f8d74e6dc1f66d2d62cbd6743ced8926789844e60b",
+      "size": 1603
+    },
+    "ci127-macos-audio-matrix.json.gz": {
+      "sha256": "cb6f5ffad11d56cfe753b20f7bc8b4fd43e9a623decf9d9952f981d193f1b933",
+      "size": 2098
+    },
+    "ci127-macos-audio-window.log.gz": {
+      "sha256": "8c68a9c3ae36a1ccc613caee2dc76b7ef6c320ceed381b362920e289b6a6dc65",
+      "size": 465
+    },
+    "ci127-macos-avi_policy_test.dart.log.gz": {
+      "sha256": "e68775be26187388e6714ae9df9147743692d3a5773d4e8c5ab4a07c5f3abda6",
+      "size": 1260
+    },
+    "ci127-macos-flv_intent_test.dart.log.gz": {
+      "sha256": "5ce2d6cbc0e41016fc294b1f6015653d35a9d33be061ef4a202b4c45e1f5ee8e",
+      "size": 1137
+    },
+    "ci127-macos-macos_hls_playback_test.dart.log.gz": {
+      "sha256": "9d13850954d52b69fe86ff0f62b36e8d2b2bca868b67b8750be4dc56ac61dc6d",
+      "size": 1128
+    },
+    "ci127-macos-macos_http_flv_playback_test.dart.log.gz": {
+      "sha256": "dabbc35f0590fb92ece260f690859adf9457ca39ccbf3d20768ac832fb4d624f",
+      "size": 1130
+    },
+    "ci127-macos-macos_mkv_playback_test.dart.log.gz": {
+      "sha256": "f3ba022acd77284692775c59a92dfab0809f7ec496c6d2d5882cf79b8ce50029",
+      "size": 1233
+    },
+    "ci127-macos-macos_network_mkv_playback_test.dart.log.gz": {
+      "sha256": "d396ac1754e974cf0c56f56d4b8a7bbd4ebf717090ab838ead60d770776efb06",
+      "size": 1176
+    },
+    "ci127-macos-mpegts_policy_test.dart.log.gz": {
+      "sha256": "4ad86bedf818ca3a7d63661380e4d2fe0816a1b0e9757e2873cbd3b5f291c766",
+      "size": 1227
+    },
+    "ci127-macos-native.log.gz": {
+      "sha256": "196fb26d3bb755aa55ad1f4858dd35ff75172e12a44a2cc7aa327a4d22f691e9",
+      "size": 3046
+    },
+    "ci127-macos-reload-attachments.json.gz": {
+      "sha256": "0ee8fcb11dec7aed000077def47065897b4484e3dd3fd8ffe44de49ccd41743c",
+      "size": 459
+    },
+    "ci127-macos-reload-window.log.gz": {
+      "sha256": "a4a1ebbb9edc82bb955c694e3ef4f4ad6db9b4f6e9818a355c7c1d0783c0f282",
+      "size": 254
+    },
+    "ci127-macos-render-timing-analysis.json.gz": {
+      "sha256": "b1012128a3d5c4c96d3f471e776d6cb4f39316a599694ebc330e9056f433423f",
+      "size": 19777
+    },
+    "ci127-macos-render-traces.json.gz": {
+      "sha256": "81b801eb1592274d828e875e0436fd8e288c2a0d9a3ce87bf712fef0e7a87abc",
+      "size": 345540
+    },
+    "ci127-macos-state_update_cadence_test.dart.log.gz": {
+      "sha256": "3382eef8f6dc266531007eb3d32ec04c15a867b47f472462244dba16a29f40b5",
+      "size": 1260
+    },
+    "ci127-macos-summary.json.gz": {
+      "sha256": "0877315a079e798179f29b170bd44aa43e11f755efa307430eb6bf7d8b4299c3",
+      "size": 782
+    },
+    "ci127-macos-tests.json.gz": {
+      "sha256": "fa3aeee6c57ab5b05706f280830cd5ecf9d83ff0ed5d0fc8ae41f1239fe1fec4",
+      "size": 52342
+    },
+    "ci127-macos-vorbis_policy_test.dart.log.gz": {
+      "sha256": "493ab39faf31d4b07fe92f5da7c8fe45d3a4ff2a546569b401ee25ead202024e",
+      "size": 1264
+    },
+    "ci127-macos-vp9_policy_test.dart.log.gz": {
+      "sha256": "30313ccb73c38cc6e21b8cb66b6cb1c710aee2f0d88f13ac71521568f1567f27",
+      "size": 1179
+    },
+    "ci127-native-comparison.json": {
+      "sha256": "2534ca3f967776eee9f1b6ee26dabf86838b6348c9d95ea65acf704585e9e51f",
+      "size": 3942
+    },
+    "ci127-prove-timeline-loss.py.txt.gz": {
+      "sha256": "27a7f506f256b3bc302045d2fe5fedfd919644cebcfb66245e8124e1f6a6f9d5",
+      "size": 1221
+    },
+    "ci127-run.json.gz": {
+      "sha256": "de5519fc6f3413ab4d24d7ca9e2d2a1f5f8db62e0271781c339530dc441f72e6",
+      "size": 1601
+    },
     "clock-diagnostics-devices.json.gz": {
       "sha256": "2e9dd6f65143de90c8e32404c6be12e982b9138d530a6fc56dbcdd08ff504e74",
       "size": 143
@@ -3199,6 +3387,10 @@
     "verifier-retry-negative-tests.log.gz": {
       "sha256": "659c9f00d3461c330d26c5d26e86161d4b2aa92d2a5921ed7898e4822bef6439",
       "size": 1058
+    },
+    "verify-ci127-audio-timing.py": {
+      "sha256": "c01a70869c425933cecb8d330e5da676bf391f9519b049176c3f25e63e861b5f",
+      "size": 3568
     },
     "vorbis-reference-build.log": {
       "sha256": "9c2e6cd7ade9beb977f38e07d2f5882a889bc81194a4d5dc0027a0456d7518b0",
