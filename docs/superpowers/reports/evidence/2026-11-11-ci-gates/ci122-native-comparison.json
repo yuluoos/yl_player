@@ -1,0 +1,61 @@
+{
+  "ios": {
+    "identitiesMatch": true,
+    "count": 904,
+    "passed": 870,
+    "failed": [
+      "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+      "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+      "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+      "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+      "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+      "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+      "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+      "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+      "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+      "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+      "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+      "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+      "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+      "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+      "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+      "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+      "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+      "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+      "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+      "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+      "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+      "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+      "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+      "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+      "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+      "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+      "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()"
+    ],
+    "skipped": [
+      "YlManagedFallbackCharacterizationTests/testBoundedSixteenMiBRealManagedFixtureProgressMetricsAndEOF()"
+    ]
+  },
+  "macos": {
+    "identitiesMatch": true,
+    "count": 957,
+    "passed": 955,
+    "failed": [
+      "YlMacosAudioTests/testActualDecodedLegacyEOFSuspendResumeDoesNotAutoplay()",
+      "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()"
+    ],
+    "skipped": []
+  },
+  "iosFailuresUnchangedFromCI118": true,
+  "allRemoteIOSFailuresPassedOnPhysicalDevice": true,
+  "head": "756ea52eec0f8682119057fb74b777c609a615bc",
+  "runId": 43362669558,
+  "sourceSha256": "a8d2596bd1f6d502fedd508eddc1c40fad48c50d5db4d3efc76caa0f89912dea",
+  "runPassed": false
+}

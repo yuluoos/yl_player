@@ -138,10 +138,13 @@ void main() {
             deadline = time.monotonic() + 60
             uri = None
             while uri is None and time.monotonic() < deadline:
+                # A cold Simulator logd query can take longer than 15 seconds.
+                # Use the remaining discovery budget, rather than failing before
+                # the existing 60-second overall deadline has been exhausted.
                 result = run(['xcrun', 'simctl', 'spawn', args.simulator, 'log', 'show',
                               '--last', '2m', '--style', 'json', '--predicate',
                               f'processIdentifier == {pid} AND eventMessage CONTAINS "The Dart VM service is listening on"'],
-                             capture=True, timeout=15)
+                             capture=True, timeout=max(0.001, deadline - time.monotonic()))
                 (evidence / 'vm-service.json').write_text(result.stdout)
                 uri = service_uri(json.loads(result.stdout), pid)
                 if uri is None:
