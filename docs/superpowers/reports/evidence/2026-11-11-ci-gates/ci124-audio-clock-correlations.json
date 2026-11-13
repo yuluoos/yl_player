@@ -1,0 +1,466 @@
+{
+  "run": "ci124",
+  "devicesAndConfigurations": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "modelName": "Apple Virtual Machine 1",
+        "osBuildNumber": "24H232",
+        "osVersion": "15.8.2",
+        "platform": "macOS"
+      },
+      "expectedFailures": 0,
+      "failedTests": 1,
+      "passedTests": 956,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ],
+  "method": "Associate each row with the latest app engine start before its attachment. The first row uses a three-second lookback; every later row has exactly one start after the preceding attachment. Count coreaudiod events from that start through this attachment. Loop start estimated by attachment timestamp minus elapsedSeconds is approximate and is not a tap host-time anchor. Counts refer only to the selected exported log events.",
+  "rows": [
+    {
+      "row": "legacy-0",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "2CA638A1-A814-4591-AE57-0358BAF1B224.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_00A3B6B5-1AE7-4F39-BD6C-AFEB4A14116E.json",
+        "timestamp": 1794547933.289
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:32:13.271222+0000",
+        "machTimestamp": 28677383173,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003170800: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:32:13.285941+00:00",
+      "expectedFrames": 0,
+      "marker": {
+        "errors": 0,
+        "frames": 0,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "legacy-1",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "8AEAB1FE-96CA-4945-9EAF-81B9064A4712.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_B98C2875-CD98-43B2-B39F-7F57C2D7C5E5.json",
+        "timestamp": 1794547933.489
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:32:13.331381+0000",
+        "machTimestamp": 28678826995,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003170800: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:32:13.346225+00:00",
+      "expectedFrames": 1024,
+      "marker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "legacy-3",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "0E4355D4-0DC3-49C9-A49D-A553B861B395.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_7A2881DF-AE22-4F3E-9748-F588DDD56AC1.json",
+        "timestamp": 1794547943.872
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:32:13.531427+0000",
+        "machTimestamp": 28683628103,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x60000311b720: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:32:13.805854+00:00",
+      "expectedFrames": 3072,
+      "marker": {
+        "errors": 0,
+        "frames": 512,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 11,
+      "clockResetSampleDiffCounts": {
+        "initial-host-out-of-bounds": 1,
+        "24960.000000": 10
+      },
+      "outOfBoundsCount": 31,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "legacy-2000",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "79FF0848-8ACD-43AB-93C1-51A41D1DC04F.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_CBD314A8-079F-4368-96FC-FE916A0A2D26.json",
+        "timestamp": 1794547987.36
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:32:24.554052+0000",
+        "machTimestamp": 28948171106,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x60000311fd50: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:32:24.574513+00:00",
+      "expectedFrames": 2048000,
+      "marker": {
+        "errors": 0,
+        "frames": 2048000,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "legacy-100-starvation",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "8E5A9084-DED3-41DE-9B74-E1C06FA32CA9.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_C54677D3-C0EC-4332-90D6-D8BB075816EB.json",
+        "timestamp": 1794547990.106
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:33:07.457664+0000",
+        "machTimestamp": 29977857777,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003106eb0: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:33:07.474185+00:00",
+      "expectedFrames": 102400,
+      "marker": {
+        "errors": 0,
+        "frames": 102400,
+        "interiorZeroFrames": 17920
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "legacy-3-paused",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "F9AFB0C5-25D5-447C-8B7F-EE42F6D01EF1.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_4C09BA0A-F413-4309-ACD2-AED97106B1A0.json",
+        "timestamp": 1794547990.57
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:33:10.172846+0000",
+        "machTimestamp": 30043022161,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003106eb0: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:33:10.375540+00:00",
+      "expectedFrames": 3072,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "candidate-0",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "4E9A4BF5-F04C-402A-9EC3-D965669C3D3C.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_AF38FAFF-E61F-4BC9-83E2-2F344B8D3401.json",
+        "timestamp": 1794547990.652
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:33:10.633621+0000",
+        "machTimestamp": 30054080752,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003102340: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:33:10.648494+00:00",
+      "expectedFrames": 0,
+      "marker": {
+        "errors": 0,
+        "frames": 0,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "candidate-1",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "05DD6A8E-914C-402D-9519-7ECC5E6D5C6F.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_96835281-5EE7-41C4-B6BA-02C2CDB1102D.json",
+        "timestamp": 1794547990.863
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:33:10.704383+0000",
+        "machTimestamp": 30055779049,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x60000310ef00: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:33:10.719146+00:00",
+      "expectedFrames": 1024,
+      "marker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "candidate-3",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "A9AAB66D-F0FE-405F-82DB-104A940AC931.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_8DF7D466-AC22-4194-9D65-E9E70884CADF.json",
+        "timestamp": 1794547991.139
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:33:10.934188+0000",
+        "machTimestamp": 30061294364,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003106b90: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:33:10.948766+00:00",
+      "expectedFrames": 3072,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 1,
+      "clockResetSampleDiffCounts": {
+        "-60116160.000000": 1
+      },
+      "outOfBoundsCount": 2,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "candidate-2000",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "7EC3DEA0-5F05-4372-A9C2-B63FB71622A1.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_6C6E8783-D52E-44E4-8734-1EE7635F17F0.json",
+        "timestamp": 1794548043.911
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:33:11.222569+0000",
+        "machTimestamp": 30068215503,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x6000031024e0: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:33:11.240338+00:00",
+      "expectedFrames": 2048000,
+      "marker": {
+        "errors": 725044,
+        "frames": 2036788,
+        "interiorZeroFrames": 11212
+      },
+      "capture": null,
+      "clockResetCount": 1,
+      "clockResetSampleDiffCounts": {
+        "-60128640.000000": 1
+      },
+      "outOfBoundsCount": 203,
+      "deadlineBeforeStartCount": 2,
+      "overloadReports": 2
+    },
+    {
+      "row": "candidate-100-starvation",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "1C4F8315-3E94-4FAE-8C73-47BBA9461552.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_3655E996-04D4-4DBE-B65A-62ADAC628E20.json",
+        "timestamp": 1794548046.544
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:34:03.990220+0000",
+        "machTimestamp": 31334639124,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x60000310eda0: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:34:04.008746+00:00",
+      "expectedFrames": 102400,
+      "marker": {
+        "errors": 0,
+        "frames": 102400,
+        "interiorZeroFrames": 13312
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    },
+    {
+      "row": "candidate-3-paused",
+      "attachment": {
+        "configurationName": "Test Scheme Action",
+        "deviceId": "936168e8403393b5ba4a3b74b3195f76a26fc210",
+        "deviceName": "My Mac",
+        "exportedFileName": "2D42B21E-F750-490D-86C9-422EAB424380.json",
+        "isAssociatedWithFailure": false,
+        "suggestedHumanReadableName": "public.json_0_43E1645B-08AB-412B-A882-BC81ADB3D7B9.json",
+        "timestamp": 1794548046.994
+      },
+      "engineStart": {
+        "timestamp": "2026-11-13 05:34:06.607898+0000",
+        "machTimestamp": 31397463408,
+        "processID": 11479,
+        "threadID": 37592,
+        "traceID": 6990540899021488132,
+        "processImagePath": "/Users/runner/work/yl_player/yl_player/packages/yl_player/example/build/native-macos-tests/Build/Products/Debug/yl_player_example.app/Contents/MacOS/yl_player_example",
+        "subsystem": "com.apple.avfaudio",
+        "category": "avae",
+        "eventMessage": "         AVAudioEngine.mm:1179  Engine@0x600003106b90: start, was running 0"
+      },
+      "estimatedLoopStartUtc": "2026-11-13T05:34:06.794898+00:00",
+      "expectedFrames": 3072,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "capture": null,
+      "clockResetCount": 0,
+      "clockResetSampleDiffCounts": {},
+      "outOfBoundsCount": 0,
+      "deadlineBeforeStartCount": 0,
+      "overloadReports": 0
+    }
+  ]
+}

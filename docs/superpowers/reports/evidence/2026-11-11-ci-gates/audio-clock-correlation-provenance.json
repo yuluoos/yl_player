@@ -1,0 +1,53 @@
+{
+  "runs": {
+    "ci124": {
+      "runId": 43370796603,
+      "headSha": "5c385465c9424b381583579c6a0ace55922d3428",
+      "artifact": {
+        "id": 14013492062,
+        "name": "apple-unit-macos-runtime-evidence",
+        "digest": "sha256:dc28353cdd34c7a8f18808f91c303908abff83e47dc3b38c0aff6884a65622a2",
+        "size_in_bytes": 114658115
+      },
+      "recomputedZipSha256": "dc28353cdd34c7a8f18808f91c303908abff83e47dc3b38c0aff6884a65622a2",
+      "systemLogArchive": "test-session-systemlogs-2026.11.13_05-17-56-+0000.logarchive",
+      "eventCount": 577,
+      "selectionStartUtc": "2026-11-13T05:32:10.289000+00:00",
+      "selectionEndUtc": "2026-11-13T05:34:07.994000+00:00"
+    },
+    "ci126": {
+      "runId": 43381434363,
+      "headSha": "f2c5b26a12f92e27d07e5da353e583d440b06873",
+      "artifact": {
+        "id": 14017344909,
+        "name": "apple-unit-macos-runtime-evidence",
+        "digest": "sha256:6c185df973a8245ac2eca4b7ea6aa939b0ae32083849d4251fc9dd78c89382b9",
+        "size_in_bytes": 119084269
+      },
+      "recomputedZipSha256": "6c185df973a8245ac2eca4b7ea6aa939b0ae32083849d4251fc9dd78c89382b9",
+      "systemLogArchive": "test-session-systemlogs-2026.11.13_06-52-48-+0000.logarchive",
+      "eventCount": 777,
+      "selectionStartUtc": "2026-11-13T07:06:57.938000+00:00",
+      "selectionEndUtc": "2026-11-13T07:09:48.826000+00:00"
+    }
+  },
+  "source": "Previously downloaded official xcresult ZIPs; SHA-256 rechecked before extraction. JSON events exported with /usr/bin/log show --style json --info --debug --timezone UTC. Attachment timestamp and row JSON exported with xcrun xcresulttool export attachments.",
+  "selection": "Full archive export (log show start/end returned no events); UTC filtering done in Python. Keep coreaudiod AMCP/carc, Overload or AVIODevice messages, and yl_player_example AMCP, Engine@ or setPlayState Started messages. Deduplicate exact projected records. All eventMessage strings are preserved as exported, including system redaction/truncation.",
+  "projection": [
+    "timestamp",
+    "machTimestamp",
+    "processID",
+    "threadID",
+    "traceID",
+    "processImagePath",
+    "subsystem",
+    "category",
+    "eventMessage"
+  ],
+  "limitations": [
+    "Temporal association between a test row and its engine start, not a shared tap-to-HAL host-time anchor.",
+    "No host CPU or hypervisor scheduler trace was collected.",
+    "System clock warnings can occur in passing rows; individual warning presence is not a loss criterion.",
+    "Diagnostic cause labels and fields are system observations, not proof of a host CPU root cause."
+  ]
+}

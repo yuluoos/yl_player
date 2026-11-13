@@ -48,6 +48,10 @@
       "sha256": "813de94d5a1758fffae0366a7861d8737db58c97d9c6516d8726ef62a5ef5a67",
       "size": 110
     },
+    "analyze-audio-clock-correlation.py": {
+      "sha256": "ffebac989be6559f01ed6cd6577fb4fd17f90b2f549b244a92d7cbb81db73967",
+      "size": 4756
+    },
     "aom-install.log": {
       "sha256": "27351d905306766a501ceb0c0259d0d3b522d3d93de67f04d36b7b33b5da6402",
       "size": 240
@@ -63,6 +67,10 @@
     "apple-local-failure-tests.json.gz": {
       "sha256": "096fe03dd17ac72d7c8769aaacc3cdc4c6f3d1127b84605de34c65a16e22d8a3",
       "size": 2578
+    },
+    "audio-clock-correlation-provenance.json": {
+      "sha256": "368501d4c510fedd79d82ad4a5657a77d991b11da8892367b8d5d6efbfd03962",
+      "size": 2620
     },
     "audio-gap-control-rows.json.gz": {
       "sha256": "bad4cdca2bf50e7f95709beffb11768089732540983dcb6eba11d19dcc536c12",
@@ -1604,6 +1612,18 @@
       "sha256": "1cd77cbc955664425d9422394084d5af68d25190717b555ff19f8f246459d105",
       "size": 1069
     },
+    "ci124-audio-clock-attachments.json.gz": {
+      "sha256": "c03e359b068f8e582319dc233bb93bd0dc04b78f9b979787af14c76b1148cfa4",
+      "size": 1564
+    },
+    "ci124-audio-clock-correlations.json": {
+      "sha256": "7dc46898557d24da3b7e92381bca38a5de8dd331f2ad392a74dd560368619e12",
+      "size": 18582
+    },
+    "ci124-audio-clock-events.json.gz": {
+      "sha256": "5171c8ce5bedb8203250a066633ff43e4bcf9742e8517d49eb161e3c798c926e",
+      "size": 16541
+    },
     "ci124-ios-apple_default_positive_test-flutter_driver_commands_0.log.gz": {
       "sha256": "30431857fac82ad31545022c6df0f1b370c1517be9d46f33a08349911a53f2c9",
       "size": 2154
@@ -1763,6 +1783,18 @@
     "ci126-artifacts.json.gz": {
       "sha256": "b883d37e130a3a70874fb7aed34e1b3a9daa082450704a406bf8db984d16dd3e",
       "size": 1079
+    },
+    "ci126-audio-clock-attachments.json.gz": {
+      "sha256": "621d82b3c316040a6fa944eb5330855975e02114c2fa130feb85ed03b3a4671b",
+      "size": 2455
+    },
+    "ci126-audio-clock-correlations.json": {
+      "sha256": "58d601cc952aaa4d4d32b880e96043cd406467e4ef462dc82e8283dc6688d812",
+      "size": 25926
+    },
+    "ci126-audio-clock-events.json.gz": {
+      "sha256": "d1bbe30ae30708684f676009a41279a27894873b6e3a1ee979d5298e434202c4",
+      "size": 23084
     },
     "ci126-audio-gap-localization.json": {
       "sha256": "63d15f3fddefc9a854d36b5bc1df1cf577eaab62dfeb47744b3940176f726277",
