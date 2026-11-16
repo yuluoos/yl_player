@@ -1,0 +1,128 @@
+#!/usr/bin/env python3
+"""Diagnostic A/B/A run; never replaces or relaxes the regular native gate.
+
+Installs a pinned loopback driver only on an ephemeral GitHub-hosted runner.
+The original default, post-CoreAudio-restart default, guest clock, and restored
+default use the same test binary and exact PCM/EOF/resource assertions.
+"""
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+import urllib.request
+
+ROOT = Path(__file__).resolve().parents[2]
+EXAMPLE = ROOT / "packages/yl_player/example"
+EVIDENCE = EXAMPLE / "build/audio-clock-evidence"
+DRIVER_URL = "https://existential.audio/downloads/BlackHole2ch-0.7.1.pkg"
+DRIVER_SHA256 = "57b540f27a3e29c37e310e01bee0fdfab76733087e47f997ef9dccf851400dcf"
+
+
+def run(args, **kwargs):
+    return subprocess.run([str(arg) for arg in args], check=True, **kwargs)
+
+
+def main():
+    if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUNNER_ENVIRONMENT") != "github-hosted":
+        raise SystemExit("This diagnostic installs a driver only on a GitHub-hosted runner")
+    EVIDENCE.mkdir(parents=True, exist_ok=True)
+    route = EVIDENCE / "output-route"
+    run(["xcrun", "clang", "-fobjc-arc", "-framework", "Foundation", "-framework", "CoreAudio",
+         ROOT / "tool/media_matrix/output_route/probe.m", "-o", route])
+    def devices():
+        return json.loads(subprocess.check_output([str(route), "list"]))
+    initial = devices()
+    original_name = next(d["name"] for d in initial["devices"] if d["id"] == initial["default"])
+    binary = EXAMPLE / "build/audio-clock-diagnostic/Build/Products/Debug/yl_player_example.app/Contents/PlugIns/RunnerTests.xctest/Contents/MacOS/RunnerTests"
+    receipt = {"commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
+               "driverURL": DRIVER_URL, "driverSHA256": DRIVER_SHA256, "initial": initial, "runs": [],
+               "testBinarySHA256": hashlib.sha256(binary.read_bytes()).hexdigest(),
+               "xcode": subprocess.check_output(["xcodebuild", "-version"], text=True).strip(),
+               "os": subprocess.check_output(["sw_vers"], text=True).strip()}
+    def save():
+        (EVIDENCE / "comparison.json").write_text(json.dumps(receipt, indent=2) + "\n")
+    def select(name):
+        # IDs can change when coreaudiod restarts; resolve the exact name anew.
+        deadline = time.monotonic() + 30
+        while True:
+            current = devices()
+            matches = [d for d in current["devices"] if d["name"] == name and d["canBeDefault"]]
+            if len(matches) == 1:
+                run([route, "set", matches[0]["id"]])
+                selected = devices()
+                if selected["default"] == matches[0]["id"]:
+                    return selected
+            if time.monotonic() > deadline:
+                raise RuntimeError(f"Cannot select unique output device {name!r}: {current}")
+            time.sleep(0.5)
+    def matrix(label, device_name):
+        if hashlib.sha256(binary.read_bytes()).hexdigest() != receipt["testBinarySHA256"]:
+            raise RuntimeError("Test binary changed between comparison arms")
+        selected = select(device_name)
+        result = EVIDENCE / f"{label}.xcresult"
+        command = [sys.executable, "-B", str(ROOT / "tool/run_with_display_awake.py"),
+                   "xcodebuild", "test-without-building", "CODE_SIGNING_ALLOWED=NO", "-quiet",
+                   "-workspace", str(EXAMPLE / "macos/Runner.xcworkspace"), "-scheme", "Runner",
+                   "-derivedDataPath", str(EXAMPLE / "build/audio-clock-diagnostic"),
+                   "-destination", "platform=macOS", "-parallel-testing-enabled", "NO",
+                   "-only-testing:RunnerTests/YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix",
+                   "-resultBundlePath", str(result)]
+        with (EVIDENCE / f"{label}.log").open("w") as log:
+            status = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT).returncode
+        summary = json.loads(subprocess.check_output([
+            "xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)]))
+        (EVIDENCE / f"{label}-summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+        attachments = EVIDENCE / f"{label}-attachments"
+        run(["xcrun", "xcresulttool", "export", "attachments", "--path", result, "--output-path", attachments])
+        pcm_rows = []
+        for path in sorted(attachments.iterdir()):
+            if not path.is_file() or path.name == "manifest.json":
+                continue
+            try:
+                value = json.loads(path.read_bytes())
+            except (ValueError, UnicodeError):
+                continue
+            if isinstance(value, dict) and "marker" in value:
+                pcm = {key: value[key] for key in ("kind", "candidate", "buffers", "starvation", "pausedEOF",
+                       "marker", "submittedMarker", "pending", "failures", "peakBytes") if key in value}
+                pcm["attachment"] = path.name
+                pcm_rows.append(pcm)
+        row = {"label": label, "route": selected, "exitCode": status,
+               "passedTests": summary["passedTests"], "failedTests": summary["failedTests"],
+               "skippedTests": summary["skippedTests"], "testFailures": summary.get("testFailures", []),
+               "pcmRows": pcm_rows}
+        receipt["runs"].append(row); save()
+        print(json.dumps(row, sort_keys=True), flush=True)
+        expected = {(candidate, count, False, False) for candidate in (False, True) for count in (0, 1, 3, 2000)}
+        expected |= {(candidate, 100, True, False) for candidate in (False, True)}
+        expected |= {(candidate, 3, False, True) for candidate in (False, True)}
+        actual = [(p["candidate"], p["buffers"], p["starvation"], p["pausedEOF"]) for p in pcm_rows if "candidate" in p]
+        return (status == 0 and row["passedTests"] == 1 and row["failedTests"] == 0 and row["skippedTests"] == 0
+                and len(actual) == len(expected) and set(actual) == expected)
+    save()
+    try:
+        matrix("default-before", original_name)
+        package = EVIDENCE / "BlackHole2ch-0.7.1.pkg"
+        urllib.request.urlretrieve(DRIVER_URL, package)
+        actual = hashlib.sha256(package.read_bytes()).hexdigest()
+        if actual != DRIVER_SHA256:
+            raise RuntimeError(f"Driver SHA256 mismatch: {actual}")
+        run(["sudo", "installer", "-pkg", package, "-target", "/"])
+        # No app is running now. Reload the new HAL plugin on this disposable VM.
+        run(["sudo", "killall", "coreaudiod"])
+        matrix("default-after-restart", original_name)
+        guest_passes = [matrix(f"guest-clock-{i}", "BlackHole 2ch") for i in range(1, 4)]
+        matrix("default-restored", original_name)
+        receipt["guestClockAllPassed"] = all(guest_passes)
+        save()
+        return 0 if all(guest_passes) else 1
+    finally:
+        receipt["restored"] = select(original_name)
+        save()
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,46 @@
+name: Audio clock diagnostic
+
+on:
+  push:
+    branches: [codex/ci-gates-20261111]
+    paths:
+      - '.github/workflows/audio-clock-diagnostic.yml'
+      - 'tool/audio_clock_diagnostic/**'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  device-comparison:
+    runs-on: macos-15
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: |
+            packages
+            tool
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.44.0'
+          channel: stable
+          cache: true
+      - run: flutter pub get
+      - name: Build unchanged native matrix
+        working-directory: packages/yl_player/example
+        run: |
+          flutter build macos --debug --config-only
+          (cd macos && pod install)
+          python3 -B ../../../tool/consumer_fixtures/apple_flutter/main_example_tests.py --current-only
+          xcodebuild build-for-testing CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -quiet -sdk macosx \
+            -workspace macos/Runner.xcworkspace -scheme Runner -parallel-testing-enabled NO \
+            -derivedDataPath build/audio-clock-diagnostic -destination 'platform=macOS'
+      - name: Compare default and guest-clock audio devices
+        run: python3 -B tool/audio_clock_diagnostic/compare.py
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: audio-clock-device-comparison
+          path: packages/yl_player/example/build/audio-clock-evidence
+          if-no-files-found: error
