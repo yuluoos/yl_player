@@ -8,6 +8,7 @@ default use the same test binary and exact PCM/EOF/resource assertions.
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path
 import subprocess
 import sys
@@ -38,6 +39,7 @@ def main():
     binary = EXAMPLE / "build/audio-clock-diagnostic/Build/Products/Debug/yl_player_example.app/Contents/PlugIns/RunnerTests.xctest/Contents/MacOS/RunnerTests"
     receipt = {"commit": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
                "driverURL": DRIVER_URL, "driverSHA256": DRIVER_SHA256, "initial": initial, "runs": [],
+               "architecture": platform.machine(),
                "testBinarySHA256": hashlib.sha256(binary.read_bytes()).hexdigest(),
                "xcode": subprocess.check_output(["xcodebuild", "-version"], text=True).strip(),
                "os": subprocess.check_output(["sw_vers"], text=True).strip()}

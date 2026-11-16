@@ -13,8 +13,12 @@ permissions:
 
 jobs:
   device-comparison:
-    runs-on: macos-15
-    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15-intel, macos-26]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v7
         with:
@@ -41,6 +45,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: audio-clock-device-comparison
+          name: audio-clock-device-comparison-${{ matrix.runner }}
           path: packages/yl_player/example/build/audio-clock-evidence
           if-no-files-found: error
