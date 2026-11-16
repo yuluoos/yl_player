@@ -12,7 +12,6 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-import urllib.request
 
 ROOT = Path(__file__).resolve().parents[2]
 EXAMPLE = ROOT / "packages/yl_player/example"
@@ -47,9 +46,14 @@ def main():
     def select(name):
         # IDs can change when coreaudiod restarts; resolve the exact name anew.
         deadline = time.monotonic() + 30
+        current = None
         while True:
-            current = devices()
-            matches = [d for d in current["devices"] if d["name"] == name and d["canBeDefault"]]
+            try:
+                current = devices()
+            except subprocess.CalledProcessError:
+                # HAL can briefly be unavailable during the explicit restart.
+                current = None
+            matches = [d for d in current["devices"] if d["name"] == name and d["canBeDefault"]] if current else []
             if len(matches) == 1:
                 run([route, "set", matches[0]["id"]])
                 selected = devices()
@@ -96,6 +100,12 @@ def main():
                "pcmRows": pcm_rows}
         receipt["runs"].append(row); save()
         print(json.dumps(row, sort_keys=True), flush=True)
+        diagnostic = {"device": device_name, "passedTests": row["passedTests"], "failedTests": row["failedTests"],
+                      "rows": len(pcm_rows), "losses": [{"candidate": p.get("candidate"), "kind": p.get("kind", "matrix"),
+                      "buffers": p["buffers"], "missingFrames": p["buffers"] * 1024 - p["marker"]["frames"],
+                      "errors": p["marker"]["errors"]} for p in pcm_rows
+                      if p["marker"]["frames"] != p["buffers"] * 1024 or p["marker"]["errors"]]}
+        print(f"::notice title=Audio matrix {label}::{json.dumps(diagnostic, sort_keys=True)}", flush=True)
         expected = {(candidate, count, False, False) for candidate in (False, True) for count in (0, 1, 3, 2000)}
         expected |= {(candidate, 100, True, False) for candidate in (False, True)}
         expected |= {(candidate, 3, False, True) for candidate in (False, True)}
@@ -104,12 +114,14 @@ def main():
                 and len(actual) == len(expected) and set(actual) == expected)
     save()
     try:
-        matrix("default-before", original_name)
         package = EVIDENCE / "BlackHole2ch-0.7.1.pkg"
-        urllib.request.urlretrieve(DRIVER_URL, package)
+        # The vendor rejects Python urllib's user agent with HTTP 406. Use the
+        # standard curl download path, retaining TLS and pinned digest checks.
+        run(["curl", "--fail", "--location", "--retry", "2", "--max-time", "120", "--output", package, DRIVER_URL])
         actual = hashlib.sha256(package.read_bytes()).hexdigest()
         if actual != DRIVER_SHA256:
             raise RuntimeError(f"Driver SHA256 mismatch: {actual}")
+        matrix("default-before", original_name)
         run(["sudo", "installer", "-pkg", package, "-target", "/"])
         # No app is running now. Reload the new HAL plugin on this disposable VM.
         run(["sudo", "killall", "coreaudiod"])
