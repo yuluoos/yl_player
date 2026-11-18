@@ -462,6 +462,39 @@ final class YlMacosPresentationTests: XCTestCase {
     XCTAssertNil(disabled.statistics.diagnostics)
   }
 
+  private final class EmptyTimedScheduler: YlPresentationScheduling {
+    var onLookup: () -> Void = {}
+    var lateFrameDropCount: Int { 0 }
+    var pendingPTS: [Int64] { [] }
+    func setPaused(_ paused: Bool) {}
+    func enqueue(_ frame: YlFrameEnvelope) -> Bool { false }
+    func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? { nil }
+    func nextFrame(upTo positionUs: Int64, generation: UInt64, willDequeue: () -> Void) -> YlFrameEnvelope? {
+      onLookup()
+      return nil
+    }
+    func flush(generation: UInt64) {}
+    func dispose() {}
+  }
+
+  func testEmptyTimedLookupKeepsDrainedPresentationIdle() {
+    let scheduler = EmptyTimedScheduler()
+    let queue = DispatchQueue(label: "test.timed.empty-lookup")
+    let pump = YlTimedVideoPump(scheduler: scheduler, endpoint: PumpOutput(), clockSnapshot: {
+      .init(positionUs: 0, hostTimeUs: 0, rate: 1, playing: true)
+    }, generation: 1, pollInterval: .seconds(3600), queue: queue)
+    var lookups = 0
+    scheduler.onLookup = { [unowned pump] in
+      lookups += 1
+      XCTAssertFalse(pump.hasPendingPresentation, "An empty lookup after EOF owns no frame")
+    }
+    pump.synchronize()
+    queue.sync {}
+    XCTAssertEqual(lookups, 1)
+    pump.stop {}
+    queue.sync {}
+  }
+
   func testTimedPendingCoversInFlightEnqueue() {
     let scheduler = YlFrameScheduler(), endpoint = PumpOutput(), clock = TimedClockBox()
     let queue = DispatchQueue(label: "test.timed.eof-race")
@@ -872,8 +905,13 @@ final class YlMacosPresentationTests: XCTestCase {
     XCTAssertFalse(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 20_000, durationUs: 0, keyframe: true, generation: 1)))
     scheduler.flush(generation: 2)
     XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 1, durationUs: 0, keyframe: true, generation: 2)))
-    XCTAssertNil(scheduler.nextFrame(upTo: 0, generation: 2))
+    XCTAssertNil(scheduler.nextFrame(upTo: 0, generation: 2) {
+      XCTFail("A future frame stays with the scheduler")
+    })
     XCTAssertEqual(scheduler.nextFrame(upTo: 1, generation: 2)?.ptsUs, 1)
+    XCTAssertNil(scheduler.nextFrame(upTo: .max, generation: 2) {
+      XCTFail("An empty queue cannot transfer ownership")
+    })
     scheduler.dispose()
     XCTAssertNil(scheduler.nextFrame(upTo: .max, generation: 2))
   }

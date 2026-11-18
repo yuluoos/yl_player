@@ -52,6 +52,10 @@
       "sha256": "ffebac989be6559f01ed6cd6577fb4fd17f90b2f549b244a92d7cbb81db73967",
       "size": 4756
     },
+    "analyze-device-comparison.py": {
+      "sha256": "9f4f25bbd814bacc8e2769f48a089c0bc61eef1f94c3f979399e6bf252a393cb",
+      "size": 7605
+    },
     "analyze-native-render-trace.py": {
       "sha256": "fde884897a3dcfc146a4532a2cc3f087c278e4055593c2b5f8dbf43da465f67b",
       "size": 4004
@@ -75,6 +79,270 @@
     "audio-clock-correlation-provenance.json": {
       "sha256": "368501d4c510fedd79d82ad4a5657a77d991b11da8892367b8d5d6efbfd03962",
       "size": 2620
+    },
+    "audio-device-diagnostic1-artifacts.json.gz": {
+      "sha256": "35c196d8ca5c8cf78f60ce213d2ee90a31c79855d0d9b213e26d22b1b9e3423a",
+      "size": 490
+    },
+    "audio-device-diagnostic1-attachments.json.gz": {
+      "sha256": "e2d59772bc5c1e0e10666548bc2796033b05e5947173be798656be7cbdbb5a73",
+      "size": 205491
+    },
+    "audio-device-diagnostic1-comparison.json": {
+      "sha256": "a807c2f23c0c2b459299efdcd64a5a667f8a5425e172e8313f556366c510d677",
+      "size": 9167
+    },
+    "audio-device-diagnostic1-default-before-summary.json.gz": {
+      "sha256": "5018868955242ee8c999cffb742a71501eaf32c512630370028c3298654a279a",
+      "size": 617
+    },
+    "audio-device-diagnostic1-default-before.log.gz": {
+      "sha256": "19349943c0295d0b8fe9ddd0b3c3c9d545c50b48701be998b4506a2b2f22dde7",
+      "size": 523
+    },
+    "audio-device-diagnostic1-jobs.json.gz": {
+      "sha256": "7629947fb7995e601cf695481ca727cabefec7f432e1ed6beef3863a3dd0437e",
+      "size": 783
+    },
+    "audio-device-diagnostic1-provenance.json": {
+      "sha256": "74a215ac96d585d639c795b3960eeb2359c31bf061ab698360de03946151d9e5",
+      "size": 437
+    },
+    "audio-device-diagnostic1-run.json.gz": {
+      "sha256": "b127e712186e486b6fc314ae261acb0588dd6c85d0cdf22cdcce0273f3ce4299",
+      "size": 1601
+    },
+    "audio-device-diagnostic1-timeline-analysis.json": {
+      "sha256": "df649ee661374b7bd32badcbad9f8ef114ac227cc4f5b0090c8e94179ea8e9c3",
+      "size": 11480
+    },
+    "audio-device-diagnostic1-timeline-loss.json": {
+      "sha256": "aecfd5cfe43b93734abc45542c460c2589042a995ebcdca53e704e14f808fdd6",
+      "size": 392
+    },
+    "audio-device-diagnostic2-artifacts.json.gz": {
+      "sha256": "ad129917898bd221981e078f97865adcdadcba41ceca5dba74a85a9fea00341d",
+      "size": 491
+    },
+    "audio-device-diagnostic2-attachments.json.gz": {
+      "sha256": "1ac1151282716ff00c59bd486461380bd8faca6c7b468880d0da0e71d7f6ba09",
+      "size": 2146992
+    },
+    "audio-device-diagnostic2-comparison.json": {
+      "sha256": "306cbbc7f43357d7b4f75c209adc2796c7166f6761b309551eb2f8789d2e5ce7",
+      "size": 50482
+    },
+    "audio-device-diagnostic2-default-after-restart-summary.json.gz": {
+      "sha256": "e23cd71a7314ddd88ed0b64064a3bcd673fddae8e74169753308d7338f0b86da",
+      "size": 621
+    },
+    "audio-device-diagnostic2-default-after-restart.log.gz": {
+      "sha256": "51d4f7a9ddfe59758dc5ae1bcd86f23359d5260f4b1647470a16aac021ab7132",
+      "size": 535
+    },
+    "audio-device-diagnostic2-default-before-summary.json.gz": {
+      "sha256": "3f01cbaf208915b427f6a07e49e0c0ae31962a70b0444bf1f0ef239a024f3f66",
+      "size": 622
+    },
+    "audio-device-diagnostic2-default-before.log.gz": {
+      "sha256": "c805d56460ff07e6869b078b719ecb52543202cebe548621c55d5dfeed69da15",
+      "size": 528
+    },
+    "audio-device-diagnostic2-default-restored-summary.json.gz": {
+      "sha256": "c23fa737fdcdbcd36ef54fbac094dd5d63e3ef2b7859d0ba63a315a22d71ef96",
+      "size": 621
+    },
+    "audio-device-diagnostic2-default-restored.log.gz": {
+      "sha256": "cff9e88ce09e66c9aa88a49efb5f7209401c1d61932ef73e834cce52309d527c",
+      "size": 533
+    },
+    "audio-device-diagnostic2-guest-clock-1-summary.json.gz": {
+      "sha256": "f38bdd95af48af9f1631f4d96b2781304e635d6f7816d798c1d5d7d84e978e65",
+      "size": 441
+    },
+    "audio-device-diagnostic2-guest-clock-1.log.gz": {
+      "sha256": "ba3f86dc73a6c6c00f54bc1ca65b9ee92c2c697a4fa81fc1e9ebd76993e6fb1f",
+      "size": 436
+    },
+    "audio-device-diagnostic2-guest-clock-2-summary.json.gz": {
+      "sha256": "947b0a2d285a5030a192e292f90fd481e00e2e32488da33aae13c4b2df7dbd11",
+      "size": 621
+    },
+    "audio-device-diagnostic2-guest-clock-2.log.gz": {
+      "sha256": "bd4268d6b2395a3945acc980d95a9c61a2498e6cdce5c19b47d3e064f2451c94",
+      "size": 527
+    },
+    "audio-device-diagnostic2-guest-clock-3-summary.json.gz": {
+      "sha256": "e1ba3c3b1e6412d0778d8304ec6258bdc2e621ac5a59a29d1ba994e1f3a0ea23",
+      "size": 622
+    },
+    "audio-device-diagnostic2-guest-clock-3.log.gz": {
+      "sha256": "929a8bef993d7b4671cf8c715efbaddf88ad56eeba58cc99e2441bc2085acea7",
+      "size": 522
+    },
+    "audio-device-diagnostic2-jobs.json.gz": {
+      "sha256": "dada72a0dbb462c9d55f2ca5aaa9f8691c85008364493f54de608d93b726db86",
+      "size": 789
+    },
+    "audio-device-diagnostic2-provenance.json": {
+      "sha256": "d7cee33f95c3b13386e10aa488219547d036e94f64571dc5e538061e434029fa",
+      "size": 438
+    },
+    "audio-device-diagnostic2-run.json.gz": {
+      "sha256": "f33fa495aa60a59d7061be83da45874d1caea4389be12c0460f4be08afe54020",
+      "size": 1602
+    },
+    "audio-device-diagnostic2-timeline-analysis.json": {
+      "sha256": "b2298a43b89cbb2b4331fa3bc18ede82ca6e9eee4fc1c3441d0241632ad90de2",
+      "size": 56095
+    },
+    "audio-device-diagnostic3-26-annotations.json.gz": {
+      "sha256": "43580fe24b1ad9f032c9532d661c5d894d21daed283080d5576d6049946f6473",
+      "size": 859
+    },
+    "audio-device-diagnostic3-artifacts.json.gz": {
+      "sha256": "e671ac4e9a55b97d8e2f1161524c595ff7f92e57ca738be6735ed05ec6bdd81f",
+      "size": 605
+    },
+    "audio-device-diagnostic3-intel-annotations.json.gz": {
+      "sha256": "e69c06049211e9cad3061db5114a74aae8889dd7c87ec0ab8bd6435ceb8abe1d",
+      "size": 801
+    },
+    "audio-device-diagnostic3-jobs.json.gz": {
+      "sha256": "81e5195b7ea15884f9fabdcdb6d7ea70f6df32024ac038fee0d63c68a8474f11",
+      "size": 979
+    },
+    "audio-device-diagnostic3-macos-15-intel-attachments.json.gz": {
+      "sha256": "3d53fb57c29f1d76a64ea515b9574f95d4b32decea9b737e1acd1d15d3757d11",
+      "size": 1959602
+    },
+    "audio-device-diagnostic3-macos-15-intel-comparison.json": {
+      "sha256": "133f84f7fb0c033392ee8594bcbd0d5233c123ca91523f24b9e3f0b1aac9487a",
+      "size": 47431
+    },
+    "audio-device-diagnostic3-macos-15-intel-default-after-restart-summary.json.gz": {
+      "sha256": "50fe624121450cffefcd387381b6eca52db4d969055382e455960201480db1fc",
+      "size": 615
+    },
+    "audio-device-diagnostic3-macos-15-intel-default-after-restart.log.gz": {
+      "sha256": "c069a41477993ea606be47a65b32647e216c4b634e0e981d3a7ae0b4cf3696ca",
+      "size": 405
+    },
+    "audio-device-diagnostic3-macos-15-intel-default-before-summary.json.gz": {
+      "sha256": "e710a4cbbf03e67108bfe34bab3821072e6f51e3e0410ea9bf89a48b58376cff",
+      "size": 615
+    },
+    "audio-device-diagnostic3-macos-15-intel-default-before.log.gz": {
+      "sha256": "aaace4559a22854f890125732ad6edc086fb2744ca8de0c4830874c608b19e21",
+      "size": 406
+    },
+    "audio-device-diagnostic3-macos-15-intel-default-restored-summary.json.gz": {
+      "sha256": "2ac15d717dee8333b2a29201bb26d978b6307b24a7b3a011cf5cc3e8d60cd93c",
+      "size": 435
+    },
+    "audio-device-diagnostic3-macos-15-intel-default-restored.log.gz": {
+      "sha256": "19b5ad98030ccb090a47bad9dc2bded711256806db3e79e7b2b7a8cc22618b71",
+      "size": 314
+    },
+    "audio-device-diagnostic3-macos-15-intel-guest-clock-1-summary.json.gz": {
+      "sha256": "78c786428136baa3fe995ff490747651258f8988bbaa86b5d4ad344cc1faac61",
+      "size": 436
+    },
+    "audio-device-diagnostic3-macos-15-intel-guest-clock-1.log.gz": {
+      "sha256": "6d93bff4569963f09e47874fd3f3cf77924210e7c7ac433be595554a8aa100e3",
+      "size": 310
+    },
+    "audio-device-diagnostic3-macos-15-intel-guest-clock-2-summary.json.gz": {
+      "sha256": "29782c2ce931539c8d34b402da89d1c57be8dd1214b204826ede1c650f7774e1",
+      "size": 615
+    },
+    "audio-device-diagnostic3-macos-15-intel-guest-clock-2.log.gz": {
+      "sha256": "e58d0a33cf0f9358b5b4493a986a5627b658d920b9b25c8f97c9c96cf4237f61",
+      "size": 394
+    },
+    "audio-device-diagnostic3-macos-15-intel-guest-clock-3-summary.json.gz": {
+      "sha256": "eb8113c575eb5d074b1404e0fd5c535f0843a39dfc32b1c78d39b4907dcd338e",
+      "size": 613
+    },
+    "audio-device-diagnostic3-macos-15-intel-guest-clock-3.log.gz": {
+      "sha256": "86b8ef8f4884e23b3cc6247abfb127aede419838ee9995e0d0ab62fa78bf5508",
+      "size": 398
+    },
+    "audio-device-diagnostic3-macos-15-intel-provenance.json": {
+      "sha256": "0fce13eb271fd96b4ee2a6836301f8cfa812c049951c8e464042b7cfd658c8ea",
+      "size": 390
+    },
+    "audio-device-diagnostic3-macos-15-intel-timeline-analysis.json": {
+      "sha256": "c1d6910ea9a09d4143b4a5538d39dec7af3d0277ca4518ac47594747d2325c01",
+      "size": 44495
+    },
+    "audio-device-diagnostic3-macos-26-attachments.json.gz": {
+      "sha256": "43b4b01f57d76c0843ae774dff5a7635f1dd8d41d166e1845235e30df2ba9bc2",
+      "size": 1805606
+    },
+    "audio-device-diagnostic3-macos-26-comparison.json": {
+      "sha256": "105ed95dd3d78e6d0caffd31a47d8f63ac374faaaec7d76e01479c15996a059c",
+      "size": 48635
+    },
+    "audio-device-diagnostic3-macos-26-default-after-restart-summary.json.gz": {
+      "sha256": "794cf5775003e0afb2a6f2d5f8bd7592237df40f8474e68a2a977ee88a1983ba",
+      "size": 440
+    },
+    "audio-device-diagnostic3-macos-26-default-after-restart.log.gz": {
+      "sha256": "1ad639f50a9ff7fbbedecc81a9bf328162426dd93bf3df961e87d19345c23b4c",
+      "size": 447
+    },
+    "audio-device-diagnostic3-macos-26-default-before-summary.json.gz": {
+      "sha256": "a5cb1cc0b023fd1752746a21ed7c42b81a3034a0ef92279c6ab3f3e3064ded6b",
+      "size": 615
+    },
+    "audio-device-diagnostic3-macos-26-default-before.log.gz": {
+      "sha256": "62b180379b92d1b38f6c73c33f0d90b7ee2aba6e45861fb39382b47f2ef803fc",
+      "size": 522
+    },
+    "audio-device-diagnostic3-macos-26-default-restored-summary.json.gz": {
+      "sha256": "064572d06ea5b037763df88be9aedc6108eab615641fa1a7d82ad479d47bc5e6",
+      "size": 620
+    },
+    "audio-device-diagnostic3-macos-26-default-restored.log.gz": {
+      "sha256": "383ffa4249a79900a285cdc146135f703e3fc4f99ba15b40ef7d9364836cd6fe",
+      "size": 524
+    },
+    "audio-device-diagnostic3-macos-26-guest-clock-1-summary.json.gz": {
+      "sha256": "4c194f8ddd4d506a87f44a82852f077f3807b232b721ca43c42f4369479ccdcb",
+      "size": 439
+    },
+    "audio-device-diagnostic3-macos-26-guest-clock-1.log.gz": {
+      "sha256": "15630652dd2b7ad80aada482df43a7e0d5067a67f8b208e50dcad046585b0c89",
+      "size": 434
+    },
+    "audio-device-diagnostic3-macos-26-guest-clock-2-summary.json.gz": {
+      "sha256": "ebdacd71ad9a20761a638721f382d67d1cecb095500a49f4be854c477d85c30f",
+      "size": 620
+    },
+    "audio-device-diagnostic3-macos-26-guest-clock-2.log.gz": {
+      "sha256": "78c2b3eba5e989984d6ad716788edd0891445094913c9a8b49432a1f9178d84e",
+      "size": 519
+    },
+    "audio-device-diagnostic3-macos-26-guest-clock-3-summary.json.gz": {
+      "sha256": "9aff5c32780929dae2d3e34d178f11bfba6caff38e20944ede735f7b1637c25a",
+      "size": 618
+    },
+    "audio-device-diagnostic3-macos-26-guest-clock-3.log.gz": {
+      "sha256": "f2cb5d2fcdcb33fc9cff1c13a77efadf1aa56b7269e5487513ff42417fc37f82",
+      "size": 520
+    },
+    "audio-device-diagnostic3-macos-26-provenance.json": {
+      "sha256": "f98bbe309944bba1939aa54ba97f67fce0b73baae3e31c3cc8e2d1e72a9916c7",
+      "size": 390
+    },
+    "audio-device-diagnostic3-macos-26-timeline-analysis.json": {
+      "sha256": "2d392efea9eb048556326d0fa3d5aaacc0c58e1d09cf9d20bf2f35aeec1fe205",
+      "size": 51659
+    },
+    "audio-device-diagnostic3-run.json.gz": {
+      "sha256": "ef6a7f09205b334b43dcaccb35d5418a0fa1e79d8518cbe8c3dcfaa437fe6f5b",
+      "size": 1612
     },
     "audio-gap-control-rows.json.gz": {
       "sha256": "bad4cdca2bf50e7f95709beffb11768089732540983dcb6eba11d19dcc536c12",
@@ -2483,6 +2751,74 @@
     "ci129-run.json.gz": {
       "sha256": "7c492946d29be473d5062e8d3162776d9fc8e4397ffd998344becb69b094dfea",
       "size": 1599
+    },
+    "ci135-artifact-verification.json": {
+      "sha256": "09b188640dabca14be93606e142d8d29e1f161ee5921bfa416f053bf84b71978",
+      "size": 1534
+    },
+    "ci135-artifacts.json.gz": {
+      "sha256": "2ed67c88092a64f930ab6d3b6240004137806ecb13119ab8d99eb962d5f2eff8",
+      "size": 1073
+    },
+    "ci135-empty-lookup-before-summary.json.gz": {
+      "sha256": "40bb3643a2a1ec37f516fc870b15a5c6ec81877c04f64b4d5ded2000373227a6",
+      "size": 603
+    },
+    "ci135-ios-apple_default_positive_test-response.json.gz": {
+      "sha256": "ffcdbfe1f1a693008625234c9874c0234880bbe7b311318780ae9083572600d4",
+      "size": 1925
+    },
+    "ci135-ios-hls_playback_test-response.json.gz": {
+      "sha256": "292d7f68d43d90a07d3344d8a4bce2939423b5d85a4dba2122ce7bb5de23e0b0",
+      "size": 1423
+    },
+    "ci135-ios-summary.json.gz": {
+      "sha256": "0dcbe4f081faa95112b5d5a7ec2464875e4e89accbba67daef33637efd31e1fe",
+      "size": 2242
+    },
+    "ci135-ios-tests.json.gz": {
+      "sha256": "66a2795c70ed1e12fc4d6fbf5a0ed54984abffc04a5e412dd0170cb037805150",
+      "size": 50756
+    },
+    "ci135-jobs.json.gz": {
+      "sha256": "33a94d9f25bdaa9a3468abb86a3e2bb547888ef39b62ada456ea3562152e01d7",
+      "size": 2963
+    },
+    "ci135-local-timed-validation.json": {
+      "sha256": "9a1227539b6b25299f759426d60532404c4c37616a586e244bda99bb8f532c0a",
+      "size": 1024
+    },
+    "ci135-macos-check-summary.json.gz": {
+      "sha256": "5c288dbdb960796bf82a9a1172ae54dda7e8c11fd74b99930c76cc746f58cfec",
+      "size": 765
+    },
+    "ci135-macos-check-tests.json.gz": {
+      "sha256": "54a8902806d87d332d4aa5200250ee4df38ddfa98aecc34c1f143afa90360c76",
+      "size": 3175
+    },
+    "ci135-macos-summary.json.gz": {
+      "sha256": "2cf4dda71893dfc988652f5fd9f9340389083fb43f2945196c0260630e453c47",
+      "size": 767
+    },
+    "ci135-macos-tests.json.gz": {
+      "sha256": "0966367c68a11459d11ebc675ea3a91c114756915f7753ed167f71609c775d5d",
+      "size": 52406
+    },
+    "ci135-run.json.gz": {
+      "sha256": "09dd4e47877aff2ab93065163a4d031587caa7127da2c8048a2aefe57b7c52c2",
+      "size": 1592
+    },
+    "ci135-tail-repeat-summary.json.gz": {
+      "sha256": "54e0fd0101c06ad9d13e8e108a7e8c69c8554f2db58c6b70626a870083acc6aa",
+      "size": 706
+    },
+    "ci135-tail-repeat-tests.json.gz": {
+      "sha256": "1bf69328a64b85bcf49e3657876ae3ab66f9587071fd332cb0639063f25d2314",
+      "size": 946
+    },
+    "ci135-timed-tail-failure.json": {
+      "sha256": "7d0b0baabc8d9af8396ce253b967125af665e01d0cd138ac00efbd2622bda5b7",
+      "size": 2468
     },
     "clock-diagnostics-devices.json.gz": {
       "sha256": "2e9dd6f65143de90c8e32404c6be12e982b9138d530a6fc56dbcdd08ff504e74",

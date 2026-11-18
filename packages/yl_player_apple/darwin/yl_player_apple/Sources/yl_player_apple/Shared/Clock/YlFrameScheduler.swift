@@ -217,7 +217,7 @@ final class YlFrameScheduler {
     return true
   }
 
-  func nextFrame(upTo positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
+  func nextFrame(upTo positionUs: Int64, generation: UInt64, willDequeue: () -> Void = {}) -> YlFrameEnvelope? {
     lock.lock()
     guard !disposed, activeGeneration == nil || activeGeneration == generation else {
       lock.unlock(); return nil
@@ -230,6 +230,8 @@ final class YlFrameScheduler {
       withExtendedLifetime(stale) {}
       return nil
     }
+    // Transfer pending ownership before EOF can observe the scheduler as empty.
+    willDequeue()
     let selected = frames.removeFirst()
     lastSubmittedPTS = selected.ptsUs
     lock.broadcast()

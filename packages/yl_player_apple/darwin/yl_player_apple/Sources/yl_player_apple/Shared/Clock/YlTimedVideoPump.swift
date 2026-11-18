@@ -120,11 +120,10 @@ final class YlTimedVideoPump {
       for _ in 0..<3 {
         guard !isStopped, window.pendingFrames.count < 3 else { break }
         if held == nil {
-          // Publish ownership before the scheduler releases it: EOF must never
-          // observe both queues empty while a native enqueue is in flight.
-          stateLock.withLock { observed.pending = true }
           let popStarted = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
-          held = scheduler.nextFrame(upTo: horizon, generation: generation)
+          held = scheduler.nextFrame(upTo: horizon, generation: generation) {
+            stateLock.withLock { observed.pending = true }
+          }
           if collectDiagnostics { phases["schedulerSeconds"] = max(phases["schedulerSeconds"] ?? 0, ProcessInfo.processInfo.systemUptime - popStarted) }
         }
         guard let frame = held else { break }

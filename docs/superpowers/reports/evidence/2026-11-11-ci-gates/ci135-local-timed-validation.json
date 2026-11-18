@@ -1,0 +1,14 @@
+{
+  "sourceSHA256": "21bad98f2b6f743d1e608c2196b27d8eb39fd37d838522e846e0b300ab2ff924",
+  "changedSourceFiles": {
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift": "ffaf17fc130f80789308338b58f87397e0736c045fd7211100d3b781bbd165f0",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift": "e0f77c4f8b22fda5d4e0f0a29829c885db3abd802f0d3e51c70dfc8862356683",
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoPump.swift": "acfc8dda594940309f174876b21441783d046e2298ae37350b231bf485e9cbd6"
+  },
+  "testBinarySHA256": "b08a9cfbb50730bb6e1e687fa759981ce0a06f7afa4f185994f8871ceaa91848",
+  "macosSuite": "ci135-macos-check-summary.json.gz",
+  "macosCases": "ci135-macos-check-tests.json.gz",
+  "repetitions": "ci135-tail-repeat-tests.json.gz",
+  "beforeFix": "ci135-empty-lookup-before-summary.json.gz",
+  "iosDeviceBuildForTestingExitCode": 0
+}

@@ -46,5 +46,8 @@ jobs:
         if: ${{ !cancelled() }}
         with:
           name: audio-clock-device-comparison-${{ matrix.runner }}
-          path: packages/yl_player/example/build/audio-clock-evidence
+          path: |
+            packages/yl_player/example/build/audio-clock-evidence
+            !packages/yl_player/example/build/audio-clock-evidence/*.pkg
+            !packages/yl_player/example/build/audio-clock-evidence/output-route
           if-no-files-found: error

@@ -240,11 +240,11 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlOpusAudioConverter.swift": "e20d27fe6ac340f0147164f33eb337eee44c6abed7b9818dba722645c4b35754",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Audio/YlVorbisAudioConverter.swift": "6c0dc2e1bf16811cf35c893cfe09a326621f9f76b5bac1b3f97c496ca9714a2c",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlAudioClockObservation.swift": "252d72096feada41bfa26d46b14dcb2ce3d5fef0cc7769a7ea4f67c48d7f8419",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift": "c449e0dcd311d56442a1aeb4086593949cb009fcf23510221a3d4dd8fa95bcf7",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlFrameScheduler.swift": "ffaf17fc130f80789308338b58f87397e0736c045fd7211100d3b781bbd165f0",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlIsolatedAudioClock.swift": "499d1fe43116ea76c2497b54c1bd2e304ec6790115989f6b24ea6f50a8ebbcf7",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlMediaClock.swift": "9bb71a76e10daf3f75755f2c92a5c9c96df9a1e448c19210099c78616b674793",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift": "dd2e398857e6cad5d7252c4b6075e6627705057402521e2d98f5327d29e866a1",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoPump.swift": "24448aa16dfd7313103a26efcd6be55c590385d1f3df88d034f28da7db02aaaf",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlPresentationCoordinator.swift": "e0f77c4f8b22fda5d4e0f0a29829c885db3abd802f0d3e51c70dfc8862356683",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoPump.swift": "acfc8dda594940309f174876b21441783d046e2298ae37350b231bf485e9cbd6",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoReadinessTrace.swift": "8fd44afe6418b88716bcf69ee204dc2e87d2600ba7905eced7feb322cf827c2b",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/Clock/YlTimedVideoWindow.swift": "2ef00dbd238e274d13584162c158ef875da7c94842c4ef9fc5a8e8bdca019eec",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashAudioConverter.swift": "87fd0c211b46fb20b46ab286c84530182662758115c1b717e582a02abf0a8a7a",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "b9d26b99653c9cd655841f0a734f61f89aaa37de55eafcadf1c524c577e06ac5"
+    "sha256": "21bad98f2b6f743d1e608c2196b27d8eb39fd37d838522e846e0b300ab2ff924"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "602ed72176ee07d80e42f0cab9a47c6783949fcb6697d4afac0f5ae9d7508e85",
+      "sha256": "e71e9e95c9359d20872d4d557c2c9934ce7161dd07dae747104365ee473523de",
       "kind": "report"
     }
   },

@@ -1,0 +1,1780 @@
+{
+  "architecture": "arm64",
+  "commit": "fd537d85c4a368b60091c452f224e4fb684e6afe",
+  "driverSHA256": "57b540f27a3e29c37e310e01bee0fdfab76733087e47f997ef9dccf851400dcf",
+  "driverURL": "https://existential.audio/downloads/BlackHole2ch-0.7.1.pkg",
+  "guestClockAllPassed": false,
+  "initial": {
+    "default": 86,
+    "devices": [
+      {
+        "canBeDefault": 1,
+        "id": 86,
+        "name": "Apple Virtual Sound Device",
+        "transport": "bltn"
+      },
+      {
+        "canBeDefault": 1,
+        "id": 51,
+        "name": "Null Audio Device",
+        "transport": "virt"
+      }
+    ]
+  },
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.7.2\nBuildVersion:\t\t25G332",
+  "restored": {
+    "default": 96,
+    "devices": [
+      {
+        "canBeDefault": 1,
+        "id": 96,
+        "name": "Apple Virtual Sound Device",
+        "transport": "bltn"
+      },
+      {
+        "canBeDefault": 1,
+        "id": 54,
+        "name": "BlackHole 2ch",
+        "transport": "virt"
+      },
+      {
+        "canBeDefault": 1,
+        "id": 102,
+        "name": "Null Audio Device",
+        "transport": "virt"
+      }
+    ]
+  },
+  "runs": [
+    {
+      "exitCode": 65,
+      "failedTests": 1,
+      "label": "default-before",
+      "passedTests": 0,
+      "pcmRows": [
+        {
+          "attachment": "0CB13B54-C018-41C6-82CB-7D968E3EF942.json",
+          "buffers": 0,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "1A44CB3C-BEE9-49E2-88AB-2DA897D8F297.json",
+          "buffers": 2000,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "1C21F54B-71A1-4A65-A130-6FD5FBFFFFEF.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "35AB087A-03A3-49FE-891A-767283E0DA33.json",
+          "buffers": 1,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "435E76BF-71EF-4869-AC25-6FC3D0F356AD.json",
+          "buffers": 0,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "495E86E8-0B84-4198-A229-29C5B2EED1E3.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "500669BA-E6B3-4EBF-BD7A-029FD8FC9633.json",
+          "buffers": 100,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 13312
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "650363B4-3E5C-4261-ADBB-7A7BA3121169.json",
+          "buffers": 1,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "78DBD54E-E86F-41FD-90C9-469781CF1CF4.json",
+          "buffers": 3,
+          "kind": "directNativeControl",
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "78F56CF1-4C4A-4986-93B5-0EAA612197F5.json",
+          "buffers": 2000,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "C38EAAA6-12D5-4070-9DAC-BCF28D2AB77F.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 512,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "C8070C5F-8D1B-4C28-8A9E-327DD4F477A7.json",
+          "buffers": 100,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 17920
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "F0E844BB-B2D3-4E7E-BDCA-A7AADFEC7EA0.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        }
+      ],
+      "route": {
+        "default": 86,
+        "devices": [
+          {
+            "canBeDefault": 1,
+            "id": 86,
+            "name": "Apple Virtual Sound Device",
+            "transport": "bltn"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 51,
+            "name": "Null Audio Device",
+            "transport": "virt"
+          }
+        ]
+      },
+      "skippedTests": 0,
+      "testFailures": [
+        {
+          "failureText": "XCTAssertEqual failed: (\"Optional(512)\") is not equal to (\"Optional(3072)\")",
+          "targetName": "RunnerTests",
+          "testIdentifier": 1,
+          "testIdentifierString": "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()",
+          "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix",
+          "testName": "testActualTerminalAdapterFrameSequenceMatrix()"
+        }
+      ]
+    },
+    {
+      "exitCode": 0,
+      "failedTests": 0,
+      "label": "default-after-restart",
+      "passedTests": 1,
+      "pcmRows": [
+        {
+          "attachment": "2A6EBBB9-0BB1-4C85-A7C5-1C1347705047.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "315D1CDD-B776-49F0-91AA-2AB524B195D8.json",
+          "buffers": 2000,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "576D2982-F497-46F6-887F-0F61636D27DE.json",
+          "buffers": 100,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 13312
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "57DDDE9B-C9C4-4106-9C5A-5D79C2E39D95.json",
+          "buffers": 100,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 17920
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "5B262101-72D8-47CB-A565-D43B520F5D8C.json",
+          "buffers": 0,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "7AEDA64B-620E-4B8D-9AA4-9CF20798C4A9.json",
+          "buffers": 0,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "97A1DA88-F741-41AB-9ABE-8C907CF92213.json",
+          "buffers": 1,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "B1E33A42-BCD4-4B7D-89DD-A6CE95B11DAB.json",
+          "buffers": 2000,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "C6B293F4-26EE-4114-821F-D2E47A96F98E.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "CEC24C74-980D-4881-94F1-941EFEF6E521.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "D714C28C-4ABF-44BA-9416-372B69445782.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "F8555C73-5191-4952-BE84-60F706518025.json",
+          "buffers": 1,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        }
+      ],
+      "route": {
+        "default": 94,
+        "devices": [
+          {
+            "canBeDefault": 1,
+            "id": 94,
+            "name": "Apple Virtual Sound Device",
+            "transport": "bltn"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 52,
+            "name": "BlackHole 2ch",
+            "transport": "virt"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 100,
+            "name": "Null Audio Device",
+            "transport": "virt"
+          }
+        ]
+      },
+      "skippedTests": 0,
+      "testFailures": []
+    },
+    {
+      "exitCode": 0,
+      "failedTests": 0,
+      "label": "guest-clock-1",
+      "passedTests": 1,
+      "pcmRows": [
+        {
+          "attachment": "0AEABD07-45DF-46D8-941B-743FD5551779.json",
+          "buffers": 100,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 17920
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "27EC2CD3-12A6-4A00-8F51-B86CA2FEF72B.json",
+          "buffers": 1,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "2FD01E3E-35B5-48C6-8DD3-60DFF12BF71E.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "44BD1E1C-75F8-4F45-9821-062D3ED30223.json",
+          "buffers": 0,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "78395F09-F69A-46B7-8399-4FA02F4F078E.json",
+          "buffers": 2000,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "84F61EF2-0DF3-426C-8649-05BCD6855300.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "9A19FD8D-9B27-4FE6-BA4D-4B2E93C23351.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "9B71E2A6-6CC6-4F56-8CFB-427DD1C74294.json",
+          "buffers": 1,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "AA34939D-5228-4A90-BDB6-B0B97F5FDE60.json",
+          "buffers": 0,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "B362B041-AFB0-4133-B97F-B0C1665B0834.json",
+          "buffers": 100,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 13312
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "DD97CFFA-8BB1-4045-8C2D-08E6CAD3D574.json",
+          "buffers": 2000,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "FFFC2F7F-BBEE-4BAA-A8D4-42F7A3719538.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        }
+      ],
+      "route": {
+        "default": 54,
+        "devices": [
+          {
+            "canBeDefault": 1,
+            "id": 96,
+            "name": "Apple Virtual Sound Device",
+            "transport": "bltn"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 54,
+            "name": "BlackHole 2ch",
+            "transport": "virt"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 102,
+            "name": "Null Audio Device",
+            "transport": "virt"
+          }
+        ]
+      },
+      "skippedTests": 0,
+      "testFailures": []
+    },
+    {
+      "exitCode": 65,
+      "failedTests": 1,
+      "label": "guest-clock-2",
+      "passedTests": 0,
+      "pcmRows": [
+        {
+          "attachment": "01C909D3-C108-4633-B133-65D1748492F9.json",
+          "buffers": 2000,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 1200496,
+            "frames": 2045296,
+            "interiorZeroFrames": 2704
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "06BDAB18-1AFC-4905-824C-6476CCF0FAC6.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "1FA8B311-21BA-4533-A516-7E505B210BA1.json",
+          "buffers": 100,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 13312
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "21EB98BF-9B95-42AD-8FB2-F5C6F98DB085.json",
+          "buffers": 2000,
+          "kind": "directNativeControl",
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "2F168005-7525-4E6D-AE1E-A79A3297332B.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "375E19BF-D5CD-4C9E-B86D-F1AC0C3F6DFB.json",
+          "buffers": 1,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "52FF1EB8-3CB8-46EB-8723-88655AD89B62.json",
+          "buffers": 0,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "95E7A1FC-50C7-4AC7-BAE4-26D7246FDF39.json",
+          "buffers": 1,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "9FD905EC-D6C9-4F39-B642-10B17B2991D7.json",
+          "buffers": 2000,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "A1DC048B-83F8-4904-A212-671A5B11CADC.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "A50CB10B-7ED6-4458-A37A-EA9A7B843B47.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "AA526F87-7063-4E0E-AB8A-7F0D51CF8028.json",
+          "buffers": 0,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "BC1FB623-166A-4203-91D7-89024632F2EA.json",
+          "buffers": 100,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 18432
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        }
+      ],
+      "route": {
+        "default": 54,
+        "devices": [
+          {
+            "canBeDefault": 1,
+            "id": 96,
+            "name": "Apple Virtual Sound Device",
+            "transport": "bltn"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 54,
+            "name": "BlackHole 2ch",
+            "transport": "virt"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 102,
+            "name": "Null Audio Device",
+            "transport": "virt"
+          }
+        ]
+      },
+      "skippedTests": 0,
+      "testFailures": [
+        {
+          "failureText": "XCTAssertEqual failed: (\"Optional(2045296)\") is not equal to (\"Optional(2048000)\")",
+          "targetName": "RunnerTests",
+          "testIdentifier": 1,
+          "testIdentifierString": "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()",
+          "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix",
+          "testName": "testActualTerminalAdapterFrameSequenceMatrix()"
+        }
+      ]
+    },
+    {
+      "exitCode": 65,
+      "failedTests": 1,
+      "label": "guest-clock-3",
+      "passedTests": 0,
+      "pcmRows": [
+        {
+          "attachment": "153AEABC-BE4E-4E8D-9214-E7EBC6515FA8.json",
+          "buffers": 2000,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 106920,
+            "frames": 2047400,
+            "interiorZeroFrames": 600
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "2AF0A4B5-8CE9-4456-90FC-9FEB7D6B873E.json",
+          "buffers": 1,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "4293B298-4271-4ABA-97C0-E1CDFDBAA9C0.json",
+          "buffers": 0,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "69FC0CEB-982A-4FE9-80DE-29B5AD8357FF.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "A5073647-DDC9-4369-8EF3-5BCCBD150DE7.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "A91A4E1B-43B1-48C6-A9ED-5CD8A6FB0B7D.json",
+          "buffers": 100,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 13312
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "B945DEAC-2F10-4534-BAC9-4271DF31AC55.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "C6D7DCE2-C588-4C0F-8697-DBF262FEEEA5.json",
+          "buffers": 1,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "D5AF64BC-A4BD-4937-B720-170BA5588818.json",
+          "buffers": 2000,
+          "kind": "directNativeControl",
+          "marker": {
+            "errors": 1782240,
+            "frames": 2041312,
+            "interiorZeroFrames": 6688
+          },
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "DEDD2C01-4E0C-47A6-BA2F-2225D7EDB488.json",
+          "buffers": 2000,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "ECE0B907-1CCB-452A-8DCD-CC1907D62507.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "F0217A41-E394-49C3-B14E-814FA5C1460D.json",
+          "buffers": 0,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "FBC658AB-BAF6-4FEB-9972-7EAAAEDDB8D6.json",
+          "buffers": 100,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 18432
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        }
+      ],
+      "route": {
+        "default": 54,
+        "devices": [
+          {
+            "canBeDefault": 1,
+            "id": 96,
+            "name": "Apple Virtual Sound Device",
+            "transport": "bltn"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 54,
+            "name": "BlackHole 2ch",
+            "transport": "virt"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 102,
+            "name": "Null Audio Device",
+            "transport": "virt"
+          }
+        ]
+      },
+      "skippedTests": 0,
+      "testFailures": [
+        {
+          "failureText": "XCTAssertEqual failed: (\"Optional(2047400)\") is not equal to (\"Optional(2048000)\")",
+          "targetName": "RunnerTests",
+          "testIdentifier": 1,
+          "testIdentifierString": "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()",
+          "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix",
+          "testName": "testActualTerminalAdapterFrameSequenceMatrix()"
+        }
+      ]
+    },
+    {
+      "exitCode": 65,
+      "failedTests": 1,
+      "label": "default-restored",
+      "passedTests": 0,
+      "pcmRows": [
+        {
+          "attachment": "0829CC1E-874F-4714-A847-6455F4651AD4.json",
+          "buffers": 100,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 13312
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "0B9B6C58-BF17-4D6D-9421-923DF1425788.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "139B4052-F67B-4909-831A-21C2C0913DC2.json",
+          "buffers": 0,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "2EF67C42-270B-4560-AF49-42CC2963AA78.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "34B4F7C6-878B-4620-92F2-4C6E9DD7D8D3.json",
+          "buffers": 1,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "4EAA8B67-B813-4ED2-BE14-4BED1AF726A2.json",
+          "buffers": 3,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "59D2A006-FB48-4A12-A14F-9FC2E6F50E01.json",
+          "buffers": 3,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": true,
+          "peakBytes": 24576,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 3072,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "7D586182-A6C6-4C2E-B8BB-B5B1BC0ABD17.json",
+          "buffers": 2000,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 1363064,
+            "frames": 2038392,
+            "interiorZeroFrames": 9608
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "8FAD0EED-47C1-4901-830B-E1BCF4248A77.json",
+          "buffers": 2000,
+          "kind": "directNativeControl",
+          "marker": {
+            "errors": 1474856,
+            "frames": 2047272,
+            "interiorZeroFrames": 728
+          },
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "A5292519-CEE7-4065-BCB3-2606929E40B9.json",
+          "buffers": 100,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 17920
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": true,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 102400,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "B9A096BA-6F58-411E-84FB-F97AE5066DC2.json",
+          "buffers": 2000,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 196608,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 2048000,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "C5316655-2275-484E-BE18-9B84014B6962.json",
+          "buffers": 1,
+          "candidate": false,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 8192,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 1024,
+            "interiorZeroFrames": 0
+          }
+        },
+        {
+          "attachment": "FAD760B0-D433-4744-880F-66CE66B02737.json",
+          "buffers": 0,
+          "candidate": true,
+          "failures": [],
+          "marker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          },
+          "pausedEOF": false,
+          "peakBytes": 0,
+          "pending": false,
+          "starvation": false,
+          "submittedMarker": {
+            "errors": 0,
+            "frames": 0,
+            "interiorZeroFrames": 0
+          }
+        }
+      ],
+      "route": {
+        "default": 96,
+        "devices": [
+          {
+            "canBeDefault": 1,
+            "id": 96,
+            "name": "Apple Virtual Sound Device",
+            "transport": "bltn"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 54,
+            "name": "BlackHole 2ch",
+            "transport": "virt"
+          },
+          {
+            "canBeDefault": 1,
+            "id": 102,
+            "name": "Null Audio Device",
+            "transport": "virt"
+          }
+        ]
+      },
+      "skippedTests": 0,
+      "testFailures": [
+        {
+          "failureText": "XCTAssertEqual failed: (\"Optional(2038392)\") is not equal to (\"Optional(2048000)\")",
+          "targetName": "RunnerTests",
+          "testIdentifier": 1,
+          "testIdentifierString": "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()",
+          "testIdentifierURL": "test://com.apple.xcode/Runner/RunnerTests/YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix",
+          "testName": "testActualTerminalAdapterFrameSequenceMatrix()"
+        }
+      ]
+    }
+  ],
+  "testBinarySHA256": "19c60837813d92be7ec49b8e30be67d62e477aa834ad3f56a349f55b1fce8dd9",
+  "xcode": "Xcode 26.6\nBuild version 17F113"
+}
