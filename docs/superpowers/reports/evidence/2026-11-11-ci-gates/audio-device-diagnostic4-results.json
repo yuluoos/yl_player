@@ -1,0 +1,126 @@
+{
+  "runId": 44287725438,
+  "head": "a4c022dce31ca38741cfbf375e70b60b9c1e3a60",
+  "results": [
+    {
+      "runner": "macos-15-intel",
+      "artifactId": 14422261395,
+      "artifactBytes": 257082701,
+      "artifactSHA256": "sha256:894b0eb249ad9358f4633db8ed267ddfded34ed46677700c532f323c2bb59d2f",
+      "testBinarySHA256": "70a52c7f53d09cfabe7ec7739efafe099fb4746cd5f3db3ace8d34bd37eb72a5",
+      "guestClockAllPassed": false,
+      "verifiedArchive": true,
+      "excludedDriverAndRouteExecutable": true,
+      "verificationExitCode": 0,
+      "rows": 80,
+      "losses": 15,
+      "exactMatches": 4,
+      "completeInputs": 80,
+      "completeTraces": 80,
+      "runs": [
+        {
+          "label": "default-before",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "default-after-restart",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "guest-clock-1",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "guest-clock-2",
+          "exitCode": 0,
+          "passedTests": 1,
+          "failedTests": 0,
+          "skippedTests": 0
+        },
+        {
+          "label": "guest-clock-3",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "default-restored",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        }
+      ]
+    },
+    {
+      "runner": "macos-26",
+      "artifactId": 14420754202,
+      "artifactBytes": 521556469,
+      "artifactSHA256": "sha256:13774f8bc6eeef3876affdf2c3c219c766e0ab52437d450291aa32861bfc3578",
+      "testBinarySHA256": "c59589367313d82286109276c706fafc228e5a8c37b8f4da7ec30611908a7739",
+      "guestClockAllPassed": false,
+      "verifiedArchive": true,
+      "excludedDriverAndRouteExecutable": true,
+      "verificationExitCode": 0,
+      "rows": 81,
+      "losses": 12,
+      "exactMatches": 10,
+      "completeInputs": 81,
+      "completeTraces": 81,
+      "runs": [
+        {
+          "label": "default-before",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "default-after-restart",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "guest-clock-1",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "guest-clock-2",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        },
+        {
+          "label": "guest-clock-3",
+          "exitCode": 0,
+          "passedTests": 1,
+          "failedTests": 0,
+          "skippedTests": 0
+        },
+        {
+          "label": "default-restored",
+          "exitCode": 65,
+          "passedTests": 0,
+          "failedTests": 1,
+          "skippedTests": 0
+        }
+      ]
+    }
+  ]
+}

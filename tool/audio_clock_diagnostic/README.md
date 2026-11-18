@@ -46,10 +46,12 @@ restart, and after restoring the original route.
 | 2 | macOS 15.8.2 arm64 | 0/3 | 1/3 |
 | 3 | macOS 15.7.9 Intel | 1/3 | 1/3 |
 | 3 | macOS 26.7.2 arm64 | 1/3 | 1/3 |
+| 4 | macOS 15.7.9 Intel | 0/3 | 1/3 |
+| 4 | macOS 26.7.2 arm64 | 0/3 | 1/3 |
 
-All three environments passed the first BlackHole execution and failed both
-subsequent executions. The experiment did not establish a reliable replacement
-route for CI. Run 1 ended during driver download after the baseline execution.
+The three comparisons in runs 2 and 3 passed the first BlackHole execution.
+In run 4, Intel passed the second execution and arm64 passed the third.
+No environment achieved three consecutive passes. Run 1 ended during driver download after the baseline execution.
 
 The archived verifier pairs each PCM attachment with a native trace, checks
 the twelve matrix identities per execution, and recomputes the intersections
@@ -61,7 +63,8 @@ python3 -B docs/superpowers/reports/evidence/2026-11-11-ci-gates/analyze-device-
   audio-device-diagnostic3-macos-15-intel --verify
 ```
 
-The other archive prefixes are `audio-device-diagnostic1`,
-`audio-device-diagnostic2`, and `audio-device-diagnostic3-macos-26`. The report
+Use the same command with `audio-device-diagnostic1`, `audio-device-diagnostic2`,
+`audio-device-diagnostic3-macos-26`, `audio-device-diagnostic4-macos-15-intel`, or
+`audio-device-diagnostic4-macos-26` to verify the other archives. The report
 records where the timestamp alignment required for a loss calculation was
 unavailable. [CI gate report](../../docs/superpowers/reports/2026-11-11-ci-gates.md)

@@ -1,0 +1,43 @@
+{
+  "counts": {
+    "passedTests": 959,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "totalTestCount": 959
+  },
+  "identitiesMatch": true,
+  "missingIdentities": [],
+  "extraIdentities": [],
+  "failed": [],
+  "skipped": [],
+  "focus": {
+    "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()": "Passed",
+    "YlMacosAudioTests/testTimedUnequalTailsAndEOFReplay()": "Passed",
+    "YlMacosPresentationTests/testEmptyTimedLookupKeepsDrainedPresentationIdle()": "Passed",
+    "YlMacosPresentationTests/testTimedPendingCoversInFlightEnqueue()": "Passed"
+  },
+  "head": "a4c022dce31ca38741cfbf375e70b60b9c1e3a60",
+  "sourceSHA256": "21bad98f2b6f743d1e608c2196b27d8eb39fd37d838522e846e0b300ab2ff924",
+  "testBinarySHA256": "b08a9cfbb50730bb6e1e687fa759981ce0a06f7afa4f185994f8871ceaa91848",
+  "platform": "macos",
+  "strictGatePassed": true,
+  "environment": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "modelName": "MacBook Pro",
+        "osBuildNumber": "26B123",
+        "osVersion": "27.2",
+        "platform": "macOS"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 959,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ]
+}

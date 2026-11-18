@@ -1,0 +1,27 @@
+{
+  "head": "a4c022dce31ca38741cfbf375e70b60b9c1e3a60",
+  "sourceSHA256": "21bad98f2b6f743d1e608c2196b27d8eb39fd37d838522e846e0b300ab2ff924",
+  "device": "iPhone 16",
+  "osVersion": "27.2",
+  "flutterVersion": "3.47.9",
+  "dartVersion": "3.13.7",
+  "mode": "profile",
+  "suite": "integration_test/apple_default_positive_test.dart",
+  "caseIdentitiesMatchCI135": true,
+  "ciCases": {
+    "local H264 AAC MKV uses native fallback and renders a frame": "success",
+    "local MKV exposes and switches both AAC tracks": "success",
+    "HTTP range MKV uses the native fallback": "success",
+    "HTTP range MKV restores real-time playback after sustained 3x": "success",
+    "HTTP range MKV completes a long video tail after audio ends": "success",
+    "HTTP 200 sequential MKV rejects seek without losing playback": "success",
+    "failed network MKV candidate preserves current HLS": "success",
+    "HTTP-FLV plays live and reconnects after a dropped socket": "success"
+  },
+  "profileAppFrameworkSHA256": "e5ddeb053f16095e874cf6d1d73a8ebe2d1bc416ca92c79bbfd2557d19c223b0",
+  "entrySourceSHA256": "7a7172800cf2318fd239ea540036c03f42e27ef79244816aba1b077b7ff8cfce",
+  "deviceReceiptSHA256": "e0ee45ced940f0dd8609bc5e0dbbe699dd2fca03ecc75c6095ac681a95b46137",
+  "collection": "Flutter integration binding results written atomically by the signed app and copied from its container through devicectl. Debug Flutter drive timed out before connecting to the wireless VM service. The debug XCTest integration host also timed out during test discovery.",
+  "entryTemplateSHA256": "405d11053638688d4b6ff8f590afdb60e5d1860adae78e4003861e8d8ca5081d",
+  "templateSubstitution": "Replace __YL_TEST_URI__ with the absolute file URI for the suite."
+}

@@ -1,0 +1,38 @@
+{
+  "counts": {
+    "passedTests": 904,
+    "failedTests": 0,
+    "skippedTests": 0,
+    "totalTestCount": 904
+  },
+  "identitiesMatch": true,
+  "missingIdentities": [],
+  "extraIdentities": [],
+  "failed": [],
+  "skipped": [],
+  "focus": {},
+  "head": "a4c022dce31ca38741cfbf375e70b60b9c1e3a60",
+  "sourceSHA256": "21bad98f2b6f743d1e608c2196b27d8eb39fd37d838522e846e0b300ab2ff924",
+  "testBinarySHA256": "be768d129ea0f4cd55358fad590b0efea609ecf0b36fc5df5c6de47ca15ea02d",
+  "platform": "ios",
+  "strictGatePassed": true,
+  "environment": [
+    {
+      "device": {
+        "architecture": "arm64",
+        "modelName": "iPhone 16",
+        "osBuildNumber": "24B119",
+        "osVersion": "27.2",
+        "platform": "iOS"
+      },
+      "expectedFailures": 0,
+      "failedTests": 0,
+      "passedTests": 904,
+      "skippedTests": 0,
+      "testPlanConfiguration": {
+        "configurationId": "1",
+        "configurationName": "Test Scheme Action"
+      }
+    }
+  ]
+}

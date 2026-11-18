@@ -23,16 +23,25 @@ def matching_trace(traces, attachment, pcm):
     if len(candidates) == 1:
         return candidates[0]
     # A failed arm can run two controls with the same buffer count.
-    tap = pcm["capture"].get("firstCallbackTime", {})
+    tap = pcm["capture"].get("firstCallbackTime") or {}
     for_host = []
+    during_render = []
     for item in candidates:
         trace = item["data"]["trace"]
-        first = next((r for r in trace["entries"] if r[5] & trace["preRenderMask"]), None)
+        entries = trace["entries"]
+        first = next((r for r in entries if r[5] & trace["preRenderMask"]), None)
         if first and first[1] == tap.get("hostTimeTicks"):
             for_host.append(item)
-    if len(for_host) != 1:
-        raise ValueError(f"Cannot identify one native trace for {attachment}")
-    return for_host[0]
+        # Repeated controls run sequentially. The tap and render observers both
+        # read mach_absolute_time(), even when HAL's audio timestamps differ.
+        observed = tap.get("observedHostTicks")
+        if entries and observed is not None and entries[0][0] <= observed <= entries[-1][0]:
+            during_render.append(item)
+    if len(for_host) == 1:
+        return for_host[0]
+    if not for_host and len(during_render) == 1:
+        return during_render[0]
+    raise ValueError(f"Cannot identify one native trace for {attachment}")
 
 
 def analyze(attachment, pcm, match):

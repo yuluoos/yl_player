@@ -53,8 +53,8 @@
       "size": 4756
     },
     "analyze-device-comparison.py": {
-      "sha256": "9f4f25bbd814bacc8e2769f48a089c0bc61eef1f94c3f979399e6bf252a393cb",
-      "size": 7605
+      "sha256": "227f387eb71f64a652f6679d82be624f070e27c6e425c112d09717efdaee11f1",
+      "size": 8075
     },
     "analyze-native-render-trace.py": {
       "sha256": "fde884897a3dcfc146a4532a2cc3f087c278e4055593c2b5f8dbf43da465f67b",
@@ -343,6 +343,138 @@
     "audio-device-diagnostic3-run.json.gz": {
       "sha256": "ef6a7f09205b334b43dcaccb35d5418a0fa1e79d8518cbe8c3dcfaa437fe6f5b",
       "size": 1612
+    },
+    "audio-device-diagnostic4-jobs.json.gz": {
+      "sha256": "24ded0ba18152a669a54c63e40d232a222c0964600f8fe8f4d1655e68008f85b",
+      "size": 943
+    },
+    "audio-device-diagnostic4-macos-15-intel-attachments.json.gz": {
+      "sha256": "0dc90f6b2cb8ca0f4eedc8b3f8045d1a16c08d2b64d061d50aad3a58acf71215",
+      "size": 2537488
+    },
+    "audio-device-diagnostic4-macos-15-intel-comparison.json": {
+      "sha256": "aff32e7cb2609e80afa2f543ba4fae2dd1e156511d10b551399330ddfac38902",
+      "size": 49712
+    },
+    "audio-device-diagnostic4-macos-15-intel-default-after-restart-summary.json.gz": {
+      "sha256": "70da9bc9b0df39184ea36fc58ae7ef0e4c5f62d781f7d0b41e4e33d260b6d366",
+      "size": 615
+    },
+    "audio-device-diagnostic4-macos-15-intel-default-after-restart.log.gz": {
+      "sha256": "2df2f958f395402641f172e4ae9106507eb442cd4cdc5cb4dc5191f7b6d59ddb",
+      "size": 405
+    },
+    "audio-device-diagnostic4-macos-15-intel-default-before-summary.json.gz": {
+      "sha256": "730d7e9a0d9bcc941430a0a0f992bb1dc45a8c3a323866364a9381bf0030f3d0",
+      "size": 616
+    },
+    "audio-device-diagnostic4-macos-15-intel-default-before.log.gz": {
+      "sha256": "8adbb85b28975e6d3c3985242e0f84e129acf5d6f86318dbee70f76a000ff744",
+      "size": 408
+    },
+    "audio-device-diagnostic4-macos-15-intel-default-restored-summary.json.gz": {
+      "sha256": "63d74cd789251640ee671d22fbf23256762ca973aae76185e4e53033dcd2fca9",
+      "size": 615
+    },
+    "audio-device-diagnostic4-macos-15-intel-default-restored.log.gz": {
+      "sha256": "7807006dc57595dd4776081136629092e6b231cf68f20a6b40b6c8c0838c57c3",
+      "size": 404
+    },
+    "audio-device-diagnostic4-macos-15-intel-guest-clock-1-summary.json.gz": {
+      "sha256": "8183834c660306da26c0c6e1302f8f2cd75170c3b77264073131c92339764bd5",
+      "size": 612
+    },
+    "audio-device-diagnostic4-macos-15-intel-guest-clock-1.log.gz": {
+      "sha256": "7ca271a74d34a430ddbefae3fb668cf220ca56df07edcea7c5a36892116e0b45",
+      "size": 396
+    },
+    "audio-device-diagnostic4-macos-15-intel-guest-clock-2-summary.json.gz": {
+      "sha256": "6a9647c00fdc853e818e41ce46628a7eea1e92f67ff5eb005cb6af18576dcac9",
+      "size": 436
+    },
+    "audio-device-diagnostic4-macos-15-intel-guest-clock-2.log.gz": {
+      "sha256": "bf0c6522a875e10becb892f01aa55a984260428733b3d19fa0d376765a215506",
+      "size": 309
+    },
+    "audio-device-diagnostic4-macos-15-intel-guest-clock-3-summary.json.gz": {
+      "sha256": "0e44d4e8ecc874cb17e4900fe7898c2056975e20eccc879e9e99d84f7642a6f2",
+      "size": 616
+    },
+    "audio-device-diagnostic4-macos-15-intel-guest-clock-3.log.gz": {
+      "sha256": "5cbfd5200a5809384e847c84a5e125c883436fb08c57757d229360522e36717a",
+      "size": 397
+    },
+    "audio-device-diagnostic4-macos-15-intel-timeline-analysis.json": {
+      "sha256": "05818c1ef87f5143862132449b554e3ed6baeef33837c1598dd15afdcb3d67f7",
+      "size": 51335
+    },
+    "audio-device-diagnostic4-macos-26-attachments.json.gz": {
+      "sha256": "6865d2e7b8f76ff1ea74662619558637511e577f5d48c52e893a93227ecab45a",
+      "size": 2438804
+    },
+    "audio-device-diagnostic4-macos-26-comparison.json": {
+      "sha256": "c9090dcb4e99dfff1d2a3a3660d885cc898cdefd8b244db1f6531a53ecee500d",
+      "size": 51304
+    },
+    "audio-device-diagnostic4-macos-26-default-after-restart-summary.json.gz": {
+      "sha256": "1ef3b4f13f85ceee7f16613f7b5d764e442db8e1d002e6c2a87ad3af809c0cb8",
+      "size": 620
+    },
+    "audio-device-diagnostic4-macos-26-default-after-restart.log.gz": {
+      "sha256": "f234c8456a483d087c37ee166b56aac9df775ab7ac4cdb52ec1c2946acbf6a27",
+      "size": 533
+    },
+    "audio-device-diagnostic4-macos-26-default-before-summary.json.gz": {
+      "sha256": "ca9d9efdacef2ed0aa43e2246d47c22d7f355843e4a3e46d8b5d04254ddb0839",
+      "size": 621
+    },
+    "audio-device-diagnostic4-macos-26-default-before.log.gz": {
+      "sha256": "0430b21c4e892b69904d89551fc41d5b8746adc240b451ccfb6c34a9ce0e393b",
+      "size": 531
+    },
+    "audio-device-diagnostic4-macos-26-default-restored-summary.json.gz": {
+      "sha256": "dbb1f4dd55fbb7fab3bddc22f677ef2f4bce2146cb4e80ccdc517bdef096ed1b",
+      "size": 619
+    },
+    "audio-device-diagnostic4-macos-26-default-restored.log.gz": {
+      "sha256": "7dce5da96c416ed5185c1dc0130e4ca64ce4d6a6df9471bef842982026089d3d",
+      "size": 531
+    },
+    "audio-device-diagnostic4-macos-26-guest-clock-1-summary.json.gz": {
+      "sha256": "ac19fdee5e0cbaad024a61b3f8afcbbd6c884489449f22c1c4ceac19b206bfb3",
+      "size": 619
+    },
+    "audio-device-diagnostic4-macos-26-guest-clock-1.log.gz": {
+      "sha256": "e1a91515ac0d8da8b25ececa8d219801c9223635dba7a706c0357cec27cae900",
+      "size": 528
+    },
+    "audio-device-diagnostic4-macos-26-guest-clock-2-summary.json.gz": {
+      "sha256": "4f77b03556eb4dac137f478b533df3d262978a338fcc1388350dd6a32421f772",
+      "size": 621
+    },
+    "audio-device-diagnostic4-macos-26-guest-clock-2.log.gz": {
+      "sha256": "1241042e47b2525bca307b0462a5f77591f607ad4ce059ac67e0b5692602d8bd",
+      "size": 524
+    },
+    "audio-device-diagnostic4-macos-26-guest-clock-3-summary.json.gz": {
+      "sha256": "323061e23891222fcbc907fc5911f03de72deffc6e444e810bf1579010b07bee",
+      "size": 440
+    },
+    "audio-device-diagnostic4-macos-26-guest-clock-3.log.gz": {
+      "sha256": "fcddd5c3ef57478a7dea640e35c520733256a9d0be3d28aec28c2757be68eb23",
+      "size": 436
+    },
+    "audio-device-diagnostic4-macos-26-timeline-analysis.json": {
+      "sha256": "19db1d26da139c516d6b8f5c6a1d6d0ef8d4c4c3a85d20da80949eeb76d794d0",
+      "size": 54397
+    },
+    "audio-device-diagnostic4-results.json": {
+      "sha256": "add5a8479d9874a4730c67b2446ccd2094c4d8b6aaf38c45533379b4ba43abfb",
+      "size": 3315
+    },
+    "audio-device-diagnostic4-run.json.gz": {
+      "sha256": "395e8be6368310feac43ee1cdcd68837856fd81b16651270a27ad11e44c289ca",
+      "size": 1616
     },
     "audio-gap-control-rows.json.gz": {
       "sha256": "bad4cdca2bf50e7f95709beffb11768089732540983dcb6eba11d19dcc536c12",
@@ -2819,6 +2951,102 @@
     "ci135-timed-tail-failure.json": {
       "sha256": "7d0b0baabc8d9af8396ce253b967125af665e01d0cd138ac00efbd2622bda5b7",
       "size": 2468
+    },
+    "ci138-android-api24-decoder.json": {
+      "sha256": "402d42ee0f89b28cbe694b1b48f0052af32d316ed5878c75ad14705b82fb14e7",
+      "size": 602
+    },
+    "ci138-artifact-verification.json": {
+      "sha256": "0b5f0a6207ca7714b6a385af83be717b0efe08cde192dda29edfb46591131a9d",
+      "size": 1531
+    },
+    "ci138-ios-apple_default_positive_test-response.json.gz": {
+      "sha256": "01b3b4f0604edacc209e2b0f150bdece35530bbc7806a36f1249e4f609752fb7",
+      "size": 1926
+    },
+    "ci138-ios-hls_playback_test-response.json.gz": {
+      "sha256": "f5151751c23f3c8751c6b77a9fb9beffff8a4616ae612a7bc0183e271f3aa232",
+      "size": 1434
+    },
+    "ci138-ios-summary.json.gz": {
+      "sha256": "e7887ac56c92c5a716a8fafadac117fe82974f19299e15ca9c8e566cee24f1e4",
+      "size": 2240
+    },
+    "ci138-ios-tests.json.gz": {
+      "sha256": "6575d22b086e15c30d1eb6bb048242ac09144380abaf7e020fe6574a3e7462bd",
+      "size": 50692
+    },
+    "ci138-iphone-default-positive-profile-entry.dart.gz": {
+      "sha256": "b1a7f06fc6ff37f38f638d0d530b05b1672032e392d4210ff5394f8703220e22",
+      "size": 1062
+    },
+    "ci138-iphone-default-positive-profile.json": {
+      "sha256": "05cf461214d797a2677deb8da0ab5ba452364dc053593319c76c21eba12fb6f3",
+      "size": 1731
+    },
+    "ci138-jobs.json.gz": {
+      "sha256": "3fd3b22cd6288c7b76b7acd5109919c4819b21b2a864cde8a2a0d30bc61636ab",
+      "size": 2964
+    },
+    "ci138-local-iphone-summary.json.gz": {
+      "sha256": "e043117bd06ae79b679c4b7438a5f1c4dac6fb35402da63bcccc207a62c1153c",
+      "size": 1019
+    },
+    "ci138-local-iphone-tests.json.gz": {
+      "sha256": "46d33eefafc2f99f0c324b7d5811031aee94429cfdf46a116eaf7b0644764e81",
+      "size": 43928
+    },
+    "ci138-local-iphone-validation.json": {
+      "sha256": "4f1fa92efbd6af1fa9586ed8305a8a574e28f714b5f409fc87cabb830a975cd1",
+      "size": 970
+    },
+    "ci138-local-macos-summary.json.gz": {
+      "sha256": "f288a88f86dbf6d5ee6b19ebcf295c76a052d97e0ded553782d2ec8eed9fe49d",
+      "size": 1053
+    },
+    "ci138-local-macos-tests.json.gz": {
+      "sha256": "f376f2cfcf31f6ef1ea2e927b1bc0c3c7f8c42806c02173cb1aa9efe734bff2f",
+      "size": 47270
+    },
+    "ci138-local-macos-validation.json": {
+      "sha256": "0897114635f38f5d487dc9c66cd8b8d10468d18cd9252609fbdfb4768df19c47",
+      "size": 1306
+    },
+    "ci138-macos-audio-attachments.json.gz": {
+      "sha256": "5f0b57f9d822d72f41dd969c836551ba7cbfabcf89dfe1410fecd6707b54812d",
+      "size": 333488
+    },
+    "ci138-macos-audio-timeline.json": {
+      "sha256": "8eceb2f54b867f782790cdc55d17d04b932b575dc3d80231a50fce450250974a",
+      "size": 8637
+    },
+    "ci138-macos-dash-failure.json.gz": {
+      "sha256": "9a0a770bc410efe610dc3335611386726f52e7fce48e459bcaeede6a904dfecd",
+      "size": 1187
+    },
+    "ci138-macos-summary.json.gz": {
+      "sha256": "2afcbaa54c8e744109b4d37eb90dbc554cfd33941d9bcf1e127cc2bfb21ec54a",
+      "size": 1167
+    },
+    "ci138-macos-tests.json.gz": {
+      "sha256": "4e7372e58ec09650d79b7584bd9dc05dc730fa00153764fa013bf45ef38d0ef7",
+      "size": 52925
+    },
+    "ci138-macos-timed-failure.json.gz": {
+      "sha256": "addfb95fed9e8dd55c9c28828a9bce0b9ca70dd3999e27ef021a373992163698",
+      "size": 818
+    },
+    "ci138-macos-timed-observation.json.gz": {
+      "sha256": "e810a13810ccd7ae64348522934a0eb1a53147abe24ee0d2d1298bd9ecf7c1f1",
+      "size": 3112
+    },
+    "ci138-native-comparison.json": {
+      "sha256": "9e248d8d4ae2164b7a4dcb42ea7d195389ab0225e4d52b87c81657bcb7d0cbe6",
+      "size": 4563
+    },
+    "ci138-run.json.gz": {
+      "sha256": "8048d18b92238dc0d291c400f247a891bbc39e9b0f61128ad913d49346aaa7ae",
+      "size": 1598
     },
     "clock-diagnostics-devices.json.gz": {
       "sha256": "2e9dd6f65143de90c8e32404c6be12e982b9138d530a6fc56dbcdd08ff504e74",
