@@ -6425,6 +6425,8 @@ extension YlDashSampleSourceNativeTests {
     let audio = try XCTUnwrap(harness.states.last?.audioTracks.first?.id)
     let backend = harness.backend!
     try await Task.detached { try backend.selectAudioTrack(audio, cancellationToken: nil) }.value
+    let requestedCandidateMedia = { harness.server.requests.filter { $0.path.hasPrefix("/period1/") }.count }
+    let initialRequests = requestedCandidateMedia()
     do { try await harness.seek(2000); XCTFail("missing explicit audio must reject") }
     catch { XCTAssertEqual((error as? NativePlayerError)?.code, "track.not_found") }
     harness.backend.emitState()
@@ -6432,6 +6434,7 @@ extension YlDashSampleSourceNativeTests {
     XCTAssertLessThan(harness.states.last?.positionMs ?? 3000, 1500)
     try harness.backend.play()
     try await harness.advance(until: { !harness.video.isEmpty }, seconds: 2)
+    XCTAssertTrue(harness.periods.isEmpty, "Pinning the active audio must preserve the accepted playback pipeline")
     for _ in 0..<400 {
       harness.display?.fire()
       if !harness.errors.isEmpty { break }
@@ -6439,6 +6442,7 @@ extension YlDashSampleSourceNativeTests {
     }
     XCTAssertEqual(harness.errors.last?.code, "track.not_found",
       "state=\(harness.states.last?.status ?? "none") positionMs=\(harness.states.last?.positionMs ?? -1) videoFrames=\(harness.video.count) audioSamples=\(harness.audio.count) lastAudioUs=\(harness.audio.last?.positionUs ?? -1) \(backend.playbackDiagnostics)")
+    XCTAssertEqual(requestedCandidateMedia(), initialRequests, "The manifest already rules out this audio selection")
     XCTAssertEqual(harness.states.last?.audioTracks.first(where: \.isSelected)?.id, audio)
   }
 }

@@ -203,6 +203,16 @@ final class YlDashProgramBackend: YlPlaybackBackend {
     }
     let startedAt = now
     let target = min(position, prepared.program.timeline.duration)
+    // Pinning the audio already on the output changes the next Period's
+    // selection policy. Keep the decoder, queued PCM and clock for this Period.
+    if let audio, try locked({
+      try cancellation?.throwIfCancelled()
+      guard active, !disposed, !stopped, !transitioning, !completed, failure == nil,
+            let current = pipeline?.prepared, current.audio?.track.id == audio,
+            current.window.start <= target, target < current.window.end else { return false }
+      explicitAudio = audio
+      return true
+    }) { return }
     let newToken = YlOpenCancellationToken()
     cancellation?.onCancel { [weak newToken] in newToken?.cancel() }
     let context = try locked { () throws -> (UInt64, UInt64, YlAppleVideoConstraints, YlNativeVideoSelection, String?, String?, String?) in

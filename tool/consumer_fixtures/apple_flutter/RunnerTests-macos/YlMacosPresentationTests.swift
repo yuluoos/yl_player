@@ -172,6 +172,13 @@ final class YlMacosPresentationTests: XCTestCase {
     endpoint.update(.init(positionUs: 2_000_000, hostTimeUs: now, rate: 1, playing: false), generation: 1)
     CMTimebaseNotificationBarrier(base)
     XCTAssertGreaterThan(lock.withLock { jumps }, beforePause, "A real control discontinuity must still reach the native timebase")
+    let afterPause = lock.withLock { jumps }
+    for offset in 1...5 {
+      endpoint.update(.init(positionUs: 2_000_000, hostTimeUs: now + Int64(offset * 10_000),
+        rate: 1, playing: false, waitingForClock: true), generation: 1)
+    }
+    CMTimebaseNotificationBarrier(base)
+    XCTAssertEqual(lock.withLock { jumps }, afterPause, "Polling a frozen clock must preserve the native timebase")
     XCTAssertEqual(CMTimebaseGetRate(base), 0)
     XCTAssertEqual(CMTimeGetSeconds(CMTimebaseGetTime(base)), 2, accuracy: 0.000001)
   }

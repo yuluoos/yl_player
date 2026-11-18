@@ -1,6 +1,7 @@
 @testable import yl_player_media_core
 @testable import yl_player_apple
 import AppKit
+import Accelerate
 import AVFoundation
 import AVFAudio
 import Foundation
@@ -774,6 +775,7 @@ final class YlMacosAudioTests: XCTestCase {
     private let diagnostics: Bool
     init(diagnostics: Bool = true) { self.diagnostics = diagnostics }
     private let lock = NSLock()
+    private var expectedBlock = [Float](repeating: 0, count: 8192)
     private var frames = 0, zeros = 0, gaps = 0, errors = 0
     private var callbacks = 0, totalFrames = 0, leadingZeros = 0
     private var firstMarker: Int?, lastMarker: Int?, nextSampleTime: Int64?
@@ -805,6 +807,30 @@ final class YlMacosAudioTests: XCTestCase {
           }
           nextSampleTime = sampleTime.map { $0 + Int64(pcm.frameLength) }
           totalFrames += Int(pcm.frameLength)
+        }
+        // Check the complete contiguous block with exact binary fractions.
+        // A mismatch, silence or wrap still takes the sample-by-sample path,
+        // preserving the original gap, absolute error and jump diagnostics.
+        let count = Int(pcm.frameLength)
+        let ordinal = frames % 2097152
+        if count > 0, count <= expectedBlock.count, ordinal + count <= 2097152,
+           lastMarker == nil || lastMarker == (ordinal + 2097151) % 2097152 {
+          var first = Float(ordinal + 1) / 4194304
+          var step: Float = 1 / 4194304
+          let matches = expectedBlock.withUnsafeMutableBufferPointer { expected in
+            vDSP_vramp(&first, &step, expected.baseAddress!, 1, vDSP_Length(count))
+            return memcmp(channel, expected.baseAddress!, count * MemoryLayout<Float>.stride) == 0
+          }
+          if matches {
+            if diagnostics {
+              if firstMarker == nil { firstMarker = ordinal }
+              lastMarker = ordinal + count - 1
+            }
+            frames += count
+            gaps += zeros
+            zeros = 0
+            return
+          }
         }
         for index in 0..<Int(pcm.frameLength) {
           let value = channel[index]
@@ -854,9 +880,11 @@ final class YlMacosAudioTests: XCTestCase {
       let ordinal = Int(packet.data.withUnsafeBytes { $0.loadUnaligned(as: Int64.self) })
       let pcm = AVAudioPCMBuffer(pcmFormat: pcmFormat!, frameCapacity: 1024)!
       pcm.frameLength = 1024
-      for channel in 0..<2 { for frame in 0..<1024 {
-        pcm.floatChannelData![channel][frame] = Float((ordinal * 1024 + frame) % 2097152 + 1) / 4194304
-      } }
+      let channels = pcm.floatChannelData!
+      for frame in 0..<1024 {
+        channels[0][frame] = Float((ordinal * 1024 + frame) % 2097152 + 1) / 4194304
+      }
+      channels[1].update(from: channels[0], count: 1024)
       return .init(payload: pcm, ptsUs: packet.ptsUs, durationUs: 21334, byteCount: 8192, generation: packet.generation)
     }
   }
@@ -1689,7 +1717,7 @@ final class YlMacosAudioTests: XCTestCase {
         if env["YL_TIMED_REVEAL"] == "1", !revealed, ProcessInfo.processInfo.systemUptime - start >= 20 {
           window.makeKeyAndOrderFront(nil); revealed = true
         }
-        try observe("playing", system: diagnostics ? await metrics() : nil)
+        try observe("playing", system: await metrics())
       } while ProcessInfo.processInfo.systemUptime - start < seconds && failures.isEmpty
     }
     let after = await metrics(); try observe("activeEnd", system: after)
@@ -1898,6 +1926,26 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertEqual(ledger.snapshot.currentBytes, 0); XCTAssertFalse(renderer.hasPendingPlayback)
     let attachment = XCTAttachment(data: try JSONSerialization.data(withJSONObject: records, options: [.sortedKeys]), uniformTypeIdentifier: "public.json")
     attachment.name = "decoded-continuity"; attachment.lifetime = .keepAlways; add(attachment)
+  }
+
+  func testPCMMarkerCapturePreservesErrorsAcrossBlockBoundaries() throws {
+    let markers = IntegrationMarkers()
+    let format = try XCTUnwrap(IntegrationPCM().pcmFormat)
+    // Encoded values 1...8 correspond to marker IDs 0...7. Swap two
+    // samples and insert silence between clean blocks.
+    for values in [[0, 1, 2], [3, 4], [0, 6, 5], [7, 8], [0]] {
+      let pcm = try XCTUnwrap(AVAudioPCMBuffer(pcmFormat: format, frameCapacity: AVAudioFrameCount(values.count)))
+      pcm.frameLength = pcm.frameCapacity
+      let channel = try XCTUnwrap(pcm.floatChannelData)[0]
+      for (index, value) in values.enumerated() { channel[index] = Float(value) / 4194304 }
+      markers.consume(pcm)
+    }
+    XCTAssertEqual(markers.snapshot, ["frames": 8, "interiorZeroFrames": 1, "errors": 2])
+    let capture = markers.capture
+    XCTAssertEqual(capture["leadingZeros"] as? Int, 1)
+    XCTAssertEqual(capture["trailingZeros"] as? Int, 1)
+    XCTAssertEqual(capture["markerJumps"] as? Int, 3)
+    XCTAssertEqual(capture["lastMarker"] as? Int, 7)
   }
 
   func testActualTerminalAdapterFrameSequenceMatrix() throws {

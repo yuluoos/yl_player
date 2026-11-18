@@ -107,10 +107,13 @@ final class YlMacosTimedVideoEndpoint: YlTimedVideoEndpoint {
       // observations. Preserve the native timeline through sub-ms source jitter.
       // Compare with the last APPLIED anchor so small drift cannot accumulate.
       let continuous = timebaseAnchor.map { anchor in
-        let expected = Double(anchor.positionUs) + (anchor.playing
-          ? (Double(snapshot.hostTimeUs) - Double(anchor.hostTimeUs)) * anchor.rate : 0)
-        return anchor.playing == snapshot.playing && anchor.rate == snapshot.rate
-          && snapshot.playing && abs(Double(snapshot.positionUs) - expected) <= 1_000 * snapshot.rate
+        guard anchor.playing == snapshot.playing else { return false }
+        // A stale audio clock can deliver the same frozen position every poll.
+        // A stopped timebase already represents that position exactly.
+        if !snapshot.playing { return anchor.positionUs == snapshot.positionUs }
+        let expected = Double(anchor.positionUs)
+          + (Double(snapshot.hostTimeUs) - Double(anchor.hostTimeUs)) * anchor.rate
+        return anchor.rate == snapshot.rate && abs(Double(snapshot.positionUs) - expected) <= 1_000 * snapshot.rate
       } ?? false
       if !continuous {
         let status = CMTimebaseSetRateAndAnchorTime(timebase, rate: snapshot.playing ? snapshot.rate : 0,

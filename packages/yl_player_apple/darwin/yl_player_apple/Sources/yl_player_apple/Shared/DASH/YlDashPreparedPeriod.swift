@@ -34,6 +34,17 @@ final class YlDashPreparedPeriod {
     let fixed = selection.fixedTrackId.flatMap { id in candidates.first { $0.id == id } }
     if selection.fixedTrackId != nil, fixed == nil { resolved = .init(reason: "trackUnavailable") }
     self.selection = resolved
+    let audios = tracks.filter { $0.kind == .audio }
+    let audioTrack: YlDashProgram.Track?
+    if let explicitAudio {
+      guard let match = audios.first(where: { $0.id == explicitAudio }) else {
+        throw NativePlayerError(category: "track", code: "track.not_found", message: "The selected audio content is absent from this Period.")
+      }
+      audioTrack = match
+    } else {
+      audioTrack = preferredAudio.flatMap { id in audios.first { $0.id == id } }
+        ?? audios.first(where: { $0.roles.contains("main") }) ?? audios.first
+    }
     // The format's actual transfer/Dolby path is authoritative. Try other
     // declared candidates only when their configuration belongs to another
     // quality family; network/decoder errors do not silently change user intent.
@@ -51,17 +62,6 @@ final class YlDashPreparedPeriod {
     }
     guard let chosen else { throw YlAppleVideoConstraints.unsupportedOutput }
     video = chosen.0; firstVideo = chosen.1; self.qualityFamily = chosen.2
-    let audios = tracks.filter { $0.kind == .audio }
-    let audioTrack: YlDashProgram.Track?
-    if let explicitAudio {
-      guard let match = audios.first(where: { $0.id == explicitAudio }) else {
-        throw NativePlayerError(category: "track", code: "track.not_found", message: "The selected audio content is absent from this Period.")
-      }
-      audioTrack = match
-    } else {
-      audioTrack = preferredAudio.flatMap { id in audios.first { $0.id == id } }
-        ?? audios.first(where: { $0.roles.contains("main") }) ?? audios.first
-    }
     if let audioTrack {
       let cursor = try YlDashTrackCursor(track: audioTrack, window: window, position: self.position,
         resources: resources, cancellation: cancellation, scope: scope)
