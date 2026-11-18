@@ -218,7 +218,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerRecoveryPolicy.swift": "b206ecc951c295fecc1a82b25ebd8fe4c3e0e366182229b6e0c98811fcde0e36",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryController.swift": "5412426a496ba6c0d5cea534fd5dfe9e9ac8bba86fa3bd71e0fab76632993e6f",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlDashAutoRecoveryPolicy.swift": "03c2d013ccd473903ad472448c63fe2ac2dc5eb2ca5e721f184d26a2d418dd9b",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "2312add5eb4732643130bce1ec29d530427400b6de101063819a44c9d3b878e4",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/DashProgram/YlDashProgramBackend.swift": "7f4437aee1d88e80876f6debc4fc6ca1327b3ca34f277878151ef68d3558ff32",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackBackend.swift": "a6ed7c4b1af601812abcf0768f316731ae892ebca8ddfa0ddcafaef59e7b228f",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/ManagedFallback/YlFallbackQualityPolicy.swift": "68f86b96ef24ed020da3c0eb8f9a79104496d87b6be4c9ff5b366706d7fe9a6e",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Generated/YlPlayerApple.g.swift": "0c913e49389f8a916838921328accc75fb47bcda72e9fcaaa5017ba3c4d3ec39",
@@ -254,7 +254,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashManagedResourceHop.swift": "bba91a3fd55cf600961e869213efe1649e59322a001523b5802972fdcf44f390",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPCMClipper.swift": "cf64ee6b002d09726017b217053c467602c2b627c584a800e04496f56281a952",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPeriodPlayback.swift": "ffac4723301cffa85a8330a8c7344be678df0c18ab8342908303b1e46afae2eb",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPreparedPeriod.swift": "aee85146f67f2fd7a876e30da727f32c3f7a256da5d8fa84198deab9157f422d",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashPreparedPeriod.swift": "d94b830027e7bf3f6926f595f95257f459c277d40f88aa1752d640ede724e458",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramDocument.swift": "628a151441c278d6aa6d9fab18c646931408288504b0e5ec15e7a6929012e4c2",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramLoader.swift": "7e89791487ebd9c280d2771789c57d921526cc070880868818f6f5dbd8571b96",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Shared/DASH/YlDashProgramResources.swift": "a8b137fa824a4fa005540e5ba5aa8fbb87b8e76c648171ba07cbe117e9ed2559",
@@ -347,7 +347,7 @@
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosLifecycle.swift": "7c90a32a0048d0c3c70e28a52184171591f5b5c11bc4d045330209967e0d4f67",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosPlatformAdapter.swift": "3111c9e2adf0fc213654c130226e13b5ec17474d7c210ed15f13762b165d24ca",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosTextureOutput.swift": "62e8261d06af9165ef428cf15b543567c34909052725f0e1fb7b91fa5d63a767",
-      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosTimedVideoEndpoint.swift": "9b21400870d86f11656a5163a9229009f95b493929a4cc8992986c00c74a5fac",
+      "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosTimedVideoEndpoint.swift": "f7856023770b0f9fd550a38e281f97a63f5878430d7f9e1d30c4fe43cb9e4f82",
       "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/macOS/YlMacosVideoView.swift": "74da8aff67e50cb552ceef1fd0c2ea0686bac54c99cdb25b0f54f4915d355e03",
       "packages/yl_player_apple/lib/src/apple_airplay.dart": "1dd06459f1512cbde3d9eaafbef858d39fa8ccab9cbce2dac625b60ff6a4d303",
       "packages/yl_player_apple/lib/src/apple_callbacks.dart": "6cb5019d4c20a4c12ac7a0a4024f733ec716123a99e4a9944538808b1c6adbb3",
@@ -610,7 +610,7 @@
       "pubspec.lock": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
       "pubspec.yaml": "f696543fbe6e1b059fff91529ba0f687b9aa0d9f91a68c2e307f1bbdaca930c8"
     },
-    "sha256": "21bad98f2b6f743d1e608c2196b27d8eb39fd37d838522e846e0b300ab2ff924"
+    "sha256": "e0d08c352b2746b241301a5c126de93cd42fb4516326f2a9f57f44bea7108174"
   },
   "evidence": {
     "p01": {
@@ -1130,7 +1130,7 @@
     },
     "ci-gates-20261111": {
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
-      "sha256": "7582320db1c26d8bcc369fa290d6e5f8edc159354a4f737eabff43c503634093",
+      "sha256": "d8cd8162b5e7c88b54cd8e2b0350cb9db513eda16b8a0198f64aa494ec19375a",
       "kind": "report"
     }
   },

@@ -1,0 +1,652 @@
+{
+  "commit": "6f83f9e6e5aa48d8cf057fd23935d7561f1cda83",
+  "run": "https://github.com/yuluoos/yl_player/actions/runs/44297386479",
+  "attempt": 1,
+  "artifact": {
+    "id": 14425478653,
+    "name": "apple-unit-macos-runtime-evidence",
+    "digest": "sha256:6bd5ed7127a873235bb1065ccd329b1c372e114587ec748ea1dfe12003199bb7",
+    "size_in_bytes": 5637104
+  },
+  "macOSJobs": {
+    "apple-unit (macos)": {
+      "url": "https://github.com/yuluoos/yl_player/actions/runs/44297386479/job/134777918798",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "macos-integration": {
+      "url": "https://github.com/yuluoos/yl_player/actions/runs/44297386479/job/134787624343",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "annotations": [
+        "The job was not acquired by Runner of type hosted even after multiple attempts",
+        "Due to capacity constraints, jobs targeting macOS arm64 runners may experience longer queue times."
+      ]
+    }
+  },
+  "hostedNative": {
+    "totalTestCount": 960,
+    "passedTests": 960,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "localNative": {
+    "totalTestCount": 960,
+    "passedTests": 959,
+    "failedTests": 1,
+    "skippedTests": 0,
+    "failures": [
+      {
+        "identity": "YlAppleRestorationTests/testRequestObserverDoesNotTreatCancelledEmptyConnectionAsHttpRequest()",
+        "message": "Asynchronous wait failed: Exceeded timeout of 2 seconds, with unfulfilled expectations: \"actual idle TCP connection\"."
+      }
+    ]
+  },
+  "cases": {
+    "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()": {
+      "hosted": "Passed",
+      "localRepetitions": [
+        "Passed",
+        "Passed",
+        "Passed"
+      ]
+    },
+    "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()": {
+      "hosted": "Passed",
+      "localRepetitions": [
+        "Passed",
+        "Passed",
+        "Passed"
+      ]
+    },
+    "YlMacosAudioTests/testActualTimedNativeActivationObservation()": {
+      "hosted": "Passed",
+      "localRepetitions": [
+        "Passed",
+        "Passed",
+        "Passed"
+      ]
+    }
+  },
+  "hostedAudioMatrix": [
+    {
+      "candidate": false,
+      "buffers": 0,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 0,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 0,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": false,
+      "buffers": 1,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": false,
+      "buffers": 3,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": false,
+      "buffers": 2000,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 2048000,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 2048000,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": false,
+      "buffers": 3,
+      "starvation": false,
+      "pausedEOF": true,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": false,
+      "buffers": 100,
+      "starvation": true,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 102400,
+        "interiorZeroFrames": 17920
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 102400,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": true,
+      "buffers": 0,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 0,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 0,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": true,
+      "buffers": 1,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 1024,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": true,
+      "buffers": 3,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": true,
+      "buffers": 2000,
+      "starvation": false,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 2048000,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 2048000,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": true,
+      "buffers": 3,
+      "starvation": false,
+      "pausedEOF": true,
+      "marker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 3072,
+        "interiorZeroFrames": 0
+      }
+    },
+    {
+      "candidate": true,
+      "buffers": 100,
+      "starvation": true,
+      "pausedEOF": false,
+      "marker": {
+        "errors": 0,
+        "frames": 102400,
+        "interiorZeroFrames": 13312
+      },
+      "submittedMarker": {
+        "errors": 0,
+        "frames": 102400,
+        "interiorZeroFrames": 0
+      }
+    }
+  ],
+  "hostedVideoMetrics": [
+    {
+      "phase": "playing",
+      "uptime": 1198.203975875,
+      "systemMetrics": {
+        "accumulatedDelay": 0,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 48
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.01240620833345929
+    },
+    {
+      "phase": "playing",
+      "uptime": 1199.2099272083335,
+      "systemMetrics": {
+        "accumulatedDelay": 0,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 72
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.012891624999838314
+    },
+    {
+      "phase": "playing",
+      "uptime": 1200.2110279166668,
+      "systemMetrics": {
+        "accumulatedDelay": 0,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 96
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.012891624999838314
+    },
+    {
+      "phase": "playing",
+      "uptime": 1201.2143849583333,
+      "systemMetrics": {
+        "accumulatedDelay": 0,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 120
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1202.2200590416667,
+      "systemMetrics": {
+        "accumulatedDelay": 0,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 144
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1203.2244902916668,
+      "systemMetrics": {
+        "accumulatedDelay": 0,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 168
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1204.2254115,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 192
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1205.2267834583333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 216
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1206.2278358333333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 240
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1207.2304809583334,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 264
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1208.2315715833333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 288
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1209.2341578750002,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 313
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1210.2377358333333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 337
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1211.2418370416667,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 361
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1212.2425104166668,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 385
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1213.248987125,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 409
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1214.250906125,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 433
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1215.2569778333334,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 457
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1216.2583180416668,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 481
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1217.2611613333333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 505
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1218.2672906666667,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 529
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1219.2717478333334,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 553
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1220.2760939166667,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 578
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1221.2780898333333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 602
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1222.2812491250002,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 626
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1223.2852133333333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 650
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1224.2875274166668,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 674
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1225.2887428333333,
+      "systemMetrics": {
+        "accumulatedDelay": 1.6666666666666667e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 698
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1226.2909467916668,
+      "systemMetrics": {
+        "accumulatedDelay": 3.3333333333333334e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 722
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1227.2929452083333,
+      "systemMetrics": {
+        "accumulatedDelay": 3.3333333333333334e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 746
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "playing",
+      "uptime": 1228.2959621666666,
+      "systemMetrics": {
+        "accumulatedDelay": 5.0000000000000004e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 770
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    },
+    {
+      "phase": "activeEnd",
+      "uptime": 1228.2968241666667,
+      "systemMetrics": {
+        "accumulatedDelay": 5.0000000000000004e-08,
+        "corrupted": 0,
+        "dropped": 0,
+        "total": 770
+      },
+      "applicationDrops": 0,
+      "workerMaxGapSeconds": 0.018470541666602003
+    }
+  ],
+  "workflowConclusion": "failure"
+}
