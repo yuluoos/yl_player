@@ -8,6 +8,31 @@ if [ "${YL_ANDROID_SKIP_JVM:-0}" != "1" ]; then
   (cd .. && "${YL_FLUTTER:-flutter}" build apk --debug --config-only --no-pub)
   ./gradlew :yl_player_android:testDebugUnitTest --stacktrace
 fi
+# Flutter resolves adb inside ANDROID_HOME. On the hosted Android 7 emulator,
+# streaming the APK into Package Manager can stall until the suite deadline.
+# Give Flutter a private SDK view for this job and stage the exact APK first.
+if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ] && [ "${YL_ANDROID_API:-}" = 24 ]; then
+  sdk=$(mktemp -d "${RUNNER_TEMP:?}/yl-api24-sdk.XXXXXX")
+  mkdir "$sdk/platform-tools"
+  for entry in "${ANDROID_HOME:?}"/*; do
+    [ "$entry" = "$ANDROID_HOME/platform-tools" ] || ln -s "$entry" "$sdk/"
+  done
+  for entry in "$ANDROID_HOME"/platform-tools/*; do
+    [ "$entry" = "$ANDROID_HOME/platform-tools/adb" ] || ln -s "$entry" "$sdk/platform-tools/"
+  done
+  export YL_HOST_ADB="$ANDROID_HOME/platform-tools/adb"
+  cat > "$sdk/platform-tools/adb" <<'ADB'
+#!/bin/sh
+set -eu
+if [ "${1:-}" = -s ] && [ "${2:-}" = "$YL_ANDROID_DEVICE_ID" ] && [ "${3:-}" = install ]; then
+  shift 3
+  exec "$YL_HOST_ADB" -s "$YL_ANDROID_DEVICE_ID" install --no-streaming "$@"
+fi
+exec "$YL_HOST_ADB" "$@"
+ADB
+  chmod +x "$sdk/platform-tools/adb"
+  export ANDROID_HOME="$sdk" ANDROID_SDK_ROOT="$sdk"
+fi
 cd "$YL_REPO_ROOT/packages/yl_player/example"
 for suite in android_progressive_playback android_hls_playback android_session_replacement android_multi_player_rollback state_update_cadence; do
   sh "$YL_SCRIPT_DIR/run_android_integration.sh" "integration_test/${suite}_test.dart"

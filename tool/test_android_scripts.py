@@ -102,6 +102,28 @@ fi''')
         self.assertNotIn("JVM ", calls)
         self.assertEqual(calls.count("FLUTTER "), 5)
 
+    def test_hosted_api24_stages_apk_only_for_the_selected_emulator(self):
+        sdk = self.root / "Android SDK"
+        platform = sdk / "platform-tools"
+        platform.mkdir(parents=True)
+        (sdk / "platforms").mkdir()
+        shutil.copy(self.bin / "adb", platform / "adb")
+        self.env.update(RUNNER_ENVIRONMENT="github-hosted", RUNNER_TEMP=self.temp.name,
+                        ANDROID_HOME=str(sdk), YL_ANDROID_API="24")
+        self.executable(self.bin / "flutter", '''test -d "$ANDROID_HOME/platforms"
+test "$ANDROID_HOME" = "$ANDROID_SDK_ROOT"
+adb="$ANDROID_HOME/platform-tools/adb"
+"$adb" -s "$YL_ANDROID_DEVICE_ID" install -t -r "example app.apk"
+"$adb" -s "$YL_ANDROID_DEVICE_ID" shell pm path test.app
+"$adb" -s other install "other.apk"''')
+        result = self.run_gate("1")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        calls = self.log.read_text().splitlines()
+        self.assertEqual(calls.count("ADB -s emulator-5580 install --no-streaming -t -r example app.apk"), 5)
+        self.assertEqual(calls.count("ADB -s emulator-5580 shell pm path test.app"), 5)
+        self.assertEqual(calls.count("ADB -s other install other.apk"), 5)
+        self.assertEqual((platform / "adb").read_bytes(), (self.bin / "adb").read_bytes())
+
     def test_failure_stops_later_suites(self):
         self.executable(self.bin / "flutter", 'echo FLUTTER >> "$CALL_LOG"\nexit 17')
         result = self.run_gate("1")
