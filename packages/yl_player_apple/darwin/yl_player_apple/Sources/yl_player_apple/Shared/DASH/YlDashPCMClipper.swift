@@ -33,11 +33,14 @@ enum YlDashPCMClipper {
     pcm.frameLength = AVAudioFrameCount(frames.count)
     let start = try pts.adding(YlDashProgramTime(Int64(frames.skip), rate))
     let duration = try YlDashProgramTime(Int64(frames.count), rate)
-    let clipped = try YlScheduledAudioBuffer(reservation: buffer.reservation, payload: pcm,
-      ptsUs: start.converted(to: 1_000_000, rounding: .floor),
-      durationUs: duration.converted(to: 1_000_000, rounding: .floor),
+    let end = try start.adding(duration)
+    let startUs = try start.converted(to: 1_000_000, rounding: .floor)
+    // Quantize both boundaries so adjacent sample windows share an endpoint.
+    let endUs = try end.converted(to: 1_000_000, rounding: .floor)
+    let clipped = YlScheduledAudioBuffer(reservation: buffer.reservation, payload: pcm,
+      ptsUs: startUs, durationUs: endUs - startUs,
       byteCount: buffer.byteCount, generation: buffer.generation)
-    return try .init(buffer: clipped, start: start, end: start.adding(duration))
+    return .init(buffer: clipped, start: start, end: end)
   }
   private static func invalid() -> NativePlayerError {
     NativePlayerError(category: "decoder", code: "decoder.dash_audio_invalid",

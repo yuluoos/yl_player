@@ -531,10 +531,9 @@ final class YlAudioRenderer: YlAudioRendering {
       guard raw.sampleRate.isFinite, raw.sampleRate > 0, let host = raw.hostTimeUs, host >= 0,
             let node = Self.nodeMicroseconds(raw), let anchor,
             node >= anchor.nodeUs, end >= anchor.mediaUs else { return .invalid }
-      let elapsed = min(Double(end) - Double(anchor.mediaUs), node - anchor.nodeUs)
-      let mapped = Double(anchor.mediaUs) + elapsed
+      let mapped = Double(anchor.mediaUs) + (node - anchor.nodeUs)
       guard mapped.isFinite, mapped >= 0, mapped < Double(Int64.max) else { return .invalid }
-      let media = Int64(mapped.rounded(.towardZero))
+      let media = min(end, Int64(mapped.rounded(.towardZero)))
       if onClockControlBegin != nil, media < end {
         sampledSubmissionTime = (node, host,
           Double(host) + (Double(end) - Double(media)) / Double(rate), epoch, version)
@@ -548,7 +547,8 @@ final class YlAudioRenderer: YlAudioRendering {
       // Normal completion/append can advance position or extend coverage without
       // changing that mapping. Keep the captured end; never mix in a later bound.
       return .running(.init(generation: expectedGeneration, positionUs: media, hostTimeUs: host,
-        lowerBoundUs: anchor.mediaUs, upperBoundUs: end, rate: Double(rate)))
+        lowerBoundUs: anchor.mediaUs, upperBoundUs: end, rate: Double(rate),
+        renderedPastEndUs: max(0, mapped - Double(end))))
     }
   }
 

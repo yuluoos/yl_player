@@ -63,10 +63,12 @@ final class YlDashAudioTimeline: YlAudioPacketConverting {
           memset(data, 0, Int(buffer.mDataByteSize))
         }
         let duration = try Time(Int64(frames), rate)
-        output = try .init(buffer: .init(reservation: reservation, payload: silence,
-          ptsUs: nextTime.converted(to: 1_000_000, rounding: .floor),
-          durationUs: duration.converted(to: 1_000_000, rounding: .floor),
-          byteCount: bytes, generation: generation), start: nextTime, end: nextTime.adding(duration))
+        let end = try nextTime.adding(duration)
+        let startUs = try nextTime.converted(to: 1_000_000, rounding: .floor)
+        let endUs = try end.converted(to: 1_000_000, rounding: .floor)
+        output = .init(buffer: .init(reservation: reservation, payload: silence,
+          ptsUs: startUs, durationUs: endUs - startUs,
+          byteCount: bytes, generation: generation), start: nextTime, end: end)
       } else { output = pending; self.pending = nil }
     }
     guard let output else { return nil }

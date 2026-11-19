@@ -5998,6 +5998,7 @@ extension YlDashSampleSourceNativeTests {
       let window = try YlDashProgramTimeline.Window(start: start.adding(YlDashProgramTime(1, 96000)), end: YlDashProgramTime(7, 2))
       let source = YlScheduledAudioBuffer(payload: pcm, ptsUs: 0, durationUs: 0, byteCount: 8192, generation: 7)
       let clipped = try XCTUnwrap(YlDashPCMClipper.clip(source, pts: start, window: window))
+      XCTAssertEqual(clipped.ptsUs + clipped.durationUs, 3_500_000, "Fractional start and duration end exactly at the window boundary")
       XCTAssertEqual(pcm.frameLength, 63); XCTAssertEqual(clipped.byteCount, 8192); XCTAssertEqual(clipped.generation, 7)
       XCTAssertEqual(try XCTUnwrap(pcm.floatChannelData?[0])[0], interleaved ? 2 : 1)
     }
@@ -6667,6 +6668,7 @@ extension YlDashSampleSourceNativeTests {
             let pcm = try XCTUnwrap(output.payload as? AVAudioPCMBuffer), samples = try XCTUnwrap(pcm.floatChannelData?[0])
             let start = Int((Double(output.ptsUs) * 48000 / 1_000_000).rounded())
             XCTAssertEqual(start, frames, "No unrepresented gap or overlap")
+            XCTAssertEqual(output.ptsUs + output.durationUs, Int64(frames + Int(pcm.frameLength)) * 1_000_000 / 48_000)
             XCTAssertLessThanOrEqual(output.durationUs, 100000)
             XCTAssertLessThan(scope.ledger.snapshot.currentBytes, 2 * 1024 * 1024)
             for index in 0..<Int(pcm.frameLength) {

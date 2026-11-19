@@ -7,11 +7,15 @@ struct YlAudioClockSample: Equatable {
   let lowerBoundUs: Int64
   let upperBoundUs: Int64
   let rate: Double
+  // The device can keep rendering silence after the submitted PCM ends.
+  var renderedPastEndUs: Double = 0
+
   func position(atHostTimeUs now: Int64) -> Int64? {
     guard rate.isFinite, rate >= 0.25, rate <= 4, hostTimeUs >= 0,
           lowerBoundUs >= 0, upperBoundUs >= lowerBoundUs,
           positionUs >= lowerBoundUs, positionUs <= upperBoundUs else { return nil }
-    let value = Double(positionUs) + (Double(now) - Double(hostTimeUs)) * rate
+    let hostDeltaUs = (Double(now) - Double(hostTimeUs)) * rate
+    let value = Double(positionUs) + (renderedPastEndUs + hostDeltaUs)
     guard value.isFinite else { return nil }
     if value <= Double(lowerBoundUs) { return lowerBoundUs }
     if value >= Double(upperBoundUs) { return upperBoundUs }

@@ -4,6 +4,7 @@ import AppKit
 import Accelerate
 import AVFoundation
 import AVFAudio
+import CoreAudio
 import Foundation
 import Darwin
 import MachO
@@ -276,6 +277,15 @@ final class YlMacosAudioTests: XCTestCase {
     guard case let .running(sample) = renderer.clockObservation(expectedGeneration: 1) else { return XCTFail("Expected timestamped running observation") }
     XCTAssertEqual(sample.positionUs, 1_020_000); XCTAssertEqual(sample.hostTimeUs, 1_020_000)
     XCTAssertEqual(sample.lowerBoundUs, 1_000_000); XCTAssertEqual(sample.upperBoundUs, 1_250_000)
+    // The device timestamp can lead the host read while its node has already
+    // rendered past the submitted tail. Project the pair before bounding it.
+    output.renderedAudioTime = .init(sampleTime: 14_400, sampleRate: 48_000, hostTimeUs: 1_300_000)
+    guard case let .running(tail) = renderer.clockObservation(expectedGeneration: 1) else {
+      return XCTFail("Expected a native timestamp while the playback callback is pending")
+    }
+    XCTAssertEqual(tail.position(atHostTimeUs: 1_237_812), 1_237_812)
+    XCTAssertEqual(tail.position(atHostTimeUs: 1_260_000), 1_250_000)
+    XCTAssertTrue(renderer.hasPendingPlayback)
     output.renderedAudioTime = .init(sampleTime: 960, sampleRate: 48000)
     XCTAssertEqual(renderer.clockObservation(expectedGeneration: 1), .invalid)
     renderer.pause()
@@ -1950,10 +1960,55 @@ final class YlMacosAudioTests: XCTestCase {
 
   func testActualTerminalAdapterFrameSequenceMatrix() throws {
     for candidate in [false, true] {
-      for count in [0, 1, 3, 2000] { try runActualAdapter(count: count, candidate: candidate) }
+      for count in [0, 1, 3] { try runActualAdapter(count: count, candidate: candidate) }
+      try withLongSequenceOutputBuffer { try runActualAdapter(count: 2000, candidate: candidate) }
       try runActualAdapter(count: 100, candidate: candidate, starvation: true)
       try runActualAdapter(count: 3, candidate: candidate, pausedEOF: true)
     }
+  }
+
+  private func withLongSequenceOutputBuffer(_ run: () throws -> [String: Any]) throws {
+    guard ProcessInfo.processInfo.environment["YL_HOSTED_PCM_BUFFER"] == "1" else {
+      _ = try run()
+      return
+    }
+    func address(_ selector: AudioObjectPropertySelector) -> AudioObjectPropertyAddress {
+      AudioObjectPropertyAddress(mSelector: selector, mScope: kAudioObjectPropertyScopeGlobal,
+        mElement: kAudioObjectPropertyElementMain)
+    }
+    var deviceKey = address(kAudioHardwarePropertyDefaultOutputDevice)
+    var framesKey = address(kAudioDevicePropertyBufferFrameSize)
+    var rangeKey = address(kAudioDevicePropertyBufferFrameSizeRange)
+    var device = AudioDeviceID(kAudioObjectUnknown), original: UInt32 = 0
+    var range = AudioValueRange(), size = UInt32(MemoryLayout<AudioDeviceID>.size)
+    let deviceStatus = AudioObjectGetPropertyData(AudioObjectID(kAudioObjectSystemObject),
+      &deviceKey, 0, nil, &size, &device)
+    size = UInt32(MemoryLayout<UInt32>.size)
+    let framesStatus = AudioObjectGetPropertyData(device, &framesKey, 0, nil, &size, &original)
+    size = UInt32(MemoryLayout<AudioValueRange>.size)
+    let rangeStatus = AudioObjectGetPropertyData(device, &rangeKey, 0, nil, &size, &range)
+    var setup = "device=\(deviceStatus) frames=\(framesStatus) range=\(rangeStatus) original=\(original)"
+    var changed = false
+    let scalarSize = UInt32(MemoryLayout<UInt32>.size)
+    if deviceStatus == noErr, framesStatus == noErr, rangeStatus == noErr, original > 0,
+       range.mMaximum.isFinite, range.mMaximum > Double(original), original < 4096 {
+      var requested = UInt32(min(4096, range.mMaximum))
+      let status = AudioObjectSetPropertyData(device, &framesKey, 0, nil, scalarSize, &requested)
+      changed = status == noErr
+      setup += " requested=\(requested) status=\(status)"
+    }
+    defer {
+      if changed {
+        let restore = AudioObjectSetPropertyData(device, &framesKey, 0, nil, scalarSize, &original)
+        XCTAssertEqual(restore, noErr, "Restore the hosted device buffer after the long row")
+      }
+      let attachment = XCTAttachment(string: setup)
+      attachment.name = "hosted-device-buffer"
+      attachment.lifetime = .keepAlways
+      add(attachment)
+    }
+    // The row's pre/post render trace independently records the actual slice sizes.
+    _ = try run()
   }
 
   func testActualTerminalAdapterContinuousObservation() throws {

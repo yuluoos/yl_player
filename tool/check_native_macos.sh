@@ -62,6 +62,11 @@ run_unit_tests() {
   python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
   verify_registrant
 
+  # Give the long, frame-exact playback rows more HAL scheduling headroom on
+  # hosted VMs. XCTest applies and restores the size around those rows only.
+  if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then
+    export TEST_RUNNER_YL_HOSTED_PCM_BUFFER=1
+  fi
   native_status=0
   python3 -B "$repo_root/tool/run_with_display_awake.py" xcodebuild test CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -quiet -sdk macosx \
     -workspace "$example_root/macos/Runner.xcworkspace" \
