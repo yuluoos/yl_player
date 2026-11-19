@@ -33,12 +33,19 @@ void main() {
         await tester.pumpWidget(
           MaterialApp(home: YlPlayerView(controller: controller)),
         );
-        final firstFrameOrError = controller.events
-            .firstWhere(
-              (event) =>
-                  event is YlFirstFrameEvent || event is YlPlaybackFailedEvent,
-            )
-            .timeout(const Duration(seconds: 20));
+        final frameEvents = StreamIterator(
+          controller.events.where(
+            (event) =>
+                event is YlFirstFrameEvent || event is YlPlaybackFailedEvent,
+          ),
+        );
+        addTearDown(frameEvents.cancel);
+        final hasFrameEvent = frameEvents.moveNext().timeout(
+          const Duration(seconds: 20),
+        );
+        // A load error can end the test before it awaits the frame result.
+        // Attach an error handler now; the await below still sees any error.
+        hasFrameEvent.ignore();
 
         await loadSession(
           controller,
@@ -59,7 +66,10 @@ void main() {
         await sessionFor(controller).play();
         await sessionFor(controller).ready.timeout(const Duration(seconds: 20));
         try {
-          final event = await firstFrameOrError;
+          if (!await hasFrameEvent) {
+            fail('HLS event stream closed before the first frame');
+          }
+          final event = frameEvents.current;
           if (event case YlPlaybackFailedEvent(:final failure)) {
             if (returnSegmentToPrimary) {
               for (final request in server.requestsFor('/segment0.ts')) {
