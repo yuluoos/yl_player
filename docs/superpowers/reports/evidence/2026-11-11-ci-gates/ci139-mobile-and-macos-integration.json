@@ -1,0 +1,415 @@
+{
+  "runId": 44297386479,
+  "headSHA": "6f83f9e6e5aa48d8cf057fd23935d7561f1cda83",
+  "firstAttemptArtifacts": [
+    {
+      "id": 14426536608,
+      "name": "ios-exact-runtime-evidence",
+      "size_in_bytes": 110314,
+      "digest": "sha256:0d2ec7cb4cfb93b06a85046349b1706e117c4977c2396e4f0a9078e0544e6a9c"
+    },
+    {
+      "id": 14425666936,
+      "name": "apple-unit-ios-runtime-evidence",
+      "size_in_bytes": 108893425,
+      "digest": "sha256:98e2e25eb60beb7f3581df2d54289fdcf82ad437c8d24b021670694fc726672a"
+    },
+    {
+      "id": 14424713043,
+      "name": "android-api-24-failure",
+      "size_in_bytes": 54742,
+      "digest": "sha256:a1f0e50286ba1b87fd4f3ca32f284220977eb6244401974fd4b5387bdbf13d74"
+    }
+  ],
+  "hostedMacOSIntegration": {
+    "attempt": 2,
+    "job": "https://github.com/yuluoos/yl_player/actions/runs/44297386479/job/135311763678",
+    "conclusion": "success",
+    "artifact": {
+      "id": 14496036832,
+      "name": "macos-exact-runtime-evidence",
+      "size_in_bytes": 15342,
+      "digest": "sha256:8620e54c9e702e1e7a661744c10bfafc862d258ea9519bffb450a313190dab9b"
+    },
+    "passedCasesBySuite": {
+      "apple_strict_policy_test": 21,
+      "avi_policy_test": 5,
+      "flv_intent_test": 3,
+      "macos_hls_playback_test": 1,
+      "macos_http_flv_playback_test": 1,
+      "macos_mkv_playback_test": 2,
+      "macos_network_mkv_playback_test": 3,
+      "mpegts_policy_test": 4,
+      "state_update_cadence_test": 1,
+      "vorbis_policy_test": 5,
+      "vp9_policy_test": 3
+    }
+  },
+  "hostedIOS": {
+    "native": {
+      "totalTestCount": 904,
+      "passedTests": 870,
+      "failedTests": 33,
+      "skippedTests": 1
+    },
+    "nativeFailureSites": [
+      {
+        "identity": "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()",
+        "assertion": "failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 292,
+        "code": "catch let error as NativePlayerError { XCTFail(\"AC3: \\(error.code): \\(error.message)\") }"
+      },
+      {
+        "identity": "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+        "line": 1872,
+        "code": "var instance: YlFallbackBackend? = try YlFallbackBackend(playerId: 731,"
+      },
+      {
+        "identity": "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 343,
+        "code": "let backend = try YlFallbackBackend(playerId: 994,"
+      },
+      {
+        "identity": "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 223,
+        "code": "throw error"
+      },
+      {
+        "identity": "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 223,
+        "code": "throw error"
+      },
+      {
+        "identity": "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()",
+        "assertion": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/AppleHostCharacterizations.swift",
+        "line": 372,
+        "code": "throw error"
+      },
+      {
+        "identity": "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 223,
+        "code": "throw error"
+      },
+      {
+        "identity": "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+        "assertion": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/AppleHostCharacterizations.swift",
+        "line": 39,
+        "code": "catch let error as PigeonError { throw NSError(domain: error.code, code: 1) }"
+      },
+      {
+        "identity": "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()",
+        "assertion": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/AppleHostCharacterizations.swift",
+        "line": 39,
+        "code": "catch let error as PigeonError { throw NSError(domain: error.code, code: 1) }"
+      },
+      {
+        "identity": "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/NativeBackendFixtures.swift",
+        "line": 26,
+        "code": "try self.init(playerId: playerId,"
+      },
+      {
+        "identity": "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()",
+        "assertion": "failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 288,
+        "code": "catch let error as NativePlayerError { XCTFail(\"Vorbis: \\(error.code): \\(error.message)\") }"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()",
+        "assertion": "failed - absolute-base: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6531,
+        "code": "catch let error as NativePlayerError { XCTFail(\"\\(name): \\(error.code): \\(error.message)\"); throw error }"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6069,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()",
+        "assertion": "failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 284,
+        "code": "catch let error as NativePlayerError { XCTFail(\"PS: \\(error.code): \\(error.message)\") }"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6153,
+        "code": "try backend.activate()"
+      },
+      {
+        "identity": "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()",
+        "assertion": "failed - Load mode 0: decoder.unavailable",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+        "line": 6268,
+        "code": "XCTFail(\"Load mode \\(mode): \\(error.code)\"); throw error"
+      },
+      {
+        "identity": "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/NativeBackendFixtures.swift",
+        "line": 26,
+        "code": "try self.init(playerId: playerId,"
+      },
+      {
+        "identity": "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 193,
+        "code": "let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)"
+      },
+      {
+        "identity": "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 193,
+        "code": "let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)"
+      },
+      {
+        "identity": "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()",
+        "assertion": "failed: caught error: \"Playback operation failed.\"",
+        "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+        "line": 193,
+        "code": "let prepared = try YlPreparedFallback(source: source, requireHardwareProbe: strictAsset != nil)"
+      }
+    ],
+    "integration": {
+      "apple_default_positive_test": {
+        "local H264 AAC MKV uses native fallback and renders a frame": "decoder.unavailable",
+        "local MKV exposes and switches both AAC tracks": "decoder.unavailable",
+        "HTTP range MKV uses the native fallback": "decoder.unavailable",
+        "HTTP range MKV restores real-time playback after sustained 3x": "decoder.unavailable",
+        "HTTP range MKV completes a long video tail after audio ends": "decoder.unavailable",
+        "HTTP 200 sequential MKV rejects seek without losing playback": "decoder.unavailable",
+        "failed network MKV candidate preserves current HLS": "success",
+        "HTTP-FLV plays live and reconnects after a dropped socket": "decoder.unavailable"
+      },
+      "hls_playback_test": {
+        "opens HLS and produces a native texture first frame": "success",
+        "rejecting a fallback source does not tear down current HLS": "success"
+      }
+    }
+  },
+  "iPhone16": {
+    "system": "iOS 27.2",
+    "xcode": "27.2",
+    "flutter": "3.47.9",
+    "localResolvedLockSHA256": "a87a073c39f605567e7899aba648cce0d398f6c6184b2b1dbdd07eb384834116",
+    "repositoryLockSHA256": "6eb931531ba406893ba260af8588618c98eb2630f768c1ea52b4c742bb8b284d",
+    "native": {
+      "totalTestCount": 904,
+      "passedTests": 904,
+      "skippedTests": 0,
+      "failedTests": 0
+    },
+    "completeCanonicalIdentitiesMatch": true,
+    "all33HostedFailuresPassed": true,
+    "testBinarySHA256": "694e58f045e4002e301d18e435da3d47095c289694b4c8b713dcb36f73aaa55a",
+    "profileIntegration": {
+      "apple_strict_policy_test.dart": {
+        "ciCases": {
+          "HLS credentials reach same-origin children": "success",
+          "HLS credentials stay stripped after crossing origins": "success",
+          "HLS credentials stay stripped on returned-primary segment": "success",
+          "managed mkv retries exactly once then positively plays": "success",
+          "managed flv retries exactly once then positively plays": "success",
+          "managed cross-origin redirect strips credentials and preserves ordinary headers": "success",
+          "managed header deadline rejects with exact zero retry request count": "success",
+          "owned mp4 enforces strict policies during playback": "success",
+          "owned mov enforces strict policies during playback": "success",
+          "owned avi enforces strict policies during playback": "success",
+          "owned mpegTs enforces strict policies during playback": "success",
+          "owned mpegPs enforces strict policies during playback": "success",
+          "unsupported HLS policies and bounded DASH reject before I/O or replacement": "success",
+          "bounded mkv positively plays and never exceeds assigned ledger limits": "success",
+          "bounded flv positively plays and never exceeds assigned ledger limits": "success",
+          "hardwareRequired commits proven hardware or rejects decoder unavailable": "success",
+          "old playback stays authoritative while candidate fails": "success",
+          "old playback stays authoritative while candidate is cancelled": "success",
+          "public controller retains ready while actual native callback acknowledgement is held": "success",
+          "iOS public two-player audio lifecycle appManaged": "success",
+          "iOS public two-player audio lifecycle pluginManagedMediaPlayback": "success"
+        },
+        "entrySHA256": "1b11d3158c29ba192eb11224ac959e560e32956c8cab285c104cd5e2543c2299",
+        "profileAppFrameworkSHA256": "558fae5f8b54c86d0565fe8dc3f6aa087dd3ee3c9da040bbf134c1b021b04cab",
+        "receiptSHA256": "f2e47aeaffa1397a5972ec001d79a9be026f917033eb42dd5fce62e58f307d0f"
+      },
+      "state_update_cadence_test.dart": {
+        "ciCases": {
+          "250 ms updates keep their measured cadence and replacement session fence": "success"
+        },
+        "entrySHA256": "d0c1da43366b342c5f4afe9c9135831404713bd6a2ef970b3ddef6f9a8f8906d",
+        "profileAppFrameworkSHA256": "887d23491f0366c034404c92a33d4ec4d912edc462b68920b37027e674dd1d3d",
+        "receiptSHA256": "6e909841b2c9114adc636747450cd2b434fd3ddf8596cf4c5e77b3c496a74079"
+      },
+      "hls_playback_test.dart": {
+        "ciCases": {
+          "opens HLS and produces a native texture first frame": "success",
+          "rejecting a fallback source does not tear down current HLS": "success"
+        },
+        "entrySHA256": "67c7ab706df15157058a678446a58896468baceb60f3e5c42e336794be260a0f",
+        "profileAppFrameworkSHA256": "28445d9402c33b30303083de4e7333ee03f61043e309e8e88213a401c4319d87",
+        "receiptSHA256": "5a6c11cc4bb8d5c0fdaab3ec1513d4a53519e42ff933d3fa02e56dac8d31f258"
+      },
+      "apple_default_positive_test.dart": {
+        "ciCases": {
+          "local H264 AAC MKV uses native fallback and renders a frame": "success",
+          "local MKV exposes and switches both AAC tracks": "success",
+          "HTTP range MKV uses the native fallback": "success",
+          "HTTP range MKV restores real-time playback after sustained 3x": "success",
+          "HTTP range MKV completes a long video tail after audio ends": "success",
+          "HTTP 200 sequential MKV rejects seek without losing playback": "success",
+          "failed network MKV candidate preserves current HLS": "success",
+          "HTTP-FLV plays live and reconnects after a dropped socket": "success"
+        },
+        "entrySHA256": "d9e31100b372d63be2c991b3e33af1a543cd354622b801e1d749aaacf38b864f",
+        "profileAppFrameworkSHA256": "e7b78eedf3061fd8edb090120c5955b1b15f5ca1b5888330cd448a2d99b8b3a9",
+        "receiptSHA256": "e0ee45ced940f0dd8609bc5e0dbbe699dd2fca03ecc75c6095ac681a95b46137"
+      }
+    }
+  },
+  "androidInitial": {
+    "attempt": 1,
+    "job": "https://github.com/yuluoos/yl_player/actions/runs/44297386479/job/134780156337#step:9:127",
+    "phase": "Gradle assembleDebug",
+    "error": "Maven Central HTTP 429 fetching Kotlin Gradle plugin dependencies",
+    "playbackCasesExecuted": 0
+  },
+  "androidRerun": {
+    "attempt": 3,
+    "job": "https://github.com/yuluoos/yl_player/actions/runs/44297386479/job/135319419964",
+    "emulatorAPI": 24,
+    "conclusion": "failure",
+    "workflowConclusion": "failure",
+    "artifact": {
+      "id": 14497125482,
+      "name": "android-api-24-failure",
+      "size_in_bytes": 64714,
+      "digest": "sha256:ffe9fb504c562f15131034fcf4dde41657862f34b836016a853db5f65ad22498"
+    },
+    "cases": {
+      "Android progressive Ready, immediate Play, frame, seek and reload": "failure",
+      "Audio-only strict Ready is independent of First Frame and native background suspends": "success",
+      "API24 strict video rejects name-only hardware evidence before public commit": "success"
+    },
+    "boundaryErrorsInLogcat": [
+      "type=YlBoundaryException httpStatus=none code=decoder.unavailable reason=The required decoder is unavailable.",
+      "type=YlBoundaryException httpStatus=none code=decoder.unavailable reason=The required decoder is unavailable."
+    ],
+    "declaredAVCDecodersInArtifact": [
+      "OMX.google.h264.decoder"
+    ]
+  }
+}
