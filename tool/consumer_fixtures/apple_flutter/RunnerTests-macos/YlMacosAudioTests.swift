@@ -2083,14 +2083,27 @@ final class YlMacosAudioTests: XCTestCase {
         output.schedule(.init(payload: pcm, ptsUs: 0, durationUs: 75_000_000,
           byteCount: Int(frames) * 8, generation: 1), completion: {})
         try output.play()
+        let outputNode = engine.outputNode
         var rows: [[String: Double]] = []
         for index in 0...30 {
           Thread.sleep(forTimeInterval: 1)
-          let node = try XCTUnwrap(player.lastRenderTime)
+          // Pin the observation to one output render cycle. Player-time conversion
+          // and graph getters can span multiple slices on a busy audio device.
+          var pair: (AVAudioTime, AVAudioTime)?
+          for _ in 0..<8 {
+            let before = try XCTUnwrap(outputNode.lastRenderTime)
+            let node = try XCTUnwrap(player.lastRenderTime)
+            let after = try XCTUnwrap(outputNode.lastRenderTime)
+            if before.hostTime == after.hostTime && before.sampleTime == after.sampleTime {
+              pair = (node, after)
+              break
+            }
+          }
+          let (node, out) = try XCTUnwrap(pair, "Could not sample both nodes in one output render cycle")
           XCTAssertTrue(node.isHostTimeValid); XCTAssertTrue(node.isSampleTimeValid)
+          XCTAssertTrue(out.isHostTimeValid); XCTAssertTrue(out.isSampleTimeValid)
           let full = try XCTUnwrap(player.playerTime(forNodeTime: node))
           let hostOnly = try XCTUnwrap(player.playerTime(forNodeTime: AVAudioTime(hostTime: node.hostTime)))
-          let out = try XCTUnwrap(engine.outputNode.lastRenderTime)
           let production = try XCTUnwrap(output.presentationAudioTime)
           let fullUs = Double(full.sampleTime) * 1_000_000 / full.sampleRate
           let hostOnlyUs = Double(hostOnly.sampleTime) * 1_000_000 / hostOnly.sampleRate
