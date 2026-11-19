@@ -84,6 +84,7 @@ xcrun simctl bootstatus "$simulator_id" -b
 cd "$repo_root/packages/yl_player/example"
 # Discover the authenticated VM endpoint from the launched process history.
 # Streaming-only discovery can miss the startup line on a busy Simulator.
+integration_status=0
 for test_file in \
   integration_test/hls_playback_test.dart \
   integration_test/apple_default_positive_test.dart \
@@ -91,11 +92,16 @@ for test_file in \
   integration_test/apple_strict_policy_test.dart
 do
   integration_log="$evidence/$(basename "$test_file").log"
-  if python3 -B "$repo_root/tool/run_ios_simulator_integration.py" \
-    --simulator "$simulator_id" --test "$test_file" --evidence "$evidence" >"$integration_log" 2>&1; then
-    cat "$integration_log"
-  else
-    cat "$integration_log"
-    exit 1
+  suite_status=0
+  python3 -B "$repo_root/tool/run_ios_simulator_integration.py" \
+    --simulator "$simulator_id" --test "$test_file" --evidence "$evidence" >"$integration_log" 2>&1 || suite_status=$?
+  cat "$integration_log"
+  if [ "$suite_status" -ne 0 ]; then
+    # A completed suite writes its own receipt. Keep testing independent suites
+    # after a case failure, but stop on build, launch, or driver startup errors.
+    suite_name=$(basename "$test_file" .dart)
+    [ -s "$evidence/$suite_name/integration_response_data.json" ] || exit "$suite_status"
+    integration_status=1
   fi
 done
+exit "$integration_status"
