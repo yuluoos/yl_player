@@ -1,6 +1,9 @@
 import yl_player_media_core
 import AudioToolbox
 import AVFAudio
+#if os(macOS)
+import CoreAudio
+#endif
 import Foundation
 import YlFFmpegBridge
 
@@ -1596,6 +1599,9 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   private let timePitch = AVAudioUnitTimePitch()
   private var configured = false
   private var disposed = false
+  #if os(macOS)
+  private var outputDeviceID = AudioDeviceID(kAudioObjectUnknown)
+  #endif
   private var outputClockAligned = false
   // Captured by the existing clock read, never by the failure-reporting path.
   private var lastPresentationClock: (readHostUs: Int64, outputHostUs: Int64?,
@@ -1661,8 +1667,22 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
   /// passing only host time avoids mixing the output's sample-rate/domain.
   var presentationAudioTime: YlRenderedAudioTime? {
     guard configured, !disposed, let outputTime = outputNode.lastRenderTime,
-          outputTime.isHostTimeValid,
-          let playerTime = player.playerTime(forNodeTime: AVAudioTime(hostTime: outputTime.hostTime)),
+          outputTime.isHostTimeValid else { return nil }
+    var presentationHost = outputTime.hostTime
+    #if os(macOS)
+    // The HAL can render ahead. Map the running device's current timestamp
+    // into player time, bounded by the latest frame the graph actually rendered.
+    if presentationHost > mach_absolute_time() {
+      let device = invalidationLock.withLock { outputDeviceID }
+      var stamp = AudioTimeStamp()
+      stamp.mFlags = .hostTimeValid
+      if device != kAudioObjectUnknown, AudioDeviceGetCurrentTime(device, &stamp) == noErr,
+         stamp.mFlags.contains(.hostTimeValid), stamp.mHostTime > 0 {
+        presentationHost = min(presentationHost, stamp.mHostTime)
+      }
+    }
+    #endif
+    guard let playerTime = player.playerTime(forNodeTime: AVAudioTime(hostTime: presentationHost)),
           playerTime.isHostTimeValid, playerTime.isSampleTimeValid,
           playerTime.sampleRate.isFinite, playerTime.sampleRate > 0 else { return nil }
     let hostUs = Self.hostMicroseconds(playerTime.hostTime)
@@ -1734,6 +1754,10 @@ final class YlSystemAudioOutput: YlAudioOutputDriving {
       outputClockAligned = aligningClockDomains
     }
     engine.prepare()
+    #if os(macOS)
+    let device = outputNode.auAudioUnit.deviceID
+    invalidationLock.withLock { outputDeviceID = device }
+    #endif
     configured = true
   }
 

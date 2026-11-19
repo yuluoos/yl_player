@@ -1959,17 +1959,18 @@ final class YlMacosAudioTests: XCTestCase {
   }
 
   func testActualTerminalAdapterFrameSequenceMatrix() throws {
-    for candidate in [false, true] {
-      for count in [0, 1, 3] { try runActualAdapter(count: count, candidate: candidate) }
-      try withLongSequenceOutputBuffer { try runActualAdapter(count: 2000, candidate: candidate) }
-      try runActualAdapter(count: 100, candidate: candidate, starvation: true)
-      try runActualAdapter(count: 3, candidate: candidate, pausedEOF: true)
+    try withMatrixOutputBuffer {
+      for candidate in [false, true] {
+        for count in [0, 1, 3, 2000] { try runActualAdapter(count: count, candidate: candidate) }
+        try runActualAdapter(count: 100, candidate: candidate, starvation: true)
+        try runActualAdapter(count: 3, candidate: candidate, pausedEOF: true)
+      }
     }
   }
 
-  private func withLongSequenceOutputBuffer(_ run: () throws -> [String: Any]) throws {
+  private func withMatrixOutputBuffer(_ run: () throws -> Void) throws {
     guard ProcessInfo.processInfo.environment["YL_HOSTED_PCM_BUFFER"] == "1" else {
-      _ = try run()
+      try run()
       return
     }
     func address(_ selector: AudioObjectPropertySelector) -> AudioObjectPropertyAddress {
@@ -2000,15 +2001,15 @@ final class YlMacosAudioTests: XCTestCase {
     defer {
       if changed {
         let restore = AudioObjectSetPropertyData(device, &framesKey, 0, nil, scalarSize, &original)
-        XCTAssertEqual(restore, noErr, "Restore the hosted device buffer after the long row")
+        XCTAssertEqual(restore, noErr, "Restore the hosted device buffer after the matrix")
       }
       let attachment = XCTAttachment(string: setup)
       attachment.name = "hosted-device-buffer"
       attachment.lifetime = .keepAlways
       add(attachment)
     }
-    // The row's pre/post render trace independently records the actual slice sizes.
-    _ = try run()
+    // Each row's render trace independently records the actual slice sizes.
+    try run()
   }
 
   func testActualTerminalAdapterContinuousObservation() throws {

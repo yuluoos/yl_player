@@ -62,8 +62,8 @@ run_unit_tests() {
   python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
   verify_registrant
 
-  # Give the long, frame-exact playback rows more HAL scheduling headroom on
-  # hosted VMs. XCTest applies and restores the size around those rows only.
+  # Give the frame-exact playback matrix more HAL scheduling headroom on
+  # hosted VMs. XCTest applies and restores the size around that matrix only.
   if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then
     export TEST_RUNNER_YL_HOSTED_PCM_BUFFER=1
   fi
