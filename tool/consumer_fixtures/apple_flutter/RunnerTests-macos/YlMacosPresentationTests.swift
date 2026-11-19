@@ -533,6 +533,18 @@ final class YlMacosPresentationTests: XCTestCase {
     endpoint.lock.withLock { endpoint.ready = true }
     clock.set(100_000, playing: true); pump.synchronize(); queue.sync {}
     XCTAssertEqual(endpoint.pts, [140_000])
+
+    // After the last frame's presentation interval, a still-blocked output
+    // must no longer hold that frame across the longer audio tail and EOF.
+    endpoint.lock.withLock { endpoint.ready = false }
+    XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: 180_000,
+      durationUs: 40_000, keyframe: true, generation: 1)))
+    clock.set(190_000, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertTrue(pump.hasPendingPresentation)
+    clock.set(220_000, playing: true); pump.synchronize(); queue.sync {}
+    XCTAssertFalse(pump.hasPendingPresentation)
+    XCTAssertEqual(pump.statistics.rejected, 1)
+    XCTAssertEqual(endpoint.pts, [140_000])
   }
 
   func testTimedPumpStopsAdmissionOnPause() {

@@ -1388,8 +1388,20 @@ final class YlMacosAudioTests: XCTestCase {
         if pass == 2 { try instance.seek(toMs: 0, cancellationToken: nil) }
         let start = ProcessInfo.processInfo.systemUptime
         try instance.play()
-        try await AppleHostCharacterizations.waitFor({ (instance.timedVideoStatistics?.submitted ?? 0) >= 12 }, timeout: 4)
-        try await AppleHostCharacterizations.waitFor({ completions == pass }, timeout: 8)
+        func waitForPass(_ milestone: String, timeout: TimeInterval, until reached: () -> Bool) async throws -> Bool {
+          let deadline = ProcessInfo.processInfo.systemUptime + timeout
+          while !reached(), errors.isEmpty, ProcessInfo.processInfo.systemUptime < deadline {
+            try await Task.sleep(nanoseconds: 10_000_000)
+          }
+          guard reached() else {
+            XCTFail("\(name) pass \(pass) timed out waiting for \(milestone). Completions \(completions), errors \(errors), video \(String(describing: instance.timedVideoStatistics)), audio \(String(describing: instance.isolatedAudioClockStatistics))")
+            return false
+          }
+          return true
+        }
+        guard try await waitForPass("12 submitted frames", timeout: 4, until: {
+          (instance.timedVideoStatistics?.submitted ?? 0) >= 12
+        }), try await waitForPass("EOF", timeout: 8, until: { completions == pass }) else { break }
         XCTAssertGreaterThan(ProcessInfo.processInfo.systemUptime - start, 3.5, "Must wait for the longer stream: \(name)")
         XCTAssertFalse(instance.timedVideoStatistics?.pending ?? true)
       }
@@ -1598,17 +1610,14 @@ final class YlMacosAudioTests: XCTestCase {
     }
     defer { workspaceObservers.forEach(workspaceCenter.removeObserver) }
     let observationClock = transportDiagnostics && candidate ? YlMediaClock() : nil
-    let observationAudio = transportDiagnostics ? TimedObservationAudioFactory() : nil
-    let audioFactory: any YlAudioRendererMaking
-    if let observationAudio { audioFactory = observationAudio }
-    else { audioFactory = YlPlatformAudioRendererFactory() }
+    let observationAudio = TimedObservationAudioFactory()
     var timelineEvents = 0
     var timelinePositionMs: Int64?
     var timelineUptime: TimeInterval?
     let instance = try YlManagedPlaybackSession(playerId: 942,
       services: YlPlatformServices(platform: .macos, textureOutput: output, makeDisplayDriver: { YlDisplayTimer(view: view, onTick: $0) }).borrowing(lease),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 31,
-      mediaClock: observationClock, audioRendererFactory: audioFactory,
+      mediaClock: observationClock, audioRendererFactory: observationAudio,
       presentationScheduler: scheduler,
       emit: {
         switch $0.event {
@@ -1631,6 +1640,8 @@ final class YlMacosAudioTests: XCTestCase {
     }
     try instance.play()
     try await Task.sleep(nanoseconds: 2_000_000_000)
+    XCTAssertEqual(observationAudio.renderer?.usesSubmissionAnchor, candidate,
+      "Timed 48 kHz stereo AAC must keep played-back completion on the audio tail")
     let layer = try XCTUnwrap(view.layer?.sublayers?.compactMap { $0 as? AVSampleBufferDisplayLayer }.last)
     let renderer = layer.sampleBufferRenderer
     func metrics() async -> [String: Any]? {
@@ -1663,9 +1674,9 @@ final class YlMacosAudioTests: XCTestCase {
           "rendererStatus": renderer.status.rawValue,
           "rendererReady": renderer.isReadyForMoreMediaData,
           "requiresFlush": renderer.requiresFlushToResumeDecoding,
-          "audioPending": observationAudio?.renderer?.hasPendingPlayback as Any? ?? NSNull(),
-          "audioDurationUs": observationAudio?.renderer?.scheduledDurationUs as Any? ?? NSNull(),
-          "audioBytes": observationAudio?.renderer?.scheduledBytes as Any? ?? NSNull(),
+          "audioPending": observationAudio.renderer?.hasPendingPlayback as Any? ?? NSNull(),
+          "audioDurationUs": observationAudio.renderer?.scheduledDurationUs as Any? ?? NSNull(),
+          "audioBytes": observationAudio.renderer?.scheduledBytes as Any? ?? NSNull(),
           "timelineEvents": timelineEvents, "timelinePositionMs": timelinePositionMs as Any? ?? NSNull(),
           "timelineUptime": timelineUptime as Any? ?? NSNull()]
       }
@@ -4001,11 +4012,44 @@ final class YlMacosAudioTests: XCTestCase {
     withExtendedLifetime(callbacks) {}
   }
 
+  private func builtInOutputDevice() throws -> AudioDeviceID? {
+    var devicesKey = AudioObjectPropertyAddress(mSelector: kAudioHardwarePropertyDevices,
+      mScope: kAudioObjectPropertyScopeGlobal, mElement: kAudioObjectPropertyElementMain)
+    let system = AudioObjectID(kAudioObjectSystemObject)
+    var size: UInt32 = 0
+    var status = AudioObjectGetPropertyDataSize(system, &devicesKey, 0, nil, &size)
+    guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
+    guard size > 0 else { return nil }
+    let stride = MemoryLayout<AudioDeviceID>.stride
+    var devices = [AudioDeviceID](repeating: kAudioObjectUnknown, count: Int(size) / stride)
+    status = devices.withUnsafeMutableBytes { bytes in
+      AudioObjectGetPropertyData(system, &devicesKey, 0, nil, &size, bytes.baseAddress!)
+    }
+    guard status == noErr else { throw NSError(domain: NSOSStatusErrorDomain, code: Int(status)) }
+
+    var transportKey = devicesKey
+    transportKey.mSelector = kAudioDevicePropertyTransportType
+    var streamsKey = AudioObjectPropertyAddress(mSelector: kAudioDevicePropertyStreams,
+      mScope: kAudioObjectPropertyScopeOutput, mElement: kAudioObjectPropertyElementMain)
+    return devices.prefix(Int(size) / stride).first { device in
+      var transport: UInt32 = 0, propertySize = UInt32(MemoryLayout<UInt32>.size)
+      guard AudioObjectGetPropertyData(device, &transportKey, 0, nil, &propertySize, &transport) == noErr,
+            transport == kAudioDeviceTransportTypeBuiltIn else { return false }
+      return AudioObjectGetPropertyDataSize(device, &streamsKey, 0, nil, &propertySize) == noErr
+        && propertySize > 0
+    }
+  }
+
   func testPlayedSystemAudioReleasesPCMAndLedgerWhileOutputRemainsAlive() throws {
     let ledger = YlManagedBufferLedger()
     let scope = try ledger.makeScope(maxBytes: nil)
     let converter = LifetimePCMConverter()
-    let output = YlSystemAudioOutput()
+    let engine = AVAudioEngine()
+    // Pin this graph before configuring it so a disappearing default Bluetooth
+    // route cannot interrupt the real played-back callbacks under test.
+    let device = try builtInOutputDevice()
+    if let device { try engine.outputNode.auAudioUnit.setDeviceID(device) }
+    let output = YlSystemAudioOutput(engine: engine)
     let renderer = YlAudioRenderer(bufferScope: scope, converter: converter, output: output)
     defer { renderer.dispose() }
     try renderer.configure(stream: .init(codec: .aac, sampleRate: 48000,
@@ -4016,8 +4060,10 @@ final class YlMacosAudioTests: XCTestCase {
           ptsUs: Int64(index) * 21333, durationUs: 21333, generation: 1)), .scheduled)
       }
     }
+    XCTAssertEqual(converter.buffers.filter { $0.value != nil }.count, 20)
     XCTAssertEqual(ledger.snapshot.currentBytes, 20 * 8192)
     try renderer.play()
+    if let device { XCTAssertEqual(engine.outputNode.auAudioUnit.deviceID, device) }
     let deadline = Date(timeIntervalSinceNow: 4)
     while renderer.scheduledDurationUs > 0 && Date() < deadline {
       RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.01))

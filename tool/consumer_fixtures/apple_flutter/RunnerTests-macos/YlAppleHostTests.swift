@@ -507,6 +507,7 @@ private final class ConnectionTransport: NSObject, FlutterBinaryMessenger {
 
 private final class ConnectionRegistrar: NSObject, FlutterPluginRegistrar, FlutterTextureRegistry {
   let transport = ConnectionTransport()
+  let engineIdentifier: Int64 = 1
   var plugin: YlPlayerApplePlugin?
   var messenger: FlutterBinaryMessenger { transport }
   var textures: FlutterTextureRegistry { self }
@@ -520,6 +521,9 @@ private final class ConnectionRegistrar: NSObject, FlutterPluginRegistrar, Flutt
   func addMethodCallDelegate(_ delegate: FlutterPlugin, channel: FlutterMethodChannel) {}
   func addApplicationDelegate(_ delegate: FlutterAppLifecycleDelegate) {}
   func publish(_ value: NSObject) { plugin = value as? YlPlayerApplePlugin }
+  func valuePublished(byPlugin pluginKey: String) -> NSObject? {
+    pluginKey == "YlPlayerApplePlugin" ? plugin : nil
+  }
   func lookupKey(forAsset asset: String) -> String { asset }
   func lookupKey(forAsset asset: String, fromPackage package: String) -> String { asset }
 }

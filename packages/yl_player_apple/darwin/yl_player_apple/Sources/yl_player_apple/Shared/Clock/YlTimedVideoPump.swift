@@ -138,10 +138,17 @@ final class YlTimedVideoPump {
         let enqueueStarted = collectDiagnostics ? ProcessInfo.processInfo.systemUptime : 0
         let accepted = endpoint.enqueue(frame)
         if collectDiagnostics { phases["enqueueSeconds"] = max(phases["enqueueSeconds"] ?? 0, ProcessInfo.processInfo.systemUptime - enqueueStarted) }
-        guard accepted else { break }
+        let end = frame.ptsUs.addingReportingOverflow(max(1, frame.durationUs))
+        if !accepted {
+          // Retry while the frame can still be shown. Holding a refused frame
+          // past its display interval blocks later frames and the EOF drain.
+          guard frame.durationUs > 0, !end.overflow, end.partialValue <= snapshot.positionUs else { break }
+          held = nil
+          stateLock.withLock { observed.rejected += 1 }
+          continue
+        }
         frame.reservation?.endQueuedTiming()
         window.didSubmit(frame)
-        let end = frame.ptsUs.addingReportingOverflow(max(1, frame.durationUs))
         lastEndUs = end.overflow ? .max : end.partialValue
         held = nil
         stateLock.withLock { observed.submitted += 1 }

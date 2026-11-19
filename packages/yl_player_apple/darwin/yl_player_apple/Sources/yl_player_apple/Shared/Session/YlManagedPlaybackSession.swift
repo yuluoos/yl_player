@@ -204,12 +204,6 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
       let admittedHTTPAV1: Bool
       if case .network = prepared.sourceRecipe { admittedHTTPAV1 = softwareAV1 && finiteSeekable }
       else { admittedHTTPAV1 = false }
-      // Decoder creation has already enforced the exact-image admission profile.
-      // Per-buffer playedBack queries hold the audio graph during HAL latency
-      // reads; keep that real completion fence only on the final PCM boundary.
-      if softwareAV1 {
-        audio.enableTerminalCompletion(eligibleFiniteSource: (localSource || admittedHTTPAV1) && finiteSeekable)
-      }
       let useTimedVideo = timedVideoCandidateEnabled || softwareAV1
       presentation.configureTimedCandidate(enabled: useTimedVideo && services.platform == .macos
         && services.nativeViewType != nil && (localSource || admittedHTTPAV1) && !prepared.policy.isLive
@@ -217,7 +211,7 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         requiresAudioAnchor: demux.selectedAudioStream != nil, diagnosticsEnabled: timedVideoDiagnosticsEnabled)
       // Admitted finite HTTP AV1 uses the same native timed queue as files;
       // neither source depends on main-thread display ticks for frame submission.
-      if presentation.configureIsolatedAudioClock(generation: audio.audioGeneration,
+      let usesIsolatedAudioClock = presentation.configureIsolatedAudioClock(generation: audio.audioGeneration,
         read: { [weak self] generation in
         guard let self, let resource = self.audio.currentResource else { return .waiting }
         // A finite audio gap must not freeze the independent video worker when
@@ -226,7 +220,14 @@ final class YlManagedPlaybackSession: NSObject, YlVideoPipelineOutput, YlAudioPi
         resource.advanceSilence(through: self.presentation.pendingFrames.last,
           atHostTimeUs: Self.hostTimeUs(), expectedGeneration: generation)
         return resource.clockObservation(expectedGeneration: generation)
-      }) {
+      })
+      // Per-buffer played-back callbacks can hold the native audio graph long
+      // enough for the timed video clock to expire. For eligible streams use
+      // rendered callbacks in steady state and keep the played-back EOF fence.
+      if softwareAV1 || usesIsolatedAudioClock {
+        audio.enableTerminalCompletion(eligibleFiniteSource: (localSource || admittedHTTPAV1) && finiteSeekable)
+      }
+      if usesIsolatedAudioClock {
         audio.beforeClockControl = { [weak presentation] in presentation?.invalidateAudioClock() }
         audio.onClockGenerationChanged = { [weak presentation] generation in presentation?.setAudioClockGeneration(generation) }
       }
