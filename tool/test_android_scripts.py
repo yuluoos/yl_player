@@ -124,6 +124,36 @@ adb="$ANDROID_HOME/platform-tools/adb"
         self.assertEqual(calls.count("ADB -s other install other.apk"), 5)
         self.assertEqual((platform / "adb").read_bytes(), (self.bin / "adb").read_bytes())
 
+    def test_api24_runs_remaining_suites_and_preserves_test_failure(self):
+        self.env["YL_ANDROID_API"] = "24"
+        self.executable(self.bin / "flutter", '''echo "$2" >> "$CALL_LOG"
+case "$2" in *progressive*|*multi_player*) ;; *) exit 0;; esac
+test "$3" = --file-reporter
+cat > "${4#json:}" <<'JSON'
+{"type":"testStart","test":{"id":1,"groupIDs":[0]}}
+{"type":"testDone","testID":1,"hidden":false,"result":"error"}
+{"type":"done","success":false}
+JSON
+exit 1''')
+        result = self.run_gate("1")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        outcomes = [line.rsplit(": ", 1)[1] for line in result.stdout.splitlines()
+                    if line.startswith("Android suite integration_test/")]
+        self.assertEqual(outcomes, ["exit 1", "exit 0", "exit 0", "exit 1", "exit 0"])
+
+    def test_api24_stops_on_suite_loading_failure(self):
+        self.env["YL_ANDROID_API"] = "24"
+        self.executable(self.bin / "flutter", '''echo FLUTTER >> "$CALL_LOG"
+cat > "${4#json:}" <<'JSON'
+{"type":"testStart","test":{"id":0,"groupIDs":[]}}
+{"type":"testDone","testID":0,"hidden":false,"result":"error"}
+{"type":"done","success":false}
+JSON
+exit 1''')
+        result = self.run_gate("1")
+        self.assertEqual(result.returncode, 1, result.stderr)
+        self.assertEqual(self.log.read_text().count("FLUTTER"), 1)
+
     def test_failure_stops_later_suites(self):
         self.executable(self.bin / "flutter", 'echo FLUTTER >> "$CALL_LOG"\nexit 17')
         result = self.run_gate("1")

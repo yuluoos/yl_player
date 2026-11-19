@@ -66,6 +66,7 @@ class Runner:
         self.offset = 0
         self.tail = b''
         self.cleanup_errors = []
+        self.clean_flutter_exit = False
 
     def interrupted(self, signum, _frame):
         if self.requested_signal is None:
@@ -166,6 +167,7 @@ class Runner:
         started = time.monotonic()
         deadline = started + self.run_seconds
         handlers = {s: signal.signal(s, self.interrupted) for s in SIGNALS}
+        flutter_exited = False
         primary = 70
         error_type = None
         restore_ok = True
@@ -187,6 +189,7 @@ class Runner:
                 self.lifecycle(deadline)
                 time.sleep(.02)
             primary = record['exitCode'] = exit_code(process.returncode)
+            flutter_exited = True
         except Failed as error:
             primary = error.code
         except Exception as error:
@@ -242,13 +245,59 @@ class Runner:
                 status = status or 70
             print('Android test log: ' + str(self.log), file=sys.stderr)
             print('Android test receipt: ' + str(receipt_path), file=sys.stderr)
+        self.clean_flutter_exit = flutter_exited and complete and restore_ok and self.requested_signal is None
         return status
+
+
+def completed_case_failure(report):
+    if not report.is_file():
+        return False
+    case_ids = set()
+    failed_case = False
+    last_event = {}
+    try:
+        with report.open() as stream:
+            for line in stream:
+                last_event = json.loads(line)
+                # The virtual test that loads/builds the suite has no root group.
+                if last_event.get('type') == 'testStart' and last_event['test']['groupIDs']:
+                    case_ids.add(last_event['test']['id'])
+                if (last_event.get('type') == 'testDone' and last_event.get('testID') in case_ids
+                        and not last_event.get('hidden')
+                        and last_event.get('result') in ('failure', 'error')):
+                    failed_case = True
+    except (OSError, ValueError, KeyError, TypeError, AttributeError):
+        return False
+    return failed_case and last_event.get('type') == 'done' and last_event.get('success') is False
+
+
+def run_suites(suites):
+    report_dir = Path(tempfile.mkdtemp(prefix='yl-android-suites.', dir=os.environ.get('YL_ANDROID_REPORT_ROOT')))
+    print(f'Android suite reports: {report_dir}', flush=True)
+    result = 0
+    for suite in suites:
+        report = report_dir / (Path(suite).stem + '.jsonl')
+        runner = Runner(suite, ['--file-reporter', 'json:' + str(report)])
+        status = runner.run()
+        print(f'Android suite {suite}: exit {status}', flush=True)
+        if status:
+            diagnostics = runner.log.with_name(runner.log.name + '.failure-logcat')
+            if diagnostics.is_file():
+                shutil.copyfile(diagnostics, report.with_suffix('.logcat.txt'))
+            if status != 1 or not runner.clean_flutter_exit or not completed_case_failure(report):
+                return status
+            result = status
+    return result
 
 
 def main():
     try:
         if len(sys.argv) < 2:
             raise ValueError('suite')
+        if sys.argv[1] == '--all-suites':
+            if not sys.argv[2:]:
+                raise ValueError('suites')
+            return run_suites(sys.argv[2:])
         return Runner(sys.argv[1], sys.argv[2:]).run()
     except (KeyError, ValueError) as error:
         print('Android runner configuration error: ' + str(error), file=sys.stderr)

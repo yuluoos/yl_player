@@ -207,7 +207,7 @@ android_device() {
   if [ "$test_mode" = 1 ]; then
     echo "WOULD_RUN Android API $expected_api on $device_id"
   else
-    YL_ANDROID_DEVICE_ID=$device_id YL_ANDROID_SKIP_JVM=1 \
+    YL_ANDROID_API=$expected_api YL_ANDROID_DEVICE_ID=$device_id YL_ANDROID_SKIP_JVM=1 \
       sh tool/check_native_android.sh
   fi
 }

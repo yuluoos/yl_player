@@ -34,6 +34,17 @@ ADB
   export ANDROID_HOME="$sdk" ANDROID_SDK_ROOT="$sdk"
 fi
 cd "$YL_REPO_ROOT/packages/yl_player/example"
+set --
 for suite in android_progressive_playback android_hls_playback android_session_replacement android_multi_player_rollback state_update_cadence; do
-  sh "$YL_SCRIPT_DIR/run_android_integration.sh" "integration_test/${suite}_test.dart"
+  set -- "$@" "integration_test/${suite}_test.dart"
+done
+if [ "${YL_ANDROID_API:-}" = 24 ]; then
+  if [ "${RUNNER_ENVIRONMENT:-}" = github-hosted ]; then
+    mkdir -p "$YL_REPO_ROOT/android-failure"
+    export YL_ANDROID_REPORT_ROOT="$YL_REPO_ROOT/android-failure"
+  fi
+  exec sh "$YL_SCRIPT_DIR/run_android_integration.sh" --all-suites "$@"
+fi
+for suite do
+  sh "$YL_SCRIPT_DIR/run_android_integration.sh" "$suite"
 done
