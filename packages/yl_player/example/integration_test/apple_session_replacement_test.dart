@@ -106,9 +106,6 @@ void main() {
         MaterialApp(home: YlPlayerView(controller: controller)),
       );
       final release = Completer<void>();
-      addTearDown(() {
-        if (!release.isCompleted) release.complete();
-      });
       probe.messenger.hold = release;
       final loading = controller.load(
         YlNetworkSource(
@@ -118,15 +115,24 @@ void main() {
         ),
         options: const YlLoadOptions(),
       );
-      await probe.messenger.entered.future.timeout(const Duration(seconds: 5));
-      final received = probe.messenger.received;
-      await Future<void>.delayed(const Duration(milliseconds: 150));
-      expect(
-        probe.messenger.received,
-        received,
-        reason: 'Native FIFO must await actual Pigeon acknowledgement.',
-      );
-      release.complete();
+      try {
+        final entered = probe.messenger.entered.future;
+        // Surface an early load error while waiting for the callback. A
+        // successful load still needs to demonstrate the held acknowledgement.
+        await Future.any<void>([
+          entered,
+          loading.then((_) => entered),
+        ]).timeout(const Duration(seconds: 5));
+        final received = probe.messenger.received;
+        await Future<void>.delayed(const Duration(milliseconds: 150));
+        expect(
+          probe.messenger.received,
+          received,
+          reason: 'Native FIFO must await actual Pigeon acknowledgement.',
+        );
+      } finally {
+        release.complete();
+      }
       final session = await loading;
       await readyAndPlay(controller, session);
       await session.ready;
