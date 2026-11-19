@@ -1,0 +1,912 @@
+{
+  "hosted139": {
+    "runId": 44297386479,
+    "nativeJob": 134777919127,
+    "attachment": "fixture=h264_aac.mkv subtype=1635148593 h264=1635148593 hardwareAvailable=false controlledVideo=false",
+    "attachmentSHA256": "a9214ab8e36f7ecfcdfe5d8d337ca24f49e6b0f0df62402d5944ef5be76548c3"
+  },
+  "localSimulator": {
+    "model": "iPhone 18 Pro",
+    "system": "iOS 27.2",
+    "Xcode": "27.2",
+    "Flutter": "3.47.9",
+    "probe": {
+      "source": "tool/decoder_probe/apple_decode_probe.swift",
+      "sourceSHA256": "17b7bc778520ce785d957839c3fcadfdc88dce2c406b236be81c0444b6bddba0",
+      "fixture": "tool/decoder_probe/fixtures/avc-control.json",
+      "fixtureSHA256": "93957de58c49add03ed809f558c69d49f7895787775ade091888c7b5bd4ecd65",
+      "observations": [
+        {
+          "callbackErrors": 0,
+          "caseId": "avc-control",
+          "createStatus": 0,
+          "decodeStatus": 0,
+          "expectedFrames": 96,
+          "finishStatus": 0,
+          "generation": 0,
+          "geometryErrors": 0,
+          "hardwareEvidence": "unknown",
+          "hardwareHint": false,
+          "outputFrames": 96,
+          "pixelFormats": [
+            "420v"
+          ],
+          "policy": "systemDefault",
+          "propertyStatus": -12900,
+          "waitStatus": 0
+        },
+        {
+          "callbackErrors": 0,
+          "caseId": "avc-control",
+          "createStatus": 0,
+          "decodeStatus": 0,
+          "expectedFrames": 96,
+          "finishStatus": 0,
+          "generation": 1,
+          "geometryErrors": 0,
+          "hardwareEvidence": "unknown",
+          "hardwareHint": false,
+          "outputFrames": 96,
+          "pixelFormats": [
+            "420v"
+          ],
+          "policy": "systemDefault",
+          "propertyStatus": -12900,
+          "waitStatus": 0
+        },
+        {
+          "callbackErrors": 0,
+          "caseId": "avc-control",
+          "createStatus": 0,
+          "decodeStatus": 0,
+          "expectedFrames": 96,
+          "finishStatus": 0,
+          "generation": 0,
+          "geometryErrors": 0,
+          "hardwareEvidence": "unknown",
+          "hardwareHint": false,
+          "outputFrames": 96,
+          "pixelFormats": [
+            "420v"
+          ],
+          "policy": "hardwarePreferred",
+          "propertyStatus": -12900,
+          "waitStatus": 0
+        },
+        {
+          "callbackErrors": 0,
+          "caseId": "avc-control",
+          "createStatus": 0,
+          "decodeStatus": 0,
+          "expectedFrames": 96,
+          "finishStatus": 0,
+          "generation": 1,
+          "geometryErrors": 0,
+          "hardwareEvidence": "unknown",
+          "hardwareHint": false,
+          "outputFrames": 96,
+          "pixelFormats": [
+            "420v"
+          ],
+          "policy": "hardwarePreferred",
+          "propertyStatus": -12900,
+          "waitStatus": 0
+        },
+        {
+          "callbackErrors": 0,
+          "caseId": "avc-control",
+          "createStatus": -12906,
+          "decodeStatus": null,
+          "expectedFrames": 96,
+          "finishStatus": null,
+          "generation": 0,
+          "geometryErrors": 0,
+          "hardwareEvidence": "unknown",
+          "hardwareHint": false,
+          "outputFrames": 0,
+          "pixelFormats": [],
+          "policy": "hardwareRequired",
+          "propertyStatus": null,
+          "waitStatus": null
+        },
+        {
+          "callbackErrors": 0,
+          "caseId": "avc-control",
+          "createStatus": -12906,
+          "decodeStatus": null,
+          "expectedFrames": 96,
+          "finishStatus": null,
+          "generation": 1,
+          "geometryErrors": 0,
+          "hardwareEvidence": "unknown",
+          "hardwareHint": false,
+          "outputFrames": 0,
+          "pixelFormats": [],
+          "policy": "hardwareRequired",
+          "propertyStatus": null,
+          "waitStatus": null
+        }
+      ]
+    },
+    "native": {
+      "selectedFrom": "all 33 hosted CI 139 native failures",
+      "tests": 33,
+      "failures": 33,
+      "skips": 0,
+      "testOutputSHA256": "144463d1ad05db97455479da9244ffdbd1d390eefad8486b8143f82148b1084f",
+      "testOnlyOverlays": [
+        {
+          "file": "packages/yl_player/example/ios/RunnerTests/YlManagedFallbackCharacterizationTests.swift",
+          "originalSHA256": "5ee18b8565c9f37e5b5d05c7bea82150eb36b985c89b7760127886f895ce467d",
+          "instrumentedSHA256": "3ff7eca7f7da0f3b321f52cb795ebd3041d9a598ef7980a7b817c0888f53dc43"
+        },
+        {
+          "file": "packages/yl_player/example/ios/RunnerTests/YlContainerOutputTests.swift",
+          "originalSHA256": "9adf214b306bf0b1c702239a40799b0826b95841bf774670d7766bbca696d10e",
+          "instrumentedSHA256": "092cf659ccbac66086dfbad9706a822469d7b1b159917d0c6f8e193b416259e0"
+        },
+        {
+          "file": "packages/yl_player/example/ios/RunnerTests/YlFallbackBackendTests.swift",
+          "originalSHA256": "a112897177534dd00b836c830fd74066175bdab87219742b2d4d7f178e8394a5",
+          "instrumentedSHA256": "591c68d1590f58432815ddd133943180f1556f6eeb1281469fc50778500bd750"
+        },
+        {
+          "file": "packages/yl_player/example/ios/RunnerTests/YlDashResourceLoaderTests.swift",
+          "originalSHA256": "b4d436b3e09c74660bca02627642822d030c51e07277881da1cec110d8501f42",
+          "instrumentedSHA256": "bc567f645353f7f77a8e5a29c2535d7e16dc5693779e1e382ac106c7868d0717"
+        }
+      ],
+      "observations": {
+        "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        },
+        "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "XCTest assertion",
+          "hosted139ReportedCode": true
+        },
+        "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()": {
+          "localCode": "decoder.unavailable",
+          "localObservation": "caught and rethrown from test-only wrapper",
+          "hosted139ReportedCode": false
+        }
+      }
+    },
+    "integrationBeforeCallbackFix": {
+      "apple_default_positive_test": {
+        "local H264 AAC MKV uses native fallback and renders a frame": "decoder.unavailable",
+        "local MKV exposes and switches both AAC tracks": "decoder.unavailable",
+        "HTTP range MKV uses the native fallback": "decoder.unavailable",
+        "HTTP range MKV restores real-time playback after sustained 3x": "decoder.unavailable",
+        "HTTP range MKV completes a long video tail after audio ends": "decoder.unavailable",
+        "HTTP 200 sequential MKV rejects seek without losing playback": "decoder.unavailable",
+        "failed network MKV candidate preserves current HLS": "success",
+        "HTTP-FLV plays live and reconnects after a dropped socket": "decoder.unavailable"
+      },
+      "apple_strict_policy_test": {
+        "HLS credentials reach same-origin children": "success",
+        "HLS credentials stay stripped after crossing origins": "success",
+        "HLS credentials stay stripped on returned-primary segment": "success",
+        "managed mkv retries exactly once then positively plays": "decoder.unavailable",
+        "managed flv retries exactly once then positively plays": "decoder.unavailable",
+        "managed cross-origin redirect strips credentials and preserves ordinary headers": "decoder.unavailable",
+        "managed header deadline rejects with exact zero retry request count": "success",
+        "owned mp4 enforces strict policies during playback": "decoder.unavailable",
+        "owned mov enforces strict policies during playback": "decoder.unavailable",
+        "owned avi enforces strict policies during playback": "decoder.unavailable",
+        "owned mpegTs enforces strict policies during playback": "decoder.unavailable",
+        "owned mpegPs enforces strict policies during playback": "decoder.unavailable",
+        "unsupported HLS policies and bounded DASH reject before I/O or replacement": "decoder.unavailable",
+        "bounded mkv positively plays and never exceeds assigned ledger limits": "decoder.unavailable",
+        "bounded flv positively plays and never exceeds assigned ledger limits": "decoder.unavailable",
+        "hardwareRequired commits proven hardware or rejects decoder unavailable": "success",
+        "old playback stays authoritative while candidate fails": "decoder.unavailable",
+        "old playback stays authoritative while candidate is cancelled": "decoder.unavailable",
+        "public controller retains ready while actual native callback acknowledgement is held": "Bad state: Future already completed",
+        "iOS public two-player audio lifecycle appManaged": "success",
+        "iOS public two-player audio lifecycle pluginManagedMediaPlayback": "success"
+      },
+      "hls_playback_test": {
+        "opens HLS and produces a native texture first frame": "success",
+        "rejecting a fallback source does not tear down current HLS": "success"
+      },
+      "state_update_cadence_test": {
+        "250 ms updates keep their measured cadence and replacement session fence": "decoder.unavailable"
+      }
+    },
+    "replacementCasesAfterCallbackFix": {
+      "old playback stays authoritative while candidate fails": "decoder.unavailable",
+      "old playback stays authoritative while candidate is cancelled": "decoder.unavailable",
+      "public controller retains ready while actual native callback acknowledgement is held": "decoder.unavailable"
+    },
+    "finalIntegration": {
+      "entry": "sh tool/check_native_ios.sh --integration-only",
+      "exitCode": 1,
+      "cases": {
+        "apple_default_positive_test": {
+          "local H264 AAC MKV uses native fallback and renders a frame": "decoder.unavailable",
+          "local MKV exposes and switches both AAC tracks": "decoder.unavailable",
+          "HTTP range MKV uses the native fallback": "decoder.unavailable",
+          "HTTP range MKV restores real-time playback after sustained 3x": "decoder.unavailable",
+          "HTTP range MKV completes a long video tail after audio ends": "decoder.unavailable",
+          "HTTP 200 sequential MKV rejects seek without losing playback": "decoder.unavailable",
+          "failed network MKV candidate preserves current HLS": "success",
+          "HTTP-FLV plays live and reconnects after a dropped socket": "decoder.unavailable"
+        },
+        "apple_strict_policy_test": {
+          "HLS credentials reach same-origin children": "success",
+          "HLS credentials stay stripped after crossing origins": "success",
+          "HLS credentials stay stripped on returned-primary segment": "success",
+          "managed mkv retries exactly once then positively plays": "decoder.unavailable",
+          "managed flv retries exactly once then positively plays": "decoder.unavailable",
+          "managed cross-origin redirect strips credentials and preserves ordinary headers": "decoder.unavailable",
+          "managed header deadline rejects with exact zero retry request count": "success",
+          "owned mp4 enforces strict policies during playback": "decoder.unavailable",
+          "owned mov enforces strict policies during playback": "decoder.unavailable",
+          "owned avi enforces strict policies during playback": "decoder.unavailable",
+          "owned mpegTs enforces strict policies during playback": "decoder.unavailable",
+          "owned mpegPs enforces strict policies during playback": "decoder.unavailable",
+          "unsupported HLS policies and bounded DASH reject before I/O or replacement": "decoder.unavailable",
+          "bounded mkv positively plays and never exceeds assigned ledger limits": "decoder.unavailable",
+          "bounded flv positively plays and never exceeds assigned ledger limits": "decoder.unavailable",
+          "hardwareRequired commits proven hardware or rejects decoder unavailable": "success",
+          "old playback stays authoritative while candidate fails": "decoder.unavailable",
+          "old playback stays authoritative while candidate is cancelled": "decoder.unavailable",
+          "public controller retains ready while actual native callback acknowledgement is held": "decoder.unavailable",
+          "iOS public two-player audio lifecycle appManaged": "success",
+          "iOS public two-player audio lifecycle pluginManagedMediaPlayback": "success"
+        },
+        "hls_playback_test": {
+          "opens HLS and produces a native texture first frame": "success",
+          "rejecting a fallback source does not tear down current HLS": "success"
+        },
+        "state_update_cadence_test": {
+          "250 ms updates keep their measured cadence and replacement session fence": "decoder.unavailable"
+        }
+      }
+    }
+  },
+  "iPhone16AfterCallbackFix": {
+    "device": "iPhone 16",
+    "suite": "apple_session_replacement_test.dart",
+    "mode": "profile",
+    "ciCases": {
+      "old playback stays authoritative while candidate fails": "success",
+      "old playback stays authoritative while candidate is cancelled": "success",
+      "public controller retains ready while actual native callback acknowledgement is held": "success"
+    },
+    "entrySHA256": "0325b3ebbdd7ae1b3582c7f4ef6197d0baa3087276e0a0b5bf909915cdffbf03",
+    "profileAppFrameworkSHA256": "75eef3960df86dedc501327918a6d8edc9132afdd954b3ba06d079a7c27c6127",
+    "receiptSHA256": "cd043bdeef6f82e49ede04ca2c5392bb5624900de516f642b0011bff7299ce1a"
+  },
+  "macOSNative142": {
+    "pcmTimelines": [
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/09D461EB-1FC3-4BE2-B9C5-63DF46782950.json",
+        "kind": "matrix",
+        "candidate": false,
+        "buffers": 3,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/09548F97-248C-4441-A564-6C7AD30C128A.json",
+        "completeTrace": true,
+        "renderPairs": 19,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 164.0,
+        "maximumEntryGapUs": 11324.0
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/1F59F1AC-EDAD-45D7-963A-9D88D84BC8FE.json",
+        "kind": "matrix",
+        "candidate": true,
+        "buffers": 3,
+        "starvation": false,
+        "pausedEOF": true,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/99F2041D-D8C6-486D-B24A-43299280EA5D.json",
+        "completeTrace": true,
+        "renderPairs": 35,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 235.79166666666666,
+        "maximumEntryGapUs": 11603.75
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/2F15A1A4-9770-48AC-A01E-991B157950F2.json",
+        "kind": "matrix",
+        "candidate": true,
+        "buffers": 1,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/E2672B5B-44DF-4226-855F-E78BD3BA9CF4.json",
+        "completeTrace": true,
+        "renderPairs": 15,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 238.91666666666666,
+        "maximumEntryGapUs": 11466.666666666666
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/34C588E4-7E64-4493-82C5-80C27065386F.json",
+        "kind": "matrix",
+        "candidate": false,
+        "buffers": 1,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/EFBBBDCD-57DF-4E96-B798-8EA6E297020E.json",
+        "completeTrace": true,
+        "renderPairs": 15,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 1238.8333333333333,
+        "maximumEntryGapUs": 13108.958333333332
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/56ED779C-902A-4B7A-AF5D-3236581BD9C4.json",
+        "kind": "matrix",
+        "candidate": false,
+        "buffers": 0,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/FDF89157-D453-4C9D-A90D-E7CFD39E35E5.json",
+        "completeTrace": true,
+        "renderPairs": 1,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 144.91666666666666,
+        "maximumEntryGapUs": 0
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/6010C3A6-1E86-4FE5-B072-3ADCE30A0DE1.json",
+        "kind": "matrix",
+        "candidate": true,
+        "buffers": 100,
+        "starvation": true,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/36682756-7FF0-4596-B130-0F566A64185C.json",
+        "completeTrace": true,
+        "renderPairs": 238,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 172.58333333333331,
+        "maximumEntryGapUs": 11822.375
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/70691F4D-00E0-462A-B631-48B1C2CB8AD4.json",
+        "kind": "matrix",
+        "candidate": false,
+        "buffers": 100,
+        "starvation": true,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/17E414CF-75D9-452B-954E-22DB63A67CF8.json",
+        "completeTrace": true,
+        "renderPairs": 248,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 1842.0,
+        "maximumEntryGapUs": 13973.958333333332
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/713F07C2-077E-416C-9180-6742F2F0B255.json",
+        "kind": "matrix",
+        "candidate": false,
+        "buffers": 2000,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/C566B27A-B472-4D16-AC91-91D399941E94.json",
+        "completeTrace": true,
+        "renderPairs": 4016,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 1781.75,
+        "maximumEntryGapUs": 18246.166666666664
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/7E2CDD4D-B841-4AD3-9E4F-5BD70063E36D.json",
+        "kind": "matrix",
+        "candidate": true,
+        "buffers": 2000,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 11648,
+        "markerErrors": 2021504,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/5113834B-EB2A-48AB-BFBD-613AB21928B7.json",
+        "completeTrace": true,
+        "renderPairs": 4919,
+        "sampleJumps": 2,
+        "maximumRenderElapsedUs": 4476.666666666666,
+        "maximumEntryGapUs": 135692.25,
+        "timelineProofPrerequisites": true,
+        "inputStart": 1536,
+        "inputEndExclusive": 2049536,
+        "skippedIntervals": [
+          {
+            "start": 16384,
+            "endExclusive": 24960,
+            "intersectionFrames": 8576,
+            "entryGapUs": 135692.25,
+            "previousRenderElapsedUs": 75.16666666666666
+          },
+          {
+            "start": 820608,
+            "endExclusive": 823680,
+            "intersectionFrames": 3072,
+            "entryGapUs": 57823.125,
+            "previousRenderElapsedUs": 4476.666666666666
+          }
+        ],
+        "predictedMissingFrames": 11648,
+        "exactLossMatch": true
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/828CDB89-8FE0-4D1C-93E3-EDFD75B19EB6.json",
+        "kind": "matrix",
+        "candidate": true,
+        "buffers": 3,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/925BE9C5-0282-4E58-9469-895713E30DBB.json",
+        "completeTrace": true,
+        "renderPairs": 19,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 227.875,
+        "maximumEntryGapUs": 11330.791666666666
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/9EC18664-D027-49D3-B8B0-3C8DB6C80ADD.json",
+        "kind": "matrix",
+        "candidate": true,
+        "buffers": 0,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/ADEB598C-F062-4E8E-811F-531F9360C952.json",
+        "completeTrace": true,
+        "renderPairs": 1,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 63.791666666666664,
+        "maximumEntryGapUs": 0
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/A60DFE92-E427-47E4-9A2F-8F11DF28BA0E.json",
+        "kind": "directNativeControl",
+        "candidate": null,
+        "buffers": 2000,
+        "starvation": false,
+        "pausedEOF": false,
+        "missingFrames": 128,
+        "markerErrors": 2047872,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/CF695E50-78B6-4CF2-9C6B-3AF498744639.json",
+        "completeTrace": true,
+        "renderPairs": 4941,
+        "sampleJumps": 1,
+        "maximumRenderElapsedUs": 12108.25,
+        "maximumEntryGapUs": 23580.25,
+        "timelineProofPrerequisites": true,
+        "inputStart": 1536,
+        "inputEndExclusive": 2049536,
+        "skippedIntervals": [
+          {
+            "start": 1024,
+            "endExclusive": 1664,
+            "intersectionFrames": 128,
+            "entryGapUs": 23580.25,
+            "previousRenderElapsedUs": 12108.25
+          }
+        ],
+        "predictedMissingFrames": 128,
+        "exactLossMatch": true
+      },
+      {
+        "arm": "ci142",
+        "attachment": "ci142-attachments/D18DF8AB-3D80-4608-9B63-C26A474771F6.json",
+        "kind": "matrix",
+        "candidate": false,
+        "buffers": 3,
+        "starvation": false,
+        "pausedEOF": true,
+        "missingFrames": 0,
+        "markerErrors": 0,
+        "submittedComplete": true,
+        "traceAttachment": "ci142-attachments/576DE646-5A59-42B9-A915-09A4715ADE5D.json",
+        "completeTrace": true,
+        "renderPairs": 35,
+        "sampleJumps": 0,
+        "maximumRenderElapsedUs": 264.04166666666663,
+        "maximumEntryGapUs": 15264.583333333332
+      }
+    ],
+    "dashAssertion": "XCTAssertEqual failed: (\"nil\") is not equal to (\"Optional(\"track.not_found\")\") - state=playing positionMs=1472 videoFrames=11 audioSamples=400 lastAudioUs=1499999 audioInputDrained=true audioPending=true audioDurationUs=27999 audioBytes=8192 videoInputDrained=true pendingVideoPTS=[] clockSamples=512 clockStale=7 clockRejected=0 clockLastReadHostUs=1078389965 clockObservation=Optional(yl_player_apple.YlAudioClockObservation.running(yl_player_apple.YlAudioClockSample(generation: 1, positionUs: 1499999, hostTimeUs: 1078452147, lowerBoundUs: 1472000, upperBoundUs: 1499999, rate: 1.0))) nativeReadHostUs=1078389959 outputHostUs=1078452147 outputSample=246960 outputRate=48000.0 playerHostUs=1078452147 playerSample=245424 playerRate=48000.0"
+  },
+  "macOSLocalTargeted": {
+    "totalTestCount": 2,
+    "passedTests": 2,
+    "failedTests": 0,
+    "skippedTests": 0
+  },
+  "hostedFinal": {
+    "run": 142,
+    "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248",
+    "headSHA": "daa51bb1b512894a06f610efb832d3a2509d97f3",
+    "conclusion": "failure",
+    "jobs": {
+      "changes": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329081092"
+      },
+      "apple-unit (macos)": {
+        "conclusion": "failure",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329119636"
+      },
+      "android-consumer": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329119670"
+      },
+      "foundation": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329119682"
+      },
+      "android-unit": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329119695"
+      },
+      "apple-consumers": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329119697"
+      },
+      "apple-unit (ios)": {
+        "conclusion": "failure",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329119809"
+      },
+      "ffmpeg-reproducibility": {
+        "conclusion": "skipped",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135329121048"
+      },
+      "android-integration (36)": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135330643271"
+      },
+      "android-integration (24)": {
+        "conclusion": "failure",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135330643273"
+      },
+      "ios-integration": {
+        "conclusion": "failure",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135335571417"
+      },
+      "macos-integration": {
+        "conclusion": "success",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135335571418"
+      },
+      "quick-aggregate": {
+        "conclusion": "failure",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135344014118"
+      },
+      "release-gates": {
+        "conclusion": "skipped",
+        "url": "https://github.com/yuluoos/yl_player/actions/runs/44455337248/job/135344015576"
+      }
+    },
+    "artifacts": {
+      "ios-exact-runtime-evidence": {
+        "id": 14499006222,
+        "size": 298720,
+        "digest": "sha256:4721877605581aef76069deede3b5e848e0024d1b35fe77777cc945a0b624007",
+        "cases": {
+          "apple_default_positive_test": {
+            "local H264 AAC MKV uses native fallback and renders a frame": "decoder.unavailable",
+            "local MKV exposes and switches both AAC tracks": "decoder.unavailable",
+            "HTTP range MKV uses the native fallback": "decoder.unavailable",
+            "HTTP range MKV restores real-time playback after sustained 3x": "decoder.unavailable",
+            "HTTP range MKV completes a long video tail after audio ends": "decoder.unavailable",
+            "HTTP 200 sequential MKV rejects seek without losing playback": "decoder.unavailable",
+            "failed network MKV candidate preserves current HLS": "success",
+            "HTTP-FLV plays live and reconnects after a dropped socket": "decoder.unavailable"
+          },
+          "apple_strict_policy_test": {
+            "HLS credentials reach same-origin children": "success",
+            "HLS credentials stay stripped after crossing origins": "success",
+            "HLS credentials stay stripped on returned-primary segment": "success",
+            "managed mkv retries exactly once then positively plays": "decoder.unavailable",
+            "managed flv retries exactly once then positively plays": "decoder.unavailable",
+            "managed cross-origin redirect strips credentials and preserves ordinary headers": "decoder.unavailable",
+            "managed header deadline rejects with exact zero retry request count": "success",
+            "owned mp4 enforces strict policies during playback": "decoder.unavailable",
+            "owned mov enforces strict policies during playback": "decoder.unavailable",
+            "owned avi enforces strict policies during playback": "decoder.unavailable",
+            "owned mpegTs enforces strict policies during playback": "decoder.unavailable",
+            "owned mpegPs enforces strict policies during playback": "decoder.unavailable",
+            "unsupported HLS policies and bounded DASH reject before I/O or replacement": "decoder.unavailable",
+            "bounded mkv positively plays and never exceeds assigned ledger limits": "decoder.unavailable",
+            "bounded flv positively plays and never exceeds assigned ledger limits": "decoder.unavailable",
+            "hardwareRequired commits proven hardware or rejects decoder unavailable": "success",
+            "old playback stays authoritative while candidate fails": "decoder.unavailable",
+            "old playback stays authoritative while candidate is cancelled": "decoder.unavailable",
+            "public controller retains ready while actual native callback acknowledgement is held": "decoder.unavailable",
+            "iOS public two-player audio lifecycle appManaged": "success",
+            "iOS public two-player audio lifecycle pluginManagedMediaPlayback": "success"
+          },
+          "hls_playback_test": {
+            "opens HLS and produces a native texture first frame": "success",
+            "rejecting a fallback source does not tear down current HLS": "success"
+          },
+          "state_update_cadence_test": {
+            "250 ms updates keep their measured cadence and replacement session fence": "decoder.unavailable"
+          }
+        }
+      },
+      "apple-unit-ios-runtime-evidence": {
+        "id": 14498312019,
+        "size": 85543502,
+        "digest": "sha256:d0a4856b7ecc084aeaf929601e8a788afe2c2a9b4f84f7409e4b7efb1e6a49c5",
+        "counts": {
+          "totalTestCount": 904,
+          "passedTests": 870,
+          "skippedTests": 1,
+          "failedTests": 33
+        },
+        "failures": {
+          "YlContainerOutputTests/testAC3SurroundActualPixelsSixChannelPCMAndSeek()": "failed - AC3: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "YlManagedFallbackCharacterizationTests/testBoundedFLVRealManagedFixtureMustProgressAndReleasePayload()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testCodecTrackSwitchPreservesTargetSamplesAndTail()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testDTSActualPixelsPCMAndSeek()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testEAC3ActualPixelsPCMAndSeek()": "failed: caught error: \"Playback operation failed.\"",
+          "YlAppleHostTests/testFailedReplacementThenReactivationPreservesAcceptedSessionControls()": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+          "YlContainerOutputTests/testFLACActualPixelsPCMAndSeek()": "failed: caught error: \"Playback operation failed.\"",
+          "YlHeaderedProgressivePlaybackTests/testHeaderedMovLoadsRendersAndSeeksWithExplicitAndAutomaticFormat()": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+          "YlHeaderedProgressivePlaybackTests/testHeaderedMp4LoadsRendersAndSeeksWithExplicitAndAutomaticFormat()": "failed: caught error: \"Error Domain=decoder.unavailable Code=1 \"(null)\"\"",
+          "YlFallbackBackendTests/testNetworkFlvReconnectsWholePipelineFromByteZeroAfterEOF()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testNonzeroVorbisDelayActualPixelsPCMAndBidirectionalSeek()": "failed - Vorbis: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "YlDashSampleSourceNativeTests/testProgramAbsoluteFragmentOffsetsSurviveManagedSegmentBaseAndListRanges()": "failed - absolute-base: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "YlDashSampleSourceNativeTests/testProgramAcceptedVideoFamilySurvivesDeactivationAndEndSeek()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramAudioIdentitySurvivesCatalogAddition()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramAudioLeadingAndInternalGapsDoNotCompressVideoTime()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramBackendClipsThreePointFiveAndSeeksOriginalClock()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramBackendIndependentPTOAndNaturalPeriods()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramBackendPlaysAndClipsActualHalfSecond()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramCancelledCandidateCannotChangeCatalogOrAcceptedOutput()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramCompletedPlayHonorsCommandCancellationDuringReload()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramCrossCodecResolutionAndBackwardSeekPublishRealHEVCPixels()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramFailedCandidatePreservesVideoFamilyForRestoration()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramNativeJointBaseline()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramSameCodecResolutionChangeAndCapsRemainAuthoritative()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testProgramSeekIntoDeclaredEmptyTailCompletesWithoutInventingSamples()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testProgramStreamActualPixelsPCMAndBidirectionalSeek()": "failed - PS: decoder.unavailable: Positive hardware decoder evidence is unavailable.",
+          "YlDashSampleSourceNativeTests/testProgramVideoOnlyWaitsForActualCoverageAndResumesAfterDelayedFragment()": "failed: caught error: \"Playback operation failed.\"",
+          "YlDashSampleSourceNativeTests/testPublicProgramLoadCommandsAndManagedPolicy()": "failed - Load mode 0: decoder.unavailable",
+          "YlFallbackBackendTests/testRejectedQualityConstraintKeepsActiveFallbackUsable()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testStrictOpusVorbisManagedBoundedHardwareActualOutputs()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testStrictProgressiveManagedBoundedHardwareActualOutputs()": "failed: caught error: \"Playback operation failed.\"",
+          "YlContainerOutputTests/testStrictVP9ManagedBoundedHardwareActualOutputs()": "failed: caught error: \"Playback operation failed.\""
+        }
+      },
+      "apple-unit-macos-runtime-evidence": {
+        "id": 14498257767,
+        "size": 111501680,
+        "digest": "sha256:f395babcfe8685900cd365b34a832b6630ee52b3c4ccd606cad6b46a630fe489",
+        "counts": {
+          "totalTestCount": 960,
+          "passedTests": 958,
+          "skippedTests": 0,
+          "failedTests": 2
+        },
+        "failures": {
+          "YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix()": "XCTAssertEqual failed: (\"Optional(2036352)\") is not equal to (\"Optional(2048000)\")",
+          "YlDashSampleSourceNativeTests/testProgramMissingExplicitAudioRejectsCandidateWithoutReplacingAcceptedTrack()": "XCTAssertEqual failed: (\"nil\") is not equal to (\"Optional(\"track.not_found\")\") - state=playing positionMs=1472 videoFrames=11 audioSamples=400 lastAudioUs=1499999 audioInputDrained"
+        }
+      },
+      "macos-exact-runtime-evidence": {
+        "id": 14499376535,
+        "size": 15348,
+        "digest": "sha256:c5445fe42b1894130f33d82886ffc31cf641263563771903a3272b16be62bbbb",
+        "suites": {
+          "apple_strict_policy_test.dart.log": 21,
+          "avi_policy_test.dart.log": 5,
+          "flv_intent_test.dart.log": 3,
+          "macos_hls_playback_test.dart.log": 1,
+          "macos_http_flv_playback_test.dart.log": 1,
+          "macos_mkv_playback_test.dart.log": 2,
+          "macos_network_mkv_playback_test.dart.log": 3,
+          "mpegts_policy_test.dart.log": 4,
+          "state_update_cadence_test.dart.log": 1,
+          "vorbis_policy_test.dart.log": 5,
+          "vp9_policy_test.dart.log": 3
+        }
+      },
+      "android-api-24-failure": {
+        "id": 14498391603,
+        "size": 67814,
+        "digest": "sha256:aab963083c06144e816c0bc72308135f5cc8f9ccd208c605dcdfa7bb144d8dde",
+        "decoderUnavailableCount": 2
+      }
+    }
+  }
+}
