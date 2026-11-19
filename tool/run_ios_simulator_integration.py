@@ -44,6 +44,38 @@ def terminate_after_test(run, simulator, bundle):
         print(f'Test application cleanup did not finish: {error}', flush=True)
 
 
+def launch_test_app(run, simulator, bundle, log_path):
+    command = ['xcrun', 'simctl', 'launch', '--terminate-running-process', simulator, bundle,
+               '--enable-dart-profiling', '--disable-vm-service-publication',
+               '--enable-checked-mode', '--verify-entry-points']
+    pid_line = re.compile(r'^' + re.escape(bundle) + r': ([1-9]\d*)[ \t]*\r?\n', re.MULTILINE)
+    with log_path.open('w') as log:
+        for attempt in (1, 2):
+            print(f'Launch attempt {attempt}', file=log, flush=True)
+            try:
+                result = run(command, capture=True, check=False)
+            except subprocess.TimeoutExpired as error:
+                # TimeoutExpired carries bytes even when subprocess.run uses text=True.
+                stdout = (error.stdout or b'').decode(errors='replace')
+                stderr = (error.stderr or b'').decode(errors='replace')
+                print(stdout, stderr, str(error), sep='\n', file=log, flush=True)
+                match = pid_line.search(stdout)
+                if match:
+                    return int(match.group(1))
+                if attempt == 2:
+                    raise
+                # CoreSimulator can still be finishing a cold launch. Wait for
+                # the same device, then replace any partially launched instance.
+                run(['xcrun', 'simctl', 'bootstatus', simulator, '-b'], timeout=120)
+            else:
+                print(result.stdout, result.stderr, sep='\n', file=log)
+                result.check_returncode()
+                match = pid_line.search(result.stdout + '\n')
+                if not match:
+                    raise ValueError('Simulator did not report the launched process')
+                return int(match.group(1))
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--simulator', required=True)
@@ -56,6 +88,8 @@ def main():
         raise ValueError('Expected an example integration test')
     evidence = args.evidence.resolve() / target.stem
     evidence.mkdir(parents=True, exist_ok=True)
+    receipt = evidence / 'integration_response_data.json'
+    receipt.unlink(missing_ok=True)
     bundle = 'dev.ylplayer.ylPlayerExample'
 
     def run(command, timeout=60, capture=False, check=True, env=None):
@@ -126,15 +160,8 @@ void main() {
                           "Future<void> main() => integrationDriver(writeResponseOnFailure: true);\n")
         run(['flutter', 'build', 'ios', '--no-pub', '--simulator', '--debug', '--target', str(entry)], timeout=600)
         run(['xcrun', 'simctl', 'install', args.simulator, 'build/ios/iphonesimulator/Runner.app'])
-        launched = run(['xcrun', 'simctl', 'launch', '--terminate-running-process', args.simulator, bundle,
-                        '--enable-dart-profiling', '--disable-vm-service-publication',
-                        '--enable-checked-mode', '--verify-entry-points'], capture=True)
-        (evidence / 'launch.log').write_text(launched.stdout + launched.stderr)
-        match = re.search(r'^' + re.escape(bundle) + r': (\d+)\s*$', launched.stdout, re.MULTILINE)
-        if not match:
-            raise ValueError('Simulator did not report the launched process')
-        pid = int(match.group(1))
         try:
+            pid = launch_test_app(run, args.simulator, bundle, evidence / 'launch.log')
             deadline = time.monotonic() + 60
             uri = None
             while uri is None and time.monotonic() < deadline:
@@ -151,8 +178,6 @@ void main() {
                     time.sleep(1)
             if uri is None:
                 raise TimeoutError('Current test process did not expose VM Service within 60 seconds')
-            receipt = evidence / 'integration_response_data.json'
-            receipt.unlink(missing_ok=True)
             env = dict(os.environ, FLUTTER_TEST_OUTPUTS_DIR=str(evidence))
             driven = run(['flutter', 'drive', '--no-pub', '-d', args.simulator,
                           '--driver', str(driver), '--target', str(entry),
