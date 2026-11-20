@@ -976,6 +976,63 @@ final class YlMacosAudioTests: XCTestCase {
     var hasHeldCallback: Bool { lock.withLock { pending != nil } }
   }
 
+  // Keep the actual node read made by the display tick. A second AVAudioPlayerNode
+  // read could already refer to another render quantum.
+  private final class DecodedTickTrace {
+    private var cadenceEntry: Int64?, entry: Int64?, previousExit: Int64?
+    private var readUs: Int64?, raw: YlRenderedAudioTime?
+    private var recent: [[String: Int64]] = [], largestJump: [[String: Int64]] = []
+    private var firstDrop: [[String: Int64]] = []
+    private var maximumExcessUs: Int64 = 0, maximumNodeExcessUs: Int64 = 0
+    private var largestNodeJump: [[String: Int64]] = []
+    private var ticks = 0
+    private var now: Int64 { Int64(ProcessInfo.processInfo.systemUptime * 1_000_000) }
+
+    func cadence(_ action: () -> Void) {
+      cadenceEntry = now
+      defer { cadenceEntry = nil }
+      action()
+    }
+    func tick(_ action: () -> Void) {
+      entry = now; raw = nil; readUs = nil
+      defer { previousExit = now; entry = nil }
+      action()
+    }
+    func read(_ value: YlRenderedAudioTime?) {
+      guard Thread.isMainThread, entry != nil else { return }
+      raw = value; readUs = now
+    }
+    func selected(position: Int64, pts: Int64?, drops: Int) {
+      guard let entry else { return }
+      var row: [String: Int64] = ["entryUs": entry, "selectionUs": now,
+        "positionUs": position, "drops": Int64(drops)]
+      row["cadenceUs"] = cadenceEntry; row["previousExitUs"] = previousExit
+      row["selectedPTS"] = pts; row["readUs"] = readUs
+      row["nodeSample"] = raw?.sampleTime; row["nodeHostUs"] = raw?.hostTimeUs
+      if let raw, raw.sampleRate > 0 {
+        row["nodeUs"] = Int64(Double(raw.sampleTime) * 1_000_000 / raw.sampleRate)
+      }
+      let prior = recent.last
+      recent.append(row)
+      if recent.count > 6 { recent.removeFirst() }
+      ticks += 1
+      if let prior, let previous = prior["positionUs"], let start = prior["entryUs"] {
+        let excess = position - previous - (entry - start)
+        if excess > maximumExcessUs { maximumExcessUs = excess; largestJump = recent }
+        if let node = row["nodeUs"], let previousNode = prior["nodeUs"] {
+          let rawExcess = node - previousNode - (entry - start)
+          if rawExcess > maximumNodeExcessUs { maximumNodeExcessUs = rawExcess; largestNodeJump = recent }
+        }
+        if Int64(drops) > prior["drops", default: 0], firstDrop.isEmpty { firstDrop = recent }
+      }
+    }
+    var snapshot: [String: Any] {
+      ["ticks": ticks, "recent": recent, "maximumExcessUs": maximumExcessUs,
+       "largestJump": largestJump, "firstDrop": firstDrop,
+       "maximumNodeExcessUs": maximumNodeExcessUs, "largestNodeJump": largestNodeJump]
+    }
+  }
+
   private final class IntegrationOutput: YlAudioOutputDriving {
     let system: YlSystemAudioOutput
     let wrapsCallbacks: Bool
@@ -997,7 +1054,12 @@ final class YlMacosAudioTests: XCTestCase {
     }
     var volume: Float { get { system.volume } set { system.volume = newValue } }
     var rate: Float { get { system.rate } set { system.rate = newValue } }
-    var renderedAudioTime: YlRenderedAudioTime? { system.renderedAudioTime }
+    var tickTrace: DecodedTickTrace?
+    var renderedAudioTime: YlRenderedAudioTime? {
+      let value = system.renderedAudioTime
+      tickTrace?.read(value)
+      return value
+    }
     func setInvalidationHandler(_ handler: (() -> Void)?) {
       guard let handler else { system.setInvalidationHandler(nil); return }
       let probe = failureProbe
@@ -1077,6 +1139,7 @@ final class YlMacosAudioTests: XCTestCase {
   }
   private final class DecodedScheduler: YlPresentationScheduling {
     let actual = YlFrameScheduler(collectDropDiagnostics: true)
+    var tickTrace: DecodedTickTrace?
     var videoFrames = 0, orderErrors = 0
     var awaitingPublish = false
     var selectedUptime: Double = 0
@@ -1102,6 +1165,7 @@ final class YlMacosAudioTests: XCTestCase {
     func enqueue(_ frame: YlFrameEnvelope) -> Bool { actual.enqueue(frame) }
     func frame(at positionUs: Int64, generation: UInt64) -> YlFrameEnvelope? {
       let frame = actual.frame(at: positionUs, generation: generation)
+      tickTrace?.selected(position: positionUs, pts: frame?.ptsUs, drops: actual.lateFrameDropCount)
       if let frame {
         if frame.ptsUs <= videoPTS || frame.ptsUs > positionUs || frame.generation != generation { orderErrors += 1 }
         awaitingPublish = true; selectedUptime = ProcessInfo.processInfo.systemUptime
@@ -1859,13 +1923,17 @@ final class YlMacosAudioTests: XCTestCase {
     let prepared = try YlPreparedFallback(source: .init(uri: fixture.absoluteString, kind: .file,
       formatHint: .matroska, bufferScope: scope), requireHardwareProbe: true)
     let factory = DecodedAudioFactory(), scheduler = DecodedScheduler()
+    let trace = DecodedTickTrace()
+    factory.output.tickTrace = trace; scheduler.tickTrace = trace
     let output = DecodedTexture(scheduler: scheduler)
     let eventLock = NSLock(); var failures: [String] = []
     let instance = try YlManagedPlaybackSession(playerId: 731,
       services: .init(platform: .macos, textureOutput: output, makeDisplayDriver: { onTick in
         YlDisplayTimer(cadenceFactory: { screen, fps, callback in
-          YlSystemDisplayCadence(screen: screen, fallbackFramesPerSecond: fps) { timing.cadence(callback) }
-        }) { timing.tick(onTick) }
+          YlSystemDisplayCadence(screen: screen, fallbackFramesPerSecond: fps) {
+            trace.cadence { timing.cadence(callback) }
+          }
+        }) { trace.tick { timing.tick(onTick) } }
       }),
       configuration: .init(map: ["audioPolicy": "appManaged"]), prepared: prepared, generation: 17,
       audioRendererFactory: factory, presentationScheduler: scheduler,
@@ -1897,7 +1965,7 @@ final class YlMacosAudioTests: XCTestCase {
       let audio = renderer.renderedAudioTime
       let audioUs = audio.map { Int64(Double($0.sampleTime) * 1_000_000 / $0.sampleRate) }
       let row: [String: Any] = ["phase": phase, "pid": ProcessInfo.processInfo.processIdentifier,
-        "activationEvents": activationEvents,
+        "activationEvents": activationEvents, "displayClockTrace": trace.snapshot,
         "applicationActive": NSApp.isActive, "activationPolicy": NSApp.activationPolicy().rawValue,
         "generation": 17, "uptime": ProcessInfo.processInfo.systemUptime,
         "audioUs": audioUs as Any? ?? NSNull(), "positionUs": scheduler.positionUs,
@@ -3674,6 +3742,38 @@ final class YlMacosAudioTests: XCTestCase {
     XCTAssertTrue(renderer.hasPendingPlayback)
     output.callbacks[0].resourcesReleased()
     awaitTerminal { !renderer.hasPendingPlayback }
+  }
+
+  func testTerminalTextureClockProjectsRenderQuantumToDisplayTick() throws {
+    let ledger = YlManagedBufferLedger(), output = TerminalOutput()
+    let renderer = try terminalRenderer(output, LifetimePCMConverter(), ledger.makeScope(maxBytes: nil),
+      bytes: 65536)
+    defer { renderer.dispose() }
+    let base: Int64 = 15_360_000
+    for index in 0..<5 {
+      _ = try renderer.enqueue(packet: .init(data: Data(), ptsUs: base + Int64(index) * 21333,
+        durationUs: 21333, generation: 1))
+    }
+    renderer.finishInput(); try renderer.play()
+    let scheduler = YlFrameScheduler()
+    for pts: Int64 in [15_375_000, 15_417_000] {
+      XCTAssertTrue(scheduler.enqueue(.init(payload: NSObject(), ptsUs: pts, durationUs: 41_667,
+        keyframe: false, generation: 1)))
+    }
+    // Replay the two media positions and tick interval from CI #150 with a
+    // synthetic, continuous 48 kHz node/host pair for each render quantum.
+    output.renderedAudioTime = .init(sampleTime: 440, sampleRate: 48_000, hostTimeUs: 1_000_000)
+    let first = try XCTUnwrap(renderer.renderedAudioTime(atHostTimeUs: 1_000_000)).sampleTime
+    XCTAssertEqual(first, 15_369_166)
+    XCTAssertNil(scheduler.frame(at: first, generation: 1))
+    output.renderedAudioTime = .init(sampleTime: 3200, sampleRate: 48_000, hostTimeUs: 1_057_500)
+    let second = try XCTUnwrap(renderer.renderedAudioTime(atHostTimeUs: 1_025_465)).sampleTime
+    XCTAssertEqual(second - first, 25_465)
+    XCTAssertEqual(scheduler.frame(at: second, generation: 1)?.ptsUs, 15_375_000)
+    let third = try XCTUnwrap(renderer.renderedAudioTime(atHostTimeUs: 1_057_500)).sampleTime
+    XCTAssertEqual(scheduler.frame(at: third, generation: 1)?.ptsUs, 15_417_000)
+    XCTAssertEqual(scheduler.lateFrameDropCount, 0)
+    XCTAssertTrue(renderer.hasPendingPlayback)
   }
 
   func testTerminalRendererPauseAndNodeTimeCannotCompletePlayback() throws {
