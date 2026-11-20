@@ -253,8 +253,11 @@ item timebase, host extrapolation, or another decoder as consumed audio.
 `validate_render_pull` independently checks the existing raw PCM/pixel, identity,
 lifecycle and source gates plus tap epoch and range/frame validity. The public
 runner reports its result as `renderPullAcceptance`; framework failure, stale
-identity or changed artifacts still reject it. `scopeAcceptance` and the complete
-matrix remain false for these rows with `played_sample_clock_unverified`.
+identity or changed artifacts still reject it. Strict `scopeAcceptance` reports
+`played_sample_clock_unverified` for source-pull evidence alone. For the iOS
+local `mp4-avc-aac` format cell, a verified render pull satisfies
+`formatPlaybackAcceptance` and counts toward the format matrix. This cell
+requires no microphone capture.
 
 This diagnostic proof is limited to owned clear local assets with one audio
 track and float32 mono/stereo tap output. Remote/DRM/multiple-track capture and

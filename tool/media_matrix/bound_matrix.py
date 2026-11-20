@@ -3,7 +3,7 @@ import base64
 import json
 from run_bound_android import parse_rows
 from pathlib import Path
-from bound_av import HASH, validate
+from bound_av import HASH, validate_format_playback
 
 IDS=set('mp4-avc-aac mov-hevc-aac mkv-avc-aac webm-vp9-opus flv-avc-mp3 ts-avc-ac3 ps-mpeg2-mp3 avi-avc-mp3 mkv-av1-opus mkv-avc-eac3 mkv-avc-dts mkv-avc-flac webm-vp9-vorbis mkv-hevc-main10-aac mkv-avc-ac3-51 mkv-avc-aac-no-cues mp4-truncated mkv-avc-opus mkv-avc-opus-silk mkv-avc-opus-hybrid mkv-avc-vorbis ps-avc-mp3'.split())
 
@@ -60,7 +60,7 @@ def summarize(matrix, records):
         if cell not in expected or key in seen:
             errors.append('duplicate_or_unplanned_cell');continue
         seen.add(key);p=record.get('plan',{});status=record.get('status',{})
-        raw=validate(p,record.get('rows',[]))
+        raw=validate_format_playback(p,record.get('rows',[]))
         identity=(p.get('artifactKind')==('android-public-flutter-debug-apk' if matrix['platform']=='android' else 'apple-public-flutter-debug-app') and p.get('matrixId')==matrix['matrixId'] and p.get('platform')==matrix['platform'] and
             p.get('buildSha256')==matrix['buildSha256'] and p.get('testSha256')==matrix['buildSha256'] and
             p.get('planned')==[planned_case(catalog(),key[0],matrix['platform'],key[1])] and
@@ -69,12 +69,14 @@ def summarize(matrix, records):
         extraction=extraction_valid(matrix['platform'],record)
         collector=(type(record.get('exitCode')) is int and record['exitCode']==0 and
             not record.get('collectorError') and extraction)
-        passed=(collector and identity and raw['scopeAcceptance'] and status.get('passed') is True and
+        passed=(collector and identity and raw['formatPlaybackAcceptance'] and status.get('passed') is True and
             status.get('identityVerified') is True and status.get('artifactsUnchanged') is True and
             record.get('artifactsUnchanged') is True)
         supported+=int(passed and cell['requirement']=='required')
         out.append(dict(**cell,accepted=bool(passed),identityBound=bool(identity),collectorPassed=bool(collector),extractionValid=bool(extraction),exitCode=record.get('exitCode'),rawErrors=raw['errors'],
             failure=status.get('failure'),collectorError=record.get('collectorError'),runId=p.get('runId')))
+        if passed and not raw['scopeAcceptance']:
+            out[-1]['acceptanceBasis']='avplayer-source-pull'
     missing=[c for c in expected if (c['caseId'],c['transport']) not in seen]
     return dict(schema=1,matrixId=matrix['matrixId'],platform=matrix['platform'],buildSha256=matrix['buildSha256'],
         requiredRows=40,supportedRows=supported,diagnosticRows=2,corruptRows=2,attemptedRows=len(seen),

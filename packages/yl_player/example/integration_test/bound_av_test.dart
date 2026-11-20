@@ -149,7 +149,15 @@ void main() {
             int? observedNativeClock;
             final apple = Platform.isMacOS || Platform.isIOS;
             await captureNativePhase(
-              done: done,
+              done: () {
+                final state = player!.state;
+                final failure = state.failure;
+                if (state.status == YlPlaybackStatus.failed &&
+                    failure != null) {
+                  throw YlPlayerException(failure);
+                }
+                return done();
+              },
               minimumNativeClockUs: minimumNativeClockUs,
               capture: () async {
                 if (apple && timer.elapsed >= const Duration(seconds: 12)) {

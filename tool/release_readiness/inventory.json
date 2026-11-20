@@ -1132,6 +1132,11 @@
       "path": "docs/superpowers/reports/2026-11-11-ci-gates.md",
       "sha256": "ef44dcafd163b418b4ca8e95d09bad0e191969fe6699019eb1b61d6bdb53df53",
       "kind": "report"
+    },
+    "ios-format-matrix-20261120": {
+      "path": "docs/superpowers/reports/2026-11-20-ios-format-matrix.md",
+      "sha256": "ee4e9419e170ad42e79ecc4882199adaac9df2e4e46523ad6a286870a214f43f",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1515,10 +1520,11 @@
         "audio-consumed-packet-20261029",
         "coreaudio-bounds-20261029",
         "ios-format-physical-followup-20261029",
-        "remaining-device-acceptance-20261105"
+        "remaining-device-acceptance-20261105",
+        "ios-format-matrix-20261120"
       ],
       "acceptance": null,
-      "nextAction": "prove-local-mp4-played-sample-clock-after-39-of-40-same-build-passes"
+      "nextAction": "verify-complete-format-matrix-on-the-candidate-ios-build"
     },
     {
       "requirement": "CAP-FORMAT",

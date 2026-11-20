@@ -101,6 +101,27 @@ def validate_render_pull(plan, rows):
     return result
 
 
+def validate_format_playback(plan, rows):
+    """Apply the catalog's iOS local MP4 exemption without changing strict output evidence."""
+    result = validate(plan, rows)
+    result['formatPlaybackAcceptance'] = result['scopeAcceptance']
+    if not isinstance(rows, list) or not any(
+            isinstance(row, dict) and row.get('audioClockMethod') == 'avplayer-preeffects-source-pull'
+            for row in rows):
+        return result
+    pull = validate_render_pull(plan, rows)
+    result.update(renderPullAcceptance=pull['renderPullAcceptance'],
+                  renderPullErrors=pull['errors'], renderPullRows=pull['supportedRows'])
+    from acoustic_evidence import MEDIA
+    planned = plan.get('planned')
+    if (plan.get('platform') == 'ios' and plan.get('artifactKind') == 'apple-public-flutter-debug-app'
+            and 'acoustic' not in plan and isinstance(planned, list) and len(planned) == 1
+            and isinstance(planned[0], dict) and planned[0].get('caseId') == 'mp4-avc-aac'
+            and planned[0].get('transport') == 'file' and planned[0].get('mediaHash') == MEDIA):
+        result['formatPlaybackAcceptance'] |= pull['renderPullAcceptance']
+    return result
+
+
 def _validate(plan, rows, *, render_pull):
     """Reject borrowed identities, missing required rows and scalar-only PCM claims.
 

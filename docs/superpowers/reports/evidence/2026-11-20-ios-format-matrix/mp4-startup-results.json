@@ -1,0 +1,115 @@
+{
+  "baseRevision": "34878df50b9e368d99c54cff1fff3ac52241ba65",
+  "device": "iPhone 16",
+  "system": "iOS 27.2 (24B119)",
+  "rawArchiveSha256": "9ec47a7299247a72fb8156b903be3e109c9d4ac1e917911a1282afcb08c02174",
+  "sourceSha256": {
+    "packages/yl_player_apple/darwin/yl_player_apple/Sources/yl_player_apple/Engines/AvPlayer/YlAvPlayerBackend.swift": "23f57a77ccdaef4d0633661f8a5792b5b4a77ac0b894a17e3804f80766968d19",
+    "packages/yl_player/example/integration_test/bound_av_test.dart": "b42e03ec87154cae568a4d402b4b115802ea5734c5ef398a288d68e613c10e7c"
+  },
+  "attempts": [
+    {
+      "attempt": "after-lease-1",
+      "runId": "fe76d2bb-b8db-4084-b414-4a92a2abe50d",
+      "buildSha256": "06f7dbd4043b299b346dfe6d041dc4638b3a33d575d22e7a4eba7d212a8edbd5",
+      "transport": "file",
+      "publicTestPassed": false,
+      "renderPullAcceptance": null,
+      "scopeAcceptance": false,
+      "errors": [
+        "incomplete_rows"
+      ],
+      "publicFailure": "TimeoutException after 0:00:12.000000: Native consumption did not reach the phase target",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    },
+    {
+      "attempt": "control-log",
+      "runId": "0bd8ab33-4d9a-4519-9d9c-d801c9a3a0f2",
+      "buildSha256": "e3c823ba1e4e3c0880a77ceadf68f666fb60f5665f429082edd4a976d32fe238",
+      "transport": "file",
+      "publicTestPassed": true,
+      "renderPullAcceptance": true,
+      "scopeAcceptance": false,
+      "errors": [
+        "played_sample_clock_unverified"
+      ],
+      "publicFailure": "",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    },
+    {
+      "attempt": "preroll-1",
+      "runId": "6180ff93-7a69-4956-975b-319a69975f3b",
+      "buildSha256": "475861ca49c6270081dffc8fcc47277cbc190bcfce6f9fb1423cdc3da782c841",
+      "transport": "file",
+      "publicTestPassed": true,
+      "renderPullAcceptance": true,
+      "scopeAcceptance": false,
+      "errors": [
+        "played_sample_clock_unverified"
+      ],
+      "publicFailure": "",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    },
+    {
+      "attempt": "preroll-2",
+      "runId": "2b80e900-6e09-4585-9cdc-de716f988ecb",
+      "buildSha256": "475861ca49c6270081dffc8fcc47277cbc190bcfce6f9fb1423cdc3da782c841",
+      "transport": "file",
+      "publicTestPassed": true,
+      "renderPullAcceptance": true,
+      "scopeAcceptance": false,
+      "errors": [
+        "played_sample_clock_unverified"
+      ],
+      "publicFailure": "",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    },
+    {
+      "attempt": "baseline-2",
+      "runId": "b06cc47e-fff6-406a-8bd6-542e2d3efb30",
+      "buildSha256": "e3c823ba1e4e3c0880a77ceadf68f666fb60f5665f429082edd4a976d32fe238",
+      "transport": "file",
+      "publicTestPassed": true,
+      "renderPullAcceptance": true,
+      "scopeAcceptance": false,
+      "errors": [
+        "played_sample_clock_unverified"
+      ],
+      "publicFailure": "",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    },
+    {
+      "attempt": "preroll-3",
+      "runId": "751c958e-d791-423e-875a-dad64ff53e93",
+      "buildSha256": "475861ca49c6270081dffc8fcc47277cbc190bcfce6f9fb1423cdc3da782c841",
+      "transport": "file",
+      "publicTestPassed": true,
+      "renderPullAcceptance": true,
+      "scopeAcceptance": false,
+      "errors": [
+        "played_sample_clock_unverified"
+      ],
+      "publicFailure": "",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    },
+    {
+      "attempt": "preroll-http",
+      "runId": "135ada92-54d6-4053-8cc5-7c7638d4b15a",
+      "buildSha256": "475861ca49c6270081dffc8fcc47277cbc190bcfce6f9fb1423cdc3da782c841",
+      "transport": "http",
+      "publicTestPassed": true,
+      "renderPullAcceptance": null,
+      "scopeAcceptance": true,
+      "errors": [],
+      "publicFailure": "",
+      "artifactsUnchanged": true,
+      "cleanup": true
+    }
+  ]
+}

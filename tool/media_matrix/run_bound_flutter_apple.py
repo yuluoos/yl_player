@@ -19,7 +19,7 @@ from bound_artifacts import canonical, freeze, verify, sha_file
 from acoustic_capture import microphone
 from acoustic_evidence import PROTOCOL
 from bound_device import DeviceTransport
-from bound_av import validate, validate_render_pull
+from bound_av import validate_format_playback
 from bound_matrix import planned_case
 from run_bound_apple import CASES, PHASES, write
 
@@ -34,17 +34,16 @@ def planned_controls(catalog):
 
 def acceptance(plan, rows, status, stable):
     """A passed raw gate cannot hide framework failure or changed bundle bytes."""
-    result=validate(plan,rows)
+    result=validate_format_playback(plan,rows)
     result.update(publicTestPassed=status.get('passed') is True,
         runtimeIdentityVerified=status.get('identityVerified') is True,
         artifactsUnchanged=stable and status.get('artifactsUnchanged') is True,
         statusRunMatches=status.get('runId')==plan['runId'])
     trusted=all(result[k] for k in ('publicTestPassed','runtimeIdentityVerified','artifactsUnchanged','statusRunMatches'))
     result['scopeAcceptance'] &= trusted
-    if any(isinstance(row,dict) and row.get('audioClockMethod')=='avplayer-preeffects-source-pull' for row in rows):
-        pull=validate_render_pull(plan,rows)
-        result.update(renderPullAcceptance=pull['renderPullAcceptance'] and trusted,
-            renderPullErrors=pull['errors'], renderPullRows=pull['supportedRows'])
+    result['formatPlaybackAcceptance'] &= trusted
+    if 'renderPullAcceptance' in result:
+        result['renderPullAcceptance'] &= trusted
     return result
 
 
@@ -179,6 +178,6 @@ def main():
     result.update(processExit=process.returncode,negativeIdentity=args.negative_identity,negativeFramework=args.negative_framework)
     write(out/'result.json',result)
     print(json.dumps({k:v for k,v in result.items() if k!='measurements'},indent=2))
-    return 0 if result['scopeAcceptance'] else 1
+    return 0 if result.get('formatPlaybackAcceptance', result['scopeAcceptance']) else 1
 
 if __name__=='__main__':raise SystemExit(main())

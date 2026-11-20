@@ -87,6 +87,33 @@ class MatrixTest(unittest.TestCase):
                     dict(record,extractedJsonlBase64=base64.b64encode(raw+b'bad trailing row').decode())):
             self.assertFalse(bound_matrix.extraction_valid('android',bad))
 
+    def test_ios_local_mp4_accepts_render_pull_for_format_playback(self):
+        from run_bound_flutter_apple import acceptance
+        sample=fixtures.BoundAVTest()
+        sample.setUp()
+        status=sample.avplayer_pull_row()
+        cells=bound_matrix.cells(self.catalog)
+        for platform,transport,case_id,expected in (
+            ('ios','file','mp4-avc-aac',True), ('macos','file','mp4-avc-aac',False),
+            ('ios','http','mp4-avc-aac',False), ('ios','file','mkv-avc-eac3',False)):
+            with self.subTest(platform=platform,transport=transport,case_id=case_id):
+                item=bound_matrix.planned_case(self.catalog,case_id,platform,transport)
+                plan=dict(sample.plan,platform=platform,matrixId='matrix',testSha256='b'*64,planned=[item])
+                row=dict(sample.row,platform=platform,transport=transport,caseId=case_id,
+                    mediaHash=item['mediaHash'],sourceVerified=True,testSha256='b'*64,networkPolicy='managed',
+                    networkReceipt=dict(runId=plan['runId'],mediaHash=item['mediaHash'],requests=1,bytesServed=100,rejected=0))
+                result=acceptance(plan,[row],status,True)
+                self.assertTrue(result['renderPullAcceptance'])
+                self.assertFalse(result['scopeAcceptance'])
+                self.assertEqual(expected,result['formatPlaybackAcceptance'])
+                cell=next(c for c in cells if c['caseId']==case_id and c['transport']==transport)
+                matrix=dict(schema=1,matrixId='matrix',platform=platform,buildSha256='b'*64,cells=cells)
+                record=dict(cell=cell,plan=plan,rows=[row],status=status,artifactsUnchanged=True,exitCode=0)
+                self.assertEqual(int(expected),bound_matrix.summarize(matrix,[record])['supportedRows'])
+                if expected:
+                    self.assertFalse(acceptance(plan,[row],status,False)['formatPlaybackAcceptance'])
+                    self.assertFalse(acceptance(plan,[dict(row,avPlayerTapReleased=False)],status,True)['formatPlaybackAcceptance'])
+
     def test_complete_raw_matrix_accepts_only_with_final_product_and_frameworks(self):
         all_cells=bound_matrix.cells(self.catalog)
         matrix=dict(schema=1,matrixId='matrix',platform='macos',buildSha256='b'*64,

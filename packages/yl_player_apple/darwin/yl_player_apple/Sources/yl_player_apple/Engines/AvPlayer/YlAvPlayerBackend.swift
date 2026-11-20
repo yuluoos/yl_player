@@ -405,9 +405,10 @@ final class YlAvPlayerBackend: NSObject, YlPlaybackBackend {
 
   private func startOutput() throws {
     try beforeAudioOutput()
-    if effectiveConfiguration.bufferMode == "stable", hlsResourceLoader == nil {
-      // Respect AVPlayer's buffering decision for smooth playback. Immediate
-      // playback bypasses that decision even when automatic waiting is enabled.
+    let mode = effectiveConfiguration.bufferMode
+    let localAutomatic = services.platform == .ios && lastSource?.kind == .file && mode == "automatic"
+    if hlsResourceLoader == nil && (mode == "stable" || localAutomatic) {
+      // Setting rate lets AVPlayer finish preroll, including audio queue startup.
       player.rate = desiredRate
     } else {
       player.playImmediately(atRate: desiredRate)

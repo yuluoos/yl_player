@@ -5,7 +5,13 @@ import XCTest
 final class YlLiveReconnectControllerTests: XCTestCase {
   @MainActor
   func testStableBufferingRespectsWaitPolicyAndPlaybackSpeed() throws {
-    for goal in [YlBufferGoal.smoothPlayback, .lowLatency] {
+    let live = source(uri: "https://example.test/live.m3u8", formatHint: .hls, isLive: true)
+    let file = YlAppleSourceDescriptor(uri: "file:///fixture.mp4", kind: .file, formatHint: .mp4)
+    let cases: [(YlAppleSourceDescriptor, YlBufferGoal, TimeInterval, Bool)] = [
+      (live, .smoothPlayback, 30, true), (live, .lowLatency, 2, false),
+      (file, .automatic, 10, true), (file, .lowLatency, 2, false)
+    ]
+    for (source, goal, bufferDuration, shouldWait) in cases {
       let player = StalledLivePlayer()
       let services = YlPlatformServices(platform: .ios, textureOutput: AppleTestTexture(),
         makeDisplayDriver: { _ in AppleTestDisplay() })
@@ -13,16 +19,15 @@ final class YlLiveReconnectControllerTests: XCTestCase {
         configuration: PlayerConfiguration(map: ["bufferMode": "lowLatency"]),
         player: player, emit: { _ in })
       defer { backend.dispose() }
-      var live = source(uri: "https://example.test/live.m3u8", formatHint: .hls, isLive: true)
-      live.loadOptions = YlAppleLoadOptions(bufferStrategy: goal)
-      try backend.open(live)
+      var request = source
+      request.loadOptions = YlAppleLoadOptions(bufferStrategy: goal)
+      try backend.open(request)
       try backend.setPlaybackSpeed(1.25)
       try backend.play()
-      let stable = goal == .smoothPlayback
-      XCTAssertEqual(player.currentItem?.preferredForwardBufferDuration, stable ? 30 : 2)
-      XCTAssertEqual(player.automaticallyWaitsToMinimizeStalling, stable)
-      XCTAssertEqual(player.immediateRates, stable ? [] : [1.25])
-      XCTAssertEqual(player.waitingRates, stable ? [1.25] : [])
+      XCTAssertEqual(player.currentItem?.preferredForwardBufferDuration, bufferDuration)
+      XCTAssertEqual(player.automaticallyWaitsToMinimizeStalling, shouldWait)
+      XCTAssertEqual(player.immediateRates, shouldWait ? [] : [1.25])
+      XCTAssertEqual(player.waitingRates, shouldWait ? [1.25] : [])
     }
   }
 
