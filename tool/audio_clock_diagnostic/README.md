@@ -1,7 +1,38 @@
-# Native audio device comparison
+# Native audio I/O period comparison
 
-`audio-clock-diagnostic.yml` builds the existing macOS test host once per runner and runs
-`testActualTerminalAdapterFrameSequenceMatrix` against these output routes:
+The workflow builds one macOS test binary and runs the full PCM sequence matrix
+four times on the same hosted output device. The default-period runs bracket
+two runs using the hosted matrix's larger device buffer. All four executions
+use the same PCM, queue budget, EOF and completion checks. The test host owns
+the temporary buffer setting and restores it after each execution.
+
+`compare.py --io-period` verifies the actual pre-render slice sizes for each
+matrix identity (512, 4096, 4096 and 512 frames, respectively). An empty
+trace is allowed only for a zero-input row. Both 4096-frame executions must
+pass. The original and restored runs retain their actual XCTest results in
+the comparison receipt even if they reproduce the original failure.
+
+[Hosted period comparison, run 5](https://github.com/yuluoos/yl_player/actions/runs/44677764884/job/136093586788)
+used Apple Virtual Sound Device for all four executions. At 48 kHz, 512
+frames give the renderer 10.67 ms per cycle and 4096 frames give it 85.33 ms.
+
+| Observed period | Matrix result | Missing marker frames |
+| --- | --- | --- |
+| 512, before | Failed | Candidate 3-buffer sequence: 2,560 |
+| 4096, first | Passed all 12 rows | 0 |
+| 4096, second | Passed all 12 rows | 0 |
+| 512, restored | Failed | Legacy 2000-buffer sequence: 21,312. Legacy starvation sequence: 572. Direct native controls: 1,012 and 804. |
+
+The twelve matrix traces in each execution confirmed the requested period.
+The hosted unit suite enables the larger device buffer for the lifetime of
+this test in `tool/check_native_macos.sh`. The comparison verifies this CI
+mitigation on the hosted device. It does not establish a latency setting for
+end-user playback.
+
+## Earlier device comparison
+
+Running the diagnostic without the period option selects the original route
+experiment. It builds on the same matrix and compares these output routes:
 
 1. The runner's original default output.
 2. The same default after installing the driver and restarting CoreAudio.
