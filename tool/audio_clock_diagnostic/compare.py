@@ -64,10 +64,12 @@ def main():
             if time.monotonic() > deadline:
                 raise RuntimeError(f"Cannot select unique output device {name!r}: {current}")
             time.sleep(0.5)
-    def matrix(label, device_name):
+    def matrix(label, device_name, period=None):
         if hashlib.sha256(binary.read_bytes()).hexdigest() != receipt["testBinarySHA256"]:
             raise RuntimeError("Test binary changed between comparison arms")
-        selected = select(device_name)
+        selected = devices() if period is not None else select(device_name)
+        if period is not None and selected["default"] != initial["default"]:
+            raise RuntimeError("Default output changed between period comparisons")
         result = EVIDENCE / f"{label}.xcresult"
         command = [sys.executable, "-B", str(ROOT / "tool/run_with_display_awake.py"),
                    "xcodebuild", "test-without-building", "CODE_SIGNING_ALLOWED=NO", "-quiet",
@@ -77,13 +79,17 @@ def main():
                    "-only-testing:RunnerTests/YlMacosAudioTests/testActualTerminalAdapterFrameSequenceMatrix",
                    "-resultBundlePath", str(result)]
         with (EVIDENCE / f"{label}.log").open("w") as log:
-            status = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT).returncode
+            env = os.environ.copy()
+            if period is not None:
+                env["TEST_RUNNER_YL_HOSTED_PCM_BUFFER"] = "1" if period == 4096 else "0"
+            status = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT, env=env).returncode
         summary = json.loads(subprocess.check_output([
             "xcrun", "xcresulttool", "get", "test-results", "summary", "--path", str(result)]))
         (EVIDENCE / f"{label}-summary.json").write_text(json.dumps(summary, indent=2) + "\n")
         attachments = EVIDENCE / f"{label}-attachments"
         run(["xcrun", "xcresulttool", "export", "attachments", "--path", result, "--output-path", attachments])
         pcm_rows = []
+        render_sizes = {}
         for path in sorted(attachments.iterdir()):
             if not path.is_file() or path.name == "manifest.json":
                 continue
@@ -91,6 +97,13 @@ def main():
                 value = json.loads(path.read_bytes())
             except (ValueError, UnicodeError):
                 continue
+            if isinstance(value, dict) and value.get("kind") == "nativeRenderTrace" and value.get("path") == "matrix":
+                trace = value["trace"]
+                identity = (value["candidate"], value["buffers"], value["starvation"], value["pausedEOF"])
+                sizes = {r[3] for r in trace["entries"] if r[5] & trace["preRenderMask"]}
+                if identity in render_sizes:
+                    raise RuntimeError(f"Duplicate render trace for {identity}")
+                render_sizes[identity] = sorted(sizes)
             if isinstance(value, dict) and "marker" in value:
                 pcm = {key: value[key] for key in ("kind", "candidate", "buffers", "starvation", "pausedEOF",
                        "marker", "submittedMarker", "pending", "failures", "peakBytes") if key in value}
@@ -99,7 +112,7 @@ def main():
         row = {"label": label, "route": selected, "exitCode": status,
                "passedTests": summary["passedTests"], "failedTests": summary["failedTests"],
                "skippedTests": summary["skippedTests"], "testFailures": summary.get("testFailures", []),
-               "pcmRows": pcm_rows}
+               "pcmRows": pcm_rows, "renderSlices": [{"identity": k, "frames": v} for k, v in sorted(render_sizes.items())]}
         receipt["runs"].append(row); save()
         print(json.dumps(row, sort_keys=True), flush=True)
         diagnostic = {"device": device_name, "passedTests": row["passedTests"], "failedTests": row["failedTests"],
@@ -112,9 +125,26 @@ def main():
         expected |= {(candidate, 100, True, False) for candidate in (False, True)}
         expected |= {(candidate, 3, False, True) for candidate in (False, True)}
         actual = [(p["candidate"], p["buffers"], p["starvation"], p["pausedEOF"]) for p in pcm_rows if "candidate" in p]
+        if period is not None:
+            measured = set(size for sizes in render_sizes.values() for size in sizes)
+            print(f"::notice title=I/O period {label}::expected={period} measured={sorted(measured)} "
+                  f"traces={len(render_sizes)}", flush=True)
+            if set(render_sizes) != expected or any(
+                sizes != [period] for key, sizes in render_sizes.items() if key[1] or sizes
+            ):
+                raise RuntimeError(f"Render traces do not confirm {period}-frame period for all matrix rows")
         return (status == 0 and row["passedTests"] == 1 and row["failedTests"] == 0 and row["skippedTests"] == 0
                 and len(actual) == len(expected) and set(actual) == expected)
     save()
+    if sys.argv[1:] == ["--io-period"]:
+        # A/B/B/A: last run verifies restoration on the same default device.
+        matrix("original-before", original_name, 512)
+        first = matrix("long-period-1", original_name, 4096)
+        second = matrix("long-period-2", original_name, 4096)
+        matrix("original-restored", original_name, 512)
+        receipt["longPeriodAllPassed"] = first and second
+        save()
+        return 0 if first and second else 1
     try:
         package = EVIDENCE / "BlackHole2ch-0.7.1.pkg"
         # The vendor rejects Python urllib's user agent with HTTP 406. Use the

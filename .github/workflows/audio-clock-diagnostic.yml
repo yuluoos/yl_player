@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runner: [macos-15-intel, macos-26]
+        runner: [macos-15]
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 45
     steps:
@@ -40,8 +40,8 @@ jobs:
           xcodebuild build-for-testing CODE_SIGNING_ALLOWED=NO ENABLE_TESTABILITY=YES -quiet -sdk macosx \
             -workspace macos/Runner.xcworkspace -scheme Runner -parallel-testing-enabled NO \
             -derivedDataPath build/audio-clock-diagnostic -destination 'platform=macOS'
-      - name: Compare default and guest-clock audio devices
-        run: python3 -B tool/audio_clock_diagnostic/compare.py
+      - name: Compare 512 and 4096 frame periods on the default device
+        run: python3 -B tool/audio_clock_diagnostic/compare.py --io-period
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
