@@ -7,18 +7,25 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:yl_player/yl_player.dart';
 
+import 'support/authenticated_hls_server.dart';
 import 'support/range_media_server.dart';
 
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  _registerCadenceTest(binding, YlMediaFormat.matroska);
+  if (Platform.isIOS) _registerCadenceTest(binding, YlMediaFormat.hls);
+}
 
+void _registerCadenceTest(
+  IntegrationTestWidgetsFlutterBinding binding,
+  YlMediaFormat format,
+) {
+  const behavior =
+      '250 ms updates keep their measured cadence and replacement session fence';
   testWidgets(
-    '250 ms updates keep their measured cadence and replacement session fence',
+    format == YlMediaFormat.matroska ? behavior : 'iOS HLS: $behavior',
     (tester) async {
-      final server = await RangeMediaServer.start(
-        asset: 'assets/test_media/network_seek_h264_aac.mkv',
-      );
-      addTearDown(server.close);
+      final source = await _startSource(format);
       final controller = await YlPlayerController.create(
         options: const YlPlayerOptions(
           decoderPolicy: YlDecoderPolicy.systemDefault,
@@ -28,19 +35,6 @@ void main() {
       addTearDown(controller.dispose);
       await tester.pumpWidget(
         MaterialApp(home: YlPlayerView(controller: controller)),
-      );
-
-      final source = YlNetworkSource(
-        server.mediaUri,
-        format: YlMediaFormat.matroska,
-        networkPolicy: const YlNetworkPolicy.managed(
-          connectTimeout: Duration(seconds: 3),
-          readTimeout: Duration(seconds: 3),
-          maxRetries: 1,
-          baseRetryDelay: Duration(milliseconds: 100),
-          maxRetryDelay: Duration(milliseconds: 100),
-          maxRedirects: 2,
-        ),
       );
 
       final oldSession = await controller.load(source);
@@ -149,6 +143,13 @@ void main() {
       );
       expect(violations, isEmpty);
       expect(fiveSecondEquivalent, inInclusiveRange(12, 28));
+      binding.reportData ??= <String, dynamic>{};
+      binding.reportData!['cadence_${format.name}'] = {
+        'elapsedMs': elapsedMilliseconds,
+        'updates': periodicTimelineUpdates,
+        'updatesPer5s': fiveSecondEquivalent,
+        'sessionChanged': oldSession.id != replacement.id,
+      };
       // Printed output is retained by the release evidence log.
       // ignore: avoid_print
       print(
@@ -160,6 +161,35 @@ void main() {
       );
     },
     timeout: const Timeout(Duration(minutes: 2)),
+  );
+}
+
+Future<YlNetworkSource> _startSource(YlMediaFormat format) async {
+  if (format == YlMediaFormat.hls) {
+    final server = await AuthenticatedHlsServer.start(
+      sameOrigin: true,
+      // Each repeated segment contains 48 video frames at 24 fps.
+      durationSeconds: 2,
+      segmentCount: 8,
+    );
+    addTearDown(server.close);
+    return YlNetworkSource(server.masterUri, format: YlMediaFormat.hls);
+  }
+  final server = await RangeMediaServer.start(
+    asset: 'assets/test_media/network_seek_h264_aac.mkv',
+  );
+  addTearDown(server.close);
+  return YlNetworkSource(
+    server.mediaUri,
+    format: YlMediaFormat.matroska,
+    networkPolicy: const YlNetworkPolicy.managed(
+      connectTimeout: Duration(seconds: 3),
+      readTimeout: Duration(seconds: 3),
+      maxRetries: 1,
+      baseRetryDelay: Duration(milliseconds: 100),
+      maxRetryDelay: Duration(milliseconds: 100),
+      maxRedirects: 2,
+    ),
   );
 }
 
