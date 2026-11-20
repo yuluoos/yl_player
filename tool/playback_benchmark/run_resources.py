@@ -20,6 +20,18 @@ HERE=Path(__file__).resolve().parent
 def digest(path): return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def dependency_fingerprints():
+    manifests = (
+        'pubspec.yaml',
+        'pubspec.lock',
+        'packages/yl_player/example/pubspec.yaml',
+        'packages/yl_player_apple/darwin/yl_player_apple/Package.swift',
+        'packages/yl_player_media_core/darwin/yl_player_media_core/Package.swift',
+        'packages/yl_player_media_delivery/darwin/yl_player_media_delivery/Package.swift',
+    )
+    return {name: digest(ROOT / name) for name in manifests}
+
+
 def run_logged(command, cwd, path, timeout):
     with path.open('w') as log:
         process=subprocess.Popen(command,cwd=cwd,stdout=log,stderr=log,start_new_session=True)
@@ -113,8 +125,7 @@ def collect(output, flutter, *, profile_cycles=False, harness_only=False, lifeti
     try:
         from run_public_stress import source_identity
         source=source_identity()
-        dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock',
-            'packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']}
+        dependencies=dependency_fingerprints()
         artifact='packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock'
         native='packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
         result['artifactFingerprints']={native:digest(ROOT/native),artifact:digest(ROOT/artifact)}

@@ -9,7 +9,7 @@ import platform
 import subprocess
 import sys
 
-from run_resources import ROOT, EXAMPLE, digest, run_logged
+from run_resources import ROOT, EXAMPLE, dependency_fingerprints, digest, run_logged
 from performance_gate import summarize_run, canonical, digest as object_digest, read_json
 
 
@@ -58,8 +58,7 @@ def collect(output,flutter):
         if sys.platform!='darwin': raise ValueError('host unavailable')
         protocol=read_json(ROOT/'tool/playback_benchmark/stress-protocol.json')
         source=source_identity()
-        dependencies={name:digest(ROOT/name) for name in ('pubspec.yaml','pubspec.lock',
-            'packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock')}
+        dependencies=dependency_fingerprints()
         artifact='packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock'
         native='packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge'
         artifacts={name:digest(ROOT/name) for name in (artifact,native)}

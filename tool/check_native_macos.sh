@@ -58,7 +58,6 @@ assert_architectures() {
 run_unit_tests() {
   cd "$example_root"
   flutter build macos --debug --config-only
-  (cd macos && pod install)
   python3 -B "$repo_root/tool/consumer_fixtures/apple_flutter/main_example_tests.py" --current-only
   verify_registrant
 

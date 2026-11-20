@@ -136,7 +136,7 @@ retain logs and a failed result, never a zero-sample success. They may lack fina
 trial rows; incomplete evidence must not be treated as passed.
 
 The fresh output directory retains raw playback/build logs, JSONL, result JSON,
-source and build-config hashes (including Podfile.lock, project/xcconfig/podspec,
+source and build-config hashes (including Swift package manifests, project/xcconfig/podspec,
 entitlements and manifests), dependency/artifact/media/sampler identity, and
 device/OS. `sourceHash` covers the recorded path map, not all external SDK/tool
 binaries or ignored generated caches. Failed and intermediate runs remain

@@ -9,7 +9,7 @@ import subprocess
 import sys
 import time
 from continuous import PROTOCOL, summarize_continuous
-from run_resources import ROOT, EXAMPLE, HERE, digest, run_logged
+from run_resources import ROOT, EXAMPLE, HERE, dependency_fingerprints, digest, run_logged
 from summarize import unique_object, reject_constant
 
 
@@ -28,7 +28,7 @@ def collect(output,flutter,*,memory_diagnostics=False):
         source=source_identity()
         result.update(commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip(),
             sourceFingerprints=source,sourceHash=hashlib.sha256(json.dumps(source,sort_keys=True,separators=(',',':')).encode()).hexdigest(),
-            dependencies={n:digest(ROOT/n) for n in ['pubspec.yaml','pubspec.lock','packages/yl_player/example/pubspec.yaml','packages/yl_player/example/macos/Podfile.lock']},
+            dependencies=dependency_fingerprints(),
             artifactFingerprints={n:digest(ROOT/n) for n in ['packages/yl_player_media_core/tool/apple_ffmpeg/bridge-artifact.lock','packages/yl_player_media_core/darwin/yl_player_media_core/Frameworks/YlFFmpegBridge.xcframework/macos-arm64_x86_64/YlFFmpegBridge.framework/Versions/A/YlFFmpegBridge']})
         media=EXAMPLE/'assets/test_media/format_matrix/continuous-avc-aac.mkv'
         result['mediaSha256']=digest(media)
