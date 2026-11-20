@@ -154,8 +154,7 @@ void _registerCadenceTest(
         'updates': periodicTimelineUpdates,
         'updatesPer5s': fiveSecondEquivalent,
         'sessionChanged': oldSession.id != replacement.id,
-        if (firstTimelineChange != null)
-          'firstTimelineChange': firstTimelineChange,
+        'firstTimelineChange': ?firstTimelineChange,
       };
       expect(
         stopwatch.elapsed,
