@@ -28,7 +28,6 @@ final class AuthenticatedHlsServer {
     required this.resolution,
     required this.isLive,
     required this.durationSeconds,
-    required this.segmentCount,
   });
 
   static Future<AuthenticatedHlsServer> start({
@@ -39,11 +38,7 @@ final class AuthenticatedHlsServer {
     String resolution = '320x180',
     bool isLive = false,
     double durationSeconds = 1.968,
-    int segmentCount = 1,
   }) async {
-    if (segmentCount < 1 || (isLive && segmentCount != 1)) {
-      throw ArgumentError.value(segmentCount, 'segmentCount');
-    }
     final values = await Future.wait<ByteData>(<Future<ByteData>>[
       rootBundle.load('assets/test_media/hls_key.bin'),
       rootBundle.load(segmentAsset),
@@ -61,7 +56,6 @@ final class AuthenticatedHlsServer {
       resolution: resolution,
       isLive: isLive,
       durationSeconds: durationSeconds,
-      segmentCount: segmentCount,
     );
     primary.listen((request) => unawaited(result._handlePrimary(request)));
     secondary.listen((request) => unawaited(result._handleSecondary(request)));
@@ -78,7 +72,6 @@ final class AuthenticatedHlsServer {
   final String resolution;
   final bool isLive;
   final double durationSeconds;
-  final int segmentCount;
   int _playlistReload = 0;
   final List<RecordedHlsRequest> requests = <RecordedHlsRequest>[];
 
@@ -131,29 +124,22 @@ final class AuthenticatedHlsServer {
       case '/media.m3u8':
         final key = _uri(_primary, '/key.bin');
         final sequence = isLive ? _playlistReload++ : 0;
-        final segments = StringBuffer();
-        for (var index = 0; index < segmentCount; index++) {
-          final number = sequence + index;
-          final segment = returnSegmentToPrimary
-              ? _uri(
-                  _primary,
-                  '/segment0.ts',
-                ).replace(queryParameters: {'sequence': '$number'}).toString()
-              : 'segment0.ts?sequence=$number';
-          // Each URI serves the same encrypted clip with its original timestamps.
-          if (index > 0) segments.writeln('#EXT-X-DISCONTINUITY');
-          segments.writeln('#EXTINF:${durationSeconds.toStringAsFixed(6)},');
-          segments.writeln(segment);
-        }
+        final segment = returnSegmentToPrimary
+            ? _uri(
+                _primary,
+                '/segment0.ts',
+              ).replace(queryParameters: {'sequence': '$sequence'}).toString()
+            : 'segment0.ts?sequence=$sequence';
         await _serveText(
           request.response,
           '#EXTM3U\n'
           '#EXT-X-VERSION:3\n'
-          '#EXT-X-TARGETDURATION:2\n'
+          '#EXT-X-TARGETDURATION:${durationSeconds.ceil()}\n'
           '#EXT-X-MEDIA-SEQUENCE:$sequence\n'
           '#EXT-X-KEY:METHOD=AES-128,URI="$key",'
           'IV=0x00000000000000000000000000000000\n'
-          '$segments'
+          '#EXTINF:${durationSeconds.toStringAsFixed(6)},\n'
+          '$segment\n'
           '${isLive ? '' : '#EXT-X-ENDLIST\n'}',
         );
       case '/segment0.ts':

@@ -48,6 +48,7 @@ void _registerCadenceTest(
       final stopwatch = Stopwatch();
       final completedOnStateEvent = Completer<void>();
       final violations = <String>[];
+      Map<String, String>? firstTimelineChange;
       var periodicTimelineUpdates = 0;
       String? lastTimelineKey;
       YlPlayerState? baseline;
@@ -79,6 +80,10 @@ void _registerCadenceTest(
             state.timeline.isSeekable != reference.timeline.isSeekable ||
             state.timeline.isLive != reference.timeline.isLive ||
             state.timeline.dvrWindow != reference.timeline.dvrWindow) {
+          firstTimelineChange ??= {
+            'before': reference.timeline.toString(),
+            'after': state.timeline.toString(),
+          };
           violations.add('static timeline data changed during a delta');
         }
 
@@ -119,7 +124,13 @@ void _registerCadenceTest(
         (state) =>
             state.sessionId == replacement.id &&
             state.status == YlPlaybackStatus.playing &&
-            state.timeline.position >= const Duration(milliseconds: 500),
+            state.timeline.position >= const Duration(milliseconds: 500) &&
+            (format != YlMediaFormat.hls ||
+                (state.timeline.isSeekable &&
+                    !state.timeline.isLive &&
+                    state.timeline.duration == _hlsDuration &&
+                    state.timeline.bufferedPosition >=
+                        state.timeline.position + const Duration(seconds: 5))),
       );
 
       baseline = controller.state;
@@ -137,19 +148,21 @@ void _registerCadenceTest(
       final elapsedMilliseconds = stopwatch.elapsedMilliseconds;
       final fiveSecondEquivalent =
           periodicTimelineUpdates * 5000 / elapsedMilliseconds;
-      expect(
-        stopwatch.elapsed,
-        greaterThanOrEqualTo(const Duration(seconds: 5)),
-      );
-      expect(violations, isEmpty);
-      expect(fiveSecondEquivalent, inInclusiveRange(12, 28));
       binding.reportData ??= <String, dynamic>{};
       binding.reportData!['cadence_${format.name}'] = {
         'elapsedMs': elapsedMilliseconds,
         'updates': periodicTimelineUpdates,
         'updatesPer5s': fiveSecondEquivalent,
         'sessionChanged': oldSession.id != replacement.id,
+        if (firstTimelineChange != null)
+          'firstTimelineChange': firstTimelineChange,
       };
+      expect(
+        stopwatch.elapsed,
+        greaterThanOrEqualTo(const Duration(seconds: 5)),
+      );
+      expect(violations, isEmpty);
+      expect(fiveSecondEquivalent, inInclusiveRange(12, 28));
       // Printed output is retained by the release evidence log.
       // ignore: avoid_print
       print(
@@ -164,13 +177,16 @@ void _registerCadenceTest(
   );
 }
 
+const _hlsDuration = Duration(seconds: 16);
+
 Future<YlNetworkSource> _startSource(YlMediaFormat format) async {
   if (format == YlMediaFormat.hls) {
     final server = await AuthenticatedHlsServer.start(
       sameOrigin: true,
-      // Each repeated segment contains 48 video frames at 24 fps.
-      durationSeconds: 2,
-      segmentCount: 8,
+      segmentAsset: 'assets/test_media/hls_cadence_16s.ts',
+      codecs: 'avc1.42c00d',
+      resolution: '160x90',
+      durationSeconds: _hlsDuration.inSeconds.toDouble(),
     );
     addTearDown(server.close);
     return YlNetworkSource(server.masterUri, format: YlMediaFormat.hls);
