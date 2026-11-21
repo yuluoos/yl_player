@@ -1,0 +1,28 @@
+{
+  "model": "CPH2065",
+  "androidVersion": "12",
+  "apiLevel": 31,
+  "sourceCommit": "970b7f72890a77891a48d173776539866d702763",
+  "test": "packages/yl_player/example/integration_test/decoder_budget_test.dart",
+  "fixture": "packages/yl_player/example/assets/test_media/format_matrix/av1-hardware-control.mkv",
+  "apkSha256": "d3cf7796a26bf3f487d8dc5fba3cf6b11295663c9166b89bfceb51a659006547",
+  "installedApkSha256": "d3cf7796a26bf3f487d8dc5fba3cf6b11295663c9166b89bfceb51a659006547",
+  "processId": 8445,
+  "launch": [
+    "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity }",
+    "Status: ok",
+    "LaunchState: COLD",
+    "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+    "TotalTime: 3492",
+    "WaitTime: 3506",
+    "Complete"
+  ],
+  "assertionLog": [
+    "11-21 11:33:53.356  8445  8445 I flutter : 00:00 +0: unavailable AV1 hardware produces the public nonretryable error",
+    "11-21 11:33:55.261  8445  8445 I flutter : YL_DECODER_ERROR_ROW=actual-unavailable-nonretryable",
+    "11-21 11:33:55.347  8445  8445 I flutter : 00:01 +1: (tearDownAll)",
+    "11-21 11:33:55.352  8445  8445 I flutter : 00:02 +2: All tests passed!"
+  ],
+  "testSha256": "88370176540f403d8c6f6cc137e178eab2e320e1b266f6355963b2361b49906d",
+  "fixtureSha256": "c9c55c75587c2362b01bd3afab0e465ca2cb1f565e3c598f17665e664bf79086"
+}
