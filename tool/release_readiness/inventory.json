@@ -1177,6 +1177,16 @@
       "path": "docs/superpowers/reports/2026-11-21-android-oppo-av-dns-script-followup.md",
       "sha256": "c573fd219151c9d1b4b0769a3cb9b3efe1d9326f3c101c0f31e4e0f218d8dd27",
       "kind": "report"
+    },
+    "android-oppo-dash-frame-timing-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-dash-frame-timing.md",
+      "sha256": "37c1af6f52e5905abadd71b4ada486dfa7ef76fe421c36d38488cc75efc89406",
+      "kind": "report"
+    },
+    "android-oppo-dash-av-optimization-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-dash-av-optimization.md",
+      "sha256": "39fc491c3d16fc81c704db071c4ded2ef34fff0a5d0a9df41c3615c3e5652865",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1270,10 +1280,12 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-oppo-av-dns-script-followup-20261121"
+        "android-oppo-av-dns-script-followup-20261121",
+        "android-oppo-dash-frame-timing-20261121",
+        "android-oppo-dash-av-optimization-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-device-av-timing-after-timestamp-matched-oppo-gpu-capture"
+      "nextAction": "qualify-additional-device-profiles-after-oppo-dash-av-gate-pass"
     },
     {
       "requirement": "CAP-DASH",
@@ -1708,10 +1720,12 @@
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
         "android-oppo-dash-network-and-resolver-20261121",
-        "android-oppo-av-dns-script-followup-20261121"
+        "android-oppo-av-dns-script-followup-20261121",
+        "android-oppo-dash-frame-timing-20261121",
+        "android-oppo-dash-av-optimization-20261121"
       ],
       "acceptance": null,
-      "nextAction": "address-oppo-first-frame-clock-coverage-and-period-av-deviation"
+      "nextAction": "qualify-additional-device-profiles-after-oppo-dash-av-gate-pass"
     },
     {
       "requirement": "CAP-PERIOD",

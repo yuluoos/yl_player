@@ -3,6 +3,9 @@ package dev.ylplayer.yl_player_android
 import android.content.Context
 import android.media.MediaFormat
 import android.os.Handler
+import android.os.SystemClock
+import androidx.media3.exoplayer.audio.AudioSink
+import java.nio.ByteBuffer
 import androidx.media3.common.Format
 import androidx.media3.common.VideoSize
 import androidx.media3.exoplayer.DefaultRenderersFactory
@@ -18,34 +21,64 @@ import java.util.concurrent.atomic.AtomicLong
 /** Pinned to Media3 1.11's output-format queue and output-stream clock, never its input Format.
  * All mutable observations live on the playback thread. Only changed immutable values are posted
  * to the application handler; the atomic generation also fences already queued lifecycle work. */
-internal class YlVideoOutputObserver(
+internal class YlVideoOutputObserver private constructor(
     private val post: (() -> Unit) -> Unit,
     private val receive: (Any?, AndroidVideoGeometryMessage?, YlDashVideoCoverage?) -> Unit,
+    private val output: Output,
 ) {
-    var dashVideoFamily: YlDashVideoFamilyPolicy? = null
+    constructor(post: (() -> Unit) -> Unit, receive: (Any?, AndroidVideoGeometryMessage?, YlDashVideoCoverage?) -> Unit)
+        : this(post, receive, Output()) { output.owner = this }
+
+    // Both renderers may decode at once. Only the renderer holding Media3's
+    // display surface can publish, and each keeps its own stream/format queue.
+    private class Output {
+        lateinit var owner: YlVideoOutputObserver
+        val generation = AtomicLong()
+        val publication = AtomicLong()
+        var family: YlDashVideoFamilyPolicy? = null
+    }
+
+    var dashVideoFamily: YlDashVideoFamilyPolicy?
+        get() = output.family
+        set(value) { output.family = value }
+
+    fun forPrewarming() = YlVideoOutputObserver(post, receive, output)
+
+    fun takeOutput() {
+        output.publication.incrementAndGet()
+        output.owner = this
+        last = null
+    }
+
     private data class Stream(val startUs: Long, val offsetUs: Long)
     private data class Entry(val uid: Any, val generation: Long)
-    private val generation = AtomicLong()
+    private var pendingFormat: Format? = null
+    private var pendingTransfer: Int? = null
     private val streams = linkedMapOf<Stream, Entry>()
     private var geometry: AndroidVideoGeometryMessage? = null
     private var coverage: YlDashVideoCoverage? = null
     private var last: Triple<Entry, AndroidVideoGeometryMessage, YlDashVideoCoverage?>? = null
 
     // Application thread: do not touch playback-thread collections here.
-    fun invalidate() { generation.incrementAndGet() }
+    fun invalidate() {
+        output.generation.incrementAndGet()
+        output.publication.incrementAndGet()
+    }
 
     fun stream(startUs: Long, offsetUs: Long, uid: Any) {
-        streams[Stream(startUs, offsetUs)] = Entry(uid, generation.get())
+        streams[Stream(startUs, offsetUs)] = Entry(uid, output.generation.get())
         // Bound even pathological sequences of replaced streams with no rendered frames.
         while (streams.size > 64) streams.remove(streams.keys.first())
     }
 
     fun reset(startUs: Long? = null, offsetUs: Long? = null, uid: Any? = null) {
-        val epoch = generation.incrementAndGet()
         streams.clear()
         if (startUs != null && offsetUs != null && uid != null) stream(startUs, offsetUs, uid)
         last = null
-        post { if (generation.get() == epoch) receive(null, null, null) }
+        if (output.owner === this) {
+            val epoch = output.publication.incrementAndGet()
+            post { if (output.publication.get() == epoch) receive(null, null, null) }
+        }
     }
 
     fun outputFormat(format: Format, mediaFormat: MediaFormat?) {
@@ -54,8 +87,10 @@ internal class YlVideoOutputObserver(
                 check(it.size <= 1) { "Conflicting DASH video coverage" }
             }.singleOrNull()
         }
-        dashVideoFamily?.verifyOutput(format, mediaFormat?.takeIf { it.containsKey(MediaFormat.KEY_COLOR_TRANSFER) }
-            ?.getInteger(MediaFormat.KEY_COLOR_TRANSFER))
+        pendingTransfer = mediaFormat?.takeIf { it.containsKey(MediaFormat.KEY_COLOR_TRANSFER) }
+            ?.getInteger(MediaFormat.KEY_COLOR_TRANSFER)
+        pendingFormat = format
+        verifyFormatBeforeRelease()
         // Same calculation as 1.11 MediaCodecVideoRenderer.onOutputFormatChanged. The Core
         // does not enable a VideoSink; MediaFormat describes the decoded crop.
         var width = format.width
@@ -75,20 +110,32 @@ internal class YlVideoOutputObserver(
         geometry = media3VideoGeometry(VideoSize(width, height, ratio), format)
     }
 
+    fun verifyFormatBeforeRelease() {
+        if (output.owner !== this) return
+        pendingFormat?.let { dashVideoFamily?.verifyOutput(it, pendingTransfer) }
+        pendingFormat = null
+    }
+
     fun rendered(startUs: Long, offsetUs: Long) {
         val stream = streams[Stream(startUs, offsetUs)] ?: return
         val value = geometry ?: return
-        if (stream.generation != generation.get()) return
+        if (output.owner !== this || stream.generation != output.generation.get()) return
         if (last?.first == stream && last?.second == value && last?.third == coverage) return // No per-frame Handler work, Format/MediaFormat never cross threads.
         val window = coverage
         last = Triple(stream, value, window)
-        post { if (stream.generation == generation.get()) receive(stream.uid, value, window) }
+        val epoch = output.publication.get()
+        post {
+            if (stream.generation == output.generation.get() && output.publication.get() == epoch)
+                receive(stream.uid, value, window)
+        }
     }
 }
 
 /** Preserves the existing factory's audio/text/etc and the pinned video Builder defaults.
- * Core uses extensions OFF, no prewarming/VideoSink, and only configures decoder policy. */
+ * DASH may allocate a second video renderer for Media3 to prepare a following Period. */
 internal open class YlOutputRenderersFactory(context: Context, private val observer: YlVideoOutputObserver) : DefaultRenderersFactory(context) {
+    var allowDashPrewarming = true
+    private var dashAudioWaiting: (() -> Boolean)? = null
     var allowEac3SoftwareAudio = false
     var useConstrainedTvAudioBuffer = false
     @Suppress("DEPRECATION") // Preserve the pinned default sink setup, changing only its size provider.
@@ -112,14 +159,14 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
             return
         }
         check(extensionRendererMode == EXTENSION_RENDERER_MODE_OFF)
-        out.add(object : androidx.media3.exoplayer.audio.MediaCodecAudioRenderer(context, codecAdapterFactory,
+        val renderer = object : androidx.media3.exoplayer.audio.MediaCodecAudioRenderer(context, codecAdapterFactory,
             mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, audioSink) {
             override fun onPositionReset(positionUs: Long, joining: Boolean, sampleStreamIsResetToKeyFrame: Boolean) {
                 super.onPositionReset(positionUs, joining, sampleStreamIsResetToKeyFrame)
                 audioSink.resetPosition(positionUs)
             }
             override fun processOutputBuffer(positionUs: Long, elapsedRealtimeUs: Long, codec: MediaCodecAdapter?,
-                buffer: java.nio.ByteBuffer?, bufferIndex: Int, bufferFlags: Int, sampleCount: Int,
+                buffer: ByteBuffer?, bufferIndex: Int, bufferFlags: Int, sampleCount: Int,
                 bufferPresentationTimeUs: Long, isDecodeOnlyBuffer: Boolean, isLastBuffer: Boolean, format: Format): Boolean {
                 val keepTail = isDecodeOnlyBuffer && buffer != null &&
                     bufferFlags and android.media.MediaCodec.BUFFER_FLAG_CODEC_CONFIG == 0 &&
@@ -127,13 +174,30 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
                 return super.processOutputBuffer(positionUs, elapsedRealtimeUs, codec, buffer, bufferIndex,
                     bufferFlags, sampleCount, bufferPresentationTimeUs, isDecodeOnlyBuffer && !keepTail, isLastBuffer, format)
             }
-        })
+        }
+        out.add(renderer)
+        dashAudioWaiting = {
+            renderer.state != Renderer.STATE_DISABLED && !renderer.isEnded &&
+                audioSink.getCurrentPositionUs(false) == AudioSink.CURRENT_POSITION_NOT_SET
+        }
     }
 
     override fun buildVideoRenderers(context: Context, extensionRendererMode: Int, mediaCodecSelector: MediaCodecSelector,
         enableDecoderFallback: Boolean, eventHandler: Handler, eventListener: VideoRendererEventListener,
         allowedVideoJoiningTimeMs: Long, out: ArrayList<Renderer>) {
         check(extensionRendererMode == EXTENSION_RENDERER_MODE_OFF)
+        out.add(videoRenderer(context, mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, allowedVideoJoiningTimeMs, observer))
+    }
+
+    override fun buildSecondaryVideoRenderer(renderer: Renderer, context: Context, extensionRendererMode: Int,
+        mediaCodecSelector: MediaCodecSelector, enableDecoderFallback: Boolean, eventHandler: Handler,
+        eventListener: VideoRendererEventListener, allowedVideoJoiningTimeMs: Long): Renderer? {
+        if (!allowDashPrewarming || renderer !is YlOutputVideoRenderer || dashAudioWaiting == null) return null
+        return videoRenderer(context, mediaCodecSelector, enableDecoderFallback, eventHandler, eventListener, allowedVideoJoiningTimeMs, observer.forPrewarming())
+    }
+
+    private fun videoRenderer(context: Context, mediaCodecSelector: MediaCodecSelector, enableDecoderFallback: Boolean,
+        eventHandler: Handler, eventListener: VideoRendererEventListener, allowedVideoJoiningTimeMs: Long, rendererObserver: YlVideoOutputObserver): YlOutputVideoRenderer {
         val builder = MediaCodecVideoRenderer.Builder(context)
             .setCodecAdapterFactory(codecAdapterFactory)
             .setMediaCodecSelector(mediaCodecSelector)
@@ -141,11 +205,37 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
             .setEnableDecoderFallback(enableDecoderFallback)
             .setEventHandler(eventHandler).setEventListener(eventListener)
             .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
-        out.add(YlOutputVideoRenderer(builder, observer))
+        return YlOutputVideoRenderer(builder, rendererObserver) { dashAudioWaiting?.invoke() == true }
     }
 }
 
-internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver) : MediaCodecVideoRenderer(builder) {
+internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver,
+    private val waitingForAudio: () -> Boolean) : MediaCodecVideoRenderer(builder) {
+    // Poll on ordinary renderer iterations. A missing/late audio stream must never
+    // prevent a preview, a seek or a video-only Period from producing a frame.
+    private companion object { const val MAX_FIRST_FRAME_AUDIO_WAIT_MS = 250L }
+    private var firstOutputPending = true
+    private var firstOutputWaitStartMs = 0L
+
+    override fun processOutputBuffer(positionUs: Long, elapsedRealtimeUs: Long, codec: MediaCodecAdapter?,
+        buffer: ByteBuffer?, bufferIndex: Int, bufferFlags: Int, sampleCount: Int,
+        bufferPresentationTimeUs: Long, isDecodeOnlyBuffer: Boolean, isLastBuffer: Boolean, format: Format): Boolean {
+        if (firstOutputPending && surface != null && !isDecodeOnlyBuffer && !isLastBuffer && waitingForAudio()) {
+            val now = SystemClock.elapsedRealtime()
+            if (firstOutputWaitStartMs == 0L) firstOutputWaitStartMs = now
+            if (now - firstOutputWaitStartMs < MAX_FIRST_FRAME_AUDIO_WAIT_MS) return false
+        }
+        return super.processOutputBuffer(positionUs, elapsedRealtimeUs, codec, buffer, bufferIndex, bufferFlags,
+            sampleCount, bufferPresentationTimeUs, isDecodeOnlyBuffer, isLastBuffer, format)
+    }
+
+    override fun handleMessage(messageType: Int, message: Any?) {
+        super.handleMessage(messageType, message)
+        if (messageType == Renderer.MSG_TRANSFER_RESOURCES && message is YlOutputVideoRenderer) {
+            message.observer.takeOutput()
+        }
+    }
+
     override fun codecNeedsSetOutputSurfaceWorkaround(codecName: String): Boolean =
         super.codecNeedsSetOutputSurfaceWorkaround(codecName) ||
             (android.os.Build.VERSION.SDK_INT < 29 && codecName == "OMX.MS.HEVC.Decoder")
@@ -165,6 +255,8 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
         super.onStreamChanged(formats, startPositionUs, offsetUs, mediaPeriodId)
     }
     override fun onPositionReset(positionUs: Long, joining: Boolean, sampleStreamIsResetToKeyFrame: Boolean) {
+        firstOutputPending = true
+        firstOutputWaitStartMs = 0L
         super.onPositionReset(positionUs, joining, sampleStreamIsResetToKeyFrame)
         observer.reset(outputStreamStartPositionUs, outputStreamOffsetUs, mediaPeriodId?.periodUid)
     }
@@ -177,10 +269,14 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
         observer.outputFormat(format, mediaFormat)
     }
     override fun renderOutputBuffer(codec: MediaCodecAdapter, index: Int, presentationTimeUs: Long) {
+        firstOutputPending = false
+        observer.verifyFormatBeforeRelease()
         super.renderOutputBuffer(codec, index, presentationTimeUs)
         observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
     }
     override fun renderOutputBufferV21(codec: MediaCodecAdapter, index: Int, presentationTimeUs: Long, releaseTimeNs: Long) {
+        firstOutputPending = false
+        observer.verifyFormatBeforeRelease()
         super.renderOutputBufferV21(codec, index, presentationTimeUs, releaseTimeNs)
         observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)
     }

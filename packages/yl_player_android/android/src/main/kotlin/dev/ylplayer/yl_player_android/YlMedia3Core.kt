@@ -205,6 +205,7 @@ internal class YlMedia3Core(
         val renderersFactory = (renderersFactoryOverride?.invoke(context, outputObserver)
             ?: YlOutputRenderersFactory(context, outputObserver))
             .also {
+                it.allowDashPrewarming = dashVideoFamily != null && deviceProfile.tier != YlDeviceTier.CONSTRAINED
                 it.allowEac3SoftwareAudio = protectedDrm == null && dashVideoFamily == null &&
                     deviceProfile.isTelevision && deviceProfile.signals.apiLevel in 24..28
                 it.useConstrainedTvAudioBuffer = protectedDrm == null && dashVideoFamily == null &&

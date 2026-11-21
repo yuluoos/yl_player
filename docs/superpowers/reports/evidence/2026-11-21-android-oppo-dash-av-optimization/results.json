@@ -1,0 +1,1652 @@
+{
+  "device": "OPPO CPH2065",
+  "api": 31,
+  "base": "4df15c8963b80f1a43e09f4a81c171f4bde58545",
+  "sourcesSha256": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "ff56164fa6eb9631885db0ab1acec84264246bcf93c9f0239822e774306e61bb",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "6b035e1be4cbe13d0773fdad326193e77e1adb71d73d54e9b4bb6973c174fe06",
+    "packages/yl_player_android/android/src/test/kotlin/dev/ylplayer/yl_player_android/YlMedia3FixedVideoTest.kt": "7b1b9037b56615f1498402d5b4639cecc533cd598c08cbc5ebf08e09397dfbdc",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashJointInstrumentedTest.kt": "d5f978a9bdbad37ed31eb31f86b2fb5d75cbc33f3aa7863288393c92b90da50f",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashSurfaceProbe.kt": "4d848bc5aa6e7f0aeb639355e06b6844a04a96362f514f6ba918c7940ee7aee1",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashTimingTrace.kt": "c5aaa10a2a5372c00a53c1085c5039b8672202b1aa430cc7e5063a84717edf5f",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashPcmInstrumentedTest.kt": "f1809113db1a99f5f638303340f5707ae7a39a77ce671f4beb40da47add94f24",
+    "packages/yl_player_android/android/src/androidTest/kotlin/dev/ylplayer/yl_player_android/YlDashLifecycleInstrumentedTest.kt": "2292e67aeb6b01a404f5d12a873116017bd6e669adb8369e7a2b951de6a98ff5"
+  },
+  "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+  "baseline": {
+    "path": "docs/superpowers/reports/evidence/2026-11-21-android-oppo-dash-frame-timing/results.json",
+    "sha256": "b6a3476ff3d17d23f5b95ece98bdc4b9fdfba0dad922e2f224b792003510e254",
+    "batches": [
+      "final-baseline",
+      "final-controls"
+    ]
+  },
+  "batches": {
+    "final": {
+      "apkSha256": "612b5f7519795db966b4f8f15779877ca780c5a8b95d611f8dd9a1957a8c0ca4",
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "frames": 192,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -42588.923,
+          "firstWriteReturnUs": -20566.77,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -20604.231,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 16287.692,
+          "switch": {
+            "ptsUs": 4000000,
+            "previousPtsUs": 3958333,
+            "nextPtsUs": 4041666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 38
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 38
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 3852975.46,
+            "audioLeadAtMetadataUs": 24823,
+            "deltaUs": -24684,
+            "rawDeltaUs": -36798,
+            "metadataToReleaseUs": -40.615,
+            "gpuReadUs": 6319.616,
+            "releaseToAudioObservationUs": 12114.461,
+            "gpuEndToAudioObservationUs": 4098.23,
+            "nextDeltaUs": 14729
+          },
+          "manifestPreparedToFirstReleaseMs": 373.476615
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "frames": 192,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -34284.615,
+          "firstWriteReturnUs": -14164.23,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -14200.615,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 17052.693,
+          "switch": {
+            "ptsUs": 4000000,
+            "previousPtsUs": 3958333,
+            "nextPtsUs": 4041666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 52
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 41
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 3748388.383,
+            "audioLeadAtMetadataUs": 22589,
+            "deltaUs": -22416,
+            "rawDeltaUs": -32732,
+            "metadataToReleaseUs": -100.23,
+            "gpuReadUs": 5482.846,
+            "releaseToAudioObservationUs": 10316.923,
+            "gpuEndToAudioObservationUs": 2814.154,
+            "nextDeltaUs": -171
+          },
+          "manifestPreparedToFirstReleaseMs": 305.279692
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "frames": 192,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -47124.308,
+          "firstWriteReturnUs": -33349.231,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -33371.615,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -14450.692,
+          "switch": {
+            "ptsUs": 4000000,
+            "previousPtsUs": 3958333,
+            "nextPtsUs": 4041666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 50
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 60
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 3847745.461,
+            "audioLeadAtMetadataUs": 38538,
+            "deltaUs": -38464,
+            "rawDeltaUs": -44860,
+            "metadataToReleaseUs": -32.615,
+            "gpuReadUs": 4360.847,
+            "releaseToAudioObservationUs": 6396.385,
+            "gpuEndToAudioObservationUs": 669.0,
+            "nextDeltaUs": 9211
+          },
+          "manifestPreparedToFirstReleaseMs": 287.146461
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -37461.231,
+          "firstWriteReturnUs": -20092.0,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -20111.0,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -9674.769,
+          "manifestPreparedToFirstReleaseMs": 270.027461
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -21761.538,
+          "firstWriteReturnUs": -7256.615,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -7274.538,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 27051.308,
+          "manifestPreparedToFirstReleaseMs": 254.625308
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -22839.615,
+          "firstWriteReturnUs": -8180.615,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -8202.154,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 29977.231,
+          "manifestPreparedToFirstReleaseMs": 282.182769
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "frames": 84,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -24870.846,
+          "firstWriteReturnUs": -8699.692,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -8720.077,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 18233.846,
+          "manifestPreparedToFirstReleaseMs": 256.523
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "frames": 84,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -25682.461,
+          "firstWriteReturnUs": -13473.153,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -13490.769,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -7877.23,
+          "manifestPreparedToFirstReleaseMs": 238.419692
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "frames": 84,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -39643.769,
+          "firstWriteReturnUs": -20833.539,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -20853.616,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -11158.231,
+          "manifestPreparedToFirstReleaseMs": 282.301461
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "frames": 69,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -38184.923,
+          "firstWriteReturnUs": -23048.308,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -23063.308,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -12911.077,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1541666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 55
+              },
+              {
+                "name": "c2.mtk.hevc.decoder",
+                "initMs": 46
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1584719.309,
+            "audioLeadAtMetadataUs": 43103,
+            "deltaUs": -43029,
+            "rawDeltaUs": -59720,
+            "metadataToReleaseUs": -36.846,
+            "gpuReadUs": 7985.539,
+            "releaseToAudioObservationUs": 16691.616,
+            "gpuEndToAudioObservationUs": 7453.846,
+            "nextDeltaUs": -147
+          },
+          "manifestPreparedToFirstReleaseMs": 216.570846
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "frames": 66,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -34598.846,
+          "firstWriteReturnUs": -14204.0,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -14222.462,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -10013.231,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1625000,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 62
+              },
+              {
+                "name": "c2.mtk.hevc.decoder",
+                "initMs": 66
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1471901.155,
+            "audioLeadAtMetadataUs": 50536,
+            "deltaUs": -50471,
+            "rawDeltaUs": -60752,
+            "metadataToReleaseUs": -37.0,
+            "gpuReadUs": 5122.077,
+            "releaseToAudioObservationUs": 10281.615,
+            "gpuEndToAudioObservationUs": 2752.692,
+            "nextDeltaUs": 16476
+          },
+          "manifestPreparedToFirstReleaseMs": 321.477231
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "frames": 68,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -37924.616,
+          "firstWriteReturnUs": -25065.847,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -25082.847,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -14732.616,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 52
+              },
+              {
+                "name": "c2.mtk.hevc.decoder",
+                "initMs": 46
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1588514.155,
+            "audioLeadAtMetadataUs": 49171,
+            "deltaUs": -49018,
+            "rawDeltaUs": -66124,
+            "metadataToReleaseUs": -77.846,
+            "gpuReadUs": 9469.846,
+            "releaseToAudioObservationUs": 17106.385,
+            "gpuEndToAudioObservationUs": 5797.462,
+            "nextDeltaUs": 5753
+          },
+          "manifestPreparedToFirstReleaseMs": 253.465615
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "frames": 68,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -23069.307,
+          "firstWriteReturnUs": -6681.846,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -6695.692,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 27140.847,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 51
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 45
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1483854.694,
+            "audioLeadAtMetadataUs": 52367,
+            "deltaUs": -52250,
+            "rawDeltaUs": -67445,
+            "metadataToReleaseUs": -52.0,
+            "gpuReadUs": 5572.923,
+            "releaseToAudioObservationUs": 15195.615,
+            "gpuEndToAudioObservationUs": 8274.769,
+            "nextDeltaUs": 20137
+          },
+          "manifestPreparedToFirstReleaseMs": 275.809462
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "frames": 67,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -20842.462,
+          "firstWriteReturnUs": -5338.77,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -5356.231,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 24326.538,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 52
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 55
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1455438.617,
+            "audioLeadAtMetadataUs": 43716,
+            "deltaUs": -43597,
+            "rawDeltaUs": -53515,
+            "metadataToReleaseUs": -64.693,
+            "gpuReadUs": 5767.461,
+            "releaseToAudioObservationUs": 9918.154,
+            "gpuEndToAudioObservationUs": 2606.385,
+            "nextDeltaUs": 20293
+          },
+          "manifestPreparedToFirstReleaseMs": 270.937154
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "frames": 68,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -26383.077,
+          "firstWriteReturnUs": -8416.231,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -8467.615,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 25189.0,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1541666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 53
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 58
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1466875.694,
+            "audioLeadAtMetadataUs": 45314,
+            "deltaUs": -45073,
+            "rawDeltaUs": -54350,
+            "metadataToReleaseUs": -85.308,
+            "gpuReadUs": 5023.615,
+            "releaseToAudioObservationUs": 9277.539,
+            "gpuEndToAudioObservationUs": 1758.462,
+            "nextDeltaUs": -272
+          },
+          "manifestPreparedToFirstReleaseMs": 259.152308
+        }
+      ],
+      "strictGate": {
+        "passed": true
+      },
+      "frameStatistics": {
+        "manifest": {
+          "runs": 3,
+          "rows": 576,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -38464,
+            "maximum": 23447,
+            "absoluteMaximum": 38464,
+            "absoluteP95": 19881
+          },
+          "rawDeltaUs": {
+            "minimum": -44860,
+            "maximum": 65418,
+            "absoluteMaximum": 65418,
+            "absoluteP95": 57271
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 16.164856,
+            "maximum": 27.375276,
+            "p95": 27.375276
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 8484,
+            "maximum": 8724,
+            "p95": 8724
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "independent-pto": {
+          "runs": 3,
+          "rows": 288,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -13482,
+            "maximum": 24682,
+            "absoluteMaximum": 24682,
+            "absoluteP95": 21806
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 65849,
+            "absoluteMaximum": 65849,
+            "absoluteP95": 58910
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 4412,
+            "maximum": 4475,
+            "p95": 4475
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "clip-end": {
+          "runs": 3,
+          "rows": 252,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -12811,
+            "maximum": 20661,
+            "absoluteMaximum": 20661,
+            "absoluteP95": 17393
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 62517,
+            "absoluteMaximum": 62517,
+            "absoluteP95": 53112
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3894,
+            "maximum": 3958,
+            "p95": 3958
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "cross-codec": {
+          "runs": 3,
+          "rows": 203,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -50471,
+            "maximum": 21236,
+            "absoluteMaximum": 50471,
+            "absoluteP95": 18734
+          },
+          "rawDeltaUs": {
+            "minimum": -66124,
+            "maximum": 65365,
+            "absoluteMaximum": 66124,
+            "absoluteP95": 55456
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 49.276667,
+            "maximum": 59.10140799999999,
+            "p95": 59.10140799999999
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3432,
+            "maximum": 3497,
+            "p95": 3497
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "resolution": {
+          "runs": 3,
+          "rows": 203,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -52250,
+            "maximum": 21704,
+            "absoluteMaximum": 52250,
+            "absoluteP95": 20720
+          },
+          "rawDeltaUs": {
+            "minimum": -67445,
+            "maximum": 65392,
+            "absoluteMaximum": 67445,
+            "absoluteP95": 59128
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 32.212508,
+            "maximum": 57.164612000000005,
+            "p95": 57.164612000000005
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3416,
+            "maximum": 3433,
+            "p95": 3433
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        }
+      }
+    },
+    "controls": {
+      "apkSha256": "612b5f7519795db966b4f8f15779877ca780c5a8b95d611f8dd9a1957a8c0ca4",
+      "runs": [
+        {
+          "fixture": "same-format-1500ms",
+          "run": 0,
+          "frames": 72,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -59737.923,
+          "firstWriteReturnUs": -40599.461,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -40627.692,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -24110.769,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1541666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 59
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 30
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1576288.619,
+            "audioLeadAtMetadataUs": 42273,
+            "deltaUs": -42102,
+            "rawDeltaUs": -52495,
+            "metadataToReleaseUs": -36.923,
+            "gpuReadUs": 6100.307,
+            "releaseToAudioObservationUs": 10393.538,
+            "gpuEndToAudioObservationUs": 2320.923,
+            "nextDeltaUs": -447
+          },
+          "manifestPreparedToFirstReleaseMs": 509.050231
+        },
+        {
+          "fixture": "delayed-audio-init",
+          "run": 0,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -29767.384,
+          "firstWriteReturnUs": -12231.077,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -12264.615,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 25128.923,
+          "manifestPreparedToFirstReleaseMs": 371.876846
+        },
+        {
+          "fixture": "same-format-1500ms",
+          "run": 1,
+          "frames": 72,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -49022.077,
+          "firstWriteReturnUs": -27172.307,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -27204.615,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -15746.461,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1541666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 47
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 48
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1526980.312,
+            "audioLeadAtMetadataUs": 28470,
+            "deltaUs": -28360,
+            "rawDeltaUs": -35083,
+            "metadataToReleaseUs": -38.769,
+            "gpuReadUs": 3583.385,
+            "releaseToAudioObservationUs": 6723.153,
+            "gpuEndToAudioObservationUs": 2126.538,
+            "nextDeltaUs": -562
+          },
+          "manifestPreparedToFirstReleaseMs": 295.744307
+        },
+        {
+          "fixture": "delayed-audio-init",
+          "run": 1,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -39123.693,
+          "firstWriteReturnUs": -20280.308,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -20319.693,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -9992.693,
+          "manifestPreparedToFirstReleaseMs": 350.669308
+        },
+        {
+          "fixture": "same-format-1500ms",
+          "run": 2,
+          "frames": 72,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -31309.846,
+          "firstWriteReturnUs": -14712.846,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -14733.538,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -8660.308,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1541666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 51
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 45
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1508601.466,
+            "audioLeadAtMetadataUs": 27679,
+            "deltaUs": -27557,
+            "rawDeltaUs": -42068,
+            "metadataToReleaseUs": -57.0,
+            "gpuReadUs": 9330.692,
+            "releaseToAudioObservationUs": 14511.461,
+            "gpuEndToAudioObservationUs": 2813.0,
+            "nextDeltaUs": 6728
+          },
+          "manifestPreparedToFirstReleaseMs": 266.898769
+        },
+        {
+          "fixture": "delayed-audio-init",
+          "run": 2,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -25824.616,
+          "firstWriteReturnUs": -8395.154,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -8427.385,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 32447.0,
+          "manifestPreparedToFirstReleaseMs": 338.398153
+        }
+      ],
+      "strictGate": null,
+      "frameStatistics": {
+        "same-format-1500ms": {
+          "runs": 3,
+          "rows": 216,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -42102,
+            "maximum": 35148,
+            "absoluteMaximum": 42102,
+            "absoluteP95": 19410
+          },
+          "rawDeltaUs": {
+            "minimum": -52495,
+            "maximum": 60746,
+            "absoluteMaximum": 60746,
+            "absoluteP95": 58006
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 18.476112,
+            "maximum": 53.046649,
+            "p95": 53.046649
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3433,
+            "maximum": 3945,
+            "p95": 3945
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "delayed-audio-init": {
+          "runs": 3,
+          "rows": 288,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -14853,
+            "maximum": 20338,
+            "absoluteMaximum": 20338,
+            "absoluteP95": 16931
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 62049,
+            "absoluteMaximum": 62049,
+            "absoluteP95": 55201
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 4514,
+            "maximum": 4614,
+            "p95": 4614
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        }
+      }
+    },
+    "repeat": {
+      "apkSha256": "612b5f7519795db966b4f8f15779877ca780c5a8b95d611f8dd9a1957a8c0ca4",
+      "runs": [
+        {
+          "fixture": "manifest",
+          "run": 0,
+          "frames": 192,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -50545.308,
+          "firstWriteReturnUs": -28628.923,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -28663.077,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -13574.538,
+          "switch": {
+            "ptsUs": 4000000,
+            "previousPtsUs": 3958333,
+            "nextPtsUs": 4041666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 50
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 36
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 3856605.25,
+            "audioLeadAtMetadataUs": 36342,
+            "deltaUs": -36141,
+            "rawDeltaUs": -47050,
+            "metadataToReleaseUs": -53.615,
+            "gpuReadUs": 6294.769,
+            "releaseToAudioObservationUs": 10909.846,
+            "gpuEndToAudioObservationUs": 3160.231,
+            "nextDeltaUs": 13794
+          },
+          "manifestPreparedToFirstReleaseMs": 524.246154
+        },
+        {
+          "fixture": "manifest",
+          "run": 1,
+          "frames": 192,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -36501.154,
+          "firstWriteReturnUs": -21638.385,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -21668.923,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -10693.461,
+          "switch": {
+            "ptsUs": 4000000,
+            "previousPtsUs": 3958333,
+            "nextPtsUs": 4041666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 62
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 51
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 3785330.482,
+            "audioLeadAtMetadataUs": 23099,
+            "deltaUs": -22892,
+            "rawDeltaUs": -32098,
+            "metadataToReleaseUs": -123.0,
+            "gpuReadUs": 5331.153,
+            "releaseToAudioObservationUs": 9206.077,
+            "gpuEndToAudioObservationUs": 2908.847,
+            "nextDeltaUs": 15944
+          },
+          "manifestPreparedToFirstReleaseMs": 301.577
+        },
+        {
+          "fixture": "manifest",
+          "run": 2,
+          "frames": 192,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -25282.692,
+          "firstWriteReturnUs": -8344.308,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -8363.692,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 30018.231,
+          "switch": {
+            "ptsUs": 4000000,
+            "previousPtsUs": 3958333,
+            "nextPtsUs": 4041666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 57
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 57
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 3790548.866,
+            "audioLeadAtMetadataUs": 36852,
+            "deltaUs": -36729,
+            "rawDeltaUs": -49921,
+            "metadataToReleaseUs": -45.847,
+            "gpuReadUs": 5967.384,
+            "releaseToAudioObservationUs": 13192.539,
+            "gpuEndToAudioObservationUs": 5828.308,
+            "nextDeltaUs": 6489
+          },
+          "manifestPreparedToFirstReleaseMs": 323.469538
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 0,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -25402.231,
+          "firstWriteReturnUs": -11699.462,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -11725.615,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 22230.462,
+          "manifestPreparedToFirstReleaseMs": 226.76423
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 1,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -43385.538,
+          "firstWriteReturnUs": -28025.846,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -28050.461,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -9667.154,
+          "manifestPreparedToFirstReleaseMs": 251.51877
+        },
+        {
+          "fixture": "independent-pto",
+          "run": 2,
+          "frames": 96,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -31880.385,
+          "firstWriteReturnUs": -17451.154,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -17471.692,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -12437.308,
+          "manifestPreparedToFirstReleaseMs": 248.989616
+        },
+        {
+          "fixture": "clip-end",
+          "run": 0,
+          "frames": 84,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -27653.846,
+          "firstWriteReturnUs": -12825.307,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -12843.461,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -8148.923,
+          "manifestPreparedToFirstReleaseMs": 292.871692
+        },
+        {
+          "fixture": "clip-end",
+          "run": 1,
+          "frames": 84,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -23592.231,
+          "firstWriteReturnUs": -11225.462,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -11244.616,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 25616.076,
+          "manifestPreparedToFirstReleaseMs": 217.182462
+        },
+        {
+          "fixture": "clip-end",
+          "run": 2,
+          "frames": 84,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -34007.693,
+          "firstWriteReturnUs": -18668.693,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -18687.077,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -11711.693,
+          "manifestPreparedToFirstReleaseMs": 257.597923
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 0,
+          "frames": 68,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -42321.461,
+          "firstWriteReturnUs": -29649.769,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -29664.846,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -20022.384,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 51
+              },
+              {
+                "name": "c2.mtk.hevc.decoder",
+                "initMs": 42
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1593326.714,
+            "audioLeadAtMetadataUs": 39480,
+            "deltaUs": -39352,
+            "rawDeltaUs": -48845,
+            "metadataToReleaseUs": -64.077,
+            "gpuReadUs": 5933.0,
+            "releaseToAudioObservationUs": 9493.539,
+            "gpuEndToAudioObservationUs": 2112.231,
+            "nextDeltaUs": 9517
+          },
+          "manifestPreparedToFirstReleaseMs": 239.504615
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 1,
+          "frames": 67,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -35112.0,
+          "firstWriteReturnUs": -19812.231,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -19834.385,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -13114.385,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 59
+              },
+              {
+                "name": "c2.mtk.hevc.decoder",
+                "initMs": 64
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1534909.33,
+            "audioLeadAtMetadataUs": 58982,
+            "deltaUs": -58819,
+            "rawDeltaUs": -76754,
+            "metadataToReleaseUs": -85.462,
+            "gpuReadUs": 6513.539,
+            "releaseToAudioObservationUs": 17935.308,
+            "gpuEndToAudioObservationUs": 9412.615,
+            "nextDeltaUs": 7473
+          },
+          "manifestPreparedToFirstReleaseMs": 283.280307
+        },
+        {
+          "fixture": "cross-codec",
+          "run": 2,
+          "frames": 68,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -24383.923,
+          "firstWriteReturnUs": -11412.0,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -11427.384,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -6935.923,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1541666,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 45
+              },
+              {
+                "name": "c2.mtk.hevc.decoder",
+                "initMs": 62
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1452448.638,
+            "audioLeadAtMetadataUs": 43567,
+            "deltaUs": -43438,
+            "rawDeltaUs": -53850,
+            "metadataToReleaseUs": -66.461,
+            "gpuReadUs": 6564.616,
+            "releaseToAudioObservationUs": 10412.923,
+            "gpuEndToAudioObservationUs": 2143.769,
+            "nextDeltaUs": 6379
+          },
+          "manifestPreparedToFirstReleaseMs": 264.11477
+        },
+        {
+          "fixture": "resolution",
+          "run": 0,
+          "frames": 67,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -21705.23,
+          "firstWriteReturnUs": -6879.769,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -6896.307,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 30316.0,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 51
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 60
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1432085.638,
+            "audioLeadAtMetadataUs": 50816,
+            "deltaUs": -50267,
+            "rawDeltaUs": -61458,
+            "metadataToReleaseUs": -269.538,
+            "gpuReadUs": 4822.769,
+            "releaseToAudioObservationUs": 11191.923,
+            "gpuEndToAudioObservationUs": 3110.385,
+            "nextDeltaUs": 20403
+          },
+          "manifestPreparedToFirstReleaseMs": 277.490154
+        },
+        {
+          "fixture": "resolution",
+          "run": 1,
+          "frames": 67,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -53286.154,
+          "firstWriteReturnUs": -34655.154,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -34687.077,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": -9541.616,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 54
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 68
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1472848.869,
+            "audioLeadAtMetadataUs": 49652,
+            "deltaUs": -49534,
+            "rawDeltaUs": -60907,
+            "metadataToReleaseUs": -63.077,
+            "gpuReadUs": 5824.924,
+            "releaseToAudioObservationUs": 11373.308,
+            "gpuEndToAudioObservationUs": 3861.615,
+            "nextDeltaUs": 21549
+          },
+          "manifestPreparedToFirstReleaseMs": 256.837154
+        },
+        {
+          "fixture": "resolution",
+          "run": 2,
+          "frames": 67,
+          "missingClockPtsUs": [],
+          "firstFrameClockUs": 0,
+          "firstWriteEnterUs": -19573.154,
+          "firstWriteReturnUs": -5053.23,
+          "firstWriteAccepted": true,
+          "clockAtWriteEnterUs": null,
+          "clockAtWriteReturnUs": 0,
+          "firstClockObservedUs": -5072.538,
+          "firstClockPositionUs": 0,
+          "firstSinkPlayUs": 34071.077,
+          "switch": {
+            "ptsUs": 1500000,
+            "previousPtsUs": 1458333,
+            "nextPtsUs": 1583333,
+            "videoReuseResult": null,
+            "discardReasons": null,
+            "decoders": [
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 51
+              },
+              {
+                "name": "c2.mtk.avc.decoder",
+                "initMs": 62
+              }
+            ],
+            "newDecoderReadyBeforeReleaseUs": 1450492.639,
+            "audioLeadAtMetadataUs": 49588,
+            "deltaUs": -49450,
+            "rawDeltaUs": -66346,
+            "metadataToReleaseUs": -66.384,
+            "gpuReadUs": 9352.923,
+            "releaseToAudioObservationUs": 16896.615,
+            "gpuEndToAudioObservationUs": 5554.461,
+            "nextDeltaUs": 9118
+          },
+          "manifestPreparedToFirstReleaseMs": 258.153
+        }
+      ],
+      "strictGate": {
+        "passed": true
+      },
+      "frameStatistics": {
+        "manifest": {
+          "runs": 3,
+          "rows": 576,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -36729,
+            "maximum": 24772,
+            "absoluteMaximum": 36729,
+            "absoluteP95": 18822
+          },
+          "rawDeltaUs": {
+            "minimum": -51665,
+            "maximum": 63742,
+            "absoluteMaximum": 63742,
+            "absoluteP95": 57825
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 15.631098000000001,
+            "maximum": 53.561509,
+            "p95": 53.561509
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 8476,
+            "maximum": 8905,
+            "p95": 8905
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "independent-pto": {
+          "runs": 3,
+          "rows": 288,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -11034,
+            "maximum": 23351,
+            "absoluteMaximum": 23351,
+            "absoluteP95": 17456
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 63930,
+            "absoluteMaximum": 63930,
+            "absoluteP95": 53453
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 4373,
+            "maximum": 4451,
+            "p95": 4451
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "clip-end": {
+          "runs": 3,
+          "rows": 252,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -10766,
+            "maximum": 20040,
+            "absoluteMaximum": 20040,
+            "absoluteP95": 11065
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 60250,
+            "absoluteMaximum": 60250,
+            "absoluteP95": 48010
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3881,
+            "maximum": 3971,
+            "p95": 3971
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "cross-codec": {
+          "runs": 3,
+          "rows": 203,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -58819,
+            "maximum": 30241,
+            "absoluteMaximum": 58819,
+            "absoluteP95": 25158
+          },
+          "rawDeltaUs": {
+            "minimum": -76754,
+            "maximum": 70025,
+            "absoluteMaximum": 76754,
+            "absoluteP95": 59899
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 31.598272999999992,
+            "maximum": 82.69761799999999,
+            "p95": 82.69761799999999
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3422,
+            "maximum": 3452,
+            "p95": 3452
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "resolution": {
+          "runs": 3,
+          "rows": 201,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -50267,
+            "maximum": 21585,
+            "absoluteMaximum": 50267,
+            "absoluteP95": 21549
+          },
+          "rawDeltaUs": {
+            "minimum": -66346,
+            "maximum": 63492,
+            "absoluteMaximum": 66346,
+            "absoluteP95": 58450
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 38.303082,
+            "maximum": 59.752455,
+            "p95": 59.752455
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3415,
+            "maximum": 3440,
+            "p95": 3440
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        }
+      }
+    }
+  },
+  "nativeRegression": {
+    "passedTests": [
+      "leadingAudioGapIsRealSilence",
+      "clipEndHasExactlyThreeAndHalfSecondsOfPcm",
+      "crossPeriodHasExactlyThreeSecondsOfPcm",
+      "internalAudioGapIsRealSilence",
+      "overlapHasSevenSecondsOfPcmAndConsumedClock",
+      "seekInsideAacBufferPreservesDecodedPrerollTail",
+      "independentPtoHasExactlyFourSecondsOfPcm",
+      "trailingAudioGapIsRealSilence",
+      "foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress"
+    ],
+    "apkSha256": "612b5f7519795db966b4f8f15779877ca780c5a8b95d611f8dd9a1957a8c0ca4"
+  },
+  "flutter": {
+    "dash_program_periods_test": {
+      "testCases": [
+        "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "managed DASH programme independent-pto",
+        "managed DASH programme clip-end",
+        "managed DASH programme gap",
+        "managed DASH programme overlap",
+        "managed DASH programme unknown-middle",
+        "managed DASH programme multiple-base",
+        "managed DASH programme fractional-microsecond",
+        "managed DASH programme cross-codec",
+        "managed DASH programme resolution",
+        "managed DASH programme audio-added",
+        "managed DASH programme absolute-base",
+        "managed DASH programme absolute-list",
+        "managed DASH programme audio-gap-leading",
+        "managed DASH programme audio-gap-internal",
+        "managed DASH programme audio-gap-trailing",
+        "managed DASH programme video-gap-leading",
+        "managed DASH programme video-gap-internal",
+        "managed DASH programme video-gap-trailing"
+      ],
+      "passed": true,
+      "frameworkTerminal": true,
+      "terminalPassCount": 20,
+      "targetSha256": "0bb74d7e116b351381ac1975ef6fcdf40a3f155dbf5c98b227b6805c975cc3e5",
+      "apkSha256": "c7320c00a340c827fe059a46b7afe5f028f7e18c5d51a9c2fad9ac9b856cc4e1"
+    },
+    "dash_program_cancellation_test": {
+      "testCases": [
+        "DASH delayed reconfiguration stop rejects late output",
+        "DASH delayed reconfiguration replacement rejects late output"
+      ],
+      "passed": true,
+      "frameworkTerminal": true,
+      "terminalPassCount": 3,
+      "targetSha256": "3e797d9a606ba98eddbdc0a7b365146bfdeaa068c7f6278e7393c5d750d29798",
+      "apkSha256": "08c180beab96c3ea0d5496c22559ec6bbe2206c9f1faf119d539fb306180148e"
+    },
+    "dash_video_gap_subtitle_test": {
+      "testCases": [
+        "DASH leading video gap keeps subtitle over actual black output",
+        "DASH internal video gap keeps subtitle over actual black output",
+        "DASH trailing video gap keeps subtitle over actual black output"
+      ],
+      "passed": true,
+      "frameworkTerminal": true,
+      "terminalPassCount": 4,
+      "targetSha256": "c2c1c777abbcff067b0caaf3c6ac846d801cdecfee8c6ee10c34b129004b8e9e",
+      "apkSha256": "fbd667bebdd9e3712c26b403d7bd07f571e82aefb65f83e003fb691b8d5adb41"
+    },
+    "android_dash_playback_test": {
+      "testCases": [
+        "explicit extensionless and automatic MPD render and preserve the eight-second Period timeline",
+        "DASH sameOrigin keeps ordinary headers and applies inherited credential policy",
+        "DASH crossOrigin keeps ordinary headers and applies inherited credential policy",
+        "DASH returnToPrimary keeps ordinary headers and applies inherited credential policy",
+        "DASH segment HTTP failure becomes a public sanitized failure",
+        "stopping delayed DASH suppresses old-session events"
+      ],
+      "passed": true,
+      "frameworkTerminal": true,
+      "terminalPassCount": 7,
+      "targetSha256": "7a7f3a6e4299fb30ba73e610744c3c0e9fb79af860f4987a5343ed91fd4ffe91",
+      "apkSha256": "cf0b12e48f2cac902d607045e94272cd3a751698670591cb6b64aea5ba8ef438"
+    }
+  },
+  "programmeCodecSamples": {
+    "count": 112,
+    "maximum": 2,
+    "lastThree": [
+      0,
+      0,
+      0
+    ],
+    "lastPhase": "All tests passed!"
+  },
+  "jvm": {
+    "tests": 614,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 3
+  },
+  "membersSha256": {
+    "android_dash_playback_test/capture.log": "4d9ef18319895111ad11d8a424ced2f2baa72f855720ca0ce49ee4830031efb7",
+    "android_dash_playback_test/receipt.json": "8daf30e2a3c2237b4baf1837c6730fcce180243a2f67b3a45525da5d35a6d642",
+    "codec-counts.json": "eaf5ff75e53d3edb00e91b513c663fa271e135ea50c8ddc0396052530a452067",
+    "controls/junit.log": "2a5c01a9f0be209c02fb4004d7e5e2723ce0fd3dde07c1bcc322c48224eeb770",
+    "controls/receipt.json": "b27bcd3f006608e76f6b5fe6001d42148e595377de7c9bd865962e8479281a96",
+    "controls/samples.log": "e0826ec8a5fc75edd833495dbfeb703d001d73004de7f1db1bba0c44521471da",
+    "dash_program_cancellation_test/capture.log": "bffa428ab52c15b0ee2d2286de113d4e53906404f10c8d95be6f8879ec2b1e27",
+    "dash_program_cancellation_test/receipt.json": "8b33b00bb6a9b770755e30085dc8733b2750640e3547285a83d38cfed3ecb1a3",
+    "dash_program_periods_test/capture.log": "e3ed30231947f7a37b1bee2695aa27eaf9d0348329c0e582cee5a219cd4b7f4d",
+    "dash_program_periods_test/receipt.json": "83ee511d33a47ffcb20fbf4f4f9db6bebaa7f9c4f0862e49f1958d61e40c0b6a",
+    "dash_video_gap_subtitle_test/capture.log": "174c23b790625a47480220b24e5c437e0d55d3a85c3a12ba29c9560d9c0d2137",
+    "dash_video_gap_subtitle_test/receipt.json": "e7efed2db4609c5dea7415a05c209e05bd48d1045d6fd1aa035e9fe8817f8823",
+    "final/junit.log": "358b689111fe1b247a9a6ca8551d77824d69f5a6ad6c325b5a305b161b23612b",
+    "final/receipt.json": "b27bcd3f006608e76f6b5fe6001d42148e595377de7c9bd865962e8479281a96",
+    "final/samples.log": "d2e92a0902428766bf4acffe1e4c8f93675629db0479beedad96bb4f00f9a586",
+    "native-regression/junit.log": "1f0d257ce5f7d42c1ee61b3042cba33c131d36465d88fbff64e40c280948b552",
+    "native-regression/receipt.json": "fc806430f7ccf0f874757dd1cc7b08cfa02982bb9a53d1b61f0927e729beda11",
+    "repeat/junit.log": "a06a005d96f76a4642e842a91a72a30948484f41fe3535ef6da0788eab6fb9b9",
+    "repeat/receipt.json": "b27bcd3f006608e76f6b5fe6001d42148e595377de7c9bd865962e8479281a96",
+    "repeat/samples.log": "6b2e24e81d8669d5bd46e3fe13c9785deba1f2101afcadccab8eaff6a82e3fde",
+    "unit/classes.json": "6e41250231180fc281739fef1a59e95b61adb4fa700f6a1535a77c3a23ebbf2d",
+    "unit/jdk21-tests.gradle": "b06b87782b2437ac10f522bf81fbbbda99f86749d7f9750aa69f02cf72e07939",
+    "unit/test-results.log": "45eebb9a0b91973e015b97fafab8d50f72aa5cbccaa587eb317162fecc13e7e3"
+  },
+  "capturesSha256": "503552dc0c710a20f694b57460b9a1bc4e2a4ae50837080d95d396c0d470a1f9"
+}

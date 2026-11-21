@@ -182,6 +182,35 @@ class YlMedia3FixedVideoTest {
         assertEquals(1280.0, received.last().second!!.encodedSize.width)
     }
 
+    @Test fun `prewarmed streams publish their own geometry only after surface transfer`() {
+        val queued = mutableListOf<() -> Unit>()
+        val received = mutableListOf<Pair<Any?, AndroidVideoGeometryMessage?>>()
+        val primary = YlVideoOutputObserver(queued::add) { uid, geometry, _ -> received.add(uid to geometry) }
+        val next = primary.forPrewarming()
+        fun drain() { queued.forEach { it() }; queued.clear() }
+        val firstFormat = Format.Builder().setWidth(320).setHeight(180).build()
+        primary.stream(0, 0, "p0")
+        primary.outputFormat(firstFormat, null)
+        primary.rendered(0, 0)
+        next.reset(1, 1, "p1")
+        next.outputFormat(firstFormat.buildUpon().setWidth(640).setHeight(360).build(), null)
+        next.rendered(1, 1)
+        drain()
+        assertEquals(listOf("p0"), received.map { it.first })
+        primary.reset(0, 0, "p0")
+        next.takeOutput()
+        primary.reset()
+        next.rendered(1, 1)
+        drain()
+        assertEquals(listOf("p0", "p1"), received.map { it.first })
+        assertEquals(640.0, received.last().second!!.encodedSize.width)
+        next.reset(1, 1, "p1")
+        next.rendered(1, 1)
+        primary.invalidate()
+        drain()
+        assertEquals(2, received.size)
+    }
+
     @Test fun `core preserves fixed and catalog across transient emptiness then publishes PD01 and sticky reason`() = withCore { core, player, events ->
         val item = MediaItem.Builder().setMediaId("test").build()
         `when`(player.currentMediaItem).thenReturn(item)

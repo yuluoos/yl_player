@@ -85,14 +85,16 @@ internal class YlDashSurfaceProbe(private val playback: Handler) {
     }
     val surface: Surface get() = output.surface
 
-    fun observe(onFrame: (Long, List<Int>) -> Unit, onError: (Throwable) -> Unit) {
+    fun observe(onFrame: (Long, List<Int>, Long, Long) -> Unit, onError: (Throwable) -> Unit) {
         output.texture.setOnFrameAvailableListener({
             try {
+                val gpuStartNs = System.nanoTime()
                 val rgb = output.sample()
+                val gpuEndNs = System.nanoTime()
                 val timestamp = output.texture.timestamp
                 check(playback.post {
                     try {
-                        onFrame(timestamp, rgb)
+                        onFrame(timestamp, rgb, gpuStartNs, gpuEndNs)
                     } catch (error: Exception) {
                         onError(error)
                     }

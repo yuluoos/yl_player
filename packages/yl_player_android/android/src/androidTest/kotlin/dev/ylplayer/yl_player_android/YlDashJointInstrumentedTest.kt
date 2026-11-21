@@ -22,10 +22,22 @@ import java.util.concurrent.TimeUnit
 class YlDashJointInstrumentedTest {
     @Test fun nativeJointBaseline() {
         for (name in listOf("manifest", "independent-pto", "clip-end", "cross-codec", "resolution"))
-            for (run in 0 until 3) measure(name, run)
+            for (run in 0 until 3) DashJointMeasurement.measure(name, run)
     }
-    private data class Frame(val ptsUs: Long, val formatId: String?, val periodStartUs: Long)
-    private fun measure(name: String, run: Int) {
+}
+
+class YlDashJointTimingControlTest {
+    @Test fun timingControls() {
+        for (run in 0 until 3) {
+            DashJointMeasurement.measure("same-format-1500ms", run)
+            DashJointMeasurement.measure("delayed-audio-init", run)
+        }
+    }
+}
+
+private object DashJointMeasurement {
+    private data class Frame(val ptsUs: Long, val formatId: String?, val periodStartUs: Long, val metadataNs: Long, val audioAtMetadataUs: Long?)
+    fun measure(name: String, run: Int) {
         val instrumentation = InstrumentationRegistry.getInstrumentation()
         val context = instrumentation.targetContext
         val assets = instrumentation.context.assets
@@ -33,26 +45,43 @@ class YlDashJointInstrumentedTest {
         var failure: Throwable? = null
         var player: ExoPlayer? = null
         var sink: AudioSink? = null
+        val trace = YlDashTimingTrace()
         var audioOffset = 0L
         var audioStart = 0L
+        fun programmeClock(raw: Long?): Long? =
+            raw?.takeUnless { it == AudioSink.CURRENT_POSITION_NOT_SET }?.let { it - audioOffset + audioStart }
         val frames = LinkedHashMap<Long, Frame>()
         val rows = mutableListOf<JSONObject>()
         val startedAt = android.os.SystemClock.elapsedRealtime()
-        val periodBoundary = when (name) { "manifest" -> 4_000_000L; "cross-codec", "resolution" -> 1_500_000L; else -> Long.MAX_VALUE }
+        val periodBoundary = when (name) { "manifest" -> 4_000_000L; "cross-codec", "resolution", "same-format-1500ms" -> 1_500_000L; else -> Long.MAX_VALUE }
         var probe: YlDashSurfaceProbe? = null
         val server = MockWebServer()
         server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
                 val path = request.path!!.substringBefore('?').removePrefix("/")
                 if (path.contains("..")) return MockResponse().setResponseCode(404)
-                var bytes = assets.open(path).use { it.readBytes() }
+                val asset = when (path) {
+                    "same-format-1500ms.mpd" -> "manifest.mpd"
+                    "delayed-audio-init.mpd" -> "independent-pto.mpd"
+                    else -> path
+                }
+                var bytes = assets.open(asset).use { it.readBytes() }
+                if (path == "same-format-1500ms.mpd") {
+                    // Keep both AVC 320x180 streams and shorten each Period to match the switch fixtures.
+                    bytes = String(bytes).replace("PT8S", "PT3S").replace("PT4S", "PT1.5S").toByteArray()
+                }
                 if (path.endsWith(".mpd")) {
                     // Test-only unique representation IDs identify exact Periods
                     // at the decoder callback; compressed media stays unchanged.
                     var index = 0
                     bytes = Regex("<Representation id=\"0\"").replace(String(bytes)) { "<Representation id=\"p${index++}-video\"" }.toByteArray()
                 }
-                return MockResponse().setBody(Buffer().write(bytes))
+                trace.mark("fixtureResponsePrepared", "path" to path)
+                return MockResponse().setBody(Buffer().write(bytes)).apply {
+                    if (name == "delayed-audio-init" && path == "independent/init-1.m4s") {
+                        setBodyDelay(160, TimeUnit.MILLISECONDS)
+                    }
+                }
             }
         }
         server.start()
@@ -62,10 +91,43 @@ class YlDashJointInstrumentedTest {
                 val renderers = object : YlOutputRenderersFactory(context, YlVideoOutputObserver({ it() }) { _, _, _ -> }) {
                     override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): AudioSink {
                         val actual = object : ForwardingAudioSink(super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams)!!) {
+                            private var firstWrite = true
+                            private var observedClock = false
+
+                            override fun getCurrentPositionUs(sourceEnded: Boolean): Long {
+                                val value = super.getCurrentPositionUs(sourceEnded)
+                                if (!observedClock && value != AudioSink.CURRENT_POSITION_NOT_SET) {
+                                    observedClock = true
+                                    trace.mark("firstObservedClock", "positionUs" to programmeClock(value))
+                                }
+                                return value
+                            }
+
+                            override fun play() {
+                                trace.mark("sinkPlay")
+                                super.play()
+                            }
+
+                            override fun pause() {
+                                trace.mark("sinkPause")
+                                super.pause()
+                            }
+
+                            override fun handleBuffer(buffer: java.nio.ByteBuffer, pts: Long, count: Int): Boolean {
+                                if (!firstWrite) return super.handleBuffer(buffer, pts, count)
+                                firstWrite = false
+                                trace.mark("firstWriteEnter", "clockUs" to programmeClock(getCurrentPositionUs(false)))
+                                val accepted = super.handleBuffer(buffer, pts, count)
+                                trace.mark("firstWriteReturn", "accepted" to accepted,
+                                    "clockUs" to programmeClock(getCurrentPositionUs(false)))
+                                return accepted
+                            }
+
                             override fun configure(config: AudioSink.AudioSinkConfig) {
                                 val metadata = config.format.metadata!!
                                 audioStart = (0 until metadata.length()).map(metadata::get).filterIsInstance<YlDashPcmWindow>().single().start.units(1_000_000)
                                 super.configure(config)
+                                trace.mark("sinkConfigured", "periodStartUs" to audioStart)
                             }
                             override fun setOutputStreamOffsetUs(value: Long) { audioOffset = value; super.setOutputStreamOffsetUs(value) }
                         }
@@ -74,22 +136,28 @@ class YlDashJointInstrumentedTest {
                     }
                 }
                 player = ExoPlayer.Builder(context, renderers).build().also { exo ->
+                    exo.addAnalyticsListener(trace)
                     exo.addListener(object : Player.Listener {
-                        override fun onPlaybackStateChanged(state: Int) { if (state == Player.STATE_ENDED) done.countDown() }
+                        override fun onPlaybackStateChanged(state: Int) {
+                            trace.mark("playerState", "state" to state)
+                            if (state == Player.STATE_ENDED) done.countDown()
+                        }
                         override fun onPlayerError(error: PlaybackException) { failure = error; done.countDown() }
                     })
                     exo.setVideoFrameMetadataListener { pts, release, format, _ ->
                         val start = if (format.id == "p1-video") periodBoundary else 0L
-                        frames[release] = Frame(pts, format.id, start)
+                        val metadataNs = System.nanoTime()
+                        val clock = if (pts <= 125_000L) programmeClock(sink?.getCurrentPositionUs(false)) else null
+                        frames[release] = Frame(pts, format.id, start, metadataNs, clock)
                         while (frames.size > 64) frames.remove(frames.keys.first())
                     }
                     val output = YlDashSurfaceProbe(Handler(exo.playbackLooper))
                     probe = output
-                    output.observe({ timestamp, rgb ->
+                    output.observe({ timestamp, rgb, gpuStartNs, gpuEndNs ->
                         val frame = frames.remove(timestamp)
                         val consumed = sink?.getCurrentPositionUs(false)
                         val observedHost = System.nanoTime()
-                        val audio = if (consumed == null || consumed == AudioSink.CURRENT_POSITION_NOT_SET) null else consumed - audioOffset + audioStart
+                        val audio = programmeClock(consumed)
                         val video = frame?.let { it.ptsUs + it.periodStartUs }
                         // The decoder can deliver pixels before the codec's requested
                         // release instant. Retain both the observed consumption and the
@@ -98,7 +166,9 @@ class YlDashJointInstrumentedTest {
                         val row = JSONObject().put("imageTimestampNs", timestamp).put("observedHostNs", observedHost)
                             .put("videoPtsUs", video ?: JSONObject.NULL).put("representation", frame?.formatId ?: JSONObject.NULL)
                             .put("audioUs", audio ?: JSONObject.NULL).put("audioProjectedAtReleaseUs", projected ?: JSONObject.NULL).put("audioPeriodStartUs", audioStart)
-                            .put("audioStreamOffsetUs", audioOffset)
+                            .put("audioStreamOffsetUs", audioOffset).put("metadataHostNs", frame?.metadataNs ?: JSONObject.NULL)
+                            .put("audioAtMetadataUs", frame?.audioAtMetadataUs ?: JSONObject.NULL)
+                            .put("gpuStartNs", gpuStartNs).put("gpuEndNs", gpuEndNs)
                             .put("rgb", JSONArray(rgb))
                             .put("rawDeltaUs", if (audio != null && video != null) video - audio else JSONObject.NULL)
                             .put("deltaUs", if (projected != null && video != null) video - projected else JSONObject.NULL)
@@ -113,6 +183,7 @@ class YlDashJointInstrumentedTest {
             assertTrue("Native AV did not finish", done.await(25, TimeUnit.SECONDS))
             probe?.drain()
             assertNull("Native AV failure", failure)
+            trace.log(name, run)
             val measured = synchronized(rows) { rows.toList() }
             val record = JSONObject().put("fixture", name).put("run", run)
                 .put("elapsedMs", android.os.SystemClock.elapsedRealtime() - startedAt).put("rows", JSONArray(measured))

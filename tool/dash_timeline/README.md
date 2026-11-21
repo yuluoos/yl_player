@@ -117,10 +117,10 @@ short-run baseline; the new independent-PTO/cropping/reconfiguration path had no
 playable old-path equivalent, and no speedup over an invented baseline is claimed.
 
 Apple pairs actual published CVPixelBuffer RGB with the native audio node's
-rendered clock at the observation host time. Android reads actual decoded YUV
-from ImageReader, matches the image timestamp to Media3's frame metadata, and
-records AudioTrack consumption. ImageReader can deliver before the requested
-release instant; both raw consumption delta and the rate-1 projection to that
+rendered clock at the observation host time. Android samples the center RGB of the decoder's SurfaceTexture on a GPU thread,
+matches the buffer timestamp to Media3's frame metadata, and reads the audio
+sink's consumption clock on the playback thread. The buffer can arrive before
+the requested release instant; both raw consumption delta and the rate-1 projection to that
 instant remain in the record. These are native output measurements, not physical
 screen/speaker measurements. Separate Flutter/OS composition tests check visible
 video and cue glyphs. The PCM tests verify decoded tone windows and exact sample
@@ -130,6 +130,16 @@ counts before AudioTrack, with actual end-of-stream drain observed separately.
 python3 -B tool/dash_timeline/joint_observations.py captured-native.log --output summary.json
 python3 -B -m unittest discover -s tool/dash_timeline -p test_joint_observations.py
 ```
+
+For startup and Period-switch diagnosis, capture the Android log tags
+`P01_AV_EVENT`, `P01_JOINT` and `P01_JOINT_ROW` together. Run
+`YlDashJointInstrumentedTest` for the five frozen fixtures and
+`YlDashJointTimingControlTest` in a separate capture for the same-format
+1.5-second boundary and the 160 ms audio-init delay. Each control runs three
+times. Replay each capture with
+`python3 -B tool/dash_timeline/joint_timing.py captured-native.log`.
+Startup event offsets in its output are relative to the first frame's audio
+observation. A positive offset places the event after that observation.
 
 The summarizer retains missing pairs as counts and absent metrics as null,
 rejects duplicate runs and non-finite numbers, and never assigns test outcomes.
