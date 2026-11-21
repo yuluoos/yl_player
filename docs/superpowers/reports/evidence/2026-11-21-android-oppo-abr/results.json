@@ -1,0 +1,208 @@
+{
+  "sourceCommit": "9f02a583bcf4196b533b59028ebaa5001c669ccd",
+  "archive": "captures.tar.xz",
+  "sha256": "5e2790b6fce779b69c8585f53e0b9819f1c73048cd5a3788dc6721cf38575cc5",
+  "runs": [
+    {
+      "runId": "oppo-auto-120-down--c8994c07",
+      "profile": "down-and-recover-v1",
+      "mode": "auto",
+      "programmeSeconds": 120,
+      "sampleCount": 500,
+      "geometry": [
+        "640x360",
+        "320x180",
+        "640x360"
+      ],
+      "mediaBytesByPhase": [
+        1685846,
+        483257,
+        4599674
+      ],
+      "requestCount": 334,
+      "endPositionUs": 120000000,
+      "rebufferCountDelta": null,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": true,
+      "networkPhasesCovered": true,
+      "downshiftLatencyUs": {
+        "min": 23756935,
+        "max": 23815980
+      },
+      "upshiftLatencyUs": {
+        "min": 21644284,
+        "max": 21703329
+      },
+      "requestFailures": 0,
+      "rebufferDurationUsDelta": null,
+      "recoveryHighRequestLatencyUs": 1669826
+    },
+    {
+      "runId": "oppo-auto-40-down--45848294",
+      "profile": "down-and-recover-v1",
+      "mode": "auto",
+      "programmeSeconds": 40,
+      "sampleCount": 161,
+      "geometry": [
+        "640x360",
+        "320x180"
+      ],
+      "mediaBytesByPhase": [
+        1685846,
+        476547,
+        0
+      ],
+      "requestCount": 113,
+      "endPositionUs": 40000000,
+      "rebufferCountDelta": null,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": false,
+      "networkPhasesCovered": false,
+      "downshiftLatencyUs": {
+        "min": 23053019,
+        "max": 23109370
+      },
+      "upshiftLatencyUs": null,
+      "requestFailures": 0,
+      "rebufferDurationUsDelta": null,
+      "recoveryHighRequestLatencyUs": null
+    },
+    {
+      "runId": "oppo-auto-40-stall-5d68a2ea",
+      "profile": "stall-and-recover-v1",
+      "mode": "auto",
+      "programmeSeconds": 40,
+      "sampleCount": 162,
+      "geometry": [
+        "640x360"
+      ],
+      "mediaBytesByPhase": [
+        1685846,
+        0,
+        671599
+      ],
+      "requestCount": 113,
+      "endPositionUs": 40000000,
+      "rebufferCountDelta": 0,
+      "bodyStallMs": 5000,
+      "playbackAdvancedAfterRestoration": true,
+      "requestFailures": 0
+    },
+    {
+      "runId": "oppo-caps-120-down--a4381057",
+      "profile": "down-and-recover-v1",
+      "mode": "caps",
+      "programmeSeconds": 120,
+      "sampleCount": 491,
+      "geometry": [
+        "320x180"
+      ],
+      "mediaBytesByPhase": [
+        991356,
+        494736,
+        3392681
+      ],
+      "requestCount": 393,
+      "endPositionUs": 120000000,
+      "rebufferCountDelta": null,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": false,
+      "networkPhasesCovered": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "requestFailures": 0,
+      "rebufferDurationUsDelta": null,
+      "recoveryHighRequestLatencyUs": null
+    },
+    {
+      "runId": "oppo-caps-40-down--0670c408",
+      "profile": "down-and-recover-v1",
+      "mode": "caps",
+      "programmeSeconds": 40,
+      "sampleCount": 162,
+      "geometry": [
+        "320x180"
+      ],
+      "mediaBytesByPhase": [
+        991356,
+        390829,
+        0
+      ],
+      "requestCount": 113,
+      "endPositionUs": 40000000,
+      "rebufferCountDelta": null,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": false,
+      "networkPhasesCovered": false,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "requestFailures": 0,
+      "rebufferDurationUsDelta": null,
+      "recoveryHighRequestLatencyUs": null
+    },
+    {
+      "runId": "oppo-fixed-40-down--8488f289",
+      "profile": "down-and-recover-v1",
+      "mode": "fixed",
+      "programmeSeconds": 40,
+      "sampleCount": 162,
+      "geometry": [
+        "640x360"
+      ],
+      "mediaBytesByPhase": [
+        1757571,
+        513894,
+        157705
+      ],
+      "requestCount": 116,
+      "endPositionUs": 40000000,
+      "rebufferCountDelta": null,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": false,
+      "networkPhasesCovered": true,
+      "downshiftLatencyUs": null,
+      "upshiftLatencyUs": null,
+      "requestFailures": 0,
+      "rebufferDurationUsDelta": null,
+      "recoveryHighRequestLatencyUs": 70872
+    }
+  ],
+  "members": {
+    "fixture-40.json": "be340432bd9f9fcffa763781a21e3196f4939fbe02c3fb18d4b1b1d09b0673c2",
+    "fixture-120.json": "e047a42ce0020f8260b1b0c8e1feb695c5ee7ed8879116c0b151f4b2ec6475df",
+    "oppo-auto-120-down--c8994c07/capture.log": "c627a4c00b10540913a7e66b8163aa8cf9989b4905d59f03974599a5773249fc",
+    "oppo-auto-120-down--c8994c07/server.log": "6d71e2693927153001f62db89de645c4244745660f854f5463ad188b8c37375c",
+    "oppo-auto-120-down--c8994c07/requests.jsonl": "582984d73483277e6d478c9ab96651bbca8874393b2ccf57f31f63683f3899fe",
+    "oppo-auto-120-down--c8994c07/receipt.json": "3839aee5cbd2b11524f4bff0325032a16a00e211ef10095989357e7173288613",
+    "oppo-auto-120-down--c8994c07/summary.json": "da80a7fdb50ad1895e520a1d2ded002f9a33137f278b67e4e1e8e3d8e3134a3a",
+    "oppo-auto-40-down--45848294/capture.log": "14791b8afa0276e71e5c3701b36c2f1bc72e6adde4393e2c295bb6bde4e6d35e",
+    "oppo-auto-40-down--45848294/server.log": "24c2c4553b033473569bd495ff651e53e94e6c84f3619bf98e30a13200645e8f",
+    "oppo-auto-40-down--45848294/requests.jsonl": "93ebaa4990cc85d4fde9dbd9e41a3734079272a51e94d61898d8e62f3c74ec9c",
+    "oppo-auto-40-down--45848294/receipt.json": "e95de1f4aa6a4bac5de46652a120c80b65a5e34ba43fca93c991cedc333be4af",
+    "oppo-auto-40-down--45848294/summary.json": "e96a08628ec3ef7ce1076b185419af474ddcbbbe62ed2d04aa31dbedb267557e",
+    "oppo-auto-40-stall-5d68a2ea/capture.log": "2c77078d82e0ee36c96990744c3846486a571d4efa16663eed2cd08ac7e2c61b",
+    "oppo-auto-40-stall-5d68a2ea/server.log": "22c098a711bfe6dbed12f42ce437ec5f800d94e1acc39f411e4cb866a6bea57e",
+    "oppo-auto-40-stall-5d68a2ea/requests.jsonl": "4d028cad32feb45d6d761e0384c4575dd9ed058197016f35509358dacd1a2357",
+    "oppo-auto-40-stall-5d68a2ea/receipt.json": "beaaced544b679c6d084306004ea2ecc63ab3e0327c33690afdff8cadd891d52",
+    "oppo-caps-120-down--a4381057/capture.log": "726e2bf98bea6fe8bf6ec29b900592b2693cf1475aa0899fd3f14ed93caced57",
+    "oppo-caps-120-down--a4381057/server.log": "70ef94e19fe39c40bcf7b45fb7e42aad291a14d9a014a364083304d4c649cce4",
+    "oppo-caps-120-down--a4381057/requests.jsonl": "48ab170604318900339f712e9b6f2cfd954b42c604b0e1c2fe5bfbc6d59c66fa",
+    "oppo-caps-120-down--a4381057/receipt.json": "2157bab51044be16149c9461d54b6f96be248e601c232ade3aff7a7eaede5e25",
+    "oppo-caps-120-down--a4381057/summary.json": "5c659fdece2aefc636b44b22c9fe09d5848e3a46c14cc884b730ee3485d9bf94",
+    "oppo-caps-40-down--0670c408/capture.log": "801141f21d0f8b2ecc84f0221ef2fed82a13aceafcb1b3dcdc52e969848184da",
+    "oppo-caps-40-down--0670c408/server.log": "c238755297cf65c144f940940b0113f118b395e5a061629e7c83cb7c92240644",
+    "oppo-caps-40-down--0670c408/requests.jsonl": "754316404a11a62a5b1502c4fd39c356f2d777153403f9a4ed9dfa63f8882d35",
+    "oppo-caps-40-down--0670c408/receipt.json": "28d8f97c0e8b2a08f755e6c70f0c810b953fdc2be2f3e9fe5870309d6281b967",
+    "oppo-caps-40-down--0670c408/summary.json": "5015a75c11f472982c6b3ef59f8e6a1b481fa330b0935faf92d70d92a7569bd2",
+    "oppo-fixed-40-down--8488f289/capture.log": "37a06f9e0fd18f4b68704f490cb96c9e3b9b2fd05de9e1790ebe94f42270c132",
+    "oppo-fixed-40-down--8488f289/server.log": "53ce7c336bc1d7a026c9b21e00a451058f0513b59f6d4c991f0082daedeef972",
+    "oppo-fixed-40-down--8488f289/requests.jsonl": "d675c0ab59a2c5fc0301e275b3cf38dad685ec1798deb68def64b60121347607",
+    "oppo-fixed-40-down--8488f289/receipt.json": "e4ebd1c4cd4a232ed715d04cea66341579493e7586a760e04004389b3cd65b34",
+    "oppo-fixed-40-down--8488f289/summary.json": "e50594d3756c3b626c096da2718c5671893fd52d3f412020d8047279ea5abad1"
+  }
+}

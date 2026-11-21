@@ -1147,6 +1147,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-av1-hardware-required.md",
       "sha256": "3031b7e467757772cb03dbfd72adcffaaafa6f89796dd21e701d7db2bd64b929",
       "kind": "report"
+    },
+    "android-oppo-abr-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-abr.md",
+      "sha256": "4081cc0dab3e8aa1297ba5f4e3611bca17c4e826982ce42875e326a541701353",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1161,10 +1166,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "abr-recovery-20261027"
+        "abr-recovery-20261027",
+        "android-oppo-abr-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-physical-api24-repeat-auto-caps-fixed-and-bound-output-after-local-120s-recovery"
+      "nextAction": "qualify-api24-repeat-policy-and-bound-output-after-api31-physical-weak-network-runs"
     },
     {
       "requirement": "CAP-ABR",
