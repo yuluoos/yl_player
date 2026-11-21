@@ -1,0 +1,639 @@
+{
+  "sourceCommit": "bf46950b432892ffd97deb01e736e258316cc242",
+  "model": "CPH2065",
+  "apiLevel": 31,
+  "runs": {
+    "android_dash_playback_retry": {
+      "target": "android_dash_playback_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "explicit extensionless and automatic MPD render and preserve the eight-second Period timeline",
+        "DASH sameOrigin keeps ordinary headers and applies inherited credential policy",
+        "DASH crossOrigin keeps ordinary headers and applies inherited credential policy",
+        "DASH returnToPrimary keeps ordinary headers and applies inherited credential policy",
+        "DASH segment HTTP failure becomes a public sanitized failure",
+        "stopping delayed DASH suppresses old-session events"
+      ],
+      "failedCases": [],
+      "apkSha256": "e6cb497fd3c3e8374a28963b072b537e02f8695d2421db5e58d1edc930dba634",
+      "targetSha256": "7a7f3a6e4299fb30ba73e610744c3c0e9fb79af860f4987a5343ed91fd4ffe91"
+    },
+    "android_dash_playback_test": {
+      "target": "android_dash_playback_test.dart",
+      "frameworkPassed": false,
+      "cases": [
+        "explicit extensionless and automatic MPD render and preserve the eight-second Period timeline",
+        "DASH sameOrigin keeps ordinary headers and applies inherited credential policy",
+        "DASH crossOrigin keeps ordinary headers and applies inherited credential policy",
+        "DASH returnToPrimary keeps ordinary headers and applies inherited credential policy",
+        "DASH segment HTTP failure becomes a public sanitized failure",
+        "stopping delayed DASH suppresses old-session events"
+      ],
+      "failedCases": [
+        "DASH segment HTTP failure becomes a public sanitized failure"
+      ],
+      "apkSha256": "ff6029ea29fc144b0f1def4d6d4b54aad5f80f76a831e02420bca2bda6f715dc",
+      "targetSha256": "ad6572c702880e7075c084f304077c76e7d32b5b21a04eb06622d1606035ad7f"
+    },
+    "android_dash_segment_base_test": {
+      "target": "android_dash_segment_base_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "Android SegmentBase v0 plays the same owned AVC/AAC fixture",
+        "Android SegmentBase v1 plays the same owned AVC/AAC fixture"
+      ],
+      "failedCases": [],
+      "apkSha256": "7c3764996dbe37e74995efa40831408cd64143496f34845e834da1fb6bd63739",
+      "targetSha256": "5b8659ec17375e36ae28a8ec3b8880f9ac982b6dd92780c356e39d45c6a1cf87"
+    },
+    "android_network_handshake_final": {
+      "target": "android_network_start_failure_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "closing RTMP during client handshake reports setup failure"
+      ],
+      "failedCases": [],
+      "apkSha256": "91e938d72c10e8da2c11ff2315d4eb70bce8954db104b055c5e3de834183550b",
+      "targetSha256": "bc770db279dfe2ea90558156997dede9190ee311b7de9649dd52fa60e68b64b8"
+    },
+    "android_network_start_failure_test": {
+      "target": "android_network_start_failure_test.dart",
+      "frameworkPassed": false,
+      "cases": [
+        "closing RTMP during client handshake reports setup failure",
+        "Android classifies DNS failure at DASH manifest request",
+        "Android classifies DNS failure at DASH segment request"
+      ],
+      "failedCases": [
+        "Android classifies DNS failure at DASH manifest request",
+        "Android classifies DNS failure at DASH segment request"
+      ],
+      "apkSha256": "ac2222b8e44b1c6aea5aefbdb0899acb5a42a3942c6ef73b8991f32652abe9a7",
+      "targetSha256": "a857a9273ef34b9cee5c83d782fe20bbc2c9477a09655286b518195db85e2080",
+      "dnsPrecondition": "negative-system-lookup-unconfirmed"
+    },
+    "android_network_start_retry": {
+      "target": "android_network_start_failure_test.dart",
+      "frameworkPassed": false,
+      "cases": [
+        "closing RTMP during client handshake reports setup failure",
+        "Android classifies DNS failure at DASH manifest request",
+        "Android classifies DNS failure at DASH segment request"
+      ],
+      "failedCases": [
+        "Android classifies DNS failure at DASH manifest request",
+        "Android classifies DNS failure at DASH segment request"
+      ],
+      "apkSha256": "65aa80564dfbb058c095077e15eff6480a54bb691695a90b1e17b74b1ee95cdd",
+      "targetSha256": "8f525c15c81d37cddbe25fa3c6472762f6edf7ca23d34f105023a581a2e26daf",
+      "dnsPrecondition": "device-resolved-test-host"
+    },
+    "android_progressive_playback_test": {
+      "target": "android_progressive_playback_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "Android progressive Ready, immediate Play, frame, seek and reload",
+        "Audio-only strict Ready is independent of First Frame and native background suspends"
+      ],
+      "failedCases": [],
+      "apkSha256": "2cb3849cbd9a0711e4b91fa4056c54f557c3de7b292cb1ffa2ae929d77b5b3a9",
+      "targetSha256": "47a5dc9e3ae6fecff1bf471edbdf40786f01c8443e152f0685d8d096433ac7e6",
+      "lifecycle": [
+        "background",
+        "foreground"
+      ]
+    },
+    "dash_candidate_playback_test": {
+      "target": "dash_candidate_playback_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "managed DASH candidates retries=1 allFail=false",
+        "managed DASH candidates retries=1 allFail=true",
+        "managed DASH candidates retries=0 allFail=false"
+      ],
+      "failedCases": [],
+      "apkSha256": "cf59dfbe9d7846d37d689cc8565ca941bd101a208a4b6bea65d59c58d1725a62",
+      "targetSha256": "60cfd17754498d1c12c5b67bf8d62d2a25095b80998e54e3138e892783f7dedf"
+    },
+    "dash_program_cancellation_test": {
+      "target": "dash_program_cancellation_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "DASH delayed reconfiguration stop rejects late output",
+        "DASH delayed reconfiguration replacement rejects late output"
+      ],
+      "failedCases": [],
+      "apkSha256": "4f37b165b03c7fb7f8674f9c2ec720b40e2cac7945d2422d81784b8431281600",
+      "targetSha256": "3e797d9a606ba98eddbdc0a7b365146bfdeaa068c7f6278e7393c5d750d29798"
+    },
+    "dash_program_periods_test": {
+      "target": "dash_program_periods_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "managed DASH fixed AVC disappears and HEVC can be fixed",
+        "managed DASH programme independent-pto",
+        "managed DASH programme clip-end",
+        "managed DASH programme gap",
+        "managed DASH programme overlap",
+        "managed DASH programme unknown-middle",
+        "managed DASH programme multiple-base",
+        "managed DASH programme fractional-microsecond",
+        "managed DASH programme cross-codec",
+        "managed DASH programme resolution",
+        "managed DASH programme audio-added",
+        "managed DASH programme absolute-base",
+        "managed DASH programme absolute-list",
+        "managed DASH programme audio-gap-leading",
+        "managed DASH programme audio-gap-internal",
+        "managed DASH programme audio-gap-trailing",
+        "managed DASH programme video-gap-leading",
+        "managed DASH programme video-gap-internal",
+        "managed DASH programme video-gap-trailing"
+      ],
+      "failedCases": [],
+      "apkSha256": "b6b9719d7c6b85e3e4e1ee17ec4bc7c84792b4af0e759269ffb7cfe7233b3d44",
+      "targetSha256": "0bb74d7e116b351381ac1975ef6fcdf40a3f155dbf5c98b227b6805c975cc3e5"
+    },
+    "dash_video_gap_subtitle_test": {
+      "target": "dash_video_gap_subtitle_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "DASH leading video gap keeps subtitle over actual black output",
+        "DASH internal video gap keeps subtitle over actual black output",
+        "DASH trailing video gap keeps subtitle over actual black output"
+      ],
+      "failedCases": [],
+      "apkSha256": "9bf47f9d643072581af51cc0fda38f6af394eb162fd96184fb9b3d87fdfb3bde",
+      "targetSha256": "c2c1c777abbcff067b0caaf3c6ac846d801cdecfee8c6ee10c34b129004b8e9e",
+      "gapCues": [
+        {
+          "gap": "leading",
+          "positionMs": 250,
+          "backgroundRgb": [
+            0,
+            0,
+            0
+          ],
+          "whitePixels": 319
+        },
+        {
+          "gap": "internal",
+          "positionMs": 1500,
+          "backgroundRgb": [
+            0,
+            0,
+            0
+          ],
+          "whitePixels": 319
+        },
+        {
+          "gap": "trailing",
+          "positionMs": 2500,
+          "backgroundRgb": [
+            0,
+            0,
+            0
+          ],
+          "whitePixels": 319
+        }
+      ]
+    },
+    "oppo-flv-low-02": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned live independent mode baseline"
+      ],
+      "failedCases": [],
+      "apkSha256": "9769861ee666a9445c2ef9145a77ce950c16dfc737c4bbf78a88946a217fb101",
+      "targetSha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7",
+      "protocol": "flv",
+      "baselineMode": "lowLatency",
+      "captureComplete": true,
+      "violations": [],
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        451846,
+        643219,
+        515013
+      ],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "sampleCount": 144
+    },
+    "oppo-flv-smooth-02": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned live independent mode baseline"
+      ],
+      "failedCases": [],
+      "apkSha256": "d49e060016e943669de2d7115548e1a11a2c18a01ac117160901807fde6c3182",
+      "targetSha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7",
+      "protocol": "flv",
+      "baselineMode": "smoothPlayback",
+      "captureComplete": true,
+      "violations": [],
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        452728,
+        643364,
+        513989
+      ],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "sampleCount": 144
+    },
+    "oppo-hls-low-02": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned live independent mode baseline"
+      ],
+      "failedCases": [],
+      "apkSha256": "76e2faa6aa5846777c1eb1705c0fe6e9e4556e38512df0a68af9c42dc3e63e2a",
+      "targetSha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7",
+      "protocol": "hls",
+      "baselineMode": "lowLatency",
+      "captureComplete": true,
+      "violations": [],
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        627658,
+        544501,
+        713404
+      ],
+      "rebufferCountDelta": 2,
+      "rebufferDurationUsDelta": 771000,
+      "sampleCount": 144
+    },
+    "oppo-hls-smooth-02": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned live independent mode baseline"
+      ],
+      "failedCases": [],
+      "apkSha256": "5a4548ea774d97b1bfb15e0a735405bf12d6fedd2901c0da8edcde493fd1a2a1",
+      "targetSha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7",
+      "protocol": "hls",
+      "baselineMode": "smoothPlayback",
+      "captureComplete": true,
+      "violations": [],
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        628297,
+        548114,
+        709950
+      ],
+      "rebufferCountDelta": 1,
+      "rebufferDurationUsDelta": 1586000,
+      "sampleCount": 144
+    },
+    "oppo-rtmp-low-02": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned live independent mode baseline"
+      ],
+      "failedCases": [],
+      "apkSha256": "33861c84e91421abcf8ced8fa734a6625d31976b83616e8149bc2c2a0ba5e6ee",
+      "targetSha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7",
+      "protocol": "rtmp",
+      "baselineMode": "lowLatency",
+      "captureComplete": true,
+      "violations": [],
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        410834,
+        634470,
+        566116
+      ],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "sampleCount": 144
+    },
+    "oppo-rtmp-smooth-02": {
+      "target": "live_mode_baseline_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned live independent mode baseline"
+      ],
+      "failedCases": [],
+      "apkSha256": "95840f7c16651e4e47032b479e09387421d2561dfae535ee96d24dff38513c4e",
+      "targetSha256": "5ef9a68ed37a5dd7404f5ab60abfc0fbbb9add0ff99bcebe1e37cd69ad0fe6a7",
+      "protocol": "rtmp",
+      "baselineMode": "smoothPlayback",
+      "captureComplete": true,
+      "violations": [],
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        396459,
+        637765,
+        577425
+      ],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "sampleCount": 144
+    },
+    "rtmp_handoff_test": {
+      "target": "rtmp_handoff_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "owned header-free JS RTMP result renders matching public firstFrame"
+      ],
+      "failedCases": [],
+      "apkSha256": "302f244be1e4d97cec0dd41ec0ccb6ac3c726013c7d937b147b14e3351962dce",
+      "targetSha256": "e238da8ada35301be19b4f8be80f3c76e8bc7b4270a3d2c2c409be0136a18266"
+    },
+    "script_runtime_test": {
+      "target": "script_runtime_test.dart",
+      "frameworkPassed": true,
+      "cases": [
+        "public native success raw parameters credentials RTMP and RTMPS admission",
+        "invalid_result leaves the native resolver reusable",
+        "host_api_unsupported leaves the native resolver reusable",
+        "infinite JavaScript native deadline and reuse",
+        "pathological regular expression native deadline and reuse",
+        "live cancellation joins native work and new generation wins",
+        "held real HTTP cancellation closes the server socket before reuse",
+        "memory failure is bounded and resolver reusable after cleanup",
+        "resolved HTTP result renders matching session firstFrame and stops"
+      ],
+      "failedCases": [],
+      "apkSha256": "73986c542802a29ab37c11300268760c28c3f7533533e09c1c3da284e5aa602b",
+      "targetSha256": "9aa01d853ccbed4f462b971f3aba5cb3c6b50a2c6b37d5cbab4262e75c87c6a2"
+    }
+  },
+  "native": {
+    "model": "CPH2065",
+    "apiLevel": "31",
+    "apkSha256": "e34446786b212ab5c702316e6b5af8bbc5f6e8897b98b8b2eac1cb8fc34fd7c3",
+    "installedApkSha256": "e34446786b212ab5c702316e6b5af8bbc5f6e8897b98b8b2eac1cb8fc34fd7c3",
+    "sourceCommit": "bf46950b432892ffd97deb01e736e258316cc242",
+    "results": {
+      "YlDashPcmInstrumentedTest": {
+        "success": 8,
+        "failures": 0,
+        "frameworkPassed": true,
+        "processCrashed": false,
+        "passedMethods": [
+          "leadingAudioGapIsRealSilence",
+          "clipEndHasExactlyThreeAndHalfSecondsOfPcm",
+          "crossPeriodHasExactlyThreeSecondsOfPcm",
+          "internalAudioGapIsRealSilence",
+          "overlapHasSevenSecondsOfPcmAndConsumedClock",
+          "seekInsideAacBufferPreservesDecodedPrerollTail",
+          "independentPtoHasExactlyFourSecondsOfPcm",
+          "trailingAudioGapIsRealSilence"
+        ],
+        "measurements": [
+          {
+            "fixture": "independent-pto",
+            "frames": 192000,
+            "endedPositionMs": 4009,
+            "durationMs": 4000
+          },
+          {
+            "fixture": "clip-end",
+            "frames": 168000,
+            "endedPositionMs": 3508,
+            "durationMs": 3500
+          },
+          {
+            "fixture": "cross-codec",
+            "frames": 144000,
+            "endedPositionMs": 3005,
+            "durationMs": 3000
+          },
+          {
+            "fixture": "independent-pto",
+            "frames": 192000,
+            "endedPositionMs": 4010,
+            "durationMs": 4000
+          },
+          {
+            "fixture": "overlap",
+            "frames": 336000,
+            "endedPositionMs": 7000,
+            "durationMs": 7000
+          },
+          {
+            "fixture": "independent-pto",
+            "frames": 168000,
+            "endedPositionMs": 4000,
+            "durationMs": 4000
+          },
+          {
+            "fixture": "independent-pto",
+            "frames": 192000,
+            "endedPositionMs": 4005,
+            "durationMs": 4000
+          },
+          {
+            "fixture": "independent-pto",
+            "frames": 192000,
+            "endedPositionMs": 4010,
+            "durationMs": 4000
+          }
+        ]
+      },
+      "YlDashJointInstrumentedTest": {
+        "success": 0,
+        "failures": 0,
+        "frameworkPassed": false,
+        "processCrashed": true,
+        "passedMethods": [],
+        "subruns": []
+      }
+    }
+  },
+  "controlledDns": {
+    "sourceCommit": "bf46950b432892ffd97deb01e736e258316cc242",
+    "target": "YlDashDnsInstrumentedTest.kt",
+    "targetSha256": "654b230b3619121ce268f2b8da37c8076132d08621144acc9a2f9af594d9ab5d",
+    "model": "CPH2065",
+    "apiLevel": "31",
+    "apkSha256": "30363f635d08d5a9d89ed13da55ab8e4f352d4468a56fc17a1d8345b05c1a068",
+    "installedApkSha256": "30363f635d08d5a9d89ed13da55ab8e4f352d4468a56fc17a1d8345b05c1a068",
+    "frameworkPassed": true,
+    "success": 2
+  },
+  "rtmpHandoffProxy": {
+    "accepted": 1,
+    "closed": 1,
+    "active": 0,
+    "heldBytes": 0,
+    "errors": [],
+    "history": [
+      {
+        "event": "connect",
+        "id": 1,
+        "time": 19962.32529275
+      }
+    ],
+    "peakHeldBytes": 5564,
+    "outcome": {
+      "kind": "success",
+      "commandExitCode": 0
+    },
+    "cleanup": {
+      "complete": true,
+      "processGroups": [
+        {
+          "pgid": 7563,
+          "termSent": false,
+          "killSent": false,
+          "complete": true,
+          "groupRemaining": false,
+          "leaderReturnCode": 0
+        },
+        {
+          "pgid": 7562,
+          "termSent": true,
+          "killSent": false,
+          "complete": true,
+          "groupRemaining": false,
+          "leaderReturnCode": 255
+        },
+        {
+          "pgid": 7561,
+          "termSent": true,
+          "killSent": false,
+          "complete": true,
+          "groupRemaining": false,
+          "leaderReturnCode": 255
+        },
+        {
+          "pgid": 7550,
+          "termSent": true,
+          "killSent": false,
+          "complete": true,
+          "groupRemaining": false,
+          "leaderReturnCode": -15
+        }
+      ],
+      "proxy": {
+        "complete": true,
+        "pendingTasks": 0,
+        "activeReaders": 0,
+        "activeControls": 0
+      },
+      "listenersClosed": true
+    },
+    "observedCommandReturnCode": 0
+  },
+  "controlledArchive": "unavailable",
+  "archiveSha256": "bc0bc1462f837e04c071e0369e4dd7ec95b5f1199b9292bad045e5871753f76c",
+  "memberSha256": {
+    "android_dash_playback_retry/capture.log": "12de0eac5de2d6c58f316234c8a34e657efa1aa686fd6b102b69c51180c22ab1",
+    "android_dash_playback_retry/receipt.json": "0402493446f8a8ca9dca0a60679eecde4c4ca9eacddb09fd7e9d869f483efc84",
+    "android_dash_playback_test/capture.log": "5a6d3f8655f1c0dbdd3ed8ff941bcb2dacd624267484286b6f704b5d4b55eb52",
+    "android_dash_playback_test/receipt.json": "24247b7bbdf9316831258e1a4a55d691c026e8f702a1560525f1b029fa1fd9dc",
+    "android_dash_playback_test/target.dart": "ad6572c702880e7075c084f304077c76e7d32b5b21a04eb06622d1606035ad7f",
+    "android_dash_segment_base_test/capture.log": "cb623c8afa22823b37c124408e194dbcfb9506621d6b4a89f9752c6066aba709",
+    "android_dash_segment_base_test/receipt.json": "a4d062f2f072dc12feace2ae0adad424ebc607c63b7d1f657302e496a51eac1a",
+    "android_network_handshake_final/capture.log": "1a74a0f5799fe0c50f6ae178b0745f628033937b32fe8db11270e669d10d3303",
+    "android_network_handshake_final/receipt.json": "fccee4fdf8e67d997371f5b37fe42ce616c4d7db6fd829d588804066ba0c6ae6",
+    "android_network_start_failure_test/capture.log": "f8debaf88d9463cd2f01cfee31074d2e5e6a16de787d5d7fea44ac7f1038f8cc",
+    "android_network_start_failure_test/receipt.json": "e075481ce64506b6db179cf908d28bd0dcad28c0288c05fca88d10a06aabd6f3",
+    "android_network_start_failure_test/target.dart": "a857a9273ef34b9cee5c83d782fe20bbc2c9477a09655286b518195db85e2080",
+    "android_network_start_retry/capture.log": "f76af11f724e5e86aadf8133a913b61aac9f50c504449f2047fd9cc04a2d1df9",
+    "android_network_start_retry/receipt.json": "d7ccf4d2f2a131cee29156e0a44f157e97c4eed7ee4d822c38c413813a88593b",
+    "android_network_start_retry/target.dart": "8f525c15c81d37cddbe25fa3c6472762f6edf7ca23d34f105023a581a2e26daf",
+    "android_progressive_playback_test/capture.log": "da33612d572960161e16f7788e1b8011e26597759149528c6c0d26a395d0750f",
+    "android_progressive_playback_test/lifecycle.json": "72928cbc6d5439dc1f00fa87216972a4b4b472df0ed6f709ce6cf488187754f8",
+    "android_progressive_playback_test/receipt.json": "e785866c0eefe50b9403446c298a437f7b56fc1c585caa6af55fa202dda53793",
+    "controlled-archive.json": "617bb8a02916e2848b9f1ffb867211304fe8141455f836e88d052c90514d6181",
+    "dash_candidate_playback_test/capture.log": "3116faf077814b94084646c00893f202d1c2622b81bb3bf497772d0dd56ddc75",
+    "dash_candidate_playback_test/receipt.json": "2510fcf02741f5d43c7fbb1861428f62cad2aa318c4ad03393c537e2a61cfcb3",
+    "dash_program_cancellation_test/capture.log": "ddf313ac4069ac5ca9d7619a8b7616368371259a55c5c3c0a92ec98f7db747f3",
+    "dash_program_cancellation_test/receipt.json": "59704d34d952211aae04e2d7e64105b636bdd6dcc66cdd3f070895615495e7db",
+    "dash_program_periods_test/capture.log": "dbc018c537618d1eafc00de5a9adced9183bba1029aa13299b42c99613a6254c",
+    "dash_program_periods_test/receipt.json": "7670e4ed3d2ed23b6508a103a4443b31d2218bd923d2ace9205169da3fcf86c8",
+    "dash_video_gap_subtitle_test/capture.log": "cccc6e88db64e7676b7506e98f62917bb326a1199ec9d1d323ff00a7739075f9",
+    "dash_video_gap_subtitle_test/receipt.json": "517364d4ceb90c15e6e005a0415b2069f11b99a2021f37db18bcf4d567852a84",
+    "dns-preflight.txt": "8c21d34234297b560843d5a4cf53087765a5e4c264eb6bba3240b4e2e719a4f9",
+    "native-dash/YlDashJointInstrumentedTest.log": "505dd2f331da61d016f2a206dd10b312fb5684deb366c328cccfe5c73f23b6f4",
+    "native-dash/YlDashJointInstrumentedTest.samples": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "native-dash/YlDashPcmInstrumentedTest.log": "34eb514089366f2af62b24e871aeca5c62bddd571cfce4e9a716fcdeafefb211",
+    "native-dash/YlDashPcmInstrumentedTest.samples": "8839653e4d26f6f6502cfada31b58452dfa1ed04dfd52039d058096c9d9d51c4",
+    "native-dash/joint-crash.log": "f7f9f13ea4331e9afad31528e9060a909498f801e614e91c92895944f4477893",
+    "native-dash/receipt.json": "f93bbb0a1078dbc3a393191f5feda60f2d256d6d75056456497aa810cde85186",
+    "native-dns/YlDashDnsInstrumentedTest.log": "a9a57433d63b89e320df602a74cbfd46c6b77e1612781f26934b33bde27ca40f",
+    "native-dns/receipt.json": "be502eb185d13e0586a2de9304e2e1ce3207e2f9b0bd2a22c3bb668fd3cc8e1e",
+    "oppo-flv-low-02/capture.log": "756d96913ee81dcbd75aa5d423f5ea0d348219324c107938e54d515b000883c2",
+    "oppo-flv-low-02/connections.jsonl": "3f2eb4d3a22e4b50da589791d8cb6ef606b15c2b0ee81708ce4052568ea0a58c",
+    "oppo-flv-low-02/receipt.json": "053a681e988750a1a9c58c1fd5ef899a5e494c7fda2d440ac2e20c031adfa88c",
+    "oppo-flv-low-02/relay-receipt.json": "77422f16771861898c7d807ae1d53fef5e552a0e38802aad90dd131372bccb63",
+    "oppo-flv-low-02/source/receipt.json": "cd84e1f47f7ad8b03b7c3c8526dadd454b4d7edd5940f8a0b835fd6c47896691",
+    "oppo-flv-low-02/summary.json": "d53a9181760331d85bf14dcd9814085e8e42bcde4666d7942c5b3251e190e8a6",
+    "oppo-flv-smooth-02/capture.log": "e0ab874008c5df0beed3587477645db37efedf7862c804fb82f2abe20f34db00",
+    "oppo-flv-smooth-02/connections.jsonl": "f8f14801ae7eb937572318c611880f392498e6269964cf1c64c0d4ee0fe36df1",
+    "oppo-flv-smooth-02/receipt.json": "72012a388042cea69a0c63f9e72271006a5a93a159ecbdb42774bc68f07a1e44",
+    "oppo-flv-smooth-02/relay-receipt.json": "003bdf50e16288343e999964369f38be4ad4e328518a108385d1e74c05643a0e",
+    "oppo-flv-smooth-02/source/receipt.json": "bd2b7cafb9a083e377b0a1f4a4d387d783b7a7b9929204c012a4dc6074459d10",
+    "oppo-flv-smooth-02/summary.json": "d35f40e119fc5d6773ae5bf6752561ef426789168bd3ad83999a8bfd2b630372",
+    "oppo-hls-low-02/capture.log": "5a4ddc6681a20b21a0889a77bee076ecac60ab39f92819b1c39f99d8f795191b",
+    "oppo-hls-low-02/connections.jsonl": "567f03befe8cb445c4dcb048d0f8b10114f65547456905687feddbf096f81e37",
+    "oppo-hls-low-02/receipt.json": "91e0be17ac76eb7afdebb8a5785a3b9c5b8889543aa1c4c9806683a2d529617f",
+    "oppo-hls-low-02/relay-receipt.json": "3f9151cf61971b1613a5c9ec6db493e54bd864edc866c4fdf9be64b1bc0c2377",
+    "oppo-hls-low-02/source/receipt.json": "2c8e4cc7356a18fff2938f394d09d1bfb6f4c61a17224df913a38ca02423442c",
+    "oppo-hls-low-02/summary.json": "cd936abbda218dac3fca4969d5e0906322b8b2e03996eaba9cd4f855ca4536bd",
+    "oppo-hls-smooth-02/capture.log": "f9b385ecde5bfb43e2c9312161a70b800390b7e2768260637b31e3cc93438f09",
+    "oppo-hls-smooth-02/connections.jsonl": "c2d2ee5cdb02ca91ef6aa8523db8e05b5155c8a308656b83c764051dfe6ac4c6",
+    "oppo-hls-smooth-02/receipt.json": "ee6b1461e1fc08dabc9eaaa6d1f6233c0fd828db5194fae712f7ee8c3ea3e841",
+    "oppo-hls-smooth-02/relay-receipt.json": "51f32039f3cbf927dd22dade06c14ab6bba8461e0989c8b6275833ea21c3c512",
+    "oppo-hls-smooth-02/source/receipt.json": "64a47de1e45ee793efb8b35cc789b27c3f3bc4574ec4e9a52760f9fd393341e1",
+    "oppo-hls-smooth-02/summary.json": "6f1c22aeb94940d3500bef39d9db9796260fa1bbfeeb250c88d849473b2cfcfe",
+    "oppo-rtmp-low-02/capture.log": "b8c39a7e7ee515e8017ef60c19175279b07290c35e43ebd0359a5d655b44de43",
+    "oppo-rtmp-low-02/connections.jsonl": "85603b34fb125f2057837477938f38b870988da513ca803f43ff1c873766009e",
+    "oppo-rtmp-low-02/peer.log": "c10040a6f0c108ae3266cea153b4f5931ef79c4bd70d2660e85f0c5fa6ead81b",
+    "oppo-rtmp-low-02/receipt.json": "97667c141e13368b814aa26db37c498da11676ad7c6ed5cbca6d3285bdf0c0dc",
+    "oppo-rtmp-low-02/relay-receipt.json": "9b633b37d8740dde0d53d7a862f984f68ffa01665807656fec7d8f8ebb13e081",
+    "oppo-rtmp-low-02/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "oppo-rtmp-low-02/summary.json": "d21dc5fa79882896771f79a817dc6ba5689f868bc5686c7482fcb35d115db38f",
+    "oppo-rtmp-smooth-02/capture.log": "05ecade46b832144575e8570b9361251af867714d3acaa87f6143796f4656cae",
+    "oppo-rtmp-smooth-02/connections.jsonl": "e77703ae5043ae52a9695948244831337a753c26e26c42385da3d628c873892c",
+    "oppo-rtmp-smooth-02/peer.log": "9c75817d28b3bccb37471da269fdc304c70987a7c5bdf163c578e858cbd9b09e",
+    "oppo-rtmp-smooth-02/receipt.json": "399c397d170338de7b2d8b7de55a0121088d295968dad7fd90d8a55a20722232",
+    "oppo-rtmp-smooth-02/relay-receipt.json": "e6b10bf76b1af530561cae2ff33bbc8d2f4c115033749ec3da598f933a5d06e9",
+    "oppo-rtmp-smooth-02/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "oppo-rtmp-smooth-02/summary.json": "c45c57b58f81f35e2457e02b2f7b0812ff70e3fdbbe0a545a1c27585128d9b49",
+    "rtmp_handoff_test/capture.log": "f747d6f3a98ea5cf77e19b0c45bdcbe10844b93c49a2c4b8a71c1ee24765a810",
+    "rtmp_handoff_test/peer.log": "70e4fff87fd23cd9f4ec91e9ae6a88f1b5a02cf64a170589fe6ec489476ac428",
+    "rtmp_handoff_test/proxy.json": "065b8e034c304f5ccd6974d398c891f0e8615b1cec964863ea9edfda3d176e45",
+    "rtmp_handoff_test/receipt.json": "90716fea8132a8b6a6cb4843b2b9986a2713df12ae07653a76e13e932fea1605",
+    "script_runtime_test/capture.log": "bc736a4765303a26865ebeb258a5cf4daf96f61a9f5dab940488c0997bcfa98b",
+    "script_runtime_test/handoff.log": "4e0ca7b1182e2ad698409cbf2a8b8538973a6acf94b16749c3930c1d70ec26ff",
+    "script_runtime_test/receipt.json": "9fbc9f8e9b7eccbb33f646c338fb8b562609d867ad0d1b902665cbaa15b6a8ab",
+    "targets/YlDashDnsInstrumentedTest.kt": "654b230b3619121ce268f2b8da37c8076132d08621144acc9a2f9af594d9ab5d",
+    "targets/android_dash_playback_test.dart": "7a7f3a6e4299fb30ba73e610744c3c0e9fb79af860f4987a5343ed91fd4ffe91",
+    "targets/android_network_start_failure_test.dart": "bc770db279dfe2ea90558156997dede9190ee311b7de9649dd52fa60e68b64b8",
+    "targets/script_runtime_test.dart": "9aa01d853ccbed4f462b971f3aba5cb3c6b50a2c6b37d5cbab4262e75c87c6a2"
+  }
+}

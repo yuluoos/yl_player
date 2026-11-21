@@ -56,6 +56,23 @@ void registerRuntimeContracts() {
       expect(secureSource.request.credentials, isEmpty);
     },
   );
+  for (final (code, source) in <(String, String)>[
+    ('invalid_result', 'function main(){return {}}'),
+    ('host_api_unsupported', 'function main(){return mytv.unknown()}'),
+  ]) {
+    test('$code leaves the native resolver reusable', () async {
+      final resolver = YlScriptResolver();
+      addTearDown(resolver.dispose);
+      await expectLater(
+        resolver.resolveSource(source).result,
+        throwsA(failure(code)),
+      );
+      expect(
+        (await resolver.resolveSource(success).result).uri.path,
+        '/success',
+      );
+    });
+  }
   for (final (name, source) in <(String, String)>[
     ('infinite JavaScript', 'function main(){while(true){}}'),
     (

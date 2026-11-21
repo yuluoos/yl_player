@@ -196,7 +196,7 @@ void main() {
     expect(failure.code, YlFailureCodes.networkHttpForbidden);
     expect(
       failure.message,
-      'The media server refused the request. Check access credentials and request configuration.',
+      'HTTP 403: The media server refused the request. Check access credentials and request configuration.',
     );
     expect(failure.toString(), isNot(contains('must-never-appear-publicly')));
     expect(failure.toString(), isNot(contains(server.automaticUri.toString())));

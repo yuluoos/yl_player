@@ -1167,6 +1167,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-oppo-network-and-resource-regressions.md",
       "sha256": "c2774bcce3857709acf387fd1c5198baf066a8399d0e452494a65d5a52905137",
       "kind": "report"
+    },
+    "android-oppo-dash-network-and-resolver-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-dash-network-and-resolver.md",
+      "sha256": "1b2d1dc091acc5d8ce87ff179e0244cc3bb4711c92e087bc6683e13a94e5e9c8",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1258,10 +1263,11 @@
         "p01",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "complete-full-platform-output-acceptance-preserving-approved-p01-completion"
+      "nextAction": "qualify-timestamp-matched-output-on-compatible-device-or-capture-path"
     },
     {
       "requirement": "CAP-DASH",
@@ -1600,10 +1606,11 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-nine-script-media-handoff-and-cleanup"
+      "nextAction": "restore-nine-frozen-scripts-for-per-source-handoff-and-cleanup"
     },
     {
       "requirement": "CAP-JS",
@@ -1645,10 +1652,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "repeat-independent-mode-baselines-and-qualify-source-clock-and-frozen-targets"
+      "nextAction": "qualify-source-clock-and-frozen-targets-after-two-oppo-mode-baselines"
     },
     {
       "requirement": "CAP-LIVE",
@@ -1691,10 +1699,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "finish-cross-period-output-and-device-matrix"
+      "nextAction": "qualify-joint-output-after-oppo-period-and-pcm-regressions"
     },
     {
       "requirement": "CAP-PERIOD",
@@ -1738,7 +1747,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
       "nextAction": "qualify-additional-device-and-stream-boundaries-after-oppo-faults-and-owned-sustained-playback"
@@ -1781,7 +1791,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -1866,10 +1877,11 @@
         "p06",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-dns-classification-across-request-boundaries"
+      "nextAction": "verify-real-negative-dns-after-injected-dash-manifest-and-segment-failures"
     },
     {
       "requirement": "ERR-02",
@@ -1912,7 +1924,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
       "nextAction": "complete-forbidden-diagnostics-and-other-request-boundaries-after-single-request-oppo-dash-pass"
@@ -1956,10 +1969,11 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-runtime-termination-and-budget-release"
+      "nextAction": "qualify-other-devices-after-oppo-native-timeout-and-reuse"
     },
     {
       "requirement": "ERR-04",
@@ -1998,10 +2012,11 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-host-and-invalid-result-faults"
+      "nextAction": "qualify-other-devices-after-oppo-invalid-result-and-host-api-regressions"
     },
     {
       "requirement": "ERR-05",
@@ -2042,10 +2057,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-handshake-failure-classification-after-physical-disconnect-recovery-budget-pass"
+      "nextAction": "qualify-other-rtmp-peers-after-oppo-handshake-and-disconnect-regressions"
     },
     {
       "requirement": "ERR-06",
@@ -2302,7 +2318,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -2397,10 +2414,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-real-route-interruption-background-and-peers"
+      "nextAction": "verify-route-interruption-and-peers-after-oppo-background-resume"
     },
     {
       "requirement": "REG-AUDIO",
@@ -2596,7 +2614,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -2648,7 +2667,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-network-and-resource-regressions-20261121"
+        "android-oppo-network-and-resource-regressions-20261121",
+        "android-oppo-dash-network-and-resolver-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"
