@@ -1157,6 +1157,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-oppo-format-matrix.md",
       "sha256": "1aae30492369f752f54249f5b8f0e1724a8937d1a2ea57bab626cc93a379959e",
       "kind": "report"
+    },
+    "android-oppo-playback-regressions-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-playback-regressions.md",
+      "sha256": "40db644fc137547fa934b9398c892fafd33da3fcd2fc6dea01659ed6ac7d5045",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1172,7 +1177,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "abr-recovery-20261027",
-        "android-oppo-abr-20261121"
+        "android-oppo-abr-20261121",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "qualify-api24-repeat-policy-and-bound-output-after-api31-physical-weak-network-runs"
@@ -1631,7 +1637,8 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "measure-three-protocols-and-freeze-mode-targets"
@@ -1676,7 +1683,8 @@
         "p02",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "finish-cross-period-output-and-device-matrix"
@@ -1721,7 +1729,8 @@
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
@@ -1763,7 +1772,8 @@
         "p02",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "complete-physical-protected-hdr-subtitle-and-sync-acceptance"
@@ -2279,7 +2289,8 @@
         "p06",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-cross-module-cancel-and-stale-races"
@@ -2373,7 +2384,8 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "verify-real-route-interruption-background-and-peers"
@@ -2568,7 +2580,8 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-playback-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"

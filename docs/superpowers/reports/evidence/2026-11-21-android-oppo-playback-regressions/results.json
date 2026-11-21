@@ -1,0 +1,219 @@
+{
+  "sourceCommit": "b61cb6688165e276c47ddaa3ebb9e899fae3fb84",
+  "model": "CPH2065",
+  "apiLevel": 31,
+  "runs": {
+    "android_audio_tracks_test": {
+      "frameworkPassed": true,
+      "apkSha256": "51e99b68aeb5618e740d63d9a5b0cd608fd9d75dfd11145d6833fa357844fd0b",
+      "tests": [
+        "Android same-language audio remains selected across reordered Periods, seeks and caps",
+        "Android reports selected audio missing in prepared next Period"
+      ]
+    },
+    "android_multi_player_rollback_test": {
+      "frameworkPassed": true,
+      "apkSha256": "04978700dd38941f0f60d4372dad1588949f69c27d085adec716deb4b42fccda",
+      "tests": [
+        "A failed candidate on a second Player restores previous playback"
+      ]
+    },
+    "android_session_replacement_test": {
+      "frameworkPassed": true,
+      "apkSha256": "dc0227f85ea374abcc8bf4fd45f46759624eeb10b94ec5129e0b5c1dfe514274",
+      "tests": [
+        "Newer Load cancels strict inspection before decoder evidence; stale sessions reject",
+        "Decoded private candidate frame is suppressed until authoritative public output",
+        "Actual native callbacks wait for delayed acknowledgement across methods"
+      ]
+    },
+    "dash_subtitle_composition_test": {
+      "frameworkPassed": true,
+      "apkSha256": "7de359daa145c61bfbf320ee8c5c54b52c47ec10e129d7948c5f53ca56ae6cbc",
+      "pixelObservations": 20,
+      "tests": [
+        "managed DASH vtt actual pixels cue across Period gap, seek and off",
+        "managed DASH ttml actual pixels cue across Period gap, seek and off",
+        "managed DASH wvtt actual pixels cue across Period gap, seek and off",
+        "managed DASH stpp actual pixels cue across Period gap, seek and off"
+      ]
+    },
+    "fixed-period": {
+      "frameworkPassed": true,
+      "apkSha256": "c34adf15a39251047b8f03878d35af78224d7f812f6a589b4f11c0a93d31e056",
+      "periodResult": {
+        "schemaVersion": 1,
+        "runId": "fixed-period",
+        "mediaHash": "36a7eb35dd512e19141c6dbda51dcc85bf66a908d1728b880aef588aa55ebc50",
+        "profileHash": "4e4f256c59465f4a573d6ab1c48f7a7571294638025088d0cddba9325f5032ea",
+        "failureCode": null,
+        "failureType": null,
+        "beforeRollbackAutomatic": false,
+        "afterRollbackAutomatic": false,
+        "outcome": "completed",
+        "stage": "caps-seek",
+        "cleaned": true,
+        "sampleCount": 96,
+        "physicalOutputVerified": false,
+        "capabilityAccepted": false
+      }
+    },
+    "oppo-auto-40-early-140a8376": {
+      "frameworkPassed": true,
+      "apkSha256": "f5092665862ac7ce5b5eea28512aef442ac90b5bfae1d8853622f0e129029400",
+      "recovery": {
+        "stallMediaBytes": [
+          1084084,
+          0,
+          1274385
+        ],
+        "bufferingPositionUs": 18444000,
+        "bufferingSamples": 44,
+        "firstBufferingSampleUs": 19928387,
+        "lastBufferingSampleUs": 30737301,
+        "firstResumedSampleUs": 30988213,
+        "firstResumedSampleAfterRestoreUs": [
+          681786,
+          735885
+        ],
+        "rebufferCount": 1,
+        "endPositionUs": 40000000
+      }
+    },
+    "oppo-flv-1": {
+      "frameworkPassed": true,
+      "apkSha256": "0bfb08a6d016e5ce2e6c65f90b0ef838891f3ea3f3cd46efd1dbf5ee83b051c3",
+      "stage": "stop",
+      "outcome": "completed",
+      "failureCode": null,
+      "failureKind": null,
+      "rapidSwitchVerified": true,
+      "staleStopVerified": true,
+      "commits": [
+        {
+          "mode": "lowLatency",
+          "startedUs": 13924009,
+          "elapsedUs": 13964780,
+          "revision": 55
+        },
+        {
+          "mode": "smoothPlayback",
+          "startedUs": 41209519,
+          "elapsedUs": 41226096,
+          "revision": 174
+        }
+      ],
+      "sampleCount": 193,
+      "cleaned": true,
+      "captureComplete": true,
+      "violations": []
+    },
+    "oppo-hls-1": {
+      "frameworkPassed": true,
+      "apkSha256": "5dcc5a18c910e518e71b600dfcb5dfc29765fb3e3a5ebf85cb71e9fa57f3934d",
+      "stage": "stop",
+      "outcome": "completed",
+      "failureCode": null,
+      "failureKind": null,
+      "rapidSwitchVerified": true,
+      "staleStopVerified": true,
+      "commits": [
+        {
+          "mode": "lowLatency",
+          "startedUs": 13660864,
+          "elapsedUs": 13694384,
+          "revision": 53
+        },
+        {
+          "mode": "smoothPlayback",
+          "startedUs": 40882223,
+          "elapsedUs": 40926360,
+          "revision": 174
+        }
+      ],
+      "sampleCount": 193,
+      "cleaned": true,
+      "captureComplete": true,
+      "violations": []
+    },
+    "oppo-rtmp-2": {
+      "frameworkPassed": true,
+      "apkSha256": "c51f07de6a02683a6e677d6ea6ea4eea98f18761a5875effaf19b642caafdf1c",
+      "stage": "stop",
+      "outcome": "completed",
+      "failureCode": null,
+      "failureKind": null,
+      "rapidSwitchVerified": true,
+      "staleStopVerified": true,
+      "commits": [
+        {
+          "mode": "lowLatency",
+          "startedUs": 14831593,
+          "elapsedUs": 14864929,
+          "revision": 54
+        },
+        {
+          "mode": "smoothPlayback",
+          "startedUs": 42072301,
+          "elapsedUs": 42099039,
+          "revision": 177
+        }
+      ],
+      "sampleCount": 193,
+      "cleaned": true,
+      "captureComplete": true,
+      "violations": []
+    }
+  },
+  "archiveSha256": "0bd3ffabf17735f86f7d38d9a22f5865a9830c0d628eb5376841d9f44954c262",
+  "memberSha256": {
+    "fixture-40.json": "be340432bd9f9fcffa763781a21e3196f4939fbe02c3fb18d4b1b1d09b0673c2",
+    "period-fixture.json": "ad5463764304267e67cfd4583bfe051f9d2b40da7910296746b7fbca7bfd1056",
+    "outage-profile.json": "90297a72a22ca1e5bcf71736c669c0fa417bb35b90ed60518beb99c43ae7d8ab",
+    "oppo-rtmp-1/harness-error.txt": "23183e8849c81efe01d2dc26af4727253cab5ebc212f2627c7d1d9cc99c2b42a",
+    "oppo-rtmp-1/peer.log": "8b64e5d56d6e15cb0e778c88a186903f9a0c7b8b7ccd382dadcc9d7576a59f43",
+    "android_audio_tracks_test/capture.log": "2333034bfc7c06b8be061759c12da9c2ea26e5ad9502b9eefed882ebd0733319",
+    "android_audio_tracks_test/receipt.json": "0511f68c040e95f0ef96fa87fffe9d733aea4e5b6d2b15caff20f621b32600b7",
+    "android_multi_player_rollback_test/capture.log": "ea33375410f43ab8eeaaae82ee0adc87c2ffbb7254b828e784dd94d01abe710c",
+    "android_multi_player_rollback_test/receipt.json": "e1b95720166a4e6ebf77a05bb24679232503938182b4477ee707d2a2e02541fe",
+    "android_session_replacement_test/capture.log": "13cd8a63c83179373e0c9a1842c900f4ac8fdf713ef5e78444f0c3a6e9ece122",
+    "android_session_replacement_test/receipt.json": "b6215c56b28c523140941de5ddde5c7ed89f1744b4b7691d471260e9e64a0cc3",
+    "dash_subtitle_composition_test/capture.log": "1c4438a8f319770d3a2d55de9d171853218e6ac7bdf2991bb92b693de9fce099",
+    "dash_subtitle_composition_test/receipt.json": "e9ef767a719c49dd2ec49d47f5b141a27122ac6e40213ff93d7f879ff9153d95",
+    "dash_subtitle_composition_test/subtitle-pixels.log": "d993adf6084e9fb404a9a1a1da93c304f082c67663179b262d85f25ca9e77a63",
+    "fixed-period/capture.log": "8b263d2cefd9953bf3a1e2032079f0a5152eb2664dc3f4eb25618d6cbed78dcf",
+    "fixed-period/receipt.json": "f72a340667bddd2e77e5a2dbb9d05bb5e1254bba2bf7f2b241d856d6e1210baf",
+    "fixed-period/server.log": "20c80a402d003f77721fb299b80cf9156b0727c40f31eb89ef1c40abf2d015ee",
+    "fixed-period/requests.jsonl": "069aa0923d3f35375efbe22617cad572e50ec91d30756296d32d8ececb357c91",
+    "oppo-auto-40-early-140a8376/capture.log": "674d2fc0fb309558f4fa2e31e50af5e8ac1c9a7e09fb9b9a225aef31b1240c99",
+    "oppo-auto-40-early-140a8376/receipt.json": "a3720f04b0f863d4391fbfdb52966bd951272bb9803d20d56d0187d95f12f284",
+    "oppo-auto-40-early-140a8376/server.log": "ac963b974f9377dce688fe56c959d0f79fc0b55059c521d64d1f68ee1aadad55",
+    "oppo-auto-40-early-140a8376/requests.jsonl": "b68a8af3cc145b224c6743e67ecb76211937d42c04d0b3b0550cbc7dd96d1bd3",
+    "oppo-auto-40-early-140a8376/recovery.json": "292f724fc297f07152cce19cd575156691cdbbc00dd86af6ff6fd3be192c25d8",
+    "oppo-flv-1/capture.log": "d18f0fe475765af256bb998ceb68738d56c649afa264a6c137bfde42eff1a20a",
+    "oppo-flv-1/receipt.json": "71fb5b3ff36f6c8e4a52b120866614b4c46c896da18b14355ae2dcc775006380",
+    "oppo-flv-1/connections.jsonl": "de31e2d17de6182b7a3c00d0872fdee786243746079d0e1189086ffcc158f44e",
+    "oppo-flv-1/relay.log": "232f04555ab26a55cf765bdc6db9932852d5886c377183b52bb377f120d60b68",
+    "oppo-flv-1/relay-receipt.json": "475bfbbb760973d0d1039f7974903e2f982158b951bc3b6fda3e745638ae3469",
+    "oppo-flv-1/summary.json": "b42db0e357484ea58c2d7b704f2bff050e79c3b08cdb257e63ee42f267d76230",
+    "oppo-flv-1/source/receipt.json": "b9e3390002b4ff80d149fc7730087a97ba912ba912731d721426f3c39813ce27",
+    "oppo-flv-1/publisher.log": "c85d2894e8f30ff9c92a223231cc681e07c61867c32bb18e0333eca04a1129b2",
+    "oppo-hls-1/capture.log": "8b748159aa2cc4f8c2cd114f105b21d060388a70ac43229f179d5abbbe7fe35b",
+    "oppo-hls-1/receipt.json": "69e0710dad5ab992473684b653fa2d6e0c57e26d0983d73c28dd4f3037624c63",
+    "oppo-hls-1/connections.jsonl": "15c75546e9f2f2ecced0a0bc40edfd6cebebb704c8e41fb98e516b2211ff1adb",
+    "oppo-hls-1/relay.log": "40c5d5636fd24cc429c0e3b9d72015cb1ebd744ec7f745315f257500bfdc94ae",
+    "oppo-hls-1/relay-receipt.json": "268a8850a4140901a90954762ba5f350aeda8042bf3ae82a16e9a193320cda29",
+    "oppo-hls-1/summary.json": "e07f98960166f53dfb200d9b2ffc333371a8f16c64422084f9d03d62f179295d",
+    "oppo-hls-1/source/receipt.json": "d35b441dd4f7b9d6c4eb160174afcc96ea02c9875151ddee299c49d294dd3f5f",
+    "oppo-hls-1/publisher.log": "d989a54c4a5ddce86ce9b0cbef412065c29f392799ee3f69a79923c9f7024f3f",
+    "oppo-rtmp-2/capture.log": "2dc2be7c715fae18dae81c9608191387b819fa4934d8f1d98509a757c46e67f2",
+    "oppo-rtmp-2/receipt.json": "4cb2dce8cb84e1ff0f54d3cea09b6fb6c2c2903ee23426ad13c734424a30c0c9",
+    "oppo-rtmp-2/connections.jsonl": "0c58b6f0a44553a61010da127c95cbb6261a0f79586e475ee8f32ff1d5f88fe0",
+    "oppo-rtmp-2/relay.log": "88e21a3701e26f86aaa0e3ad36dfcb1d324955d52d26853ac3dd054d840773c2",
+    "oppo-rtmp-2/relay-receipt.json": "a3f9b8fa1fe69b9804641b454dd71d42ca0c88cea36f1f62f2bab8ed21dbeffb",
+    "oppo-rtmp-2/summary.json": "3b51ab2f2531a2cbf36937d7dd15efa550dd3fc3004716f3c33b44c1a3a964a2",
+    "oppo-rtmp-2/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "oppo-rtmp-2/server.yml": "880c642c88c72d23bf3115986a3aa7503d33b6b476f602062789f0b1d2d878f1",
+    "oppo-rtmp-2/peer.log": "df1484779e14fcfb139290c53cb6beb57722d6f98b72256bdc486c10dcf5dbf8"
+  }
+}
