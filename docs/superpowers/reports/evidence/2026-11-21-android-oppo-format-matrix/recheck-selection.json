@@ -1,0 +1,112 @@
+[
+  {
+    "usedInFinal": true,
+    "caseId": "avi-avc-mp3",
+    "transport": "file",
+    "initialRunId": "e771c552-193f-4d26-ae6d-0c5489bb7174",
+    "repeatRunId": "c45f51db-d601-416f-93e0-42f6a264d1d0",
+    "repeatAccepted": true,
+    "repeatErrors": [],
+    "repeatFailure": null,
+    "initialLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: UNKNOWN (0)",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "WaitTime: 167",
+      "Complete"
+    ],
+    "repeatLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: COLD",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "TotalTime: 3702",
+      "WaitTime: 3722",
+      "Complete"
+    ]
+  },
+  {
+    "usedInFinal": true,
+    "caseId": "mkv-avc-aac-no-cues",
+    "transport": "file",
+    "initialRunId": "9f0ecab9-7cb5-4c7a-b823-78c8b06b5db6",
+    "repeatRunId": "62ef958d-1220-41fa-bc86-7b289242316d",
+    "repeatAccepted": true,
+    "repeatErrors": [],
+    "repeatFailure": null,
+    "initialLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: UNKNOWN (0)",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "WaitTime: 179",
+      "Complete"
+    ],
+    "repeatLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: COLD",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "TotalTime: 3472",
+      "WaitTime: 3488",
+      "Complete"
+    ]
+  },
+  {
+    "usedInFinal": true,
+    "caseId": "mkv-hevc-main10-aac",
+    "transport": "http",
+    "initialRunId": "cfddb9bf-04e1-4b6a-9de7-322c4f8a35f3",
+    "repeatRunId": "2f02ceef-b519-40ab-ad26-373bf4d87bcf",
+    "repeatAccepted": true,
+    "repeatErrors": [],
+    "repeatFailure": null,
+    "initialLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: UNKNOWN (0)",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "WaitTime: 171",
+      "Complete"
+    ],
+    "repeatLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: COLD",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "TotalTime: 3647",
+      "WaitTime: 3658",
+      "Complete"
+    ]
+  },
+  {
+    "usedInFinal": true,
+    "caseId": "ps-mpeg2-mp3",
+    "transport": "file",
+    "initialRunId": "ea6d8b4e-7e26-49db-9e27-074b79359771",
+    "repeatRunId": "72520684-b0b0-407c-b0dc-b3b66ff3d3a2",
+    "repeatAccepted": false,
+    "repeatErrors": [
+      "invalid_session"
+    ],
+    "repeatFailure": "YlFailure(category: decoder, code: decoder.unsupported, retryable: false, scope: command, diagnosticId: 73c13957-77c9-41b9-941d-9987b0c8120b)",
+    "initialLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: UNKNOWN (0)",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "WaitTime: 165",
+      "Complete"
+    ],
+    "repeatLaunch": [
+      "Starting: Intent { cmp=dev.ylplayer.yl_player_example/.MainActivity (has extras) }",
+      "Status: ok",
+      "LaunchState: COLD",
+      "Activity: dev.ylplayer.yl_player_example/.MainActivity",
+      "TotalTime: 3536",
+      "WaitTime: 3557",
+      "Complete"
+    ]
+  }
+]
