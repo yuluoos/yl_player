@@ -1137,6 +1137,11 @@
       "path": "docs/superpowers/reports/2026-11-20-ios-format-matrix.md",
       "sha256": "ee4e9419e170ad42e79ecc4882199adaac9df2e4e46523ad6a286870a214f43f",
       "kind": "report"
+    },
+    "android-hevc-main10-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-hevc-main10.md",
+      "sha256": "cc37a7426e8f640b77cfb36c4ce228a23b7831c0294382046e745d8cff50dba4",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1502,10 +1507,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "remaining-device-acceptance-20261105"
+        "remaining-device-acceptance-20261105",
+        "android-hevc-main10-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-av1-and-hevc-main10-file-http-on-capable-hardware-after-36-of-40-same-build-passes"
+      "nextAction": "qualify-av1-file-http-on-capable-hardware-after-hevc-main10-device-pass"
     },
     {
       "requirement": "CAP-FORMAT",
