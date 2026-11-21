@@ -1162,6 +1162,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-oppo-playback-regressions.md",
       "sha256": "40db644fc137547fa934b9398c892fafd33da3fcd2fc6dea01659ed6ac7d5045",
       "kind": "report"
+    },
+    "android-oppo-network-and-resource-regressions-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-network-and-resource-regressions.md",
+      "sha256": "c2774bcce3857709acf387fd1c5198baf066a8399d0e452494a65d5a52905137",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1178,10 +1183,11 @@
         "remaining-local-acceptance-20261028",
         "abr-recovery-20261027",
         "android-oppo-abr-20261121",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-api24-repeat-policy-and-bound-output-after-api31-physical-weak-network-runs"
+      "nextAction": "qualify-api24-and-physical-output-after-repeated-api31-auto-recovery"
     },
     {
       "requirement": "CAP-ABR",
@@ -1638,10 +1644,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "measure-three-protocols-and-freeze-mode-targets"
+      "nextAction": "repeat-independent-mode-baselines-and-qualify-source-clock-and-frozen-targets"
     },
     {
       "requirement": "CAP-LIVE",
@@ -1730,10 +1737,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "complete-device-fault-and-sustained-acceptance-preserving-controlled-playback"
+      "nextAction": "qualify-additional-device-and-stream-boundaries-after-oppo-faults-and-owned-sustained-playback"
     },
     {
       "requirement": "CAP-RTMP",
@@ -1903,10 +1911,11 @@
         "p06",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-forbidden-no-token-guess-or-repeat-retry"
+      "nextAction": "complete-forbidden-diagnostics-and-other-request-boundaries-after-single-request-oppo-dash-pass"
     },
     {
       "requirement": "ERR-03",
@@ -2032,10 +2041,11 @@
         "p04",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "restore-pinned-server-and-run-fault-matrix"
+      "nextAction": "verify-handshake-failure-classification-after-physical-disconnect-recovery-budget-pass"
     },
     {
       "requirement": "ERR-06",
@@ -2119,10 +2129,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-av1-hardware-required-20261121"
+        "android-av1-hardware-required-20261121",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "complete-resource-rejection-acceptance-after-physical-av1-hardware-required-error-pass"
+      "nextAction": "qualify-other-device-resource-limits-after-oppo-native-budget-and-av1-error-regressions"
     },
     {
       "requirement": "ERR-08",
@@ -2203,10 +2214,11 @@
         "p02",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-subtitle-only-failure-and-video-continuity"
+      "nextAction": "qualify-font-and-graphics-resource-failures-after-malformed-external-subtitle-isolation"
     },
     {
       "requirement": "ERR-10",
@@ -2434,7 +2446,8 @@
         "p08",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "verify-budgets-with-overlapping-sessions-and-rebuilds"
@@ -2487,7 +2500,8 @@
         "p03",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "verify-decoder-evidence-after-rebuild-and-fallback"
@@ -2581,7 +2595,8 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-playback-regressions-20261121"
+        "android-oppo-playback-regressions-20261121",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-replacement-cancel-and-release-races"
@@ -2632,7 +2647,8 @@
         "p06",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
-        "remaining-local-acceptance-20261028"
+        "remaining-local-acceptance-20261028",
+        "android-oppo-network-and-resource-regressions-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"

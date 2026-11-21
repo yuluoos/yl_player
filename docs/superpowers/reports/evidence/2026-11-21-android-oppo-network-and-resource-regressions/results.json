@@ -1,0 +1,433 @@
+{
+  "sourceCommit": "87b9baa14256c0fecb943099375c24d288098955",
+  "model": "CPH2065",
+  "apiLevel": 31,
+  "runs": {
+    "adaptive-120-r1": {
+      "frameworkPassed": true,
+      "outcome": "completed",
+      "sampleCount": 499,
+      "endPositionUs": 120000000,
+      "mediaBytesByPhase": [
+        1685846,
+        478137,
+        4615774
+      ],
+      "rebufferCount": 0,
+      "requestCount": 333,
+      "seconds": 120,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": true,
+      "upshiftLatencyUs": {
+        "min": 20832739,
+        "max": 20882605
+      },
+      "recoveryHighRequestLatencyUs": 632440,
+      "downshiftLatencyUs": {
+        "min": 23681304,
+        "max": 23731170
+      },
+      "requestFailures": 0
+    },
+    "adaptive-120-r2": {
+      "frameworkPassed": true,
+      "outcome": "completed",
+      "sampleCount": 498,
+      "endPositionUs": 120000000,
+      "mediaBytesByPhase": [
+        1685846,
+        481209,
+        4613530
+      ],
+      "rebufferCount": 0,
+      "requestCount": 334,
+      "seconds": 120,
+      "captureComplete": true,
+      "violations": [],
+      "adaptationObserved": true,
+      "upshiftLatencyUs": {
+        "min": 20652556,
+        "max": 20712512
+      },
+      "recoveryHighRequestLatencyUs": 700762,
+      "downshiftLatencyUs": {
+        "min": 23819412,
+        "max": 23879368
+      },
+      "requestFailures": 0
+    },
+    "android_managed_fault_isolation_test": {
+      "frameworkPassed": true,
+      "tests": [
+        "forbidden DASH manifest consumes one request even with retries",
+        "managed redirect budget prevents a third manifest request",
+        "malformed external subtitle preserves the advancing video session"
+      ]
+    },
+    "android_overlapping_release_test": {
+      "frameworkPassed": false,
+      "tests": [
+        "stopping and reopening overlapping video sessions releases their codecs"
+      ],
+      "videoCodecCounts": {
+        "idle": [
+          0
+        ]
+      },
+      "observedVideoCodecsDuringOverlap": [],
+      "stoppedSamples": 0,
+      "videoResourcesReleased": false
+    },
+    "oppo-flv-low-01": {
+      "frameworkPassed": true,
+      "sampleCount": 143,
+      "protocol": "flv",
+      "baselineMode": "lowLatency",
+      "captureComplete": true,
+      "violations": [],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        445159,
+        641659,
+        516581
+      ]
+    },
+    "oppo-flv-smooth-01": {
+      "frameworkPassed": true,
+      "sampleCount": 144,
+      "protocol": "flv",
+      "baselineMode": "smoothPlayback",
+      "captureComplete": true,
+      "violations": [],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        451274,
+        641746,
+        518830
+      ]
+    },
+    "oppo-hls-low-01": {
+      "frameworkPassed": true,
+      "sampleCount": 144,
+      "protocol": "hls",
+      "baselineMode": "lowLatency",
+      "captureComplete": true,
+      "violations": [],
+      "rebufferCountDelta": 2,
+      "rebufferDurationUsDelta": 1418000,
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        580260,
+        570101,
+        735766
+      ]
+    },
+    "oppo-hls-smooth-01": {
+      "frameworkPassed": true,
+      "sampleCount": 144,
+      "protocol": "hls",
+      "baselineMode": "smoothPlayback",
+      "captureComplete": true,
+      "violations": [],
+      "rebufferCountDelta": 1,
+      "rebufferDurationUsDelta": 1577000,
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        628297,
+        552210,
+        705854
+      ]
+    },
+    "oppo-rtmp-low-01": {
+      "frameworkPassed": true,
+      "sampleCount": 144,
+      "protocol": "rtmp",
+      "baselineMode": "lowLatency",
+      "captureComplete": true,
+      "violations": [],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        408151,
+        634227,
+        567485
+      ]
+    },
+    "oppo-rtmp-smooth-01": {
+      "frameworkPassed": true,
+      "sampleCount": 144,
+      "protocol": "rtmp",
+      "baselineMode": "smoothPlayback",
+      "captureComplete": true,
+      "violations": [],
+      "rebufferCountDelta": 0,
+      "rebufferDurationUsDelta": 0,
+      "networkPhasesObserved": [
+        0,
+        1,
+        2
+      ],
+      "networkPhaseBytes": [
+        398642,
+        638000,
+        573595
+      ]
+    },
+    "overlap-automatic": {
+      "frameworkPassed": true,
+      "tests": [
+        "stopping and reopening overlapping video sessions releases their codecs"
+      ],
+      "videoCodecCounts": {
+        "idle": [
+          0,
+          1
+        ],
+        "both": [
+          1
+        ],
+        "peer": [
+          0,
+          1
+        ],
+        "reopened": [
+          1
+        ],
+        "stopped": [
+          0
+        ]
+      },
+      "observedVideoCodecsDuringOverlap": [
+        1
+      ],
+      "stoppedSamples": 5,
+      "videoResourcesReleased": true
+    },
+    "rtmp-sustained-repeat": {
+      "frameworkPassed": true,
+      "tests": [
+        "owned RTMP advances for ten minutes on one connection"
+      ],
+      "accepted": 1,
+      "closed": 1,
+      "peakHeldBytes": 7692,
+      "samples": 120,
+      "elapsedMs": 600420,
+      "positionMs": 596963,
+      "lastRebufferCount": 1,
+      "hostObservations": 617,
+      "hostObservationErrors": 0,
+      "preFixtureCleanupActive": 0
+    },
+    "rtmp_playback_test": {
+      "frameworkPassed": true,
+      "tests": [
+        "RTMP independent AVC AAC and AVC-only mounted output and stop",
+        "RTMP policy assess load parity rejects before connect and survivor advances",
+        "RTMP missing candidate preserves survivor without claiming lease rollback",
+        "RTMP silent setup cancellation and replacement fence stale work",
+        "RTMP public pause suspends blocked input beyond fifteen seconds",
+        "RTMP three lifetime recoveries fresh output fourth drop terminal and stop fences backoff"
+      ],
+      "accepted": 15,
+      "closed": 15,
+      "peakHeldBytes": 915769
+    },
+    "rtmp_sustained_playback_test": {
+      "frameworkPassed": false,
+      "tests": [
+        "owned RTMP advances for ten minutes on one connection"
+      ],
+      "accepted": 1,
+      "closed": 1,
+      "peakHeldBytes": 11860,
+      "samples": 120,
+      "elapsedMs": 600407,
+      "positionMs": 597103,
+      "lastRebufferCount": 1
+    },
+    "stall-120-r1": {
+      "frameworkPassed": true,
+      "outcome": "completed",
+      "sampleCount": 539,
+      "endPositionUs": 120000000,
+      "mediaBytesByPhase": [
+        977737,
+        0,
+        6096477
+      ],
+      "rebufferCount": 1,
+      "requestCount": 337,
+      "seconds": 120,
+      "bufferingSamples": 48,
+      "bufferingStartPositionUs": 16851000,
+      "bufferingEndPositionUs": 16854000,
+      "firstResumedAfterRestoreUs": [
+        569124,
+        627015
+      ]
+    },
+    "stall-40-r1": {
+      "frameworkPassed": true,
+      "outcome": "completed",
+      "sampleCount": 202,
+      "endPositionUs": 40000000,
+      "mediaBytesByPhase": [
+        1110058,
+        0,
+        1248800
+      ],
+      "rebufferCount": 1,
+      "requestCount": 117,
+      "seconds": 40,
+      "bufferingSamples": 42,
+      "bufferingStartPositionUs": 18898000,
+      "bufferingEndPositionUs": 18902000,
+      "firstResumedAfterRestoreUs": [
+        706265,
+        759300
+      ]
+    },
+    "native-resources-online": {
+      "target": "dev.ylplayer.yl_player_android.test/androidx.test.runner.AndroidJUnitRunner",
+      "apkSha256": "e34446786b212ab5c702316e6b5af8bbc5f6e8897b98b8b2eac1cb8fc34fd7c3",
+      "installedApkSha256": "e34446786b212ab5c702316e6b5af8bbc5f6e8897b98b8b2eac1cb8fc34fd7c3",
+      "sourceCommit": "87b9baa14256c0fecb943099375c24d288098955",
+      "apiLevel": "31",
+      "model": "CPH2065",
+      "tests": [
+        "dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest#nativeFrameBudgetFailureIsResourceExhaustedAndReleasesEverything",
+        "dev.ylplayer.yl_player_android.YlFormatDecodeInstrumentedTest#actualEngineBudgetFailureIsOneTerminalEventAndCleanup",
+        "dev.ylplayer.yl_player_android.YlDashLifecycleInstrumentedTest#foregroundRebuildPreservesProgrammeAudioAndCrossPeriodProgress"
+      ],
+      "frameworkPassed": true
+    }
+  },
+  "archiveSha256": "3c8e623b8ec8bbd3807edd6e0dc01cd50605b24040cf6bf7650b7f675a55b5b9",
+  "memberSha256": {
+    "adaptive-120-r1/receipt.json": "6bd20260b5562158414035c7ddca5fccb4a04a3608cdd01fd3f9e7b2cd057a39",
+    "adaptive-120-r1/capture.log": "bd0656e070b46ddf8c5cafa4256c509124a5d7e6f7b6999a08545053e8c11a3e",
+    "adaptive-120-r1/server.log": "a9f005231e34f6284ffdef7b457898dc06c7d35a030b392253b66f9d1ad12803",
+    "adaptive-120-r1/requests.jsonl": "3afb3cd92bf204302bf5a23f4f8433dcdec6640d5166260713f7d80520ca1e2d",
+    "adaptive-120-r1/summary.json": "b56ee67fc8b442f4784cc3dff294c3dbe22e1af1a9dea8404a2ea3312ab408a0",
+    "adaptive-120-r2/receipt.json": "491f8025b8eb5d0b5a7420f63927df741e171e613981a69bc1d781e8544336e6",
+    "adaptive-120-r2/capture.log": "a177b96896b085a51b1667bb773aa9c29fa3c483f86bf711e86c522ec5ec41b9",
+    "adaptive-120-r2/server.log": "edfc20933ede7f9da2a8b1c376cd02ec2f8b4683f86f6f5b3e37fa77b6848e82",
+    "adaptive-120-r2/requests.jsonl": "c907c4622856954cfa841d6a1108fa0b099ecc9667dba5528bd2d7f38f8b1299",
+    "adaptive-120-r2/summary.json": "cb40a42fc1cb4290b37808c4f79544ea58f632e6a38eaf0bd0ef8617cde7d706",
+    "android_managed_fault_isolation_test/receipt.json": "7116a7ed95b2d4bbcd60f38ce05635ff5c0d25648cedbcecf9e6573e37520da0",
+    "android_managed_fault_isolation_test/capture.log": "215b193d7e903caaaddd9375470727a4df52d427cc9289f7ef599608517dec3f",
+    "android_overlapping_release_test/framework.log": "54e8074526f41f724a37a46f5d5f0ba0fccb4fca6d77ff396fd00e9d93f66b53",
+    "android_overlapping_release_test/receipt.json": "1d41821dcd7fc94c65a214553c68671bf9a1e7f850aa80c66e47343977bdfa7e",
+    "android_overlapping_release_test/capture.log": "65e26720a02350f3a6e0365b49d78adc5aa716db1bb1e146cfefaaeb57fa142b",
+    "android_overlapping_release_test/codec-counts.json": "9227b9e71127cc9bfecc9c2a1e2e236cfd0c37c42ef877c26d93b7ca603f3c59",
+    "android_overlapping_release_test/target.dart": "c273e68e845e051a14e00745964b9bc07b8a3648b41edeea64366d6ce5e1607a",
+    "oppo-flv-low-01/receipt.json": "35902b22b3513e0af47f82c2a14a44f6603d688c8eca5ac509dc9e9b5924f013",
+    "oppo-flv-low-01/capture.log": "4500032883c59f05771ddcf8b83f0f44466155113de511aec25b35989348690f",
+    "oppo-flv-low-01/summary.json": "8556d5a612cb719aa581a39f0ecf08ebb71100c055015bd567d22ca8b13c3b45",
+    "oppo-flv-low-01/connections.jsonl": "146e310f80d7b70f3ced970f55459074065b2bbe8e85382845997d94799f3020",
+    "oppo-flv-low-01/relay-receipt.json": "639fd434244ebc645124d342cb2e94cef8e976ce4515ce7d11200ec51bd65be0",
+    "oppo-flv-low-01/source/receipt.json": "9970d6a19d7b76711fb075c625b361525f2c2d24c7d78237c13fe447da8f8f06",
+    "oppo-flv-smooth-01/receipt.json": "93bb9f2da8eb0ac00e70251895aeba02a7c41b2f1445d040908af4823975b043",
+    "oppo-flv-smooth-01/capture.log": "59abdb6eaa03dd33523317322f89aa2466338a4802157651e4f40934cc1b4567",
+    "oppo-flv-smooth-01/summary.json": "9b54f65fa5e3367bdc249b91a064c9fd808918f3370b51be43cbbe64a9a81d4e",
+    "oppo-flv-smooth-01/connections.jsonl": "43239647e7b8756356bab8e76527fa9d6c5733b4f23c62b2f7a186d719f617cb",
+    "oppo-flv-smooth-01/relay-receipt.json": "45896d12ea1e3eb3778405a87a1f97558c70e8d2df8f498f9635114f75069dd4",
+    "oppo-flv-smooth-01/source/receipt.json": "21340a632d5b482d20c33eec7d4a46f144999a21d2667f68d7b34a82d35a7bd9",
+    "oppo-hls-low-01/receipt.json": "0dd500cee2ef4a0a6893dc6ccb88a83c8680fcf5bbd07c4a773c494896096a2b",
+    "oppo-hls-low-01/capture.log": "3003fd5bb7411f2b2d81bdf53bfef773f7d33a3f223d79e20d969d3988dbc40a",
+    "oppo-hls-low-01/summary.json": "06cec422c40aaba0aa52f4f652323c1aeb368f97e50f66f483836749615ee220",
+    "oppo-hls-low-01/connections.jsonl": "4d1c5280b77529891a02d44bf8bfc03f1f925d1854b7d71c71e22ead8f04419f",
+    "oppo-hls-low-01/relay-receipt.json": "829b88634edebdf26fe900f7db38ed387af378a1391cb4476092f57d7294a4ed",
+    "oppo-hls-low-01/source/receipt.json": "acf3a47760cb03fd1092e9b53cf121f1cd9c7984471859f3d637c40d589331ea",
+    "oppo-hls-smooth-01/receipt.json": "929b566d578f522850306083922814d1845611c070d15f5b179108993b176351",
+    "oppo-hls-smooth-01/capture.log": "c2daec17000d20d6f7978b07681c607d690a78ca65ff8ef4e2bc771aa07aec0f",
+    "oppo-hls-smooth-01/summary.json": "ba03c29acb5a1a6ce13a20a731b416f51b859f4fe1330572bce5455b65d2d1af",
+    "oppo-hls-smooth-01/connections.jsonl": "fbcb38f427007a33d3db39d528b435aa31e797d013cf81abca2d6a58ad254446",
+    "oppo-hls-smooth-01/relay-receipt.json": "d38293db6d199a99a1a4d09faedbc01049a5d54d2c044b704168de5559e7b52d",
+    "oppo-hls-smooth-01/source/receipt.json": "0f5a741b4cb47fbcf3cda5306475dc766ae72e5bc189a86faf04172d1813c372",
+    "oppo-rtmp-low-01/receipt.json": "9cfcba87ca9e6302676cbf95c50ea3786a36c6683856f30c0b988482fbb5a7b2",
+    "oppo-rtmp-low-01/capture.log": "bb6dded55035a4c275ac57cc7fd627938bad8b0a212e4b17295c71cfa9b19977",
+    "oppo-rtmp-low-01/summary.json": "083c329767e662ec694e032204e76d93e258a0af26e906f1c41622ed1cd36576",
+    "oppo-rtmp-low-01/connections.jsonl": "69c9854a14cb094ed21887fb6ca2382a85f620e7db13240825e64175d0ebb6ab",
+    "oppo-rtmp-low-01/relay-receipt.json": "39fce85a080a984ff027f746cbcd5b2588fd529f30307e525fd5c63ff04eeb92",
+    "oppo-rtmp-low-01/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "oppo-rtmp-low-01/peer.log": "e0514621efe1de7b68f706c703bb5c6566227e912f6ffb0153dcd06daee883d3",
+    "oppo-rtmp-low-01/server.yml": "e5376a7c4c21145c56239f172e751805efd189857edb1bd2ca3803684c8546b4",
+    "oppo-rtmp-smooth-01/receipt.json": "0169735ccaf682f60b27e41acc0ed98544abacc79f90f521164608c12814d11d",
+    "oppo-rtmp-smooth-01/capture.log": "778a2de699ababfa21c73d881ad1e1d32ff4c282ee4ff9340a9fc56aa0718dca",
+    "oppo-rtmp-smooth-01/summary.json": "d0a01df06c1e00368511eef22ea67b47662ce6f7b5f56a9af78b1edd3d5447da",
+    "oppo-rtmp-smooth-01/connections.jsonl": "743a6bc437813d11e735be2445c7580edb9a2ce2c5b73db2a8452f6dc0a107b2",
+    "oppo-rtmp-smooth-01/relay-receipt.json": "94d026ef645df680ac4dc282ce05702b9a5655af7f5dc9fa28c581a1fddf92f5",
+    "oppo-rtmp-smooth-01/source-identity.json": "8266179c4789f98d640b8cc4971d42bf8bb7d9b709dbe45d55ed0feed08300f0",
+    "oppo-rtmp-smooth-01/peer.log": "db482775a46d5a1062d8249fa3302bcc14a2a09951bacb9bc1ae8e38b1136085",
+    "oppo-rtmp-smooth-01/server.yml": "48cdeaa080491065987567a1b90237d78fd985fe73940be9adf4dbcbf02a11c4",
+    "overlap-automatic/receipt.json": "369da2e61e65511787f0c61e285d6bb0486ae4c2124dc115a40b943de92b6d79",
+    "overlap-automatic/capture.log": "183dfadabecd434a4fa9e136d36bd4453da1e553c2ea65fc958d5f9089d0858d",
+    "overlap-automatic/codec-counts.json": "a8d3b0dc0ed68e4a8f6f61104491fcfb106427b83499de613d4fe0b17e1b515a",
+    "rtmp-sustained-repeat/peer/proxy.json": "fe94a2da0e3dba59cc1678e37376c46292cd77b4666f9922dd5d5528a861d897",
+    "rtmp-sustained-repeat/peer/peer.log": "570e04ceaa1a2d4107966fb098ca3e7b00cbbfb4778ccba17c3ae813a524d14a",
+    "rtmp-sustained-repeat/peer/peer.yml": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "rtmp-sustained-repeat/rtmp-observations.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "rtmp-sustained-repeat/receipt.json": "f2388f3dbfc923c910b37703defec2cf86d6e5e2d46acbddf52b656aae9c02fe",
+    "rtmp-sustained-repeat/capture.log": "4dec31686db27acc69a6c0168397c3adb5edecae79f2d025c0236e01d319ffba",
+    "rtmp-sustained-repeat/peer-stats.jsonl": "6b9150008d7936bde6a1a37a115a7f2983979c15e7b419dbead25e6a0d8ed525",
+    "rtmp-sustained-repeat/before-fixture-cleanup.json": "9ac0034052ffdf03839bf7d294f1b548b70faeeea223596bfe8750c51d426318",
+    "rtmp-sustained-repeat/device-cleanup.json": "b1bff4da3cb63a4e206120b440dd9dc8bcf6aeab99d4895ce2a9db103e55cefd",
+    "rtmp_playback_test/peer/proxy.json": "38548a2ba7ed29db8a21ff7377098c2f07c064567ff4990028517665e960b465",
+    "rtmp_playback_test/peer/peer.log": "269c16295baadcc8beb10d4c5e44f853560c9a1e7408d37e353adb386452f906",
+    "rtmp_playback_test/peer/peer.yml": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "rtmp_playback_test/rtmp-observations.log": "303f298f060fdeeff2af3e6c1e31e37d792e12b023b6e289b20b4b9b75be1893",
+    "rtmp_playback_test/receipt.json": "78b7e790b22cf6749e1b16ee5180292a13aa6f6a08db9a2a3d963b707b35fd4c",
+    "rtmp_playback_test/capture.log": "0c61acc6d9061c2fcb828c19ff9c770b898bd7734b80d1bd1e08db57d763b50a",
+    "rtmp_sustained_playback_test/peer/proxy.json": "6f9da73bd07ed08366cbdcb649d2a435c29e6f7050bd4ba90a62f94da34bb4e2",
+    "rtmp_sustained_playback_test/peer/peer.log": "b4f238011e9686516b5c448f0729bd5e5cfb411f13ce98e47fdd90a059b488d0",
+    "rtmp_sustained_playback_test/peer/peer.yml": "32a0e227ef2795ded94f07e07ea15f7632abba67c1c22ee0d23ec335e89e82e7",
+    "rtmp_sustained_playback_test/rtmp-observations.log": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+    "rtmp_sustained_playback_test/framework.log": "ec53e6acc758031f58da320471268d1c6de5bac51e97e3987fdb50d303f38513",
+    "rtmp_sustained_playback_test/receipt.json": "b703c7993dc947fc76a365d344fac8bd4b950b35b34b048273d06e21f2bc15d5",
+    "rtmp_sustained_playback_test/capture.log": "f15d9575a1209c005a8d3cd4135073fb0593885e96dbd1ae1ae2115508bde3ca",
+    "rtmp_sustained_playback_test/target.dart": "ed86558e251e7b97a883525b93cd2bfc7dded9e40fedfc56a2bd2e24cdd00872",
+    "stall-120-r1/receipt.json": "5772d09a944764c957f2126862fdc2e7023422f43a93f968954c31a6ec2f1496",
+    "stall-120-r1/capture.log": "d56e4444767f6b7402330e35c4282630ff199e513d41a02263ed6fd2eaf5576b",
+    "stall-120-r1/server.log": "bbdab039bcbd4c4ce8060d559abb18e05f1dcb202ca3d0488f9db5f20ada201d",
+    "stall-120-r1/requests.jsonl": "83ca9d77103b1f200fdbe214a98c4455e6d19e2b600e6add81a46da5b28309dd",
+    "stall-40-r1/receipt.json": "8be9d9d881a01f922ef6c2d484857548045be3b21d1bd65c1ed4fb6bbeefdc46",
+    "stall-40-r1/capture.log": "0f53ccab97808b08976e93685ac2866130646569c550cf7a8a9f9f2871bc708a",
+    "stall-40-r1/server.log": "0740ab47b711e899df5e00dc0f8176b13405c38b1f3e742c4d0d6fdbc7b9cf7b",
+    "stall-40-r1/requests.jsonl": "9c26cef53a205fffc8b26029bcd3d856760e52d42e203744bb2cb9f3197bf178",
+    "native-resources/build-failure.log": "e16113451bc825f83c542cedc5a332119756e0ce7e6d7b4f9dcb4532a8673dd7",
+    "native-resources-online/receipt.json": "c928d6d9e82cdf3a9a6fdd6396523b6dd542bb9c43c95e61bbcb43a8259dafd0",
+    "native-resources-online/instrumentation.log": "d817d8995e009e064c658228d2eaf07521b124ab1c23e5c7af2e72a122d178dd",
+    "outage-profile.json": "90297a72a22ca1e5bcf71736c669c0fa417bb35b90ed60518beb99c43ae7d8ab",
+    "fixture-40.json": "be340432bd9f9fcffa763781a21e3196f4939fbe02c3fb18d4b1b1d09b0673c2",
+    "fixture-120.json": "e047a42ce0020f8260b1b0c8e1feb695c5ee7ed8879116c0b151f4b2ec6475df",
+    "cleanup.json": "b1bff4da3cb63a4e206120b440dd9dc8bcf6aeab99d4895ce2a9db103e55cefd"
+  }
+}
