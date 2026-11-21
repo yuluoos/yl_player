@@ -84,6 +84,7 @@ internal class YlDashSurfaceProbe(private val playback: Handler) {
         throw failure
     }
     val surface: Surface get() = output.surface
+    val texture: SurfaceTexture get() = output.texture
 
     fun observe(onFrame: (Long, List<Int>, Long, Long) -> Unit, onError: (Throwable) -> Unit) {
         output.texture.setOnFrameAvailableListener({

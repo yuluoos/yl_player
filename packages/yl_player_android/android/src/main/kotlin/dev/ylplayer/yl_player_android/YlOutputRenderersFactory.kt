@@ -238,7 +238,7 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
 
     override fun codecNeedsSetOutputSurfaceWorkaround(codecName: String): Boolean =
         super.codecNeedsSetOutputSurfaceWorkaround(codecName) ||
-            (android.os.Build.VERSION.SDK_INT < 29 && codecName == "OMX.MS.HEVC.Decoder")
+            needsLegacyHevcSurfaceRestart(codecName)
     override fun onProcessedTunneledBuffer(presentationTimeUs: Long) {
         super.onProcessedTunneledBuffer(presentationTimeUs)
         observer.rendered(outputStreamStartPositionUs, outputStreamOffsetUs)

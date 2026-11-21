@@ -26,6 +26,7 @@ internal class YlNativeFallbackEngine(
     private val observeAudioClock: ((Long) -> Unit)? = null,
     private val seekNative: (YlFfmpegSession, Long) -> Boolean = { native, target -> native.seekTo(target) },
     private val networkBytes: YlNetworkByteCounter? = if (source.kind == AndroidSourceKind.NETWORK) YlNetworkByteCounter() else null,
+    private val requiresSurfaceRestart: (String) -> Boolean = { needsLegacyHevcSurfaceRestart(it) },
     private val surfaceForOutput: (YlVideoOutput) -> Surface = { it.borrowSurface() },
 ) : YlPlaybackEngineAdapter {
     private val softwareServices by lazy { softwareServicesOverride ?: YlSoftwareDecodeServices.production(context) }
@@ -317,8 +318,8 @@ internal class YlNativeFallbackEngine(
         if (!seekNative(requireSession(), targetUs)) throw YlBoundaryException(YlFailureKind.SOURCE_INVALID)
         resetOutputTimeline(targetUs)
     }
-    private fun resetOutputTimeline(targetUs: Long) {
-        hardwareVideo?.flush(targetUs)
+    private fun resetOutputTimeline(targetUs: Long, flushHardware: Boolean = true) {
+        if (flushHardware) hardwareVideo?.flush(targetUs)
         audioOutput?.flush(targetUs)
         requireSession().flush()
         playbackGeneration++
@@ -398,8 +399,28 @@ internal class YlNativeFallbackEngine(
     override suspend fun onTrimMemory(level: Int) = Unit
     override suspend fun onConfigurationChanged() = withContext(worker) {
         val public = output ?: return@withContext
+        if (terminalFailure || closed || session == null) return@withContext
         val surface = public.recreateBorrowedSurface()
-        hardwareVideo?.replaceSurface(surface) ?: video?.let { stream ->
+        val decoder = hardwareVideo
+        if (decoder != null) {
+            try {
+                val targetUs = currentPositionUs().coerceAtLeast(0)
+                if (decoder.replaceSurface(surface, targetUs, requiresSurfaceRestart)) {
+                    firstFrame = false
+                    firstFrameAtMs = 0L
+                    val native = requireSession()
+                    if (source.intent != AndroidStreamIntent.LIVE && native.mediaInfo.seekable && seekNative(native, targetUs)) {
+                        // The new codec already has fresh CSD and the presentation floor.
+                        resetOutputTimeline(targetUs, flushHardware = false)
+                    }
+                    // Forward-only inputs keep their audio clock and resume at the next keyframe.
+                }
+            } catch (error: Exception) {
+                failOnce(error)
+                closePlayback()
+                return@withContext
+            }
+        } else video?.let { stream ->
             if (!requireSession().configureSoftwareVideo(stream.index, surface, checkNotNull(softwareLease))) {
                 throw YlBoundaryException(YlFailureKind.PLATFORM_FAILURE)
             }

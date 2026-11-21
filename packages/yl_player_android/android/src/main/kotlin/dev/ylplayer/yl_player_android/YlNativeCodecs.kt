@@ -104,8 +104,11 @@ internal object YlHardwareCodecProbe {
     }
 }
 
+internal fun needsLegacyHevcSurfaceRestart(codecName: String, apiLevel: Int = Build.VERSION.SDK_INT): Boolean =
+    apiLevel < 29 && codecName == "OMX.MS.HEVC.Decoder"
+
 internal class YlHardwareVideoDecoder(
-    stream: YlNativeStreamInfo,
+    private val stream: YlNativeStreamInfo,
     surface: Surface,
     codecName: String,
     codecConfig: ByteArray,
@@ -120,6 +123,8 @@ internal class YlHardwareVideoDecoder(
     private var observedOutput = false
     private var presentationFloorUs = 0L
     private var reachedEos = false
+    private var waitingForKeyFrame = false
+    private var started = false
     /** Identity of the initialized codec, rather than its discovery candidate. */
     val decoderIdentity: String get() = codec.name
     var decoderMode = AndroidDecoderMode.UNKNOWN
@@ -131,9 +136,18 @@ internal class YlHardwareVideoDecoder(
         if (actual.isEncoder || !evidence.allowsPlayback(decoderPolicy, codec.name)) {
             throw YlBoundaryException(YlFailureKind.DECODER_UNAVAILABLE)
         }
+        configureAndStart(surface)
+        decoderMode = evidence.mode(codec.name)
+      } catch (error: Throwable) {
+        codec.release()
+        throw error
+      }
+    }
+
+    private fun configureAndStart(surface: Surface) {
         val format = MediaFormat.createVideoFormat(checkNotNull(stream.codec.mimeType), stream.width, stream.height)
         if (stream.frameRate > 0) format.setFloat(MediaFormat.KEY_FRAME_RATE, stream.frameRate.toFloat())
-        if (codecConfig.isNotEmpty()) {
+        if (configuration.isNotEmpty()) {
             if (stream.codec == YlNativeCodec.H264) {
                 val units = androidx.media3.common.util.CodecSpecificDataUtil.splitNalUnits(configuration)
                     ?: throw YlBoundaryException(YlFailureKind.DECODER_UNSUPPORTED)
@@ -146,11 +160,7 @@ internal class YlHardwareVideoDecoder(
         }
         codec.configure(format, surface, null, 0)
         codec.start()
-        decoderMode = evidence.mode(codec.name)
-      } catch (error: Throwable) {
-        codec.release()
-        throw error
-      }
+        started = true
     }
 
     private fun queue(bytes: ByteArray, pts: Long, flags: Int): Boolean {
@@ -168,6 +178,10 @@ internal class YlHardwareVideoDecoder(
         }
     }
     fun consume(packet: YlNativePacket): Boolean {
+        if (waitingForKeyFrame) {
+            if (!packet.keyFrame) return false
+            waitingForKeyFrame = false
+        }
         var rendered=drainOutput()
         if (resendConfiguration) {
             rendered=queue(configuration,0,MediaCodec.BUFFER_FLAG_CODEC_CONFIG) || rendered
@@ -178,7 +192,7 @@ internal class YlHardwareVideoDecoder(
     }
     /** Drain reordered output before publishing completion; cancellation remains bounded. */
     fun finish(): Boolean {
-        if (reachedEos) return false
+        if (reachedEos || waitingForKeyFrame) return false
         var rendered=queue(byteArrayOf(),0,MediaCodec.BUFFER_FLAG_END_OF_STREAM)
         val deadline=System.nanoTime()+5_000_000_000L
         while (!reachedEos) {
@@ -215,8 +229,32 @@ internal class YlHardwareVideoDecoder(
         resendConfiguration = !observedOutput && configuration.isNotEmpty()
         codec.flush(); reachedEos=false; presentationFloorUs=targetUs
     }
-    fun replaceSurface(surface: Surface) = codec.setOutputSurface(surface)
-    override fun close() { runCatching { codec.stop() }; codec.release() }
+    /** Returns true when decoded reference frames were lost and demux can replay from a sync point. */
+    fun replaceSurface(
+        surface: Surface,
+        positionUs: Long = presentationFloorUs,
+        requiresRestart: (String) -> Boolean = { needsLegacyHevcSurfaceRestart(it) },
+    ): Boolean {
+        if (!requiresRestart(decoderIdentity)) {
+            codec.setOutputSurface(surface)
+            return false
+        }
+        // Stop disconnects the old buffer producer. Configure with fresh CSD on the
+        // replacement surface, without allocating a second hardware decoder.
+        started = false
+        codec.stop()
+        configureAndStart(surface)
+        reachedEos = false
+        observedOutput = false
+        resendConfiguration = false
+        waitingForKeyFrame = true
+        presentationFloorUs = positionUs
+        return true
+    }
+    override fun close() {
+        if (started) runCatching { codec.stop() }
+        codec.release()
+    }
 }
 
 internal class YlPcmAudioOutput(

@@ -6,7 +6,10 @@ import dev.ylplayer.yl_player_android.pigeon.AndroidDecoderMode
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import dev.ylplayer.yl_player_android.pigeon.AndroidDecoderPolicy
+import java.nio.ByteBuffer
 import kotlin.test.Test
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertFailsWith
@@ -55,6 +58,73 @@ class YlNativeCodecProbeTest {
             }
             verify(codec, never()).start()
             verify(codec).release()
+        }
+    }
+
+    @Test fun `only the known pre-29 HEVC codec needs a surface restart`() {
+        for (api in 24..28) assertTrue(needsLegacyHevcSurfaceRestart("OMX.MS.HEVC.Decoder", api))
+        for (api in 29..36) assertFalse(needsLegacyHevcSurfaceRestart("OMX.MS.HEVC.Decoder", api))
+        assertFalse(needsLegacyHevcSurfaceRestart("OMX.MS.AVC.Decoder", 24))
+        assertFalse(needsLegacyHevcSurfaceRestart("c2.mtk.hevc.decoder", 28))
+    }
+
+    @Test fun `legacy surface change restarts with CSD and waits for a sync sample`() {
+        withInitializedCodec("OMX.MS.HEVC.Decoder") { codec ->
+            val old = mock(Surface::class.java)
+            val next = mock(Surface::class.java)
+            val csd = byteArrayOf(0, 0, 0, 1, 64, 1)
+            YlHardwareVideoDecoder(stream, old, "candidate", csd,
+                decoderPolicy = AndroidDecoderPolicy.HARDWARE_PREFERRED).use { decoder ->
+                assertTrue(decoder.replaceSurface(next, 1000) { needsLegacyHevcSurfaceRestart(it, 28) })
+                val order = inOrder(codec)
+                order.verify(codec).configure(any(MediaFormat::class.java), eq(old), isNull(), eq(0))
+                order.verify(codec).start()
+                order.verify(codec).stop()
+                val format = org.mockito.ArgumentCaptor.forClass(MediaFormat::class.java)
+                order.verify(codec).configure(format.capture(), eq(next), isNull(), eq(0))
+                verify(format.value, atLeastOnce()).setByteBuffer("csd-0", ByteBuffer.wrap(csd))
+                order.verify(codec).start()
+                verify(codec, never()).setOutputSurface(any())
+                val delta = YlNativePacket(0, byteArrayOf(1), 400, 400, 40, false)
+                assertFalse(decoder.consume(delta))
+                assertFalse(decoder.finish())
+                verify(codec, never()).dequeueInputBuffer(anyLong())
+                `when`(codec.dequeueOutputBuffer(any(), anyLong())).thenReturn(MediaCodec.INFO_TRY_AGAIN_LATER)
+                `when`(codec.getInputBuffer(0)).thenReturn(ByteBuffer.allocate(64))
+                decoder.consume(delta.copy(keyFrame = true))
+                verify(codec).queueInputBuffer(0, 0, 1, 400, MediaCodec.BUFFER_FLAG_KEY_FRAME)
+            }
+            verify(codec).release()
+        }
+    }
+
+    @Test fun `failed legacy reconfigure releases codec without a direct surface retry`() {
+        withInitializedCodec("OMX.MS.HEVC.Decoder") { codec ->
+            val next = mock(Surface::class.java)
+            doThrow(IllegalStateException("reconfigure failed")).`when`(codec)
+                .configure(any(MediaFormat::class.java), eq(next), isNull(), eq(0))
+            assertFailsWith<IllegalStateException> {
+                YlHardwareVideoDecoder(stream, mock(Surface::class.java), "candidate", byteArrayOf(),
+                    decoderPolicy = AndroidDecoderPolicy.HARDWARE_PREFERRED).use { decoder ->
+                    decoder.replaceSurface(next, 0) { needsLegacyHevcSurfaceRestart(it, 24) }
+                }
+            }
+            verify(codec, never()).setOutputSurface(any())
+            verify(codec).start()
+            verify(codec).stop()
+            verify(codec).release()
+        }
+    }
+
+    @Test fun `other vendor codec switches surfaces without interrupting decode`() {
+        withInitializedCodec("OMX.vendor.hevc.decoder") { codec ->
+            val next = mock(Surface::class.java)
+            YlHardwareVideoDecoder(stream, mock(Surface::class.java), "candidate", byteArrayOf(),
+                decoderPolicy = AndroidDecoderPolicy.HARDWARE_PREFERRED).use { decoder ->
+                assertFalse(decoder.replaceSurface(next, 0) { needsLegacyHevcSurfaceRestart(it, 28) })
+                verify(codec).setOutputSurface(next)
+                verify(codec, never()).stop()
+            }
         }
     }
 
