@@ -1,0 +1,204 @@
+{
+  "baselineCommit": "8a27caa9bd04fc4e13bc47318f3ca2c518ccb847",
+  "device": "OPPO CPH2065",
+  "apiLevel": 31,
+  "evidenceKind": "substitute-script behavior with device loopback HLS",
+  "originalScriptsExecutedOnThisDevice": 0,
+  "acceptanceBatch": "verified",
+  "batches": {
+    "run1": {
+      "apkSha256": "0fc6446ac8a6cd5da1fb7237caf83a757e3e89ec062130f9e38b09b4f1a82d30",
+      "targetSha256": "f7ea47b10beeaed273d4bb266d0c61a7c8cfe2483de6b56be63ac1a3491c56a8",
+      "passedCases": 9
+    },
+    "final": {
+      "apkSha256": "e03588164cbee1d81d522122059cf3976eb9c9c91869f86c596d1b5159d1371f",
+      "targetSha256": "73382626333a2307e57ab20d436eeaa922b6e709d79bcbf9c54a9da622d19637",
+      "passedCases": 9
+    },
+    "verified": {
+      "apkSha256": "d1c9fca0a49f40283899858e5cdf92386429c0d9685c2fc5aac3946d785b2c75",
+      "targetSha256": "ec9cad5c1d25299cebc2f4cdc27aa0df885a5486074a80102fd95d5da6bc4414",
+      "passedCases": 9
+    }
+  },
+  "cases": [
+    {
+      "id": "JS-01",
+      "templateSha256": "5258f4617ca71bd0259a54d55099f61cbca19322404f9a587bf3e7b56ab84654",
+      "executedSha256": "38cc066f531f93b1239adfaa5fad79719b236ae9a16c6c700b54e4b51cc80a75",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-02",
+      "templateSha256": "99ac07a973b65b11d7eb7846e803ce1cb239d34ba72b2471c06007f682d5d7c8",
+      "executedSha256": "0f4dd0cc50c5da2e5ea91581eafa9e6ab82a1ef353ef92f52e384785534a41cb",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-03",
+      "templateSha256": "53f2a4f617673ca2b4c6b0cdaa6ba5aa46d7baba7d3271073fd46365fa3dc8d4",
+      "executedSha256": "221a096da414e502c0e2fef09861e793da4bb04565f5a1bb5f819e8b60d98716",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-04",
+      "templateSha256": "79e63d46c5a1d9a32bbcff21e73416049e341d7447b72309d3826959582dc490",
+      "executedSha256": "0829cc585b195f528199bc4c51f9770df6fee1ed389797d9a1b5e5c0cd9cd288",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-05",
+      "templateSha256": "9bb3059c279fbeb3571bb123b53a0f1733fd4bbc40355c69697d0ba62b190efb",
+      "executedSha256": "bf77eceaf420363b856e33b20f271bef112d411df37b1f48391a21a69396eb02",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 6,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-06",
+      "templateSha256": "a5e798a67b43bd8d1fdc18ba387dd3f550378a27d4668c5fd46c7f0d6f7d9241",
+      "executedSha256": "d799be27c5f3a231b1a1d0b607434e0fbcd22e652c60dc7d8a9be33453a6c598",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-07",
+      "templateSha256": "f2a6a18e94c37274abd8069d4ef229b0ada3bded9bd588194c38127f1e6bd571",
+      "executedSha256": "7be95cfaa3a079f1f2d48c4c66e81582e8f5ba7e9683b033ae021fd7948b7d76",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 6,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-08",
+      "templateSha256": "2a3b575ab4b5cf224de71cb4bac69e7d6ea3d6b637850e0ca92e04c39b114469",
+      "executedSha256": "2374ce11127f8a8949f722f868cada1550aa54ca1c61b7b62d6410536345adbd",
+      "resolutions": 2,
+      "successHostCalls": 2,
+      "hostFailures": 1,
+      "cancelled": true,
+      "heldSocketClosed": true,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    },
+    {
+      "id": "JS-09",
+      "templateSha256": "cb5948148e45b60e2a9ce3331a1864bd4420d7f244203424cb4a47c35f8618f3",
+      "executedSha256": "5d33d310369fbaa4b40db2106f2bc665f97c8f70e57db64d722a29e4d3b7e9b9",
+      "resolutions": 2,
+      "successHostCalls": 0,
+      "hostFailures": 0,
+      "cancelled": true,
+      "heldSocketClosed": null,
+      "mediaRequests": 5,
+      "credentialChecks": 0,
+      "matchingFirstFrame": true,
+      "sessionCleared": true,
+      "lateFrameWindowMs": 200
+    }
+  ],
+  "sourcesSha256": {
+    "packages/yl_player_source_resolver/example/integration_test/substitute_behavior_test.dart": "ec9cad5c1d25299cebc2f4cdc27aa0df885a5486074a80102fd95d5da6bc4414",
+    "packages/yl_player_source_resolver/test/support/substitute_scripts.dart": "ba533b7839b50ddbb7bde7235d98047855ba85d17905df239db7663475b5ec94",
+    "packages/yl_player_source_resolver/test/support/controlled_contract.dart": "bc51b1832d30e2674d7e89081c23918d5511ddfc4b06986583c75a51c995ac93",
+    "packages/yl_player_source_resolver/example/lib/demo_server.dart": "e2267f20b93711744266dea5552a59a59d26558a6cf0ae0739ea6a431489701c",
+    "packages/yl_player_source_resolver/example/assets/fixture-video.mp4": "a9746f24e997dac3bf466501c71935155f887aa160131b7ecd581f519933613c"
+  },
+  "postSuiteCodecSamples": [
+    {
+      "elapsedRealtimeHostNs": 164823583,
+      "pid": "23145",
+      "audioCodecs": 0,
+      "videoCodecs": 0,
+      "pidListed": true
+    },
+    {
+      "elapsedRealtimeHostNs": 826108791,
+      "pid": "23145",
+      "audioCodecs": 0,
+      "videoCodecs": 0,
+      "pidListed": true
+    },
+    {
+      "elapsedRealtimeHostNs": 1501993708,
+      "pid": "23145",
+      "audioCodecs": 0,
+      "videoCodecs": 0,
+      "pidListed": true
+    }
+  ],
+  "archiveSha256": "3c9ba81dbfc820be09da9fa52c99d5ac3778506ab0c792f0547cc01ee955ffb4",
+  "membersSha256": {
+    "run1/capture.log": "2e7bee5a6ca4b7d643dfd6b557a8562f49b5459aefdbeb4ce31b151543e0ec17",
+    "run1/receipt.json": "1fc53b972468d58b39197a589260520a37dc3fa8afce76eddd301654a7fc0437",
+    "run1/target.dart": "f7ea47b10beeaed273d4bb266d0c61a7c8cfe2483de6b56be63ac1a3491c56a8",
+    "final/capture.log": "4ddbc4add404fbc6ec7bb20e7409e61181cecd2a2b9fe4e36924836b981b7302",
+    "final/receipt.json": "17b61817d0b3dbaa0da4341d8d196417ca2a5939bd7fe6328dcdcda766d1a79f",
+    "final/target.dart": "73382626333a2307e57ab20d436eeaa922b6e709d79bcbf9c54a9da622d19637",
+    "verified/capture.log": "06e305f3bf6a5d9b338917594ea05c772e2c0881bc56a9bfd63b2c026b8b8ed2",
+    "verified/receipt.json": "49847bc0feb31a08fbcf3dcf012c190eb36580027bc07081c813f2eeded802e5",
+    "verified/post-dispose-codecs.json": "94fe57e868a03f1ab4b3fc196f4255fc25e0f2a114a02a1e01b8023495a33528"
+  }
+}

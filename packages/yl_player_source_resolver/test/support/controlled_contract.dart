@@ -73,14 +73,18 @@ Uint8List fixtureEncrypt(List<int> plain, List<int> key, List<int> iv) {
   return cipher.process(Uint8List.fromList(plain));
 }
 
-ScriptHttpReply fixtureResponse(String id, Map<String, String> headers) {
+ScriptHttpReply fixtureResponse(
+  String id,
+  Map<String, String> headers, {
+  String mediaUrl = fixtureUrl,
+}) {
   Object body;
   switch (id) {
     case 'JS-01':
       body = {
         'data': {
           'video_stream': [
-            {'stream_url': fixtureUrl},
+            {'stream_url': mediaUrl},
           ],
         },
       };
@@ -94,7 +98,7 @@ ScriptHttpReply fixtureResponse(String id, Map<String, String> headers) {
       final iv = dk.substring(dk.length - 8) + time.substring(0, 8);
       final auth = base64Encode(
         fixtureEncrypt(
-          utf8.encode(fixtureUrl),
+          utf8.encode(mediaUrl),
           utf8.encode(key),
           utf8.encode(iv),
         ),
@@ -121,21 +125,21 @@ ScriptHttpReply fixtureResponse(String id, Map<String, String> headers) {
     case 'JS-03':
       body = {
         'data': [
-          {'httpUrl': fixtureUrl},
+          {'httpUrl': mediaUrl},
         ],
       };
     case 'JS-04':
-      body = {'stream_url': fixtureUrl};
+      body = {'stream_url': mediaUrl};
     case 'JS-05':
       body = {
         'resultSet': [
-          {'url': fixtureUrl},
+          {'url': mediaUrl},
         ],
       };
     case 'JS-06':
       body = {
         'dt': [
-          {'id': 2030, 'channelUrl': fixtureUrl},
+          {'id': 2030, 'channelUrl': mediaUrl},
         ],
       };
     case 'JS-07':
@@ -147,7 +151,7 @@ ScriptHttpReply fixtureResponse(String id, Map<String, String> headers) {
     case 'JS-08':
       body = {
         'data': [
-          {'Id': 1, 'PlayStreamUrl': fixtureUrl},
+          {'Id': 1, 'PlayStreamUrl': mediaUrl},
         ],
       };
     default:
