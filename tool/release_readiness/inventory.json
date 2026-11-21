@@ -1172,6 +1172,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-oppo-dash-network-and-resolver.md",
       "sha256": "1b2d1dc091acc5d8ce87ff179e0244cc3bb4711c92e087bc6683e13a94e5e9c8",
       "kind": "report"
+    },
+    "android-oppo-av-dns-script-followup-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-oppo-av-dns-script-followup.md",
+      "sha256": "c573fd219151c9d1b4b0769a3cb9b3efe1d9326f3c101c0f31e4e0f218d8dd27",
+      "kind": "report"
     }
   },
   "rows": [
@@ -1264,10 +1269,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-oppo-av-dns-script-followup-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-timestamp-matched-output-on-compatible-device-or-capture-path"
+      "nextAction": "qualify-device-av-timing-after-timestamp-matched-oppo-gpu-capture"
     },
     {
       "requirement": "CAP-DASH",
@@ -1601,16 +1607,17 @@
       "requirement": "CAP-JS",
       "platform": "android",
       "implementation": "implemented",
-      "verification": "not_run",
+      "verification": "external_missing",
       "evidence": [
         "p05",
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-oppo-av-dns-script-followup-20261121"
       ],
       "acceptance": null,
-      "nextAction": "restore-nine-frozen-scripts-for-per-source-handoff-and-cleanup"
+      "nextAction": "supply-nine-hash-matched-originals-before-device-handoffs"
     },
     {
       "requirement": "CAP-JS",
@@ -1700,10 +1707,11 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-playback-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-oppo-av-dns-script-followup-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-joint-output-after-oppo-period-and-pcm-regressions"
+      "nextAction": "address-oppo-first-frame-clock-coverage-and-period-av-deviation"
     },
     {
       "requirement": "CAP-PERIOD",
@@ -1878,10 +1886,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-oppo-av-dns-script-followup-20261121"
       ],
       "acceptance": null,
-      "nextAction": "verify-real-negative-dns-after-injected-dash-manifest-and-segment-failures"
+      "nextAction": "verify-connected-dns-response-and-request-budgets-after-oppo-offline-system-lookup"
     },
     {
       "requirement": "ERR-02",
@@ -2668,7 +2677,8 @@
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
         "android-oppo-network-and-resource-regressions-20261121",
-        "android-oppo-dash-network-and-resolver-20261121"
+        "android-oppo-dash-network-and-resolver-20261121",
+        "android-oppo-av-dns-script-followup-20261121"
       ],
       "acceptance": null,
       "nextAction": "run-final-request-redirect-and-budget-regressions"

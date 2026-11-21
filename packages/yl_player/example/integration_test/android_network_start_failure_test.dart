@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -69,50 +70,51 @@ void main() {
     expect(player.state.sessionId, isNull);
   });
 
-  if (_missingHost.isEmpty) return;
   for (final child in [false, true]) {
-    testWidgets(
-      'Android classifies DNS failure at DASH ${child ? 'segment' : 'manifest'} request',
-      (tester) async {
-        await expectLater(
-          InternetAddress.lookup(
-            _missingHost,
-          ).timeout(const Duration(seconds: 10)),
-          throwsA(isA<SocketException>()),
-          reason: 'The device must observe a failed lookup before playback.',
+    final boundary = child ? 'segment' : 'manifest';
+    testWidgets('Android classifies DNS failure at DASH $boundary request', (
+      tester,
+    ) async {
+      await expectLater(
+        InternetAddress.lookup(
+          _missingHost,
+        ).timeout(const Duration(seconds: 10)),
+        throwsA(isA<SocketException>()),
+        reason: 'The device must observe a failed lookup before playback.',
+      );
+      debugPrint('YL_DNS_LOOKUP boundary=$boundary result=failed');
+      final player = await appleController(tester);
+      // The debug app permits cleartext only for the loopback fixture.
+      Uri uri = Uri.https(_missingHost, '/private-stream.mpd');
+      DashServer? server;
+      if (child) {
+        final manifest = await rootBundle.loadString(
+          'assets/test_media/dash_variants/manifest.mpd',
         );
-        final player = await appleController(tester);
-        // The debug app permits cleartext only for the loopback fixture.
-        Uri uri = Uri.https(_missingHost, '/private-stream.mpd');
-        DashServer? server;
-        if (child) {
-          final manifest = await rootBundle.loadString(
-            'assets/test_media/dash_variants/manifest.mpd',
-          );
-          server = await DashServer.start(
-            manifestOverride: manifest.replaceAll(
-              '<BaseURL>period',
-              '<BaseURL>https://$_missingHost/private-stream/period',
-            ),
-          );
-          addTearDown(server.close);
-          uri = server.automaticUri;
-        }
-        final failure = await _observeFailure(
-          player,
-          YlNetworkSource(
-            uri,
-            format: YlMediaFormat.dash,
-            networkPolicy: _network,
+        server = await DashServer.start(
+          manifestOverride: manifest.replaceAll(
+            '<BaseURL>period',
+            '<BaseURL>https://$_missingHost/private-stream/period',
           ),
         );
-        _checkFailure(failure, YlFailureCodes.networkDnsFailed, _missingHost);
-        if (server != null) {
-          await server.settle();
-          expect(server.requestsFor('/manifest.mpd'), isNotEmpty);
-          expect(server.childRequests, isEmpty);
-        }
-      },
-    );
+        addTearDown(server.close);
+        uri = server.automaticUri;
+      }
+      final failure = await _observeFailure(
+        player,
+        YlNetworkSource(
+          uri,
+          format: YlMediaFormat.dash,
+          networkPolicy: _network,
+        ),
+      );
+      _checkFailure(failure, YlFailureCodes.networkDnsFailed, _missingHost);
+      if (server != null) {
+        await server.settle();
+        expect(server.requestsFor('/manifest.mpd'), isNotEmpty);
+        expect(server.childRequests, isEmpty);
+      }
+      debugPrint('YL_DNS_RESULT boundary=$boundary code=${failure.code}');
+    }, skip: _missingHost.isEmpty);
   }
 }

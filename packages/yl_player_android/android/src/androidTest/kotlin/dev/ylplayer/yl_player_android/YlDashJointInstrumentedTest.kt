@@ -1,8 +1,6 @@
 package dev.ylplayer.yl_player_android
 
 import android.content.Context
-import android.graphics.ImageFormat
-import android.media.ImageReader
 import android.os.Handler
 import androidx.media3.common.*
 import androidx.media3.datasource.DefaultHttpDataSource
@@ -41,7 +39,7 @@ class YlDashJointInstrumentedTest {
         val rows = mutableListOf<JSONObject>()
         val startedAt = android.os.SystemClock.elapsedRealtime()
         val periodBoundary = when (name) { "manifest" -> 4_000_000L; "cross-codec", "resolution" -> 1_500_000L; else -> Long.MAX_VALUE }
-        val reader = ImageReader.newInstance(320, 180, ImageFormat.YUV_420_888, 4)
+        var probe: YlDashSurfaceProbe? = null
         val server = MockWebServer()
         server.dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest): MockResponse {
@@ -85,48 +83,35 @@ class YlDashJointInstrumentedTest {
                         frames[release] = Frame(pts, format.id, start)
                         while (frames.size > 64) frames.remove(frames.keys.first())
                     }
-                    reader.setOnImageAvailableListener({ source ->
-                        try {
-                            source.acquireNextImage()?.use { image ->
-                                val timestamp = image.timestamp
-                                val frame = frames.remove(timestamp)
-                                check(image.format == ImageFormat.YUV_420_888 && image.planes.size == 3)
-                                val x = image.cropRect.centerX(); val y = image.cropRect.centerY()
-                                val yuv = image.planes.mapIndexed { i, plane ->
-                                    val at = (if (i == 0) y else y / 2) * plane.rowStride + (if (i == 0) x else x / 2) * plane.pixelStride
-                                    plane.buffer.get(at).toInt() and 255
-                                }
-                                // Owned fixtures are untagged limited-range YUV420;
-                                // retain raw values and convert their solid markers with BT.601.
-                                val luma = 1.164383 * (yuv[0] - 16)
-                                val u = yuv[1] - 128; val v = yuv[2] - 128
-                                val rgb = listOf(luma + 1.596027 * v, luma - 0.391762 * u - 0.812968 * v, luma + 2.017232 * u)
-                                    .map { it.toInt().coerceIn(0, 255) }
-                                val consumed = sink?.getCurrentPositionUs(false)
-                                val audio = if (consumed == null || consumed == AudioSink.CURRENT_POSITION_NOT_SET) null else consumed - audioOffset + audioStart
-                                val video = frame?.let { it.ptsUs + it.periodStartUs }
-                                val observedHost = System.nanoTime()
-                                // ImageReader can deliver pixels before the codec's requested
-                                // release instant. Retain both the observed consumption and the
-                                // rate-1 projection to that native presentation timestamp.
-                                val projected = audio?.let { it + (timestamp - observedHost) / 1000 }
-                                val row = JSONObject().put("imageTimestampNs", timestamp).put("observedHostNs", observedHost)
-                                    .put("videoPtsUs", video ?: JSONObject.NULL).put("representation", frame?.formatId ?: JSONObject.NULL)
-                                    .put("audioUs", audio ?: JSONObject.NULL).put("audioProjectedAtReleaseUs", projected ?: JSONObject.NULL).put("audioPeriodStartUs", audioStart)
-                                    .put("yuv", JSONArray(yuv)).put("rgb", JSONArray(rgb))
-                                    .put("rawDeltaUs", if (audio != null && video != null) video - audio else JSONObject.NULL)
-                                    .put("deltaUs", if (projected != null && video != null) video - projected else JSONObject.NULL)
-                                synchronized(rows) { rows += row }
-                            }
-                        } catch (error: Throwable) { failure = error; done.countDown() }
-                    }, Handler(exo.playbackLooper))
-                    exo.setVideoSurface(reader.surface)
+                    val output = YlDashSurfaceProbe(Handler(exo.playbackLooper))
+                    probe = output
+                    output.observe({ timestamp, rgb ->
+                        val frame = frames.remove(timestamp)
+                        val consumed = sink?.getCurrentPositionUs(false)
+                        val observedHost = System.nanoTime()
+                        val audio = if (consumed == null || consumed == AudioSink.CURRENT_POSITION_NOT_SET) null else consumed - audioOffset + audioStart
+                        val video = frame?.let { it.ptsUs + it.periodStartUs }
+                        // The decoder can deliver pixels before the codec's requested
+                        // release instant. Retain both the observed consumption and the
+                        // rate-1 projection to that native presentation timestamp.
+                        val projected = audio?.let { it + (timestamp - observedHost) / 1000 }
+                        val row = JSONObject().put("imageTimestampNs", timestamp).put("observedHostNs", observedHost)
+                            .put("videoPtsUs", video ?: JSONObject.NULL).put("representation", frame?.formatId ?: JSONObject.NULL)
+                            .put("audioUs", audio ?: JSONObject.NULL).put("audioProjectedAtReleaseUs", projected ?: JSONObject.NULL).put("audioPeriodStartUs", audioStart)
+                            .put("audioStreamOffsetUs", audioOffset)
+                            .put("rgb", JSONArray(rgb))
+                            .put("rawDeltaUs", if (audio != null && video != null) video - audio else JSONObject.NULL)
+                            .put("deltaUs", if (projected != null && video != null) video - projected else JSONObject.NULL)
+                        synchronized(rows) { rows += row }
+                    }, { error -> failure = error; done.countDown() })
+                    exo.setVideoSurface(output.surface)
                     exo.setMediaSource(YlDashProgramMediaSource(item, DefaultHttpDataSource.Factory(),
                         YlDashManifestParser(null), DefaultLoadErrorHandlingPolicy(0), YlDashGapGroups()))
                     exo.prepare(); exo.play()
                 }
             }
             assertTrue("Native AV did not finish", done.await(25, TimeUnit.SECONDS))
+            probe?.drain()
             assertNull("Native AV failure", failure)
             val measured = synchronized(rows) { rows.toList() }
             val record = JSONObject().put("fixture", name).put("run", run)
@@ -149,8 +134,18 @@ class YlDashJointInstrumentedTest {
                 for (c in 0..2) assertTrue("$name actual pixel at $pts: $rgb expected $expected", kotlin.math.abs(rgb.getInt(c) - expected[c]) < 32)
             }
         } finally {
-            instrumentation.runOnMainSync { player?.release() }
-            reader.close(); server.shutdown()
+            try {
+                instrumentation.runOnMainSync {
+                    try {
+                        player?.clearVideoSurface()
+                        probe?.close()
+                    } finally {
+                        player?.release()
+                    }
+                }
+            } finally {
+                server.shutdown()
+            }
         }
     }
 }

@@ -97,8 +97,12 @@ def verify_archive(archive):
     finally:
         if directory is not None:
             os.close(directory)
-    if len(encoded) == 9:
+    report['requiredCount'] = len(entries)
+    report['verifiedCount'] = len(encoded)
+    if len(encoded) == len(entries):
         report['status'] = 'verified'
+    elif report['archiveStatus'] == 'verified':
+        report['archiveStatus'] = 'incomplete'
     return report, encoded
 
 

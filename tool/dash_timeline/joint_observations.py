@@ -1,7 +1,7 @@
 """Summarize owned P01 native observations; missing output stays explicitly missing.
 
 The Apple native observer pairs published pixels with rendered audio node time.
-Android pairs actual ImageReader pixels with AudioTrack consumption and retains
+Android pairs decoder surface pixels with AudioTrack consumption and retains
 both raw and rate-1 projected clocks at the codec's requested release instant.
 Neither is a measurement of physical speakers or display scanout. Input files
 and test outcomes must accompany summaries. Optional frozen limits check only

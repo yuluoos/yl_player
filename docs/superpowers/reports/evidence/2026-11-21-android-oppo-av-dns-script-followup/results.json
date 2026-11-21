@@ -1,0 +1,601 @@
+{
+  "baseCommit": "122010cba6969b8baab5f773bbf4d813c3a3caa3",
+  "device": "CPH2065",
+  "api": "31",
+  "av": {
+    "joint-01": {
+      "rows": 1516,
+      "paired": 1508,
+      "missingAtPtsUs": [
+        0
+      ],
+      "maximumAbsoluteDeltaUs": 76235,
+      "over70ms": 3,
+      "gate": {
+        "passed": false,
+        "reason": "manifest: incomplete observed run/pair coverage"
+      },
+      "fixtures": {
+        "manifest": {
+          "runs": 3,
+          "rows": 576,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -8392,
+            "maximum": 42451,
+            "absoluteMaximum": 42451,
+            "absoluteP95": 19168
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 61995,
+            "absoluteMaximum": 61995,
+            "absoluteP95": 58062
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": -8.333668000000003,
+            "maximum": -8.333668000000003,
+            "p95": -8.333668000000003
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 8471,
+            "maximum": 8715,
+            "p95": 8715
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "independent-pto": {
+          "runs": 3,
+          "rows": 288,
+          "missingAudioPairs": 3,
+          "deltaUs": {
+            "minimum": -12944,
+            "maximum": 19949,
+            "absoluteMaximum": 19949,
+            "absoluteP95": 17710
+          },
+          "rawDeltaUs": {
+            "minimum": 2312,
+            "maximum": 63077,
+            "absoluteMaximum": 63077,
+            "absoluteP95": 53397
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 4408,
+            "maximum": 4442,
+            "p95": 4442
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "clip-end": {
+          "runs": 3,
+          "rows": 252,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -15043,
+            "maximum": 19636,
+            "absoluteMaximum": 19636,
+            "absoluteP95": 15772
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 54700,
+            "absoluteMaximum": 54700,
+            "absoluteP95": 52427
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3891,
+            "maximum": 3902,
+            "p95": 3902
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "cross-codec": {
+          "runs": 3,
+          "rows": 200,
+          "missingAudioPairs": 2,
+          "deltaUs": {
+            "minimum": -76235,
+            "maximum": 33991,
+            "absoluteMaximum": 76235,
+            "absoluteP95": 32918
+          },
+          "rawDeltaUs": {
+            "minimum": -84912,
+            "maximum": 75616,
+            "absoluteMaximum": 84912,
+            "absoluteP95": 69231
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": -5.344825000000014,
+            "maximum": 41.01084399999999,
+            "p95": 41.01084399999999
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3381,
+            "maximum": 3443,
+            "p95": 3443
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "resolution": {
+          "runs": 3,
+          "rows": 200,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -76082,
+            "maximum": 39566,
+            "absoluteMaximum": 76082,
+            "absoluteP95": 37105
+          },
+          "rawDeltaUs": {
+            "minimum": -84492,
+            "maximum": 77459,
+            "absoluteMaximum": 84492,
+            "absoluteP95": 72001
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": -5.95566500000001,
+            "maximum": 59.346222999999995,
+            "p95": 59.346222999999995
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3394,
+            "maximum": 3433,
+            "p95": 3433
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        }
+      }
+    },
+    "joint-02": {
+      "rows": 1525,
+      "paired": 1515,
+      "missingAtPtsUs": [
+        0
+      ],
+      "maximumAbsoluteDeltaUs": 75547,
+      "over70ms": 5,
+      "gate": {
+        "passed": false,
+        "reason": "manifest: incomplete observed run/pair coverage"
+      },
+      "fixtures": {
+        "manifest": {
+          "runs": 3,
+          "rows": 576,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -13879,
+            "maximum": 28239,
+            "absoluteMaximum": 28239,
+            "absoluteP95": 22040
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 66436,
+            "absoluteMaximum": 66436,
+            "absoluteP95": 59685
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": -8.333668000000003,
+            "maximum": -8.333668000000003,
+            "p95": -8.333668000000003
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 8444,
+            "maximum": 8694,
+            "p95": 8694
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "independent-pto": {
+          "runs": 3,
+          "rows": 288,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -14294,
+            "maximum": 24117,
+            "absoluteMaximum": 24117,
+            "absoluteP95": 16026
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 59624,
+            "absoluteMaximum": 59624,
+            "absoluteP95": 53316
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 4408,
+            "maximum": 4460,
+            "p95": 4460
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "clip-end": {
+          "runs": 3,
+          "rows": 252,
+          "missingAudioPairs": 3,
+          "deltaUs": {
+            "minimum": -12083,
+            "maximum": 22253,
+            "absoluteMaximum": 22253,
+            "absoluteP95": 19281
+          },
+          "rawDeltaUs": {
+            "minimum": 16772,
+            "maximum": 64717,
+            "absoluteMaximum": 64717,
+            "absoluteP95": 55372
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3894,
+            "maximum": 3928,
+            "p95": 3928
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "cross-codec": {
+          "runs": 3,
+          "rows": 204,
+          "missingAudioPairs": 2,
+          "deltaUs": {
+            "minimum": -75333,
+            "maximum": 35835,
+            "absoluteMaximum": 75333,
+            "absoluteP95": 34270
+          },
+          "rawDeltaUs": {
+            "minimum": -86978,
+            "maximum": 76010,
+            "absoluteMaximum": 86978,
+            "absoluteP95": 68638
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 54.223752000000005,
+            "maximum": 67.720274,
+            "p95": 67.720274
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3396,
+            "maximum": 3452,
+            "p95": 3452
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "resolution": {
+          "runs": 3,
+          "rows": 205,
+          "missingAudioPairs": 3,
+          "deltaUs": {
+            "minimum": -75547,
+            "maximum": 35521,
+            "absoluteMaximum": 75547,
+            "absoluteP95": 29883
+          },
+          "rawDeltaUs": {
+            "minimum": -85187,
+            "maximum": 71611,
+            "absoluteMaximum": 85187,
+            "absoluteP95": 65711
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 59.129557000000005,
+            "maximum": 72.182187,
+            "p95": 72.182187
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3445,
+            "maximum": 3505,
+            "p95": 3505
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        }
+      }
+    },
+    "joint-final": {
+      "rows": 1524,
+      "paired": 1518,
+      "missingAtPtsUs": [
+        0
+      ],
+      "maximumAbsoluteDeltaUs": 76193,
+      "over70ms": 6,
+      "gate": {
+        "passed": false,
+        "reason": "manifest: incomplete observed run/pair coverage"
+      },
+      "fixtures": {
+        "manifest": {
+          "runs": 3,
+          "rows": 576,
+          "missingAudioPairs": 2,
+          "deltaUs": {
+            "minimum": -8121,
+            "maximum": 34545,
+            "absoluteMaximum": 34545,
+            "absoluteP95": 18325
+          },
+          "rawDeltaUs": {
+            "minimum": -135,
+            "maximum": 63233,
+            "absoluteMaximum": 63233,
+            "absoluteP95": 56309
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": -25.000334000000002,
+            "maximum": -8.333668000000003,
+            "p95": -8.333668000000003
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 8477,
+            "maximum": 8689,
+            "p95": 8689
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "independent-pto": {
+          "runs": 3,
+          "rows": 288,
+          "missingAudioPairs": 0,
+          "deltaUs": {
+            "minimum": -13383,
+            "maximum": 21724,
+            "absoluteMaximum": 21724,
+            "absoluteP95": 11721
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 61270,
+            "absoluteMaximum": 61270,
+            "absoluteP95": 46841
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 4418,
+            "maximum": 4436,
+            "p95": 4436
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "clip-end": {
+          "runs": 3,
+          "rows": 252,
+          "missingAudioPairs": 2,
+          "deltaUs": {
+            "minimum": -12331,
+            "maximum": 19940,
+            "absoluteMaximum": 19940,
+            "absoluteP95": 17559
+          },
+          "rawDeltaUs": {
+            "minimum": 0,
+            "maximum": 62272,
+            "absoluteMaximum": 62272,
+            "absoluteP95": 54649
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": null,
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3887,
+            "maximum": 3952,
+            "p95": 3952
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "cross-codec": {
+          "runs": 3,
+          "rows": 204,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -76193,
+            "maximum": 38822,
+            "absoluteMaximum": 76193,
+            "absoluteP95": 22588
+          },
+          "rawDeltaUs": {
+            "minimum": -85024,
+            "maximum": 73102,
+            "absoluteMaximum": 85024,
+            "absoluteP95": 62540
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 62.793025,
+            "maximum": 67.480807,
+            "p95": 67.480807
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3420,
+            "maximum": 3425,
+            "p95": 3425
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        },
+        "resolution": {
+          "runs": 3,
+          "rows": 204,
+          "missingAudioPairs": 1,
+          "deltaUs": {
+            "minimum": -75873,
+            "maximum": 35070,
+            "absoluteMaximum": 75873,
+            "absoluteP95": 25176
+          },
+          "rawDeltaUs": {
+            "minimum": -85417,
+            "maximum": 68413,
+            "absoluteMaximum": 85417,
+            "absoluteP95": 63630
+          },
+          "periodWaitMs": null,
+          "transitionOutputGapExcessMs": {
+            "minimum": 53.241778999999994,
+            "maximum": 66.071827,
+            "p95": 66.071827
+          },
+          "readyMs": null,
+          "elapsedMs": {
+            "minimum": 3404,
+            "maximum": 3431,
+            "p95": 3431
+          },
+          "peakBytes": null,
+          "releasedBytes": null
+        }
+      }
+    }
+  },
+  "dns": {
+    "systemLookupFailedAndClassified": [
+      "manifest",
+      "segment"
+    ],
+    "settings": {
+      "before": {
+        "wifi_on": "1",
+        "mobile_data": "1",
+        "airplane_mode_on": "0"
+      },
+      "during": {
+        "wifi_on": "0",
+        "mobile_data": "0",
+        "airplane_mode_on": "0"
+      },
+      "secondsUntilRestored": 8.01,
+      "after": {
+        "wifi_on": "1",
+        "mobile_data": "1",
+        "airplane_mode_on": "0"
+      }
+    }
+  },
+  "scripts": {
+    "schemaVersion": 1,
+    "status": "failed",
+    "executed": false,
+    "contractSha256": "d28c61b81fbe9bd10fadc13a67167139573ea171c9cef4ac86d2d15e7f467a76",
+    "archiveStatus": "unavailable",
+    "scripts": [
+      {
+        "id": "JS-01",
+        "expectedSha256": "5a217f208bce349c3f4bde904f67dd10f071a329603966a919f24b523a48a034",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-02",
+        "expectedSha256": "5297480cc156df777a9578dd303bb4eb1e80235d0316038ee5ba3f0c6febe3ea",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-03",
+        "expectedSha256": "e8bc63ce38d2675dfc1ff1d2139e1baf51242ddba95e60bcb515c6dbcb3918d5",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-04",
+        "expectedSha256": "d9c0e65fadf8c72b837c8dce548b59b36648dd1660353796d4dade60fa1c6b9f",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-05",
+        "expectedSha256": "e89a36134251782f23da093ae1c1039ec1499e0b817b453e97a97f3aef266a1f",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-06",
+        "expectedSha256": "df3915e4162c3a71d9c0cd8d5cf7579def4c2450d1adc629380a17bd601dc481",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-07",
+        "expectedSha256": "701f53b46ffdff66cfc8ae0704f71d223d034b7c2b2fba46f84a7cbc18057848",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-08",
+        "expectedSha256": "aa33edda8604250549029e18741b935a506456e6a4dd1544775cd316b5be068d",
+        "status": "archive_unavailable"
+      },
+      {
+        "id": "JS-09",
+        "expectedSha256": "c004d274717c482254b2f70ac8304a124fc7acc17e2ac06fb6c3b31f2c627acc",
+        "status": "archive_unavailable"
+      }
+    ],
+    "requiredCount": 9,
+    "verifiedCount": 0
+  },
+  "limitsSha256": "8def28b2d6e54475e02fcbfba7e001d3b2ae58af0e95d59f9e43810d7048ef74",
+  "capturesSha256": "53637b2441f752df1f3b4b197690caf1542619683af2c418d3996f550e2b41b6",
+  "memberSha256": {
+    "archive-preflight.json": "66a5eed5283cfc228c5baf9be80ff31fcef9625f4c456d30d94d0d5b9dcfb78d",
+    "archive-unittests.log": "68fc531b17ed21acbc4335a1b7ec1f65a921658a365f28df054f8b699de81a69",
+    "dns/capture.log": "8c7e038e682f284d37d0817af6a5009a44e78d1d4146c3916d6c56eadb25ad1a",
+    "dns/network-switches.json": "05f709481f9fdb6dec30786d9a99a404f3a797a61b3a63bcf018ae8d955b7bc0",
+    "dns/receipt.json": "e509676f89ecafcaad6f365089d55f6a7ad9b190e05bb021bebaee17c7be41e5",
+    "dns/target.dart": "aa87337c7452842be4dcf56cbe1dd41ff53a024db4af5f55208a4e8e9334dd96",
+    "joint-01/YlDashJointInstrumentedTest.kt": "6e195da8fbf8312d472bb8ab986f3a2867bf274bc9d187f0ef32d59c2307f594",
+    "joint-01/YlDashSurfaceProbe.kt": "949bf7b2849d31ea53cf8e3407ff26e8b47b0f108084f9d066fa5b80b24a6cb1",
+    "joint-01/junit.log": "470065b535679b8ae7f9e52d74c1ce34f85e9182d6b6a1937c150f90fa54cfa2",
+    "joint-01/metrics.json": "0062316c5360eded8a8308768d3618ed07db03a6aeac1ad6b9dde4e506abb1d6",
+    "joint-01/receipt.json": "644d303de027d39ba122532d8b4cbe2de821b9d72d6b709b77383ea43d071e9a",
+    "joint-01/samples.log": "99bf56a7014bf12a761e5c299a244d451c313de68754f14e3f26eee9186c334e",
+    "joint-02/YlDashJointInstrumentedTest.kt": "c70d91704b815c630b9e1e8232584174c15355aab65fb13f8e89bc152c29a17a",
+    "joint-02/YlDashSurfaceProbe.kt": "92ccf3d90f5856feb6255ba641d6a4d42724464ec76a0cd8b9dca63423f43e43",
+    "joint-02/junit.log": "39dc3e42f495734ca2fe906710a7a4486eeb56388c041dea4459bb32ca54963a",
+    "joint-02/metrics.json": "831c81d7454bf42f0edcf99196a2b3e7978e29f0ec7b637ce830b416ff2dca9e",
+    "joint-02/receipt.json": "1c09537d9c8cdd2739d6b8fbc497d062c3bd9807908d6063c0a7f9623981aa2f",
+    "joint-02/samples.log": "6751527c4f07f8439c72fd128b974ef1239235fd88cad49c3759ebbda65dd3ff",
+    "joint-final/YlDashJointInstrumentedTest.kt": "71c6ac5faf00ca1033686a31e9355b4d5f37bb8efd63ed6a17b273c79f5c2620",
+    "joint-final/YlDashSurfaceProbe.kt": "09778b834ddd148f811cb5ca599fe953e458e0824127bcee1d3c08ee1902fce9",
+    "joint-final/junit.log": "44b4d7aee6e9f2abb3fd6ebc194a0b9fe2b013e84742217c45a05a5cc4a62b5e",
+    "joint-final/metrics.json": "0496fb66f00c499695c43aafb0cc09446bbc0dd361e3f19080036efab471bd2d",
+    "joint-final/receipt.json": "f0d6d18114f389d4b8a7f8e8af6119aa091f004b71ebae8f01799e5986eb0b5a",
+    "joint-final/samples.log": "e3d64ecfe531195058d9230abb0785a2c4d0162b76c62dd2a35b316e112bb7b0"
+  }
+}

@@ -132,6 +132,8 @@ refuses an unignored output, and writes the complete entry with mode 0600 inside
 embed originals. The source archive itself remains restricted and unchanged.
 `--verify-only` enforces a 512 KiB source limit and emits a JSON receipt with all
 nine IDs, expected/observed SHA-256, byte counts and fixed verification statuses.
+Use `verifiedCount` and `requiredCount` to see how many originals are ready.
+An accessible archive with missing or mismatched files reports `archiveStatus: incomplete`.
 It does not generate a Dart entry, run JavaScript, download anything or use a
 device. A missing or changed script remains a failed row; any failure exits 1.
 The archive directory and script files must have no group/other permission bits

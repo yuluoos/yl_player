@@ -69,6 +69,8 @@ class ArchiveTests(unittest.TestCase):
         code, report, err = self.audit()
         self.assertEqual(code, 0, err)
         self.assertEqual(report['status'], 'verified')
+        self.assertEqual((report['archiveStatus'], report['verifiedCount'], report['requiredCount']),
+                         ('verified', 9, 9))
         self.assertEqual(len(report['scripts']), 9)
         self.assertFalse(report['executed'])
         for row, (key, raw) in zip(report['scripts'], self.payloads.items()):
@@ -86,6 +88,8 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(report['status'], 'failed')
         self.assertEqual(len(report['scripts']), 9)
         self.assertEqual([r['status'] for r in report['scripts'][:2]], ['missing', 'digest_mismatch'])
+        self.assertEqual((report['archiveStatus'], report['verifiedCount'], report['requiredCount']),
+                         ('incomplete', 7, 9))
         self.assertEqual(sum(r['status'] == 'verified' for r in report['scripts']), 7)
 
     def test_generation_preserves_exact_bytes_and_private_permissions(self):
@@ -212,6 +216,7 @@ class ArchiveTests(unittest.TestCase):
                 report = json.loads(out)
                 self.assertEqual(code, 1)
                 self.assertEqual(report['archiveStatus'], 'unavailable')
+                self.assertEqual((report['verifiedCount'], report['requiredCount']), (0, 9))
                 self.assertEqual([r['status'] for r in report['scripts']], ['archive_unavailable'] * 9)
 
 
