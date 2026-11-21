@@ -31,6 +31,23 @@ class YlSpeedLoadControlTest {
         assertEquals(profile, control.currentProfile)
     }
 
+    @Test fun `TV reselection history shares the forward buffer byte budget`() {
+        val small = profile.copy(targetBufferBytes = C.DEFAULT_BUFFER_SEGMENT_SIZE)
+        assertEquals(0L, YlAdaptiveLoadControl(small).getBackBufferDurationUs(PlayerId.UNSET))
+        val control = YlAdaptiveLoadControl(small, backBufferDurationUs = 2_000_000L)
+        assertEquals(2_000_000L, control.getBackBufferDurationUs(PlayerId.UNSET))
+        assertFalse(control.retainBackBufferFromKeyframe(PlayerId.UNSET))
+        val allocator = control.getAllocator(PlayerId.UNSET)
+        val allocation = allocator.allocate()
+        try {
+            assertFalse(control.shouldContinueLoading(parameters(100, 3f)))
+            assertTrue(control.shouldStartPlayback(parameters(100, 3f)))
+        } finally {
+            allocator.release(allocation)
+            control.onReleased(PlayerId.UNSET)
+        }
+    }
+
     @Test fun `actual allocator byte target wins even when media duration is insufficient`() {
         val control = YlAdaptiveLoadControl(profile.copy(targetBufferBytes = 2 * C.DEFAULT_BUFFER_SEGMENT_SIZE))
         val allocator = control.getAllocator(PlayerId.UNSET)

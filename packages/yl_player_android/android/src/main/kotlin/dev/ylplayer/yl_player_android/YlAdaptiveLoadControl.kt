@@ -47,7 +47,7 @@ internal fun shouldStartPlayback(
 
 @OptIn(UnstableApi::class)
 /** Buffer targets are scheduling goals, never an enforced hard allocation ceiling. */
-internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadControl {
+internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile, private val backBufferDurationUs: Long = 0L) : LoadControl {
     private val allocator = DefaultAllocator(true, C.DEFAULT_BUFFER_SEGMENT_SIZE)
     // LoadControl callbacks own these scratch objects on the playback thread.
     private val period = Timeline.Period()
@@ -135,7 +135,8 @@ internal class YlAdaptiveLoadControl(initialProfile: YlBufferProfile) : LoadCont
             allocatedBytes = allocator.totalBytesAllocated,
         )
 
-    override fun getBackBufferDurationUs(playerId: PlayerId): Long = 0L
+    // Renderer reselection can reuse a recent sync sample instead of reopening the input.
+    override fun getBackBufferDurationUs(playerId: PlayerId): Long = backBufferDurationUs
 
     override fun retainBackBufferFromKeyframe(playerId: PlayerId): Boolean = false
 

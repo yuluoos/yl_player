@@ -6,6 +6,7 @@ import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
+import androidx.media3.common.util.Util
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.okhttp.OkHttpDataSource
 import androidx.media3.exoplayer.dash.DashMediaSource
@@ -51,7 +52,7 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
     private val loaderPolicy = if (managed || rtmp != null) YlManagedLoadErrorPolicy() else DefaultLoadErrorHandlingPolicy()
     private val dashGapGroups = YlDashGapGroups()
     fun isDashGapGroup(group: androidx.media3.common.TrackGroup) = dashGapGroups.contains(group)
-    fun create(context: Context, item: MediaItem): MediaSource {
+    fun create(context: Context, item: MediaItem, limitProgressiveReadAhead: Boolean = false): MediaSource {
         rtmp?.let { return ProgressiveMediaSource.Factory(it.factory(), ExtractorsFactory { arrayOf(FlvExtractor()) })
             .setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item) }
         val dataSources = if (http == null) DefaultDataSource.Factory(context)
@@ -77,7 +78,17 @@ internal class YlMediaSourceFactory(source: AndroidSourceMessage, network: Netwo
                 }
             }
             .createMediaSource(item)
-        else DefaultMediaSourceFactory(dataSources, YlProgressiveExtractors(routeFlvForSeek)).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
+        else {
+            val extractors = YlProgressiveExtractors(routeFlvForSeek)
+            val local = item.localConfiguration
+            if (limitProgressiveReadAhead && local != null &&
+                Util.inferContentTypeForUriAndMimeType(local.uri, local.mimeType) == C.CONTENT_TYPE_OTHER) {
+                // Give load control a chance to stop extraction between smaller
+                // bursts after both renderers are reselected for a tunnel change.
+                ProgressiveMediaSource.Factory(dataSources, extractors).setContinueLoadingCheckIntervalBytes(64 * 1024)
+                    .setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
+            } else DefaultMediaSourceFactory(dataSources, extractors).setLoadErrorHandlingPolicy(loaderPolicy).createMediaSource(item)
+        }
     }
     fun setPlaybackPaused(paused: Boolean) { rtmp?.setPlaybackPaused(paused) }
     fun cancelAll() { rtmp?.cancelAll(); http?.cancelAll() }

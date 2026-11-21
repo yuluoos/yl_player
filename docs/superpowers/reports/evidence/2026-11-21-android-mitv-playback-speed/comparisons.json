@@ -1,0 +1,1364 @@
+[
+  {
+    "variant": "async-codec-only",
+    "httpRequestStarts": [],
+    "apk": "4031113ad2a5bc8fcfcb160e083580e72f8005a3ca2391433fee6da5dd24ec67",
+    "localWindows": [
+      {
+        "phase": "fast",
+        "actualSpeed": 0.7702421569443288,
+        "wallMs": 12017,
+        "status": "playing",
+        "underruns": 81,
+        "rebuffers": 7,
+        "drops": 63,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 159
+        }
+      },
+      {
+        "phase": "fastSteady",
+        "actualSpeed": 0.8419825072886298,
+        "wallMs": 12005,
+        "status": "playing",
+        "underruns": 188,
+        "rebuffers": 14,
+        "drops": 96,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 366
+        }
+      },
+      {
+        "phase": "restored",
+        "actualSpeed": 0.3741272691003391,
+        "wallMs": 10026,
+        "status": "buffering",
+        "underruns": 188,
+        "rebuffers": 18,
+        "drops": 97,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 27
+        }
+      }
+    ],
+    "httpFast3": []
+  },
+  {
+    "variant": "platform-rate-upstream-buffer",
+    "httpRequestStarts": [],
+    "apk": "cf899e741f4ff428d82593424bf0e85e285e2af322cc8d08bc2c080ecd6133ca",
+    "localWindows": [
+      {
+        "phase": "fast",
+        "actualSpeed": 1.2060979673442187,
+        "wallMs": 12004,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 337
+        }
+      },
+      {
+        "phase": "fastSteady",
+        "actualSpeed": 1.4977529960053262,
+        "wallMs": 12016,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 759
+        }
+      },
+      {
+        "phase": "restored",
+        "actualSpeed": 0.7771820077450105,
+        "wallMs": 10071,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 3,
+        "drops": 24,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 182
+        }
+      }
+    ],
+    "httpFast3": []
+  },
+  {
+    "variant": "platform-rate-pcm-750ms",
+    "httpRequestStarts": [
+      0,
+      4945384,
+      761,
+      31973,
+      203582,
+      383395,
+      422736,
+      688678,
+      352441,
+      375744
+    ],
+    "apk": "f460db570832f177f0b3fd854a1c70cbcc19cace9835213523bfe9943e4bf4c3",
+    "localWindows": [
+      {
+        "phase": "fast-1.5",
+        "actualSpeed": 1.3595010395010394,
+        "wallMs": 12025,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 375
+        }
+      },
+      {
+        "phase": "steady-1.5",
+        "actualSpeed": 1.4783792705066843,
+        "wallMs": 12118,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 800
+        }
+      },
+      {
+        "phase": "restored-1.5",
+        "actualSpeed": 0.963832550704366,
+        "wallMs": 10009,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 3,
+        "drops": 31,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 216
+        }
+      },
+      {
+        "phase": "fast-2.0",
+        "actualSpeed": 1.8569166666666668,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 31,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 515
+        }
+      },
+      {
+        "phase": "steady-2.0",
+        "actualSpeed": 2.003666361136572,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 31,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1069
+        }
+      },
+      {
+        "phase": "restored-2.0",
+        "actualSpeed": 0.9276,
+        "wallMs": 10000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 5,
+        "drops": 77,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 223
+        }
+      },
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.6966666666666668,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 6,
+        "drops": 277,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 473
+        }
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 2.9865833333333334,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 6,
+        "drops": 527,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 996
+        }
+      },
+      {
+        "phase": "restored-3.0",
+        "actualSpeed": 0.9953004699530047,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 7,
+        "drops": 548,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 221
+        }
+      }
+    ],
+    "httpFast3": [
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.6788600949920838,
+        "wallMs": 12001,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 511
+        },
+        "underruns": 0,
+        "rebuffers": 6
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 2.9531705691192403,
+        "wallMs": 12001,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1057
+        },
+        "underruns": 0,
+        "rebuffers": 6
+      }
+    ]
+  },
+  {
+    "variant": "platform-rate-pcm-400ms-and-early-video",
+    "httpRequestStarts": [
+      0,
+      4945384,
+      761
+    ],
+    "apk": "e53bd9133fff722f81841a300693f14c48ad414cea41302095440423f1e0ad16",
+    "localWindows": [
+      {
+        "phase": "fast-1.5",
+        "actualSpeed": 1.3760099958350687,
+        "wallMs": 12005,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 384,
+          "dropped": 15
+        }
+      },
+      {
+        "phase": "steady-1.5",
+        "actualSpeed": 1.498167888074617,
+        "wallMs": 12008,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 802,
+          "dropped": 30
+        }
+      },
+      {
+        "phase": "restored-1.5",
+        "actualSpeed": 0.9396,
+        "wallMs": 10000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 3,
+        "drops": 30,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 219,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-2.0",
+        "actualSpeed": 1.806516123656362,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 30,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 513,
+          "dropped": 27
+        }
+      },
+      {
+        "phase": "steady-2.0",
+        "actualSpeed": 2.06525,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 30,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1074,
+          "dropped": 44
+        }
+      },
+      {
+        "phase": "restored-2.0",
+        "actualSpeed": 0.934006599340066,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 5,
+        "drops": 74,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 221,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.7051324779203467,
+        "wallMs": 12002,
+        "status": "playing",
+        "underruns": 7,
+        "rebuffers": 6,
+        "drops": 224,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 505,
+          "dropped": 201
+        }
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 3.0155820348304307,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 17,
+        "rebuffers": 6,
+        "drops": 474,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1063,
+          "dropped": 424
+        }
+      },
+      {
+        "phase": "restored-3.0",
+        "actualSpeed": 0.9411058894110589,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 17,
+        "rebuffers": 7,
+        "drops": 500,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 218,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-1.5",
+        "actualSpeed": 1.3764686276143654,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 17,
+        "rebuffers": 8,
+        "drops": 500,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 394,
+          "dropped": 9
+        }
+      },
+      {
+        "phase": "direct-2.0",
+        "actualSpeed": 1.9868333333333332,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 17,
+        "rebuffers": 8,
+        "drops": 500,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 959,
+          "dropped": 20
+        }
+      },
+      {
+        "phase": "direct-3.0",
+        "actualSpeed": 2.96075,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 23,
+        "rebuffers": 8,
+        "drops": 800,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1470,
+          "dropped": 303
+        }
+      },
+      {
+        "phase": "direct-restored",
+        "actualSpeed": 0.9926007399260074,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 23,
+        "rebuffers": 9,
+        "drops": 803,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 226,
+          "dropped": 0
+        }
+      }
+    ],
+    "httpFast3": []
+  },
+  {
+    "variant": "keep-tunnel-at-fast-rate",
+    "httpRequestStarts": [],
+    "apk": "9c1bed42b5fd87df2494d80da5940a36e4b50117848ef79ef15bdccfef8993f0",
+    "localWindows": [
+      {
+        "phase": "fast-1.5",
+        "actualSpeed": 1.0373333333333334,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 5,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 529,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "steady-1.5",
+        "actualSpeed": 0.9763353053912174,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 10,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 817,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "restored-1.5",
+        "actualSpeed": 0.9619304556354916,
+        "wallMs": 10008,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 10,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 1057,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-2.0",
+        "actualSpeed": 1.0540833333333333,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 19,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 1349,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "steady-2.0",
+        "actualSpeed": 0.9552537288559286,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 28,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 1634,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "restored-2.0",
+        "actualSpeed": 0.969,
+        "wallMs": 10000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 28,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 1874,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 1.0005832847262728,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 28,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 2165,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 0.9945837846846096,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 28,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 2453,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "restored-3.0",
+        "actualSpeed": 0.9921007899210079,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 28,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 2693,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-1.5",
+        "actualSpeed": 1.036746937755187,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 32,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 2985,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-2.0",
+        "actualSpeed": 1.0130833333333333,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 41,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 3269,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-3.0",
+        "actualSpeed": 0.9911666666666666,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 50,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 3553,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-restored",
+        "actualSpeed": 0.905009499050095,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 50,
+        "drops": 0,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 3793,
+          "dropped": 0
+        }
+      }
+    ],
+    "httpFast3": []
+  },
+  {
+    "variant": "pcm-750ms-64KiB-load-check",
+    "httpRequestStarts": [
+      0,
+      4945384,
+      761,
+      31973,
+      164617,
+      172251,
+      281775,
+      312880,
+      586912,
+      618089,
+      917083,
+      352441,
+      375744
+    ],
+    "apk": "9b3615a6b4b2d833469814a6a94bc11c3eb6a21ffa5846b6d543e16ff56b83c1",
+    "localWindows": [
+      {
+        "phase": "fast-1.5",
+        "actualSpeed": 1.3730660455830976,
+        "wallMs": 12022,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 382,
+          "dropped": 16
+        }
+      },
+      {
+        "phase": "steady-1.5",
+        "actualSpeed": 1.4967108002331584,
+        "wallMs": 12009,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 807,
+          "dropped": 23
+        }
+      },
+      {
+        "phase": "restored-1.5",
+        "actualSpeed": 0.9264471057884232,
+        "wallMs": 10020,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 3,
+        "drops": 23,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 219,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-2.0",
+        "actualSpeed": 1.8117656861928173,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 23,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 516,
+          "dropped": 14
+        }
+      },
+      {
+        "phase": "steady-2.0",
+        "actualSpeed": 1.9765852845596201,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 23,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1074,
+          "dropped": 32
+        }
+      },
+      {
+        "phase": "restored-2.0",
+        "actualSpeed": 0.9337,
+        "wallMs": 10000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 5,
+        "drops": 55,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 219,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.7466044496291975,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 6,
+        "drops": 255,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 496,
+          "dropped": 248
+        }
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 2.9859166666666668,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 6,
+        "drops": 605,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 997,
+          "dropped": 555
+        }
+      },
+      {
+        "phase": "restored-3.0",
+        "actualSpeed": 0.9844015598440156,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 7,
+        "drops": 610,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 223,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-1.5",
+        "actualSpeed": 1.3726045659056825,
+        "wallMs": 12002,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 8,
+        "drops": 610,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 386,
+          "dropped": 12
+        }
+      },
+      {
+        "phase": "direct-2.0",
+        "actualSpeed": 1.949196302157075,
+        "wallMs": 12007,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 8,
+        "drops": 610,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 934,
+          "dropped": 37
+        }
+      },
+      {
+        "phase": "direct-3.0",
+        "actualSpeed": 2.9695,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 8,
+        "drops": 910,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1454,
+          "dropped": 313
+        }
+      },
+      {
+        "phase": "direct-restored",
+        "actualSpeed": 0.972002799720028,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 9,
+        "drops": 925,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 223,
+          "dropped": 0
+        }
+      }
+    ],
+    "httpFast3": [
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.7169402549787516,
+        "wallMs": 12001,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 508,
+          "dropped": 193
+        },
+        "underruns": 0,
+        "rebuffers": 6
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 3.0055,
+        "wallMs": 12000,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1048,
+          "dropped": 424
+        },
+        "underruns": 0,
+        "rebuffers": 6
+      }
+    ]
+  },
+  {
+    "variant": "pcm-750ms-short-backbuffer-scaled-video-poll",
+    "httpRequestStarts": [
+      0,
+      4945384,
+      761,
+      352441
+    ],
+    "apk": "ee01ae0d1072a2891427e145f0541c2c82f50e3558626cc6400a95347fbf4a23",
+    "localWindows": [
+      {
+        "phase": "fast-1.5",
+        "actualSpeed": 1.3665584145224414,
+        "wallMs": 12009,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 381,
+          "dropped": 17
+        }
+      },
+      {
+        "phase": "steady-1.5",
+        "actualSpeed": 1.5112055319503457,
+        "wallMs": 12003,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 813,
+          "dropped": 25
+        }
+      },
+      {
+        "phase": "restored-1.5",
+        "actualSpeed": 0.9423518833050255,
+        "wallMs": 10009,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 3,
+        "drops": 25,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 221,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-2.0",
+        "actualSpeed": 1.82025,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 25,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 511,
+          "dropped": 25
+        }
+      },
+      {
+        "phase": "steady-2.0",
+        "actualSpeed": 2.0051662361469877,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 25,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1065,
+          "dropped": 45
+        }
+      },
+      {
+        "phase": "restored-2.0",
+        "actualSpeed": 0.9651034896510349,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 5,
+        "drops": 70,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 224,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.72625,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 6,
+        "drops": 220,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 516,
+          "dropped": 190
+        }
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 3.006416131989001,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 6,
+        "drops": 520,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1041,
+          "dropped": 470
+        }
+      },
+      {
+        "phase": "restored-3.0",
+        "actualSpeed": 0.9659034096590341,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 7,
+        "drops": 541,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 221,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-1.5",
+        "actualSpeed": 1.3910507457711858,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 8,
+        "drops": 541,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 392,
+          "dropped": 12
+        }
+      },
+      {
+        "phase": "direct-2.0",
+        "actualSpeed": 1.965252895592034,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 8,
+        "drops": 541,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 939,
+          "dropped": 40
+        }
+      },
+      {
+        "phase": "direct-3.0",
+        "actualSpeed": 2.986666666666667,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 8,
+        "drops": 741,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1501,
+          "dropped": 234
+        }
+      },
+      {
+        "phase": "direct-restored",
+        "actualSpeed": 0.9675032496750325,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 9,
+        "drops": 776,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 218,
+          "dropped": 0
+        }
+      }
+    ],
+    "httpFast3": [
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.716,
+        "wallMs": 12000,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 506,
+          "dropped": 192
+        },
+        "underruns": 0,
+        "rebuffers": 6
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 3.024997916840263,
+        "wallMs": 12001,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1022,
+          "dropped": 451
+        },
+        "underruns": 0,
+        "rebuffers": 6
+      }
+    ]
+  },
+  {
+    "variant": "pcm-600ms-short-backbuffer-async-aac",
+    "httpRequestStarts": [],
+    "apk": "40803f2778cda53536d31e20a196de34a37622dd0f55160af875e1f7c9492c6c",
+    "localWindows": [
+      {
+        "phase": "fast-1.5",
+        "actualSpeed": 1.3628864261311557,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 385,
+          "dropped": 14
+        }
+      },
+      {
+        "phase": "steady-1.5",
+        "actualSpeed": 1.522072297184741,
+        "wallMs": 12006,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 2,
+        "drops": 0,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 814,
+          "dropped": 19
+        }
+      },
+      {
+        "phase": "restored-1.5",
+        "actualSpeed": 0.9538277033779732,
+        "wallMs": 10006,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 3,
+        "drops": 19,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 220,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-2.0",
+        "actualSpeed": 1.7788701883019498,
+        "wallMs": 12002,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 19,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 506,
+          "dropped": 20
+        }
+      },
+      {
+        "phase": "steady-2.0",
+        "actualSpeed": 1.9929166666666667,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 4,
+        "drops": 19,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1069,
+          "dropped": 35
+        }
+      },
+      {
+        "phase": "restored-2.0",
+        "actualSpeed": 0.9214,
+        "wallMs": 10000,
+        "status": "playing",
+        "underruns": 0,
+        "rebuffers": 5,
+        "drops": 54,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 216,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "fast-3.0",
+        "actualSpeed": 2.781101574868761,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 8,
+        "rebuffers": 6,
+        "drops": 104,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 597,
+          "dropped": 95
+        }
+      },
+      {
+        "phase": "steady-3.0",
+        "actualSpeed": 2.9530833333333333,
+        "wallMs": 12000,
+        "status": "playing",
+        "underruns": 12,
+        "rebuffers": 6,
+        "drops": 304,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1202,
+          "dropped": 274
+        }
+      },
+      {
+        "phase": "restored-3.0",
+        "actualSpeed": 1.0219,
+        "wallMs": 10000,
+        "status": "playing",
+        "underruns": 12,
+        "rebuffers": 7,
+        "drops": 329,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 224,
+          "dropped": 0
+        }
+      },
+      {
+        "phase": "direct-1.5",
+        "actualSpeed": 1.3708024331305724,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 12,
+        "rebuffers": 8,
+        "drops": 329,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 394,
+          "dropped": 10
+        }
+      },
+      {
+        "phase": "direct-2.0",
+        "actualSpeed": 1.9695050824862523,
+        "wallMs": 12002,
+        "status": "playing",
+        "underruns": 12,
+        "rebuffers": 8,
+        "drops": 329,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 954,
+          "dropped": 26
+        }
+      },
+      {
+        "phase": "direct-3.0",
+        "actualSpeed": 2.950254145487876,
+        "wallMs": 12001,
+        "status": "playing",
+        "underruns": 12,
+        "rebuffers": 8,
+        "drops": 429,
+        "output": {
+          "requested": false,
+          "enabled": false,
+          "rendered": 1585,
+          "dropped": 143
+        }
+      },
+      {
+        "phase": "direct-restored",
+        "actualSpeed": 0.9514048595140486,
+        "wallMs": 10001,
+        "status": "playing",
+        "underruns": 12,
+        "rebuffers": 9,
+        "drops": 473,
+        "output": {
+          "requested": true,
+          "enabled": true,
+          "rendered": 222,
+          "dropped": 0
+        }
+      }
+    ],
+    "httpFast3": []
+  }
+]

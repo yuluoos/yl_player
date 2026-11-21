@@ -24,7 +24,10 @@ void main() {
     'continuous',
   ]) {
     if (selection == 'short' && name == 'continuous') continue;
-    if (!['all', 'short', name].contains(selection)) continue;
+    if (!['all', 'short', name].contains(selection) &&
+        !(selection == 'speed' && name.startsWith('speed-'))) {
+      continue;
+    }
     testWidgets('Android TV $name', (tester) async {
       final av1 = name.startsWith('av1');
       final sustained = name == 'continuous';
@@ -132,6 +135,7 @@ void main() {
           });
           observing = true;
           final failures = <String>[];
+          int? rendered;
           Future<void> sample(
             String phase, {
             bool? tunnel,
@@ -140,6 +144,7 @@ void main() {
             final output = await observer.invokeMapMethod<String, dynamic>(
               'playbackOutput',
             );
+            rendered = output?['rendered'] as int?;
             emit(phase, {'output': output, ...extra});
             if (tunnel != null &&
                 (output?['enabled'] != tunnel ||
@@ -150,7 +155,14 @@ void main() {
             }
           }
 
-          Future<void> window(String phase, int seconds, double speed) async {
+          Future<void> window(
+            String phase,
+            int seconds,
+            double speed, {
+            bool steady = false,
+          }) async {
+            final initial = active.state.metrics;
+            final initialFrames = rendered;
             final start = active.state.timeline.position.inMilliseconds;
             final wall = Stopwatch()..start();
             await Future<void>.delayed(Duration(seconds: seconds));
@@ -168,8 +180,79 @@ void main() {
               },
             );
             expect(active.state.failure, isNull);
+            if (active.state.status != YlPlaybackStatus.playing) {
+              failures.add('$phase ended in ${active.state.status.name}');
+            }
+            if (steady &&
+                (rendered == null ||
+                    initialFrames == null ||
+                    rendered! <= initialFrames)) {
+              failures.add('$phase rendered no new video frames');
+            }
+            if (steady &&
+                (active.state.metrics.audioUnderruns !=
+                        initial.audioUnderruns ||
+                    active.state.metrics.rebufferCount !=
+                        initial.rebufferCount)) {
+              failures.add(
+                '$phase audio underrun or rebuffer during steady playback',
+              );
+            }
             if ((ratio - speed).abs() > .25) {
               failures.add('$phase requested $speed, measured $ratio');
+            }
+          }
+
+          Future<void> fromNormalSpeed(String phase, double rate) async {
+            final underrunsBefore = active.state.metrics.audioUnderruns;
+            final before = (await observer.invokeMethod<int>('clockMs'))!;
+            final start = active.state.timeline.position;
+            final wall = Stopwatch()..start();
+            int? firstMediaSecondMs;
+            void observePosition() {
+              if (active.state.timeline.position - start >=
+                  const Duration(seconds: 1)) {
+                firstMediaSecondMs ??= wall.elapsedMilliseconds;
+              }
+            }
+
+            active.addListener(observePosition);
+            try {
+              await session.setPlaybackSpeed(rate);
+              await window(phase, 12, rate);
+              final underrunsAfter = active.state.metrics.audioUnderruns;
+              if (rate == 3 &&
+                  (underrunsBefore == null ||
+                      underrunsAfter != underrunsBefore)) {
+                failures.add(
+                  '$phase audio underruns at direct switch: '
+                  '$underrunsBefore -> $underrunsAfter',
+                );
+              }
+              final events = await observer.invokeListMethod<dynamic>('read');
+              final frames = events!.whereType<Map>().where(
+                (e) =>
+                    e['kind'] == 'frame' &&
+                    e['public'] == true &&
+                    e['matchesCurrentSurface'] == true &&
+                    (e['timeMs'] as int) >= before,
+              );
+              final firstFrameMs = frames.isEmpty
+                  ? null
+                  : (frames.first['timeMs'] as int) - before;
+              if (firstMediaSecondMs == null || firstFrameMs == null) {
+                failures.add(
+                  '$phase missing position or Surface frame after switching',
+                );
+              }
+              emit('$phase-startup', {
+                'underrunsBefore': underrunsBefore,
+                'underrunsAfter': underrunsAfter,
+                'firstMediaSecondMs': firstMediaSecondMs,
+                'firstFrameMs': firstFrameMs,
+              });
+            } finally {
+              active.removeListener(observePosition);
             }
           }
 
@@ -180,11 +263,28 @@ void main() {
           } else {
             await window('normal', 10, 1);
             if (name != 'lifecycle') {
-              await session.setPlaybackSpeed(1.5);
-              await window('fast', 12, 1.5);
-              await window('fastSteady', 12, 1.5);
+              for (final rate in [1.5, 2.0, 3.0]) {
+                await fromNormalSpeed('fast-$rate', rate);
+                await window('steady-$rate', 12, rate, steady: true);
+                await session.setPlaybackSpeed(1);
+                await window('restored-$rate', 10, 1);
+                await session.pause();
+                await waitState((s) => s.status == YlPlaybackStatus.paused);
+                await sample('paused-$rate', tunnel: true);
+                await session.play();
+                await waitState((s) => s.status == YlPlaybackStatus.playing);
+              }
+              // Also change rates without rebuilding the untunneled output in between.
+              for (final rate in [1.5, 2.0, 3.0]) {
+                await session.setPlaybackSpeed(rate);
+                await window('direct-$rate', 12, rate);
+              }
               await session.setPlaybackSpeed(1);
-              await window('restored', 10, 1);
+              await window('direct-restored', 10, 1);
+              // Repeat the direct jump after uninterrupted 1x playback.
+              await fromNormalSpeed('repeat-3.0', 3);
+              await session.setPlaybackSpeed(1);
+              await window('repeat-restored', 10, 1);
             }
             // Preserve each command's outcome even if a previous phase remained buffering.
             Future<void> checkState(
@@ -255,6 +355,6 @@ void main() {
           }
         }
       }
-    }, timeout: Timeout(Duration(minutes: name == 'continuous' ? 23 : 3)));
+    }, timeout: Timeout(Duration(minutes: name == 'continuous' ? 23 : 4)));
   }
 }

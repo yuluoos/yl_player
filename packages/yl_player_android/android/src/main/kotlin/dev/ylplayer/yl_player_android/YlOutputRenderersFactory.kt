@@ -5,11 +5,15 @@ import android.media.MediaFormat
 import android.os.Handler
 import android.os.SystemClock
 import androidx.media3.exoplayer.audio.AudioSink
+import androidx.media3.exoplayer.audio.AudioTrackAudioOutputProvider
+import androidx.media3.exoplayer.audio.DefaultAudioSink
+import androidx.media3.exoplayer.audio.ForwardingAudioSink
 import java.nio.ByteBuffer
 import androidx.media3.common.Format
 import androidx.media3.common.VideoSize
 import androidx.media3.exoplayer.DefaultRenderersFactory
 import androidx.media3.exoplayer.Renderer
+import androidx.media3.exoplayer.mediacodec.DefaultMediaCodecAdapterFactory
 import androidx.media3.exoplayer.mediacodec.MediaCodecAdapter
 import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import androidx.media3.exoplayer.source.MediaSource.MediaPeriodId
@@ -138,15 +142,40 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
     private var dashAudioWaiting: (() -> Boolean)? = null
     var allowEac3SoftwareAudio = false
     var useConstrainedTvAudioBuffer = false
-    @Suppress("DEPRECATION") // Preserve the pinned default sink setup, changing only its size provider.
+    var useMiTvPlatformRate = false
+    var isMiTv3xRequested: (() -> Boolean)? = null
+    // Keep the Google AAC input queue fed while video output and the audio
+    // sink compete for playback-thread time at high rates.
+    private val miTvAdapters by lazy {
+        val ordinary = super.getCodecAdapterFactory()
+        val asyncAac = DefaultMediaCodecAdapterFactory(context).forceEnableAsynchronous()
+        MediaCodecAdapter.Factory { config ->
+            if (config.codecInfo.name.equals("OMX.google.aac.decoder", ignoreCase = true)) {
+                asyncAac.createAdapter(config)
+            } else ordinary.createAdapter(config)
+        }
+    }
+
+    override fun getCodecAdapterFactory(): MediaCodecAdapter.Factory =
+        if (useMiTvPlatformRate) miTvAdapters else super.getCodecAdapterFactory()
+
+    @Suppress("DEPRECATION")
     override fun buildAudioSink(context: Context, enableFloatOutput: Boolean, enableAudioOutputPlaybackParams: Boolean): androidx.media3.exoplayer.audio.AudioSink? {
+        val platformRate = enableAudioOutputPlaybackParams || useMiTvPlatformRate
         val sink = if (useConstrainedTvAudioBuffer) {
-            androidx.media3.exoplayer.audio.DefaultAudioSink.Builder(context)
+            val builder = DefaultAudioSink.Builder(context)
                 .setEnableFloatOutput(enableFloatOutput)
-                .setEnableAudioOutputPlaybackParameters(enableAudioOutputPlaybackParams)
-                .setAudioTrackBufferSizeProvider(YlTvAudioBufferSizeProvider())
-                .build()
-        } else super.buildAudioSink(context, enableFloatOutput, enableAudioOutputPlaybackParams) ?: return null
+                .setEnableAudioOutputPlaybackParameters(platformRate)
+            val sizes = YlTvAudioBufferSizeProvider(useMiTvPlatformRate, isMiTv3xRequested)
+            if (useMiTvPlatformRate) {
+                val provider = AudioTrackAudioOutputProvider.Builder(context).setAudioTrackBufferSizeProvider(sizes).build()
+                val playbackSink = builder.setAudioOutputProvider(YlMiTvAudioOutputProvider(provider)).build()
+                // DefaultAudioSink can only query capabilities from an unwrapped AudioTrack provider.
+                object : ForwardingAudioSink(playbackSink) {
+                    override fun getAudioCapabilities() = provider.audioCapabilities
+                }
+            } else builder.setAudioTrackBufferSizeProvider(sizes).build()
+        } else super.buildAudioSink(context, enableFloatOutput, platformRate) ?: return null
         return if (observer.dashVideoFamily != null) YlDashPcmAudioSink(sink) else sink
     }
 
@@ -154,8 +183,12 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
         enableDecoderFallback: Boolean, audioSink: androidx.media3.exoplayer.audio.AudioSink, eventHandler: Handler,
         eventListener: androidx.media3.exoplayer.audio.AudioRendererEventListener, out: ArrayList<Renderer>) {
         if (audioSink !is YlDashPcmAudioSink) {
-            super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, out)
-            if (allowEac3SoftwareAudio) out.add(YlEac3AudioRenderer(eventHandler, eventListener, audioSink))
+            // Media3 renders in array order. Give the TV's AAC decoder and PCM
+            // sink a turn before the synchronous video codec starts or drains.
+            val audio = if (useMiTvPlatformRate) ArrayList<Renderer>() else out
+            super.buildAudioRenderers(context, extensionRendererMode, mediaCodecSelector, enableDecoderFallback, audioSink, eventHandler, eventListener, audio)
+            if (allowEac3SoftwareAudio) audio.add(YlEac3AudioRenderer(eventHandler, eventListener, audioSink))
+            if (useMiTvPlatformRate) out.addAll(0, audio)
             return
         }
         check(extensionRendererMode == EXTENSION_RENDERER_MODE_OFF)
@@ -205,17 +238,30 @@ internal open class YlOutputRenderersFactory(context: Context, private val obser
             .setEnableDecoderFallback(enableDecoderFallback)
             .setEventHandler(eventHandler).setEventListener(eventListener)
             .setMaxDroppedFramesToNotify(MAX_DROPPED_VIDEO_FRAME_COUNT_TO_NOTIFY)
-        return YlOutputVideoRenderer(builder, rendererObserver) { dashAudioWaiting?.invoke() == true }
+        return YlOutputVideoRenderer(builder, rendererObserver, isMiTv3xRequested) { dashAudioWaiting?.invoke() == true }
     }
 }
 
 internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlVideoOutputObserver,
-    private val waitingForAudio: () -> Boolean) : MediaCodecVideoRenderer(builder) {
+    private val isMiTv3xRequested: (() -> Boolean)?, private val waitingForAudio: () -> Boolean) : MediaCodecVideoRenderer(builder) {
     // Poll on ordinary renderer iterations. A missing/late audio stream must never
     // prevent a preview, a seek or a video-only Period from producing a frame.
     private companion object { const val MAX_FIRST_FRAME_AUDIO_WAIT_MS = 250L }
     private var firstOutputPending = true
     private var firstOutputWaitStartMs = 0L
+    private var startupPollDeadlineMs = 0L
+
+    override fun getDurationToProgressUs(positionUs: Long, elapsedRealtimeUs: Long, hasBufferAvailableListener: Boolean): Long {
+        val normal = super.getDurationToProgressUs(positionUs, elapsedRealtimeUs, hasBufferAvailableListener)
+        if (!firstOutputPending || hasBufferAvailableListener || normal <= 2_000 ||
+            isMiTv3xRequested?.invoke() != true || codec == null || configuration.tunneling) return normal
+        val now = clock.elapsedRealtime()
+        if (startupPollDeadlineMs == 0L) {
+            startupPollDeadlineMs = now + 500
+            android.util.Log.d("YlPlayer", "Mi TV polling for first untunneled 3x frame")
+        }
+        return if (now < startupPollDeadlineMs) 2_000 else normal
+    }
 
     override fun processOutputBuffer(positionUs: Long, elapsedRealtimeUs: Long, codec: MediaCodecAdapter?,
         buffer: ByteBuffer?, bufferIndex: Int, bufferFlags: Int, sampleCount: Int,
@@ -257,6 +303,7 @@ internal class YlOutputVideoRenderer(builder: Builder, private val observer: YlV
     override fun onPositionReset(positionUs: Long, joining: Boolean, sampleStreamIsResetToKeyFrame: Boolean) {
         firstOutputPending = true
         firstOutputWaitStartMs = 0L
+        startupPollDeadlineMs = 0L
         super.onPositionReset(positionUs, joining, sampleStreamIsResetToKeyFrame)
         observer.reset(outputStreamStartPositionUs, outputStreamOffsetUs, mediaPeriodId?.periodUid)
     }

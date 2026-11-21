@@ -134,18 +134,38 @@ final class YlPlayerView extends StatelessWidget {
             fit: StackFit.expand,
             children: [
               LayoutBuilder(
-                builder: (context, constraints) => FittedBox(
-                  fit: fit,
-                  alignment: alignment,
-                  child: RotatedBox(
-                    quarterTurns: (geometry?.rotationDegrees ?? 0) ~/ 90,
-                    child: SizedBox(
-                      width: geometry == null
-                          ? constraints.maxWidth
-                          : geometry.displaySize.width *
-                                geometry.pixelAspectRatio,
-                      height:
-                          geometry?.displaySize.height ?? constraints.maxHeight,
+                builder: (context, constraints) {
+                  final viewport = constraints.biggest;
+                  final turns = (geometry?.rotationDegrees ?? 0) ~/ 90;
+                  var size = viewport;
+                  if (geometry != null && !viewport.isEmpty) {
+                    final aperture = Size(
+                      geometry.displaySize.width * geometry.pixelAspectRatio,
+                      geometry.displaySize.height,
+                    );
+                    final input = turns.isOdd ? aperture.flipped : aperture;
+                    if (!input.isEmpty) {
+                      final fitted = applyBoxFit(fit, input, viewport);
+                      size = Size(
+                        input.width *
+                            fitted.destination.width /
+                            fitted.source.width,
+                        input.height *
+                            fitted.destination.height /
+                            fitted.source.height,
+                      );
+                    }
+                  }
+                  // The sideband SurfaceView needs its final layout bounds. A
+                  // Flutter paint transform alone leaves the TV layer unscaled.
+                  return OverflowBox(
+                    alignment: alignment,
+                    minWidth: size.width,
+                    maxWidth: size.width,
+                    minHeight: size.height,
+                    maxHeight: size.height,
+                    child: RotatedBox(
+                      quarterTurns: turns,
                       child: _AndroidNativeVideoView(
                         key: ValueKey((
                           controller,
@@ -156,8 +176,8 @@ final class YlPlayerView extends StatelessWidget {
                         viewType: native?.viewType ?? '',
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               if (!presented) _placeholder(),
             ],

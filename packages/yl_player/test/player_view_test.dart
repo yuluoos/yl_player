@@ -92,11 +92,36 @@ void main() {
       expect(find.byType(AndroidViewSurface), findsOneWidget);
       expect(find.byType(Texture), findsNothing);
       expect(find.byType(Opacity), findsNothing);
+      final surface = find.byType(AndroidViewSurface);
+      expect(tester.getSize(surface), const Size(300, 300));
       final create = nativeCalls.singleWhere((call) => call.method == 'create');
       expect((create.arguments as Map)['hybrid'], isTrue);
       _publishGeometry(backend, _wideGeometry);
       backend.emitFirstFrame(_s1);
       await tester.pump();
+      expect(tester.getSize(surface), const Size(300, 168.75));
+      _expectRect(
+        tester.getRect(surface),
+        left: 0,
+        top: 65.625,
+        width: 300,
+        height: 168.75,
+      );
+      await _pumpView(
+        tester,
+        YlPlayerView(
+          controller: controller,
+          fit: BoxFit.cover,
+          alignment: Alignment.centerRight,
+        ),
+      );
+      _expectRect(
+        tester.getRect(surface),
+        left: 300 - 300 * 16 / 9,
+        top: 0,
+        width: 300 * 16 / 9,
+        height: 300,
+      );
       expect(nativeCalls.where((call) => call.method == 'create').length, 1);
       expect(find.text('waiting'), findsNothing);
       await tester.pumpWidget(const SizedBox());

@@ -2,6 +2,7 @@ package dev.ylplayer.yl_player_android
 
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.os.SystemClock
@@ -64,6 +65,15 @@ internal class YlMedia3Core(
         val occurredAtMs = SystemClock.elapsedRealtime()
         handler.post { if (!disposed && !stopped) recordRetry(attempt, delayMs, occurredAtMs) }
     }.also { trackSelector.isDashGapGroup = it::isDashGapGroup }
+    private val dashAudio = source.format == AndroidMediaFormat.DASH ||
+        source.locator.substringBefore('?').substringBefore('#').lowercase().endsWith(".mpd")
+    private val sourceClass = YlPlaybackPolicy.classifySource(source.kind.name.lowercase(),
+        rtmp || source.intent == AndroidStreamIntent.LIVE, formatHint(source.format), source.locator)
+    private val useMiTvPlatformRate = deviceProfile.isTelevision && Build.MODEL == "MiTV-MTTP0" &&
+        deviceProfile.signals.apiLevel == 28 && protectedDrm == null && !dashAudio &&
+        source.intent != AndroidStreamIntent.LIVE && source.format != AndroidMediaFormat.HLS &&
+        !source.locator.substringBefore('?').substringBefore('#').endsWith(".m3u8", ignoreCase = true) &&
+        (sourceClass == YlSourceClass.LOCAL || sourceClass == YlSourceClass.NETWORK_VOD)
     private val loadControl = YlAdaptiveLoadControl(
         YlPlaybackPolicy.effectiveBufferProfile(
             deviceProfile.tier,
@@ -71,11 +81,10 @@ internal class YlMedia3Core(
             configuration.bufferRequest(),
             memoryClassMb = deviceProfile.signals.memoryClassMb,
         ),
+        backBufferDurationUs = if (useMiTvPlatformRate) 2_000_000L else 0L,
     )
     private lateinit var exoPlayer: ExoPlayer
     private var audioIntent: YlAudioIntent? = null
-    private val dashAudio = source.format == AndroidMediaFormat.DASH ||
-        source.locator.substringBefore('?').substringBefore('#').lowercase().endsWith(".mpd")
     private val dashVideoFamily = if (dashAudio && protectedDrm == null) YlDashVideoFamilyPolicy() else null
     private val liveCatchUp = YlLiveCatchUpPolicy()
     private val rtmpLiveMode = YlRtmpLiveModePolicy()
@@ -117,7 +126,6 @@ internal class YlMedia3Core(
         return previous.copy(mode = mode, committedRequestId = requestId)
     }
     private var sourceIsLive = false
-    private var sourceClass = YlSourceClass.NETWORK_VOD
     private var stopped = false
     private var resetting = false
     private var disposed = false
@@ -140,7 +148,7 @@ internal class YlMedia3Core(
     private var selectedVideoBitrate: Int? = null
     private var availableVideoBitrates: List<Int> = emptyList()
     private var surfaceRebuildBaseline = 0
-    private var requestedPlaybackSpeed = 1f
+    @Volatile private var requestedPlaybackSpeed = 1f
     private val healthMonitor = YlPlaybackHealthMonitor()
     private var healthWindowStartedAtMs: Long? = null
     private val videoFrameCounter = YlVideoFrameCounter()
@@ -210,6 +218,8 @@ internal class YlMedia3Core(
                     deviceProfile.isTelevision && deviceProfile.signals.apiLevel in 24..28
                 it.useConstrainedTvAudioBuffer = protectedDrm == null && dashVideoFamily == null &&
                     deviceProfile.isTelevision && deviceProfile.tier == YlDeviceTier.CONSTRAINED
+                it.useMiTvPlatformRate = useMiTvPlatformRate
+                if (useMiTvPlatformRate) it.isMiTv3xRequested = { requestedPlaybackSpeed == 3f }
             }
             .setEnableDecoderFallback(protectedDrm == null)
             .setMediaCodecSelector(protectedSelector ?: YlPolicyCodecSelector(decoderPolicy, evidence = decoderEvidence))
@@ -509,7 +519,7 @@ internal class YlMedia3Core(
                 .setMinPlaybackSpeed(1f).setMaxPlaybackSpeed(1f).build())
             .build()
 
-        val mediaSource = sourceFactory.create(context, mediaItem)
+        val mediaSource = sourceFactory.create(context, mediaItem, limitProgressiveReadAhead = useMiTvPlatformRate)
         cancelFocusGrace()
         stallWatchdog.cancel()
         stopped = false
@@ -519,12 +529,6 @@ internal class YlMedia3Core(
         handler.post(positionTicker)
         firstFrameRendered = false
         sourceIsLive = rtmp || source.intent == AndroidStreamIntent.LIVE
-        sourceClass = YlPlaybackPolicy.classifySource(
-            kind = source.kind.name.lowercase(),
-            isLive = sourceIsLive,
-            formatHint = formatHint(source.format),
-            uri = uriString,
-        )
 
         active = true
         savedPositionMs = 0
@@ -1182,6 +1186,10 @@ internal class YlMedia3Core(
     ) {
         if (!isCurrentEvent(eventTime)) return
         audioUnderruns += 1
+        if (useMiTvPlatformRate && requestedPlaybackSpeed == 3f) {
+            android.util.Log.d("YlPlayer", "Mi TV 3x audio underrun count=$audioUnderruns " +
+                "bufferMs=$bufferSizeMs sinceLastFeedMs=$elapsedSinceLastFeedMs")
+        }
         metricsCollector.underrun()
     }
 

@@ -1197,6 +1197,11 @@
       "path": "docs/superpowers/reports/2026-11-21-android-mitv-api28.md",
       "sha256": "3a21593c43983921ea83d33a127734a0ed60e51202e76fc70a566fe67efa32ac",
       "kind": "report"
+    },
+    "android-mitv-playback-speed-20261121": {
+      "path": "docs/superpowers/reports/2026-11-21-android-mitv-playback-speed.md",
+      "sha256": "d9dcf43454580863b6e8ba0f836eff7128e70e81e1d291dabda1e3fb8a02b3b6",
+      "kind": "report"
     }
   },
   "rows": [
@@ -2757,10 +2762,11 @@
         "remaining-acceptance-20261026",
         "remaining-main-merge-20261027",
         "remaining-local-acceptance-20261028",
-        "android-mitv-api28-20261121"
+        "android-mitv-api28-20261121",
+        "android-mitv-playback-speed-20261121"
       ],
       "acceptance": null,
-      "nextAction": "qualify-minimum-api24-and-retest-speed-transitions-after-low-memory-32bit-api28-run"
+      "nextAction": "qualify-minimum-api24-after-low-memory-32bit-api28-run"
     },
     {
       "requirement": "REG-OS",

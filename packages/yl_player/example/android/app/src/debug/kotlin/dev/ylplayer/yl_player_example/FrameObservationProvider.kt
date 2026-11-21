@@ -61,6 +61,7 @@ private class FrameObservation(private val flutter: FlutterEngine) {
                 when (call.method) {
                     "install" -> install(call.argument<String>("previousSession")!!, false, result)
                     "installActive" -> install(call.argument<String>("sessionId")!!, true, result)
+                    "clockMs" -> result.success(android.os.SystemClock.elapsedRealtime())
                     "playbackOutput" -> {
                         val current = checkNotNull(attached)
                         onWorker(current.handler, result) {
@@ -70,7 +71,8 @@ private class FrameObservation(private val flutter: FlutterEngine) {
                             counters?.ensureUpdated()
                             mapOf("requested" to selector.parameters.tunnelingEnabled,
                                 "enabled" to player.isTunnelingEnabled,
-                                "rendered" to counters?.renderedOutputBufferCount)
+                                "rendered" to counters?.renderedOutputBufferCount,
+                                "dropped" to counters?.droppedBufferCount)
                         }
                     }
                     "read" -> {
@@ -115,8 +117,9 @@ private class FrameObservation(private val flutter: FlutterEngine) {
             val privateSurface = field(field(observedEngine, "privateOutput")!!, "surface") as Surface
             val records = ArrayList<Map<String, Any>>()
             fun record(value: Map<String, Any>) {
-                if (records.size < 32) records += value
-                else if (records.size == 32) records += mapOf("kind" to "overflow")
+                val limit = if (activeMode) 64 else 32
+                if (records.size < limit) records += value
+                else if (records.size == limit) records += mapOf("kind" to "overflow")
             }
             var decoderSeen = false
             val listener = object : AnalyticsListener {

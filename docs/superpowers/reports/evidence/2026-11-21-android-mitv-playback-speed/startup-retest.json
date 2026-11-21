@@ -1,0 +1,1816 @@
+{
+  "device": {
+    "model": "MiTV-MTTP0",
+    "board": "m7332",
+    "android": "9",
+    "sdk": "28",
+    "abi": "armeabi-v7a,armeabi",
+    "heapGrowthLimit": "192m",
+    "memTotalKiB": 1362636,
+    "televisionFeature": true,
+    "display": "Physical size: 1920x1080",
+    "registeredCodecs": [
+      "<MediaCodec name=\"OMX.MS.HEVC.Decoder\" type=\"video/hevc\" >",
+      "<MediaCodec name=\"OMX.MS.HEVC.Decoder.secure\" type=\"video/hevc\" >",
+      "<MediaCodec name=\"OMX.MS.AV1.Decoder\" type=\"video/av01\" >",
+      "<MediaCodec name=\"OMX.MS.AV1.Decoder.secure\" type=\"video/av01\" >"
+    ],
+    "activeDisplayMode": {
+      "id": 1,
+      "width": 1920,
+      "height": 1080,
+      "fps": 60.000004,
+      "source": "adb shell dumpsys display / DisplayDeviceInfo"
+    }
+  },
+  "build": {
+    "apk": "e2de31c36473b0d07d5bc6e3e6531a7ff25a07bad11024e4c87441863d5615b1",
+    "installed": "e2de31c36473b0d07d5bc6e3e6531a7ff25a07bad11024e4c87441863d5615b1",
+    "case": "speed",
+    "base": "62eec144d5782335a843e899a45a797be9271947",
+    "pid": "6995"
+  },
+  "files": {
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlTvAudioBufferSizeProvider.kt": "e3416e4da9c58f6397f979da9f4cec83ca22ae062c89a2edebf5f50049f0c3e3",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlOutputRenderersFactory.kt": "00f64bdea6d24673bbdc1378a53d7e5b6735ea70e8631c7a27a1b794b9645f59",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMedia3Core.kt": "6b6c4b47fefa42448880fecbea31d477ad80759f56867f757f0e5a43ca9b1390",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMediaSourceFactory.kt": "d03453a847dded7134fce4f8f577076fe096de97340eca109c66db767c46bba7",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlAdaptiveLoadControl.kt": "09c00b26d17853cd5f93d48594d20f57b3f64c05a753088bca7c83576b21a782",
+    "packages/yl_player/example/integration_test/android_tv_playback_test.dart": "269abf472ad58539300850d32f1920de1912153bb7c0acb2d2849f5d5f214ade",
+    "packages/yl_player/example/android/app/src/debug/kotlin/dev/ylplayer/yl_player_example/FrameObservationProvider.kt": "f62633f128a1b06e33dd90495992ae97853e45301bc87d9c1faf974886cae41b",
+    "packages/yl_player_android/android/src/main/kotlin/dev/ylplayer/yl_player_android/YlMiTvAudioOutputProvider.kt": "7fd1735c125102bd5ca5bb1ff4628ab4871ba6f0ea0411d73e78671ffb4bf0a8",
+    "packages/yl_player/lib/src/player_view.dart": "3462ef9d71d3eedde7bbd8ee16f732fc134114150c559d9b2ecb7504211cf2f6"
+  },
+  "framework": {
+    "terminal": true,
+    "passed": true,
+    "pid": "6995"
+  },
+  "rows": [
+    {
+      "case": "speed-file",
+      "phase": "load",
+      "elapsedMs": 1598,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "speed-file",
+      "phase": "firstFrame",
+      "elapsedMs": 7571,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "speed-file",
+      "phase": "normal",
+      "elapsedMs": 17715,
+      "status": "playing",
+      "positionMs": 9807,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 238,
+        "dropped": 0
+      },
+      "wallMs": 10011,
+      "advancedMs": 9557,
+      "actualSpeed": 0.954649885126361
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast-1.5",
+      "elapsedMs": 29922,
+      "status": "playing",
+      "positionMs": 26655,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 386,
+        "dropped": 16
+      },
+      "wallMs": 12015,
+      "advancedMs": 16176,
+      "actualSpeed": 1.3463171036204744
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast-1.5-startup",
+      "elapsedMs": 29984,
+      "status": "playing",
+      "positionMs": 26655,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "firstMediaSecondMs": 1479,
+      "firstFrameMs": 643
+    },
+    {
+      "case": "speed-file",
+      "phase": "steady-1.5",
+      "elapsedMs": 42049,
+      "status": "playing",
+      "positionMs": 44908,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 820,
+        "dropped": 19
+      },
+      "wallMs": 12007,
+      "advancedMs": 17855,
+      "actualSpeed": 1.4870492212875823
+    },
+    {
+      "case": "speed-file",
+      "phase": "restored-1.5",
+      "elapsedMs": 52099,
+      "status": "playing",
+      "positionMs": 54223,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 19,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 221,
+        "dropped": 0
+      },
+      "wallMs": 10004,
+      "advancedMs": 9315,
+      "actualSpeed": 0.9311275489804078
+    },
+    {
+      "case": "speed-file",
+      "phase": "paused-1.5",
+      "elapsedMs": 52316,
+      "status": "paused",
+      "positionMs": 54467,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 19,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 224,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast-2.0",
+      "elapsedMs": 64403,
+      "status": "playing",
+      "positionMs": 76375,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 19,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 512,
+        "dropped": 23
+      },
+      "wallMs": 12000,
+      "advancedMs": 21908,
+      "actualSpeed": 1.8256666666666668
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast-2.0-startup",
+      "elapsedMs": 64414,
+      "status": "playing",
+      "positionMs": 76375,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 19,
+      "underruns": 0,
+      "firstMediaSecondMs": 1509,
+      "firstFrameMs": 621
+    },
+    {
+      "case": "speed-file",
+      "phase": "steady-2.0",
+      "elapsedMs": 76428,
+      "status": "playing",
+      "positionMs": 100423,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 19,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1078,
+        "dropped": 33
+      },
+      "wallMs": 12000,
+      "advancedMs": 24048,
+      "actualSpeed": 2.004
+    },
+    {
+      "case": "speed-file",
+      "phase": "restored-2.0",
+      "elapsedMs": 86444,
+      "status": "playing",
+      "positionMs": 109908,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 5,
+      "drops": 52,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 219,
+        "dropped": 0
+      },
+      "wallMs": 10000,
+      "advancedMs": 9485,
+      "actualSpeed": 0.9485
+    },
+    {
+      "case": "speed-file",
+      "phase": "paused-2.0",
+      "elapsedMs": 86580,
+      "status": "paused",
+      "positionMs": 110004,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 5,
+      "drops": 52,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 220,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast-3.0",
+      "elapsedMs": 98839,
+      "status": "playing",
+      "positionMs": 143463,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 152,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 601,
+        "dropped": 108
+      },
+      "wallMs": 12000,
+      "advancedMs": 33453,
+      "actualSpeed": 2.78775
+    },
+    {
+      "case": "speed-file",
+      "phase": "fast-3.0-startup",
+      "elapsedMs": 98864,
+      "status": "playing",
+      "positionMs": 143463,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 152,
+      "underruns": 0,
+      "firstMediaSecondMs": 1123,
+      "firstFrameMs": 460
+    },
+    {
+      "case": "speed-file",
+      "phase": "steady-3.0",
+      "elapsedMs": 110876,
+      "status": "playing",
+      "positionMs": 180032,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 252,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1211,
+        "dropped": 245
+      },
+      "wallMs": 12000,
+      "advancedMs": 36569,
+      "actualSpeed": 3.047416666666667
+    },
+    {
+      "case": "speed-file",
+      "phase": "restored-3.0",
+      "elapsedMs": 120890,
+      "status": "playing",
+      "positionMs": 189630,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 7,
+      "drops": 297,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 225,
+        "dropped": 0
+      },
+      "wallMs": 10000,
+      "advancedMs": 9598,
+      "actualSpeed": 0.9598
+    },
+    {
+      "case": "speed-file",
+      "phase": "paused-3.0",
+      "elapsedMs": 121060,
+      "status": "paused",
+      "positionMs": 189802,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 7,
+      "drops": 297,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 228,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "direct-1.5",
+      "elapsedMs": 133122,
+      "status": "playing",
+      "positionMs": 206291,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 8,
+      "drops": 297,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 397,
+        "dropped": 6
+      },
+      "wallMs": 12000,
+      "advancedMs": 16489,
+      "actualSpeed": 1.3740833333333333
+    },
+    {
+      "case": "speed-file",
+      "phase": "direct-2.0",
+      "elapsedMs": 145138,
+      "status": "playing",
+      "positionMs": 230164,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 8,
+      "drops": 297,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 957,
+        "dropped": 21
+      },
+      "wallMs": 12001,
+      "advancedMs": 23873,
+      "actualSpeed": 1.9892508957586867
+    },
+    {
+      "case": "speed-file",
+      "phase": "direct-3.0",
+      "elapsedMs": 157150,
+      "status": "playing",
+      "positionMs": 265955,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 8,
+      "drops": 397,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1592,
+        "dropped": 149
+      },
+      "wallMs": 12000,
+      "advancedMs": 35791,
+      "actualSpeed": 2.9825833333333334
+    },
+    {
+      "case": "speed-file",
+      "phase": "direct-restored",
+      "elapsedMs": 167164,
+      "status": "playing",
+      "positionMs": 275886,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 9,
+      "drops": 446,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 224,
+        "dropped": 0
+      },
+      "wallMs": 10000,
+      "advancedMs": 9931,
+      "actualSpeed": 0.9931
+    },
+    {
+      "case": "speed-file",
+      "phase": "repeat-3.0",
+      "elapsedMs": 179180,
+      "status": "playing",
+      "positionMs": 309133,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 10,
+      "drops": 546,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 599,
+        "dropped": 108
+      },
+      "wallMs": 12000,
+      "advancedMs": 33247,
+      "actualSpeed": 2.770583333333333
+    },
+    {
+      "case": "speed-file",
+      "phase": "repeat-3.0-startup",
+      "elapsedMs": 179203,
+      "status": "playing",
+      "positionMs": 309133,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 10,
+      "drops": 546,
+      "underruns": 0,
+      "firstMediaSecondMs": 1282,
+      "firstFrameMs": 692
+    },
+    {
+      "case": "speed-file",
+      "phase": "repeat-restored",
+      "elapsedMs": 189336,
+      "status": "playing",
+      "positionMs": 318594,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 11,
+      "drops": 554,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 220,
+        "dropped": 0
+      },
+      "wallMs": 10000,
+      "advancedMs": 9461,
+      "actualSpeed": 0.9461
+    },
+    {
+      "case": "speed-file",
+      "phase": "pause",
+      "elapsedMs": 189475,
+      "status": "paused",
+      "positionMs": 318864,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 11,
+      "drops": 554,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 224,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "pausedSeek",
+      "elapsedMs": 190664,
+      "status": "buffering",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 12,
+      "drops": 554,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 224,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "unmounted",
+      "elapsedMs": 191890,
+      "status": "ready",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 13,
+      "drops": 554,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-file",
+      "phase": "remounted",
+      "elapsedMs": 200054,
+      "status": "playing",
+      "positionMs": 97115,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 14,
+      "drops": 554,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 175,
+        "dropped": 0
+      },
+      "wallMs": 8008,
+      "advancedMs": 7115,
+      "actualSpeed": 0.8884865134865135
+    },
+    {
+      "case": "speed-file",
+      "phase": "frames",
+      "elapsedMs": 200112,
+      "status": "playing",
+      "positionMs": 97369,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 14,
+      "drops": 554,
+      "underruns": 0,
+      "frames": [
+        {
+          "kind": "frame",
+          "sessionId": "a1-s1",
+          "timeMs": 11599032,
+          "surfaceId": 142612532,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        },
+        {
+          "kind": "frame",
+          "sessionId": "a1-s1",
+          "timeMs": 11599693,
+          "surfaceId": 142612532,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        }
+      ]
+    },
+    {
+      "case": "speed-file",
+      "phase": "disposed",
+      "elapsedMs": 200966,
+      "status": "playing",
+      "positionMs": 97369,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 14,
+      "drops": 554,
+      "underruns": 0
+    },
+    {
+      "case": "speed-http",
+      "phase": "load",
+      "elapsedMs": 99,
+      "status": "idle",
+      "positionMs": 0,
+      "engine": "unknown",
+      "decoder": null,
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": null,
+      "drops": null,
+      "underruns": null,
+      "sha256": "f608bf8ab3ddea0589c2a4020593fd807ac78f6ca946288da057c1d264100790"
+    },
+    {
+      "case": "speed-http",
+      "phase": "firstFrame",
+      "elapsedMs": 3645,
+      "status": "ready",
+      "positionMs": 0,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 0,
+      "drops": 0,
+      "underruns": 0
+    },
+    {
+      "case": "speed-http",
+      "phase": "normal",
+      "elapsedMs": 13733,
+      "status": "playing",
+      "positionMs": 9538,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 1,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 237,
+        "dropped": 0
+      },
+      "wallMs": 10016,
+      "advancedMs": 9538,
+      "actualSpeed": 0.952276357827476
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast-1.5",
+      "elapsedMs": 25833,
+      "status": "playing",
+      "positionMs": 26166,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 385,
+        "dropped": 14
+      },
+      "wallMs": 12003,
+      "advancedMs": 16628,
+      "actualSpeed": 1.385320336582521
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast-1.5-startup",
+      "elapsedMs": 25873,
+      "status": "playing",
+      "positionMs": 26166,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "firstMediaSecondMs": 1690,
+      "firstFrameMs": 784
+    },
+    {
+      "case": "speed-http",
+      "phase": "steady-1.5",
+      "elapsedMs": 37990,
+      "status": "playing",
+      "positionMs": 44532,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 2,
+      "drops": 0,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 815,
+        "dropped": 22
+      },
+      "wallMs": 12027,
+      "advancedMs": 17954,
+      "actualSpeed": 1.4928078490064023
+    },
+    {
+      "case": "speed-http",
+      "phase": "restored-1.5",
+      "elapsedMs": 48050,
+      "status": "playing",
+      "positionMs": 54048,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 25,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 213,
+        "dropped": 0
+      },
+      "wallMs": 10006,
+      "advancedMs": 9516,
+      "actualSpeed": 0.9510293823705777
+    },
+    {
+      "case": "speed-http",
+      "phase": "paused-1.5",
+      "elapsedMs": 48190,
+      "status": "paused",
+      "positionMs": 54153,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 3,
+      "drops": 25,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 216,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast-2.0",
+      "elapsedMs": 60385,
+      "status": "playing",
+      "positionMs": 76496,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 25,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 531,
+        "dropped": 12
+      },
+      "wallMs": 12001,
+      "advancedMs": 22337,
+      "actualSpeed": 1.8612615615365387
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast-2.0-startup",
+      "elapsedMs": 60396,
+      "status": "playing",
+      "positionMs": 76496,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 25,
+      "underruns": 0,
+      "firstMediaSecondMs": 1441,
+      "firstFrameMs": 512
+    },
+    {
+      "case": "speed-http",
+      "phase": "steady-2.0",
+      "elapsedMs": 72403,
+      "status": "playing",
+      "positionMs": 100715,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 4,
+      "drops": 25,
+      "underruns": 0,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1092,
+        "dropped": 27
+      },
+      "wallMs": 12001,
+      "advancedMs": 24219,
+      "actualSpeed": 2.0180818265144573
+    },
+    {
+      "case": "speed-http",
+      "phase": "restored-2.0",
+      "elapsedMs": 82433,
+      "status": "playing",
+      "positionMs": 110320,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 5,
+      "drops": 52,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 226,
+        "dropped": 0
+      },
+      "wallMs": 10002,
+      "advancedMs": 9347,
+      "actualSpeed": 0.9345130973805239
+    },
+    {
+      "case": "speed-http",
+      "phase": "paused-2.0",
+      "elapsedMs": 82572,
+      "status": "paused",
+      "positionMs": 110348,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 5,
+      "drops": 52,
+      "underruns": 0,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 227,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast-3.0",
+      "elapsedMs": 94672,
+      "status": "playing",
+      "positionMs": 143422,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 202,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 577,
+        "dropped": 161
+      },
+      "wallMs": 12001,
+      "advancedMs": 33060,
+      "actualSpeed": 2.754770435797017
+    },
+    {
+      "case": "speed-http",
+      "phase": "fast-3.0-startup",
+      "elapsedMs": 94689,
+      "status": "playing",
+      "positionMs": 143422,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 202,
+      "underruns": 5,
+      "firstMediaSecondMs": 1173,
+      "firstFrameMs": 517
+    },
+    {
+      "case": "speed-http",
+      "phase": "steady-3.0",
+      "elapsedMs": 106754,
+      "status": "playing",
+      "positionMs": 180008,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 6,
+      "drops": 352,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1189,
+        "dropped": 307
+      },
+      "wallMs": 12000,
+      "advancedMs": 36023,
+      "actualSpeed": 3.001916666666667
+    },
+    {
+      "case": "speed-http",
+      "phase": "restored-3.0",
+      "elapsedMs": 116769,
+      "status": "playing",
+      "positionMs": 189727,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 7,
+      "drops": 363,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 224,
+        "dropped": 0
+      },
+      "wallMs": 10001,
+      "advancedMs": 9719,
+      "actualSpeed": 0.9718028197180282
+    },
+    {
+      "case": "speed-http",
+      "phase": "paused-3.0",
+      "elapsedMs": 116906,
+      "status": "paused",
+      "positionMs": 189952,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 7,
+      "drops": 363,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 227,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "direct-1.5",
+      "elapsedMs": 128999,
+      "status": "playing",
+      "positionMs": 206366,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 8,
+      "drops": 363,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 397,
+        "dropped": 7
+      },
+      "wallMs": 12001,
+      "advancedMs": 16396,
+      "actualSpeed": 1.3662194817098574
+    },
+    {
+      "case": "speed-http",
+      "phase": "direct-2.0",
+      "elapsedMs": 141012,
+      "status": "playing",
+      "positionMs": 230302,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 8,
+      "drops": 363,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 961,
+        "dropped": 15
+      },
+      "wallMs": 12001,
+      "advancedMs": 23936,
+      "actualSpeed": 1.994500458295142
+    },
+    {
+      "case": "speed-http",
+      "phase": "direct-3.0",
+      "elapsedMs": 153031,
+      "status": "playing",
+      "positionMs": 266393,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 8,
+      "drops": 563,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1550,
+        "dropped": 200
+      },
+      "wallMs": 12001,
+      "advancedMs": 36091,
+      "actualSpeed": 3.007332722273144
+    },
+    {
+      "case": "speed-http",
+      "phase": "direct-restored",
+      "elapsedMs": 163046,
+      "status": "playing",
+      "positionMs": 276061,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 9,
+      "drops": 564,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 225,
+        "dropped": 0
+      },
+      "wallMs": 10001,
+      "advancedMs": 9668,
+      "actualSpeed": 0.9667033296670333
+    },
+    {
+      "case": "speed-http",
+      "phase": "repeat-3.0",
+      "elapsedMs": 175060,
+      "status": "playing",
+      "positionMs": 309292,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 10,
+      "drops": 664,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 593,
+        "dropped": 134
+      },
+      "wallMs": 12001,
+      "advancedMs": 33231,
+      "actualSpeed": 2.769019248395967
+    },
+    {
+      "case": "speed-http",
+      "phase": "repeat-3.0-startup",
+      "elapsedMs": 175085,
+      "status": "playing",
+      "positionMs": 309292,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 10,
+      "drops": 664,
+      "underruns": 5,
+      "firstMediaSecondMs": 1149,
+      "firstFrameMs": 510
+    },
+    {
+      "case": "speed-http",
+      "phase": "repeat-restored",
+      "elapsedMs": 185097,
+      "status": "playing",
+      "positionMs": 319346,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 11,
+      "drops": 698,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 228,
+        "dropped": 0
+      },
+      "wallMs": 10000,
+      "advancedMs": 10054,
+      "actualSpeed": 1.0054
+    },
+    {
+      "case": "speed-http",
+      "phase": "pause",
+      "elapsedMs": 185223,
+      "status": "paused",
+      "positionMs": 319580,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 11,
+      "drops": 698,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 228,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "pausedSeek",
+      "elapsedMs": 186479,
+      "status": "buffering",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 12,
+      "drops": 698,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 228,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "unmounted",
+      "elapsedMs": 187569,
+      "status": "ready",
+      "positionMs": 90000,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 12,
+      "drops": 698,
+      "underruns": 5,
+      "output": {
+        "requested": false,
+        "enabled": false,
+        "rendered": 1,
+        "dropped": 0
+      }
+    },
+    {
+      "case": "speed-http",
+      "phase": "remounted",
+      "elapsedMs": 195860,
+      "status": "playing",
+      "positionMs": 97233,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 13,
+      "drops": 698,
+      "underruns": 5,
+      "output": {
+        "requested": true,
+        "enabled": true,
+        "rendered": 175,
+        "dropped": 0
+      },
+      "wallMs": 8004,
+      "advancedMs": 7233,
+      "actualSpeed": 0.9036731634182908
+    },
+    {
+      "case": "speed-http",
+      "phase": "frames",
+      "elapsedMs": 195911,
+      "status": "playing",
+      "positionMs": 97233,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": true,
+      "failure": null,
+      "rebuffers": 13,
+      "drops": 698,
+      "underruns": 5,
+      "frames": [
+        {
+          "kind": "frame",
+          "sessionId": "a2-s1",
+          "timeMs": 11796879,
+          "surfaceId": 80668839,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        },
+        {
+          "kind": "frame",
+          "sessionId": "a2-s1",
+          "timeMs": 11797623,
+          "surfaceId": 80668839,
+          "private": false,
+          "matchesCurrentSurface": true,
+          "public": true,
+          "decoderSeen": true
+        }
+      ]
+    },
+    {
+      "case": "speed-http",
+      "phase": "disposed",
+      "elapsedMs": 196769,
+      "status": "playing",
+      "positionMs": 97491,
+      "engine": "media3",
+      "decoder": "OMX.MS.AVC.Decoder",
+      "mode": "unknown",
+      "presented": false,
+      "failure": null,
+      "rebuffers": 13,
+      "drops": 698,
+      "underruns": 5
+    }
+  ],
+  "native": [
+    "11-21 23:49:33.892  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:1.500000  mPitch:1.000000",
+    "11-21 23:50:08.387  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:2.000000  mPitch:1.000000",
+    "11-21 23:50:42.761  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:3.000000  mPitch:1.000000",
+    "11-21 23:50:42.762  6995  7061 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+    "11-21 23:50:42.888  6995  7061 D YlPlayer: Mi TV PCM restored frames=36000",
+    "11-21 23:51:17.058  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:1.500000  mPitch:1.000000",
+    "11-21 23:51:28.695  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:2.000000  mPitch:1.000000",
+    "11-21 23:51:40.702  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:3.000000  mPitch:1.000000",
+    "11-21 23:52:03.126  6995  7061 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:3.000000  mPitch:1.000000",
+    "11-21 23:52:03.126  6995  7061 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+    "11-21 23:52:03.448  6995  7061 D YlPlayer: Mi TV PCM restored frames=36000",
+    "11-21 23:52:51.844  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:1.500000  mPitch:1.000000",
+    "11-21 23:53:26.420  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:2.000000  mPitch:1.000000",
+    "11-21 23:54:00.692  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:3.000000  mPitch:1.000000",
+    "11-21 23:54:00.693  6995  7942 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+    "11-21 23:54:00.850  6995  7942 D YlPlayer: Mi TV PCM restored frames=36000",
+    "11-21 23:54:35.021  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:1.500000  mPitch:1.000000",
+    "11-21 23:54:46.665  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:2.000000  mPitch:1.000000",
+    "11-21 23:54:58.690  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:3.000000  mPitch:1.000000",
+    "11-21 23:55:21.103  6995  7942 V AudioTrack: setPlaybackRate (effective): mSampleRate:48000  mSpeed:3.000000  mPitch:1.000000",
+    "11-21 23:55:21.104  6995  7942 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+    "11-21 23:55:21.319  6995  7942 D YlPlayer: Mi TV PCM restored frames=36000"
+  ],
+  "http": [
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 0,
+      "end": 4957952,
+      "bytesWritten": 4957953
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 4945384,
+      "end": 4957952,
+      "bytesWritten": 12569
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 761,
+      "end": 4957952,
+      "bytesWritten": 4957192
+    },
+    {
+      "asset": "continuous-avc-aac.mkv",
+      "method": "GET",
+      "start": 352441,
+      "end": 4957952,
+      "bytesWritten": 4605512
+    }
+  ],
+  "released": {
+    "pid": "6995",
+    "observed": true,
+    "videoCodecs": 0,
+    "pssKiB": 214507
+  },
+  "display": {
+    "before": [
+      {
+        "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#0",
+        "composition": "Client",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      },
+      {
+        "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+        "composition": "Sideband",
+        "bounds": [
+          0,
+          0,
+          640,
+          360
+        ]
+      },
+      {
+        "name": "dev.ylplayer.yl_player_example/dev.ylplayer.yl_player_example.MainActivity#0",
+        "composition": "Client",
+        "bounds": [
+          0,
+          0,
+          1920,
+          1080
+        ]
+      }
+    ],
+    "after": [
+      {
+        "case": "speed-file",
+        "afterPhase": "fast-3.0",
+        "deviceEpoch": "1795276256",
+        "layers": [
+          {
+            "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+            "composition": "Device",
+            "bounds": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        ]
+      },
+      {
+        "case": "speed-file",
+        "afterPhase": "direct-3.0",
+        "deviceEpoch": "1795276314",
+        "layers": [
+          {
+            "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+            "composition": "Sideband",
+            "bounds": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        ]
+      },
+      {
+        "case": "speed-http",
+        "afterPhase": "fast-3.0",
+        "deviceEpoch": "1795276454",
+        "layers": [
+          {
+            "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+            "composition": "Device",
+            "bounds": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        ]
+      },
+      {
+        "case": "speed-http",
+        "afterPhase": "direct-3.0",
+        "deviceEpoch": "1795276513",
+        "layers": [
+          {
+            "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+            "composition": "Sideband",
+            "bounds": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "screenshot": {
+    "file": "fullscreen.png",
+    "sha256": "62b2988f351772111cf8e4248fd071eabf686ba55c8033685773e9d35a7a7d6c",
+    "source": "Android screencap, local file 3x, full-screen layout",
+    "build": "13aed1a4419482c51866f8b6c5de038a2b4eb692dd9f35975716dd3dc8627d07"
+  },
+  "comparisons": [
+    {
+      "build": "9f43bbf794c2538d3f79152e33f31a305cbfb2a88bad99f299a7ecbc964cea3e",
+      "framework": {
+        "terminal": true,
+        "passed": false,
+        "pid": "31893"
+      },
+      "fullScreen": false,
+      "direct": [
+        {
+          "case": "speed-file",
+          "phase": "fast-3.0",
+          "actualSpeed": 2.751437380218315,
+          "underruns": 0
+        },
+        {
+          "case": "speed-http",
+          "phase": "fast-3.0",
+          "actualSpeed": 2.7466044496291975,
+          "underruns": 0
+        }
+      ],
+      "native": [
+        "11-21 23:25:26.622 31893 31976 D YlPlayer: Mi TV PCM startup frames=12000 steadyFrames=36000",
+        "11-21 23:25:26.893 31893 31976 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:28:22.543 31893 32735 D YlPlayer: Mi TV PCM startup frames=12000 steadyFrames=36000",
+        "11-21 23:28:22.832 31893 32735 D YlPlayer: Mi TV PCM restored frames=36000"
+      ]
+    },
+    {
+      "build": "192538b10a239016c2ed28bdf2c1e4110c3f1d87e8f8d0e972826a13b2d0d8fe",
+      "framework": {
+        "terminal": true,
+        "passed": true,
+        "pid": "1407"
+      },
+      "fullScreen": false,
+      "direct": [
+        {
+          "case": "speed-file",
+          "phase": "fast-3.0",
+          "actualSpeed": 2.7740188317640198,
+          "underruns": 0
+        },
+        {
+          "case": "speed-file",
+          "phase": "repeat-3.0",
+          "actualSpeed": 2.7703333333333333,
+          "underruns": 0
+        },
+        {
+          "case": "speed-http",
+          "phase": "fast-3.0",
+          "actualSpeed": 2.7628530955753687,
+          "underruns": 1
+        },
+        {
+          "case": "speed-http",
+          "phase": "repeat-3.0",
+          "actualSpeed": 2.8146666666666667,
+          "underruns": 1
+        }
+      ],
+      "native": [
+        "11-21 23:35:07.988  1407  1494 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:35:08.265  1407  1494 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:36:28.331  1407  1494 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:36:28.605  1407  1494 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:38:25.830  1407  2384 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:38:26.161  1407  2384 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:39:46.166  1407  2384 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:39:46.334  1407  2384 D YlPlayer: Mi TV PCM restored frames=36000"
+      ]
+    },
+    {
+      "build": "13aed1a4419482c51866f8b6c5de038a2b4eb692dd9f35975716dd3dc8627d07",
+      "framework": {
+        "terminal": true,
+        "passed": false,
+        "pid": "4448"
+      },
+      "fullScreen": true,
+      "direct": [
+        {
+          "case": "speed-file",
+          "phase": "fast-3.0",
+          "actualSpeed": 2.795933672193984,
+          "underruns": 0
+        },
+        {
+          "case": "speed-file",
+          "phase": "repeat-3.0",
+          "actualSpeed": 2.776120646558907,
+          "underruns": 6
+        },
+        {
+          "case": "speed-http",
+          "phase": "fast-3.0",
+          "actualSpeed": 2.7680386602232963,
+          "underruns": 0
+        },
+        {
+          "case": "speed-http",
+          "phase": "repeat-3.0",
+          "actualSpeed": 2.72825,
+          "underruns": 0
+        }
+      ],
+      "native": [
+        "11-21 23:43:01.827  4448  4573 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:43:02.060  4448  4573 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:44:22.161  4448  4573 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:44:22.417  4448  4573 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:46:19.120  4448  5881 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:46:19.401  4448  5881 D YlPlayer: Mi TV PCM restored frames=36000",
+        "11-21 23:47:39.446  4448  5881 D YlPlayer: Mi TV PCM startup frames=6000 steadyFrames=36000",
+        "11-21 23:47:39.906  4448  5881 D YlPlayer: Mi TV PCM restored frames=36000"
+      ],
+      "display": {
+        "before": [
+          {
+            "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#0",
+            "composition": "Client",
+            "bounds": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          },
+          {
+            "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+            "composition": "Sideband",
+            "bounds": [
+              0,
+              0,
+              640,
+              360
+            ]
+          },
+          {
+            "name": "dev.ylplayer.yl_player_example/dev.ylplayer.yl_player_example.MainActivity#0",
+            "composition": "Client",
+            "bounds": [
+              0,
+              0,
+              1920,
+              1080
+            ]
+          }
+        ],
+        "after": [
+          {
+            "case": "speed-file",
+            "afterPhase": "fast-3.0",
+            "deviceEpoch": "1795275842",
+            "layers": [
+              {
+                "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+                "composition": "Device",
+                "bounds": [
+                  0,
+                  0,
+                  1920,
+                  1080
+                ]
+              }
+            ]
+          },
+          {
+            "case": "speed-file",
+            "afterPhase": "direct-3.0",
+            "deviceEpoch": "1795275854",
+            "layers": [
+              {
+                "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+                "composition": "Sideband",
+                "bounds": [
+                  0,
+                  0,
+                  1920,
+                  1080
+                ]
+              }
+            ]
+          },
+          {
+            "case": "speed-http",
+            "afterPhase": "fast-3.0",
+            "deviceEpoch": "1795275993",
+            "layers": [
+              {
+                "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+                "composition": "Device",
+                "bounds": [
+                  0,
+                  0,
+                  1920,
+                  1080
+                ]
+              }
+            ]
+          },
+          {
+            "case": "speed-http",
+            "afterPhase": "direct-3.0",
+            "deviceEpoch": "1795276051",
+            "layers": [
+              {
+                "name": "SurfaceView - dev.ylplayer.yl_player[...]yer.yl_player_example.MainActivity#1",
+                "composition": "Sideband",
+                "bounds": [
+                  0,
+                  0,
+                  1920,
+                  1080
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

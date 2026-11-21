@@ -1,9 +1,15 @@
 package dev.ylplayer.yl_player_android
 
 import android.content.Context
+import android.os.Handler
+import androidx.media3.exoplayer.Renderer
+import androidx.media3.exoplayer.audio.AudioTrackAudioOutputProvider
 import androidx.media3.exoplayer.audio.AudioSink
+import androidx.media3.exoplayer.audio.AudioRendererEventListener
+import androidx.media3.exoplayer.audio.MediaCodecAudioRenderer
 import androidx.media3.exoplayer.audio.DefaultAudioSink
 import androidx.media3.exoplayer.drm.DrmSessionManager
+import androidx.media3.exoplayer.mediacodec.MediaCodecSelector
 import dev.ylplayer.yl_player_android.pigeon.AndroidMediaFormat
 import org.mockito.Mockito.*
 import kotlin.test.*
@@ -33,7 +39,35 @@ class YlTvAudioSinkTest {
         }
     }
 
-    private fun checkFactory(enabled: Boolean) {
+    @Test fun `Mi TV uses platform playback parameters for the bounded PCM sink`() {
+        val delegate = mock(AudioTrackAudioOutputProvider::class.java)
+        mockConstruction(AudioTrackAudioOutputProvider.Builder::class.java, withSettings().defaultAnswer(RETURNS_SELF)) { builder, _ ->
+            `when`(builder.build()).thenReturn(delegate)
+        }.use { outputBuilders ->
+            checkFactory(enabled = true, platformRate = true)
+            verify(outputBuilders.constructed().single()).setAudioTrackBufferSizeProvider(isA(YlTvAudioBufferSizeProvider::class.java))
+        }
+    }
+
+    @Test fun `Mi TV feeds audio before video while preserving software fallback order`() {
+        val context = mock(Context::class.java)
+        val video = mock(Renderer::class.java)
+        val factory = TestFactory(context)
+        factory.allowEac3SoftwareAudio = true
+        for (prioritizeAudio in listOf(false, true)) {
+            factory.useMiTvPlatformRate = prioritizeAudio
+            mockConstruction(MediaCodecAudioRenderer::class.java).use { codecs ->
+                mockConstruction(YlEac3AudioRenderer::class.java).use { fallbacks ->
+                    val renderers = arrayListOf(video)
+                    factory.addAudio(context, renderers)
+                    val audio = listOf(codecs.constructed().single(), fallbacks.constructed().single())
+                    assertEquals(if (prioritizeAudio) audio + video else listOf(video) + audio, renderers)
+                }
+            }
+        }
+    }
+
+    private fun checkFactory(enabled: Boolean, platformRate: Boolean = false) {
         val sink = mock(DefaultAudioSink::class.java)
         mockConstruction(DefaultAudioSink.Builder::class.java, withSettings().defaultAnswer(RETURNS_SELF)) { builder, _ ->
             `when`(builder.build()).thenReturn(sink)
@@ -41,11 +75,14 @@ class YlTvAudioSinkTest {
             val context = mock(Context::class.java)
             val factory = TestFactory(context)
             factory.useConstrainedTvAudioBuffer = enabled
-            assertSame(sink, factory.audio(context))
+            factory.useMiTvPlatformRate = platformRate
+            val actual = factory.audio(context)
+            if (platformRate) assertNotNull(actual) else assertSame(sink, actual)
             val builder = construction.constructed().single()
             verify(builder).setEnableFloatOutput(false)
-            verify(builder).setEnableAudioOutputPlaybackParameters(false)
-            if (enabled) verify(builder).setAudioTrackBufferSizeProvider(isA(YlTvAudioBufferSizeProvider::class.java))
+            verify(builder).setEnableAudioOutputPlaybackParameters(platformRate)
+            if (platformRate) verify(builder).setAudioOutputProvider(isA(YlMiTvAudioOutputProvider::class.java))
+            else if (enabled) verify(builder).setAudioTrackBufferSizeProvider(isA(YlTvAudioBufferSizeProvider::class.java))
             else verify(builder, never()).setAudioTrackBufferSizeProvider(any())
         }
     }
@@ -56,5 +93,9 @@ class YlTvAudioSinkTest {
     private class TestFactory(context: Context) : YlOutputRenderersFactory(context,
         YlVideoOutputObserver({ it() }, { _, _, _ -> })) {
         fun audio(context: Context): AudioSink? = buildAudioSink(context, false, false)
+        fun addAudio(context: Context, renderers: ArrayList<Renderer>) = buildAudioRenderers(
+            context, EXTENSION_RENDERER_MODE_OFF, MediaCodecSelector.DEFAULT, true, mock(AudioSink::class.java),
+            mock(Handler::class.java), mock(AudioRendererEventListener::class.java), renderers,
+        )
     }
 }
